@@ -11,12 +11,10 @@ where
   t_tagid = ttc_tagid and 
   (ttc_tagclassid in (
   		 select s_subtagclassid from
-		 	(select transitive t_in (1) t_out (2) t_distinct s_subtagclassid, s_supertagclassid
+		 	(select transitive t_in (1) t_out (2) t_distinct t_min(0) s_subtagclassid, s_supertagclassid
 			 from subclass) k, tagclass
 		 where tc_tagclassid = k.s_supertagclassid and tc_name = '@TagType@'
 		 )
-   or
-   ttc_tagclassid = (select tc_tagclassid from tagclass where tc_name = '@TagType@')
    )
 group by 1, p_firstname, p_lastname
 order by 5 desc, 1
