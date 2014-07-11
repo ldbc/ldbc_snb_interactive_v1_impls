@@ -1,6 +1,7 @@
 sparql select ?tagname count (*) #Q4
 from <sib>
 where {
+    ?post a snvoc:Post .
     ?post snvoc:hasCreator ?fr .
     ?post snvoc:hasTag ?tag .
     ?tag foaf:name ?tagname .
