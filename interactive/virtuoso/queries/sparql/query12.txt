@@ -1,4 +1,4 @@
-sparql select ?exp ?first ?last sql:group_concat_distinct(?tagname) count (*) #Q12
+sparql select ?exp ?first ?last sql:group_concat_distinct(?tagname, ', ') count (*) #Q12
 where {
     sn:pers%Person% snvoc:knows ?exp .
     ?exp snvoc:firstName ?first . ?exp snvoc:lastName ?last .
@@ -9,7 +9,7 @@ where {
     ?tag foaf:name ?tagname .
     ?tag a ?type.
     ?type rdfs:subClassOf* ?type1 .
-    ?type1 rdfs:label %TagType% .
+    ?type1 rdfs:label "%TagType%" .
 }
 group by ?exp ?first ?last
 order by desc(5) ?exp
