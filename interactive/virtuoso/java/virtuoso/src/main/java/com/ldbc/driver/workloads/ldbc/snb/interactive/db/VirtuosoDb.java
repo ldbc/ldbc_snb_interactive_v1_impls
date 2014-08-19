@@ -141,8 +141,8 @@ public class VirtuosoDb extends Db {
             ds.setServerName(properties.get("endpoint"));
             ds.setUser(properties.get("user"));
             ds.setPassword(properties.get("password"));
-            ds.setMinPoolSize(2);
-            ds.setMaxPoolSize(32);
+            ds.setMinPoolSize(1);
+            ds.setMaxPoolSize(Integer.parseInt(properties.get("tc")));
             ds.fill();
 			queryDir = properties.get("queryDir");
 			runSql = properties.get("run_sql").equals("true") ? true : false;
@@ -230,8 +230,26 @@ public class VirtuosoDb extends Db {
 					Collection<String> emails =  result.getString(9) == null ? new ArrayList<String>() : new ArrayList<String>(Arrays.asList(result.getString(9).split(", ")));
 					Collection<String> languages =  result.getString(10) == null ? new ArrayList<String>() : new ArrayList<String>(Arrays.asList(result.getString(10).split(", ")));
 					String place = result.getString(11);
-					Collection<String> universities =  result.getString(12) == null ? new ArrayList<String>() : new ArrayList<String>(Arrays.asList(result.getString(12).split(", ")));
-					Collection<String> companies = result.getString(13) == null ? new ArrayList<String>() : new ArrayList<String>(Arrays.asList(result.getString(13).split(", ")));
+					ArrayList<List<Object>> universities = null;
+					if (result.getString(12) != null) {
+						List<String> items = new ArrayList<String>(Arrays.asList(result.getString(12).split(", ")));
+						universities = new ArrayList<List<Object>>();
+						for (int i = 0; i < items.size(); i++) {
+							universities.add(new ArrayList<Object>(Arrays.asList(items.get(i).split(" "))));
+						}
+					}
+					else
+						universities = new ArrayList<List<Object>>();
+					ArrayList<List<Object>> companies = null;
+					if (result.getString(13) != null) {
+						List<String> items = new ArrayList<String>(Arrays.asList(result.getString(13).split(", ")));
+						companies = new ArrayList<List<Object>>();
+						for (int i = 0; i < items.size(); i++) {
+							companies.add(new ArrayList<Object>(Arrays.asList(items.get(i).split(" "))));
+						}
+					}
+					else
+						companies = new ArrayList<List<Object>>();
 					LdbcQuery1Result tmp = new LdbcQuery1Result(id, lastName, dist, birthday, creationDate,
 							gender, browserUsed, ip, emails, languages, place, universities, companies);
 					if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintResults())
@@ -278,8 +296,26 @@ public class VirtuosoDb extends Db {
 					Collection<String> emails =  result.getString(9) == null ? new ArrayList<String>() : new ArrayList<String>(Arrays.asList(result.getString(9).split(", ")));
 					Collection<String> languages =  result.getString(10) == null ? new ArrayList<String>() : new ArrayList<String>(Arrays.asList(result.getString(10).split(", ")));
 					String place = result.getString(11);
-					Collection<String> universities =  result.getString(12) == null ? new ArrayList<String>() : new ArrayList<String>(Arrays.asList(result.getString(12).split(", ")));
-					Collection<String> companies = result.getString(13) == null ? new ArrayList<String>() : new ArrayList<String>(Arrays.asList(result.getString(13).split(", ")));
+					List<List<Object>> universities = null;
+					if (result.getString(12) != null) {
+						List<String> items = new ArrayList<String>(Arrays.asList(result.getString(12).split(", ")));
+						universities = new ArrayList<List<Object>>(items.size());
+						for (int i = 0; i < items.size(); i++) {
+							universities.set(i, new ArrayList<Object>(Arrays.asList(items.get(i).split(" "))));
+						}
+					}
+					else
+						universities = new ArrayList<List<Object>>();
+					List<List<Object>> companies = null;
+					if (result.getString(13) != null) {
+						List<String> items = new ArrayList<String>(Arrays.asList(result.getString(13).split(", ")));
+						companies = new ArrayList<List<Object>>(items.size());
+						for (int i = 0; i < items.size(); i++) {
+							companies.set(i, new ArrayList<Object>(Arrays.asList(items.get(i).split(" "))));
+						}
+					}
+					else
+						companies = new ArrayList<List<Object>>();
 					LdbcQuery1Result tmp = new LdbcQuery1Result(id, lastName, dist, birthday, creationDate, gender, browserUsed, ip, emails, languages, place, universities, companies);
 					//System.out.println(tmp.toString());
 					RESULT.add(tmp);
@@ -1551,6 +1587,7 @@ public class VirtuosoDb extends Db {
         	    cs.setArray(16, conn.createArrayOf("int", companyYears));
         	    cs.executeQuery();
         	    cs.close();
+        	    conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1635,6 +1672,7 @@ public class VirtuosoDb extends Db {
         	    cs.setArray(1, conn.createArrayOf("varchar", triplets));
         	    cs.executeQuery();
         	    cs.close();
+        	    conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1662,6 +1700,7 @@ public class VirtuosoDb extends Db {
         	    cs.setString(3, df.format(operation.creationDate()));
         	    cs.executeUpdate();
         	    cs.close();
+        	    conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1689,6 +1728,7 @@ public class VirtuosoDb extends Db {
         	    cs.setArray(1, conn.createArrayOf("varchar", triplets));
         	    cs.executeQuery();
         	    cs.close();
+        	    conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1714,6 +1754,7 @@ public class VirtuosoDb extends Db {
         	    cs.setString(3, df.format(operation.creationDate()));
         	    cs.executeUpdate();
         	    cs.close();
+        	    conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1741,6 +1782,7 @@ public class VirtuosoDb extends Db {
         	    cs.setArray(1, conn.createArrayOf("varchar", triplets));
         	    cs.executeQuery();
         	    cs.close();
+        	    conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1783,6 +1825,7 @@ public class VirtuosoDb extends Db {
         	    cs.setArray(5, conn.createArrayOf("int", tagIds1));
         	    cs.executeUpdate();
         	    cs.close();
+        	    conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1825,6 +1868,7 @@ public class VirtuosoDb extends Db {
         	    cs.setArray(1, conn.createArrayOf("varchar", triplets));
         	    cs.executeQuery();
         	    cs.close();
+        	    conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1850,6 +1894,7 @@ public class VirtuosoDb extends Db {
         	    cs.setString(3, df.format(operation.creationDate()));
         	    cs.executeUpdate();
         	    cs.close();
+        	    conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1879,6 +1924,7 @@ public class VirtuosoDb extends Db {
         	    cs.setArray(1, conn.createArrayOf("varchar", triplets));
         	    cs.executeQuery();
         	    cs.close();
+        	    conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1931,6 +1977,7 @@ public class VirtuosoDb extends Db {
         	    cs.setArray(12, conn.createArrayOf("int", tagIds1));
         	    cs.executeUpdate();
         	    cs.close();
+        	    conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -2001,6 +2048,7 @@ public class VirtuosoDb extends Db {
         			cs.executeQuery();
         		}
         		cs.close();
+        	    conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -2054,6 +2102,7 @@ public class VirtuosoDb extends Db {
         	    cs.setArray(11, conn.createArrayOf("int", tagIds1));
         	    cs.executeUpdate();
         	    cs.close();
+        	    conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -2113,6 +2162,7 @@ public class VirtuosoDb extends Db {
        			cs.setArray(1, conn.createArrayOf("varchar", triplets));
        			cs.executeQuery();
        			cs.close();
+        	    conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -2140,6 +2190,7 @@ public class VirtuosoDb extends Db {
         	    cs.setString(3, df.format(operation.creationDate()));
         	    cs.executeUpdate();
         	    cs.close();
+        	    conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -2170,6 +2221,7 @@ public class VirtuosoDb extends Db {
         	    cs.setArray(1, conn.createArrayOf("varchar", triplets));
         	    cs.executeQuery();
         	    cs.close();
+        	    conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
