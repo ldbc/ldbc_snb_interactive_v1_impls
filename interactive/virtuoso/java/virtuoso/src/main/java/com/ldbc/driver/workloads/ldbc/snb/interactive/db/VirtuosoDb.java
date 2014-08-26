@@ -1585,7 +1585,7 @@ public class VirtuosoDb extends Db {
         	    }
         	    cs.setArray(15, conn.createArrayOf("int", companyIds));
         	    cs.setArray(16, conn.createArrayOf("int", companyYears));
-        	    cs.executeQuery();
+        	    cs.execute();
         	    cs.close();
         	    conn.close();
 			} catch (SQLException e) {
@@ -1670,7 +1670,7 @@ public class VirtuosoDb extends Db {
         			//TODO: workAt -> organisationId vs <http://dbpedia.org/resource/Hong_Kong_Air_International_Ltd>
         			triplets[j] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/workAt> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasOrganisation> \"" + operation.workAt().get(k).organizationId() + "\"; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/workFrom> \"" + operation.workAt().get(k).year() + "\"] .";
         	    cs.setArray(1, conn.createArrayOf("varchar", triplets));
-        	    cs.executeQuery();
+        	    cs.execute();
         	    cs.close();
         	    conn.close();
 			} catch (SQLException e) {
@@ -1698,7 +1698,7 @@ public class VirtuosoDb extends Db {
         	    cs.setLong(2, operation.postId());
         		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
         	    cs.setString(3, df.format(operation.creationDate()));
-        	    cs.executeUpdate();
+        	    cs.execute();
         	    cs.close();
         	    conn.close();
 			} catch (SQLException e) {
@@ -1726,7 +1726,7 @@ public class VirtuosoDb extends Db {
         		String triplets [] = new String[1];
         		triplets[0] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/likes> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasPost> " + postUri + "; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"] .";
         	    cs.setArray(1, conn.createArrayOf("varchar", triplets));
-        	    cs.executeQuery();
+        	    cs.execute();
         	    cs.close();
         	    conn.close();
 			} catch (SQLException e) {
@@ -1752,7 +1752,7 @@ public class VirtuosoDb extends Db {
         	    cs.setLong(2, operation.commentId());
         		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
         	    cs.setString(3, df.format(operation.creationDate()));
-        	    cs.executeUpdate();
+        	    cs.execute();
         	    cs.close();
         	    conn.close();
 			} catch (SQLException e) {
@@ -1780,7 +1780,7 @@ public class VirtuosoDb extends Db {
         		String triplets [] = new String[1];
         		triplets[0] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/likes> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasComment> " + commentUri + "; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"] .";
         	    cs.setArray(1, conn.createArrayOf("varchar", triplets));
-        	    cs.executeQuery();
+        	    cs.execute();
         	    cs.close();
         	    conn.close();
 			} catch (SQLException e) {
@@ -1823,7 +1823,7 @@ public class VirtuosoDb extends Db {
         	        tagIds1[i++] = temp;
         	    }
         	    cs.setArray(5, conn.createArrayOf("int", tagIds1));
-        	    cs.executeUpdate();
+        	    cs.execute();
         	    cs.close();
         	    conn.close();
 			} catch (SQLException e) {
@@ -1866,7 +1866,7 @@ public class VirtuosoDb extends Db {
         			//TODO: hasTag -> tagId vs <http://dbpedia.org/resource/Pablo_Picasso>
         			triplets[4 + k] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasTag> \"" + operation.tagIds().get(k) + "\" .";
         	    cs.setArray(1, conn.createArrayOf("varchar", triplets));
-        	    cs.executeQuery();
+        	    cs.execute();
         	    cs.close();
         	    conn.close();
 			} catch (SQLException e) {
@@ -1892,7 +1892,7 @@ public class VirtuosoDb extends Db {
         		cs.setLong(2, operation.personId());
         		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
         	    cs.setString(3, df.format(operation.creationDate()));
-        	    cs.executeUpdate();
+        	    cs.execute();
         	    cs.close();
         	    conn.close();
 			} catch (SQLException e) {
@@ -1922,7 +1922,7 @@ public class VirtuosoDb extends Db {
         		String triplets [] = new String[1];
         		triplets[0] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasMember> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasPerson> " + memberUri + "; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/joinDate> \"" + df1.format(operation.creationDate()) + "\"] .";
         	    cs.setArray(1, conn.createArrayOf("varchar", triplets));
-        	    cs.executeQuery();
+        	    cs.execute();
         	    cs.close();
         	    conn.close();
 			} catch (SQLException e) {
@@ -1975,7 +1975,7 @@ public class VirtuosoDb extends Db {
         	        tagIds1[i++] = temp;
         	    }
         	    cs.setArray(12, conn.createArrayOf("int", tagIds1));
-        	    cs.executeUpdate();
+        	    cs.execute();
         	    cs.close();
         	    conn.close();
 			} catch (SQLException e) {
@@ -2031,7 +2031,7 @@ public class VirtuosoDb extends Db {
         				//TODO: hasTag -> tagId vs <http://dbpedia.org/resource/Pablo_Picasso>
         				triplets[10 + k] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasTag> \"" + operation.tagIds().get(k) + "\" .";
         			cs.setArray(1, conn.createArrayOf("varchar", triplets));
-        			cs.executeQuery();
+        			cs.execute();
         		}
         		else {
         			String triplets [] = new String[8];
@@ -2045,7 +2045,7 @@ public class VirtuosoDb extends Db {
         			triplets[6] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/isLocatedIn> \"" + operation.countryId() + "\" .";
         			triplets[7] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/containerOf> " + postUri + " .";
         			cs.setArray(1, conn.createArrayOf("varchar", triplets));
-        			cs.executeQuery();
+        			cs.execute();
         		}
         		cs.close();
         	    conn.close();
@@ -2100,7 +2100,7 @@ public class VirtuosoDb extends Db {
         	        tagIds1[i++] = temp;
         	    }
         	    cs.setArray(11, conn.createArrayOf("int", tagIds1));
-        	    cs.executeUpdate();
+        	    cs.execute();
         	    cs.close();
         	    conn.close();
 			} catch (SQLException e) {
@@ -2160,7 +2160,7 @@ public class VirtuosoDb extends Db {
         			//TODO: hasTag -> tagId vs <http://dbpedia.org/resource/Pablo_Picasso>
        				triplets[9 + k] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasTag> \"" + operation.tagIds().get(k) + "\" .";
        			cs.setArray(1, conn.createArrayOf("varchar", triplets));
-       			cs.executeQuery();
+       			cs.execute();
        			cs.close();
         	    conn.close();
 			} catch (SQLException e) {
@@ -2188,7 +2188,7 @@ public class VirtuosoDb extends Db {
         		cs.setLong(2, operation.person2Id());
         		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
         	    cs.setString(3, df.format(operation.creationDate()));
-        	    cs.executeUpdate();
+        	    cs.execute();
         	    cs.close();
         	    conn.close();
 			} catch (SQLException e) {
@@ -2219,7 +2219,7 @@ public class VirtuosoDb extends Db {
         		triplets[0] = person1Uri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/knows> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasPerson> " + person2Uri + "; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"] .";
         		triplets[1] = person1Uri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/knows> " + person2Uri + " .";
         	    cs.setArray(1, conn.createArrayOf("varchar", triplets));
-        	    cs.executeQuery();
+        	    cs.execute();
         	    cs.close();
         	    conn.close();
 			} catch (SQLException e) {
