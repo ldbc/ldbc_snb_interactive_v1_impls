@@ -258,3 +258,174 @@ create procedure LdbcUpdateSparql (in triplets varchar array)
 	return;
 };
 
+create procedure post_view (in postid int) {
+  declare content, imagefile varchar;
+  declare creationdate datetime;
+  result_names(content, imagefile, creationdate);
+
+  whenever not found goto done1;
+  declare cr1 cursor for 
+      select ps_content, ps_imagefile, ps_creationdate
+        from post
+	where
+	  ps_postid = postid;
+
+  open cr1;
+  while (1)
+    {
+      fetch cr1 into content, imagefile, creationdate;
+      result (content, imagefile, creationdate);
+    }
+
+done1:
+  close cr1;
+
+  declare firstname, lastname varchar;
+  declare personid int;
+  result_names(personid, firstname, lastname);
+  end_result ();
+
+  whenever not found goto done2;
+  declare cr2 cursor for 
+      select p_personid, p_firstname, p_lastname
+        from post, person
+	where
+	  ps_postid = postid and ps_creatorid = p_personid;
+
+  open cr2;
+  while (1)
+    {
+      fetch cr2 into personid, firstname, lastname;
+      result (personid, firstname, lastname);
+    }
+
+done2:
+  close cr2;
+
+  declare modfirstname, modlastname, forumname varchar;
+  declare modpersonid, forumid int;
+  result_names(forumid, forumname, modpersonid, modfirstname, modlastname);
+  end_result ();
+
+  whenever not found goto done3;
+  declare cr3 cursor for 
+      select f_forumid, f_title, p_personid, p_firstname, p_lastname
+        from post, person, forum
+	where
+	  ps_postid = postid and ps_forumid = f_forumid and f_moderatorid = p_personid;
+
+  open cr3;
+  while (1)
+    {
+      fetch cr3 into forumid, forumname, modpersonid, modfirstname, modlastname;
+      result (forumid, forumname, modpersonid, modfirstname, modlastname);
+    }
+
+done3:
+  close cr3;
+
+  declare origpostcontent, origfirstname, origlastname varchar;
+  declare origpostid, origautorid, friendornot int;
+  result_names(origpostid, origpostcontent, origautorid, origfirstname, origlastname, friendornot);
+  end_result ();
+
+  whenever not found goto done4;
+  declare cr4 cursor for 
+      select p2.ps_postid, p2.ps_content, p_personid, p_firstname, p_lastname,
+      	     (case when exists (
+	     	   	       select 1 from knows
+			       where p1.ps_creatorid = k_person1id and p2.ps_creatorid = k_person2id)
+	      then 1
+	      else 0
+	      end)
+        from post p1, post p2, person
+	where
+	  p1.ps_postid = postid and p1.ps_replyof = p2.ps_postid and p2.ps_creatorid = p_personid;
+
+  open cr4;
+  while (1)
+    {
+      fetch cr4 into origpostid, origpostcontent, origautorid, origfirstname, origlastname, friendornot;
+      result (origpostid, origpostcontent, origautorid, origfirstname, origlastname, friendornot);
+    }
+
+done4:
+  close cr4;
+
+}
+
+
+create procedure person_view (in personid int) {
+  declare firstname, lastname, gender, browserused varchar;
+  declare birthday, creationdate datetime;
+  declare locationip, placeid int;
+  result_names(firstname, lastname, gender, birthday, creationdate, locationip, browserused, placeid);
+
+  whenever not found goto done1;
+  declare cr1 cursor for 
+      select p_firstname, p_lastname, p_gender, p_birthday, p_creationdate, p_locationip, p_browserused, p_placeid
+        from person
+	where
+	  p_personid = personid;
+
+  open cr1;
+  while (1)
+    {
+      fetch cr1 into firstname, lastname, gender, birthday, creationdate, locationip, browserused, placeid;
+      result (firstname, lastname, gender, birthday, creationdate, locationip, browserused, placeid);
+    }
+
+done1:
+  close cr1;
+
+  declare content, imagefile, origfirstname, origlastname varchar;
+  declare postid, origpostid, origpersonid int;
+  declare postcreationdate datetime;
+  result_names(postid, content, imagefile, postcreationdate, origpostid, origpersonid, origfirstname, origlastname);
+  end_result ();
+
+  whenever not found goto done2;
+  declare cr2 cursor for 
+  select top 10
+       p1.ps_postid, p1.ps_content, p1.ps_imagefile, p1.ps_creationdate,
+       p2.ps_postid, p2.p_personid, p2.p_firstname, p2.p_lastname
+  from post p1 left outer join
+     (select ps_postid, p_personid, p_firstname, p_lastname from post, person where ps_creatorid = p_personid ) p2
+  on p2.ps_postid = p1.ps_replyof
+  where p1.ps_creatorid = personid
+  order by p1.ps_creationdate desc;
+
+  open cr2;
+  while (1)
+    {
+      fetch cr2 into postid, content, imagefile, postcreationdate, origpostid, origpersonid, origfirstname, origlastname;
+      result (postid, content, imagefile, postcreationdate, origpostid, origpersonid, origfirstname, origlastname);
+    }
+
+done2:
+  close cr2;
+
+  declare friendfirstname, friendlastname varchar;
+  declare friendpersonid int;
+  declare since datetime;
+  result_names(friendpersonid, friendfirstname, friendlastname, since);
+  end_result ();
+
+  whenever not found goto done3;
+  declare cr3 cursor for 
+      select p_personid, p_firstname, p_lastname, k_creationdate
+        from knows, person
+	where
+	  k_person1id = personid and k_person2id = p_personid;
+
+  open cr3;
+  while (1)
+    {
+      fetch cr3 into friendpersonid, friendfirstname, friendlastname, since;
+      result (friendpersonid, friendfirstname, friendlastname, since);
+    }
+
+done3:
+  close cr3;
+
+}
