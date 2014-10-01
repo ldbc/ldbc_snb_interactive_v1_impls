@@ -8,7 +8,7 @@
   <dependencies>
   	<dependency>
   		<groupId>com.ldbc.driver</groupId>
-  		<artifactId>core</artifactId>
+  		<artifactId>jeeves</artifactId>
 		<version>0.2-SNAPSHOT</version>
   	</dependency>
 	<dependency>
@@ -23,7 +23,7 @@
   	<dependencies>
   		<dependency>
   			<groupId>com.ldbc.driver</groupId>
-  			<artifactId>core</artifactId>
+  			<artifactId>jeeves</artifactId>
   			<version>0.2-SNAPSHOT</version>
   		</dependency>
   	</dependencies>

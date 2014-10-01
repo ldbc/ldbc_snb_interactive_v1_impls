@@ -1075,13 +1075,13 @@ public class VirtuosoDb extends Db {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query10.txt"));
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isRunSql()) {
         			queryString = queryString.replaceAll("@Person@", String.valueOf(operation.personId()));
-        			queryString = queryString.replaceAll("@HS0@", String.valueOf(operation.month1()));
-        			queryString = queryString.replaceAll("@HS1@", String.valueOf(operation.month2()));
+        			queryString = queryString.replaceAll("@HS0@", String.valueOf(operation.month()));
+        			queryString = queryString.replaceAll("@HS1@", String.valueOf((operation.month() + 1) % 12));
         		}
         		else {
             		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
-            		queryString = queryString.replaceAll("%HS0%", String.valueOf(operation.month1()));
-               		queryString = queryString.replaceAll("%HS1%", String.valueOf(operation.month2()));
+            		queryString = queryString.replaceAll("%HS0%", String.valueOf(operation.month()));
+               		queryString = queryString.replaceAll("%HS1%", String.valueOf((operation.month() + 1) % 12));
         		}
         		Statement stmt = conn.createStatement();
         		
@@ -1094,7 +1094,7 @@ public class VirtuosoDb extends Db {
 				while (result.next()) { results_count++;
 					String personFirstName = result.getString(1);
 					String personLastName = result.getString(2);
-					double commonInterestScore = result.getDouble(3);
+					int commonInterestScore = result.getInt(3);
 					long personId;
 					if (((VirtuosoDbConnectionState)dbConnectionState()).isRunSql())
 						personId = result.getLong(4);
@@ -1129,8 +1129,8 @@ public class VirtuosoDb extends Db {
         	try {
         		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query10.txt"));
         		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
-        		queryString = queryString.replaceAll("%HS0%", String.valueOf(operation.month1()));
-           		queryString = queryString.replaceAll("%HS1%", String.valueOf(operation.month2()));
+        		queryString = queryString.replaceAll("%HS0%", String.valueOf(operation.month()));
+           		queryString = queryString.replaceAll("%HS1%", String.valueOf((operation.month() + 1) % 12));
         		Statement stmt = conn.createStatement();
 //        		System.out.println(queryString);
         		System.out.println("########### LdbcQuery10");
@@ -1139,7 +1139,7 @@ public class VirtuosoDb extends Db {
 				while (result.next()) { results_count++;
 					String personFirstName = result.getString(1);
 					String personLastName = result.getString(2);
-					double commonInterestScore = result.getDouble(3);
+					int commonInterestScore = result.getInt(3);
 					long personId = Long.parseLong(result.getString(4).substring(47));
 					String gender = result.getString(5);
 					String personCityName = result.getString(6);
