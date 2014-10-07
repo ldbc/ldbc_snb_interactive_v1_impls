@@ -1287,9 +1287,9 @@ public class VirtuosoDb extends Db {
 						personId = Long.parseLong(result.getString(1).substring(47));
 					String personFirstName = result.getString(2);
 					String personLastName = result.getString(3);
-					String tagName = result.getString(4);
+					Collection<String> tagNames =  result.getString(4) == null ? new ArrayList<String>() : new ArrayList<String>(Arrays.asList(result.getString(4).split(", ")));
 					int replyCount = result.getInt(5);
-					LdbcQuery12Result tmp = new LdbcQuery12Result(personId, personFirstName, personLastName, null, replyCount);
+					LdbcQuery12Result tmp = new LdbcQuery12Result(personId, personFirstName, personLastName, tagNames, replyCount);
 					if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintResults())
 						System.out.println(tmp.toString());
 					RESULT.add(tmp);
