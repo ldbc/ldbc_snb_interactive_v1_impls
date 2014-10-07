@@ -143,6 +143,7 @@ public class VirtuosoDb extends Db {
             ds.setPassword(properties.get("password"));
             ds.setMinPoolSize(1);
             ds.setMaxPoolSize(Integer.parseInt(properties.get("tc")));
+	    ds.setCharset("UTF-8");
             ds.fill();
 			queryDir = properties.get("queryDir");
 			runSql = properties.get("run_sql").equals("true") ? true : false;
@@ -194,7 +195,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery1 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query1.txt"));
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isRunSql()) {
@@ -274,7 +275,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery1 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query1.txt"));
         		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
@@ -338,7 +339,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery2 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query2.txt"));
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isRunSql()) {
@@ -396,7 +397,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery2 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query2.txt"));
         		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
@@ -434,7 +435,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery3 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query3.txt"));
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isRunSql()) {
@@ -494,7 +495,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery3 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query3.txt"));
         		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
@@ -538,7 +539,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery4 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query4.txt"));
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isRunSql()) {
@@ -586,7 +587,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery4 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query4.txt"));
         		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
@@ -622,7 +623,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery5 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query5.txt"));
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isRunSql()) {
@@ -644,7 +645,7 @@ public class VirtuosoDb extends Db {
 				while (result.next()) {
 					results_count++;
 					String forumTitle = result.getString(1);
-					int postCount = result.getInt(2);
+					int postCount = result.getInt(3);
 					LdbcQuery5Result tmp = new LdbcQuery5Result(forumTitle, postCount);
 					if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintResults())
 						System.out.println(tmp.toString());
@@ -668,7 +669,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery5 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query5.txt"));
         		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
@@ -703,7 +704,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery6 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query6.txt"));
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isRunSql()) {
@@ -749,7 +750,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery6 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query6.txt"));
         		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
@@ -783,7 +784,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery7 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query7.txt"));
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isRunSql()) {
@@ -841,7 +842,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery7 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query7.txt"));
         		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));	
@@ -881,7 +882,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery8 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query8.txt"));
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isRunSql()) {
@@ -937,7 +938,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery8 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query8.txt"));
         		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));	
@@ -974,7 +975,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery9 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query9.txt"));
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isRunSql()) {
@@ -1032,7 +1033,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery9 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query9.txt"));
         		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
@@ -1070,7 +1071,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery10 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query10.txt"));
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isRunSql()) {
@@ -1125,7 +1126,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery10 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query10.txt"));
         		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
@@ -1165,7 +1166,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery11 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query11.txt"));
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isRunSql()) {
@@ -1220,7 +1221,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery11 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query11.txt"));
         		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
@@ -1258,7 +1259,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery12 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query12.txt"));
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isRunSql()) {
@@ -1311,7 +1312,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery12 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query12.txt"));
         		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
@@ -1349,7 +1350,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery13 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query13.txt"));
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isRunSql()) {
@@ -1394,7 +1395,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery13 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query13.txt"));
         		queryString = queryString.replaceAll("%Person1%", String.format("%020d", operation.person1Id()));
@@ -1427,7 +1428,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery14 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query14.txt"));
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isRunSql()) {
@@ -1474,7 +1475,7 @@ public class VirtuosoDb extends Db {
         @Override
         protected OperationResultReport executeOperation(LdbcQuery14 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0;
+        	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query14.txt"));
         		queryString = queryString.replaceAll("%Person1%", String.format("%020d", operation.person1Id()));
