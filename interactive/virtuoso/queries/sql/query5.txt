@@ -1,4 +1,4 @@
-select top 20 f_title, count(*) --Q5
+select top 20 f_title, f_forumid, count(*) --Q5
 from forum, post, forum_person,
  ( select k_person2id
    from knows
@@ -12,5 +12,5 @@ from forum, post, forum_person,
  ) f
 where f_forumid = ps_forumid and f_forumid = fp_forumid and fp_personid = f.k_person2id and ps_creatorid = f.k_person2id and
       fp_creationdate >= stringdate('@Date0@')
-group by f_title
-order by 2 desc, f_title
+group by f_forumid, f_title
+order by 3 desc, f_title

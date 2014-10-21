@@ -1,4 +1,4 @@
-select top 10 p_firstname, p_lastname, --Q10
+select top 20 p_firstname, p_lastname, --Q10
        ( select count(distinct ps_postid)
          from post, post_tag pt1
          where
