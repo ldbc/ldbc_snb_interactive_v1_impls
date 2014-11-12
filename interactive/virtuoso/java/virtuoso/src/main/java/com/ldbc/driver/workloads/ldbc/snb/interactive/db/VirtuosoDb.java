@@ -23,6 +23,9 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Calendar;
+import java.util.TimeZone;
+import java.sql.Timestamp;
 
 import virtuoso.jdbc4.VirtuosoConnectionPoolDataSource;
 
@@ -107,7 +110,7 @@ public class VirtuosoDb extends Db {
     }
 
     @Override
-    protected void onCleanup()  {
+    protected void onClose()  {
     	try {
 			virtuosoDbConnectionState.getDs().close();
 		} catch (SQLException e) {
@@ -186,15 +189,20 @@ public class VirtuosoDb extends Db {
 		public VirtuosoConnectionPoolDataSource getDs() {
 			return ds;
 		}
+	
+	@Override
+	    public void close() throws IOException {
+	    // TODO Auto-generated method stub
+	    
+	}
 		
     }
 
     public static class LdbcQuery1ToVirtuoso extends OperationHandler<LdbcQuery1> {
-        static final List<LdbcQuery1Result> RESULT = new ArrayList<LdbcQuery1Result>();
-
         @Override
         protected OperationResultReport executeOperation(LdbcQuery1 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
+		List<LdbcQuery1Result> RESULT = new ArrayList<LdbcQuery1Result>();
         	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query1.txt"));
@@ -269,86 +277,22 @@ public class VirtuosoDb extends Db {
         }
     }
     
-    public static class LdbcQuery1ToVirtuosoSparql extends OperationHandler<LdbcQuery1> {
-        static final List<LdbcQuery1Result> RESULT = new ArrayList<LdbcQuery1Result>();
-
-        @Override
-        protected OperationResultReport executeOperation(LdbcQuery1 operation) throws DbException {
-        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0; RESULT.clear();
-        	try {
-        		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query1.txt"));
-        		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
-        		queryString = queryString.replaceAll("%Name%", operation.firstName());
-        		Statement stmt = conn.createStatement();
-        		System.out.println("########### LdbcQuery1");
-//        		System.out.println(queryString);
-		    
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) { results_count++;
-					long id = Long.parseLong(result.getString(1).substring(47));
-					String lastName = result.getString(2);
-					int dist = result.getInt(3);
-					long birthday = result.getDate(4).getTime();
-					long creationDate = result.getTimestamp(5).getTime();
-					String gender = result.getString(6);
-					String browserUsed = result.getString(7);
-					String ip = result.getString(8);
-					Collection<String> emails =  result.getString(9) == null ? new ArrayList<String>() : new ArrayList<String>(Arrays.asList(result.getString(9).split(", ")));
-					Collection<String> languages =  result.getString(10) == null ? new ArrayList<String>() : new ArrayList<String>(Arrays.asList(result.getString(10).split(", ")));
-					String place = result.getString(11);
-					List<List<Object>> universities = null;
-					if (result.getString(12) != null) {
-						List<String> items = new ArrayList<String>(Arrays.asList(result.getString(12).split(", ")));
-						universities = new ArrayList<List<Object>>(items.size());
-						for (int i = 0; i < items.size(); i++) {
-							universities.set(i, new ArrayList<Object>(Arrays.asList(items.get(i).split(" "))));
-						}
-					}
-					else
-						universities = new ArrayList<List<Object>>();
-					List<List<Object>> companies = null;
-					if (result.getString(13) != null) {
-						List<String> items = new ArrayList<String>(Arrays.asList(result.getString(13).split(", ")));
-						companies = new ArrayList<List<Object>>(items.size());
-						for (int i = 0; i < items.size(); i++) {
-							companies.set(i, new ArrayList<Object>(Arrays.asList(items.get(i).split(" "))));
-						}
-					}
-					else
-						companies = new ArrayList<List<Object>>();
-					LdbcQuery1Result tmp = new LdbcQuery1Result(id, lastName, dist, birthday, creationDate, gender, browserUsed, ip, emails, languages, place, universities, companies);
-					//System.out.println(tmp.toString());
-					RESULT.add(tmp);
-				}
-				stmt.close();conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	return operation.buildResult(results_count, RESULT);
-        }
-    }
-
     public static class LdbcQuery2ToVirtuoso extends OperationHandler<LdbcQuery2> {
-        static final List<LdbcQuery2Result> RESULT = new ArrayList<LdbcQuery2Result>();
 
         @Override
         protected OperationResultReport executeOperation(LdbcQuery2 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
+		List<LdbcQuery2Result> RESULT = new ArrayList<LdbcQuery2Result>();
         	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query2.txt"));
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isRunSql()) {
         			queryString = queryString.replaceAll("@Person@", String.valueOf(operation.personId()));
-        			queryString = queryString.replaceAll("@Date0@", new SimpleDateFormat("yyyy.MM.dd HH:mm:ss S").format(operation.maxDate()));
+        			queryString = queryString.replaceAll("@Date0@", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'").format(operation.maxDate()));
         		}
         		else {
             		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
-            		queryString = queryString.replaceAll("%Date0%", new SimpleDateFormat("yyyy.MM.dd HH:mm:ss S").format(operation.maxDate()));
+            		queryString = queryString.replaceAll("%Date0%", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'").format(operation.maxDate()));
         		}
         		Statement  stmt = conn.createStatement();
         		
@@ -390,51 +334,13 @@ public class VirtuosoDb extends Db {
             return operation.buildResult(results_count, RESULT);
         }
     }
-
-    public static class LdbcQuery2ToVirtuosoSparql extends OperationHandler<LdbcQuery2> {
-        static final List<LdbcQuery2Result> RESULT = new ArrayList<LdbcQuery2Result>();
-
-        @Override
-        protected OperationResultReport executeOperation(LdbcQuery2 operation) throws DbException {
-        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0; RESULT.clear();
-        	try {
-        		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query2.txt"));
-        		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
-        		queryString = queryString.replaceAll("%Date0%", new SimpleDateFormat("yyyy.MM.dd HH:mm:ss S").format(operation.maxDate()));
-        		Statement stmt = conn.createStatement();
-        		System.out.println("########### LdbcQuery2");
-        		
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) { results_count++;
-					long id = Long.parseLong(result.getString(1).substring(47));
-					String firstName = result.getString(2);
-					String lastName = result.getString(3);
-					long postid = Long.parseLong(result.getString(4).substring(47));
-					String content = result.getString(5);
-					long postdate = result.getTimestamp(6).getTime();
-					LdbcQuery2Result tmp = new LdbcQuery2Result(id, firstName, lastName, postid, content, postdate);
-					//System.out.println(tmp.toString());
-					RESULT.add(tmp);
-				}
-				stmt.close();conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            return operation.buildResult(results_count, RESULT);
-        }
-    }    
     
     public static class LdbcQuery3ToVirtuoso extends OperationHandler<LdbcQuery3> {
-        static final List<LdbcQuery3Result> RESULT = new ArrayList<LdbcQuery3Result>();
 
         @Override
         protected OperationResultReport executeOperation(LdbcQuery3 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
+		List<LdbcQuery3Result> RESULT = new ArrayList<LdbcQuery3Result>();
         	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query3.txt"));
@@ -442,14 +348,14 @@ public class VirtuosoDb extends Db {
         			queryString = queryString.replaceAll("@Person@", String.valueOf(operation.personId()));
         			queryString = queryString.replaceAll("@Country1@", operation.countryXName());
         			queryString = queryString.replaceAll("@Country2@", operation.countryYName());
-        			queryString = queryString.replaceAll("@Date0@", new SimpleDateFormat("yyyy.MM.dd HH:mm:ss S").format(operation.startDate()));
+        			queryString = queryString.replaceAll("@Date0@", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'").format(operation.startDate()));
         			queryString = queryString.replaceAll("@Duration@", String.valueOf(operation.durationDays()));
         		}
         		else {
             		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
             		queryString = queryString.replaceAll("%Country1%", operation.countryXName());
             		queryString = queryString.replaceAll("%Country2%", operation.countryYName());
-            		queryString = queryString.replaceAll("%Date0%", new SimpleDateFormat("yyyy.MM.dd HH:mm:ss S").format(operation.startDate()));
+            		queryString = queryString.replaceAll("%Date0%", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'").format(operation.startDate()));
             		queryString = queryString.replaceAll("%Duration%", String.valueOf(operation.durationDays()));
         		}
         		Statement  stmt = conn.createStatement();
@@ -489,67 +395,24 @@ public class VirtuosoDb extends Db {
         }
     }
 
-    public static class LdbcQuery3ToVirtuosoSparql extends OperationHandler<LdbcQuery3> {
-        static final List<LdbcQuery3Result> RESULT = new ArrayList<LdbcQuery3Result>();
-
-        @Override
-        protected OperationResultReport executeOperation(LdbcQuery3 operation) throws DbException {
-        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0; RESULT.clear();
-        	try {
-        		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query3.txt"));
-        		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
-        		queryString = queryString.replaceAll("%Country1%", operation.countryXName());
-        		queryString = queryString.replaceAll("%Country2%", operation.countryYName());
-        		queryString = queryString.replaceAll("%Date0%", new SimpleDateFormat("yyyy.MM.dd HH:mm:ss S").format(operation.startDate()));
-        		queryString = queryString.replaceAll("%Duration%", String.valueOf(operation.durationDays()));
-        		Statement stmt = conn.createStatement();
-//        		System.out.println(queryString);
-        		System.out.println("########### LdbcQuery3");
-		    
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) { results_count++;
-					
-					long id = Long.parseLong(result.getString(1).substring(47));
-					String firstName = result.getString(2);
-					String lastName = result.getString(3);
-					long ct1 = result.getLong(4);
-					long ct2 = result.getLong(5);
-					long total = result.getLong(6);
-					// TODO: Add results to the class LdbcQuery3Result when Alex modifies this class
-					LdbcQuery3Result tmp = new LdbcQuery3Result(id, firstName, lastName, ct1, ct2, total);
-					//System.out.println(tmp.toString());
-					RESULT.add(tmp);
-				}
-				stmt.close();conn.close();
-			} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	return operation.buildResult(results_count, RESULT);
-        }
-    }
     
     public static class LdbcQuery4ToVirtuoso extends OperationHandler<LdbcQuery4> {
-        static final List<LdbcQuery4Result> RESULT = new ArrayList<LdbcQuery4Result>();
 
         @Override
         protected OperationResultReport executeOperation(LdbcQuery4 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
+		List<LdbcQuery4Result> RESULT = new ArrayList<LdbcQuery4Result>();
         	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query4.txt"));
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isRunSql()) {
         			queryString = queryString.replaceAll("@Person@", String.valueOf(operation.personId()));
-        			queryString = queryString.replaceAll("@Date0@", new SimpleDateFormat("yyyy.MM.dd HH:mm:ss S").format(operation.startDate()));
+        			queryString = queryString.replaceAll("@Date0@", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'").format(operation.startDate()));
         			queryString = queryString.replaceAll("@Duration@", String.valueOf(operation.durationDays()));
         		}
         		else {
             		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
-            		queryString = queryString.replaceAll("%Date0%", new SimpleDateFormat("yyyy.MM.dd HH:mm:ss S").format(operation.startDate()));
+            		queryString = queryString.replaceAll("%Date0%", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'").format(operation.startDate()));
             		queryString = queryString.replaceAll("%Duration%", String.valueOf(operation.durationDays()));
         		}
         		Statement stmt = conn.createStatement();
@@ -580,59 +443,23 @@ public class VirtuosoDb extends Db {
         	return operation.buildResult(results_count, RESULT);
         }
     }
-
-    public static class LdbcQuery4ToVirtuosoSparql extends OperationHandler<LdbcQuery4> {
-        static final List<LdbcQuery4Result> RESULT = new ArrayList<LdbcQuery4Result>();
-
-        @Override
-        protected OperationResultReport executeOperation(LdbcQuery4 operation) throws DbException {
-        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0; RESULT.clear();
-        	try {
-        		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query4.txt"));
-        		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
-        		queryString = queryString.replaceAll("%Date0%", new SimpleDateFormat("yyyy.MM.dd HH:mm:ss S").format(operation.startDate()));
-        		queryString = queryString.replaceAll("%Duration%", String.valueOf(operation.durationDays()));
-        		Statement stmt = conn.createStatement();
-//        		System.out.println(queryString);
-        		System.out.println("########### LdbcQuery4");
-		    
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) { results_count++;
-					String tagName = result.getString(1);
-					int tagCount = result.getInt(2);
-					LdbcQuery4Result tmp = new LdbcQuery4Result(tagName, tagCount);
-					//System.out.println(tmp.toString());
-					RESULT.add(tmp);
-				}
-				stmt.close();conn.close();
-			} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	return operation.buildResult(results_count, RESULT);
-        }
-    }
     
     public static class LdbcQuery5ToVirtuoso extends OperationHandler<LdbcQuery5> {
-        static final List<LdbcQuery5Result> RESULT = new ArrayList<LdbcQuery5Result>();
 
         @Override
         protected OperationResultReport executeOperation(LdbcQuery5 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
+		List<LdbcQuery5Result> RESULT = new ArrayList<LdbcQuery5Result>();
         	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query5.txt"));
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isRunSql()) {
         			queryString = queryString.replaceAll("@Person@", String.valueOf(operation.personId()));
-        			queryString = queryString.replaceAll("@Date0@", new SimpleDateFormat("yyyy.MM.dd HH:mm:ss S").format(operation.minDate()));
+        			queryString = queryString.replaceAll("@Date0@", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'").format(operation.minDate()));
         		}
         		else {
         			queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
-            		queryString = queryString.replaceAll("%Date0%", new SimpleDateFormat("yyyy.MM.dd HH:mm:ss S").format(operation.minDate()));
+            		queryString = queryString.replaceAll("%Date0%", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'").format(operation.minDate()));
         		}
         		Statement stmt = conn.createStatement();
         		
@@ -662,48 +489,14 @@ public class VirtuosoDb extends Db {
         	return operation.buildResult(results_count, RESULT);
         }
     }
-
-    public static class LdbcQuery5ToVirtuosoSparql extends OperationHandler<LdbcQuery5> {
-        static final List<LdbcQuery5Result> RESULT = new ArrayList<LdbcQuery5Result>();
-
-        @Override
-        protected OperationResultReport executeOperation(LdbcQuery5 operation) throws DbException {
-        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0; RESULT.clear();
-        	try {
-        		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query5.txt"));
-        		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
-        		queryString = queryString.replaceAll("%Date0%", new SimpleDateFormat("yyyy.MM.dd HH:mm:ss S").format(operation.minDate()));
-        		Statement stmt = conn.createStatement();
-        		System.out.println("########### LdbcQuery5");
-		    
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) { results_count++;
-					
-					String forumTitle = result.getString(1);
-					int postCount = result.getInt(2);
-					LdbcQuery5Result tmp = new LdbcQuery5Result(forumTitle, postCount);
-					System.out.println(tmp);
-					RESULT.add(tmp);
-				}
-				stmt.close();conn.close();
-			} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	return operation.buildResult(results_count, RESULT);
-        }
-    }
     
+
     public static class LdbcQuery6ToVirtuoso extends OperationHandler<LdbcQuery6> {
-        static final List<LdbcQuery6Result> RESULT = new ArrayList<LdbcQuery6Result>();
 
         @Override
         protected OperationResultReport executeOperation(LdbcQuery6 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
+		List<LdbcQuery6Result> RESULT = new ArrayList<LdbcQuery6Result>();
         	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query6.txt"));
@@ -744,46 +537,13 @@ public class VirtuosoDb extends Db {
         }
     }
     
-    public static class LdbcQuery6ToVirtuosoSparql extends OperationHandler<LdbcQuery6> {
-        static final List<LdbcQuery6Result> RESULT = new ArrayList<LdbcQuery6Result>();
-
-        @Override
-        protected OperationResultReport executeOperation(LdbcQuery6 operation) throws DbException {
-        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0; RESULT.clear();
-        	try {
-        		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query6.txt"));
-        		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
-        		queryString = queryString.replaceAll("%Tag%", operation.tagName());
-        		Statement stmt = conn.createStatement();
-        		System.out.println("########### LdbcQuery6");
-		    
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) { results_count++;
-					String tagName = result.getString(1);
-					int tagCount = result.getInt(2);
-					LdbcQuery6Result tmp = new LdbcQuery6Result(tagName, tagCount);
-					//System.out.println(tmp.toString());
-					RESULT.add(tmp);
-				}
-				stmt.close();conn.close();
-			} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	return operation.buildResult(results_count, RESULT);
-        }
-    }
 
     public static class LdbcQuery7ToVirtuoso extends OperationHandler<LdbcQuery7> {
-        static final List<LdbcQuery7Result> RESULT = new ArrayList<LdbcQuery7Result>();
 
         @Override
         protected OperationResultReport executeOperation(LdbcQuery7 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
+		List<LdbcQuery7Result> RESULT = new ArrayList<LdbcQuery7Result>();
         	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query7.txt"));
@@ -836,52 +596,13 @@ public class VirtuosoDb extends Db {
         }
     }
 
-    public static class LdbcQuery7ToVirtuosoSparql extends OperationHandler<LdbcQuery7> {
-        static final List<LdbcQuery7Result> RESULT = new ArrayList<LdbcQuery7Result>();
-
-        @Override
-        protected OperationResultReport executeOperation(LdbcQuery7 operation) throws DbException {
-        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0; RESULT.clear();
-        	try {
-        		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query7.txt"));
-        		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));	
-        		Statement stmt = conn.createStatement();
-        		System.out.println("########### LdbcQuery7");
-//        		System.out.println(queryString);
-		    
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) { results_count++;
-					long personId = Long.parseLong(result.getString(1).substring(47));
-					String personFirstName = result.getString(2);
-					String personLastName = result.getString(3);
-					long likeCreationDate = result.getTimestamp(4).getTime();
-					boolean isNew = result.getInt(5) == 1 ? true : false;
-					long postId = Long.parseLong(result.getString(6).substring(47));
-					String postContent = result.getString(7);
-					int milliSecondDelay = result.getInt(8);
-					LdbcQuery7Result tmp = new LdbcQuery7Result(personId, personFirstName, personLastName, likeCreationDate, postId, postContent, milliSecondDelay, isNew);
-					//System.out.println(tmp.toString());
-					RESULT.add(tmp);
-				}
-				stmt.close();conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	return operation.buildResult(results_count, RESULT);
-        }
-    }
 
     public static class LdbcQuery8ToVirtuoso extends OperationHandler<LdbcQuery8> {
-        static final List<LdbcQuery8Result> RESULT = new ArrayList<LdbcQuery8Result>();
 
         @Override
         protected OperationResultReport executeOperation(LdbcQuery8 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
+		List<LdbcQuery8Result> RESULT = new ArrayList<LdbcQuery8Result>();
         	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query8.txt"));
@@ -931,60 +652,23 @@ public class VirtuosoDb extends Db {
         	return operation.buildResult(results_count, RESULT);
         }
     }
-    
-    public static class LdbcQuery8ToVirtuosoSparql extends OperationHandler<LdbcQuery8> {
-        static final List<LdbcQuery8Result> RESULT = new ArrayList<LdbcQuery8Result>();
-
-        @Override
-        protected OperationResultReport executeOperation(LdbcQuery8 operation) throws DbException {
-        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0; RESULT.clear();
-        	try {
-        		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query8.txt"));
-        		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));	
-        		Statement stmt = conn.createStatement();
-        		System.out.println("########### LdbcQuery8");
-		    
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) { results_count++;
-					long personId = Long.parseLong(result.getString(1).substring(47));
-					String personFirstName = result.getString(2);
-					String personLastName = result.getString(3);
-					long replyCreationDate = result.getTimestamp(4).getTime();
-					long replyId = Long.parseLong(result.getString(5).substring(47));
-					String replyContent = result.getString(6);
-					LdbcQuery8Result tmp = new LdbcQuery8Result(personId, personFirstName, personLastName, replyCreationDate, replyId, replyContent);
-					//System.out.println(tmp.toString());
-					RESULT.add(tmp);
-				}
-				stmt.close();conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	return operation.buildResult(results_count, RESULT);
-        }
-    }
 
     public static class LdbcQuery9ToVirtuoso extends OperationHandler<LdbcQuery9> {
-        static final List<LdbcQuery9Result> RESULT = new ArrayList<LdbcQuery9Result>();
 
         @Override
         protected OperationResultReport executeOperation(LdbcQuery9 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
+		List<LdbcQuery9Result> RESULT = new ArrayList<LdbcQuery9Result>();
         	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query9.txt"));
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isRunSql()) {
         			queryString = queryString.replaceAll("@Person@", String.valueOf(operation.personId()));
-        			queryString = queryString.replaceAll("@Date0@", new SimpleDateFormat("yyyy.MM.dd HH:mm:ss S").format(operation.maxDate()));
+        			queryString = queryString.replaceAll("@Date0@", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'").format(operation.maxDate()));
         		}
         		else {
             		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
-            		queryString = queryString.replaceAll("%Date0%", new SimpleDateFormat("yyyy.MM.dd HH:mm:ss S").format(operation.maxDate()));
+            		queryString = queryString.replaceAll("%Date0%", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'").format(operation.maxDate()));
         		}
         		Statement stmt = conn.createStatement();
         		
@@ -1010,6 +694,18 @@ public class VirtuosoDb extends Db {
 						postOrCommentId = Long.parseLong(result.getString(4).substring(47));
 					String postOrCommentContent = result.getString(5);
 					long postOrCommentCreationDate = result.getTimestamp(6).getTime();
+					//System.out.println("### " + result.getTimestamp(6));
+					//System.out.println("### " + result.getString(6));
+					//System.out.println("### " + Timestamp.valueOf(result.getString(6)).getTime());
+					//System.out.println("### " + Timestamp.valueOf(result.getString(6)).getTimezoneOffset());
+					// create time zone object 
+					TimeZone tzone = TimeZone.getTimeZone("UTC");
+					// set time zone to default
+					tzone.setDefault(tzone);
+					//System.out.println("@@@ " + result.getTimestamp(6));
+					//System.out.println("@@@ " + result.getString(6));
+					//System.out.println("@@@ " + Timestamp.valueOf(result.getString(6)).getTime());
+					//System.out.println("@@@ " + Timestamp.valueOf(result.getString(6)).getTimezoneOffset());
 					LdbcQuery9Result tmp = new LdbcQuery9Result(personId, personFirstName, personLastName, postOrCommentId, postOrCommentContent, postOrCommentCreationDate);
 					if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintResults())
 						System.out.println(tmp.toString());
@@ -1027,50 +723,13 @@ public class VirtuosoDb extends Db {
         }
     }
 
-    public static class LdbcQuery9ToVirtuosoSparql extends OperationHandler<LdbcQuery9> {
-        static final List<LdbcQuery9Result> RESULT = new ArrayList<LdbcQuery9Result>();
-
-        @Override
-        protected OperationResultReport executeOperation(LdbcQuery9 operation) throws DbException {
-        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0; RESULT.clear();
-        	try {
-        		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query9.txt"));
-        		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
-        		queryString = queryString.replaceAll("%Date0%", new SimpleDateFormat("yyyy.MM.dd HH:mm:ss S").format(operation.maxDate()));
-        		Statement stmt = conn.createStatement();
-        		System.out.println("########### LdbcQuery9");
-        		
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) { results_count++;					
-					long personId = Long.parseLong(result.getString(1).substring(47));
-					String personFirstName = result.getString(2);
-					String personLastName = result.getString(3);
-					long postOrCommentId = Long.parseLong(result.getString(4).substring(47));
-					String postOrCommentContent = result.getString(5);
-					long postOrCommentCreationDate = result.getTimestamp(6).getTime();
-					LdbcQuery9Result tmp = new LdbcQuery9Result(personId, personFirstName, personLastName, postOrCommentId, postOrCommentContent, postOrCommentCreationDate);
-					//System.out.println(tmp.toString());
-					RESULT.add(tmp);
-				}
-				stmt.close();conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	return operation.buildResult(results_count, RESULT);
-        }
-    }    
     
     public static class LdbcQuery10ToVirtuoso extends OperationHandler<LdbcQuery10> {
-        static final List<LdbcQuery10Result> RESULT = new ArrayList<LdbcQuery10Result>();
 
         @Override
         protected OperationResultReport executeOperation(LdbcQuery10 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
+		List<LdbcQuery10Result> RESULT = new ArrayList<LdbcQuery10Result>();
         	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query10.txt"));
@@ -1120,52 +779,13 @@ public class VirtuosoDb extends Db {
         }
     }
 
-    public static class LdbcQuery10ToVirtuosoSparql extends OperationHandler<LdbcQuery10> {
-        static final List<LdbcQuery10Result> RESULT = new ArrayList<LdbcQuery10Result>();
-
-        @Override
-        protected OperationResultReport executeOperation(LdbcQuery10 operation) throws DbException {
-        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0; RESULT.clear();
-        	try {
-        		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query10.txt"));
-        		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
-        		queryString = queryString.replaceAll("%HS0%", String.valueOf(operation.month()));
-           		queryString = queryString.replaceAll("%HS1%", String.valueOf((operation.month() + 1) % 12));
-        		Statement stmt = conn.createStatement();
-//        		System.out.println(queryString);
-        		System.out.println("########### LdbcQuery10");
-		    
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) { results_count++;
-					String personFirstName = result.getString(1);
-					String personLastName = result.getString(2);
-					int commonInterestScore = result.getInt(3);
-					long personId = Long.parseLong(result.getString(4).substring(47));
-					String gender = result.getString(5);
-					String personCityName = result.getString(6);
-					LdbcQuery10Result tmp = new LdbcQuery10Result(personId, personFirstName, personLastName, commonInterestScore, gender, personCityName);
-					//System.out.println(tmp.toString());
-					RESULT.add(tmp);
-				}
-				stmt.close();conn.close();
-			} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	return operation.buildResult(results_count, RESULT);
-        }
-    }
     
     public static class LdbcQuery11ToVirtuoso extends OperationHandler<LdbcQuery11> {
-        static final List<LdbcQuery11Result> RESULT = new ArrayList<LdbcQuery11Result>();
 
         @Override
         protected OperationResultReport executeOperation(LdbcQuery11 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
+		List<LdbcQuery11Result> RESULT = new ArrayList<LdbcQuery11Result>();
         	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query11.txt"));
@@ -1215,50 +835,12 @@ public class VirtuosoDb extends Db {
         }
     }
 
-    public static class LdbcQuery11ToVirtuosoSparql extends OperationHandler<LdbcQuery11> {
-        static final List<LdbcQuery11Result> RESULT = new ArrayList<LdbcQuery11Result>();
-
-        @Override
-        protected OperationResultReport executeOperation(LdbcQuery11 operation) throws DbException {
-        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0; RESULT.clear();
-        	try {
-        		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query11.txt"));
-        		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
-        		queryString = queryString.replaceAll("%Date0%", String.valueOf(operation.workFromYear()));
-        		queryString = queryString.replaceAll("%Country%", operation.countryName());
-        		Statement stmt = conn.createStatement();
-        		System.out.println("########### LdbcQuery11");
-		    
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) { results_count++;
-					String personFirstName = result.getString(1);
-					String personLastName = result.getString(2);
-					int organizationWorkFromYear = result.getInt(3);
-					String organizationName = result.getString(4);
-					long personId = Long.parseLong(result.getString(5).substring(47));;
-					LdbcQuery11Result tmp = new LdbcQuery11Result(personId, personFirstName, personLastName, organizationName, organizationWorkFromYear);
-					//System.out.println(tmp.toString());
-					RESULT.add(tmp);
-				}
-				stmt.close();conn.close();
-			} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	return operation.buildResult(results_count, RESULT);
-        }
-    }
-    
     public static class LdbcQuery12ToVirtuoso extends OperationHandler<LdbcQuery12> {
-    	static final List<LdbcQuery12Result> RESULT = new ArrayList<LdbcQuery12Result>();
 
         @Override
         protected OperationResultReport executeOperation(LdbcQuery12 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
+		List<LdbcQuery12Result> RESULT = new ArrayList<LdbcQuery12Result>();
         	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query12.txt"));
@@ -1306,50 +888,13 @@ public class VirtuosoDb extends Db {
         }
     }
     
-    public static class LdbcQuery12ToVirtuosoSparql extends OperationHandler<LdbcQuery12> {
-    	static final List<LdbcQuery12Result> RESULT = new ArrayList<LdbcQuery12Result>();
-
-        @Override
-        protected OperationResultReport executeOperation(LdbcQuery12 operation) throws DbException {
-        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0; RESULT.clear();
-        	try {
-        		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query12.txt"));
-        		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
-        		queryString = queryString.replaceAll("%TagType%", operation.tagClassName());
-        		Statement stmt = conn.createStatement();
-//        		System.out.println(queryString);
-        		System.out.println("########### LdbcQuery12");
-		    
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) { results_count++;
-					long personId = Long.parseLong(result.getString(1).substring(47));;;
-					String personFirstName = result.getString(2);
-					String personLastName = result.getString(3);
-					String tagName = result.getString(4);
-					int replyCount = result.getInt(5);
-					LdbcQuery12Result tmp = new LdbcQuery12Result(personId, personFirstName, personLastName, null, replyCount);
-					//System.out.println(tmp.toString());
-					RESULT.add(tmp);
-				}
-				stmt.close();conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	return operation.buildResult(results_count, RESULT);
-        }
-    }
     
     public static class LdbcQuery13ToVirtuoso extends OperationHandler<LdbcQuery13> {
-        static final List<LdbcQuery13Result> RESULT = new ArrayList<LdbcQuery13Result>();
 
         @Override
         protected OperationResultReport executeOperation(LdbcQuery13 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
+		List<LdbcQuery13Result> RESULT = new ArrayList<LdbcQuery13Result>();
         	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query13.txt"));
@@ -1389,45 +934,12 @@ public class VirtuosoDb extends Db {
         }
     }
     
-    public static class LdbcQuery13ToVirtuosoSparql extends OperationHandler<LdbcQuery13> {
-        static final List<LdbcQuery13Result> RESULT = new ArrayList<LdbcQuery13Result>();
-
-        @Override
-        protected OperationResultReport executeOperation(LdbcQuery13 operation) throws DbException {
-        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0; RESULT.clear();
-        	try {
-        		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query13.txt"));
-        		queryString = queryString.replaceAll("%Person1%", String.format("%020d", operation.person1Id()));
-        		queryString = queryString.replaceAll("%Person2%", String.format("%020d", operation.person2Id()));
-        		Statement stmt = conn.createStatement();
-        		System.out.println("########### LdbcQuery13");
-		    
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) { results_count++;
-					int shortestPathlenght = result.getInt(1);
-					LdbcQuery13Result tmp = new LdbcQuery13Result(shortestPathlenght);
-					//System.out.println(tmp.toString());
-					RESULT.add(tmp);
-				}
-				stmt.close();conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	return operation.buildResult(results_count, RESULT);
-        }
-    }
-    
     public static class LdbcQuery14ToVirtuoso extends OperationHandler<LdbcQuery14> {
-        static final List<LdbcQuery14Result> RESULT = new ArrayList<LdbcQuery14Result>();
 
         @Override
         protected OperationResultReport executeOperation(LdbcQuery14 operation) throws DbException {
         	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
+		List<LdbcQuery14Result> RESULT = new ArrayList<LdbcQuery14Result>();
         	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(((VirtuosoDbConnectionState)dbConnectionState()).getQueryDir(), "query14.txt"));
@@ -1469,41 +981,6 @@ public class VirtuosoDb extends Db {
         }
     }
     
-    public static class LdbcQuery14ToVirtuosoSparql extends OperationHandler<LdbcQuery14> {
-        static final List<LdbcQuery14Result> RESULT = new ArrayList<LdbcQuery14Result>();
-
-        @Override
-        protected OperationResultReport executeOperation(LdbcQuery14 operation) throws DbException {
-        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
-        	int results_count = 0; RESULT.clear();
-        	try {
-        		String queryString = file2string(new File("/2d1/ldbc/ldbc_snb_interactive_vendors/interactive/virtuoso/queries/sparql/query14.txt"));
-        		queryString = queryString.replaceAll("%Person1%", String.format("%020d", operation.person1Id()));
-        		queryString = queryString.replaceAll("%Person2%", String.format("%020d", operation.person2Id()));
-        		Statement stmt = conn.createStatement();
-//        		System.out.println(queryString);
-        		System.out.println("########### LdbcQuery14");
-		    
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) { results_count++;
-					String path = result.getString(1);
-					double weight = result.getDouble(2);
-//					System.out.println(path);
-//					System.out.println(weight);
-					// TODO: This should be fixed
-//					RESULT.add(new LdbcQuery14Result(personId, personFirstName, personLastName, tagName, replyCount));
-				}
-				stmt.close();conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-        	return operation.buildResult(results_count, RESULT);
-        }
-    }
     
     public static class LdbcUpdate1AddPersonToVirtuoso extends OperationHandler<LdbcUpdate1AddPerson> {
         
@@ -1554,7 +1031,7 @@ public class VirtuosoDb extends Db {
         	    cs.setString(2, operation.personFirstName());
         	    cs.setString(3, operation.personLastName());
         	    cs.setString(4, operation.gender());
-        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
         	    cs.setString(5, df.format(operation.birthday()));
         	    cs.setString(6, df.format(operation.creationDate()));
         	    cs.setString(7, operation.locationIp());
@@ -1643,7 +1120,7 @@ public class VirtuosoDb extends Db {
         		String queryString = "LdbcUpdateSparql(?)";
         		PreparedStatement cs = conn.prepareStatement(queryString);
         		String personUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.personId()) + ">";
-        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
         		DateFormat df2 = new SimpleDateFormat("yyyy.MM.dd");
         		String triplets [] = new String[9 + operation.languages().size() + operation.emails().size() + operation.tagIds().size() + operation.studyAt().size() + operation.workAt().size()];
         		triplets[0] = personUri + " a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/Person> .";
@@ -1697,7 +1174,7 @@ public class VirtuosoDb extends Db {
         		CallableStatement cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.personId());
         	    cs.setLong(2, operation.postId());
-        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
         	    cs.setString(3, df.format(operation.creationDate()));
         	    cs.execute();
         	    cs.close();
@@ -1723,7 +1200,7 @@ public class VirtuosoDb extends Db {
         		PreparedStatement cs = conn.prepareStatement(queryString);
         		String personUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.personId()) + ">";
         		String postUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/post" + String.format("%020d", operation.postId()) + ">";
-        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
         		String triplets [] = new String[1];
         		triplets[0] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/likes> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasPost> " + postUri + "; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"] .";
         	    cs.setArray(1, conn.createArrayOf("varchar", triplets));
@@ -1751,7 +1228,7 @@ public class VirtuosoDb extends Db {
         		CallableStatement cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.personId());
         	    cs.setLong(2, operation.commentId());
-        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
         	    cs.setString(3, df.format(operation.creationDate()));
         	    cs.execute();
         	    cs.close();
@@ -1777,7 +1254,7 @@ public class VirtuosoDb extends Db {
         		PreparedStatement cs = conn.prepareStatement(queryString);
         		String personUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.personId()) + ">";
         		String commentUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/comm" + String.format("%020d", operation.commentId()) + ">";
-        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
         		String triplets [] = new String[1];
         		triplets[0] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/likes> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasComment> " + commentUri + "; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"] .";
         	    cs.setArray(1, conn.createArrayOf("varchar", triplets));
@@ -1815,7 +1292,7 @@ public class VirtuosoDb extends Db {
         		CallableStatement cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.forumId());
         	    cs.setString(2, operation.forumTitle());
-        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
         	    cs.setString(3, df.format(operation.creationDate()));
         	    cs.setLong(4, operation.moderatorPersonId());
         	    Long tagIds1 [] = new Long[operation.tagIds().size()];
@@ -1857,7 +1334,7 @@ public class VirtuosoDb extends Db {
         		PreparedStatement cs = conn.prepareStatement(queryString);
         		String forumUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/forum" + String.format("%020d", operation.forumId()) + ">";
         		String moderatorUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.moderatorPersonId()) + ">";
-        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
         		String triplets [] = new String[4 + operation.tagIds().size()];
         		triplets[0] = forumUri + " a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/Forum> .";
         		triplets[1] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/title> \"" + operation.forumTitle() + "\" .";
@@ -1891,7 +1368,7 @@ public class VirtuosoDb extends Db {
         		CallableStatement cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.forumId());
         		cs.setLong(2, operation.personId());
-        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
         	    cs.setString(3, df.format(operation.creationDate()));
         	    cs.execute();
         	    cs.close();
@@ -1919,7 +1396,7 @@ public class VirtuosoDb extends Db {
         		PreparedStatement cs = conn.prepareStatement(queryString);
         		String forumUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/forum" + String.format("%020d", operation.forumId()) + ">";
         		String memberUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.personId()) + ">";
-        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
         		String triplets [] = new String[1];
         		triplets[0] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasMember> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasPerson> " + memberUri + "; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/joinDate> \"" + df1.format(operation.creationDate()) + "\"] .";
         	    cs.setArray(1, conn.createArrayOf("varchar", triplets));
@@ -1960,7 +1437,7 @@ public class VirtuosoDb extends Db {
         		CallableStatement cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.postId());
         	    cs.setString(2, operation.imageFile());
-        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
         	    cs.setString(3, df.format(operation.creationDate()));
         	    cs.setString(4, operation.locationIp());
         	    cs.setString(5, operation.browserUsed());
@@ -2014,7 +1491,7 @@ public class VirtuosoDb extends Db {
         		String postUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/post" + String.format("%020d", operation.postId()) + ">";
         		String forumUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/forum" + String.format("%020d", operation.forumId()) + ">";
         		String authorUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.authorPersonId()) + ">";
-        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
         		if (operation.imageFile().equals("")) {
         			String triplets [] = new String[10 + operation.tagIds().size()];
         			triplets[0] = postUri + " a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/Post> .";
@@ -2085,7 +1562,7 @@ public class VirtuosoDb extends Db {
         		String queryString = "LdbcUpdate7AddComment(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         		CallableStatement cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.commentId());
-        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
         	    cs.setString(2, df.format(operation.creationDate()));
         	    cs.setString(3, operation.locationIp());
         	    cs.setString(4, operation.browserUsed());
@@ -2141,7 +1618,7 @@ public class VirtuosoDb extends Db {
         		String commentUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/comm" + String.format("%020d", operation.commentId()) + ">";
         		String authorUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.authorPersonId()) + ">";
         		String postUri = null;
-        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
         		String triplets [] = new String[9 + operation.tagIds().size()];
         		triplets[0] = commentUri + " a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/Comment> .";
         		triplets[1] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/locationIP> \"" + operation.locationIp() + "\" .";
@@ -2187,7 +1664,7 @@ public class VirtuosoDb extends Db {
         		CallableStatement cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.person1Id());
         		cs.setLong(2, operation.person2Id());
-        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
         	    cs.setString(3, df.format(operation.creationDate()));
         	    cs.execute();
         	    cs.close();
@@ -2215,7 +1692,7 @@ public class VirtuosoDb extends Db {
         		PreparedStatement cs = conn.prepareStatement(queryString);
         		String person1Uri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.person1Id()) + ">";
         		String person2Uri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.person2Id()) + ">";
-        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
         		String triplets [] = new String[2];
         		triplets[0] = person1Uri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/knows> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasPerson> " + person2Uri + "; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"] .";
         		triplets[1] = person1Uri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/knows> " + person2Uri + " .";
