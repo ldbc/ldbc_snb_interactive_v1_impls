@@ -1,4 +1,10 @@
 -- Top tags for country, age, gender, time
+
+create procedure p_age_group (in bday date) returns int
+{
+  return floor (datediff ('year', bday, cast ('2014-1-1' as date)) / 5);
+}
+
 select top 100 ctry_name, month (ps_creationdate) as mm, p_gender,
        p_age_group (p_birthday) as age, t_name, count (*) as cnt
 from person, post, post_tag, tag, country 

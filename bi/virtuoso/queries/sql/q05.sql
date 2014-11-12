@@ -1,6 +1,6 @@
 -- top posters in top 100 forumns in China
 select top 100 p_personid, p_firstname, p_lastname, p_creationdate, count (*) 
-from person, post, forum f, forum_person,
+from person, post, forum f,
      (select top 100 f_forumid, count (*) as cnt
      from forum, forum_person, person, country 
      where f_forumid = fp_forumid and p_personid = fp_personid 
