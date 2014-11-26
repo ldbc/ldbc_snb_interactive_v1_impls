@@ -440,7 +440,7 @@ create procedure post_view_4 (in postid int) {
 	      end)
         from post p1, post p2, person
 	where
-	  p1.ps_postid = postid and p1.ps_replyof = p2.ps_postid and p2.ps_creatorid = p_personid;
+	  p1.ps_postid = postid and p2.ps_replyof = p1.ps_postid and p2.ps_creatorid = p_personid;
 
   open cr4;
   while (1)
@@ -536,14 +536,19 @@ done3:
 }
 
 create procedure person_view_1 (in personid int) {
-  declare firstname, lastname, gender, browserused varchar;
+  declare firstname, lastname, gender, browserused, locationip varchar;
   declare birthday, creationdate datetime;
-  declare locationip, placeid int;
+  declare placeid int;
   result_names(firstname, lastname, gender, birthday, creationdate, locationip, browserused, placeid);
 
   whenever not found goto done1;
   declare cr1 cursor for 
-      select p_firstname, p_lastname, p_gender, p_birthday, p_creationdate, p_locationip, p_browserused, p_placeid
+      select p_firstname, p_lastname, p_gender, p_birthday, p_creationdate,
+      	     bit_shift(bit_and(p_locationip, 4278190080), -24) || '.' ||
+       	     bit_shift(bit_and(p_locationip, 16711680), -16) || '.' ||
+       	     bit_shift(bit_and(p_locationip, 65280), -8) || '.' ||
+       	     bit_and(p_locationip, 255),
+	     p_browserused, p_placeid
         from person
 	where
 	  p_personid = personid;
