@@ -88,6 +88,12 @@ public class VirtuosoDb extends Db {
         registerOperationHandler(LdbcQuery14.class, LdbcQuery14ToVirtuoso.class);
         
         registerOperationHandler(LdbcShortQuery1PersonProfile.class, LdbcShortQuery1ToVirtuoso.class);
+        registerOperationHandler(LdbcShortQuery2PersonPosts.class, LdbcShortQuery2ToVirtuoso.class);
+        registerOperationHandler(LdbcShortQuery3PersonFriends.class, LdbcShortQuery3ToVirtuoso.class);
+        registerOperationHandler(LdbcShortQuery4MessageContent.class, LdbcShortQuery4ToVirtuoso.class);
+        registerOperationHandler(LdbcShortQuery5MessageCreator.class, LdbcShortQuery5ToVirtuoso.class);
+        registerOperationHandler(LdbcShortQuery6MessageForum.class, LdbcShortQuery6ToVirtuoso.class);
+        registerOperationHandler(LdbcShortQuery7MessageReplies.class, LdbcShortQuery7ToVirtuoso.class);
 	        
 	    if (properties.get("run_sql").equals("true")) {
 	        registerOperationHandler(LdbcUpdate1AddPerson.class, LdbcUpdate1AddPersonToVirtuoso.class);
