@@ -86,6 +86,8 @@ public class VirtuosoDb extends Db {
         registerOperationHandler(LdbcQuery12.class, LdbcQuery12ToVirtuoso.class);
         registerOperationHandler(LdbcQuery13.class, LdbcQuery13ToVirtuoso.class);
         registerOperationHandler(LdbcQuery14.class, LdbcQuery14ToVirtuoso.class);
+        
+        registerOperationHandler(LdbcShortQuery1PersonProfile.class, LdbcShortQuery1ToVirtuoso.class);
 	        
 	    if (properties.get("run_sql").equals("true")) {
 	        registerOperationHandler(LdbcUpdate1AddPerson.class, LdbcUpdate1AddPersonToVirtuoso.class);
@@ -981,6 +983,304 @@ public class VirtuosoDb extends Db {
         }
     }
     
+    public static class LdbcShortQuery1ToVirtuoso extends OperationHandler<LdbcShortQuery1PersonProfile> {   
+        @Override
+        protected OperationResultReport executeOperation(LdbcShortQuery1PersonProfile operation) throws DbException {
+        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
+        	LdbcShortQuery1PersonProfileResult RESULT = null;
+        	int results_count = 0;
+        	try {
+        		CallableStatement stmt1 = conn.prepareCall("person_view_1(?)");
+        		stmt1.setLong(1, operation.personId());
+        		
+        		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
+        			System.out.println("########### LdbcShortQuery1");
+        		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings())
+        			System.out.println("LdbcShortQuery1 (" + operation.personId() + ")");
+        		
+        		boolean results = stmt1.execute();
+        		if (results) {
+        			ResultSet rs = stmt1.getResultSet();
+        			while (rs.next()) {
+    					results_count++;
+    					String firstName = rs.getString(1);
+                        String lastName = rs.getString(2);
+                        //String gender = rs.getString(3);
+                        long birthday = rs.getDate(4).getTime();
+                        //long creationDate = rs.getTimestamp(5).getTime();
+                        String locationIp = rs.getString(6);
+                        String browserUsed = rs.getString(7);
+                        long cityId = rs.getLong(8);
+                        RESULT = new LdbcShortQuery1PersonProfileResult(firstName, lastName, birthday, locationIp, browserUsed, cityId);
+                        if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintResults())
+    						System.out.println(RESULT.toString());
+        			}
+        		}
+				stmt1.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	return operation.buildResult(results_count, RESULT);
+        }
+    }
+    
+    public static class LdbcShortQuery2ToVirtuoso extends OperationHandler<LdbcShortQuery2PersonPosts> {   
+        @Override
+        protected OperationResultReport executeOperation(LdbcShortQuery2PersonPosts operation) throws DbException {
+        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
+        	List<LdbcShortQuery2PersonPostsResult> RESULT = new ArrayList<LdbcShortQuery2PersonPostsResult>();
+        	int results_count = 0;
+        	try {
+        		CallableStatement stmt1 = conn.prepareCall("person_view_2(?)");
+        		stmt1.setLong(1, operation.personId());
+        		
+        		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
+        			System.out.println("########### LdbcShortQuery2");
+        		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings())
+        			System.out.println("LdbcShortQuery2 (" + operation.personId() + ")");
+        		
+        		boolean results = stmt1.execute();
+        		if (results) {
+        			ResultSet rs = stmt1.getResultSet();
+        			while (rs.next()) {
+    					results_count++;
+    					long postId = rs.getLong(1);
+    					String postContent = rs.getString(2);
+//    					String postImageFile = rs.getString(3);
+//    					long postCreationTime = rs.getTimestamp(4).getTime();
+//    					long origPostId = rs.getLong(5);
+//    					long origPersonId = rs.getLong(6);
+//    					String origFirstName = rs.getString(7);
+//                      String origLastName = rs.getString(8);
+    					LdbcShortQuery2PersonPostsResult tmp = new LdbcShortQuery2PersonPostsResult(postId, postContent);
+    					if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintResults())
+    						System.out.println(tmp.toString());
+    					RESULT.add(tmp);
+        			}
+        		}
+				stmt1.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	return operation.buildResult(results_count, RESULT);
+        }
+    }
+    
+    public static class LdbcShortQuery3ToVirtuoso extends OperationHandler<LdbcShortQuery3PersonFriends> {   
+        @Override
+        protected OperationResultReport executeOperation(LdbcShortQuery3PersonFriends operation) throws DbException {
+        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
+        	List<LdbcShortQuery3PersonFriendsResult> RESULT = new ArrayList<LdbcShortQuery3PersonFriendsResult>();
+        	int results_count = 0;
+        	try {
+        		CallableStatement stmt1 = conn.prepareCall("person_view_3(?)");
+        		stmt1.setLong(1, operation.personId());
+        		
+        		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
+        			System.out.println("########### LdbcShortQuery3");
+        		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings())
+        			System.out.println("LdbcShortQuery3 (" + operation.personId() + ")");
+        		
+        		boolean results = stmt1.execute();
+        		if (results) {
+        			ResultSet rs = stmt1.getResultSet();
+        			while (rs.next()) {
+    					results_count++;
+    					long personId = rs.getLong(1);
+    					String firstName = rs.getString(2);
+    					String lastName = rs.getString(3);
+//    					long since = rs.getTimestamp(4).getTime();
+    					LdbcShortQuery3PersonFriendsResult tmp = new LdbcShortQuery3PersonFriendsResult(personId, firstName, lastName);
+    					if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintResults())
+    						System.out.println(tmp.toString());
+    					RESULT.add(tmp);
+        			}
+        		}
+				stmt1.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	return operation.buildResult(results_count, RESULT);
+        }
+    }
+
+    public static class LdbcShortQuery4ToVirtuoso extends OperationHandler<LdbcShortQuery4MessageContent> {   
+        @Override
+        protected OperationResultReport executeOperation(LdbcShortQuery4MessageContent operation) throws DbException {
+        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
+        	LdbcShortQuery4MessageContentResult RESULT = null;
+        	int results_count = 0;
+        	try {
+        		CallableStatement stmt1 = conn.prepareCall("post_view_1(?)");
+        		stmt1.setLong(1, operation.messageId());
+        		
+        		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
+        			System.out.println("########### LdbcShortQuery4");
+        		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings())
+        			System.out.println("LdbcShortQuery4 (" + operation.messageId() + ")");
+        		
+        		boolean results = stmt1.execute();
+        		if (results) {
+        			ResultSet rs = stmt1.getResultSet();
+        			while (rs.next()) {
+    					results_count++;
+    					String messageContent = rs.getString(1);
+//    					String imageFile = rs.getString(2);
+//    					long creationDate = rs.getTimestamp(3).getTime();
+    					RESULT = new LdbcShortQuery4MessageContentResult(messageContent);
+    					if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintResults())
+    						System.out.println(RESULT.toString());
+        			}
+        		}
+				stmt1.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	return operation.buildResult(results_count, RESULT);
+        }
+    }
+
+    public static class LdbcShortQuery5ToVirtuoso extends OperationHandler<LdbcShortQuery5MessageCreator> {   
+        @Override
+        protected OperationResultReport executeOperation(LdbcShortQuery5MessageCreator operation) throws DbException {
+        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
+        	LdbcShortQuery5MessageCreatorResult RESULT = null;
+        	int results_count = 0;
+        	try {
+        		CallableStatement stmt1 = conn.prepareCall("post_view_2(?)");
+        		stmt1.setLong(1, operation.messageId());
+        		
+        		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
+        			System.out.println("########### LdbcShortQuery5");
+        		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings())
+        			System.out.println("LdbcShortQuery5 (" + operation.messageId() + ")");
+        		
+        		boolean results = stmt1.execute();
+        		if (results) {
+        			ResultSet rs = stmt1.getResultSet();
+        			while (rs.next()) {
+    					results_count++;
+    					long personId = rs.getLong(1);
+    					String firstName = rs.getString(2);
+    					String lastName = rs.getString(3);
+    					RESULT = new LdbcShortQuery5MessageCreatorResult(personId, firstName, lastName);
+    					if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintResults())
+    						System.out.println(RESULT.toString());
+        			}
+        		}
+				stmt1.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	return operation.buildResult(results_count, RESULT);
+        }
+    }
+
+    public static class LdbcShortQuery6ToVirtuoso extends OperationHandler<LdbcShortQuery6MessageForum> {   
+        @Override
+        protected OperationResultReport executeOperation(LdbcShortQuery6MessageForum operation) throws DbException {
+        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
+        	LdbcShortQuery6MessageForumResult RESULT = null;
+        	int results_count = 0;
+        	try {
+        		CallableStatement stmt1 = conn.prepareCall("post_view_3(?)");
+        		stmt1.setLong(1, operation.messageId());
+        		
+        		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
+        			System.out.println("########### LdbcShortQuery3");
+        		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings())
+        			System.out.println("LdbcShortQuery3 (" + operation.messageId() + ")");
+        		
+        		boolean results = stmt1.execute();
+        		if (results) {
+        			ResultSet rs = stmt1.getResultSet();
+        			while (rs.next()) {
+    					results_count++;
+    					long forumId = rs.getLong(1);
+    					String forumTitle = rs.getString(2);
+    					long moderatorId = rs.getLong(3);
+    					String moderatorFirstName = rs.getString(4);
+    					String moderatorLastName = rs.getString(5);
+    					RESULT = new LdbcShortQuery6MessageForumResult(forumId, forumTitle, moderatorId, moderatorFirstName, moderatorLastName);
+    					if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintResults())
+    						System.out.println(RESULT.toString());
+        			}
+        		}
+				stmt1.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	return operation.buildResult(results_count, RESULT);
+        }
+    }
+    
+    public static class LdbcShortQuery7ToVirtuoso extends OperationHandler<LdbcShortQuery7MessageReplies> {   
+        @Override
+        protected OperationResultReport executeOperation(LdbcShortQuery7MessageReplies operation) throws DbException {
+        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
+        	List<LdbcShortQuery7MessageRepliesResult> RESULT = new ArrayList<LdbcShortQuery7MessageRepliesResult>();
+        	int results_count = 0;
+        	try {
+        		CallableStatement stmt1 = conn.prepareCall("post_view_4(?)");
+        		stmt1.setLong(1, operation.messageId());
+        		
+        		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
+        			System.out.println("########### LdbcShortQuery4");
+        		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings())
+        			System.out.println("LdbcShortQuery4 (" + operation.messageId() + ")");
+        		
+        		boolean results = stmt1.execute();
+        		if (results) {
+        			ResultSet rs = stmt1.getResultSet();
+        			while (rs.next()) {
+    					results_count++;
+    					long commentId = rs.getLong(1);
+    					String commentContent = rs.getString(2);
+//    					long personId = rs.getLong(3);
+//    					String firstName = rs.getString(4);
+//    					String lastName = rs.getString(5);
+//    					String knows = rs.getInt(6);
+    					LdbcShortQuery7MessageRepliesResult tmp = new LdbcShortQuery7MessageRepliesResult(commentId, commentContent);
+    					if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintResults())
+    						System.out.println(tmp.toString());
+    					RESULT.add(tmp);
+        			}
+        		}
+				stmt1.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	return operation.buildResult(results_count, RESULT);
+        }
+    }
     
     public static class LdbcUpdate1AddPersonToVirtuoso extends OperationHandler<LdbcUpdate1AddPerson> {
         
@@ -1363,13 +1663,13 @@ public class VirtuosoDb extends Db {
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
         			System.out.println("########### LdbcUpdate5");
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings())
-        			System.out.println(operation.forumId() + " " + operation.personId() + " " + operation.creationDate());
+        			System.out.println(operation.forumId() + " " + operation.personId() + " " + operation.joinDate());
         		String queryString = "{call LdbcUpdate5AddForumMembership(?, ?, ?)}";
         		CallableStatement cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.forumId());
         		cs.setLong(2, operation.personId());
         		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
-        	    cs.setString(3, df.format(operation.creationDate()));
+        	    cs.setString(3, df.format(operation.joinDate()));
         	    cs.execute();
         	    cs.close();
         	    conn.close();
@@ -1391,14 +1691,14 @@ public class VirtuosoDb extends Db {
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
         			System.out.println("########### LdbcUpdate5");
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings())
-        			System.out.println(operation.forumId() + " " + operation.personId() + " " + operation.creationDate());
+        			System.out.println(operation.forumId() + " " + operation.personId() + " " + operation.joinDate());
         		String queryString = "LdbcUpdateSparql(?)";
         		PreparedStatement cs = conn.prepareStatement(queryString);
         		String forumUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/forum" + String.format("%020d", operation.forumId()) + ">";
         		String memberUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.personId()) + ">";
         		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
         		String triplets [] = new String[1];
-        		triplets[0] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasMember> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasPerson> " + memberUri + "; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/joinDate> \"" + df1.format(operation.creationDate()) + "\"] .";
+        		triplets[0] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasMember> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasPerson> " + memberUri + "; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/joinDate> \"" + df1.format(operation.joinDate()) + "\"] .";
         	    cs.setArray(1, conn.createArrayOf("varchar", triplets));
         	    cs.execute();
         	    cs.close();
