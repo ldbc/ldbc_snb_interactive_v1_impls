@@ -1293,8 +1293,8 @@ public class VirtuosoDb extends Db {
 
         @Override
         protected OperationResultReport executeOperation(LdbcUpdate1AddPerson operation) throws DbException {
-        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         	try {
+		       	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
         			System.out.println("########### LdbcUpdate1");
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings()) {
@@ -1372,7 +1372,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1385,8 +1385,8 @@ public class VirtuosoDb extends Db {
 
         @Override
         protected OperationResultReport executeOperation(LdbcUpdate1AddPerson operation) throws DbException {
-    		Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         	try {
+		   	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
         			System.out.println("########### LdbcUpdate1");
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings()) {
@@ -1457,7 +1457,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1470,8 +1470,8 @@ public class VirtuosoDb extends Db {
         
         @Override
         protected OperationResultReport executeOperation(LdbcUpdate2AddPostLike operation) throws DbException {
-        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         	try {
+			Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
                 	System.out.println("########### LdbcUpdate2");
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings())
@@ -1485,7 +1485,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1496,8 +1496,8 @@ public class VirtuosoDb extends Db {
     public static class LdbcUpdate2AddPostLikeToVirtuosoSparql extends OperationHandler<LdbcUpdate2AddPostLike> {
         @Override
         protected OperationResultReport executeOperation(LdbcUpdate2AddPostLike operation) throws DbException {
-    		Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         	try {
+			Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
                 	System.out.println("########### LdbcUpdate2");
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings())
@@ -1513,7 +1513,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1524,8 +1524,8 @@ public class VirtuosoDb extends Db {
     public static class LdbcUpdate3AddCommentLikeToVirtuoso extends OperationHandler<LdbcUpdate3AddCommentLike> {
         @Override
         protected OperationResultReport executeOperation(LdbcUpdate3AddCommentLike operation) throws DbException {
-        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         	try {
+			Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
         			System.out.println("########### LdbcUpdate3");
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings())
@@ -1539,7 +1539,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1550,8 +1550,8 @@ public class VirtuosoDb extends Db {
     public static class LdbcUpdate3AddCommentLikeToVirtuosoSparql extends OperationHandler<LdbcUpdate3AddCommentLike> {
         @Override
         protected OperationResultReport executeOperation(LdbcUpdate3AddCommentLike operation) throws DbException {
-    		Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         	try {
+			Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
         			System.out.println("########### LdbcUpdate3");
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings())
@@ -1567,7 +1567,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1581,8 +1581,8 @@ public class VirtuosoDb extends Db {
 
         @Override
         protected OperationResultReport executeOperation(LdbcUpdate4AddForum operation) throws DbException {
-        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         	try {
+			Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
            		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
         			System.out.println("########### LdbcUpdate4");
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings()) {
@@ -1610,7 +1610,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1623,8 +1623,8 @@ public class VirtuosoDb extends Db {
 
         @Override
         protected OperationResultReport executeOperation(LdbcUpdate4AddForum operation) throws DbException {
-    		Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         	try {
+			Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
         			System.out.println("########### LdbcUpdate4");
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings()) {
@@ -1653,7 +1653,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1664,8 +1664,8 @@ public class VirtuosoDb extends Db {
     public static class LdbcUpdate5AddForumMembershipToVirtuoso extends OperationHandler<LdbcUpdate5AddForumMembership> {
         @Override
         protected OperationResultReport executeOperation(LdbcUpdate5AddForumMembership operation) throws DbException {
-        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         	try {
+			Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
         			System.out.println("########### LdbcUpdate5");
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings())
@@ -1679,7 +1679,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1692,8 +1692,8 @@ public class VirtuosoDb extends Db {
 
         @Override
         protected OperationResultReport executeOperation(LdbcUpdate5AddForumMembership operation) throws DbException {
-        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         	try {
+			Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
         			System.out.println("########### LdbcUpdate5");
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings())
@@ -1709,7 +1709,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1722,8 +1722,8 @@ public class VirtuosoDb extends Db {
 
         @Override
         protected OperationResultReport executeOperation(LdbcUpdate6AddPost operation) throws DbException {
-        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         	try {
+			Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
         			System.out.println("########### LdbcUpdate6");
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings()) {
@@ -1762,7 +1762,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1775,8 +1775,8 @@ public class VirtuosoDb extends Db {
 
         @Override
         protected OperationResultReport executeOperation(LdbcUpdate6AddPost operation) throws DbException {
-    		Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         	try {
+    		        Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
         			System.out.println("########### LdbcUpdate6");
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings()) {
@@ -1833,7 +1833,7 @@ public class VirtuosoDb extends Db {
         		}
         		cs.close();
         	    conn.close();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1846,8 +1846,8 @@ public class VirtuosoDb extends Db {
 
         @Override
         protected OperationResultReport executeOperation(LdbcUpdate7AddComment operation) throws DbException {
-        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn(); 
         	try {
+			Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn(); 
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
         			System.out.println("########### LdbcUpdate7");
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings()) {
@@ -1887,7 +1887,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1900,8 +1900,8 @@ public class VirtuosoDb extends Db {
 
         @Override
         protected OperationResultReport executeOperation(LdbcUpdate7AddComment operation) throws DbException {
-    		Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         	try {
+			Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
         			System.out.println("########### LdbcUpdate7");
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings()) {
@@ -1947,7 +1947,7 @@ public class VirtuosoDb extends Db {
        			cs.execute();
        			cs.close();
         	    conn.close();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1960,8 +1960,8 @@ public class VirtuosoDb extends Db {
 
         @Override
         protected OperationResultReport executeOperation(LdbcUpdate8AddFriendship operation) throws DbException {
-        	Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         	try {
+			Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
         			System.out.println("########### LdbcUpdate8");
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings())
@@ -1975,7 +1975,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1988,8 +1988,8 @@ public class VirtuosoDb extends Db {
 
         @Override
         protected OperationResultReport executeOperation(LdbcUpdate8AddFriendship operation) throws DbException {
-    		Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         	try {
+			Connection conn = ((VirtuosoDbConnectionState)dbConnectionState()).getConn();
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintNames())
         			System.out.println("########### LdbcUpdate8");
         		if (((VirtuosoDbConnectionState)dbConnectionState()).isPrintStrings())
@@ -2006,7 +2006,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
