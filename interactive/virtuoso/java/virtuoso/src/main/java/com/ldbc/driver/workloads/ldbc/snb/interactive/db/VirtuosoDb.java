@@ -1372,7 +1372,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1457,7 +1457,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1485,7 +1485,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1513,7 +1513,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1539,7 +1539,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1567,7 +1567,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1610,7 +1610,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1653,7 +1653,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1679,7 +1679,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1709,7 +1709,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1762,7 +1762,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1833,7 +1833,7 @@ public class VirtuosoDb extends Db {
         		}
         		cs.close();
         	    conn.close();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1887,7 +1887,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1947,7 +1947,7 @@ public class VirtuosoDb extends Db {
        			cs.execute();
        			cs.close();
         	    conn.close();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1975,7 +1975,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -2006,7 +2006,7 @@ public class VirtuosoDb extends Db {
         	    cs.execute();
         	    cs.close();
         	    conn.close();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
