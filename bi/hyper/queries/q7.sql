@@ -7,5 +7,5 @@ where liker = l_personid and l_postid = ps_postid
       and pst_postid = ps_postid 
       and   pst_tagid = t_tagid and t_name = 'Augustine_of_Hippo'
 group by ps_creatorid
-order by sc desc, p_personid asc;
+order by sc desc, ps_creatorid asc;
 
