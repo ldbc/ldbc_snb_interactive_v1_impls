@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.thinkaurelius.titan:titan-es:0.5.2">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/thinkaurelius/titan/titan-es/0.5.2/titan-es-0.5.2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/thinkaurelius/titan/titan-es/0.5.2/titan-es-0.5.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/thinkaurelius/titan/titan-es/0.5.2/titan-es-0.5.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

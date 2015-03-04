@@ -1,0 +1,91 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.hp.alps2</groupId>
+        <artifactId>ldbc_benchmarkFTM</artifactId>
+        <version>0.1-SNAPSHOT</version>
+    </parent>
+    <artifactId>driverFTM</artifactId>
+    <name>LDBC interactive workload driver</name>
+    <description>An workload driver for LDBC's interactive workload on titanFTM</description>
+    <properties>
+        <titan.version>0.5.2</titan.version>
+        <titan.groupId>com.thinkaurelius.titan</titan.groupId>
+        <!--Use com.hp.alps2 for hp titan-->
+        <!-- use this property to point towards location of toy example or set at run time, e.g.: -DtoyFolderName=C:\\social_network_toy-->
+        <toyFolderName>../social_network_toy</toyFolderName>
+
+    </properties>
+    <dependencies>
+        <dependency>
+        <groupId>com.ldbc.driver</groupId>
+            <artifactId>jeeves</artifactId>
+            <version>0.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>${titan.groupId}</groupId>
+            <artifactId>titan-core</artifactId>
+            <version>${titan.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${titan.groupId}</groupId>
+            <artifactId>titan-berkeleyje</artifactId>
+            <version>${titan.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${titan.groupId}</groupId>
+            <artifactId>titan-lucene</artifactId>
+            <version>${titan.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${titan.groupId}</groupId>
+            <artifactId>titan-es</artifactId>
+            <version>${titan.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tinkerpop.blueprints</groupId>
+            <artifactId>blueprints-core</artifactId>
+            <version>2.5.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.2.4</version>
+        </dependency>
+
+
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>15.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemProperties>
+                        <property>
+                            <name>toyFolderName</name>
+                            <value>${toyFolderName}</value>
+                        </property>
+                    </systemProperties>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

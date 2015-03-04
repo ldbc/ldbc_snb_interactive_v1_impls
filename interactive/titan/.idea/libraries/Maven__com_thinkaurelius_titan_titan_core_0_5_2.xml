@@ -1,0 +1,37 @@
+<component name="libraryTable">
+  <library name="Maven: com.thinkaurelius.titan:titan-core:0.5.2">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/thinkaurelius/titan/titan-core/0.5.2/titan-core-0.5.2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/thinkaurelius/titan/titan-core/0.5.2/titan-core-0.5.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/thinkaurelius/titan/titan-core/0.5.2/titan-core-0.5.2-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-berkeleyje/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-berkeleyje/src/test/java" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-cassandra/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-cassandra/src/test/java" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-core/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-dist/src/test/java" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-es/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-es/src/test/java" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-hadoop-parent/titan-hadoop-1/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-hadoop-parent/titan-hadoop-2/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-hadoop-parent/titan-hadoop-core/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-hadoop-parent/titan-hadoop-core/src/test/java" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-hbase-parent/titan-hbase-094/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-hbase-parent/titan-hbase-096/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-hbase-parent/titan-hbase-098/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-hbase-parent/titan-hbase-core/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-hbase-parent/titan-hbase-core/src/test/java" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-lucene/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-lucene/src/test/java" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-rexster/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-solr/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-solr/src/test/java" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-test/src/main/java" />
+      <root url="jar://$PROJECT_DIR$/../titan-titan05.zip!/titan-titan05/titan-test/src/test/java" />
+    </SOURCES>
+  </library>
+</component>

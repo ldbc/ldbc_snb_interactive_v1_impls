@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="Maven: com.ldbc.driver:core:0.2-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ldbc/driver/core/0.2-SNAPSHOT/core-0.2-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ldbc/driver/core/0.2-SNAPSHOT/core-0.2-SNAPSHOT-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/ldbc/driver/core/0.2-SNAPSHOT/core-0.2-SNAPSHOT-sources.jar!/" />
+      <root url="file://$USER_HOME$/Documents/GitHub/ldbc_driver/src/main/java" />
+      <root url="file://$USER_HOME$/Documents/GitHub/ldbc_driver/src/test/java" />
+      <root url="file://$USER_HOME$/Documents/ALP2/LDBC_Benchmark/ldbc_driver/src/main/java" />
+      <root url="file://$USER_HOME$/Documents/ALP2/LDBC_Benchmark/ldbc_driver/src/test/java" />
+    </SOURCES>
+  </library>
+</component>

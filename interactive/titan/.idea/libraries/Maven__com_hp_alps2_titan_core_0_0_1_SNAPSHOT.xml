@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Maven: com.hp.alps2:titan-core:0.0.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/hp/alps2/titan-core/0.0.1-SNAPSHOT/titan-core-0.0.1-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/hp/alps2/titan-core/0.0.1-SNAPSHOT/titan-core-0.0.1-SNAPSHOT-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../titanFTM/titan-core/src/main/java" />
+      <root url="file://$PROJECT_DIR$/../titanFTM/titan-core/target/generated-sources/groovy-stubs/main" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/hp/alps2/titan-core/0.0.1-SNAPSHOT/titan-core-0.0.1-SNAPSHOT-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
