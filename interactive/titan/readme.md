@@ -1,6 +1,7 @@
 # Titan graph database implementation by HP Labs
 ## About
 This implementation contains:
+
 1. An importer for LDBC data from csv format to a [titan 0.5.X](https://github.com/thinkaurelius/titan) graph database using [IdGraph](https://github.com/tinkerpop/blueprints/wiki/Id-Implementation) and [BatchGraph](https://github.com/tinkerpop/blueprints/wiki/Batch-Implementation).
 2. JVM style [blueprints gremlin](http://gremlindocs.com/) queries.
 
