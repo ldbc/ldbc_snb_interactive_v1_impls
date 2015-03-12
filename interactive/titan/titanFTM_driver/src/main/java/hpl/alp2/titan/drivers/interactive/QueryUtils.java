@@ -1,17 +1,3 @@
-/**(c) Copyright [2015] Hewlett-Packard Development Company, L.P.
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.**/
-
 package hpl.alp2.titan.drivers.interactive;
 
 import com.tinkerpop.blueprints.Edge;
@@ -20,6 +6,7 @@ import com.tinkerpop.gremlin.java.GremlinPipeline;
 import com.tinkerpop.pipes.PipeFunction;
 import com.tinkerpop.pipes.branch.LoopPipe;
 import com.tinkerpop.pipes.util.PipesFunction;
+import com.tinkerpop.pipes.util.structures.Pair;
 import com.tinkerpop.pipes.util.structures.Row;
 import com.tinkerpop.pipes.util.structures.Table;
 import hpl.alp2.titan.importers.InteractiveWorkloadSchema;
@@ -286,5 +273,19 @@ public class QueryUtils {
         return res;
     }
 
+    static final PipeFunction<Pair<Row, Row>, Integer> COMP_CDate_Postid = new PipeFunction<Pair<Row, Row>, Integer>() {
+
+        @Override
+        public Integer compute(Pair<Row, Row> argument) {
+            Vertex v1 = (Vertex) argument.getA().getColumn("post");
+            Vertex v2 = (Vertex) argument.getB().getColumn("post");
+            long d1 = v1.getProperty("creationDate");
+            long d2 = v2.getProperty("creationDate");
+            if (d1 == d2) {
+                return ((Long) v1.getId()).compareTo((Long) v2.getId());
+            } else
+                return Long.compare(d2, d1);
+        }
+    };
 
 }

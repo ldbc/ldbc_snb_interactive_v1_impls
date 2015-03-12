@@ -1,22 +1,9 @@
-/**(c) Copyright [2015] Hewlett-Packard Development Company, L.P.
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.**/
-
 package hpl.alp2.titan.drivers.interactive;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.OperationHandler;
-import com.ldbc.driver.OperationResultReport;
+import com.ldbc.driver.ResultReporter;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcNoResult;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate7AddComment;
 import com.thinkaurelius.titan.core.TitanException;
 import com.tinkerpop.blueprints.Vertex;
@@ -31,12 +18,12 @@ import java.util.Map;
  * Update Query 7: add comment
  * Created by Tomer Sagi on 14-Nov-14.
  */
-public class LdbcQueryU7Handler extends OperationHandler<LdbcUpdate7AddComment> {
+public class LdbcQueryU7Handler implements OperationHandler<LdbcUpdate7AddComment,TitanFTMDb.BasicDbConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQueryU7Handler.class);
 
     @Override
-    protected OperationResultReport executeOperation(LdbcUpdate7AddComment operation) throws DbException {
-        TitanFTMDb.BasicClient client = ((TitanFTMDb.BasicDbConnectionState) dbConnectionState()).client();
+    public void executeOperation(LdbcUpdate7AddComment operation, TitanFTMDb.BasicDbConnectionState dbConnectionState, ResultReporter reporter) throws DbException {
+        TitanFTMDb.BasicClient client = dbConnectionState.client();
         try {
 
             Map<String, Object> props = new HashMap<>(5);
@@ -76,8 +63,10 @@ public class LdbcQueryU7Handler extends OperationHandler<LdbcUpdate7AddComment> 
             client.commit();
         } catch (TitanException e) {
             logger.error("Couldn't complete U7 handler, db didn't commit");
+            reporter.report(-1, LdbcNoResult.INSTANCE,operation);
             e.printStackTrace();
+            return;
         }
-        return operation.buildResult(0, null);
+        reporter.report(0, LdbcNoResult.INSTANCE,operation);
     }
 }

@@ -1,32 +1,17 @@
-/**(c) Copyright [2015] Hewlett-Packard Development Company, L.P.
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.**/
-
 package hpl.alp2.titan.drivers.interactive;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.OperationHandler;
-import com.ldbc.driver.OperationResultReport;
+import com.ldbc.driver.ResultReporter;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcNoResult;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate1AddPerson;
 import com.thinkaurelius.titan.core.TitanException;
 import com.thinkaurelius.titan.core.TitanVertex;
 import com.tinkerpop.blueprints.Vertex;
 import com.tinkerpop.blueprints.util.wrappers.id.IdVertex;
-import hpl.alp2.titan.importers.TitanImporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,12 +19,12 @@ import java.util.Map;
  * Created by Tomer Sagi on 14-Nov-14.
  * Add a person. Currently assuming all edge end point vertices exist
  */
-public class LdbcQueryU1Handler extends OperationHandler<LdbcUpdate1AddPerson> {
+public class LdbcQueryU1Handler implements OperationHandler<LdbcUpdate1AddPerson,TitanFTMDb.BasicDbConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQueryU1Handler.class);
 
     @Override
-    protected OperationResultReport executeOperation(LdbcUpdate1AddPerson operation) throws DbException {
-        TitanFTMDb.BasicClient client = ((TitanFTMDb.BasicDbConnectionState) dbConnectionState()).client();
+    public void executeOperation(LdbcUpdate1AddPerson operation, TitanFTMDb.BasicDbConnectionState dbConnectionState, ResultReporter reporter) throws DbException {
+        TitanFTMDb.BasicClient client = dbConnectionState.client();
         Map<String, Object> props = new HashMap<>(9);
         props.put("firstName", operation.personFirstName());
         props.put("lastName", operation.personLastName());
@@ -99,6 +84,6 @@ public class LdbcQueryU1Handler extends OperationHandler<LdbcUpdate1AddPerson> {
         }
 
         logger.debug("U1 complete for person {}" ,operation.personId());
-        return operation.buildResult(0,null);
+        reporter.report(0, LdbcNoResult.INSTANCE,operation);
     }
 }

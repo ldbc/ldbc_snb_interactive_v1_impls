@@ -1,21 +1,7 @@
-/**(c) Copyright [2015] Hewlett-Packard Development Company, L.P.
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.**/
-
 package hpl.alp2.titan.drivers.interactive;
 
 import com.ldbc.driver.OperationHandler;
-import com.ldbc.driver.OperationResultReport;
+import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10Result;
 import com.tinkerpop.blueprints.Vertex;
@@ -42,11 +28,11 @@ import java.util.*;
  * Return top 10 Persons, their Place, and their similarity score. Sort results descending by similarity score,
  * and then ascending by Person identifier
  */
-public class LdbcQuery10Handler extends OperationHandler<LdbcQuery10> {
+public class LdbcQuery10Handler implements OperationHandler<LdbcQuery10,TitanFTMDb.BasicDbConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQuery10Handler.class);
 
     @Override
-    public OperationResultReport executeOperation(LdbcQuery10 operation) {
+    public void executeOperation(final LdbcQuery10 operation,TitanFTMDb.BasicDbConnectionState dbConnectionState,ResultReporter resultReporter) {
         long person_id = operation.personId();
         final int monthNum = operation.month();
         final int limit = operation.limit();
@@ -54,7 +40,7 @@ public class LdbcQuery10Handler extends OperationHandler<LdbcQuery10> {
         logger.debug("Query 10 called on Person id: {} with month number {}",
                 person_id, monthNum);
 
-        TitanFTMDb.BasicClient client = ((TitanFTMDb.BasicDbConnectionState) dbConnectionState()).client();
+        TitanFTMDb.BasicClient client = dbConnectionState.client();
         Vertex root = null;
 
         PipeFunction<Vertex, Boolean> Q10Friends = new PipesFunction<Vertex, Boolean>() {
@@ -131,7 +117,7 @@ public class LdbcQuery10Handler extends OperationHandler<LdbcQuery10> {
         }
 
 
-        return operation.buildResult(0, result);
+        resultReporter.report(result.size(), result, operation);
     }
 
     static public class Q10Res implements Comparable {

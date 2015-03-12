@@ -1,21 +1,7 @@
-/**(c) Copyright [2015] Hewlett-Packard Development Company, L.P.
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.**/
-
 package hpl.alp2.titan.drivers.interactive;
 
 import com.ldbc.driver.OperationHandler;
-import com.ldbc.driver.OperationResultReport;
+import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery14;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery14Result;
 import com.tinkerpop.blueprints.Vertex;
@@ -40,11 +26,11 @@ import java.util.*;
  other Person) contributes 0.5. Return all the paths with shortest length, and their weights. Sort results
  descending by path weight. The order of paths with the same weight is unspecified.
  */
-public class LdbcQuery14Handler extends OperationHandler<LdbcQuery14> {
+public class LdbcQuery14Handler implements OperationHandler<LdbcQuery14,TitanFTMDb.BasicDbConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQuery14Handler.class);
 
     @Override
-    public OperationResultReport executeOperation(LdbcQuery14 operation) {
+    public void executeOperation(final LdbcQuery14 operation,TitanFTMDb.BasicDbConnectionState dbConnectionState,ResultReporter resultReporter) {
 
         final long person1id = operation.person1Id();
         final long person2id = operation.person2Id();
@@ -56,10 +42,11 @@ public class LdbcQuery14Handler extends OperationHandler<LdbcQuery14> {
 
         //Early termination when ids are identical
         if (person1id == person2id) {
-            return operation.buildResult(0, result);
+            resultReporter.report(result.size(), result, operation);
+            return;
         }
 
-        TitanFTMDb.BasicClient client = ((TitanFTMDb.BasicDbConnectionState) dbConnectionState()).client();
+        TitanFTMDb.BasicClient client = dbConnectionState.client();
         try {
             final Vertex v1 = client.getVertex(person1id, "Person");
             final Vertex v2 = client.getVertex(person2id, "Person");
@@ -100,7 +87,7 @@ public class LdbcQuery14Handler extends OperationHandler<LdbcQuery14> {
             e.printStackTrace();
         }
 
-        return operation.buildResult(0, result);
+        resultReporter.report(result.size(), result, operation);
     }
 
     private double calcWeight(List<Vertex> vertexList, Map<Pair<Vertex, Vertex>, Double> pairWeights) {

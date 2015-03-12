@@ -1,17 +1,6 @@
-/**(c) Copyright [2015] Hewlett-Packard Development Company, L.P.
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.**/
-
+/**
+ *
+ */
 package hpl.alp2.titan.drivers.interactive;
 
 import com.ldbc.driver.Db;
@@ -76,6 +65,13 @@ public class TitanFTMDb extends Db {
         registerOperationHandler(LdbcQuery12.class, LdbcQuery12Handler.class);
         registerOperationHandler(LdbcQuery13.class, LdbcQuery13Handler.class);
         registerOperationHandler(LdbcQuery14.class, LdbcQuery14Handler.class);
+        registerOperationHandler(LdbcShortQuery1PersonProfile.class, LdbcShortQuery1Handler.class);
+        registerOperationHandler(LdbcShortQuery2PersonPosts.class, LdbcShortQuery2Handler.class);
+        registerOperationHandler(LdbcShortQuery3PersonFriends.class, LdbcShortQuery3Handler.class);
+        registerOperationHandler(LdbcShortQuery4MessageContent.class, LdbcShortQuery4Handler.class);
+        registerOperationHandler(LdbcShortQuery5MessageCreator.class, LdbcShortQuery5Handler.class);
+        registerOperationHandler(LdbcShortQuery6MessageForum.class, LdbcShortQuery6Handler.class);
+        registerOperationHandler(LdbcShortQuery7MessageReplies.class, LdbcShortQuery7Handler.class);
         registerOperationHandler(LdbcUpdate1AddPerson.class, LdbcQueryU1Handler.class);
         registerOperationHandler(LdbcUpdate2AddPostLike.class, LdbcQueryU2Handler.class);
         registerOperationHandler(LdbcUpdate3AddCommentLike.class, LdbcQueryU3Handler.class);

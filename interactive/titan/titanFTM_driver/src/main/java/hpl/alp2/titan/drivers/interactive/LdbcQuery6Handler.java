@@ -1,21 +1,7 @@
-/**(c) Copyright [2015] Hewlett-Packard Development Company, L.P.
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.**/
-
 package hpl.alp2.titan.drivers.interactive;
 
 import com.ldbc.driver.OperationHandler;
-import com.ldbc.driver.OperationResultReport;
+import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery6;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery6Result;
 import com.tinkerpop.blueprints.Vertex;
@@ -35,11 +21,11 @@ import java.util.*;
  * which contain both this Tag and the given Tag.
  * Sort results descending by count, and then ascending by Tag name.
  */
-public class LdbcQuery6Handler extends OperationHandler<LdbcQuery6> {
+public class LdbcQuery6Handler implements OperationHandler<LdbcQuery6,TitanFTMDb.BasicDbConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQuery6Handler.class);
 
     @Override
-    public OperationResultReport executeOperation(LdbcQuery6 operation) {
+    public void executeOperation(final LdbcQuery6 operation,TitanFTMDb.BasicDbConnectionState dbConnectionState,ResultReporter resultReporter) {
         long person_id = operation.personId();
         final String tagName = operation.tagName();
         final int limit = operation.limit();
@@ -47,7 +33,7 @@ public class LdbcQuery6Handler extends OperationHandler<LdbcQuery6> {
         logger.debug("Query 6 called on Person id: {} and Tag {}",
                 person_id, tagName);
 
-        TitanFTMDb.BasicClient client = ((TitanFTMDb.BasicDbConnectionState) dbConnectionState()).client();
+        TitanFTMDb.BasicClient client = dbConnectionState.client();
         final Set<Vertex> friends = QueryUtils.getInstance().getFoF(person_id, client);
 
         Map<Vertex, Number> qRes = new HashMap<>();
@@ -83,7 +69,7 @@ public class LdbcQuery6Handler extends OperationHandler<LdbcQuery6> {
                 break;
         }
 
-        return operation.buildResult(0, result);
+        resultReporter.report(result.size(), result, operation);
     }
 }
 

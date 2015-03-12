@@ -1,21 +1,7 @@
-/**(c) Copyright [2015] Hewlett-Packard Development Company, L.P.
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.**/
-
 package hpl.alp2.titan.drivers.interactive;
 
 import com.ldbc.driver.OperationHandler;
-import com.ldbc.driver.OperationResultReport;
+import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery3;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery3Result;
 import com.tinkerpop.blueprints.Vertex;
@@ -33,7 +19,7 @@ import java.util.*;
  * Handles Q3 by running a groupBy pipe and then sorting using
  * a sortable map.
  */
-public class LdbcQuery3Handler extends OperationHandler<LdbcQuery3> {
+public class LdbcQuery3Handler implements OperationHandler<LdbcQuery3,TitanFTMDb.BasicDbConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQuery3Handler.class);
 
     /*Given a start Person, find Persons that are their friends and friends of friends (excluding start
@@ -43,7 +29,7 @@ public class LdbcQuery3Handler extends OperationHandler<LdbcQuery3> {
     Sort results descending by total number of Posts/Comments, and then ascending by Person identifier. */
 
     @Override
-    public OperationResultReport executeOperation(LdbcQuery3 operation) {
+    public void executeOperation(final LdbcQuery3 operation,TitanFTMDb.BasicDbConnectionState dbConnectionState,ResultReporter resultReporter) {
 
         long person_id = operation.personId();
         final String country_x = operation.countryXName();
@@ -54,7 +40,7 @@ public class LdbcQuery3Handler extends OperationHandler<LdbcQuery3> {
                 , person_id, country_x, country_y, min_date, max_date);
 
         int limit = operation.limit();
-        TitanFTMDb.BasicClient client = ((TitanFTMDb.BasicDbConnectionState) dbConnectionState()).client();
+        TitanFTMDb.BasicClient client = dbConnectionState.client();
 
         //collect cities to exclude friends with
         Vertex country;
@@ -129,7 +115,7 @@ public class LdbcQuery3Handler extends OperationHandler<LdbcQuery3> {
                 break;
         }
 
-        return operation.buildResult(0, result);
+        resultReporter.report(result.size(), result, operation);
     }
 
 

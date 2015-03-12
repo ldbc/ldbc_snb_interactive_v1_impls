@@ -1,21 +1,7 @@
-/**(c) Copyright [2015] Hewlett-Packard Development Company, L.P.
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.**/
-
 package hpl.alp2.titan.drivers.interactive;
 
 import com.ldbc.driver.OperationHandler;
-import com.ldbc.driver.OperationResultReport;
+import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery13;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery13Result;
 import com.tinkerpop.blueprints.Vertex;
@@ -38,24 +24,23 @@ import java.util.*;
  * SPT Code by Daniel Kuppitz: https://groups.google.com/forum/#!msg/aureliusgraphs/d3jvgJeArOU/lMoObkk-If0J
  * //TODO since we don't need the paths themselves, consider using this instead: https://groups.google.com/forum/#!searchin/gremlin-users/shortest$20path/gremlin-users/GMIUZ7eFF7Y/yZy4yWN3Vg8J
  */
-public class LdbcQuery13Handler extends OperationHandler<LdbcQuery13> {
+public class LdbcQuery13Handler implements OperationHandler<LdbcQuery13,TitanFTMDb.BasicDbConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQuery13Handler.class);
 
     @Override
-    public OperationResultReport executeOperation(LdbcQuery13 operation) {
+    public void executeOperation(final LdbcQuery13 operation,TitanFTMDb.BasicDbConnectionState dbConnectionState,ResultReporter resultReporter) {
         final long person1id = operation.person1Id();
         final long person2id = operation.person2Id();
 
         logger.debug("Query 13 called on Person1 id: {} and Person2Id {}",
                 person1id, person2id);
 
-        List<LdbcQuery13Result> result = new ArrayList<>();
         if (person1id == person2id) {
-            result.add(new LdbcQuery13Result(0));
-            return operation.buildResult(0, result);
+            resultReporter.report(0, new LdbcQuery13Result(0), operation);
+            return;
         }
 
-        TitanFTMDb.BasicClient client = ((TitanFTMDb.BasicDbConnectionState) dbConnectionState()).client();
+        TitanFTMDb.BasicClient client = dbConnectionState.client();
         try {
             final Vertex v1 = client.getVertex(person1id, "Person");
             final Vertex v2 = client.getVertex(person2id, "Person");
@@ -80,11 +65,9 @@ public class LdbcQuery13Handler extends OperationHandler<LdbcQuery13> {
             for (final List path : pipe)
                 r = new LdbcQuery13Result(path.size() - 1);
 
-            result.add(r);
+            resultReporter.report(1, r, operation);
         } catch (SchemaViolationException e) {
             e.printStackTrace();
         }
-
-        return operation.buildResult(0, result);
     }
 }

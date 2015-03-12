@@ -1,21 +1,7 @@
-/**(c) Copyright [2015] Hewlett-Packard Development Company, L.P.
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.**/
-
 package hpl.alp2.titan.drivers.interactive;
 
 import com.ldbc.driver.OperationHandler;
-import com.ldbc.driver.OperationResultReport;
+import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery4;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery4Result;
 import com.tinkerpop.blueprints.Compare;
@@ -34,11 +20,11 @@ import java.util.*;
  * created within the given time interval, that this Tag was attached to. Sort results descending by Post count,
  * and then ascending by Tag name.
  */
-public class LdbcQuery4Handler extends OperationHandler<LdbcQuery4> {
+public class LdbcQuery4Handler implements OperationHandler<LdbcQuery4,TitanFTMDb.BasicDbConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQuery4Handler.class);
 
     @Override
-    public OperationResultReport executeOperation(LdbcQuery4 operation) {
+    public void executeOperation(final LdbcQuery4 operation,TitanFTMDb.BasicDbConnectionState dbConnectionState,ResultReporter resultReporter) {
         /*
         Given a start Person, find Tags that are attached to Posts that were created by that Person’s
         friends. Only include Tags that were attached to Posts created within a given time interval, and that were
@@ -53,7 +39,7 @@ public class LdbcQuery4Handler extends OperationHandler<LdbcQuery4> {
         logger.debug("Query 4 called on Person id: {} with min date {} and max date {}",
                 person_id, min_date, max_date);
 
-        TitanFTMDb.BasicClient client = ((TitanFTMDb.BasicDbConnectionState) dbConnectionState()).client();
+        TitanFTMDb.BasicClient client = dbConnectionState.client();
 
 
         //Prepare result map
@@ -121,7 +107,7 @@ public class LdbcQuery4Handler extends OperationHandler<LdbcQuery4> {
         long timePost = System.currentTimeMillis() - startPost;
         logger.debug("Query 4 post-process time: {}", timePost);
 
-        return operation.buildResult(0, result);
+        resultReporter.report(result.size(), result, operation);
 
     }
 }

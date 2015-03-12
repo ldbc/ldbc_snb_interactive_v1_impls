@@ -1,21 +1,7 @@
-/**(c) Copyright [2015] Hewlett-Packard Development Company, L.P.
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.**/
-
 package hpl.alp2.titan.drivers.interactive;
 
 import com.ldbc.driver.OperationHandler;
-import com.ldbc.driver.OperationResultReport;
+import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery11;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery11Result;
 import com.tinkerpop.blueprints.Compare;
@@ -34,11 +20,11 @@ import java.util.*;
  * Persons, the Company they worked at, and the year they started working at that Company. Sort results
  * ascending by the start date, then ascending by Person identifier, and lastly by Organization name descending.
  */
-public class LdbcQuery11Handler extends OperationHandler<LdbcQuery11> {
+public class LdbcQuery11Handler implements OperationHandler<LdbcQuery11,TitanFTMDb.BasicDbConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQuery11Handler.class);
 
     @Override
-    public OperationResultReport executeOperation(LdbcQuery11 operation) {
+    public void executeOperation(final LdbcQuery11 operation,TitanFTMDb.BasicDbConnectionState dbConnectionState,ResultReporter resultReporter) {
         long person_id = operation.personId();
         String countryName = operation.countryName();
         int year = operation.workFromYear();
@@ -47,7 +33,7 @@ public class LdbcQuery11Handler extends OperationHandler<LdbcQuery11> {
         logger.debug("Query 11 called on Person id: {} with counrty {} and year {}",
                 person_id, countryName, year);
 
-        TitanFTMDb.BasicClient client = ((TitanFTMDb.BasicDbConnectionState) dbConnectionState()).client();
+        TitanFTMDb.BasicClient client = dbConnectionState.client();
         final Set<Vertex> friends = QueryUtils.getInstance().getFoF(person_id, client);
 
         GremlinPipeline<Collection<Vertex>, Vertex> gpf = new GremlinPipeline<>(friends);
@@ -87,6 +73,6 @@ public class LdbcQuery11Handler extends OperationHandler<LdbcQuery11> {
 
         if (result.size() > limit)
             result = result.subList(0, limit);
-        return operation.buildResult(0, result);
+        resultReporter.report(result.size(), result, operation);
     }
 }
