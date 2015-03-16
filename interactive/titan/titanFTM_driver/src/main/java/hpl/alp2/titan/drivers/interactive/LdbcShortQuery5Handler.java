@@ -37,7 +37,7 @@ public class LdbcShortQuery5Handler implements OperationHandler<LdbcShortQuery5M
                         (String) person.getProperty("firstName"),(String) person.getProperty("lastName"));
             resultReporter.report(1, res, operation);
 
-        } catch (SchemaViolationException e) {
+        } catch (Exception e) {
         e.printStackTrace();
         resultReporter.report(-1, null, operation);
     }

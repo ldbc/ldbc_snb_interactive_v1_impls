@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.naming.directory.SchemaViolationException;
+import java.util.Iterator;
 
 /**
  * Implementation of LDBC Interactive workload short query 6
@@ -32,8 +33,14 @@ public class LdbcShortQuery6Handler implements OperationHandler<LdbcShortQuery6M
                 m = client.getVertex(mid, "Post");
 
             GremlinPipeline<Vertex,Vertex> gp = new GremlinPipeline<>(m);
-            Iterable<Row> qResult = gp.in("containerOf").as("forum").out("hasModerator").as("person").select();
-            Row r = qResult.iterator().next();
+            Iterator<Row> qResult = gp.in("containerOf").as("forum").out("hasModerator").as("person").select();
+            if (!qResult.hasNext())
+            {
+                logger.error("Unexpected empty set");
+                return;
+            }
+
+            Row r = qResult.next();
                 Vertex forum = (Vertex)r.getColumn("forum");
                 Vertex person = (Vertex)r.getColumn("person");
 
@@ -43,7 +50,7 @@ public class LdbcShortQuery6Handler implements OperationHandler<LdbcShortQuery6M
                         client.getVLocalId((Long)person.getId()),
                         (String) person.getProperty("firstName"),(String) person.getProperty("lastName"));
                 resultReporter.report(1, res, operation);
-        } catch (SchemaViolationException e) {
+        } catch (Exception e) {
         e.printStackTrace();
         resultReporter.report(-1, null, operation);
     }

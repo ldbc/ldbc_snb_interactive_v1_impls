@@ -36,7 +36,7 @@ public class LdbcShortQuery4Handler implements OperationHandler<LdbcShortQuery4M
                     content,(Long)m.getProperty("creationDate"));
 
             resultReporter.report(1, res, operation);
-        } catch (SchemaViolationException e) {
+        } catch (Exception e) {
         e.printStackTrace();
         resultReporter.report(-1, null, operation);
     }

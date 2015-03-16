@@ -41,11 +41,11 @@ public class LdbcShortQuery1Handler implements OperationHandler<LdbcShortQuery1P
             LdbcShortQuery1PersonProfileResult res = new LdbcShortQuery1PersonProfileResult(
                     (String) root.getProperty("firstName"),(String) root.getProperty("lastName"),
                     (Long) root.getProperty("birthday"), (String) root.getProperty("locationIP"),
-                    (String) root.getProperty("browserUsed"),(Long)cityV.getId(), (String) root.getProperty("gender"),
+                    (String) root.getProperty("browserUsed"),client.getVLocalId((Long)cityV.getId()), (String) root.getProperty("gender"),
                     (Long) root.getProperty("creationDate"));
 
             resultReporter.report(result.size(), res, operation);
-        } catch (SchemaViolationException e) {
+        } catch (Exception e) {
         e.printStackTrace();
         resultReporter.report(-1, null, operation);
     }

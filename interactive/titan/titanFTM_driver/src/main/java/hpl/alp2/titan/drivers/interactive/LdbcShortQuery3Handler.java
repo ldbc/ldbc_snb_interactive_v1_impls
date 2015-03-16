@@ -41,7 +41,7 @@ public class LdbcShortQuery3Handler implements OperationHandler<LdbcShortQuery3P
                         @Override
                         public Integer compute(Pair<Row, Row> argument) {
                             long d1 = ((Edge) argument.getA().getColumn("knowEdge")).getProperty("creationDate");
-                            long d2 = ((Edge) argument.getA().getColumn("knowEdge")).getProperty("creationDate");
+                            long d2 = ((Edge) argument.getB().getColumn("knowEdge")).getProperty("creationDate");
                             if (d1 == d2)
                                 return Long.compare((Long) ((Vertex) argument.getA().getColumn("friend")).getId(), (Long) ((Vertex) argument.getB().getColumn("friend")).getId());
                             else
@@ -61,7 +61,7 @@ public class LdbcShortQuery3Handler implements OperationHandler<LdbcShortQuery3P
                 result.add(res);
             }
             resultReporter.report(result.size(), result, operation);
-        } catch (SchemaViolationException e) {
+        } catch (Exception e) {
         e.printStackTrace();
         resultReporter.report(-1, null, operation);
     }

@@ -2,8 +2,6 @@ package hpl.alp2.titan.drivers.interactive;
 
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery6MessageForum;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery6MessageForumResult;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery7MessageReplies;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery7MessageRepliesResult;
 import com.tinkerpop.blueprints.Vertex;
@@ -49,11 +47,11 @@ public class LdbcShortQuery7Handler implements OperationHandler<LdbcShortQuery7M
                         @Override
                         public Integer compute(Pair<Row, Row> argument) {
                             long cid1 = (Long)((Vertex)argument.getA().getColumn("reply")).getId();
-                            long cid2 = (Long)((Vertex)argument.getA().getColumn("reply")).getId();
+                            long cid2 = (Long)((Vertex)argument.getB().getColumn("reply")).getId();
                             if (cid1==cid2)
                             {
                                 long aid1 = (Long)((Vertex)argument.getA().getColumn("person")).getId();
-                                long aid2 = (Long)((Vertex)argument.getA().getColumn("person")).getId();
+                                long aid2 = (Long)((Vertex)argument.getB().getColumn("person")).getId();
                                 return Long.compare(aid2,aid1);
                             } else
                                 return Long.compare(cid2,cid1);
@@ -80,7 +78,7 @@ public class LdbcShortQuery7Handler implements OperationHandler<LdbcShortQuery7M
                 resultReporter.report(1, result, operation);
                 result.add(res);
             }
-        } catch (SchemaViolationException e) {
+        } catch (Exception e) {
         e.printStackTrace();
         resultReporter.report(-1, null, operation);
     }

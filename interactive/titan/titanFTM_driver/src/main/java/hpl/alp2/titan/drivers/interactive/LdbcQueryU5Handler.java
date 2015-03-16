@@ -28,6 +28,11 @@ public class LdbcQueryU5Handler implements OperationHandler<LdbcUpdate5AddForumM
         try {
             Vertex forum = client.getVertex(operation.forumId(), "Forum");
             Vertex person = client.getVertex(operation.personId(), "Person");
+            if (forum==null)
+                logger.error("Forum membership requested for nonexistent forum id {}", operation.forumId());
+            if (person==null)
+                logger.error("Forum membership requested for nonexistent person {}", operation.personId());
+
             Map<String, Object> props = new HashMap<>(1);
             props.put("joinDate", operation.joinDate().getTime());
             client.addEdge(forum, person, "hasMember", props);

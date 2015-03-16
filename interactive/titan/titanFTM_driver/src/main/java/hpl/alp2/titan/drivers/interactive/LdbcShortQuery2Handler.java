@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.naming.directory.SchemaViolationException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -34,11 +35,11 @@ public class LdbcShortQuery2Handler implements OperationHandler<LdbcShortQuery2P
             root = client.getVertex(person_id, "Person");
             logger.debug("Short Query 2 called on person id: {}", person_id);
             GremlinPipeline<Vertex, Vertex> gp = new GremlinPipeline<>(root);
-            Iterable<Row> qResult = gp.in("hasCreator").as("message").select()
+            Iterable<Row> qResult = gp.in("hasCreator").as("post").select()
                     .order(QueryUtils.COMP_CDate_Postid).range(0, operation.limit() - 1);
 
             for (Row r : qResult) {
-                Vertex message = (Vertex)r.getColumn("message");
+                Vertex message = (Vertex)r.getColumn("post");
                 Vertex originalM;
                 Vertex author;
 
@@ -49,10 +50,25 @@ public class LdbcShortQuery2Handler implements OperationHandler<LdbcShortQuery2P
                 }
                 else {
                     GremlinPipeline<Vertex, Vertex> gpt = (new GremlinPipeline<>(message));
-                    Row r1 = gpt.as("start").out("replyOf").loop("start", QueryUtils.LOOPTRUEFUNC)
-                            .as("originalM").out("hasCreator").as("author").select().next();
-                    originalM = (Vertex)r1.getColumn("originalM");
-                    author = (Vertex)r1.getColumn("author");
+                    Iterator<Row> it =gpt.as("start").out("replyOf").loop("start", QueryUtils.LOOPTRUEFUNC,QueryUtils.LOOPTRUEFUNC)
+                            .as("originalM").out("hasCreator").as("author").select();
+                    if (it.hasNext())
+                    {
+                        Row r1 = it.next();
+                        if (it.hasNext()) //ensures I only record the last one
+                            continue;
+
+                        originalM = (Vertex) r1.getColumn("originalM");
+                        author = (Vertex) r1.getColumn("author");
+
+                    }
+                    else
+                    {
+                        originalM = message;
+                        author = originalM.query().labels("hasCreator").vertices().iterator().next();
+                    }
+
+
                 }
 
                 Long mid = client.getVLocalId((Long) message.getId());
@@ -61,14 +77,14 @@ public class LdbcShortQuery2Handler implements OperationHandler<LdbcShortQuery2P
                     content = message.getProperty("imageFile");
 
                 LdbcShortQuery2PersonPostsResult res = new LdbcShortQuery2PersonPostsResult(
-                        mid,content, (Long) originalM.getProperty("creationDate"),
+                        mid,content, (Long) message.getProperty("creationDate"),
                         client.getVLocalId((Long) originalM.getId()),
                         client.getVLocalId((Long) author.getId()),
                         (String) author.getProperty("firstName"), (String) author.getProperty("lastName"));
                 result.add(res);
             }
             resultReporter.report(result.size(), result, operation);
-        } catch (SchemaViolationException e) {
+        } catch (Exception e) {
         e.printStackTrace();
         resultReporter.report(-1, null, operation);
     }

@@ -141,5 +141,10 @@ public class LdbcQuery3Handler implements OperationHandler<LdbcQuery3,TitanFTMDb
             } else
                 return 0;
         }
+        @Override
+        public int hashCode() {
+            return x*((int)Math.pow(10,String.valueOf(y).length()))+y;
+        }
+
     }
 }

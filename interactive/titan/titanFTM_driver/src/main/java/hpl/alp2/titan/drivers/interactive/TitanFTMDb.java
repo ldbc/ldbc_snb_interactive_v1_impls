@@ -42,6 +42,8 @@ public class TitanFTMDb extends Db {
     @Override
     protected void onInit(Map<String, String> properties) throws DbException {
         String configFile = properties.get("confFile");
+        if (configFile==null)
+            throw new DbException("Titan LDBC implementation is missing a configuration parameter named confFile pointing to the titan config file");
         URL u = this.getClass().getClassLoader().getResource(configFile);
         String confFilePath = u != null ? u.getPath() : configFile;
         File confFile = new File(configFile);
