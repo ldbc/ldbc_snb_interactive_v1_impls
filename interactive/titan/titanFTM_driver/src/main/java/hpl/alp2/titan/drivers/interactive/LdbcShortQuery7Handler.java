@@ -1,3 +1,18 @@
+/**
+ (c) Copyright [2015] Hewlett-Packard Development Company, L.P.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package hpl.alp2.titan.drivers.interactive;
 
 import com.ldbc.driver.OperationHandler;
@@ -21,9 +36,9 @@ import java.util.Set;
 /**
  * Implementation of LDBC Interactive workload short query 7
  Given a Message (Post or Comment), retrieve the (1-hop) Comments that reply to it.
- In addition, return a boolean flag indicating if the author of the reply knows the author of the original message.
- If author is same as original author, return false for "knows" flag.
- Order results descending by comment identifier, then descending by author identifier.
+ In addition, return a boolean flag indicating if the author of the reply knows the author of the original message
+ If author is same as original author, return false for "knows" flag
+ Order results descending by comment identifier, then ascending by author identifier
  * Created by Tomer Sagi on 10-Mar-15.
  */
 public class LdbcShortQuery7Handler implements OperationHandler<LdbcShortQuery7MessageReplies,TitanFTMDb.BasicDbConnectionState> {
@@ -52,7 +67,7 @@ public class LdbcShortQuery7Handler implements OperationHandler<LdbcShortQuery7M
                             {
                                 long aid1 = (Long)((Vertex)argument.getA().getColumn("person")).getId();
                                 long aid2 = (Long)((Vertex)argument.getB().getColumn("person")).getId();
-                                return Long.compare(aid2,aid1);
+                                return Long.compare(aid1,aid2);
                             } else
                                 return Long.compare(cid2,cid1);
                         }

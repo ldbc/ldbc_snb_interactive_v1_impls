@@ -1,3 +1,18 @@
+/**
+ (c) Copyright [2015] Hewlett-Packard Development Company, L.P.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package hpl.alp2.titan.drivers.interactive;
 
 import com.ldbc.driver.OperationHandler;
@@ -10,7 +25,6 @@ import com.tinkerpop.pipes.util.structures.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.naming.directory.SchemaViolationException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -35,42 +49,29 @@ public class LdbcShortQuery2Handler implements OperationHandler<LdbcShortQuery2P
             root = client.getVertex(person_id, "Person");
             logger.debug("Short Query 2 called on person id: {}", person_id);
             GremlinPipeline<Vertex, Vertex> gp = new GremlinPipeline<>(root);
-            Iterable<Row> qResult = gp.in("hasCreator").as("post").select()
+            Iterable<Row> qResult = gp.in("hasCreator").as("message").select()
                     .order(QueryUtils.COMP_CDate_Postid).range(0, operation.limit() - 1);
 
             for (Row r : qResult) {
-                Vertex message = (Vertex)r.getColumn("post");
-                Vertex originalM;
+                Vertex message = (Vertex)r.getColumn("message");
+                Vertex originalM =message;
                 Vertex author;
 
-                if (((String)message.getProperty("label")).equalsIgnoreCase("Post"))
-                {
-                    originalM = message;
-                    author = originalM.query().labels("hasCreator").vertices().iterator().next();
-                }
-                else {
+                if (!((String)message.getProperty("label")).equalsIgnoreCase("Post")) { //Comment, retrieve original post in thread
                     GremlinPipeline<Vertex, Vertex> gpt = (new GremlinPipeline<>(message));
-                    Iterator<Row> it =gpt.as("start").out("replyOf").loop("start", QueryUtils.LOOPTRUEFUNC,QueryUtils.LOOPTRUEFUNC)
-                            .as("originalM").out("hasCreator").as("author").select();
-                    if (it.hasNext())
-                    {
-                        Row r1 = it.next();
-                        if (it.hasNext()) //ensures I only record the last one
-                            continue;
-
-                        originalM = (Vertex) r1.getColumn("originalM");
-                        author = (Vertex) r1.getColumn("author");
-
-                    }
-                    else
-                    {
-                        originalM = message;
-                        author = originalM.query().labels("hasCreator").vertices().iterator().next();
-                    }
-
-
+                    Iterator<Vertex> it = gpt.as("start").out("replyOf").loop("start", QueryUtils.LOOPTRUEFUNC, QueryUtils.LOOPTRUEFUNC)
+                            .as("originalM");
+                    while (it.hasNext())
+                     originalM= it.next();
                 }
 
+                Iterator<Vertex> it = originalM.query().labels("hasCreator").vertices().iterator();
+                if (!it.hasNext()) {
+                    logger.error("No creator found for message {}",originalM.getId());
+                    resultReporter.report(-1,null,operation);
+                    return;
+                }
+                author = it.next();
                 Long mid = client.getVLocalId((Long) message.getId());
                 String content = message.getProperty("content");
                 if (content.length() == 0)
