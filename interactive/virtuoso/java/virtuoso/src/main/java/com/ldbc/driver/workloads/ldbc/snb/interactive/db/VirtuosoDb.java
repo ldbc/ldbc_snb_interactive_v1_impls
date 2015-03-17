@@ -1013,13 +1013,13 @@ public class VirtuosoDb extends Db {
     					results_count++;
     					String firstName = rs.getString(1);
                         String lastName = rs.getString(2);
-                        //String gender = rs.getString(3);
+                        String gender = rs.getString(3);
                         long birthday = rs.getDate(4).getTime();
-                        //long creationDate = rs.getTimestamp(5).getTime();
+                        long creationDate = rs.getTimestamp(5).getTime();
                         String locationIp = rs.getString(6);
                         String browserUsed = rs.getString(7);
                         long cityId = rs.getLong(8);
-                        RESULT = new LdbcShortQuery1PersonProfileResult(firstName, lastName, birthday, locationIp, browserUsed, cityId);
+                        RESULT = new LdbcShortQuery1PersonProfileResult(firstName, lastName, birthday, locationIp, browserUsed, cityId, gender, creationDate);
                         if (state.isPrintResults())
     						System.out.println(RESULT.toString());
         			}
@@ -1057,16 +1057,15 @@ public class VirtuosoDb extends Db {
         			while (rs.next()) {
     					results_count++;
     					long postId = rs.getLong(1);
-					// TODO:
-					//String postContent = rs.getString(2);
-    					String postContent = null;
-//    					String postImageFile = rs.getString(3);
-//    					long postCreationTime = rs.getTimestamp(4).getTime();
-//    					long origPostId = rs.getLong(5);
-//    					long origPersonId = rs.getLong(6);
-//    					String origFirstName = rs.getString(7);
-//                      String origLastName = rs.getString(8);
-    					LdbcShortQuery2PersonPostsResult tmp = new LdbcShortQuery2PersonPostsResult(postId, postContent);
+					String postContent = rs.getString(2);
+					if (postContent == null)
+					    postContent = rs.getString(3);
+    					long postCreationTime = rs.getTimestamp(4).getTime();
+    					long origPostId = rs.getLong(5);
+    					long origPersonId = rs.getLong(6);
+    					String origFirstName = rs.getString(7);
+					String origLastName = rs.getString(8);
+    					LdbcShortQuery2PersonPostsResult tmp = new LdbcShortQuery2PersonPostsResult(postId, postContent, postCreationTime, origPostId, origPersonId, origFirstName, origLastName);
     					if (state.isPrintResults())
     						System.out.println(tmp.toString());
     					RESULT.add(tmp);
@@ -1107,8 +1106,8 @@ public class VirtuosoDb extends Db {
     					long personId = rs.getLong(1);
     					String firstName = rs.getString(2);
     					String lastName = rs.getString(3);
-//    					long since = rs.getTimestamp(4).getTime();
-    					LdbcShortQuery3PersonFriendsResult tmp = new LdbcShortQuery3PersonFriendsResult(personId, firstName, lastName);
+    					long since = rs.getTimestamp(4).getTime();
+    					LdbcShortQuery3PersonFriendsResult tmp = new LdbcShortQuery3PersonFriendsResult(personId, firstName, lastName, since);
     					if (state.isPrintResults())
     						System.out.println(tmp.toString());
     					RESULT.add(tmp);
@@ -1146,12 +1145,11 @@ public class VirtuosoDb extends Db {
         			ResultSet rs = stmt1.getResultSet();
         			while (rs.next()) {
     					results_count++;
-					// TODO
-    					//String messageContent = rs.getString(1);
-					String messageContent = null;
-//    					String imageFile = rs.getString(2);
-//    					long creationDate = rs.getTimestamp(3).getTime();
-    					RESULT = new LdbcShortQuery4MessageContentResult(messageContent);
+    					String messageContent = rs.getString(1);
+					if (messageContent == null)
+					    messageContent = rs.getString(2);
+    					long creationDate = rs.getTimestamp(3).getTime();
+    					RESULT = new LdbcShortQuery4MessageContentResult(messageContent, creationDate);
     					if (state.isPrintResults())
     						System.out.println(RESULT.toString());
         			}
@@ -1219,9 +1217,9 @@ public class VirtuosoDb extends Db {
         		stmt1.setLong(1, operation.messageId());
         		
         		if (state.isPrintNames())
-        			System.out.println("########### LdbcShortQuery3");
+        			System.out.println("########### LdbcShortQuery6");
         		if (state.isPrintStrings())
-        			System.out.println("LdbcShortQuery3 (" + operation.messageId() + ")");
+        			System.out.println("LdbcShortQuery6 (" + operation.messageId() + ")");
         		
         		boolean results = stmt1.execute();
         		if (results) {
@@ -1261,9 +1259,9 @@ public class VirtuosoDb extends Db {
         		stmt1.setLong(1, operation.messageId());
         		
         		if (state.isPrintNames())
-        			System.out.println("########### LdbcShortQuery4");
+        			System.out.println("########### LdbcShortQuery7");
         		if (state.isPrintStrings())
-        			System.out.println("LdbcShortQuery4 (" + operation.messageId() + ")");
+        			System.out.println("LdbcShortQuery7 (" + operation.messageId() + ")");
         		
         		boolean results = stmt1.execute();
         		if (results) {
@@ -1271,14 +1269,14 @@ public class VirtuosoDb extends Db {
         			while (rs.next()) {
     					results_count++;
     					long commentId = rs.getLong(1);
-					// TODO
-    					//String commentContent = rs.getString(2);
-					String commentContent = null;
-//    					long personId = rs.getLong(3);
-//    					String firstName = rs.getString(4);
-//    					String lastName = rs.getString(5);
-//    					String knows = rs.getInt(6);
-    					LdbcShortQuery7MessageRepliesResult tmp = new LdbcShortQuery7MessageRepliesResult(commentId, commentContent);
+    					String commentContent = rs.getString(2);
+					long creationDate = rs.getTimestamp(3).getTime();
+    					long personId = rs.getLong(4);
+    					String firstName = rs.getString(5);
+    					String lastName = rs.getString(6);
+    					int knows = rs.getInt(7);
+					boolean knows_b = (knows == 1) ? true : false;
+    					LdbcShortQuery7MessageRepliesResult tmp = new LdbcShortQuery7MessageRepliesResult(commentId, commentContent, creationDate, personId, firstName, lastName, knows_b);
     					if (state.isPrintResults())
     						System.out.println(tmp.toString());
     					RESULT.add(tmp);

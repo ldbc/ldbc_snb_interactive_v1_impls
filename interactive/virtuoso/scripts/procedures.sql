@@ -427,11 +427,12 @@ done3:
 create procedure post_view_4 (in postid int) {
   declare origpostcontent, origfirstname, origlastname varchar;
   declare origpostid, origautorid, friendornot int;
-  result_names(origpostid, origpostcontent, origautorid, origfirstname, origlastname, friendornot);
+  declare creationdate datetime;
+  result_names(origpostid, origpostcontent, creationdate, origautorid, origfirstname, origlastname, friendornot);
 
   whenever not found goto done4;
   declare cr4 cursor for 
-      select p2.ps_postid, p2.ps_content, p_personid, p_firstname, p_lastname,
+      select p2.ps_postid, p2.ps_content, p2.ps_creationdate, p_personid, p_firstname, p_lastname,
       	     (case when exists (
 	     	   	       select 1 from knows
 			       where p1.ps_creatorid = k_person1id and p2.ps_creatorid = k_person2id)
@@ -445,8 +446,8 @@ create procedure post_view_4 (in postid int) {
   open cr4;
   while (1)
     {
-      fetch cr4 into origpostid, origpostcontent, origautorid, origfirstname, origlastname, friendornot;
-      result (origpostid, origpostcontent, origautorid, origfirstname, origlastname, friendornot);
+      fetch cr4 into origpostid, origpostcontent, creationdate, origautorid, origfirstname, origlastname, friendornot;
+      result (origpostid, origpostcontent, creationdate, origautorid, origfirstname, origlastname, friendornot);
     }
 
 done4:
