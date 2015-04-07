@@ -10,7 +10,7 @@ where
         select * from 
   (select distinct pst_tagid from post, post_tag, knows
         where
-	k_person1id = @Person@ and
+        k_person1id = @Person@ and
         k_person2id = ps_p_creatorid and
         pst_postid = ps_postid and
         ps_creationdate < datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate('@Date0@')))

@@ -22,8 +22,8 @@ from person, place,
 where
 p_placeid = pl_placeid and
 p_personid = f.k_person2id and
-case month(p_birthday) when @HS0@ then (case when dayofmonth(p_birthday) > 21 then 1 else 0 end)
-                    when @HS1@ then (case when dayofmonth(p_birthday) < 22 then 1 else 0 end)
+case month(dateadd('millisecond', p_birthday, stringdate ('1970.1.1 00:00:00.000+00:00'))) when @HS0@ then (case when dayofmonth(dateadd('millisecond', p_birthday, stringdate ('1970.1.1 00:00:00.000+00:00'))) > 21 then 1 else 0 end)
+                    when @HS1@ then (case when dayofmonth(dateadd('millisecond', p_birthday, stringdate ('1970.1.1 00:00:00.000+00:00'))) < 22 then 1 else 0 end)
                else 0
 end
 order by 3 desc, 4

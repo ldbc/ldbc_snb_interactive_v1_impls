@@ -118,13 +118,14 @@ public class VirtuosoDb extends Db {
     }
 
     @Override
-    protected void onClose()  {
+    protected void onClose()   {
+	System.out.println("ON CLOSE()");
     	try {
-			virtuosoDbConnectionState.getDs().close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	    virtuosoDbConnectionState.getDs().close();
+	} catch (SQLException e) {
+	    //TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
     }
 
     @Override
@@ -153,7 +154,8 @@ public class VirtuosoDb extends Db {
             ds.setUser(properties.get("user"));
             ds.setPassword(properties.get("password"));
             ds.setMinPoolSize(1);
-            ds.setMaxPoolSize(Integer.parseInt(properties.get("tc")) * 2);
+            //ds.setMaxPoolSize(Integer.parseInt(properties.get("tc")) * 2);
+	    ds.setMaxPoolSize(64);
 	    ds.setCharset("UTF-8");
             ds.fill();
 			queryDir = properties.get("queryDir");
@@ -239,8 +241,8 @@ public class VirtuosoDb extends Db {
 						id = Long.parseLong(result.getString(1).substring(47));
 					String lastName = result.getString(2);
 					int dist = result.getInt(3);
-					long birthday = result.getDate(4).getTime();
-					long creationDate = result.getTimestamp(5).getTime();
+					long birthday = result.getLong(4);
+					long creationDate = result.getLong(5);
 					String gender = result.getString(6);
 					String browserUsed = result.getString(7);
 					String ip = result.getString(8);
@@ -294,13 +296,15 @@ public class VirtuosoDb extends Db {
         	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(state.getQueryDir(), "query2.txt"));
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
+			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         		if (state.isRunSql()) {
         			queryString = queryString.replaceAll("@Person@", String.valueOf(operation.personId()));
-        			queryString = queryString.replaceAll("@Date0@", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'").format(operation.maxDate()));
+				queryString = queryString.replaceAll("@Date0@", sdf.format(operation.maxDate()));
         		}
         		else {
             		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
-            		queryString = queryString.replaceAll("%Date0%", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'").format(operation.maxDate()));
+			queryString = queryString.replaceAll("%Date0%", sdf.format(operation.maxDate()));
         		}
         		Statement  stmt = conn.createStatement();
         		
@@ -325,7 +329,7 @@ public class VirtuosoDb extends Db {
 					else
 						postid = Long.parseLong(result.getString(4).substring(47));
 					String content = result.getString(5);
-					long postdate = result.getTimestamp(6).getTime();
+					long postdate = result.getLong(6);
 					LdbcQuery2Result tmp = new LdbcQuery2Result(id, firstName, lastName, postid, content, postdate);
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
@@ -352,18 +356,20 @@ public class VirtuosoDb extends Db {
         	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(state.getQueryDir(), "query3.txt"));
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
+			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         		if (state.isRunSql()) {
         			queryString = queryString.replaceAll("@Person@", String.valueOf(operation.personId()));
         			queryString = queryString.replaceAll("@Country1@", operation.countryXName());
         			queryString = queryString.replaceAll("@Country2@", operation.countryYName());
-        			queryString = queryString.replaceAll("@Date0@", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'").format(operation.startDate()));
+				queryString = queryString.replaceAll("@Date0@", sdf.format(operation.startDate()));
         			queryString = queryString.replaceAll("@Duration@", String.valueOf(operation.durationDays()));
         		}
         		else {
             		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
             		queryString = queryString.replaceAll("%Country1%", operation.countryXName());
             		queryString = queryString.replaceAll("%Country2%", operation.countryYName());
-            		queryString = queryString.replaceAll("%Date0%", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'").format(operation.startDate()));
+			queryString = queryString.replaceAll("%Date0%", sdf.format(operation.startDate()));
             		queryString = queryString.replaceAll("%Duration%", String.valueOf(operation.durationDays()));
         		}
         		Statement  stmt = conn.createStatement();
@@ -413,14 +419,16 @@ public class VirtuosoDb extends Db {
         	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(state.getQueryDir(), "query4.txt"));
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
+			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         		if (state.isRunSql()) {
         			queryString = queryString.replaceAll("@Person@", String.valueOf(operation.personId()));
-        			queryString = queryString.replaceAll("@Date0@", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'").format(operation.startDate()));
+				queryString = queryString.replaceAll("@Date0@", sdf.format(operation.startDate()));
         			queryString = queryString.replaceAll("@Duration@", String.valueOf(operation.durationDays()));
         		}
         		else {
             		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
-            		queryString = queryString.replaceAll("%Date0%", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'").format(operation.startDate()));
+			queryString = queryString.replaceAll("%Date0%", sdf.format(operation.startDate()));
             		queryString = queryString.replaceAll("%Duration%", String.valueOf(operation.durationDays()));
         		}
         		Statement stmt = conn.createStatement();
@@ -461,13 +469,15 @@ public class VirtuosoDb extends Db {
         	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(state.getQueryDir(), "query5.txt"));
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
+			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         		if (state.isRunSql()) {
         			queryString = queryString.replaceAll("@Person@", String.valueOf(operation.personId()));
-        			queryString = queryString.replaceAll("@Date0@", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'").format(operation.minDate()));
+				queryString = queryString.replaceAll("@Date0@", sdf.format(operation.minDate()));
         		}
         		else {
         			queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
-            		queryString = queryString.replaceAll("%Date0%", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'").format(operation.minDate()));
+			queryString = queryString.replaceAll("%Date0%", sdf.format(operation.minDate()));
         		}
         		Statement stmt = conn.createStatement();
         		
@@ -578,7 +588,7 @@ public class VirtuosoDb extends Db {
 						personId = Long.parseLong(result.getString(1).substring(47));
 					String personFirstName = result.getString(2);
 					String personLastName = result.getString(3);
-					long likeCreationDate = result.getTimestamp(4).getTime();
+					long likeCreationDate = result.getLong(4);
 					boolean isNew = result.getInt(5) == 1 ? true : false;
 					long postId;
 					if (state.isRunSql())
@@ -637,15 +647,15 @@ public class VirtuosoDb extends Db {
 						personId = Long.parseLong(result.getString(1).substring(47));
 					String personFirstName = result.getString(2);
 					String personLastName = result.getString(3);
-					long replyCreationDate = result.getTimestamp(4).getTime();
+					long replyCreationDate = result.getLong(4);
 					long replyId;
 					if (state.isRunSql())
 						replyId = result.getLong(5);
 					else
 						replyId = Long.parseLong(result.getString(5).substring(47));
 					// TODO
-					//String replyContent = result.getString(6);
-					String replyContent = null;
+					String replyContent = result.getString(6);
+					//String replyContent = null;
 					LdbcQuery8Result tmp = new LdbcQuery8Result(personId, personFirstName, personLastName, replyCreationDate, replyId, replyContent);
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
@@ -672,13 +682,15 @@ public class VirtuosoDb extends Db {
         	int results_count = 0; RESULT.clear();
         	try {
         		String queryString = file2string(new File(state.getQueryDir(), "query9.txt"));
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
+			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         		if (state.isRunSql()) {
         			queryString = queryString.replaceAll("@Person@", String.valueOf(operation.personId()));
-        			queryString = queryString.replaceAll("@Date0@", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'").format(operation.maxDate()));
+				queryString = queryString.replaceAll("@Date0@", sdf.format(operation.maxDate()));
         		}
         		else {
             		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
-            		queryString = queryString.replaceAll("%Date0%", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'").format(operation.maxDate()));
+			queryString = queryString.replaceAll("%Date0%", sdf.format(operation.maxDate()));
         		}
         		Statement stmt = conn.createStatement();
         		
@@ -703,7 +715,7 @@ public class VirtuosoDb extends Db {
 					else
 						postOrCommentId = Long.parseLong(result.getString(4).substring(47));
 					String postOrCommentContent = result.getString(5);
-					long postOrCommentCreationDate = result.getTimestamp(6).getTime();
+					long postOrCommentCreationDate = result.getLong(6);
 					//System.out.println("### " + result.getTimestamp(6));
 					//System.out.println("### " + result.getString(6));
 					//System.out.println("### " + Timestamp.valueOf(result.getString(6)).getTime());
@@ -994,10 +1006,10 @@ public class VirtuosoDb extends Db {
     public static class LdbcShortQuery1ToVirtuoso implements OperationHandler<LdbcShortQuery1PersonProfile, VirtuosoDbConnectionState> {   
         @Override
         public void executeOperation(LdbcShortQuery1PersonProfile operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
-        	Connection conn = state.getConn();
         	LdbcShortQuery1PersonProfileResult RESULT = null;
         	int results_count = 0;
         	try {
+		    Connection conn = state.getConn();
         		CallableStatement stmt1 = conn.prepareCall("person_view_1(?)");
         		stmt1.setLong(1, operation.personId());
         		
@@ -1012,26 +1024,26 @@ public class VirtuosoDb extends Db {
         			while (rs.next()) {
     					results_count++;
     					String firstName = rs.getString(1);
-                        String lastName = rs.getString(2);
-                        String gender = rs.getString(3);
-                        long birthday = rs.getDate(4).getTime();
-                        long creationDate = rs.getTimestamp(5).getTime();
-                        String locationIp = rs.getString(6);
-                        String browserUsed = rs.getString(7);
-                        long cityId = rs.getLong(8);
-                        RESULT = new LdbcShortQuery1PersonProfileResult(firstName, lastName, birthday, locationIp, browserUsed, cityId, gender, creationDate);
-                        if (state.isPrintResults())
-    						System.out.println(RESULT.toString());
+					String lastName = rs.getString(2);
+					String gender = rs.getString(3);
+					long birthday = rs.getLong(4);
+					long creationDate = rs.getLong(5);
+					String locationIp = rs.getString(6);
+					String browserUsed = rs.getString(7);
+					long cityId = rs.getLong(8);
+					RESULT = new LdbcShortQuery1PersonProfileResult(firstName, lastName, birthday, locationIp, browserUsed, cityId, gender, creationDate);
+					if (state.isPrintResults())
+					    System.out.println(RESULT.toString());
         			}
         		}
-				stmt1.close();conn.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			stmt1.close();conn.close();
+		} catch (SQLException e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		} catch (Exception e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
         	resultReporter.report(results_count, RESULT, operation);
         }
     }
@@ -1039,10 +1051,10 @@ public class VirtuosoDb extends Db {
     public static class LdbcShortQuery2ToVirtuoso implements OperationHandler<LdbcShortQuery2PersonPosts, VirtuosoDbConnectionState> {   
         @Override
         public void executeOperation(LdbcShortQuery2PersonPosts operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
-        	Connection conn = state.getConn();
         	List<LdbcShortQuery2PersonPostsResult> RESULT = new ArrayList<LdbcShortQuery2PersonPostsResult>();
         	int results_count = 0;
         	try {
+		    Connection conn = state.getConn();
         		CallableStatement stmt1 = conn.prepareCall("person_view_2(?)");
         		stmt1.setLong(1, operation.personId());
         		
@@ -1060,7 +1072,7 @@ public class VirtuosoDb extends Db {
 					String postContent = rs.getString(2);
 					if (postContent == null)
 					    postContent = rs.getString(3);
-    					long postCreationTime = rs.getTimestamp(4).getTime();
+    					long postCreationTime = rs.getLong(4);
     					long origPostId = rs.getLong(5);
     					long origPersonId = rs.getLong(6);
     					String origFirstName = rs.getString(7);
@@ -1086,10 +1098,10 @@ public class VirtuosoDb extends Db {
     public static class LdbcShortQuery3ToVirtuoso implements OperationHandler<LdbcShortQuery3PersonFriends, VirtuosoDbConnectionState> {   
         @Override
         public void executeOperation(LdbcShortQuery3PersonFriends operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
-        	Connection conn = state.getConn();
         	List<LdbcShortQuery3PersonFriendsResult> RESULT = new ArrayList<LdbcShortQuery3PersonFriendsResult>();
         	int results_count = 0;
         	try {
+		    Connection conn = state.getConn();
         		CallableStatement stmt1 = conn.prepareCall("person_view_3(?)");
         		stmt1.setLong(1, operation.personId());
         		
@@ -1106,7 +1118,7 @@ public class VirtuosoDb extends Db {
     					long personId = rs.getLong(1);
     					String firstName = rs.getString(2);
     					String lastName = rs.getString(3);
-    					long since = rs.getTimestamp(4).getTime();
+    					long since = rs.getLong(4);
     					LdbcShortQuery3PersonFriendsResult tmp = new LdbcShortQuery3PersonFriendsResult(personId, firstName, lastName, since);
     					if (state.isPrintResults())
     						System.out.println(tmp.toString());
@@ -1128,10 +1140,10 @@ public class VirtuosoDb extends Db {
     public static class LdbcShortQuery4ToVirtuoso implements OperationHandler<LdbcShortQuery4MessageContent, VirtuosoDbConnectionState> {   
         @Override
         public void executeOperation(LdbcShortQuery4MessageContent operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
-        	Connection conn = state.getConn();
         	LdbcShortQuery4MessageContentResult RESULT = null;
         	int results_count = 0;
         	try {
+		    Connection conn = state.getConn();
         		CallableStatement stmt1 = conn.prepareCall("post_view_1(?)");
         		stmt1.setLong(1, operation.messageId());
         		
@@ -1148,7 +1160,7 @@ public class VirtuosoDb extends Db {
     					String messageContent = rs.getString(1);
 					if (messageContent == null)
 					    messageContent = rs.getString(2);
-    					long creationDate = rs.getTimestamp(3).getTime();
+    					long creationDate = rs.getLong(3);
     					RESULT = new LdbcShortQuery4MessageContentResult(messageContent, creationDate);
     					if (state.isPrintResults())
     						System.out.println(RESULT.toString());
@@ -1169,10 +1181,10 @@ public class VirtuosoDb extends Db {
     public static class LdbcShortQuery5ToVirtuoso implements OperationHandler<LdbcShortQuery5MessageCreator, VirtuosoDbConnectionState> {   
         @Override
         public void executeOperation(LdbcShortQuery5MessageCreator operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
-        	Connection conn = state.getConn();
         	LdbcShortQuery5MessageCreatorResult RESULT = null;
         	int results_count = 0;
         	try {
+		    Connection conn = state.getConn();
         		CallableStatement stmt1 = conn.prepareCall("post_view_2(?)");
         		stmt1.setLong(1, operation.messageId());
         		
@@ -1209,10 +1221,10 @@ public class VirtuosoDb extends Db {
     public static class LdbcShortQuery6ToVirtuoso implements OperationHandler<LdbcShortQuery6MessageForum, VirtuosoDbConnectionState> {   
         @Override
         public void executeOperation(LdbcShortQuery6MessageForum operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
-        	Connection conn = state.getConn();
         	LdbcShortQuery6MessageForumResult RESULT = null;
         	int results_count = 0;
         	try {
+		    Connection conn = state.getConn();
         		CallableStatement stmt1 = conn.prepareCall("post_view_3(?)");
         		stmt1.setLong(1, operation.messageId());
         		
@@ -1251,10 +1263,10 @@ public class VirtuosoDb extends Db {
     public static class LdbcShortQuery7ToVirtuoso implements OperationHandler<LdbcShortQuery7MessageReplies, VirtuosoDbConnectionState> {   
         @Override
         public void executeOperation(LdbcShortQuery7MessageReplies operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
-        	Connection conn = state.getConn();
         	List<LdbcShortQuery7MessageRepliesResult> RESULT = new ArrayList<LdbcShortQuery7MessageRepliesResult>();
         	int results_count = 0;
         	try {
+		    Connection conn = state.getConn();
         		CallableStatement stmt1 = conn.prepareCall("post_view_4(?)");
         		stmt1.setLong(1, operation.messageId());
         		
@@ -1270,7 +1282,7 @@ public class VirtuosoDb extends Db {
     					results_count++;
     					long commentId = rs.getLong(1);
     					String commentContent = rs.getString(2);
-					long creationDate = rs.getTimestamp(3).getTime();
+					long creationDate = rs.getLong(3);
     					long personId = rs.getLong(4);
     					String firstName = rs.getString(5);
     					String lastName = rs.getString(6);
@@ -1343,9 +1355,10 @@ public class VirtuosoDb extends Db {
         	    cs.setString(2, operation.personFirstName());
         	    cs.setString(3, operation.personLastName());
         	    cs.setString(4, operation.gender());
-        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
+        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+			df.setTimeZone(TimeZone.getTimeZone("GMT"));
         	    cs.setString(5, df.format(operation.birthday()));
-        	    cs.setString(6, df.format(operation.creationDate()));
+		    cs.setString(6, df.format(operation.creationDate()));
         	    cs.setString(7, operation.locationIp());
         	    cs.setString(8, operation.browserUsed());
         	    cs.setLong(9, operation.cityId());
@@ -1432,8 +1445,10 @@ public class VirtuosoDb extends Db {
         		String queryString = "LdbcUpdateSparql(?)";
         		PreparedStatement cs = conn.prepareStatement(queryString);
         		String personUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.personId()) + ">";
-        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
+        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
         		DateFormat df2 = new SimpleDateFormat("yyyy.MM.dd");
+			df1.setTimeZone(TimeZone.getTimeZone("GMT"));
+			df2.setTimeZone(TimeZone.getTimeZone("GMT"));
         		String triplets [] = new String[9 + operation.languages().size() + operation.emails().size() + operation.tagIds().size() + operation.studyAt().size() + operation.workAt().size()];
         		triplets[0] = personUri + " a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/Person> .";
         		triplets[1] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/firstName> \"" + operation.personFirstName() + "\" .";
@@ -1486,8 +1501,9 @@ public class VirtuosoDb extends Db {
         		CallableStatement cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.personId());
         	    cs.setLong(2, operation.postId());
-        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
-        	    cs.setString(3, df.format(operation.creationDate()));
+		    DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+		    df.setTimeZone(TimeZone.getTimeZone("GMT"));
+		    cs.setString(3, df.format(operation.creationDate()));
         	    cs.execute();
         	    cs.close();
         	    conn.close();
@@ -1512,7 +1528,8 @@ public class VirtuosoDb extends Db {
         		PreparedStatement cs = conn.prepareStatement(queryString);
         		String personUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.personId()) + ">";
         		String postUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/post" + String.format("%020d", operation.postId()) + ">";
-        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
+        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+			df1.setTimeZone(TimeZone.getTimeZone("GMT"));
         		String triplets [] = new String[1];
         		triplets[0] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/likes> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasPost> " + postUri + "; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"] .";
         	    cs.setArray(1, conn.createArrayOf("varchar", triplets));
@@ -1540,8 +1557,9 @@ public class VirtuosoDb extends Db {
         		CallableStatement cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.personId());
         	    cs.setLong(2, operation.commentId());
-        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
-        	    cs.setString(3, df.format(operation.creationDate()));
+		    DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+		    df.setTimeZone(TimeZone.getTimeZone("GMT"));
+		    cs.setString(3, df.format(operation.creationDate()));
         	    cs.execute();
         	    cs.close();
         	    conn.close();
@@ -1566,7 +1584,8 @@ public class VirtuosoDb extends Db {
         		PreparedStatement cs = conn.prepareStatement(queryString);
         		String personUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.personId()) + ">";
         		String commentUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/comm" + String.format("%020d", operation.commentId()) + ">";
-        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
+        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+			df1.setTimeZone(TimeZone.getTimeZone("GMT"));
         		String triplets [] = new String[1];
         		triplets[0] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/likes> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasComment> " + commentUri + "; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"] .";
         	    cs.setArray(1, conn.createArrayOf("varchar", triplets));
@@ -1604,8 +1623,9 @@ public class VirtuosoDb extends Db {
         		CallableStatement cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.forumId());
         	    cs.setString(2, operation.forumTitle());
-        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
-        	    cs.setString(3, df.format(operation.creationDate()));
+		    DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+		    df.setTimeZone(TimeZone.getTimeZone("GMT"));
+		    cs.setString(3, df.format(operation.creationDate()));
         	    cs.setLong(4, operation.moderatorPersonId());
         	    Long tagIds1 [] = new Long[operation.tagIds().size()];
         	    int i=0;
@@ -1646,7 +1666,8 @@ public class VirtuosoDb extends Db {
         		PreparedStatement cs = conn.prepareStatement(queryString);
         		String forumUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/forum" + String.format("%020d", operation.forumId()) + ">";
         		String moderatorUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.moderatorPersonId()) + ">";
-        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
+        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+			df1.setTimeZone(TimeZone.getTimeZone("GMT"));
         		String triplets [] = new String[4 + operation.tagIds().size()];
         		triplets[0] = forumUri + " a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/Forum> .";
         		triplets[1] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/title> \"" + operation.forumTitle() + "\" .";
@@ -1680,8 +1701,9 @@ public class VirtuosoDb extends Db {
         		CallableStatement cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.forumId());
         		cs.setLong(2, operation.personId());
-        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
-        	    cs.setString(3, df.format(operation.joinDate()));
+			DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+			df.setTimeZone(TimeZone.getTimeZone("GMT"));
+			cs.setString(3, df.format(operation.joinDate()));
         	    cs.execute();
         	    cs.close();
         	    conn.close();
@@ -1708,7 +1730,8 @@ public class VirtuosoDb extends Db {
         		PreparedStatement cs = conn.prepareStatement(queryString);
         		String forumUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/forum" + String.format("%020d", operation.forumId()) + ">";
         		String memberUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.personId()) + ">";
-        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
+        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+			df1.setTimeZone(TimeZone.getTimeZone("GMT"));
         		String triplets [] = new String[1];
         		triplets[0] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasMember> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasPerson> " + memberUri + "; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/joinDate> \"" + df1.format(operation.joinDate()) + "\"] .";
         	    cs.setArray(1, conn.createArrayOf("varchar", triplets));
@@ -1749,8 +1772,9 @@ public class VirtuosoDb extends Db {
         		CallableStatement cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.postId());
         	    cs.setString(2, operation.imageFile());
-        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
-        	    cs.setString(3, df.format(operation.creationDate()));
+		    DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+		    df.setTimeZone(TimeZone.getTimeZone("GMT"));
+		    cs.setString(3, df.format(operation.creationDate()));
         	    cs.setString(4, operation.locationIp());
         	    cs.setString(5, operation.browserUsed());
         	    cs.setString(6, operation.language());
@@ -1803,7 +1827,8 @@ public class VirtuosoDb extends Db {
         		String postUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/post" + String.format("%020d", operation.postId()) + ">";
         		String forumUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/forum" + String.format("%020d", operation.forumId()) + ">";
         		String authorUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.authorPersonId()) + ">";
-        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
+        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+			df1.setTimeZone(TimeZone.getTimeZone("GMT"));
         		if (operation.imageFile().equals("")) {
         			String triplets [] = new String[10 + operation.tagIds().size()];
         			triplets[0] = postUri + " a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/Post> .";
@@ -1874,8 +1899,9 @@ public class VirtuosoDb extends Db {
         		String queryString = "LdbcUpdate7AddComment(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         		CallableStatement cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.commentId());
-        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
-        	    cs.setString(2, df.format(operation.creationDate()));
+			DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+			df.setTimeZone(TimeZone.getTimeZone("GMT"));
+			cs.setString(2, df.format(operation.creationDate()));
         	    cs.setString(3, operation.locationIp());
         	    cs.setString(4, operation.browserUsed());
         	    cs.setString(5, operation.content());
@@ -1930,7 +1956,8 @@ public class VirtuosoDb extends Db {
         		String commentUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/comm" + String.format("%020d", operation.commentId()) + ">";
         		String authorUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.authorPersonId()) + ">";
         		String postUri = null;
-        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
+        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+			df1.setTimeZone(TimeZone.getTimeZone("GMT"));
         		String triplets [] = new String[9 + operation.tagIds().size()];
         		triplets[0] = commentUri + " a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/Comment> .";
         		triplets[1] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/locationIP> \"" + operation.locationIp() + "\" .";
@@ -1976,8 +2003,9 @@ public class VirtuosoDb extends Db {
         		CallableStatement cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.person1Id());
         		cs.setLong(2, operation.person2Id());
-        		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
-        	    cs.setString(3, df.format(operation.creationDate()));
+			DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+			df.setTimeZone(TimeZone.getTimeZone("GMT"));
+			cs.setString(3, df.format(operation.creationDate()));
         	    cs.execute();
         	    cs.close();
         	    conn.close();
@@ -2004,7 +2032,8 @@ public class VirtuosoDb extends Db {
         		PreparedStatement cs = conn.prepareStatement(queryString);
         		String person1Uri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.person1Id()) + ">";
         		String person2Uri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.person2Id()) + ">";
-        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss'+00:00'");
+        		DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+			df1.setTimeZone(TimeZone.getTimeZone("GMT"));
         		String triplets [] = new String[2];
         		triplets[0] = person1Uri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/knows> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasPerson> " + person2Uri + "; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"] .";
         		triplets[1] = person1Uri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/knows> " + person2Uri + " .";
@@ -2020,3 +2049,4 @@ public class VirtuosoDb extends Db {
         }
     }
 }
+

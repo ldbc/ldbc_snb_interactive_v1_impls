@@ -17,14 +17,14 @@ from
       select ps_creatorid as ps_c_creatorid, count(*) as ct1 from post, place
       where
         ps_locationid = pl_placeid and pl_name = '@Country1@' and
-        ps_creationdate between stringdate('@Date0@') and dateadd ('day', @Duration@, stringdate('@Date0@'))
+        ps_creationdate between datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate('@Date0@')) and  datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), dateadd('day', @Duration@, stringdate('@Date0@')))
       group by ps_c_creatorid
    ) chn,
    (
       select ps_creatorid as ps_c_creatorid, count(*) as ct2 from post, place
       where
         ps_locationid = pl_placeid and pl_name = '@Country2@' and
-        ps_creationdate between stringdate('@Date0@') and dateadd ('day', @Duration@, stringdate('@Date0@'))
+        ps_creationdate between datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate('@Date0@')) and  datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), dateadd('day', @Duration@, stringdate('@Date0@')))
       group by ps_c_creatorid
    ) ind
   where CHN.ps_c_creatorid = IND.ps_c_creatorid

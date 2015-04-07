@@ -11,8 +11,7 @@ from tag, post_tag, post,
    k1.k_person1id = @Person@ and k1.k_person2id = k2.k_person1id and k2.k_person2id <> @Person@
  ) f
 where
-isnull(ps_replyof) and
-ps_creatorid = f.k_person2id and
+ps_p_creatorid = f.k_person2id and
 ps_postid = pst_postid and
 pst_tagid = t_tagid and
 t_name <> '@Tag@' and

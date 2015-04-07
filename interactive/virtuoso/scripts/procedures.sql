@@ -29,7 +29,8 @@ create procedure LdbcUpdate1AddPerson (in personid int,
 		goto again;
 	};
 	insert into person values(personid, personfirstname, personlastname, gender,
-	       	    	   	  stringdate(birthday), stringdate(creationdate),
+	       	    	   	  datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(birthday)),
+				  datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)),
 				  bit_or(
 					bit_or( bit_shift(sprintf_inverse(locationip, '%d.%d.%d.%d', 2)[0], 24),
 					       bit_shift(sprintf_inverse(locationip, '%d.%d.%d.%d', 2)[1], 16)),
@@ -78,7 +79,7 @@ create procedure LdbcUpdate2AddPostLike (in personid int,
 		}
 		goto again;
 	};
-	insert into likes values(personid, postid, stringdate(datetimestr));
+	insert into likes values(personid, postid, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(datetimestr)));
 	return;
 };
 
@@ -101,7 +102,7 @@ create procedure LdbcUpdate4AddForum  (in forumid int,
 		}
 		goto again;
 	};
-	insert into forum values(forumid, forumtitle, stringdate(creationdate), moderatorpersonid);
+	insert into forum values(forumid, forumtitle, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)), moderatorpersonid);
 	for vectored
 	    (in i1 int := tagids) {
 	    insert into forum_tag values(forumid, i1);
@@ -126,7 +127,7 @@ create procedure LdbcUpdate5AddForumMembership (in forumid int,
 		}
 		goto again;
 	};
-	insert into forum_person values(forumid, personid, stringdate(creationdate));
+	insert into forum_person values(forumid, personid, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)));
 	return;
 };
 
@@ -156,14 +157,14 @@ create procedure LdbcUpdate6AddPost (in postid int,
 		}
 		goto again;
 	};
-	insert into post values(postid, imagefile, stringdate(creationdate),
+	insert into post values(postid, imagefile, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)),
 				  bit_or(
 					bit_or( bit_shift(sprintf_inverse(locationip, '%d.%d.%d.%d', 2)[0], 24),
 					       bit_shift(sprintf_inverse(locationip, '%d.%d.%d.%d', 2)[1], 16)),
 					bit_or( bit_shift(sprintf_inverse(locationip, '%d.%d.%d.%d', 2)[2], 8),
 					       sprintf_inverse(locationip, '%d.%d.%d.%d', 2)[3])
        				  ),
-				browserused, lang, content, len, authorpersonid, countryid, forumid, NULL, NULL);
+				browserused, lang, content, len, authorpersonid, authorpersonid, countryid, forumid, NULL, NULL);
 				
 	for vectored
 	    (in i1 int := tagids) {
@@ -197,14 +198,14 @@ create procedure LdbcUpdate7AddComment (in commentid int,
 		}
 		goto again;
 	};
-	insert into post values(commentid, NULL, stringdate(creationdate),
+	insert into post values(commentid, NULL, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)),
 				  bit_or(
 					bit_or( bit_shift(sprintf_inverse(locationip, '%d.%d.%d.%d', 2)[0], 24),
 					       bit_shift(sprintf_inverse(locationip, '%d.%d.%d.%d', 2)[1], 16)),
 					bit_or( bit_shift(sprintf_inverse(locationip, '%d.%d.%d.%d', 2)[2], 8),
 					       sprintf_inverse(locationip, '%d.%d.%d.%d', 2)[3])
        				  ),
-				browserused, NULL, content, len, authorpersonid, countryid, NULL,
+				browserused, NULL, content, len, authorpersonid, NULL, countryid, NULL,
 				replytocommentid+replytopostid+1,
 				NULL);
 				
@@ -233,7 +234,7 @@ create procedure LdbcUpdate8AddFriendship (in person1id int,
 		}
 		goto again;
 	};
-	insert into knows values(person1id, person2id, stringdate(creationdate));
+	insert into knows values(person1id, person2id, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)));
 	return;
 };
 
@@ -260,7 +261,7 @@ create procedure LdbcUpdateSparql (in triplets varchar array)
 
 create procedure post_view (in postid int) {
   declare content, imagefile varchar;
-  declare creationdate datetime;
+  declare creationdate int;
   result_names(content, imagefile, creationdate);
 
   whenever not found goto done1;
@@ -356,7 +357,7 @@ done4:
 
 create procedure post_view_1 (in postid int) {
   declare content, imagefile varchar;
-  declare creationdate datetime;
+  declare creationdate int;
   result_names(content, imagefile, creationdate);
 
   whenever not found goto done1;
@@ -411,7 +412,8 @@ create procedure post_view_3 (in postid int) {
       select f_forumid, f_title, p_personid, p_firstname, p_lastname
         from post, person, forum
 	where
-	  ps_postid = postid and ps_forumid = f_forumid and f_moderatorid = p_personid;
+	  ps_postid = (select coalesce(min(ps_replyof), postid) from (select transitive t_in (1) t_out (2) t_distinct ps_postid, ps_replyof from post) k where ps_postid = postid)
+	  and ps_forumid = f_forumid and f_moderatorid = p_personid;
 
   open cr3;
   while (1)
@@ -427,7 +429,7 @@ done3:
 create procedure post_view_4 (in postid int) {
   declare origpostcontent, origfirstname, origlastname varchar;
   declare origpostid, origautorid, friendornot int;
-  declare creationdate datetime;
+  declare creationdate int;
   result_names(origpostid, origpostcontent, creationdate, origautorid, origfirstname, origlastname, friendornot);
 
   whenever not found goto done4;
@@ -457,7 +459,8 @@ done4:
 
 create procedure person_view (in personid int) {
   declare firstname, lastname, gender, browserused varchar;
-  declare birthday, creationdate datetime;
+  declare birthday int;
+  declare creationdate int;
   declare locationip, placeid int;
   result_names(firstname, lastname, gender, birthday, creationdate, locationip, browserused, placeid);
 
@@ -480,7 +483,7 @@ done1:
 
   declare content, imagefile, origfirstname, origlastname varchar;
   declare postid, origpostid, origpersonid int;
-  declare postcreationdate datetime;
+  declare postcreationdate int;
   result_names(postid, content, imagefile, postcreationdate, origpostid, origpersonid, origfirstname, origlastname);
   end_result ();
 
@@ -513,7 +516,7 @@ done2:
 
   declare friendfirstname, friendlastname varchar;
   declare friendpersonid int;
-  declare since datetime;
+  declare since int;
   result_names(friendpersonid, friendfirstname, friendlastname, since);
   end_result ();
 
@@ -538,7 +541,8 @@ done3:
 
 create procedure person_view_1 (in personid int) {
   declare firstname, lastname, gender, browserused, locationip varchar;
-  declare birthday, creationdate datetime;
+  declare birthday int;
+  declare creationdate int;
   declare placeid int;
   result_names(firstname, lastname, gender, birthday, creationdate, locationip, browserused, placeid);
 
@@ -568,7 +572,7 @@ done1:
 create procedure person_view_2 (in personid int) {
   declare content, imagefile, origfirstname, origlastname varchar;
   declare postid, origpostid, origpersonid int;
-  declare postcreationdate datetime;
+  declare postcreationdate int;
   result_names(postid, content, imagefile, postcreationdate, origpostid, origpersonid, origfirstname, origlastname);
 
   whenever not found goto done2;
@@ -602,7 +606,7 @@ done2:
 create procedure person_view_3 (in personid int) {
   declare friendfirstname, friendlastname varchar;
   declare friendpersonid int;
-  declare since datetime;
+  declare since int;
   result_names(friendpersonid, friendfirstname, friendlastname, since);
 
   whenever not found goto done3;
