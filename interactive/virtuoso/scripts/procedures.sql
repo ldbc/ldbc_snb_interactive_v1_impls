@@ -603,6 +603,38 @@ done2:
   close cr2;
 }
 
+create procedure person_view_2 (in personid int) {
+  declare content, imagefile, origfirstname, origlastname varchar;
+  declare postid, origpostid, origpersonid int;
+  declare postcreationdate int;
+  result_names(postid, content, imagefile, postcreationdate, origpostid, origpersonid, origfirstname, origlastname);
+
+  whenever not found goto done2;
+  declare cr2 cursor for 
+    select top 10 ps_postid, ps_content, ps_imagefile, ps_creationdate
+    from post
+    where ps_creatorid = personid
+    order by ps_creationdate desc;
+
+  open cr2;
+  while (1)
+    {
+      fetch cr2 into postid, content, imagefile, postcreationdate;
+      select ps_postid, p_personid, p_firstname, p_lastname
+      into origpostid, origpersonid, origfirstname, origlastname
+      from post, person
+      where ps_postid = (select coalesce(min(ps_replyof), postid) as origpostid
+	  		 from (select transitive t_in (1) t_out (2) t_distinct ps_postid, ps_replyof from post) k
+			 where ps_postid = postid)
+      and ps_creatorid = p_personid;
+      result (postid, content, imagefile, postcreationdate, origpostid, origpersonid, origfirstname, origlastname);
+    }
+
+done2:
+  close cr2;
+}
+
+
 create procedure person_view_3 (in personid int) {
   declare friendfirstname, friendlastname varchar;
   declare friendpersonid int;
