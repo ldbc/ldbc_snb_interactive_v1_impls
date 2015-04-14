@@ -31,12 +31,7 @@ create procedure LdbcUpdate1AddPerson (in personid int,
 	insert into person values(personid, personfirstname, personlastname, gender,
 	       	    	   	  datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(birthday)),
 				  datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)),
-				  bit_or(
-					bit_or( bit_shift(sprintf_inverse(locationip, '%d.%d.%d.%d', 2)[0], 24),
-					       bit_shift(sprintf_inverse(locationip, '%d.%d.%d.%d', 2)[1], 16)),
-					bit_or( bit_shift(sprintf_inverse(locationip, '%d.%d.%d.%d', 2)[2], 8),
-					       sprintf_inverse(locationip, '%d.%d.%d.%d', 2)[3])
-       				  ),
+				  locationip,
 				  browserused, cityid, null);
 	for vectored
 	    (in i1 varchar := languages) {
@@ -158,12 +153,7 @@ create procedure LdbcUpdate6AddPost (in postid int,
 		goto again;
 	};
 	insert into post values(postid, imagefile, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)),
-				  bit_or(
-					bit_or( bit_shift(sprintf_inverse(locationip, '%d.%d.%d.%d', 2)[0], 24),
-					       bit_shift(sprintf_inverse(locationip, '%d.%d.%d.%d', 2)[1], 16)),
-					bit_or( bit_shift(sprintf_inverse(locationip, '%d.%d.%d.%d', 2)[2], 8),
-					       sprintf_inverse(locationip, '%d.%d.%d.%d', 2)[3])
-       				  ),
+	       	    	 	locationip,
 				browserused, lang, content, len, authorpersonid, authorpersonid, countryid, forumid, NULL, NULL);
 				
 	for vectored
@@ -199,12 +189,7 @@ create procedure LdbcUpdate7AddComment (in commentid int,
 		goto again;
 	};
 	insert into post values(commentid, NULL, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)),
-				  bit_or(
-					bit_or( bit_shift(sprintf_inverse(locationip, '%d.%d.%d.%d', 2)[0], 24),
-					       bit_shift(sprintf_inverse(locationip, '%d.%d.%d.%d', 2)[1], 16)),
-					bit_or( bit_shift(sprintf_inverse(locationip, '%d.%d.%d.%d', 2)[2], 8),
-					       sprintf_inverse(locationip, '%d.%d.%d.%d', 2)[3])
-       				  ),
+	       	    	 	locationip,
 				browserused, NULL, content, len, authorpersonid, NULL, countryid, NULL,
 				replytocommentid+replytopostid+1,
 				NULL);
@@ -461,7 +446,8 @@ create procedure person_view (in personid int) {
   declare firstname, lastname, gender, browserused varchar;
   declare birthday int;
   declare creationdate int;
-  declare locationip, placeid int;
+  declare locationip varchar;
+  declare placeid int;
   result_names(firstname, lastname, gender, birthday, creationdate, locationip, browserused, placeid);
 
   whenever not found goto done1;
@@ -549,10 +535,7 @@ create procedure person_view_1 (in personid int) {
   whenever not found goto done1;
   declare cr1 cursor for 
       select p_firstname, p_lastname, p_gender, p_birthday, p_creationdate,
-      	     bit_shift(bit_and(p_locationip, 4278190080), -24) || '.' ||
-       	     bit_shift(bit_and(p_locationip, 16711680), -16) || '.' ||
-       	     bit_shift(bit_and(p_locationip, 65280), -8) || '.' ||
-       	     bit_and(p_locationip, 255),
+      	     p_locationip,
 	     p_browserused, p_placeid
         from person
 	where

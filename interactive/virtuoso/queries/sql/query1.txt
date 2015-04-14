@@ -1,9 +1,6 @@
 select top 20 id, p_lastname, min (dist) as dist, --Q1
        p_birthday, p_creationdate, p_gender, p_browserused,
-       bit_shift(bit_and(p_locationip, 4278190080), -24) || '.' ||
-       bit_shift(bit_and(p_locationip, 16711680), -16) || '.' ||
-       bit_shift(bit_and(p_locationip, 65280), -8) || '.' ||
-       bit_and(p_locationip, 255) as ip,
+       p_locationip,
        (select group_concat (pe_email, ', ') from person_email where pe_personid = id group by pe_personid) as emails,
        (select group_concat (plang_language, ', ') from person_language where plang_personid = id group by plang_personid) as languages,
        p1.pl_name,
