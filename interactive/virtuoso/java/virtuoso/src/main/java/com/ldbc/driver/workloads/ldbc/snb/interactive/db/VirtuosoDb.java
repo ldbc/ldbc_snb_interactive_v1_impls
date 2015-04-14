@@ -321,6 +321,8 @@ public class VirtuosoDb extends Db {
 						id = result.getLong(1);
 					else
 						id = Long.parseLong(result.getString(1).substring(47));
+					if (id == 0)
+					    System.out.println("@@@@@@@@@@@@@@@@@@@@@@ - " + id);
 					String firstName = result.getString(2);
 					String lastName = result.getString(3);
 					long postid;
@@ -328,6 +330,8 @@ public class VirtuosoDb extends Db {
 						postid = result.getLong(4);
 					else
 						postid = Long.parseLong(result.getString(4).substring(47));
+					if (postid == 0)
+					    System.out.println("@@@@@@@@@@@@@@@@@@@@@@ - " + postid);
 					String content = result.getString(5);
 					long postdate = result.getLong(6);
 					LdbcQuery2Result tmp = new LdbcQuery2Result(id, firstName, lastName, postid, content, postdate);
