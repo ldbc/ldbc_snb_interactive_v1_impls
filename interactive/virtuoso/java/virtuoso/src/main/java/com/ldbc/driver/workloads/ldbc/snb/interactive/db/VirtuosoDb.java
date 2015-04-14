@@ -1081,6 +1081,12 @@ public class VirtuosoDb extends Db {
     					long origPersonId = rs.getLong(6);
     					String origFirstName = rs.getString(7);
 					String origLastName = rs.getString(8);
+					if (postId == 0)
+					    System.out.println("1@@@@@@@@@@@@@@@@@@@@@@ - " + postId);
+					if (origPostId == 0)
+					    System.out.println("2@@@@@@@@@@@@@@@@@@@@@@ - " + origPostId);
+					if (origPersonId == 0)
+					    System.out.println("3@@@@@@@@@@@@@@@@@@@@@@ - " + origPersonId);
     					LdbcShortQuery2PersonPostsResult tmp = new LdbcShortQuery2PersonPostsResult(postId, postContent, postCreationTime, origPostId, origPersonId, origFirstName, origLastName);
     					if (state.isPrintResults())
     						System.out.println(tmp.toString());
@@ -1123,6 +1129,8 @@ public class VirtuosoDb extends Db {
     					String firstName = rs.getString(2);
     					String lastName = rs.getString(3);
     					long since = rs.getLong(4);
+					if (personId == 0)
+					    System.out.println("4@@@@@@@@@@@@@@@@@@@@@@ - " + personId);
     					LdbcShortQuery3PersonFriendsResult tmp = new LdbcShortQuery3PersonFriendsResult(personId, firstName, lastName, since);
     					if (state.isPrintResults())
     						System.out.println(tmp.toString());
@@ -1205,6 +1213,8 @@ public class VirtuosoDb extends Db {
     					long personId = rs.getLong(1);
     					String firstName = rs.getString(2);
     					String lastName = rs.getString(3);
+					if (personId == 0)
+					    System.out.println("5@@@@@@@@@@@@@@@@@@@@@@ - " + personId);
     					RESULT = new LdbcShortQuery5MessageCreatorResult(personId, firstName, lastName);
     					if (state.isPrintResults())
     						System.out.println(RESULT.toString());
@@ -1247,6 +1257,8 @@ public class VirtuosoDb extends Db {
     					long moderatorId = rs.getLong(3);
     					String moderatorFirstName = rs.getString(4);
     					String moderatorLastName = rs.getString(5);
+					if (moderatorId == 0)
+					    System.out.println("6@@@@@@@@@@@@@@@@@@@@@@ - " + moderatorId);
     					RESULT = new LdbcShortQuery6MessageForumResult(forumId, forumTitle, moderatorId, moderatorFirstName, moderatorLastName);
     					if (state.isPrintResults())
     						System.out.println(RESULT.toString());
@@ -1292,6 +1304,10 @@ public class VirtuosoDb extends Db {
     					String lastName = rs.getString(6);
     					int knows = rs.getInt(7);
 					boolean knows_b = (knows == 1) ? true : false;
+					if (commentId == 0)
+					    System.out.println("7@@@@@@@@@@@@@@@@@@@@@@ - " + commentId);
+					if (personId == 0)
+					    System.out.println("8@@@@@@@@@@@@@@@@@@@@@@ - " + personId);
     					LdbcShortQuery7MessageRepliesResult tmp = new LdbcShortQuery7MessageRepliesResult(commentId, commentContent, creationDate, personId, firstName, lastName, knows_b);
     					if (state.isPrintResults())
     						System.out.println(tmp.toString());
