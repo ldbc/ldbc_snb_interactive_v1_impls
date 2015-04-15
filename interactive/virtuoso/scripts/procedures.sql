@@ -1,3 +1,34 @@
+
+create procedure path_str (in path any)
+{
+  declare str any;
+  declare inx int;
+  str := '';
+  foreach (any  st  in path) do
+    str := str || sprintf (' %ld->%ld (%g) ', st[0], coalesce (st[1], 0), coalesce (st[2], 0));
+  return str;
+}
+
+create procedure c_weight (in p1 bigint, in p2 bigint)
+{
+  vectored;
+  if (p1 is null or p2 is null)
+     return 0;
+  return 0.5 + 
+  	  (select count (*) from post ps1, post ps2
+	   where ps1.ps_creatorid = p1 and ps1.ps_replyof = ps2.ps_postid and ps2.ps_creatorid = p2 and ps2.ps_replyof is null) +
+	  (select count (*) from post ps1, post ps2
+	   where ps1.ps_creatorid = p2 and ps1.ps_replyof = ps2.ps_postid and ps2.ps_creatorid = p1 and ps2.ps_replyof is null) +
+	  (select 0.5 * count (*) from post c1, post c2
+	   where c1.ps_creatorid = p1 and c1.ps_replyof = c2.ps_postid and c2.ps_creatorid = p2 and c2.ps_replyof is not null) +
+	  (select 0.5 * count (*) from post c1, post c2
+	   where c1.ps_creatorid = p2 and c1.ps_replyof = c2.ps_postid and c2.ps_creatorid = p1 and c2.ps_replyof is not null);
+}
+
+
+
+
+
 create procedure LdbcUpdate1AddPerson (in personid int,
        		 		       in personfirstname varchar,
 				       in personlastname varchar,
@@ -220,6 +251,7 @@ create procedure LdbcUpdate8AddFriendship (in person1id int,
 		goto again;
 	};
 	insert into knows values(person1id, person2id, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)));
+	insert into knows values(person2id, person1id, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)));
 	return;
 };
 

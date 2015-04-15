@@ -17,4 +17,4 @@ where
     pc_workfrom < @Date0@ and
     o_placeid = pl_placeid and
     pl_name = '@Country@'
-order by pc_workfrom, 5, o_name
+order by pc_workfrom, 5, o_name desc
