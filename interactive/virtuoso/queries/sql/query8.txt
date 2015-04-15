@@ -5,3 +5,4 @@ select top 20 p1.ps_creatorid, p_firstname, p_lastname, p1.ps_creationdate, p1.p
       p2.ps_creatorid = @Person@ and
       p_personid = p1.ps_creatorid
 order by p1.ps_creationdate desc, 5
+option (loop)

@@ -22,13 +22,14 @@ drop table tag_tagclass;
 create table post (
     ps_postid bigint primary key (column),
     ps_imagefile varchar,
-    ps_creationdate datetime not null,
-    ps_locationip bigint not null,
+    ps_creationdate bigint not null,
+    ps_locationip varchar not null,
     ps_browserused varchar not null,
     ps_language varchar,
     ps_content long varchar not null,
     ps_length int not null,
     ps_creatorid bigint,
+    ps_p_creatorid bigint,
     ps_locationid bigint,
     ps_forumid bigint,
     ps_replyof bigint,
@@ -40,7 +41,7 @@ alter index post on post partition (ps_postid int (0hexffff00));
 create table forum (
    f_forumid bigint primary key (column),
    f_title varchar not null,
-   f_creationdate datetime not null, 
+   f_creationdate bigint not null, 
    f_moderatorid bigint
 );
 
@@ -49,7 +50,7 @@ alter index forum on forum partition (f_forumid int (0hexffff00));
 create table forum_person (
    fp_forumid bigint not null,
    fp_personid bigint not null,
-   fp_creationdate datetime not null,
+   fp_creationdate bigint not null,
    primary key (fp_forumid, fp_personid) column
 );
 
@@ -78,9 +79,9 @@ create table person (
    p_firstname varchar not null,
    p_lastname varchar not null,
    p_gender varchar not null,
-   p_birthday date not null,
-   p_creationdate datetime not null,
-   p_locationip bigint not null,
+   p_birthday bigint not null,
+   p_creationdate bigint not null,
+   p_locationip varchar not null,
    p_browserused varchar not null,
    p_placeid bigint,
     p_country int
@@ -110,7 +111,7 @@ alter index person_tag on person_tag partition (pt_personid int (0hexffff00));
 create table knows (
    k_person1id bigint not null,
    k_person2id bigint not null,
-   k_creationdate datetime,
+   k_creationdate bigint,
    primary key (k_person1id, k_person2id) column
 );
 
@@ -119,7 +120,7 @@ alter index knows on knows partition (k_person1id int (0hexffff00));
 create table likes (
    l_personid bigint not null,
    l_postid bigint not null,
-   l_creationdate datetime not null,
+   l_creationdate bigint not null,
    primary key (l_postid, l_personid) column
 );
 
@@ -172,7 +173,7 @@ create table post_tag (
 
 alter index post_tag on post_tag partition (pst_postid int (0hexffff00));
 
---create column index pst_tagid on post_tag (pst_tagid) partition (pst_tagid int (0hexffff00));
+create column index pst_tagid on post_tag (pst_tagid) partition (pst_tagid int (0hexffff00));
 
 
 create table tagclass (
@@ -211,10 +212,12 @@ alter index tag_tagclass on tag_tagclass partition (ttc_tagid int (0hexffff00));
 
 create column index k_p2 on knows (k_person2id, k_person1id) partition (k_person2id int (0hexffff00));
 
-create column index ps_creatorid on post (ps_creatorid) partition (ps_creatorid int (0hexffff00));
+create column index ps_creatorid on post (ps_creatorid, ps_creationdate) partition (ps_creatorid int (0hexffff00));
+create column not null index ps_p_creatorid on post (ps_p_creatorid) partition (ps_creatorid int (0hexffff00));
 create column index ps_replyof on post (ps_replyof) partition (ps_replyof int (0hexffff00));
-create column index ps_forumid on post (ps_forumid) partition (ps_forumid int (0hexffff00));
+create column index ps_forumid on post (ps_forumid, ps_creatorid) partition (ps_forumid int (0hexffff00));
 
+create column index fp_personid on forum_person (fp_personid) partition (fp_personid int (0hexffff00));
 
 
 create table k_weight (kw_p1 bigint, kw_p2 bigint, kw_weight int,
