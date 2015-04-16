@@ -1,6 +1,6 @@
-select top 10 path_str (path), sc --Q14
+select top 10 path, sc --Q14
 from 
-  (select path_no, vector_agg (vector (via1, via2, cweight)) as path, sum (cweight) as sc
+  (select path_no, vector_agg (via1) as path, sum (cweight) as sc
    from 
    	(select path_no, step_no, via1, via2, c_weight (via1, via2) as cweight
 	 from 

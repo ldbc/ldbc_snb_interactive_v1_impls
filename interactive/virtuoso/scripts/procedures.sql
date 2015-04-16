@@ -1,4 +1,16 @@
 
+
+create function q_name (in str2 any array) returns varchar 
+{
+  vectored;
+  declare str varchar;
+  str := cast (str2 as varchar);
+  if (str like '%_view_%' or str like '%_Update_%')
+  return str;
+  return regexp_substr ('Q[0-9]*', str, 0); 
+}
+
+
 create procedure path_str (in path any)
 {
   declare str any;
@@ -14,7 +26,7 @@ create procedure c_weight (in p1 bigint, in p2 bigint)
   vectored;
   if (p1 is null or p2 is null)
      return 0;
-  return 0.5 + 
+  return
   	  (select count (*) from post ps1, post ps2
 	   where ps1.ps_creatorid = p1 and ps1.ps_replyof = ps2.ps_postid and ps2.ps_creatorid = p2 and ps2.ps_replyof is null) +
 	  (select count (*) from post ps1, post ps2
@@ -460,7 +472,8 @@ create procedure post_view_4 (in postid int) {
 	      end)
         from post p1, post p2, person
 	where
-	  p1.ps_postid = postid and p2.ps_replyof = p1.ps_postid and p2.ps_creatorid = p_personid;
+	  p1.ps_postid = postid and p2.ps_replyof = p1.ps_postid and p2.ps_creatorid = p_personid
+	order by 3 desc, 4;
 
   open cr4;
   while (1)
@@ -661,7 +674,8 @@ create procedure person_view_3 (in personid int) {
       select p_personid, p_firstname, p_lastname, k_creationdate
         from knows, person
 	where
-	  k_person1id = personid and k_person2id = p_personid;
+	  k_person1id = personid and k_person2id = p_personid
+	order by 4 desc, 1;
 
   open cr3;
   while (1)

@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Calendar;
 import java.util.TimeZone;
 import java.sql.Timestamp;
+import openlink.util.Vector;
 
 import virtuoso.jdbc4.VirtuosoConnectionPoolDataSource;
 
@@ -987,13 +988,19 @@ public class VirtuosoDb extends Db {
 				ResultSet result = stmt.executeQuery(queryString);
 				while (result.next()) {
 					results_count++;
-					String path = result.getString(1);
+					openlink.util.Vector o1 = (openlink.util.Vector)(result.getObject(1));
+					Long [] ttt = new Long[o1.size()];
+					for (int i = 0; i < o1.size(); i++) {
+					    if (o1.elementAt(i) instanceof Long)
+						ttt[i] = (Long)o1.elementAt(i);
+					    else if (o1.elementAt(i) instanceof Integer)
+						ttt[i] = new Long((Integer)o1.elementAt(i));
+					}
 					double weight = result.getDouble(2);
-//					if (state.isPrintResults())
-//					System.out.println(path);
-//					System.out.println(weight);
-					// TODO: This should be fixed
-//					RESULT.add(new LdbcQuery14Result(personId, personFirstName, personLastName, tagName, replyCount));
+					LdbcQuery14Result tmp = new LdbcQuery14Result(new ArrayList<Long>(Arrays.asList(ttt)), weight);
+					if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					RESULT.add(tmp);
 				}
 				stmt.close();conn.close();
 			} catch (SQLException e) {
@@ -1074,7 +1081,7 @@ public class VirtuosoDb extends Db {
     					results_count++;
     					long postId = rs.getLong(1);
 					String postContent = rs.getString(2);
-					if (postContent == null)
+					if (postContent == null || postContent.length() == 0)
 					    postContent = rs.getString(3);
     					long postCreationTime = rs.getLong(4);
     					long origPostId = rs.getLong(5);
@@ -1095,9 +1102,11 @@ public class VirtuosoDb extends Db {
         		}
 				stmt1.close();conn.close();
 			} catch (SQLException e) {
+		    System.out.println("Err: LdbcShortQuery2 (" + operation.personId() + ")");
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (Exception e) {
+		    System.out.println("Err: LdbcShortQuery2 (" + operation.personId() + ")");
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -1170,7 +1179,7 @@ public class VirtuosoDb extends Db {
         			while (rs.next()) {
     					results_count++;
     					String messageContent = rs.getString(1);
-					if (messageContent == null)
+					if (messageContent == null || messageContent.length() == 0)
 					    messageContent = rs.getString(2);
     					long creationDate = rs.getLong(3);
     					RESULT = new LdbcShortQuery4MessageContentResult(messageContent, creationDate);
@@ -1181,9 +1190,11 @@ public class VirtuosoDb extends Db {
 				stmt1.close();conn.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
+		    System.out.println("Err: LdbcShortQuery4 (" + operation.messageId() + ")");
 				e.printStackTrace();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
+		    System.out.println("Err: LdbcShortQuery4 (" + operation.messageId() + ")");
 				e.printStackTrace();
 			}
         	resultReporter.report(results_count, RESULT, operation);
