@@ -157,7 +157,7 @@ public class VirtuosoDb extends Db {
             ds.setMinPoolSize(1);
             //ds.setMaxPoolSize(Integer.parseInt(properties.get("tc")) * 2);
 	    ds.setMaxPoolSize(64);
-	    ds.setCharset("UTF-8");
+	    //ds.setCharset("UTF-8");
             ds.fill();
 			queryDir = properties.get("queryDir");
 			runSql = properties.get("run_sql").equals("true") ? true : false;
