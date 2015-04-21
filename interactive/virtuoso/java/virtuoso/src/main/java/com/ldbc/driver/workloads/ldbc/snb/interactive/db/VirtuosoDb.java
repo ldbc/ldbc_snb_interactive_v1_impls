@@ -240,7 +240,7 @@ public class VirtuosoDb extends Db {
 						id = result.getLong(1);
 					else
 						id = Long.parseLong(result.getString(1).substring(47));
-					String lastName = result.getString(2);
+					String lastName = new String(result.getString(2).getBytes("ISO-8859-1"));
 					int dist = result.getInt(3);
 					long birthday = result.getLong(4);
 					long creationDate = result.getLong(5);
@@ -324,16 +324,14 @@ public class VirtuosoDb extends Db {
 						id = Long.parseLong(result.getString(1).substring(47));
 					if (id == 0)
 					    System.out.println("@@@@@@@@@@@@@@@@@@@@@@ - " + id);
-					String firstName = result.getString(2);
-					String lastName = result.getString(3);
+					String firstName = new String(result.getString(2).getBytes("ISO-8859-1"));
+					String lastName = new String(result.getString(3).getBytes("ISO-8859-1"));
 					long postid;
 					if (state.isRunSql())
 						postid = result.getLong(4);
 					else
 						postid = Long.parseLong(result.getString(4).substring(47));
-					if (postid == 0)
-					    System.out.println("@@@@@@@@@@@@@@@@@@@@@@ - " + postid);
-					String content = result.getString(5);
+					String content = new String(result.getString(5).getBytes("ISO-8859-1"));
 					long postdate = result.getLong(6);
 					LdbcQuery2Result tmp = new LdbcQuery2Result(id, firstName, lastName, postid, content, postdate);
 					if (state.isPrintResults())
@@ -392,8 +390,8 @@ public class VirtuosoDb extends Db {
 						id = result.getLong(1);
 					else
 						id = Long.parseLong(result.getString(1).substring(47));
-					String firstName = result.getString(2);
-					String lastName = result.getString(3);
+					String firstName = new String(result.getString(2).getBytes("ISO-8859-1"));
+					String lastName = new String(result.getString(3).getBytes("ISO-8859-1"));
 					long ct1 = result.getLong(4);
 					long ct2 = result.getLong(5);
 					long total = result.getLong(6);
@@ -446,7 +444,7 @@ public class VirtuosoDb extends Db {
 				ResultSet result = stmt.executeQuery(queryString);
 				while (result.next()) {
 					results_count++;
-					String tagName = result.getString(1);
+					String tagName = new String(result.getString(1).getBytes("ISO-8859-1"));
 					int tagCount = result.getInt(2);
 					LdbcQuery4Result tmp = new LdbcQuery4Result(tagName, tagCount);
 					if (state.isPrintResults())
@@ -494,7 +492,7 @@ public class VirtuosoDb extends Db {
 				ResultSet result = stmt.executeQuery(queryString);
 				while (result.next()) {
 					results_count++;
-					String forumTitle = result.getString(1);
+					String forumTitle = new String(result.getString(1).getBytes("ISO-8859-1"));
 					int postCount = result.getInt(3);
 					LdbcQuery5Result tmp = new LdbcQuery5Result(forumTitle, postCount);
 					if (state.isPrintResults())
@@ -541,7 +539,7 @@ public class VirtuosoDb extends Db {
 				ResultSet result = stmt.executeQuery(queryString);
 				while (result.next()) {
 					results_count++;
-					String tagName = result.getString(1);
+					String tagName = new String(result.getString(1).getBytes("ISO-8859-1"));
 					int tagCount = result.getInt(2);
 					LdbcQuery6Result tmp = new LdbcQuery6Result(tagName, tagCount);
 					if (state.isPrintResults())
@@ -591,8 +589,8 @@ public class VirtuosoDb extends Db {
 						personId = result.getLong(1);
 					else
 						personId = Long.parseLong(result.getString(1).substring(47));
-					String personFirstName = result.getString(2);
-					String personLastName = result.getString(3);
+					String personFirstName = new String(result.getString(2).getBytes("ISO-8859-1"));
+					String personLastName = new String(result.getString(3).getBytes("ISO-8859-1"));
 					long likeCreationDate = result.getLong(4);
 					boolean isNew = result.getInt(5) == 1 ? true : false;
 					long postId;
@@ -600,7 +598,7 @@ public class VirtuosoDb extends Db {
 						postId = result.getLong(6);
 					else
 						postId = Long.parseLong(result.getString(6).substring(47));
-					String postContent = result.getString(7);
+					String postContent = new String(result.getString(7).getBytes("ISO-8859-1"));;
 					int milliSecondDelay = result.getInt(8);
 					LdbcQuery7Result tmp = new LdbcQuery7Result(personId, personFirstName, personLastName, likeCreationDate, postId, postContent, milliSecondDelay, isNew);
 					if (state.isPrintResults())
@@ -650,8 +648,8 @@ public class VirtuosoDb extends Db {
 						personId = result.getLong(1);
 					else
 						personId = Long.parseLong(result.getString(1).substring(47));
-					String personFirstName = result.getString(2);
-					String personLastName = result.getString(3);
+					String personFirstName = new String(result.getString(2).getBytes("ISO-8859-1"));
+					String personLastName = new String(result.getString(3).getBytes("ISO-8859-1"));
 					long replyCreationDate = result.getLong(4);
 					long replyId;
 					if (state.isRunSql())
@@ -659,7 +657,7 @@ public class VirtuosoDb extends Db {
 					else
 						replyId = Long.parseLong(result.getString(5).substring(47));
 					// TODO
-					String replyContent = result.getString(6);
+					String replyContent = new String(result.getString(6).getBytes("ISO-8859-1"));
 					//String replyContent = null;
 					LdbcQuery8Result tmp = new LdbcQuery8Result(personId, personFirstName, personLastName, replyCreationDate, replyId, replyContent);
 					if (state.isPrintResults())
@@ -712,27 +710,15 @@ public class VirtuosoDb extends Db {
 						personId = result.getLong(1);
 					else
 						personId = Long.parseLong(result.getString(1).substring(47));
-					String personFirstName = result.getString(2);
-					String personLastName = result.getString(3);
+					String personFirstName = new String(result.getString(2).getBytes("ISO-8859-1"));
+					String personLastName = new String(result.getString(3).getBytes("ISO-8859-1"));
 					long postOrCommentId;
 					if (state.isRunSql())
 						postOrCommentId = result.getLong(4);
 					else
 						postOrCommentId = Long.parseLong(result.getString(4).substring(47));
-					String postOrCommentContent = result.getString(5);
+					String postOrCommentContent = new String(result.getString(5).getBytes("ISO-8859-1"));
 					long postOrCommentCreationDate = result.getLong(6);
-					//System.out.println("### " + result.getTimestamp(6));
-					//System.out.println("### " + result.getString(6));
-					//System.out.println("### " + Timestamp.valueOf(result.getString(6)).getTime());
-					//System.out.println("### " + Timestamp.valueOf(result.getString(6)).getTimezoneOffset());
-					// create time zone object 
-					TimeZone tzone = TimeZone.getTimeZone("UTC");
-					// set time zone to default
-					tzone.setDefault(tzone);
-					//System.out.println("@@@ " + result.getTimestamp(6));
-					//System.out.println("@@@ " + result.getString(6));
-					//System.out.println("@@@ " + Timestamp.valueOf(result.getString(6)).getTime());
-					//System.out.println("@@@ " + Timestamp.valueOf(result.getString(6)).getTimezoneOffset());
 					LdbcQuery9Result tmp = new LdbcQuery9Result(personId, personFirstName, personLastName, postOrCommentId, postOrCommentContent, postOrCommentCreationDate);
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
@@ -763,12 +749,12 @@ public class VirtuosoDb extends Db {
         		if (state.isRunSql()) {
         			queryString = queryString.replaceAll("@Person@", String.valueOf(operation.personId()));
         			queryString = queryString.replaceAll("@HS0@", String.valueOf(operation.month()));
-        			queryString = queryString.replaceAll("@HS1@", String.valueOf((operation.month() + 1) % 12));
+        			queryString = queryString.replaceAll("@HS1@", String.valueOf((operation.month() + 1)));
         		}
         		else {
             		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
             		queryString = queryString.replaceAll("%HS0%", String.valueOf(operation.month()));
-               		queryString = queryString.replaceAll("%HS1%", String.valueOf((operation.month() + 1) % 12));
+               		queryString = queryString.replaceAll("%HS1%", String.valueOf((operation.month() + 1)));
         		}
         		Statement stmt = conn.createStatement();
         		
@@ -779,8 +765,8 @@ public class VirtuosoDb extends Db {
 		    
 				ResultSet result = stmt.executeQuery(queryString);
 				while (result.next()) { results_count++;
-					String personFirstName = result.getString(1);
-					String personLastName = result.getString(2);
+					String personFirstName = new String(result.getString(1).getBytes("ISO-8859-1"));
+					String personLastName = new String(result.getString(2).getBytes("ISO-8859-1"));
 					int commonInterestScore = result.getInt(3);
 					long personId;
 					if (state.isRunSql())
@@ -788,7 +774,7 @@ public class VirtuosoDb extends Db {
 					else
 						personId = Long.parseLong(result.getString(4).substring(47));
 					String gender = result.getString(5);
-					String personCityName = result.getString(6);
+					String personCityName = new String(result.getString(6).getBytes("ISO-8859-1"));
 					LdbcQuery10Result tmp = new LdbcQuery10Result(personId, personFirstName, personLastName, commonInterestScore, gender, personCityName);
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
@@ -836,10 +822,10 @@ public class VirtuosoDb extends Db {
 				ResultSet result = stmt.executeQuery(queryString);
 				while (result.next()) {
 					results_count++;
-					String personFirstName = result.getString(1);
-					String personLastName = result.getString(2);
+					String personFirstName = new String(result.getString(1).getBytes("ISO-8859-1"));
+					String personLastName = new String(result.getString(2).getBytes("ISO-8859-1"));
 					int organizationWorkFromYear = result.getInt(3);
-					String organizationName = result.getString(4);
+					String organizationName = new String(result.getString(4).getBytes("ISO-8859-1"));
 					long personId;
 					if (state.isRunSql())
 						personId = result.getLong(5);
@@ -894,9 +880,9 @@ public class VirtuosoDb extends Db {
 						personId = result.getLong(1);
 					else
 						personId = Long.parseLong(result.getString(1).substring(47));
-					String personFirstName = result.getString(2);
-					String personLastName = result.getString(3);
-					Collection<String> tagNames =  result.getString(4) == null ? new ArrayList<String>() : new ArrayList<String>(Arrays.asList(result.getString(4).split(", ")));
+					String personFirstName = new String(result.getString(2).getBytes("ISO-8859-1"));
+					String personLastName = new String(result.getString(3).getBytes("ISO-8859-1"));
+					Collection<String> tagNames =  result.getString(4) == null ? new ArrayList<String>() : new ArrayList<String>(Arrays.asList(new String(result.getString(4).getBytes("ISO-8859-1")).split(", ")));
 					int replyCount = result.getInt(5);
 					LdbcQuery12Result tmp = new LdbcQuery12Result(personId, personFirstName, personLastName, tagNames, replyCount);
 					if (state.isPrintResults())
@@ -1034,8 +1020,8 @@ public class VirtuosoDb extends Db {
         			ResultSet rs = stmt1.getResultSet();
         			while (rs.next()) {
     					results_count++;
-    					String firstName = rs.getString(1);
-					String lastName = rs.getString(2);
+    					String firstName = new String(rs.getString(1).getBytes("ISO-8859-1"));
+					String lastName = new String(rs.getString(2).getBytes("ISO-8859-1"));
 					String gender = rs.getString(3);
 					long birthday = rs.getLong(4);
 					long creationDate = rs.getLong(5);
@@ -1080,14 +1066,14 @@ public class VirtuosoDb extends Db {
         			while (rs.next()) {
     					results_count++;
     					long postId = rs.getLong(1);
-					String postContent = rs.getString(2);
+					String postContent = new String(rs.getString(2).getBytes("ISO-8859-1"));
 					if (postContent == null || postContent.length() == 0)
-					    postContent = rs.getString(3);
+					    postContent = new String(rs.getString(3).getBytes("ISO-8859-1"));
     					long postCreationTime = rs.getLong(4);
     					long origPostId = rs.getLong(5);
     					long origPersonId = rs.getLong(6);
-    					String origFirstName = rs.getString(7);
-					String origLastName = rs.getString(8);
+    					String origFirstName = new String(rs.getString(7).getBytes("ISO-8859-1"));
+					String origLastName = new String(rs.getString(8).getBytes("ISO-8859-1"));
 					if (postId == 0)
 					    System.out.println("1@@@@@@@@@@@@@@@@@@@@@@ - " + postId);
 					if (origPostId == 0)
@@ -1135,8 +1121,8 @@ public class VirtuosoDb extends Db {
         			while (rs.next()) {
     					results_count++;
     					long personId = rs.getLong(1);
-    					String firstName = rs.getString(2);
-    					String lastName = rs.getString(3);
+    					String firstName = new String(rs.getString(2).getBytes("ISO-8859-1"));;
+    					String lastName = new String(rs.getString(3).getBytes("ISO-8859-1"));;
     					long since = rs.getLong(4);
 					if (personId == 0)
 					    System.out.println("4@@@@@@@@@@@@@@@@@@@@@@ - " + personId);
@@ -1178,9 +1164,9 @@ public class VirtuosoDb extends Db {
         			ResultSet rs = stmt1.getResultSet();
         			while (rs.next()) {
     					results_count++;
-    					String messageContent = rs.getString(1);
+    					String messageContent = new String(rs.getString(1).getBytes("ISO-8859-1"));;
 					if (messageContent == null || messageContent.length() == 0)
-					    messageContent = rs.getString(2);
+					    messageContent = new String(rs.getString(2).getBytes("ISO-8859-1"));
     					long creationDate = rs.getLong(3);
     					RESULT = new LdbcShortQuery4MessageContentResult(messageContent, creationDate);
     					if (state.isPrintResults())
@@ -1222,8 +1208,8 @@ public class VirtuosoDb extends Db {
         			while (rs.next()) {
     					results_count++;
     					long personId = rs.getLong(1);
-    					String firstName = rs.getString(2);
-    					String lastName = rs.getString(3);
+    					String firstName = new String(rs.getString(2).getBytes("ISO-8859-1"));;
+    					String lastName = new String(rs.getString(3).getBytes("ISO-8859-1"));;
 					if (personId == 0)
 					    System.out.println("5@@@@@@@@@@@@@@@@@@@@@@ - " + personId);
     					RESULT = new LdbcShortQuery5MessageCreatorResult(personId, firstName, lastName);
@@ -1264,10 +1250,10 @@ public class VirtuosoDb extends Db {
         			while (rs.next()) {
     					results_count++;
     					long forumId = rs.getLong(1);
-    					String forumTitle = rs.getString(2);
+    					String forumTitle = new String(rs.getString(2).getBytes("ISO-8859-1"));;
     					long moderatorId = rs.getLong(3);
-    					String moderatorFirstName = rs.getString(4);
-    					String moderatorLastName = rs.getString(5);
+    					String moderatorFirstName = new String(rs.getString(4).getBytes("ISO-8859-1"));;
+    					String moderatorLastName = new String(rs.getString(5).getBytes("ISO-8859-1"));;
 					if (moderatorId == 0)
 					    System.out.println("6@@@@@@@@@@@@@@@@@@@@@@ - " + moderatorId);
     					RESULT = new LdbcShortQuery6MessageForumResult(forumId, forumTitle, moderatorId, moderatorFirstName, moderatorLastName);
@@ -1308,11 +1294,11 @@ public class VirtuosoDb extends Db {
         			while (rs.next()) {
     					results_count++;
     					long commentId = rs.getLong(1);
-    					String commentContent = rs.getString(2);
+    					String commentContent = new String(rs.getString(2).getBytes("ISO-8859-1"));;
 					long creationDate = rs.getLong(3);
     					long personId = rs.getLong(4);
-    					String firstName = rs.getString(5);
-    					String lastName = rs.getString(6);
+    					String firstName = new String(rs.getString(5).getBytes("ISO-8859-1"));;
+    					String lastName = new String(rs.getString(6).getBytes("ISO-8859-1"));;
     					int knows = rs.getInt(7);
 					boolean knows_b = (knows == 1) ? true : false;
 					if (commentId == 0)
@@ -1383,49 +1369,49 @@ public class VirtuosoDb extends Db {
         		String queryString = "LdbcUpdate1AddPerson(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         		PreparedStatement cs = conn.prepareStatement(queryString);
         		cs.setLong(1, operation.personId());
-        	    cs.setString(2, operation.personFirstName());
-        	    cs.setString(3, operation.personLastName());
-        	    cs.setString(4, operation.gender());
+			cs.setString(2, new String(operation.personFirstName().getBytes("UTF-8"), "ISO-8859-1"));
+			cs.setString(3, new String(operation.personLastName().getBytes("UTF-8"), "ISO-8859-1"));
+			cs.setString(4, operation.gender());
         		DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
 			df.setTimeZone(TimeZone.getTimeZone("GMT"));
-        	    cs.setString(5, df.format(operation.birthday()));
-		    cs.setString(6, df.format(operation.creationDate()));
-        	    cs.setString(7, operation.locationIp());
-        	    cs.setString(8, operation.browserUsed());
-        	    cs.setLong(9, operation.cityId());
-        	    cs.setArray(10, conn.createArrayOf("varchar", operation.languages().toArray(new String[operation.languages().size()])));
-        	    cs.setArray(11, conn.createArrayOf("varchar", operation.emails().toArray(new String[operation.emails().size()])));
-        	    Long tagIds1 [] = new Long[operation.tagIds().size()];
-        	    int i=0;
-        	    for(long temp:operation.tagIds()){
-        	        tagIds1[i++] = temp;
-        	    }
-        	    cs.setArray(12, conn.createArrayOf("int", tagIds1));
-        	    Long universityIds [] = new Long[operation.studyAt().size()];
-        	    Integer universityYears [] = new Integer[operation.studyAt().size()];
-        	    i=0;
-        	    for(Organization temp:operation.studyAt()){
-        	        universityIds[i] = temp.organizationId();
-        	        universityYears[i++] = temp.year();
-        	    }
-        	    cs.setArray(13, conn.createArrayOf("int", universityIds));
-        	    cs.setArray(14, conn.createArrayOf("int", universityYears));
-        	    Long companyIds [] = new Long[operation.workAt().size()];
-        	    Integer companyYears [] = new Integer[operation.workAt().size()];
-        	    i=0;
-        	    for(Organization temp:operation.workAt()){
-        	        companyIds[i] = temp.organizationId();
-        	        companyYears[i++] = temp.year();
-        	    }
-        	    cs.setArray(15, conn.createArrayOf("int", companyIds));
-        	    cs.setArray(16, conn.createArrayOf("int", companyYears));
-        	    cs.execute();
-        	    cs.close();
-        	    conn.close();
-			} catch (Throwable e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			cs.setString(5, df.format(operation.birthday()));
+			cs.setString(6, df.format(operation.creationDate()));
+			cs.setString(7, operation.locationIp());
+			cs.setString(8, operation.browserUsed());
+			cs.setLong(9, operation.cityId());
+			cs.setArray(10, conn.createArrayOf("varchar", operation.languages().toArray(new String[operation.languages().size()])));
+			cs.setArray(11, conn.createArrayOf("varchar", operation.emails().toArray(new String[operation.emails().size()])));
+			Long tagIds1 [] = new Long[operation.tagIds().size()];
+			int i=0;
+			for(long temp:operation.tagIds()){
+			    tagIds1[i++] = temp;
 			}
+			cs.setArray(12, conn.createArrayOf("int", tagIds1));
+			Long universityIds [] = new Long[operation.studyAt().size()];
+			Integer universityYears [] = new Integer[operation.studyAt().size()];
+			i=0;
+			for(Organization temp:operation.studyAt()){
+			    universityIds[i] = temp.organizationId();
+			    universityYears[i++] = temp.year();
+			}
+			cs.setArray(13, conn.createArrayOf("int", universityIds));
+			cs.setArray(14, conn.createArrayOf("int", universityYears));
+			Long companyIds [] = new Long[operation.workAt().size()];
+			Integer companyYears [] = new Integer[operation.workAt().size()];
+			i=0;
+			for(Organization temp:operation.workAt()){
+			    companyIds[i] = temp.organizationId();
+			    companyYears[i++] = temp.year();
+			}
+			cs.setArray(15, conn.createArrayOf("int", companyIds));
+			cs.setArray(16, conn.createArrayOf("int", companyYears));
+			cs.execute();
+			cs.close();
+			conn.close();
+		} catch (Throwable e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
         	resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
     }
@@ -1531,17 +1517,17 @@ public class VirtuosoDb extends Db {
         		String queryString = "{call LdbcUpdate2AddPostLike(?, ?, ?)}";
         		CallableStatement cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.personId());
-        	    cs.setLong(2, operation.postId());
-		    DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
-		    df.setTimeZone(TimeZone.getTimeZone("GMT"));
-		    cs.setString(3, df.format(operation.creationDate()));
-        	    cs.execute();
-        	    cs.close();
-        	    conn.close();
-			} catch (Throwable e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			cs.setLong(2, operation.postId());
+			DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+			df.setTimeZone(TimeZone.getTimeZone("GMT"));
+			cs.setString(3, df.format(operation.creationDate()));
+			cs.execute();
+			cs.close();
+			conn.close();
+		} catch (Throwable e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
         	resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
     }
@@ -1587,17 +1573,17 @@ public class VirtuosoDb extends Db {
         		String queryString = "{call LdbcUpdate2AddPostLike(?, ?, ?)}";
         		CallableStatement cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.personId());
-        	    cs.setLong(2, operation.commentId());
-		    DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
-		    df.setTimeZone(TimeZone.getTimeZone("GMT"));
-		    cs.setString(3, df.format(operation.creationDate()));
-        	    cs.execute();
-        	    cs.close();
-        	    conn.close();
-			} catch (Throwable e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			cs.setLong(2, operation.commentId());
+			DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+			df.setTimeZone(TimeZone.getTimeZone("GMT"));
+			cs.setString(3, df.format(operation.creationDate()));
+			cs.execute();
+			cs.close();
+			conn.close();
+		} catch (Throwable e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
         	resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
     }
@@ -1653,24 +1639,24 @@ public class VirtuosoDb extends Db {
         		String queryString = "LdbcUpdate4AddForum(?, ?, ?, ?, ?)";
         		CallableStatement cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.forumId());
-        	    cs.setString(2, operation.forumTitle());
-		    DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
-		    df.setTimeZone(TimeZone.getTimeZone("GMT"));
-		    cs.setString(3, df.format(operation.creationDate()));
-        	    cs.setLong(4, operation.moderatorPersonId());
-        	    Long tagIds1 [] = new Long[operation.tagIds().size()];
-        	    int i=0;
-        	    for(long temp:operation.tagIds()){
-        	        tagIds1[i++] = temp;
-        	    }
-        	    cs.setArray(5, conn.createArrayOf("int", tagIds1));
-        	    cs.execute();
-        	    cs.close();
-        	    conn.close();
-			} catch (Throwable e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			cs.setString(2, new String(operation.forumTitle().getBytes("UTF-8"), "ISO-8859-1"));
+			DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+			df.setTimeZone(TimeZone.getTimeZone("GMT"));
+			cs.setString(3, df.format(operation.creationDate()));
+			cs.setLong(4, operation.moderatorPersonId());
+			Long tagIds1 [] = new Long[operation.tagIds().size()];
+			int i=0;
+			for(long temp:operation.tagIds()){
+			    tagIds1[i++] = temp;
 			}
+			cs.setArray(5, conn.createArrayOf("int", tagIds1));
+			cs.execute();
+			cs.close();
+			conn.close();
+		} catch (Throwable e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
         	resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
     }
@@ -1735,13 +1721,13 @@ public class VirtuosoDb extends Db {
 			DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
 			df.setTimeZone(TimeZone.getTimeZone("GMT"));
 			cs.setString(3, df.format(operation.joinDate()));
-        	    cs.execute();
-        	    cs.close();
-        	    conn.close();
-			} catch (Throwable e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			cs.execute();
+			cs.close();
+			conn.close();
+		} catch (Throwable e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
         	resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
     }
@@ -1765,14 +1751,14 @@ public class VirtuosoDb extends Db {
 			df1.setTimeZone(TimeZone.getTimeZone("GMT"));
         		String triplets [] = new String[1];
         		triplets[0] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasMember> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasPerson> " + memberUri + "; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/joinDate> \"" + df1.format(operation.joinDate()) + "\"] .";
-        	    cs.setArray(1, conn.createArrayOf("varchar", triplets));
-        	    cs.execute();
-        	    cs.close();
-        	    conn.close();
-			} catch (Throwable e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			cs.setArray(1, conn.createArrayOf("varchar", triplets));
+			cs.execute();
+			cs.close();
+			conn.close();
+		} catch (Throwable e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
         	resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
     }
@@ -1802,31 +1788,31 @@ public class VirtuosoDb extends Db {
         		String queryString = "LdbcUpdate6AddPost(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         		CallableStatement cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.postId());
-        	    cs.setString(2, operation.imageFile());
-		    DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
-		    df.setTimeZone(TimeZone.getTimeZone("GMT"));
-		    cs.setString(3, df.format(operation.creationDate()));
-        	    cs.setString(4, operation.locationIp());
-        	    cs.setString(5, operation.browserUsed());
-        	    cs.setString(6, operation.language());
-        	    cs.setString(7, operation.content());
-        	    cs.setInt(8, operation.length());
-        	    cs.setLong(9, operation.authorPersonId());
-        	    cs.setLong(10, operation.forumId());
-        	    cs.setLong(11, operation.countryId());
-        	    Long tagIds1 [] = new Long[operation.tagIds().size()];
-        	    int i=0;
-        	    for(long temp:operation.tagIds()){
-        	        tagIds1[i++] = temp;
-        	    }
-        	    cs.setArray(12, conn.createArrayOf("int", tagIds1));
-        	    cs.execute();
-        	    cs.close();
-        	    conn.close();
-			} catch (Throwable e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			cs.setString(2, new String(operation.imageFile().getBytes("UTF-8"), "ISO-8859-1"));
+			DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+			df.setTimeZone(TimeZone.getTimeZone("GMT"));
+			cs.setString(3, df.format(operation.creationDate()));
+			cs.setString(4, operation.locationIp());
+			cs.setString(5, operation.browserUsed());
+			cs.setString(6, operation.language());
+			cs.setString(7, new String(operation.content().getBytes("UTF-8"), "ISO-8859-1"));
+			cs.setInt(8, operation.length());
+			cs.setLong(9, operation.authorPersonId());
+			cs.setLong(10, operation.forumId());
+			cs.setLong(11, operation.countryId());
+			Long tagIds1 [] = new Long[operation.tagIds().size()];
+			int i=0;
+			for(long temp:operation.tagIds()){
+			    tagIds1[i++] = temp;
 			}
+			cs.setArray(12, conn.createArrayOf("int", tagIds1));
+			cs.execute();
+			cs.close();
+			conn.close();
+		} catch (Throwable e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
         	resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
     }  
@@ -1913,19 +1899,19 @@ public class VirtuosoDb extends Db {
         		if (state.isPrintNames())
         			System.out.println("########### LdbcUpdate7");
         		if (state.isPrintStrings()) {
-	            	System.out.println("################################################ LdbcUpdate7AddComment");
-	            	System.out.println(operation.commentId());
-	            	System.out.println(operation.creationDate() + " " + operation.locationIp());
-	            	System.out.println(operation.browserUsed());
-	            	System.out.println(operation.content());
-	            	System.out.println(operation.length() + " " + operation.authorPersonId());
-	            	System.out.println(operation.countryId());
-	            	System.out.println(operation.replyToPostId() + " " + operation.replyToCommentId());
-	            	System.out.println("[");
-	            	for (long tag : operation.tagIds()) {
-						System.out.println(tag);
-					}
-	            	System.out.println("]");
+			    System.out.println("################################################ LdbcUpdate7AddComment");
+			    System.out.println(operation.commentId());
+			    System.out.println(operation.creationDate() + " " + operation.locationIp());
+			    System.out.println(operation.browserUsed());
+			    System.out.println(operation.content());
+			    System.out.println(operation.length() + " " + operation.authorPersonId());
+			    System.out.println(operation.countryId());
+			    System.out.println(operation.replyToPostId() + " " + operation.replyToCommentId());
+			    System.out.println("[");
+			    for (long tag : operation.tagIds()) {
+				System.out.println(tag);
+			    }
+			    System.out.println("]");
         		}
         		String queryString = "LdbcUpdate7AddComment(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         		CallableStatement cs = conn.prepareCall(queryString);
@@ -1933,27 +1919,27 @@ public class VirtuosoDb extends Db {
 			DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
 			df.setTimeZone(TimeZone.getTimeZone("GMT"));
 			cs.setString(2, df.format(operation.creationDate()));
-        	    cs.setString(3, operation.locationIp());
-        	    cs.setString(4, operation.browserUsed());
-        	    cs.setString(5, operation.content());
-        	    cs.setInt(6, operation.length());
-        	    cs.setLong(7, operation.authorPersonId());
-        	    cs.setLong(8, operation.countryId());
-        	    cs.setLong(9, operation.replyToPostId());
-        	    cs.setLong(10, operation.replyToCommentId());
-        	    Long tagIds1 [] = new Long[operation.tagIds().size()];
-        	    int i=0;
-        	    for(long temp:operation.tagIds()){
-        	        tagIds1[i++] = temp;
-        	    }
-        	    cs.setArray(11, conn.createArrayOf("int", tagIds1));
-        	    cs.execute();
-        	    cs.close();
-        	    conn.close();
-			} catch (Throwable e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			cs.setString(3, operation.locationIp());
+			cs.setString(4, operation.browserUsed());
+			cs.setString(5, new String(operation.content().getBytes("UTF-8"), "ISO-8859-1"));
+			cs.setInt(6, operation.length());
+			cs.setLong(7, operation.authorPersonId());
+			cs.setLong(8, operation.countryId());
+			cs.setLong(9, operation.replyToPostId());
+			cs.setLong(10, operation.replyToCommentId());
+			Long tagIds1 [] = new Long[operation.tagIds().size()];
+			int i=0;
+			for(long temp:operation.tagIds()){
+			    tagIds1[i++] = temp;
 			}
+			cs.setArray(11, conn.createArrayOf("int", tagIds1));
+			cs.execute();
+			cs.close();
+			conn.close();
+		} catch (Throwable e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
         	resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
     } 
@@ -2027,9 +2013,9 @@ public class VirtuosoDb extends Db {
         	try {
 			Connection conn = state.getConn();
         		if (state.isPrintNames())
-        			System.out.println("########### LdbcUpdate8");
+			    System.out.println("########### LdbcUpdate8");
         		if (state.isPrintStrings())
-        			System.out.println(operation.person1Id() + " " + operation.person2Id() + " " + operation.creationDate());
+			    System.out.println(operation.person1Id() + " " + operation.person2Id() + " " + operation.creationDate());
         		String queryString = "{call LdbcUpdate8AddFriendship(?, ?, ?)}";
         		CallableStatement cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.person1Id());
@@ -2037,19 +2023,19 @@ public class VirtuosoDb extends Db {
 			DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
 			df.setTimeZone(TimeZone.getTimeZone("GMT"));
 			cs.setString(3, df.format(operation.creationDate()));
-        	    cs.execute();
-        	    cs.close();
-        	    conn.close();
-			} catch (Throwable e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			cs.execute();
+			cs.close();
+			conn.close();
+		} catch (Throwable e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
         	resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
     }
     
     public static class LdbcUpdate8AddFriendshipToVirtuosoSparql implements OperationHandler<LdbcUpdate8AddFriendship, VirtuosoDbConnectionState> {
-        
+	
 
         @Override
         public void executeOperation(LdbcUpdate8AddFriendship operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
