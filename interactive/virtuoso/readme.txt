@@ -87,7 +87,6 @@ You can run the attached 4 scritps (in folder scripts) to create the schema, and
    $ isql <PORT_NUMBER> < ld.sql
 
 After loading, you have to create some stored procedures used in querues:
-   $ isql <PORT_NUMBER> < prep.sql
    $ isql <PORT_NUMBER> < procedures.sql
 
 
