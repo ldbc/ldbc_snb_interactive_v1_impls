@@ -27,17 +27,38 @@ create procedure c_weight (in p1 bigint, in p2 bigint)
   vectored;
   if (p1 is null or p2 is null)
      return 0;
-  declare x real;
-  declare y real;
-  x := (select sum (case when ps2.ps_replyof is null then 1 else 0.5 end) from post ps1, post ps2
-	   where ps1.ps_creatorid = p1 and ps1.ps_replyof = ps2.ps_postid and ps2.ps_creatorid = p2);
-  y := (select sum (case when ps2.ps_replyof is null then 1 else 0.5 end)  from post ps1, post ps2
+  return
+  	  (select coalesce (sum (case when ps2.ps_replyof is null then 1 else 0.5 end), 0) from post ps1, post ps2
+	   where ps1.ps_creatorid = p1 and ps1.ps_replyof = ps2.ps_postid and ps2.ps_creatorid = p2) +
+	  (select coalesce (sum (case when ps2.ps_replyof is null then 1 else 0.5 end), 0)  from post ps1, post ps2
 	   where ps1.ps_creatorid = p2 and ps1.ps_replyof = ps2.ps_postid and ps2.ps_creatorid = p1);
-  return coalesce (x, 0) + coalesce (y, 0);
 }
 
 
+create procedure c_weight_upd (in p1 bigint, in p2 bigint)
+{
+  vectored;
+  set isolation = 'serializable';
+  if (p1 is null or p2 is null)
+    return 0;
+  return
+  	  (select coalesce (sum (case when ps2.ps_replyof is null then 1 else 0.5 end), 0) from post ps1, post ps2
+	   where ps1.ps_creatorid = p1 and ps1.ps_replyof = ps2.ps_postid and ps2.ps_creatorid = p2 for update) +
+	  (select coalesce (sum (case when ps2.ps_replyof is null then 1 else 0.5 end), 0)  from post ps1, post ps2
+	   where ps1.ps_creatorid = p2 and ps1.ps_replyof = ps2.ps_postid and ps2.ps_creatorid = p1 for update);
+}
 
+
+create function c_weight_pre (in p1 bigint, in p2 bigint)
+{
+  vectored;
+  if (p1 is null or p2 is null)
+    return 0;
+  if (p1 < p2)
+    return coalesce ((select kw_weight from k_weight where kw_p1 = p1 and kw_p2 = p2), 0);
+  else
+    return coalesce ((select kw_weight from k_weight where kw_p1 = p2 and kw_p2 = p1), 0);
+}
 
 
 create procedure LdbcUpdate1AddPerson (in personid int,
@@ -205,6 +226,34 @@ create procedure LdbcUpdate6AddPost (in postid int,
 
 };
 
+
+create procedure kw_reply (in p1 bigint, in r_post bigint, in r_comment bigint)
+{
+  declare tmp, p2, reply bigint;
+  declare inc real;
+  whenever not found goto none;
+  select ps_creatorid into p2 from post where ps_postid = r_post + r_comment + 1;
+if (r_post)
+ inc := 1;
+ else 
+ inc := 0.5;
+  if (p1 > p2)
+    {
+    tmp := p2;
+    p2 := p1;
+    p1 := tmp;
+    }
+  set isolation = 'serializable';
+  if (not exists (select 1 from knows where k_person1id = p1 and k_person2id = p2))
+    return;
+  if (exists (select 1 from k_weight where kw_p1 = p1 and kw_p2 = p2 for update))
+    update k_weight set kw_weight = kw_weight + inc where kw_p1 = p1 and kw_p2 = p2;
+  else
+    insert into k_weight values (p1, p2, inc);
+none:
+return;
+}
+
 create procedure LdbcUpdate7AddComment (in commentid int,
 				    	in creationdate varchar,
 				     	in locationip varchar,
@@ -240,9 +289,22 @@ create procedure LdbcUpdate7AddComment (in commentid int,
 	    (in i1 int := tagids) {
 	    insert into post_tag values(commentid, i1);
 	}
-
+	  kw_reply (authorpersonid, replytocommentid, replytopostid);
 };
 				     
+
+create procedure k_weight_add (in p1 bigint, in p2 bigint)
+{
+  declare cw real;
+ cw := c_weight_upd (p1, p2);
+  if (cw <> 0)
+    {
+      if (p1 < p2)
+	insert into k_weight values (p1, p2, cw);
+      else
+	insert into k_weight values (p1, p2, cw);
+    }
+}
 
 create procedure LdbcUpdate8AddFriendship (in person1id int,
        		 			   in person2id int,
@@ -263,6 +325,7 @@ create procedure LdbcUpdate8AddFriendship (in person1id int,
 	};
 	insert into knows values(person1id, person2id, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)));
 	insert into knows values(person2id, person1id, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)));
+	k_weight_add (person1id, person2id);
 	return;
 };
 

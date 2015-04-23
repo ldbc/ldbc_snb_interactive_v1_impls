@@ -165,6 +165,40 @@ delete from load_list where ll_file like '%updateStrea%';
 
 rdf_loader_run () &
 rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+
 wait_for_children;
+
+log_enable (2);
+insert into k_weight 
+select p1, p2, sum (inc) from 
+(select case when rep.ps_creatorid < org.ps_creatorid then rep.ps_creatorid else org.ps_creatorid end as p1,
+  case when rep.ps_creatorid < org.ps_creatorid then org.ps_creatorid else rep.ps_creatorid end as p2,
+case when org.ps_replyof is null then 1e0 else 0.5e0 end as inc
+from post org, post rep where org.ps_postid = rep.ps_replyof) f
+where exists (select 1 from knows where k_person1id = p1 and k_person2id = p2 and k_person1id < k_person2id)
+group by p1, p2;
+ 
 
 checkpoint;

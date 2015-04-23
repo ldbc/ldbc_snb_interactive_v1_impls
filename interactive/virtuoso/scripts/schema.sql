@@ -221,8 +221,8 @@ create column index ps_forumid on post (ps_forumid, ps_creatorid) partition (ps_
 create column index fp_personid on forum_person (fp_personid) partition (fp_personid int (0hexffff00));
 
 
-create table k_weight (kw_p1 bigint, kw_p2 bigint, kw_weight int,
-  primary key (kw_p1, kw_p2) column);
+create table k_weight (kw_p1 bigint, kw_p2 bigint, kw_weight real,
+  primary key (kw_p1, kw_p2) not column);
 alter index k_weight on k_weight partition (kw_p1 int (0hexffff00));
 
 
