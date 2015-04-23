@@ -140,6 +140,7 @@ public class VirtuosoDb extends Db {
 //        private String endPoint;
         private String queryDir;
         private boolean runSql;
+	private boolean runCluster;
         private boolean printNames;
         private boolean printStrings;
         private boolean printResults;
@@ -157,6 +158,9 @@ public class VirtuosoDb extends Db {
             ds.setMinPoolSize(1);
             //ds.setMaxPoolSize(Integer.parseInt(properties.get("tc")) * 2);
 	    ds.setMaxPoolSize(64);
+	    runCluster = properties.get("run_cluster").equals("true") ? true : false;
+	    if (runCluster)
+		ds.setRoundrobin(true);
 	    //ds.setCharset("UTF-8");
             ds.fill();
 			queryDir = properties.get("queryDir");
@@ -164,6 +168,7 @@ public class VirtuosoDb extends Db {
 			printNames = properties.get("printQueryNames").equals("true") ? true : false;
 			printStrings = properties.get("printQueryStrings").equals("true") ? true : false;
 			printResults = properties.get("printQueryResults").equals("true") ? true : false;
+
 		}
 
 		public Connection getConn() {
