@@ -981,6 +981,11 @@ public class VirtuosoDb extends Db {
 						ttt[i] = (Long)o1.elementAt(i);
 					    else if (o1.elementAt(i) instanceof Integer)
 						ttt[i] = new Long((Integer)o1.elementAt(i));
+					    else if (o1.elementAt(i) instanceof Short)
+						ttt[i] = new Long((Short)o1.elementAt(i));
+					    else {
+						System.out.println("Error in Q14");
+					    }
 					}
 					double weight = result.getDouble(2);
 					LdbcQuery14Result tmp = new LdbcQuery14Result(new ArrayList<Long>(Arrays.asList(ttt)), weight);

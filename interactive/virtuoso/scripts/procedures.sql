@@ -21,16 +21,19 @@ create procedure path_str (in path any)
   return str;
 }
 
+
 create procedure c_weight (in p1 bigint, in p2 bigint)
 {
   vectored;
   if (p1 is null or p2 is null)
      return 0;
-  return
-  	  (select coalesce (sum (case when ps2.ps_replyof is null then 1 else 0.5 end), 0) from post ps1, post ps2
-	   where ps1.ps_creatorid = p1 and ps1.ps_replyof = ps2.ps_postid and ps2.ps_creatorid = p2) +
-	  (select coalesce (sum (case when ps2.ps_replyof is null then 1 else 0.5 end), 0)  from post ps1, post ps2
+  declare x real;
+  declare y real;
+  x := (select sum (case when ps2.ps_replyof is null then 1 else 0.5 end) from post ps1, post ps2
+	   where ps1.ps_creatorid = p1 and ps1.ps_replyof = ps2.ps_postid and ps2.ps_creatorid = p2);
+  y := (select sum (case when ps2.ps_replyof is null then 1 else 0.5 end)  from post ps1, post ps2
 	   where ps1.ps_creatorid = p2 and ps1.ps_replyof = ps2.ps_postid and ps2.ps_creatorid = p1);
+  return coalesce (x, 0) + coalesce (y, 0);
 }
 
 
