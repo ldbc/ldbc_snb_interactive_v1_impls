@@ -187,6 +187,14 @@ rdf_loader_run () &
 rdf_loader_run () &
 rdf_loader_run () &
 rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
+rdf_loader_run () &
 
 wait_for_children;
 
