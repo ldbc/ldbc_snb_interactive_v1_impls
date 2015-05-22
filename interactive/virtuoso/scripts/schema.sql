@@ -218,7 +218,7 @@ create column index ps_replyof on post (ps_replyof) partition (ps_replyof int (0
 --create column index ps_replyof on post (ps_replyof, ps_creatorid, ps_creationdate) partition (ps_replyof int (0hexffff00));
 create column index ps_forumid on post (ps_forumid, ps_creatorid) partition (ps_forumid int (0hexffff00));
 
-create column index fp_personid on forum_person (fp_personid) partition (fp_personid int (0hexffff00));
+create column index fp_personid on forum_person (fp_personid, fp_creationdate, fp_forumid) partition (fp_personid int (0hexffff00));
 
 
 create table k_weight (kw_p1 bigint, kw_p2 bigint, kw_weight real,
