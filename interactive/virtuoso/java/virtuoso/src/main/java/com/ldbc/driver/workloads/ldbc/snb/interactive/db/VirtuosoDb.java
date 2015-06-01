@@ -218,6 +218,7 @@ public class VirtuosoDb extends Db {
         @Override
         public void executeOperation(LdbcQuery1 operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
         	Connection conn = state.getConn();
+		Statement stmt = null;
 		List<LdbcQuery1Result> RESULT = new ArrayList<LdbcQuery1Result>();
         	int results_count = 0; RESULT.clear();
         	try {
@@ -230,7 +231,7 @@ public class VirtuosoDb extends Db {
             		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
             		queryString = queryString.replaceAll("%Name%", operation.firstName());
         		}
-        		Statement stmt = conn.createStatement();
+        		stmt = conn.createStatement();
         		
         		if (state.isPrintNames())
         			System.out.println("########### LdbcQuery1");
@@ -285,6 +286,7 @@ public class VirtuosoDb extends Db {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -298,6 +300,7 @@ public class VirtuosoDb extends Db {
         @Override
         public void executeOperation(LdbcQuery2 operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
         	Connection conn = state.getConn();
+       		Statement stmt = null;
 		List<LdbcQuery2Result> RESULT = new ArrayList<LdbcQuery2Result>();
         	int results_count = 0; RESULT.clear();
         	try {
@@ -312,7 +315,7 @@ public class VirtuosoDb extends Db {
             		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
 			queryString = queryString.replaceAll("%Date0%", sdf.format(operation.maxDate()));
         		}
-        		Statement  stmt = conn.createStatement();
+        		stmt = conn.createStatement();
         		
         		if (state.isPrintNames())
         			System.out.println("########### LdbcQuery2");
@@ -347,9 +350,11 @@ public class VirtuosoDb extends Db {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+
 			}
             resultReporter.report(results_count, RESULT, operation);
         }
@@ -360,6 +365,7 @@ public class VirtuosoDb extends Db {
         @Override
         public void executeOperation(LdbcQuery3 operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
         	Connection conn = state.getConn();
+		Statement stmt = null;
 		List<LdbcQuery3Result> RESULT = new ArrayList<LdbcQuery3Result>();
         	int results_count = 0; RESULT.clear();
         	try {
@@ -380,7 +386,7 @@ public class VirtuosoDb extends Db {
 			queryString = queryString.replaceAll("%Date0%", sdf.format(operation.startDate()));
             		queryString = queryString.replaceAll("%Duration%", String.valueOf(operation.durationDays()));
         		}
-        		Statement  stmt = conn.createStatement();
+        		stmt = conn.createStatement();
         		
         		if (state.isPrintNames())
         			System.out.println("########### LdbcQuery3");
@@ -409,9 +415,11 @@ public class VirtuosoDb extends Db {
 			} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+
 			}
         	resultReporter.report(results_count, RESULT, operation);
         }
@@ -423,6 +431,7 @@ public class VirtuosoDb extends Db {
         @Override
         public void executeOperation(LdbcQuery4 operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
         	Connection conn = state.getConn();
+		Statement stmt = null;
 		List<LdbcQuery4Result> RESULT = new ArrayList<LdbcQuery4Result>();
         	int results_count = 0; RESULT.clear();
         	try {
@@ -439,7 +448,7 @@ public class VirtuosoDb extends Db {
 			queryString = queryString.replaceAll("%Date0%", sdf.format(operation.startDate()));
             		queryString = queryString.replaceAll("%Duration%", String.valueOf(operation.durationDays()));
         		}
-        		Statement stmt = conn.createStatement();
+        		stmt = conn.createStatement();
         		
         		if (state.isPrintNames())
         			System.out.println("########### LdbcQuery4");
@@ -460,9 +469,11 @@ public class VirtuosoDb extends Db {
 			} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+
 			}
         	resultReporter.report(results_count, RESULT, operation);
         }
@@ -473,6 +484,7 @@ public class VirtuosoDb extends Db {
         @Override
         public void executeOperation(LdbcQuery5 operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
         	Connection conn = state.getConn();
+		Statement stmt = null;
 		List<LdbcQuery5Result> RESULT = new ArrayList<LdbcQuery5Result>();
         	int results_count = 0; RESULT.clear();
         	try {
@@ -487,7 +499,7 @@ public class VirtuosoDb extends Db {
         			queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
 			queryString = queryString.replaceAll("%Date0%", sdf.format(operation.minDate()));
         		}
-        		Statement stmt = conn.createStatement();
+        		stmt = conn.createStatement();
         		
         		if (state.isPrintNames())
         			System.out.println("########### LdbcQuery5");
@@ -508,9 +520,11 @@ public class VirtuosoDb extends Db {
 			} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+
 			}
         	resultReporter.report(results_count, RESULT, operation);
         }
@@ -522,6 +536,7 @@ public class VirtuosoDb extends Db {
         @Override
         public void executeOperation(LdbcQuery6 operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
         	Connection conn = state.getConn();
+		Statement stmt = null;
 		List<LdbcQuery6Result> RESULT = new ArrayList<LdbcQuery6Result>();
         	int results_count = 0; RESULT.clear();
         	try {
@@ -534,7 +549,7 @@ public class VirtuosoDb extends Db {
             		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
             		queryString = queryString.replaceAll("%Tag%", operation.tagName());
         		}
-        		Statement stmt = conn.createStatement();
+        		stmt = conn.createStatement();
         		
         		if (state.isPrintNames())
         			System.out.println("########### LdbcQuery6");
@@ -555,9 +570,11 @@ public class VirtuosoDb extends Db {
 			} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+
 			}
         	resultReporter.report(results_count, RESULT, operation);
         }
@@ -569,6 +586,7 @@ public class VirtuosoDb extends Db {
         @Override
         public void executeOperation(LdbcQuery7 operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
         	Connection conn = state.getConn();
+		Statement stmt = null;
 		List<LdbcQuery7Result> RESULT = new ArrayList<LdbcQuery7Result>();
         	int results_count = 0; RESULT.clear();
         	try {
@@ -579,8 +597,8 @@ public class VirtuosoDb extends Db {
         		else {
             		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
         		}
-        		Statement stmt = conn.createStatement();
-        		
+        		stmt = conn.createStatement();        		
+
         		if (state.isPrintNames())
         			System.out.println("########### LdbcQuery7");
         		if (state.isPrintStrings())
@@ -614,9 +632,11 @@ public class VirtuosoDb extends Db {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+
 			}
         	resultReporter.report(results_count, RESULT, operation);
         }
@@ -628,6 +648,7 @@ public class VirtuosoDb extends Db {
         @Override
         public void executeOperation(LdbcQuery8 operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
         	Connection conn = state.getConn();
+		Statement stmt = null;
 		List<LdbcQuery8Result> RESULT = new ArrayList<LdbcQuery8Result>();
         	int results_count = 0; RESULT.clear();
         	try {
@@ -638,7 +659,7 @@ public class VirtuosoDb extends Db {
         		else {
             		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));        			
         		}
-        		Statement stmt = conn.createStatement();
+        		stmt = conn.createStatement();
         		
         		if (state.isPrintNames())
         			System.out.println("########### LdbcQuery8");
@@ -673,9 +694,11 @@ public class VirtuosoDb extends Db {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+
 			}
         	resultReporter.report(results_count, RESULT, operation);
         }
@@ -686,6 +709,7 @@ public class VirtuosoDb extends Db {
         @Override
         public void executeOperation(LdbcQuery9 operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
         	Connection conn = state.getConn();
+		Statement stmt = null;
 		List<LdbcQuery9Result> RESULT = new ArrayList<LdbcQuery9Result>();
         	int results_count = 0; RESULT.clear();
         	try {
@@ -700,7 +724,7 @@ public class VirtuosoDb extends Db {
             		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
 			queryString = queryString.replaceAll("%Date0%", sdf.format(operation.maxDate()));
         		}
-        		Statement stmt = conn.createStatement();
+        		stmt = conn.createStatement();
         		
         		if (state.isPrintNames())
         			System.out.println("########### LdbcQuery9");
@@ -733,9 +757,11 @@ public class VirtuosoDb extends Db {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+
 			}
         	resultReporter.report(results_count, RESULT, operation);
         }
@@ -747,6 +773,7 @@ public class VirtuosoDb extends Db {
         @Override
         public void executeOperation(LdbcQuery10 operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
         	Connection conn = state.getConn();
+		Statement stmt = null;
 		List<LdbcQuery10Result> RESULT = new ArrayList<LdbcQuery10Result>();
         	int results_count = 0; RESULT.clear();
         	try {
@@ -761,7 +788,7 @@ public class VirtuosoDb extends Db {
             		queryString = queryString.replaceAll("%HS0%", String.valueOf(operation.month()));
                		queryString = queryString.replaceAll("%HS1%", String.valueOf((operation.month() + 1)));
         		}
-        		Statement stmt = conn.createStatement();
+        		stmt = conn.createStatement();
         		
         		if (state.isPrintNames())
         			System.out.println("########### LdbcQuery10");
@@ -789,9 +816,11 @@ public class VirtuosoDb extends Db {
 			} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					try { stmt.close();conn.close(); } catch (SQLException e1) { }
 				} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+
 			}
         	resultReporter.report(results_count, RESULT, operation);
         }
@@ -803,6 +832,7 @@ public class VirtuosoDb extends Db {
         @Override
         public void executeOperation(LdbcQuery11 operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
         	Connection conn = state.getConn();
+		Statement stmt = null;
 		List<LdbcQuery11Result> RESULT = new ArrayList<LdbcQuery11Result>();
         	int results_count = 0; RESULT.clear();
         	try {
@@ -817,7 +847,7 @@ public class VirtuosoDb extends Db {
             		queryString = queryString.replaceAll("%Date0%", String.valueOf(operation.workFromYear()));
             		queryString = queryString.replaceAll("%Country%", operation.countryName());
         		}
-        		Statement stmt = conn.createStatement();
+        		stmt = conn.createStatement();
         		
         		if (state.isPrintNames())
         			System.out.println("########### LdbcQuery11");
@@ -845,9 +875,11 @@ public class VirtuosoDb extends Db {
 			} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+
 			}
         	resultReporter.report(results_count, RESULT, operation);
         }
@@ -858,6 +890,7 @@ public class VirtuosoDb extends Db {
         @Override
         public void executeOperation(LdbcQuery12 operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
         	Connection conn = state.getConn();
+		Statement stmt = null;
 		List<LdbcQuery12Result> RESULT = new ArrayList<LdbcQuery12Result>();
         	int results_count = 0; RESULT.clear();
         	try {
@@ -870,7 +903,7 @@ public class VirtuosoDb extends Db {
             		queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
             		queryString = queryString.replaceAll("%TagType%", operation.tagClassName());
         		}
-        		Statement stmt = conn.createStatement();
+        		stmt = conn.createStatement();
         		
         		if (state.isPrintNames())
         			System.out.println("########### LdbcQuery12");
@@ -898,9 +931,11 @@ public class VirtuosoDb extends Db {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+
 			}
         	resultReporter.report(results_count, RESULT, operation);
         }
@@ -912,6 +947,7 @@ public class VirtuosoDb extends Db {
         @Override
         public void executeOperation(LdbcQuery13 operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
         	Connection conn = state.getConn();
+		Statement stmt = null;
 		List<LdbcQuery13Result> RESULT = new ArrayList<LdbcQuery13Result>();
         	int results_count = 0; RESULT.clear();
         	try {
@@ -924,7 +960,7 @@ public class VirtuosoDb extends Db {
         			queryString = queryString.replaceAll("%Person1%", String.format("%020d", operation.person1Id()));
             		queryString = queryString.replaceAll("%Person2%", String.format("%020d", operation.person2Id()));
         		}
-        		Statement stmt = conn.createStatement();
+        		stmt = conn.createStatement();
         		
         		if (state.isPrintNames())
         			System.out.println("########### LdbcQuery13");
@@ -944,9 +980,11 @@ public class VirtuosoDb extends Db {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+
 			}
         	resultReporter.report(results_count, RESULT.get(0), operation);
         }
@@ -957,6 +995,7 @@ public class VirtuosoDb extends Db {
         @Override
         public void executeOperation(LdbcQuery14 operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
         	Connection conn = state.getConn();
+		Statement stmt = null;
 		List<LdbcQuery14Result> RESULT = new ArrayList<LdbcQuery14Result>();
         	int results_count = 0; RESULT.clear();
         	try {
@@ -969,7 +1008,7 @@ public class VirtuosoDb extends Db {
             		queryString = queryString.replaceAll("%Person1%", String.format("%020d", operation.person1Id()));
             		queryString = queryString.replaceAll("%Person2%", String.format("%020d", operation.person2Id()));
         		}
-        		Statement stmt = conn.createStatement();
+        		stmt = conn.createStatement();
         		
         		if (state.isPrintNames())
         			System.out.println("########### LdbcQuery14");
@@ -1002,9 +1041,11 @@ public class VirtuosoDb extends Db {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+
 			}
         	resultReporter.report(results_count, RESULT, operation);
         }
@@ -1015,9 +1056,11 @@ public class VirtuosoDb extends Db {
         public void executeOperation(LdbcShortQuery1PersonProfile operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
         	LdbcShortQuery1PersonProfileResult RESULT = null;
         	int results_count = 0;
+		Connection conn = state.getConn();
+		CallableStatement stmt1 = null;
+
         	try {
-		    Connection conn = state.getConn();
-        		CallableStatement stmt1 = conn.prepareCall("person_view_1(?)");
+		        stmt1 = conn.prepareCall("person_view_1(?)");
         		stmt1.setLong(1, operation.personId());
         		
         		if (state.isPrintNames())
@@ -1047,6 +1090,7 @@ public class VirtuosoDb extends Db {
 		} catch (SQLException e) {
 		    // TODO Auto-generated catch block
 		    e.printStackTrace();
+		    try { stmt1.close();conn.close(); } catch (SQLException e1) { }
 		} catch (Exception e) {
 		    // TODO Auto-generated catch block
 		    e.printStackTrace();
@@ -1060,9 +1104,10 @@ public class VirtuosoDb extends Db {
         public void executeOperation(LdbcShortQuery2PersonPosts operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
         	List<LdbcShortQuery2PersonPostsResult> RESULT = new ArrayList<LdbcShortQuery2PersonPostsResult>();
         	int results_count = 0;
+		Connection conn = state.getConn();
+		CallableStatement stmt1 = null;
         	try {
-		    Connection conn = state.getConn();
-        		CallableStatement stmt1 = conn.prepareCall("person_view_2(?)");
+        		stmt1 = conn.prepareCall("person_view_2(?)");
         		stmt1.setLong(1, operation.personId());
         		
         		if (state.isPrintNames())
@@ -1101,6 +1146,7 @@ public class VirtuosoDb extends Db {
 		    System.out.println("Err: LdbcShortQuery2 (" + operation.personId() + ")");
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				try { stmt1.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 		    System.out.println("Err: LdbcShortQuery2 (" + operation.personId() + ")");
 				// TODO Auto-generated catch block
@@ -1115,9 +1161,10 @@ public class VirtuosoDb extends Db {
         public void executeOperation(LdbcShortQuery3PersonFriends operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
         	List<LdbcShortQuery3PersonFriendsResult> RESULT = new ArrayList<LdbcShortQuery3PersonFriendsResult>();
         	int results_count = 0;
+		Connection conn = state.getConn();
+		CallableStatement stmt1 = null;
         	try {
-		    Connection conn = state.getConn();
-        		CallableStatement stmt1 = conn.prepareCall("person_view_3(?)");
+                        stmt1 = conn.prepareCall("person_view_3(?)");
         		stmt1.setLong(1, operation.personId());
         		
         		if (state.isPrintNames())
@@ -1146,6 +1193,7 @@ public class VirtuosoDb extends Db {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				try { stmt1.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1159,9 +1207,10 @@ public class VirtuosoDb extends Db {
         public void executeOperation(LdbcShortQuery4MessageContent operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
         	LdbcShortQuery4MessageContentResult RESULT = null;
         	int results_count = 0;
+		Connection conn = state.getConn();
+		CallableStatement stmt1 = null;
         	try {
-		    Connection conn = state.getConn();
-        		CallableStatement stmt1 = conn.prepareCall("post_view_1(?)");
+        		stmt1 = conn.prepareCall("post_view_1(?)");
         		stmt1.setLong(1, operation.messageId());
         		
         		if (state.isPrintNames())
@@ -1188,6 +1237,7 @@ public class VirtuosoDb extends Db {
 				// TODO Auto-generated catch block
 		    System.out.println("Err: LdbcShortQuery4 (" + operation.messageId() + ")");
 				e.printStackTrace();
+				try { stmt1.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 		    System.out.println("Err: LdbcShortQuery4 (" + operation.messageId() + ")");
@@ -1202,9 +1252,10 @@ public class VirtuosoDb extends Db {
         public void executeOperation(LdbcShortQuery5MessageCreator operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
         	LdbcShortQuery5MessageCreatorResult RESULT = null;
         	int results_count = 0;
+		Connection conn = state.getConn();
+		CallableStatement stmt1 = null;
         	try {
-		    Connection conn = state.getConn();
-        		CallableStatement stmt1 = conn.prepareCall("post_view_2(?)");
+        		stmt1 = conn.prepareCall("post_view_2(?)");
         		stmt1.setLong(1, operation.messageId());
         		
         		if (state.isPrintNames())
@@ -1231,6 +1282,7 @@ public class VirtuosoDb extends Db {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				try { stmt1.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1244,9 +1296,10 @@ public class VirtuosoDb extends Db {
         public void executeOperation(LdbcShortQuery6MessageForum operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
         	LdbcShortQuery6MessageForumResult RESULT = null;
         	int results_count = 0;
+		Connection conn = state.getConn();
+		CallableStatement stmt1 = null;
         	try {
-		    Connection conn = state.getConn();
-        		CallableStatement stmt1 = conn.prepareCall("post_view_3(?)");
+        		stmt1 = conn.prepareCall("post_view_3(?)");
         		stmt1.setLong(1, operation.messageId());
         		
         		if (state.isPrintNames())
@@ -1275,6 +1328,7 @@ public class VirtuosoDb extends Db {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				try { stmt1.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1288,9 +1342,10 @@ public class VirtuosoDb extends Db {
         public void executeOperation(LdbcShortQuery7MessageReplies operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
         	List<LdbcShortQuery7MessageRepliesResult> RESULT = new ArrayList<LdbcShortQuery7MessageRepliesResult>();
         	int results_count = 0;
+		Connection conn = state.getConn();
+		CallableStatement stmt1 = null;
         	try {
-		    Connection conn = state.getConn();
-        		CallableStatement stmt1 = conn.prepareCall("post_view_4(?)");
+        		stmt1 = conn.prepareCall("post_view_4(?)");
         		stmt1.setLong(1, operation.messageId());
         		
         		if (state.isPrintNames())
@@ -1325,6 +1380,7 @@ public class VirtuosoDb extends Db {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				try { stmt1.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -1338,8 +1394,9 @@ public class VirtuosoDb extends Db {
 
         @Override
         public void executeOperation(LdbcUpdate1AddPerson operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+	    Connection conn = state.getConn();
+	    PreparedStatement  cs = null;
         	try {
-		       	Connection conn = state.getConn();
         		if (state.isPrintNames())
         			System.out.println("########### LdbcUpdate1");
         		if (state.isPrintStrings()) {
@@ -1377,7 +1434,7 @@ public class VirtuosoDb extends Db {
 	            	System.out.println("]");
         		}
         		String queryString = "LdbcUpdate1AddPerson(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        		PreparedStatement cs = conn.prepareStatement(queryString);
+        		cs = conn.prepareStatement(queryString);
         		cs.setLong(1, operation.personId());
 			cs.setString(2, new String(operation.personFirstName().getBytes("UTF-8"), "ISO-8859-1"));
 			cs.setString(3, new String(operation.personLastName().getBytes("UTF-8"), "ISO-8859-1"));
@@ -1421,6 +1478,7 @@ public class VirtuosoDb extends Db {
 		} catch (Throwable e) {
 		    // TODO Auto-generated catch block
 		    e.printStackTrace();
+		    try { cs.close();conn.close(); } catch (SQLException e1) { }
 		}
         	resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
@@ -1518,14 +1576,15 @@ public class VirtuosoDb extends Db {
         
         @Override
         public void executeOperation(LdbcUpdate2AddPostLike operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+	    Connection conn = state.getConn();
+	    CallableStatement cs = null;
         	try {
-			Connection conn = state.getConn();
         		if (state.isPrintNames())
                 	System.out.println("########### LdbcUpdate2");
         		if (state.isPrintStrings())
         			System.out.println(operation.personId() + " " + operation.postId() + " " + operation.creationDate());
         		String queryString = "{call LdbcUpdate2AddPostLike(?, ?, ?)}";
-        		CallableStatement cs = conn.prepareCall(queryString);
+        		cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.personId());
 			cs.setLong(2, operation.postId());
 			DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
@@ -1537,6 +1596,7 @@ public class VirtuosoDb extends Db {
 		} catch (Throwable e) {
 		    // TODO Auto-generated catch block
 		    e.printStackTrace();
+		    try { cs.close();conn.close(); } catch (SQLException e1) { }
 		}
         	resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
@@ -1574,14 +1634,15 @@ public class VirtuosoDb extends Db {
     public static class LdbcUpdate3AddCommentLikeToVirtuoso implements OperationHandler<LdbcUpdate3AddCommentLike, VirtuosoDbConnectionState> {
         @Override
         public void executeOperation(LdbcUpdate3AddCommentLike operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+	    Connection conn = state.getConn();
+	    CallableStatement cs = null;
         	try {
-			Connection conn = state.getConn();
         		if (state.isPrintNames())
         			System.out.println("########### LdbcUpdate3");
         		if (state.isPrintStrings())
         			System.out.println(operation.personId() + " " + operation.commentId() + " " + operation.creationDate());
         		String queryString = "{call LdbcUpdate2AddPostLike(?, ?, ?)}";
-        		CallableStatement cs = conn.prepareCall(queryString);
+        		cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.personId());
 			cs.setLong(2, operation.commentId());
 			DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
@@ -1593,6 +1654,7 @@ public class VirtuosoDb extends Db {
 		} catch (Throwable e) {
 		    // TODO Auto-generated catch block
 		    e.printStackTrace();
+		    try { cs.close();conn.close(); } catch (SQLException e1) { }
 		}
         	resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
@@ -1633,8 +1695,9 @@ public class VirtuosoDb extends Db {
 
         @Override
         public void executeOperation(LdbcUpdate4AddForum operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+	    Connection conn = state.getConn();
+	    CallableStatement cs = null;
         	try {
-			Connection conn = state.getConn();
            		if (state.isPrintNames())
         			System.out.println("########### LdbcUpdate4");
         		if (state.isPrintStrings()) {
@@ -1647,7 +1710,7 @@ public class VirtuosoDb extends Db {
 	            	System.out.println("]");
         		}
         		String queryString = "LdbcUpdate4AddForum(?, ?, ?, ?, ?)";
-        		CallableStatement cs = conn.prepareCall(queryString);
+        		cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.forumId());
 			cs.setString(2, new String(operation.forumTitle().getBytes("UTF-8"), "ISO-8859-1"));
 			DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
@@ -1666,6 +1729,7 @@ public class VirtuosoDb extends Db {
 		} catch (Throwable e) {
 		    // TODO Auto-generated catch block
 		    e.printStackTrace();
+		    try { cs.close();conn.close(); } catch (SQLException e1) { }
 		}
         	resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
@@ -1718,14 +1782,15 @@ public class VirtuosoDb extends Db {
     public static class LdbcUpdate5AddForumMembershipToVirtuoso implements OperationHandler<LdbcUpdate5AddForumMembership, VirtuosoDbConnectionState> {
         @Override
         public void executeOperation(LdbcUpdate5AddForumMembership operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+	    Connection conn = state.getConn();		
+	    CallableStatement cs = null;
         	try {
-			Connection conn = state.getConn();
         		if (state.isPrintNames())
         			System.out.println("########### LdbcUpdate5");
         		if (state.isPrintStrings())
         			System.out.println(operation.forumId() + " " + operation.personId() + " " + operation.joinDate());
         		String queryString = "{call LdbcUpdate5AddForumMembership(?, ?, ?)}";
-        		CallableStatement cs = conn.prepareCall(queryString);
+        		cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.forumId());
         		cs.setLong(2, operation.personId());
 			DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
@@ -1737,6 +1802,7 @@ public class VirtuosoDb extends Db {
 		} catch (Throwable e) {
 		    // TODO Auto-generated catch block
 		    e.printStackTrace();
+		    try { cs.close();conn.close(); } catch (SQLException e1) { }
 		}
         	resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
@@ -1778,8 +1844,9 @@ public class VirtuosoDb extends Db {
 
         @Override
         public void executeOperation(LdbcUpdate6AddPost operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+	    Connection conn = state.getConn();
+	    CallableStatement cs = null;
         	try {
-			Connection conn = state.getConn();
         		if (state.isPrintNames())
         			System.out.println("########### LdbcUpdate6");
         		if (state.isPrintStrings()) {
@@ -1796,7 +1863,7 @@ public class VirtuosoDb extends Db {
 	            	System.out.println("]");
         		}
         		String queryString = "LdbcUpdate6AddPost(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        		CallableStatement cs = conn.prepareCall(queryString);
+        		cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.postId());
 			cs.setString(2, new String(operation.imageFile().getBytes("UTF-8"), "ISO-8859-1"));
 			DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
@@ -1822,6 +1889,7 @@ public class VirtuosoDb extends Db {
 		} catch (Throwable e) {
 		    // TODO Auto-generated catch block
 		    e.printStackTrace();
+		    try { cs.close();conn.close(); } catch (SQLException e1) { }
 		}
         	resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
@@ -1904,8 +1972,9 @@ public class VirtuosoDb extends Db {
 
         @Override
         public void executeOperation(LdbcUpdate7AddComment operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+	    Connection conn = state.getConn(); 
+	    CallableStatement cs = null;
         	try {
-			Connection conn = state.getConn(); 
         		if (state.isPrintNames())
         			System.out.println("########### LdbcUpdate7");
         		if (state.isPrintStrings()) {
@@ -1924,7 +1993,7 @@ public class VirtuosoDb extends Db {
 			    System.out.println("]");
         		}
         		String queryString = "LdbcUpdate7AddComment(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        		CallableStatement cs = conn.prepareCall(queryString);
+        		cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.commentId());
 			DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
 			df.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -1949,6 +2018,7 @@ public class VirtuosoDb extends Db {
 		} catch (Throwable e) {
 		    // TODO Auto-generated catch block
 		    e.printStackTrace();
+		    try { cs.close();conn.close(); } catch (SQLException e1) { }
 		}
         	resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
@@ -2020,14 +2090,15 @@ public class VirtuosoDb extends Db {
 
         @Override
         public void executeOperation(LdbcUpdate8AddFriendship operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+	    Connection conn = state.getConn();
+	    CallableStatement cs = null;
         	try {
-			Connection conn = state.getConn();
         		if (state.isPrintNames())
 			    System.out.println("########### LdbcUpdate8");
         		if (state.isPrintStrings())
 			    System.out.println(operation.person1Id() + " " + operation.person2Id() + " " + operation.creationDate());
         		String queryString = "{call LdbcUpdate8AddFriendship(?, ?, ?)}";
-        		CallableStatement cs = conn.prepareCall(queryString);
+        		cs = conn.prepareCall(queryString);
         		cs.setLong(1, operation.person1Id());
         		cs.setLong(2, operation.person2Id());
 			DateFormat df = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
@@ -2039,6 +2110,7 @@ public class VirtuosoDb extends Db {
 		} catch (Throwable e) {
 		    // TODO Auto-generated catch block
 		    e.printStackTrace();
+		    try { cs.close();conn.close(); } catch (SQLException e1) { }
 		}
         	resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }

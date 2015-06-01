@@ -91,36 +91,36 @@ create procedure LdbcUpdate1AddPerson (in personid int,
 		}
 		goto again;
 	};
-	insert into person values(personid, personfirstname, personlastname, gender,
-	       	    	   	  datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(birthday)),
-				  datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)),
-				  locationip,
-				  browserused, cityid, null);
-	--delete from person where p_personid = personid;
+--	insert into person values(personid, personfirstname, personlastname, gender,
+--	       	    	   	  datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(birthday)),
+--				  datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)),
+--				  locationip,
+--				  browserused, cityid, null);
+	delete from person where p_personid = personid;
 	for vectored
 	    (in i1 varchar := languages) {
-	    insert into person_language values(personid, i1);
-	    --delete from person_language where plang_personid = personid;
+	    --insert into person_language values(personid, i1);
+	    delete from person_language where plang_personid = personid;
 	}
 	for vectored
 	    (in i1 varchar := emails) {
-	    insert into person_email values(personid, i1);
-	    --delete from person_email where pe_personid = personid;
+	    --insert into person_email values(personid, i1);
+	    delete from person_email where pe_personid = personid;
 	}
 	for vectored
 	    (in i1 int := tagids) {
-	    insert into person_tag values(personid, i1);
-	    --delete from person_tag where pt_personid = personid;
+	    --insert into person_tag values(personid, i1);
+	    delete from person_tag where pt_personid = personid;
 	}
 	for vectored
 	    (in i1 int := studyatorgids, in i2 int := studyatyears) {
-	    insert into person_university values(personid, i1, i2);
-	    --delete from person_university where pu_personid = personid;
+	    --insert into person_university values(personid, i1, i2);
+	    delete from person_university where pu_personid = personid;
 	}
 	for vectored
 	    (in i1 int := workatorgids, in i2 int := workatyears) {
-	    insert into person_company values(personid, i1, i2);
-	    --delete from person_company where pc_personid = personid;
+	    --insert into person_company values(personid, i1, i2);
+	    delete from person_company where pc_personid = personid;
 	}
 	return;
 };
@@ -143,8 +143,8 @@ create procedure LdbcUpdate2AddPostLike (in personid int,
 		}
 		goto again;
 	};
-	insert into likes values(personid, postid, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(datetimestr)));
-	--delete from likes where l_personid = personid and l_postid = postid;
+	--insert into likes values(personid, postid, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(datetimestr)));
+	delete from likes where l_personid = personid and l_postid = postid;
 	return;
 };
 
@@ -167,12 +167,12 @@ create procedure LdbcUpdate4AddForum  (in forumid int,
 		}
 		goto again;
 	};
-	insert into forum values(forumid, forumtitle, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)), moderatorpersonid);
-	--delete from forum where f_forumid = forumid;
+	--insert into forum values(forumid, forumtitle, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)), moderatorpersonid);
+	delete from forum where f_forumid = forumid;
 	for vectored
 	    (in i1 int := tagids) {
-	    insert into forum_tag values(forumid, i1);
-	    --delete from forum_tag where ft_forumid = forumid;
+	    --insert into forum_tag values(forumid, i1);
+	    delete from forum_tag where ft_forumid = forumid;
 	}
 	return;
 };
@@ -194,8 +194,8 @@ create procedure LdbcUpdate5AddForumMembership (in forumid int,
 		}
 		goto again;
 	};
-	insert into forum_person values(forumid, personid, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)));
-	--delete from forum_person where fp_forumid = forumid and fp_personid = personid;
+	--insert into forum_person values(forumid, personid, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)));
+	delete from forum_person where fp_forumid = forumid and fp_personid = personid;
 	return;
 };
 
@@ -225,15 +225,15 @@ create procedure LdbcUpdate6AddPost (in postid int,
 		}
 		goto again;
 	};
-	insert into post values(postid, imagefile, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)),
-	       	    	 	locationip,
-				browserused, lang, content, len, authorpersonid, authorpersonid, countryid, forumid, NULL, NULL);
-	--delete from post where ps_postid = postid;
+--	insert into post values(postid, imagefile, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)),
+--	       	    	 	locationip,
+--				browserused, lang, content, len, authorpersonid, authorpersonid, countryid, forumid, NULL, NULL);
+	delete from post where ps_postid = postid;
 				
 	for vectored
 	    (in i1 int := tagids) {
-	    insert into post_tag values(postid, i1);
-	    --delete from post_tag where pst_postid = postid;
+	    --insert into post_tag values(postid, i1);
+	    delete from post_tag where pst_postid = postid;
 	}
 
 };
@@ -291,17 +291,17 @@ create procedure LdbcUpdate7AddComment (in commentid int,
 		}
 		goto again;
 	};
-	insert into post values(commentid, NULL, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)),
-	       	    	 	locationip,
-				browserused, NULL, content, len, authorpersonid, NULL, countryid, NULL,
-				replytocommentid+replytopostid+1,
-				NULL);
-	--delete from post where ps_postid = commentid;
+--	insert into post values(commentid, NULL, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)),
+--	       	    	 	locationip,
+--				browserused, NULL, content, len, authorpersonid, NULL, countryid, NULL,
+--				replytocommentid+replytopostid+1,
+--				NULL);
+	delete from post where ps_postid = commentid;
 				
 	for vectored
 	    (in i1 int := tagids) {
-	    insert into post_tag values(commentid, i1);
-	    --delete from post_tag where pst_postid = commentid;
+	    --insert into post_tag values(commentid, i1);
+	    delete from post_tag where pst_postid = commentid;
 	}
 	  kw_reply (authorpersonid, replytocommentid, replytopostid);
 };
@@ -337,10 +337,10 @@ create procedure LdbcUpdate8AddFriendship (in person1id int,
 		}
 		goto again;
 	};
-	insert into knows values(person1id, person2id, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)));
-	insert into knows values(person2id, person1id, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)));
-	--delete from knows where k_person1id = person1id and k_person2id = person2id;
-	--delete from knows where k_person1id = person2id and k_person2id = person1id;
+	--insert into knows values(person1id, person2id, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)));
+	--insert into knows values(person2id, person1id, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate(creationdate)));
+	delete from knows where k_person1id = person1id and k_person2id = person2id;
+	delete from knows where k_person1id = person2id and k_person2id = person1id;
 	k_weight_add (person1id, person2id);
 	return;
 };
