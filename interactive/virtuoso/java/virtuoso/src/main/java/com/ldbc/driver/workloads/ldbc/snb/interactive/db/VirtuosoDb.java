@@ -173,7 +173,9 @@ public class VirtuosoDb extends Db {
 
 		public Connection getConn() {
             try {
-                return ds.getPooledConnection().getConnection();
+		Connection tmp = ds.getPooledConnection().getConnection();
+		tmp.setTransactionIsolation(2);
+                return tmp;
             } catch (SQLException e) {
                 // TODO Auto-generated catch block                                                                
                 e.printStackTrace();
