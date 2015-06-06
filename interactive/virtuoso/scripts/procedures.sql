@@ -765,3 +765,29 @@ create procedure person_view_3 (in personid int) {
 done3:
   close cr3;
 }
+
+
+
+create procedure snb_result (in file varchar := 'driver/results/LDBC-results.json')
+{
+  declare inx int;
+  declare str, j any;
+  str := file_to_string (file);
+	    j := json_parse  (str)[5];
+  for (inx := 0;	  inx < length (j); inx := inx+1)
+    { 
+      declare e, rt any;
+    e := j[inx];
+    rt := get_keyword ('run_time', e);
+      insert into snb_result 
+	values  (get_keyword ('name', e),
+		 get_keyword ('count', rt),
+		 get_keyword ('mean', rt),
+		 get_keyword ('min', rt),
+		 get_keyword ('max', rt),
+		 get_keyword ('50th_percentile', rt),
+		 get_keyword ('90th_percentile', rt),
+		 get_keyword ('95th_percentile', rt),
+		 get_keyword ('99th_percentile', rt));
+    }		 
+}   

@@ -182,7 +182,7 @@ create table tagclass (
    tc_url varchar not null
 );
 
-alter index tagclass on tagclass partition (tc_tagclassid int (0hexffff00));
+alter index tagclass on tagclass partition cluster REPLICATED;
 
 create table subclass (
    s_subtagclassid bigint not null,
@@ -190,7 +190,7 @@ create table subclass (
    primary key (s_subtagclassid, s_supertagclassid) column
 );
 
-alter index subclass on subclass partition (s_subtagclassid int (0hexffff00));
+alter index subclass on subclass partition cluster REPLICATED;
 
 create table tag (
    t_tagid bigint primary key (column),
@@ -198,7 +198,7 @@ create table tag (
    t_url varchar not null
 );
 
-alter index tag on tag partition (t_tagid int (0hexffff00));
+alter index tag on tag partition cluster REPLICATED;
 
 create table tag_tagclass (
    ttc_tagid bigint not null,
@@ -206,7 +206,7 @@ create table tag_tagclass (
    primary key (ttc_tagid, ttc_tagclassid) column
 );
 
-alter index tag_tagclass on tag_tagclass partition (ttc_tagid int (0hexffff00));
+alter index tag_tagclass on tag_tagclass partition cluster REPLICATED;
 
 
 
@@ -238,3 +238,7 @@ create view country as select city.pl_placeid as ctry_city, ctry.pl_name as ctry
 create table  result_f (r_op varchar, r_sched bigint, r_start bigint, r_duration int, r_stat int);
 
 ft_set_file ('result_f', 'driver/results/LDBC-results_log.csv', delimiter => '|', skip_rows=>1);
+
+create table  snb_result (sq_name varchar, sq_count int, sq_mean float, sq_min float, sq_max float, 
+       sq_50 float, sq_90 float, sq_95 float, sq_99 float);
+
