@@ -1,18 +1,3 @@
-/**
- (c) Copyright [2015] Hewlett-Packard Development Company, L.P.
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package hpl.alp2.titan.drivers.interactive;
 
 import com.tinkerpop.blueprints.Edge;
@@ -24,6 +9,7 @@ import com.tinkerpop.pipes.util.PipesFunction;
 import com.tinkerpop.pipes.util.structures.Pair;
 import com.tinkerpop.pipes.util.structures.Row;
 import com.tinkerpop.pipes.util.structures.Table;
+import hpl.alp2.titan.importers.InteractiveWorkloadSchema;
 
 import javax.naming.directory.SchemaViolationException;
 import java.util.*;
@@ -34,6 +20,7 @@ import java.util.*;
  * Singleton design pattern
  */
 public class QueryUtils {
+    static public Calendar GMT_CAL = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
     final public static PipeFunction<LoopPipe.LoopBundle<Vertex>, Boolean> LOOPTRUEFUNC = new PipesFunction<LoopPipe.LoopBundle<Vertex>, Boolean>() {
         @Override
         public Boolean compute(LoopPipe.LoopBundle<Vertex> argument) {
@@ -47,8 +34,10 @@ public class QueryUtils {
         }
     };
     static private QueryUtils qu = new QueryUtils();
-    private QueryUtils() {
+    private InteractiveWorkloadSchema s;
 
+    private QueryUtils() {
+        s = new InteractiveWorkloadSchema();
     }
 
     public static QueryUtils getInstance() {
@@ -249,6 +238,18 @@ public class QueryUtils {
     }
 
     /**
+     * Given a vertex returns the type label using the id suffix
+     *
+     * @param v    Vertex to check
+     * @param mult power of 10 used to create suffix (10 for 1 digit, 100 for 2 digits, etc..)
+     * @return String representing the vertex label
+     */
+    public String getVertexType(Vertex v, int mult) {
+        Integer i = (int) ((Long) v.getId() % mult);
+        return this.s.getVertexTypesReverse().get(i);
+    }
+
+    /**
      * Given a person, returns the set of friends and friends of friends
      * , excluding that person
      *
@@ -265,7 +266,7 @@ public class QueryUtils {
             e.printStackTrace();
         }
 
-        GremlinPipeline<Vertex, Vertex> gp = (new GremlinPipeline<>(root));
+        GremlinPipeline<Vertex, Vertex> gp = (new GremlinPipeline<Vertex, Vertex>(root));
         gp.out("knows").aggregate(res)
                 .out("knows").aggregate(res).iterate();
         res.remove(root);

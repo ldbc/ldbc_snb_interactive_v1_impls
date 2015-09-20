@@ -1,20 +1,6 @@
-/**
- (c) Copyright [2015] Hewlett-Packard Development Company, L.P.
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package hpl.alp2.titan.drivers.interactive;
 
+import com.ldbc.driver.DbException;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery6;
@@ -40,7 +26,7 @@ public class LdbcQuery6Handler implements OperationHandler<LdbcQuery6,TitanFTMDb
     final static Logger logger = LoggerFactory.getLogger(LdbcQuery6Handler.class);
 
     @Override
-    public void executeOperation(final LdbcQuery6 operation,TitanFTMDb.BasicDbConnectionState dbConnectionState,ResultReporter resultReporter) {
+    public void executeOperation(final LdbcQuery6 operation,TitanFTMDb.BasicDbConnectionState dbConnectionState,ResultReporter resultReporter) throws DbException {
         long person_id = operation.personId();
         final String tagName = operation.tagName();
         final int limit = operation.limit();

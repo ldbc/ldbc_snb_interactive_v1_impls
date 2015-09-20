@@ -1,17 +1,5 @@
 /**
- (c) Copyright [2015] Hewlett-Packard Development Company, L.P.
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 package hpl.alp2.titan.test;
 import com.google.gson.Gson;
@@ -29,8 +17,8 @@ import java.util.Set;
 
 public class DebugQueries {
 
-    static String actualPath = "C:\\Users\\sagit\\workspace\\ldbc_benchmarkFTM\\titanFTM_driver\\src\\test\\resources\\validation_params-failed-actual.json";
-    static String expectedPath = "C:\\Users\\sagit\\workspace\\ldbc_benchmarkFTM\\titanFTM_driver\\src\\test\\resources\\validation_params-failed-expected.json";
+    static String actualPath = "C:\\Users\\axelrodm\\Documents\\alp2_ldbc\\titanFTM_driver\\src\\test\\java\\hpl\\alp2\\titan\\test\\validation_params-failed-actual.json";
+    static String expectedPath = "C:\\Users\\axelrodm\\Documents\\alp2_ldbc\\titanFTM_driver\\src\\test\\java\\hpl\\alp2\\titan\\test\\validation_params-failed-expected.json";
     String[] columnNames = {"Failed Reason", "Query Number", "Operation", "Expected", "Actual"};
     String[] queryFailedReason = {"Unexpected", "Missing", "Sort order is not the same", "One of the attribute value is not as expected"};
 
