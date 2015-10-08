@@ -1,0 +1,9 @@
+select top 20 p_personid as personid, p_firstname as firstname, p_lastname as lastname, --Q2
+       ps_postid as id, ps_content || ps_imagefile as content, ps_creationdate as creationdate
+from person, post, knows
+where
+    p_personid = ps_creatorid and
+    ps_creationdate <= datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+00:00'), stringdate('@Date0@')) and
+    k_person1id = @Person@ and
+    k_person2id = p_personid
+order by creationdate desc, id

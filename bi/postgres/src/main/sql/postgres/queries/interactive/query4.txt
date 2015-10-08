@@ -1,0 +1,20 @@
+select top 10 t_name, count(*) --Q4
+from tag, post, post_tag recent, knows
+where
+    ps_postid = pst_postid and
+    pst_tagid = t_tagid and
+    ps_p_creatorid = k_person2id and
+    k_person1id = @Person@ and
+    ps_creationdate between datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate('@Date0@')) and datediff ('millisecond', stringdate ('1970.1.1 00:00:00.000+0000'), dateadd('day', @Duration@, stringdate('@Date0@'))) and
+    not exists (
+        select * from 
+  (select distinct pst_tagid from post, post_tag, knows
+        where
+	k_person1id = @Person@ and
+        k_person2id = ps_p_creatorid and
+        pst_postid = ps_postid and
+        ps_creationdate < datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate('@Date0@')))
+     tags table option (hash, hash unique, hash replication, final)
+  where  tags.pst_tagid = recent.pst_tagid)
+group by t_name
+order by 2 desc, t_name
