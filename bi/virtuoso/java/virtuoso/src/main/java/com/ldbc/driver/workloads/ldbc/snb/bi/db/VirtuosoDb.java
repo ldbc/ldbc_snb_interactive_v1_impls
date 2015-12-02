@@ -203,15 +203,7 @@ public class VirtuosoDb extends Db {
 					else
 						;
 					boolean isComment = result.getInt(2) == 0 ? false : true;
-					int messageLengthCategory;
-					if (result.getString(3).equals("short"))
-						messageLengthCategory = LdbcSnbBiQuery1PostingSummaryResult.CATEGORY_SHORT;
-					else if (result.getString(3).equals("one liner"))
-						messageLengthCategory = LdbcSnbBiQuery1PostingSummaryResult.CATEGORY_ONE_LINER;
-					else if (result.getString(3).equals("tweet"))
-						messageLengthCategory = LdbcSnbBiQuery1PostingSummaryResult.CATEGORY_TWEET;
-					else 
-						messageLengthCategory = LdbcSnbBiQuery1PostingSummaryResult.CATEGORY_LONG;
+					int messageLengthCategory = result.getInt(3);
 					long messageCount = result.getLong(4);
 					long messageLengthMean = result.getLong(5);
 					long messageLengthSum = result.getLong(6);
