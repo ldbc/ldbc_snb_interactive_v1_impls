@@ -1,0 +1,238 @@
+package com.ldbc.driver.workloads.ldbc.snb.bi.db;
+
+
+import com.ldbc.driver.*;
+import com.ldbc.driver.control.LoggingService;
+import com.ldbc.driver.workloads.ldbc.snb.bi.*;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Calendar;
+import java.util.TimeZone;
+import java.sql.Timestamp;
+import openlink.util.Vector;
+
+import virtuoso.jdbc4.VirtuosoConnectionPoolDataSource;
+
+public class VirtuosoDb extends Db {
+	private VirtuosoDbConnectionState virtuosoDbConnectionState;
+
+	public static  String file2string(File file) throws Exception {
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new FileReader(file));
+			StringBuffer sb = new StringBuffer();
+
+			while (true) {
+				String line = reader.readLine();
+				if (line == null)
+					break;
+				else {
+					sb.append(line);
+					sb.append("\n");
+				}
+			}
+			return sb.toString();
+		} catch (IOException e) {
+			throw new Exception("Error openening or reading file: " + file.getAbsolutePath(), e);
+		} finally {
+			try {
+				if (reader != null)
+					reader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	@Override
+	protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
+		try {
+			virtuosoDbConnectionState = new VirtuosoDbConnectionState(properties);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		registerOperationHandler(LdbcSnbBiQuery1PostingSummary.class, LdbcSnbBiQuery1PostingSummaryToVirtuoso.class);
+	}
+
+	@Override
+	protected void onClose()   {
+		try {
+			virtuosoDbConnectionState.getDs().close();
+		} catch (SQLException e) {
+			//TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	protected DbConnectionState getConnectionState() throws DbException {
+		return virtuosoDbConnectionState;
+	}
+
+	public class VirtuosoDbConnectionState extends DbConnectionState {
+		private VirtuosoConnectionPoolDataSource ds;
+		//    	private Connection conn;
+		//        private String endPoint;
+		private String queryDir;
+		private boolean runSql;
+		private boolean runCluster;
+		private boolean printNames;
+		private boolean printStrings;
+		private boolean printResults;
+
+		VirtuosoDbConnectionState(Map<String, String> properties) throws ClassNotFoundException, SQLException {
+			super();
+			//			Class.forName("virtuoso.jdbc4.Driver");
+			//	        endPoint = properties.get("endpoint");
+			//			conn = DriverManager.getConnection(endPoint, properties.get("user"), properties.get("password"));;
+			ds = new VirtuosoConnectionPoolDataSource();
+			ds.setDataSourceName("MyPool");
+			ds.setServerName(properties.get("endpoint"));
+			ds.setUser(properties.get("user"));
+			ds.setPassword(properties.get("password"));
+			ds.setMinPoolSize(1);
+			//ds.setMaxPoolSize(Integer.parseInt(properties.get("tc")) * 2);
+			ds.setMaxPoolSize(64);
+			runCluster = properties.get("run_cluster").equals("true") ? true : false;
+			if (runCluster)
+				ds.setRoundrobin(true);
+			//ds.setCharset("UTF-8");
+			ds.fill();
+			queryDir = properties.get("queryDir");
+			runSql = properties.get("run_sql").equals("true") ? true : false;
+			printNames = properties.get("printQueryNames").equals("true") ? true : false;
+			printStrings = properties.get("printQueryStrings").equals("true") ? true : false;
+			printResults = properties.get("printQueryResults").equals("true") ? true : false;
+
+		}
+
+		public Connection getConn() {
+			try {
+				Connection tmp = ds.getPooledConnection().getConnection();
+				tmp.setTransactionIsolation(2);
+				return tmp;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block                                                                
+				e.printStackTrace();
+			}
+			return null;
+			//			return conn;
+		}
+
+		public String getQueryDir() {
+			return queryDir;
+		}
+
+		public boolean isRunSql() {
+			return runSql;
+		}
+
+		public boolean isPrintNames() {
+			return printNames;
+		}
+
+		public boolean isPrintStrings() {
+			return printStrings;
+		}
+
+		public boolean isPrintResults() {
+			return printResults;
+		}
+
+		public VirtuosoConnectionPoolDataSource getDs() {
+			return ds;
+		}
+
+		public void close() throws IOException {
+			// TODO Auto-generated method stub
+
+		}
+
+	}
+
+	public static class LdbcSnbBiQuery1PostingSummaryToVirtuoso implements OperationHandler<LdbcSnbBiQuery1PostingSummary, VirtuosoDbConnectionState> {
+		public void executeOperation(LdbcSnbBiQuery1PostingSummary operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+			Connection conn = state.getConn();
+			Statement stmt = null;
+			List<LdbcSnbBiQuery1PostingSummaryResult> RESULT = new ArrayList<LdbcSnbBiQuery1PostingSummaryResult>();
+			int results_count = 0; RESULT.clear();
+			try {
+				String queryString = file2string(new File(state.getQueryDir(), "query1.txt"));
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
+				if (state.isRunSql()) {
+					queryString = queryString.replaceAll("@Date@", String.valueOf(operation.date()));
+				}
+				else {
+
+				}
+				stmt = conn.createStatement();
+
+				if (state.isPrintNames())
+					System.out.println("########### LdbcSnbBiQuery1PostingSummary");
+				if (state.isPrintStrings())
+					System.out.println(queryString);
+
+				ResultSet result = stmt.executeQuery(queryString);
+				while (result.next()) {
+					results_count++;
+					int year = 0;
+					if (state.isRunSql())
+						year = result.getInt(1);
+					else
+						;
+					boolean isComment = result.getInt(2) == 0 ? false : true;
+					int messageLengthCategory;
+					if (result.getString(3).equals("short"))
+						messageLengthCategory = LdbcSnbBiQuery1PostingSummaryResult.CATEGORY_SHORT;
+					else if (result.getString(3).equals("one liner"))
+						messageLengthCategory = LdbcSnbBiQuery1PostingSummaryResult.CATEGORY_ONE_LINER;
+					else if (result.getString(3).equals("tweet"))
+						messageLengthCategory = LdbcSnbBiQuery1PostingSummaryResult.CATEGORY_TWEET;
+					else 
+						messageLengthCategory = LdbcSnbBiQuery1PostingSummaryResult.CATEGORY_LONG;
+					long messageCount = result.getLong(4);
+					long messageLengthMean = result.getLong(5);
+					long messageLengthSum = result.getLong(6);
+					float percentOfTotalMessageCount = result.getFloat(7);
+					LdbcSnbBiQuery1PostingSummaryResult tmp = new LdbcSnbBiQuery1PostingSummaryResult(year, isComment, messageLengthCategory, messageCount, messageLengthMean, messageLengthSum, percentOfTotalMessageCount);
+					if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					RESULT.add(tmp);
+				}
+				stmt.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			resultReporter.report(results_count, RESULT, operation);
+		}
+	}
+
+}
+
