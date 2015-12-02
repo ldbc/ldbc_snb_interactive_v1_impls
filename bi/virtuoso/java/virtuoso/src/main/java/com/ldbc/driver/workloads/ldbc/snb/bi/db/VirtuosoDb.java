@@ -76,6 +76,7 @@ public class VirtuosoDb extends Db {
 		registerOperationHandler(LdbcSnbBiQuery1PostingSummary.class, LdbcSnbBiQuery1PostingSummaryToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery2TopTags.class, LdbcSnbBiQuery2TopTagsToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery3TagEvolution.class, LdbcSnbBiQuery3TagEvolutionToVirtuoso.class);
+		registerOperationHandler(LdbcSnbBiQuery4PopularCountryTopics.class, LdbcSnbBiQuery4PopularCountryTopicsToVirtuoso.class);
 	}
 
 	@Override
@@ -314,6 +315,55 @@ public class VirtuosoDb extends Db {
 					int countB = result.getInt(3);
 					int difference = result.getInt(4);
 					LdbcSnbBiQuery3TagEvolutionResult tmp = new LdbcSnbBiQuery3TagEvolutionResult(tag, countA, countB, difference);
+					if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					RESULT.add(tmp);
+				}
+				stmt.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			resultReporter.report(results_count, RESULT, operation);
+		}
+	}
+	
+	public static class LdbcSnbBiQuery4PopularCountryTopicsToVirtuoso implements OperationHandler<LdbcSnbBiQuery4PopularCountryTopics, VirtuosoDbConnectionState> {
+		public void executeOperation(LdbcSnbBiQuery4PopularCountryTopics operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+			Connection conn = state.getConn();
+			Statement stmt = null;
+			List<LdbcSnbBiQuery4PopularCountryTopicsResult> RESULT = new ArrayList<LdbcSnbBiQuery4PopularCountryTopicsResult>();
+			int results_count = 0; RESULT.clear();
+			try {
+				String queryString = file2string(new File(state.getQueryDir(), "query4.txt"));
+				if (state.isRunSql()) {
+					queryString = queryString.replaceAll("@Type@", String.valueOf(operation.tagClass()));
+					queryString = queryString.replaceAll("@Country@", String.valueOf(operation.country()));
+					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
+				}
+				else {
+
+				}
+				stmt = conn.createStatement();
+
+				if (state.isPrintNames())
+					System.out.println("########### LdbcSnbBiQuery4PopularCountryTopics");
+				if (state.isPrintStrings())
+					System.out.println(queryString);
+
+				ResultSet result = stmt.executeQuery(queryString);
+				while (result.next()) {
+					results_count++;
+					long forumId = result.getLong(1);
+					String forumTitle = result.getString(2);
+					long forumCreationDate = result.getLong(3);
+					long moderatorId = result.getLong(4);
+					int count = result.getInt(5);
+					LdbcSnbBiQuery4PopularCountryTopicsResult tmp = new LdbcSnbBiQuery4PopularCountryTopicsResult(forumId, forumTitle, forumCreationDate, moderatorId, count);
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
 					RESULT.add(tmp);
