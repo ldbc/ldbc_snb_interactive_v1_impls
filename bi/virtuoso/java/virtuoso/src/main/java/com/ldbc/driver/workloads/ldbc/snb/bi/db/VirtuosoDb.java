@@ -180,7 +180,6 @@ public class VirtuosoDb extends Db {
 			int results_count = 0; RESULT.clear();
 			try {
 				String queryString = file2string(new File(state.getQueryDir(), "query1.txt"));
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
 				if (state.isRunSql()) {
 					queryString = queryString.replaceAll("@Date@", String.valueOf(operation.date()));
 				}
@@ -226,5 +225,58 @@ public class VirtuosoDb extends Db {
 		}
 	}
 
+	public static class LdbcSnbBiQuery2TopTagsToVirtuoso implements OperationHandler<LdbcSnbBiQuery2TopTags, VirtuosoDbConnectionState> {
+		public void executeOperation(LdbcSnbBiQuery2TopTags operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+			Connection conn = state.getConn();
+			Statement stmt = null;
+			List<LdbcSnbBiQuery2TopTagsResult> RESULT = new ArrayList<LdbcSnbBiQuery2TopTagsResult>();
+			int results_count = 0; RESULT.clear();
+			try {
+				String queryString = file2string(new File(state.getQueryDir(), "query2.txt"));
+				if (state.isRunSql()) {
+					queryString = queryString.replaceAll("@Date1@", String.valueOf(operation.dateA()));
+					queryString = queryString.replaceAll("@Date2@", String.valueOf(operation.dateB()));
+					queryString = queryString.replaceAll("@Name1@", operation.countries().get(0));
+					queryString = queryString.replaceAll("@Name2@", operation.countries().get(1));
+					queryString = queryString.replaceAll("@EndDate@", String.valueOf(operation.endOfSimulationTime()));
+					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
+					queryString = queryString.replaceAll("@MessageThreshold@", String.valueOf(operation.messageThreshold()));
+				}
+				else {
+
+				}
+				stmt = conn.createStatement();
+
+				if (state.isPrintNames())
+					System.out.println("########### LdbcSnbBiQuery2TopTags");
+				if (state.isPrintStrings())
+					System.out.println(queryString);
+
+				ResultSet result = stmt.executeQuery(queryString);
+				while (result.next()) {
+					results_count++;
+					String country = result.getString(1);
+					int month= result.getInt(2);
+					String gender = result.getString(3);
+					int ageGroup = result.getInt(4);
+					String tag = result.getString(5);
+					int count = result.getInt(6);
+					LdbcSnbBiQuery2TopTagsResult tmp = new LdbcSnbBiQuery2TopTagsResult(country, month, gender, ageGroup, tag, count);
+					if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					RESULT.add(tmp);
+				}
+				stmt.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			resultReporter.report(results_count, RESULT, operation);
+		}
+	}
 }
 
