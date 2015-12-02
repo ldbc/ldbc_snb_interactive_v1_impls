@@ -74,6 +74,7 @@ public class VirtuosoDb extends Db {
 		}
 
 		registerOperationHandler(LdbcSnbBiQuery1PostingSummary.class, LdbcSnbBiQuery1PostingSummaryToVirtuoso.class);
+		registerOperationHandler(LdbcSnbBiQuery2TopTags.class, LdbcSnbBiQuery2TopTagsToVirtuoso.class);
 	}
 
 	@Override
