@@ -380,5 +380,53 @@ public class VirtuosoDb extends Db {
 			resultReporter.report(results_count, RESULT, operation);
 		}
 	}
+	
+	public static class LdbcSnbBiQuery5TopCountryPostersToVirtuoso implements OperationHandler<LdbcSnbBiQuery5TopCountryPosters, VirtuosoDbConnectionState> {
+		public void executeOperation(LdbcSnbBiQuery5TopCountryPosters operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+			Connection conn = state.getConn();
+			Statement stmt = null;
+			List<LdbcSnbBiQuery5TopCountryPostersResult> RESULT = new ArrayList<LdbcSnbBiQuery5TopCountryPostersResult>();
+			int results_count = 0; RESULT.clear();
+			try {
+				String queryString = file2string(new File(state.getQueryDir(), "query5.txt"));
+				if (state.isRunSql()) {
+					queryString = queryString.replaceAll("@Country@", String.valueOf(operation.country()));
+					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
+				}
+				else {
+
+				}
+				stmt = conn.createStatement();
+
+				if (state.isPrintNames())
+					System.out.println("########### LdbcSnbBiQuery5TopCountryPostersResult");
+				if (state.isPrintStrings())
+					System.out.println(queryString);
+
+				ResultSet result = stmt.executeQuery(queryString);
+				while (result.next()) {
+					results_count++;
+					long personId = result.getLong(1);
+					String firstName = result.getString(2);
+					String lastName = result.getString(3);
+					long creationDate = result.getLong(4);
+					int count = result.getInt(5);
+					LdbcSnbBiQuery5TopCountryPostersResult tmp = new LdbcSnbBiQuery5TopCountryPostersResult(personId, firstName, lastName, creationDate, count); 
+					if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					RESULT.add(tmp);
+				}
+				stmt.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			resultReporter.report(results_count, RESULT, operation);
+		}
+	}
 }
 
