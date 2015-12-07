@@ -79,6 +79,7 @@ public class VirtuosoDb extends Db {
 		registerOperationHandler(LdbcSnbBiQuery4PopularCountryTopics.class, LdbcSnbBiQuery4PopularCountryTopicsToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery5TopCountryPosters.class, LdbcSnbBiQuery5TopCountryPostersToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery6ActivePosters.class, LdbcSnbBiQuery6ActivePostersToVirtuoso.class);
+		registerOperationHandler(LdbcSnbBiQuery7AuthoritativeUsers.class, LdbcSnbBiQuery7AuthoritativeUsersToVirtuoso.class);
 	}
 
 	@Override
@@ -462,6 +463,51 @@ public class VirtuosoDb extends Db {
 					int likeCount = result.getInt(4);
 					int score = result.getInt(5);
 					LdbcSnbBiQuery6ActivePostersResult tmp = new LdbcSnbBiQuery6ActivePostersResult(personId, postCount, replyCount, likeCount, score); 
+					if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					RESULT.add(tmp);
+				}
+				stmt.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			resultReporter.report(results_count, RESULT, operation);
+		}
+	}
+	
+	public static class LdbcSnbBiQuery7AuthoritativeUsersToVirtuoso implements OperationHandler<LdbcSnbBiQuery7AuthoritativeUsers, VirtuosoDbConnectionState> {
+		public void executeOperation(LdbcSnbBiQuery7AuthoritativeUsers operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+			Connection conn = state.getConn();
+			Statement stmt = null;
+			List<LdbcSnbBiQuery7AuthoritativeUsersResult> RESULT = new ArrayList<LdbcSnbBiQuery7AuthoritativeUsersResult>();
+			int results_count = 0; RESULT.clear();
+			try {
+				String queryString = file2string(new File(state.getQueryDir(), "query7.txt"));
+				if (state.isRunSql()) {
+					queryString = queryString.replaceAll("@Tag@", String.valueOf(operation.tag()));
+					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
+				}
+				else {
+
+				}
+				stmt = conn.createStatement();
+
+				if (state.isPrintNames())
+					System.out.println("########### LdbcSnbBiQuery7AuthoritativeUsersResult");
+				if (state.isPrintStrings())
+					System.out.println(queryString);
+
+				ResultSet result = stmt.executeQuery(queryString);
+				while (result.next()) {
+					results_count++;
+					long personId = result.getLong(1);
+					int score = result.getInt(2);
+					LdbcSnbBiQuery7AuthoritativeUsersResult tmp = new LdbcSnbBiQuery7AuthoritativeUsersResult(personId, score); 
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
 					RESULT.add(tmp);
