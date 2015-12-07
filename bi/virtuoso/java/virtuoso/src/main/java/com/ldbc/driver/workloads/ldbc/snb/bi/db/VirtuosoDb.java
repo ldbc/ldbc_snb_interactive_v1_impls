@@ -649,7 +649,7 @@ public class VirtuosoDb extends Db {
 				    long personId = result.getLong(1);
 				    int score = result.getInt(2);
 				    // TODO: This query shold be changed
-				    int friendsScore;
+				    int friendsScore = 0;
 					LdbcSnbBiQuery10TagPersonResult tmp = new LdbcSnbBiQuery10TagPersonResult(personId, score, friendsScore);
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
