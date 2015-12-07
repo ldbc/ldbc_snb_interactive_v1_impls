@@ -81,6 +81,7 @@ public class VirtuosoDb extends Db {
 		registerOperationHandler(LdbcSnbBiQuery6ActivePosters.class, LdbcSnbBiQuery6ActivePostersToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery7AuthoritativeUsers.class, LdbcSnbBiQuery7AuthoritativeUsersToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery8RelatedTopics.class, LdbcSnbBiQuery8RelatedTopicsToVirtuoso.class);
+		registerOperationHandler(LdbcSnbBiQuery9RelatedForums.class, LdbcSnbBiQuery9RelatedForumsToVirtuoso.class);
 	}
 
 	@Override
@@ -345,8 +346,8 @@ public class VirtuosoDb extends Db {
 			try {
 				String queryString = file2string(new File(state.getQueryDir(), "query4.txt"));
 				if (state.isRunSql()) {
-					queryString = queryString.replaceAll("@Type@", String.valueOf(operation.tagClass()));
-					queryString = queryString.replaceAll("@Country@", String.valueOf(operation.country()));
+					queryString = queryString.replaceAll("@Type@", operation.tagClass());
+					queryString = queryString.replaceAll("@Country@", operation.country());
 					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
 				}
 				else {
@@ -394,7 +395,7 @@ public class VirtuosoDb extends Db {
 			try {
 				String queryString = file2string(new File(state.getQueryDir(), "query5.txt"));
 				if (state.isRunSql()) {
-					queryString = queryString.replaceAll("@Country@", String.valueOf(operation.country()));
+					queryString = queryString.replaceAll("@Country@", operation.country());
 					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
 				}
 				else {
@@ -442,7 +443,7 @@ public class VirtuosoDb extends Db {
 			try {
 				String queryString = file2string(new File(state.getQueryDir(), "query6.txt"));
 				if (state.isRunSql()) {
-					queryString = queryString.replaceAll("@Tag@", String.valueOf(operation.tag()));
+					queryString = queryString.replaceAll("@Tag@", operation.tag());
 					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
 				}
 				else {
@@ -490,7 +491,7 @@ public class VirtuosoDb extends Db {
 			try {
 				String queryString = file2string(new File(state.getQueryDir(), "query7.txt"));
 				if (state.isRunSql()) {
-					queryString = queryString.replaceAll("@Tag@", String.valueOf(operation.tag()));
+					queryString = queryString.replaceAll("@Tag@", operation.tag());
 					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
 				}
 				else {
@@ -535,7 +536,7 @@ public class VirtuosoDb extends Db {
 			try {
 				String queryString = file2string(new File(state.getQueryDir(), "query8.txt"));
 				if (state.isRunSql()) {
-					queryString = queryString.replaceAll("@Tag@", String.valueOf(operation.tag()));
+					queryString = queryString.replaceAll("@Tag@", operation.tag());
 					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
 				}
 				else {
@@ -554,6 +555,54 @@ public class VirtuosoDb extends Db {
 					String tag = result.getString(1);
 					int count = result.getInt(2);
 					LdbcSnbBiQuery8RelatedTopicsResult tmp = new LdbcSnbBiQuery8RelatedTopicsResult(tag, count); 
+					if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					RESULT.add(tmp);
+				}
+				stmt.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			resultReporter.report(results_count, RESULT, operation);
+		}
+	}
+	
+	public static class LdbcSnbBiQuery9RelatedForumsToVirtuoso implements OperationHandler<LdbcSnbBiQuery9RelatedForums, VirtuosoDbConnectionState> {
+		public void executeOperation(LdbcSnbBiQuery9RelatedForums operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+			Connection conn = state.getConn();
+			Statement stmt = null;
+			List<LdbcSnbBiQuery9RelatedForumsResult> RESULT = new ArrayList<LdbcSnbBiQuery9RelatedForumsResult>();
+			int results_count = 0; RESULT.clear();
+			try {
+				String queryString = file2string(new File(state.getQueryDir(), "query9.txt"));
+				if (state.isRunSql()) {
+					queryString = queryString.replaceAll("@TagClass1@", operation.tagClassA());
+					queryString = queryString.replaceAll("@TagClass2@", operation.tagClassB());
+					queryString = queryString.replaceAll("@Threshold@", String.valueOf(operation.threshold()));
+					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
+				}
+				else {
+
+				}
+				stmt = conn.createStatement();
+
+				if (state.isPrintNames())
+					System.out.println("########### LdbcSnbBiQuery9RelatedForumsResult");
+				if (state.isPrintStrings())
+					System.out.println(queryString);
+
+				ResultSet result = stmt.executeQuery(queryString);
+				while (result.next()) {
+					results_count++;
+				    long forumId = result.getLong(1);
+				    int sumA = result.getInt(2);
+				    int sumB = result.getInt(3);
+					LdbcSnbBiQuery9RelatedForumsResult tmp = new LdbcSnbBiQuery9RelatedForumsResult(forumId, sumA, sumB); 
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
 					RESULT.add(tmp);
