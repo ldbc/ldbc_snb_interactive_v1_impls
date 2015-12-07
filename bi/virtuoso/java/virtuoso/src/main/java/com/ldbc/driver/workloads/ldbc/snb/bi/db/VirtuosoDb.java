@@ -82,6 +82,7 @@ public class VirtuosoDb extends Db {
 		registerOperationHandler(LdbcSnbBiQuery7AuthoritativeUsers.class, LdbcSnbBiQuery7AuthoritativeUsersToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery8RelatedTopics.class, LdbcSnbBiQuery8RelatedTopicsToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery9RelatedForums.class, LdbcSnbBiQuery9RelatedForumsToVirtuoso.class);
+		registerOperationHandler(LdbcSnbBiQuery10TagPerson.class, LdbcSnbBiQuery10TagPersonToVirtuoso.class);
 	}
 
 	@Override
@@ -603,6 +604,53 @@ public class VirtuosoDb extends Db {
 				    int sumA = result.getInt(2);
 				    int sumB = result.getInt(3);
 					LdbcSnbBiQuery9RelatedForumsResult tmp = new LdbcSnbBiQuery9RelatedForumsResult(forumId, sumA, sumB); 
+					if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					RESULT.add(tmp);
+				}
+				stmt.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			resultReporter.report(results_count, RESULT, operation);
+		}
+	}
+	
+	public static class LdbcSnbBiQuery10TagPersonToVirtuoso implements OperationHandler<LdbcSnbBiQuery10TagPerson, VirtuosoDbConnectionState> {
+		public void executeOperation(LdbcSnbBiQuery10TagPerson operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+			Connection conn = state.getConn();
+			Statement stmt = null;
+			List<LdbcSnbBiQuery10TagPersonResult> RESULT = new ArrayList<LdbcSnbBiQuery10TagPersonResult>();
+			int results_count = 0; RESULT.clear();
+			try {
+				String queryString = file2string(new File(state.getQueryDir(), "query10.txt"));
+				if (state.isRunSql()) {
+					queryString = queryString.replaceAll("@Tag@", operation.tag());
+					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
+				}
+				else {
+
+				}
+				stmt = conn.createStatement();
+
+				if (state.isPrintNames())
+					System.out.println("########### LdbcSnbBiQuery10TagPersonResult");
+				if (state.isPrintStrings())
+					System.out.println(queryString);
+
+				ResultSet result = stmt.executeQuery(queryString);
+				while (result.next()) {
+					results_count++;
+				    long personId = result.getLong(1);
+				    int score = result.getInt(2);
+				    // TODO: This query shold be changed
+				    int friendsScore;
+					LdbcSnbBiQuery10TagPersonResult tmp = new LdbcSnbBiQuery10TagPersonResult(personId, score, friendsScore);
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
 					RESULT.add(tmp);
