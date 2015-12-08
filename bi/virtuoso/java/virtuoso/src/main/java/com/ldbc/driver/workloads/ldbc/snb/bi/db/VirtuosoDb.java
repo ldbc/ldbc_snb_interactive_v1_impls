@@ -96,6 +96,7 @@ public class VirtuosoDb extends Db {
 		registerOperationHandler(LdbcSnbBiQuery20HighLevelTopics.class, LdbcSnbBiQuery20HighLevelTopicsToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery21Zombies.class, LdbcSnbBiQuery21ZombiesToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery22InternationalDialog.class, LdbcSnbBiQuery22InternationalDialogToVirtuoso.class);
+		registerOperationHandler(LdbcSnbBiQuery23HolidayDestinations.class, LdbcSnbBiQuery23HolidayDestinationsToVirtuoso.class);
 	}
 
 	@Override
@@ -1231,6 +1232,52 @@ public class VirtuosoDb extends Db {
 				    long personId2 = 0;
 				    int score = 0;
 				   	LdbcSnbBiQuery22InternationalDialogResult tmp = new LdbcSnbBiQuery22InternationalDialogResult(personId1, personId2, score);
+					if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					RESULT.add(tmp);
+				}
+				stmt.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			resultReporter.report(results_count, RESULT, operation);
+		}
+	}
+	
+	public static class LdbcSnbBiQuery23HolidayDestinationsToVirtuoso implements OperationHandler<LdbcSnbBiQuery23HolidayDestinations, VirtuosoDbConnectionState> {
+		public void executeOperation(LdbcSnbBiQuery23HolidayDestinations operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+			Connection conn = state.getConn();
+			Statement stmt = null;
+			List<LdbcSnbBiQuery23HolidayDestinationsResult> RESULT = new ArrayList<LdbcSnbBiQuery23HolidayDestinationsResult>();
+			int results_count = 0; RESULT.clear();
+			try {
+				String queryString = file2string(new File(state.getQueryDir(), "query23.txt"));
+				if (state.isRunSql()) {
+					queryString = queryString.replaceAll("@Country@", operation.country());
+					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
+				}
+				else {
+
+				}
+				stmt = conn.createStatement();
+
+				if (state.isPrintNames())
+					System.out.println("########### LdbcSnbBiQuery23HolidayDestinationsResult");
+				if (state.isPrintStrings())
+					System.out.println(queryString);
+
+				ResultSet result = stmt.executeQuery(queryString);
+				while (result.next()) {
+					results_count++;
+				    String place = result.getString(1);
+				    int month = result.getInt(2);
+				    int count = result.getInt(3);
+				   	LdbcSnbBiQuery23HolidayDestinationsResult tmp = new LdbcSnbBiQuery23HolidayDestinationsResult(place, month, count);
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
 					RESULT.add(tmp);
