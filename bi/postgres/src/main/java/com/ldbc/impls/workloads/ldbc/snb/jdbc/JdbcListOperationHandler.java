@@ -12,7 +12,7 @@ import com.ldbc.driver.Operation;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
 
-public abstract class JdbcOperationHandler<OperationType extends Operation<List<OperationResult>>, OperationResult, QueryStore> 
+public abstract class JdbcListOperationHandler<OperationType extends Operation<List<OperationResult>>, OperationResult, QueryStore> 
 	implements OperationHandler<OperationType, JdbcDbConnectionStore<QueryStore>> {
 
 	@Override

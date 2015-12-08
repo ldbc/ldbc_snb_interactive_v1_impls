@@ -31,7 +31,7 @@ public class JdbcDbConnectionStore<DbQueryStore> extends DbConnectionState {
 		}
 
 		ds.setDataSourceName("MyPool");
-		ds.setDatabaseName(properties.get("database"));
+		ds.setDatabaseName(properties.get("jdbcdatabase"));
 		ds.setServerName(endPoint);
 		ds.setUser(properties.get("user"));
 		ds.setPassword(properties.get("password"));

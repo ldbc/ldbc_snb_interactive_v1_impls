@@ -112,9 +112,7 @@ ALTER TABLE tag_tagclass DROP COLUMN dummy;
 -- PROBLEMATIC
 
 -- Populate post table
-COPY post FROM PROGRAM 'cat PATHVAR/post_0_0.csv | awk -F ''|'' ''{ print $1"|"$2"|"$3"|"$4"|"$5"|"$6"|"$7"|"$8"|"$9"|"$9"|"$11"|"$10"||"}''
- ' WITH (FORCE_NOT_NULL ("ps_content"),  DELIMITER '|', HEADER, FORMAT csv);
-COPY post FROM PROGRAM 'cat PATHVAR/comment_0_0.csv | awk -F ''|'' ''{print $1"||"$2"|"$3"|"$4"||"$5"|"$6"|"$7"||"$8"||"$9 $10"|"}''
- ' WITH (FORCE_NOT_NULL ("ps_content"),  DELIMITER '|', HEADER, FORMAT csv);
+COPY post FROM 'PATHVAR/post_0_0_converted.csv' WITH (FORCE_NOT_NULL ("ps_content"),  DELIMITER '|', HEADER, FORMAT csv);
+COPY post FROM 'PATHVAR/comment_0_0_converted.csv'  WITH (FORCE_NOT_NULL ("ps_content"),  DELIMITER '|', HEADER, FORMAT csv);
 
 create view country as select city.pl_placeid as ctry_city, ctry.pl_name as ctry_name from place city, place ctry where city.pl_containerplaceid = ctry.pl_placeid and ctry.pl_type = 'country';

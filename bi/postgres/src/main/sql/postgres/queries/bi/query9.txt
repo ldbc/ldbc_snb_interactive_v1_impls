@@ -21,10 +21,10 @@ from
       )
     ) as ours 
   from forum
-  where (select count (*) from forum_person where fp_forumid = f_forumid) > 200
+  where (select count (*) from forum_person where fp_forumid = f_forumid) > --3--
   )   mindshare 
 where competing > 0 and ours > 0
 group by f_forumid
-order by 2 - 3 desc, f_forumid
-limit 200;
+order by abs(sum (ours)-sum (competing)) desc, f_forumid
+limit 100;
 

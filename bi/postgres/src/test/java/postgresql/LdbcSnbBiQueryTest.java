@@ -56,44 +56,44 @@ public class LdbcSnbBiQueryTest {
 	
 	@Test
 	public void testQueries() throws DbException, IOException {
-		System.out.println(System.getProperty("user.dir"));
-		Workload workload = new LdbcSnbBiWorkload();
-		@SuppressWarnings("rawtypes")
-		Map<Integer, Class<? extends Operation>> mapping = workload.operationTypeToClassMapping();
-		BiJdbcDb sqldb = new BiJdbcDb();
-		sqldb.init(getProperties(), null, mapping);
-
-		LdbcSnbBiQuery1PostingSummary q1 = new LdbcSnbBiQuery1PostingSummary(630);
-		System.out.println(runOperation(sqldb, q1));
+//		System.out.println(System.getProperty("user.dir"));
+//		Workload workload = new LdbcSnbBiWorkload();
+//		@SuppressWarnings("rawtypes")
+//		Map<Integer, Class<? extends Operation>> mapping = workload.operationTypeToClassMapping();
+//		BiJdbcDb sqldb = new BiJdbcDb();
+//		sqldb.init(getProperties(), null, mapping);
+//
+//		LdbcSnbBiQuery1PostingSummary q1 = new LdbcSnbBiQuery1PostingSummary(630);
+//		System.out.println(runOperation(sqldb, q1));
+////		
+//////		LdbcSnbBiQuery2TopTags q2 = new LdbcSnbBiQuery2TopTags(dateA, dateB, countryA, countryB, minMessageCount, limit)
+//////		System.out.println(runOperation(sqldb, q1));
+//
+//		LdbcSnbBiQuery3TagEvolution q3 = new LdbcSnbBiQuery3TagEvolution(280, 308);
+//		System.out.println(runOperation(sqldb, q3));
+//
+//		LdbcSnbBiQuery4PopularCountryTopics q4 = new LdbcSnbBiQuery4PopularCountryTopics("Artist", "United_States", 100);
+//		System.out.println(runOperation(sqldb, q4));
 //		
-////		LdbcSnbBiQuery2TopTags q2 = new LdbcSnbBiQuery2TopTags(dateA, dateB, countryA, countryB, minMessageCount, limit)
-////		System.out.println(runOperation(sqldb, q1));
-
-		LdbcSnbBiQuery3TagEvolution q3 = new LdbcSnbBiQuery3TagEvolution(280, 308);
-		System.out.println(runOperation(sqldb, q3));
-
-		LdbcSnbBiQuery4PopularCountryTopics q4 = new LdbcSnbBiQuery4PopularCountryTopics("Artist", "United_States", 100);
-		System.out.println(runOperation(sqldb, q4));
-		
-		LdbcSnbBiQuery5TopCountryPosters q5 = new LdbcSnbBiQuery5TopCountryPosters("Cameroon", 100, 100);
-		System.out.println(runOperation(sqldb, q5));
-		
-		LdbcSnbBiQuery6ActivePosters q6 = new LdbcSnbBiQuery6ActivePosters("Al_Gore", 100);
-		System.out.println(runOperation(sqldb, q6));
-		
-		LdbcSnbBiQuery7AuthoritativeUsers q7 = new LdbcSnbBiQuery7AuthoritativeUsers("Abraham_Lincoln", 100);
-		System.out.println(runOperation(sqldb, q7));
-		
-		LdbcSnbBiQuery8RelatedTopics q8 = new LdbcSnbBiQuery8RelatedTopics("Abraham_Lincoln", 100);
-		System.out.println(runOperation(sqldb, q8));
-		
-		LdbcSnbBiQuery9RelatedForums q9 = new LdbcSnbBiQuery9RelatedForums("Artist", "BaseballPlayer", 100);
-		System.out.println(runOperation(sqldb, q9));
-		
-		LdbcSnbBiQuery10TagPerson q10 = new LdbcSnbBiQuery10TagPerson("Abraham_Lincoln", 100);
-		System.out.println(runOperation(sqldb, q10));
-		
-		sqldb.close();
-		workload.close();
+//		LdbcSnbBiQuery5TopCountryPosters q5 = new LdbcSnbBiQuery5TopCountryPosters("Cameroon", 100, 100);
+//		System.out.println(runOperation(sqldb, q5));
+//		
+//		LdbcSnbBiQuery6ActivePosters q6 = new LdbcSnbBiQuery6ActivePosters("Al_Gore", 100);
+//		System.out.println(runOperation(sqldb, q6));
+//		
+//		LdbcSnbBiQuery7AuthoritativeUsers q7 = new LdbcSnbBiQuery7AuthoritativeUsers("Abraham_Lincoln", 100);
+//		System.out.println(runOperation(sqldb, q7));
+//		
+//		LdbcSnbBiQuery8RelatedTopics q8 = new LdbcSnbBiQuery8RelatedTopics("Abraham_Lincoln", 100);
+//		System.out.println(runOperation(sqldb, q8));
+//		
+//		LdbcSnbBiQuery9RelatedForums q9 = new LdbcSnbBiQuery9RelatedForums("Artist", "BaseballPlayer", 100);
+//		System.out.println(runOperation(sqldb, q9));
+//		
+//		LdbcSnbBiQuery10TagPerson q10 = new LdbcSnbBiQuery10TagPerson("Abraham_Lincoln", 100);
+//		System.out.println(runOperation(sqldb, q10));
+//		
+//		sqldb.close();
+//		workload.close();
 	}
 }
