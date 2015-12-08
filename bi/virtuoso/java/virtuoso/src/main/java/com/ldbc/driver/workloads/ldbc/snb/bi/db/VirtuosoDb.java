@@ -95,6 +95,7 @@ public class VirtuosoDb extends Db {
 		registerOperationHandler(LdbcSnbBiQuery19StrangerInteraction.class, LdbcSnbBiQuery19StrangerInteractionToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery20HighLevelTopics.class, LdbcSnbBiQuery20HighLevelTopicsToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery21Zombies.class, LdbcSnbBiQuery21ZombiesToVirtuoso.class);
+		registerOperationHandler(LdbcSnbBiQuery22InternationalDialog.class, LdbcSnbBiQuery22InternationalDialogToVirtuoso.class);
 	}
 
 	@Override
@@ -1182,6 +1183,54 @@ public class VirtuosoDb extends Db {
 					int realCount = 0;
 					int score = 0;				    
 				   	LdbcSnbBiQuery21ZombiesResult tmp = new LdbcSnbBiQuery21ZombiesResult(personId, zombieCount, realCount, score);
+					if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					RESULT.add(tmp);
+				}
+				stmt.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			resultReporter.report(results_count, RESULT, operation);
+		}
+	}
+	
+	public static class LdbcSnbBiQuery22InternationalDialogToVirtuoso implements OperationHandler<LdbcSnbBiQuery22InternationalDialog, VirtuosoDbConnectionState> {
+		public void executeOperation(LdbcSnbBiQuery22InternationalDialog operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+			Connection conn = state.getConn();
+			Statement stmt = null;
+			List<LdbcSnbBiQuery22InternationalDialogResult> RESULT = new ArrayList<LdbcSnbBiQuery22InternationalDialogResult>();
+			int results_count = 0; RESULT.clear();
+			try {
+				String queryString = file2string(new File(state.getQueryDir(), "query22.txt"));
+				if (state.isRunSql()) {
+					queryString = queryString.replaceAll("@CountryA@", operation.countryA());
+					queryString = queryString.replaceAll("@CountryB@", operation.countryB());
+					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
+				}
+				else {
+
+				}
+				stmt = conn.createStatement();
+
+				if (state.isPrintNames())
+					System.out.println("########### LdbcSnbBiQuery22InternationalDialogResult");
+				if (state.isPrintStrings())
+					System.out.println(queryString);
+
+				ResultSet result = stmt.executeQuery(queryString);
+				while (result.next()) {
+					results_count++;
+					// TODO: This query should be fixed
+				    long personId1 = 0;
+				    long personId2 = 0;
+				    int score = 0;
+				   	LdbcSnbBiQuery22InternationalDialogResult tmp = new LdbcSnbBiQuery22InternationalDialogResult(personId1, personId2, score);
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
 					RESULT.add(tmp);
