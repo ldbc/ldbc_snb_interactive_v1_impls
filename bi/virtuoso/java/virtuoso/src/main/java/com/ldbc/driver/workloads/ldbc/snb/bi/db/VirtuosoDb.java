@@ -83,6 +83,7 @@ public class VirtuosoDb extends Db {
 		registerOperationHandler(LdbcSnbBiQuery8RelatedTopics.class, LdbcSnbBiQuery8RelatedTopicsToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery9RelatedForums.class, LdbcSnbBiQuery9RelatedForumsToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery10TagPerson.class, LdbcSnbBiQuery10TagPersonToVirtuoso.class);
+		registerOperationHandler(LdbcSnbBiQuery11UnrelatedReplies.class, LdbcSnbBiQuery11UnrelatedRepliesToVirtuoso.class);
 	}
 
 	@Override
@@ -651,6 +652,55 @@ public class VirtuosoDb extends Db {
 				    // TODO: This query shold be changed
 				    int friendsScore = 0;
 					LdbcSnbBiQuery10TagPersonResult tmp = new LdbcSnbBiQuery10TagPersonResult(personId, score, friendsScore);
+					if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					RESULT.add(tmp);
+				}
+				stmt.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			resultReporter.report(results_count, RESULT, operation);
+		}
+	}
+	
+	public static class LdbcSnbBiQuery11UnrelatedRepliesToVirtuoso implements OperationHandler<LdbcSnbBiQuery11UnrelatedReplies, VirtuosoDbConnectionState> {
+		public void executeOperation(LdbcSnbBiQuery11UnrelatedReplies operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+			Connection conn = state.getConn();
+			Statement stmt = null;
+			List<LdbcSnbBiQuery11UnrelatedRepliesResult> RESULT = new ArrayList<LdbcSnbBiQuery11UnrelatedRepliesResult>();
+			int results_count = 0; RESULT.clear();
+			try {
+				String queryString = file2string(new File(state.getQueryDir(), "query11.txt"));
+				if (state.isRunSql()) {
+					//TODO: This query should be updated
+					queryString = queryString.replaceAll("@Country@", operation.country());
+					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
+				}
+				else {
+
+				}
+				stmt = conn.createStatement();
+
+				if (state.isPrintNames())
+					System.out.println("########### LdbcSnbBiQuery11UnrelatedRepliesResult");
+				if (state.isPrintStrings())
+					System.out.println(queryString);
+
+				ResultSet result = stmt.executeQuery(queryString);
+				while (result.next()) {
+					results_count++;
+					long personId = result.getLong(1);
+				    String tag = result.getString(2);
+				    int likeCount = result.getInt(3);
+				    //TODO: This query should be changed
+				    int replyCount = 0;
+					LdbcSnbBiQuery11UnrelatedRepliesResult tmp = new LdbcSnbBiQuery11UnrelatedRepliesResult(personId, tag, likeCount, replyCount);
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
 					RESULT.add(tmp);
