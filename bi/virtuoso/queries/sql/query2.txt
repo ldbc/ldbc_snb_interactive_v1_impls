@@ -4,7 +4,7 @@ from person, post, post_tag, tag, country
 where ps_creatorid = p_personid and p_placeid = ctry_city
       and pst_postid = ps_postid and t_tagid = pst_tagid 
       and ps_creationdate between @Date1@ and @Date2@
-      and (ctry_name = '@Name1@' or ctry_name = '@Name2@')
+      and ctry_name in (@Names@)
 group by ctry_name, mm, p_gender, age, t_name
 having cnt > @MessageThreshold@
 order by cnt desc
