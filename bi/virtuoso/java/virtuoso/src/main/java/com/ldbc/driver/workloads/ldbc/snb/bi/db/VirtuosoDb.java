@@ -93,6 +93,7 @@ public class VirtuosoDb extends Db {
 		registerOperationHandler(LdbcSnbBiQuery17FriendshipTriangles.class, LdbcSnbBiQuery17FriendshipTrianglesToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery18PersonPostCounts.class, LdbcSnbBiQuery18PersonPostCountsToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery19StrangerInteraction.class, LdbcSnbBiQuery19StrangerInteractionToVirtuoso.class);
+		registerOperationHandler(LdbcSnbBiQuery20HighLevelTopics.class, LdbcSnbBiQuery20HighLevelTopicsToVirtuoso.class);
 	}
 
 	@Override
@@ -1086,6 +1087,51 @@ public class VirtuosoDb extends Db {
 				    int strangerCount = 0;
 				    int count = result.getInt(2);
 				   	LdbcSnbBiQuery19StrangerInteractionResult tmp = new LdbcSnbBiQuery19StrangerInteractionResult(personId, strangerCount, count);
+					if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					RESULT.add(tmp);
+				}
+				stmt.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			resultReporter.report(results_count, RESULT, operation);
+		}
+	}
+	
+	public static class LdbcSnbBiQuery20HighLevelTopicsToVirtuoso implements OperationHandler<LdbcSnbBiQuery20HighLevelTopics, VirtuosoDbConnectionState> {
+		public void executeOperation(LdbcSnbBiQuery20HighLevelTopics operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+			Connection conn = state.getConn();
+			Statement stmt = null;
+			List<LdbcSnbBiQuery20HighLevelTopicsResult> RESULT = new ArrayList<LdbcSnbBiQuery20HighLevelTopicsResult>();
+			int results_count = 0; RESULT.clear();
+			try {
+				String queryString = file2string(new File(state.getQueryDir(), "query20.txt"));
+				if (state.isRunSql()) {
+					//TODO: This query should be changed
+					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
+				}
+				else {
+
+				}
+				stmt = conn.createStatement();
+
+				if (state.isPrintNames())
+					System.out.println("########### LdbcSnbBiQuery20HighLevelTopicsResult");
+				if (state.isPrintStrings())
+					System.out.println(queryString);
+
+				ResultSet result = stmt.executeQuery(queryString);
+				while (result.next()) {
+					results_count++;
+				    String tagClass = result.getString(1);
+				    int count = result.getInt(2);
+				   	LdbcSnbBiQuery20HighLevelTopicsResult tmp = new LdbcSnbBiQuery20HighLevelTopicsResult(tagClass, count);
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
 					RESULT.add(tmp);
