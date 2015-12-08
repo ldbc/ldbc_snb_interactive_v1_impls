@@ -260,7 +260,12 @@ public class VirtuosoDb extends Db {
 				if (state.isRunSql()) {
 					queryString = queryString.replaceAll("@Date1@", String.valueOf(operation.dateA()));
 					queryString = queryString.replaceAll("@Date2@", String.valueOf(operation.dateB()));
-					queryString = queryString.replaceAll("@Name1@", operation.countries().get(0));
+					String listString = "'" + operation.countries().get(0) + "'";
+					for (int j = 1; j < operation.countries().size(); j++)
+					{
+					    listString += ", '" + operation.countries().get(j) + "'";
+					}
+					queryString = queryString.replaceAll("@Names@", listString);
 					queryString = queryString.replaceAll("@Name2@", operation.countries().get(1));
 					queryString = queryString.replaceAll("@EndDate@", String.valueOf(operation.endOfSimulationTime()));
 					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
