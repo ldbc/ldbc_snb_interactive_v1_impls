@@ -798,7 +798,7 @@ public class VirtuosoDb extends Db {
 				    int year = result.getInt(1);
 				    int month = result.getInt(2);
 				    //TODO: This query should be updated
-				    List<TagPopularity> tagPopularities = null;
+				    List<TagPopularity> tagPopularities = new ArrayList<TagPopularity>();
 				   	LdbcSnbBiQuery13PopularMonthlyTagsResult tmp = new LdbcSnbBiQuery13PopularMonthlyTagsResult(year, month, tagPopularities);
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
