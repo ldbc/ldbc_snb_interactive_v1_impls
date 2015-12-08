@@ -90,6 +90,7 @@ public class VirtuosoDb extends Db {
 		registerOperationHandler(LdbcSnbBiQuery14TopThreadInitiators.class, LdbcSnbBiQuery14TopThreadInitiatorsToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery15SocialNormals.class, LdbcSnbBiQuery15SocialNormalsToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery16ExpertsInSocialCircle.class, LdbcSnbBiQuery16ExpertsInSocialCircleToVirtuoso.class);
+		registerOperationHandler(LdbcSnbBiQuery17FriendshipTriangles.class, LdbcSnbBiQuery17FriendshipTrianglesToVirtuoso.class);
 	}
 
 	@Override
@@ -962,6 +963,51 @@ public class VirtuosoDb extends Db {
 			resultReporter.report(results_count, RESULT, operation);
 		}
 	}
+	
+	public static class LdbcSnbBiQuery17FriendshipTrianglesToVirtuoso implements OperationHandler<LdbcSnbBiQuery17FriendshipTriangles, VirtuosoDbConnectionState> {
+		public void executeOperation(LdbcSnbBiQuery17FriendshipTriangles operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+			Connection conn = state.getConn();
+			Statement stmt = null;
+			List<LdbcSnbBiQuery17FriendshipTrianglesResult> RESULT = new ArrayList<LdbcSnbBiQuery17FriendshipTrianglesResult>();
+			int results_count = 0; RESULT.clear();
+			try {
+				String queryString = file2string(new File(state.getQueryDir(), "query17.txt"));
+				if (state.isRunSql()) {
+					queryString = queryString.replaceAll("@Country@", operation.country());
+				}
+				else {
+
+				}
+				stmt = conn.createStatement();
+
+				if (state.isPrintNames())
+					System.out.println("########### LdbcSnbBiQuery17FriendshipTrianglesResult");
+				if (state.isPrintStrings())
+					System.out.println(queryString);
+
+				ResultSet result = stmt.executeQuery(queryString);
+				while (result.next()) {
+					results_count++;
+				    int count = result.getInt(1);				    
+				   	LdbcSnbBiQuery17FriendshipTrianglesResult tmp = new LdbcSnbBiQuery17FriendshipTrianglesResult(count);
+					if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					RESULT.add(tmp);
+				}
+				stmt.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// TODO: This doesn't work
+			//resultReporter.report(results_count, RESULT, operation);
+		}
+	}
+	
 }
 
 
