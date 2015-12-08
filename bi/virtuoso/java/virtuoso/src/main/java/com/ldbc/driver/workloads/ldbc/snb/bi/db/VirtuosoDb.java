@@ -91,6 +91,8 @@ public class VirtuosoDb extends Db {
 		registerOperationHandler(LdbcSnbBiQuery15SocialNormals.class, LdbcSnbBiQuery15SocialNormalsToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery16ExpertsInSocialCircle.class, LdbcSnbBiQuery16ExpertsInSocialCircleToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery17FriendshipTriangles.class, LdbcSnbBiQuery17FriendshipTrianglesToVirtuoso.class);
+		registerOperationHandler(LdbcSnbBiQuery18PersonPostCounts.class, LdbcSnbBiQuery18PersonPostCountsToVirtuoso.class);
+		
 	}
 
 	@Override
@@ -1008,6 +1010,50 @@ public class VirtuosoDb extends Db {
 		}
 	}
 	
+	public static class LdbcSnbBiQuery18PersonPostCountsToVirtuoso implements OperationHandler<LdbcSnbBiQuery18PersonPostCounts, VirtuosoDbConnectionState> {
+		public void executeOperation(LdbcSnbBiQuery18PersonPostCounts operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+			Connection conn = state.getConn();
+			Statement stmt = null;
+			List<LdbcSnbBiQuery18PersonPostCountsResult> RESULT = new ArrayList<LdbcSnbBiQuery18PersonPostCountsResult>();
+			int results_count = 0; RESULT.clear();
+			try {
+				String queryString = file2string(new File(state.getQueryDir(), "query18.txt"));
+				if (state.isRunSql()) {
+					queryString = queryString.replaceAll("@Date@", String.valueOf(operation.date()));
+					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
+				}
+				else {
+
+				}
+				stmt = conn.createStatement();
+
+				if (state.isPrintNames())
+					System.out.println("########### LdbcSnbBiQuery18PersonPostCountsResult");
+				if (state.isPrintStrings())
+					System.out.println(queryString);
+
+				ResultSet result = stmt.executeQuery(queryString);
+				while (result.next()) {
+					results_count++;
+				    int messageCount = result.getInt(1);
+				    int personCount = result.getInt(2);				    
+				   	LdbcSnbBiQuery18PersonPostCountsResult tmp = new LdbcSnbBiQuery18PersonPostCountsResult(messageCount, personCount);
+					if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					RESULT.add(tmp);
+				}
+				stmt.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			resultReporter.report(results_count, RESULT, operation);
+		}
+	}
 }
 
 
