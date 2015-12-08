@@ -84,6 +84,7 @@ public class VirtuosoDb extends Db {
 		registerOperationHandler(LdbcSnbBiQuery9RelatedForums.class, LdbcSnbBiQuery9RelatedForumsToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery10TagPerson.class, LdbcSnbBiQuery10TagPersonToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery11UnrelatedReplies.class, LdbcSnbBiQuery11UnrelatedRepliesToVirtuoso.class);
+		registerOperationHandler(LdbcSnbBiQuery12TrendingPosts.class, LdbcSnbBiQuery12TrendingPostsToVirtuoso.class);
 	}
 
 	@Override
@@ -701,6 +702,55 @@ public class VirtuosoDb extends Db {
 				    //TODO: This query should be changed
 				    int replyCount = 0;
 					LdbcSnbBiQuery11UnrelatedRepliesResult tmp = new LdbcSnbBiQuery11UnrelatedRepliesResult(personId, tag, likeCount, replyCount);
+					if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					RESULT.add(tmp);
+				}
+				stmt.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			resultReporter.report(results_count, RESULT, operation);
+		}
+	}
+	
+	public static class LdbcSnbBiQuery12TrendingPostsToVirtuoso implements OperationHandler<LdbcSnbBiQuery12TrendingPosts, VirtuosoDbConnectionState> {
+		public void executeOperation(LdbcSnbBiQuery12TrendingPosts operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+			Connection conn = state.getConn();
+			Statement stmt = null;
+			List<LdbcSnbBiQuery12TrendingPostsResult> RESULT = new ArrayList<LdbcSnbBiQuery12TrendingPostsResult>();
+			int results_count = 0; RESULT.clear();
+			try {
+				String queryString = file2string(new File(state.getQueryDir(), "query12.txt"));
+				if (state.isRunSql()) {
+					queryString = queryString.replaceAll("@Count@", String.valueOf(operation.likeCount()));
+					queryString = queryString.replaceAll("@Date@", String.valueOf(operation.date()));
+					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
+				}
+				else {
+
+				}
+				stmt = conn.createStatement();
+
+				if (state.isPrintNames())
+					System.out.println("########### LdbcSnbBiQuery12TrendingPostsResult");
+				if (state.isPrintStrings())
+					System.out.println(queryString);
+
+				ResultSet result = stmt.executeQuery(queryString);
+				while (result.next()) {
+					results_count++;
+				    long messageId = result.getLong(1);
+				    String firstName = result.getString(2);
+				    String lastName = result.getString(3);
+				    long creationDate = result.getLong(4);
+				    int likeCount = result.getInt(5);
+				   	LdbcSnbBiQuery12TrendingPostsResult tmp = new LdbcSnbBiQuery12TrendingPostsResult(messageId, firstName, lastName, creationDate, likeCount);
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
 					RESULT.add(tmp);
