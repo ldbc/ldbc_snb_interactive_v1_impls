@@ -1,0 +1,10 @@
+select top @Limit@ year (dateadd('millisecond', ps_creationdate, stringdate ('1970.1.1 00:00:00.000+00:00'))) as yy,
+       	   	   month (dateadd('millisecond', ps_creationdate, stringdate ('1970.1.1 00:00:00.000+00:00'))) as mm,
+		   t_name, count (*) as cnt 
+from post join person on ps_creatorid = p_personid 
+  join place pcity on pcity.pl_placeid = p_placeid
+  join place ctry on ctry.pl_placeid = pcity.pl_containerplaceid 
+  left join (select t_name, pst_postid from post_tag, tag where t_tagid = pst_tagid) tags on pst_postid = ps_postid
+where ctry.pl_name = '@Country@'
+group by yy, mm, t_name 
+order by yy, mm, cnt desc

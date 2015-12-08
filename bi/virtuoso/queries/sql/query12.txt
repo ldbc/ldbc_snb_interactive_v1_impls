@@ -1,0 +1,8 @@
+select top @Limit@ ps_postid, p_firstname, p_lastname, ps_creationdate, count (*) 
+from post, person, likes
+where ps_postid in (select l_postid, count (*) from likes group by l_postid having count (*) > @Count@)
+      and p_personid = ps_creatorid 
+      and l_postid = ps_postid
+      and ps_creationdate > @Date@
+group by ps_postid, p_firstname, p_lastname, ps_creationdate 
+order by ps_creationdate desc

@@ -1,0 +1,12 @@
+select top @Limit@ kn.k_person2id, t_name, count (*)  as cnt
+from 
+     (select transitive t_distinct t_in (1) t_out (2) k_person1id, k_person2id from knows
+      where k_person2id in (select p_personid from person, country 
+      	    		    where p_placeid = ctry_city and ctry_name = '@Country@')
+     ) kn,
+     post, post_tag, tag, tag_tagclass, tagclass
+where ps_postid = pst_postid and t_tagid = pst_tagid and ttc_tagid = pst_tagid
+      and ttc_tagclassid = tc_tagclassid and tc_name = '@TagClass@' 
+      and ps_creatorid = kn.k_person2id and kn.k_person1id = @Person@
+group by t_name, kn.k_person2id 
+order by cnt desc, t_name

@@ -1,0 +1,15 @@
+select top @Limit@ year (dateadd('millisecond', ps_creationdate, stringdate ('1970.1.1 00:00:00.000+00:00'))) as yy,
+       	   	   month (dateadd('millisecond', ps_creationdate, stringdate ('1970.1.1 00:00:00.000+00:00'))) as mm,
+		   continent, count (*) as n_posts, 
+  sum ((select count (*) from likes where l_postid = ps_postid)) as n_likes
+from post join post_tag on pst_postid = ps_postid 
+     left join
+     (select cont.pl_name as continent, ctry.pl_placeid as pl
+      from place cont, place ctry
+      where cont.pl_placeid = ctry.pl_containerplaceid
+     ) ppl on pl = ps_locationid
+where pst_tagid in
+      		(select ttc_tagid from tag_tagclass, tagclass
+		 where tc_name = '@TagClass@' and  ttc_tagclassid = tc_tagclassid)
+group by yy, mm, continent 
+order by yy, mm, continent
