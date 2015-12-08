@@ -97,6 +97,7 @@ public class VirtuosoDb extends Db {
 		registerOperationHandler(LdbcSnbBiQuery21Zombies.class, LdbcSnbBiQuery21ZombiesToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery22InternationalDialog.class, LdbcSnbBiQuery22InternationalDialogToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery23HolidayDestinations.class, LdbcSnbBiQuery23HolidayDestinationsToVirtuoso.class);
+		registerOperationHandler(LdbcSnbBiQuery24MessagesByTopic.class, LdbcSnbBiQuery24MessagesByTopicToVirtuoso.class);
 	}
 
 	@Override
@@ -1278,6 +1279,54 @@ public class VirtuosoDb extends Db {
 				    int month = result.getInt(2);
 				    int count = result.getInt(3);
 				   	LdbcSnbBiQuery23HolidayDestinationsResult tmp = new LdbcSnbBiQuery23HolidayDestinationsResult(place, month, count);
+					if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					RESULT.add(tmp);
+				}
+				stmt.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			resultReporter.report(results_count, RESULT, operation);
+		}
+	}
+	
+	public static class LdbcSnbBiQuery24MessagesByTopicToVirtuoso implements OperationHandler<LdbcSnbBiQuery24MessagesByTopic, VirtuosoDbConnectionState> {
+		public void executeOperation(LdbcSnbBiQuery24MessagesByTopic operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+			Connection conn = state.getConn();
+			Statement stmt = null;
+			List<LdbcSnbBiQuery24MessagesByTopicResult> RESULT = new ArrayList<LdbcSnbBiQuery24MessagesByTopicResult>();
+			int results_count = 0; RESULT.clear();
+			try {
+				String queryString = file2string(new File(state.getQueryDir(), "query24.txt"));
+				if (state.isRunSql()) {
+					queryString = queryString.replaceAll("@TagClass@", operation.tagClass());
+					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
+				}
+				else {
+
+				}
+				stmt = conn.createStatement();
+
+				if (state.isPrintNames())
+					System.out.println("########### LdbcSnbBiQuery24MessagesByTopicResult");
+				if (state.isPrintStrings())
+					System.out.println(queryString);
+
+				ResultSet result = stmt.executeQuery(queryString);
+				while (result.next()) {
+					results_count++;
+				    int year = result.getInt(1);
+				    int month = result.getInt(2);
+				    String continent = result.getString(3);
+				    int messageCount = result.getInt(4);
+				    int likeCount = result.getInt(5);
+				   	LdbcSnbBiQuery24MessagesByTopicResult tmp = new LdbcSnbBiQuery24MessagesByTopicResult(messageCount, likeCount, year, month, continent);
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
 					RESULT.add(tmp);
