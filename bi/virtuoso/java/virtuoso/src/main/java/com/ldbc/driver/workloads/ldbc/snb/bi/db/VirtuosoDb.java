@@ -87,6 +87,7 @@ public class VirtuosoDb extends Db {
 		registerOperationHandler(LdbcSnbBiQuery11UnrelatedReplies.class, LdbcSnbBiQuery11UnrelatedRepliesToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery12TrendingPosts.class, LdbcSnbBiQuery12TrendingPostsToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery13PopularMonthlyTags.class, LdbcSnbBiQuery13PopularMonthlyTagsToVirtuoso.class);
+		registerOperationHandler(LdbcSnbBiQuery14TopThreadInitiators.class, LdbcSnbBiQuery14TopThreadInitiatorsToVirtuoso.class);
 	}
 
 	@Override
@@ -779,7 +780,7 @@ public class VirtuosoDb extends Db {
 			try {
 				String queryString = file2string(new File(state.getQueryDir(), "query13.txt"));
 				if (state.isRunSql()) {
-					queryString = queryString.replaceAll("@Country@", String.valueOf(operation.country()));
+					queryString = queryString.replaceAll("@Country@", operation.country());
 					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
 				}
 				else {
@@ -800,6 +801,55 @@ public class VirtuosoDb extends Db {
 				    //TODO: This query should be updated
 				    List<TagPopularity> tagPopularities = new ArrayList<TagPopularity>();
 				   	LdbcSnbBiQuery13PopularMonthlyTagsResult tmp = new LdbcSnbBiQuery13PopularMonthlyTagsResult(year, month, tagPopularities);
+					if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					RESULT.add(tmp);
+				}
+				stmt.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			resultReporter.report(results_count, RESULT, operation);
+		}
+	}
+	
+	public static class LdbcSnbBiQuery14TopThreadInitiatorsToVirtuoso implements OperationHandler<LdbcSnbBiQuery14TopThreadInitiators, VirtuosoDbConnectionState> {
+		public void executeOperation(LdbcSnbBiQuery14TopThreadInitiators operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+			Connection conn = state.getConn();
+			Statement stmt = null;
+			List<LdbcSnbBiQuery14TopThreadInitiatorsResult> RESULT = new ArrayList<LdbcSnbBiQuery14TopThreadInitiatorsResult>();
+			int results_count = 0; RESULT.clear();
+			try {
+				String queryString = file2string(new File(state.getQueryDir(), "query14.txt"));
+				if (state.isRunSql()) {
+					queryString = queryString.replaceAll("@Date1@", String.valueOf(operation.beginDate()));
+					queryString = queryString.replaceAll("@Date2@", String.valueOf(operation.endDate()));
+					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
+				}
+				else {
+
+				}
+				stmt = conn.createStatement();
+
+				if (state.isPrintNames())
+					System.out.println("########### LdbcSnbBiQuery14TopThreadInitiatorsResult");
+				if (state.isPrintStrings())
+					System.out.println(queryString);
+
+				ResultSet result = stmt.executeQuery(queryString);
+				while (result.next()) {
+					results_count++;
+				    long personId = result.getLong(1);
+				    String firstName = result.getString(2);
+				    String lastName = result.getString(3);
+				    int count = result.getInt(4);
+				    int threadCount = result.getInt(5);				    				    
+				   	LdbcSnbBiQuery14TopThreadInitiatorsResult tmp = new LdbcSnbBiQuery14TopThreadInitiatorsResult(personId, firstName, lastName, count, threadCount);
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
 					RESULT.add(tmp);
