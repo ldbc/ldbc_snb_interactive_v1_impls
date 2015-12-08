@@ -92,7 +92,7 @@ public class VirtuosoDb extends Db {
 		registerOperationHandler(LdbcSnbBiQuery16ExpertsInSocialCircle.class, LdbcSnbBiQuery16ExpertsInSocialCircleToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery17FriendshipTriangles.class, LdbcSnbBiQuery17FriendshipTrianglesToVirtuoso.class);
 		registerOperationHandler(LdbcSnbBiQuery18PersonPostCounts.class, LdbcSnbBiQuery18PersonPostCountsToVirtuoso.class);
-		
+		registerOperationHandler(LdbcSnbBiQuery19StrangerInteraction.class, LdbcSnbBiQuery19StrangerInteractionToVirtuoso.class);
 	}
 
 	@Override
@@ -1038,6 +1038,54 @@ public class VirtuosoDb extends Db {
 				    int messageCount = result.getInt(1);
 				    int personCount = result.getInt(2);				    
 				   	LdbcSnbBiQuery18PersonPostCountsResult tmp = new LdbcSnbBiQuery18PersonPostCountsResult(messageCount, personCount);
+					if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					RESULT.add(tmp);
+				}
+				stmt.close();conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			resultReporter.report(results_count, RESULT, operation);
+		}
+	}
+	
+	public static class LdbcSnbBiQuery19StrangerInteractionToVirtuoso implements OperationHandler<LdbcSnbBiQuery19StrangerInteraction, VirtuosoDbConnectionState> {
+		public void executeOperation(LdbcSnbBiQuery19StrangerInteraction operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
+			Connection conn = state.getConn();
+			Statement stmt = null;
+			List<LdbcSnbBiQuery19StrangerInteractionResult> RESULT = new ArrayList<LdbcSnbBiQuery19StrangerInteractionResult>();
+			int results_count = 0; RESULT.clear();
+			try {
+				String queryString = file2string(new File(state.getQueryDir(), "query19.txt"));
+				if (state.isRunSql()) {
+					//TODO: This query should be changed
+					queryString = queryString.replaceAll("@Date@", String.valueOf(operation.date()));
+					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
+				}
+				else {
+
+				}
+				stmt = conn.createStatement();
+
+				if (state.isPrintNames())
+					System.out.println("########### LdbcSnbBiQuery19StrangerInteractionResult");
+				if (state.isPrintStrings())
+					System.out.println(queryString);
+
+				ResultSet result = stmt.executeQuery(queryString);
+				while (result.next()) {
+					results_count++;
+				    long personId = result.getLong(1);
+				    //TODO: This query should be changed.
+				    int strangerCount = 0;
+				    int count = result.getInt(2);
+				   	LdbcSnbBiQuery19StrangerInteractionResult tmp = new LdbcSnbBiQuery19StrangerInteractionResult(personId, strangerCount, count);
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
 					RESULT.add(tmp);
