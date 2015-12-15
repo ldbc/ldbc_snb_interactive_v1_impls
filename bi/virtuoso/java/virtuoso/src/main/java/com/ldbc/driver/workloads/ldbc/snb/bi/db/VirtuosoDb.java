@@ -1216,8 +1216,8 @@ public class VirtuosoDb extends Db {
 			try {
 				String queryString = file2string(new File(state.getQueryDir(), "query22.txt"));
 				if (state.isRunSql()) {
-					queryString = queryString.replaceAll("@CountryA@", operation.countryA());
-					queryString = queryString.replaceAll("@CountryB@", operation.countryB());
+					queryString = queryString.replaceAll("@CountryA@", operation.countryX());
+					queryString = queryString.replaceAll("@CountryB@", operation.countryY());
 					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
 				}
 				else {
