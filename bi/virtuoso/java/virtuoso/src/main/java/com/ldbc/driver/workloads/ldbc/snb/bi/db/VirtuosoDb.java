@@ -142,7 +142,7 @@ public class VirtuosoDb extends Db {
 			runCluster = properties.get("run_cluster").equals("true") ? true : false;
 			if (runCluster)
 				ds.setRoundrobin(true);
-			//ds.setCharset("UTF-8");
+			ds.setCharset("UTF-8");
 			ds.fill();
 			queryDir = properties.get("queryDir");
 			runSql = properties.get("run_sql").equals("true") ? true : false;
