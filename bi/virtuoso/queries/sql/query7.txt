@@ -7,4 +7,4 @@ where liker = l_personid and l_postid = ps_postid
       and pst_postid = ps_postid 
       and   pst_tagid = t_tagid and t_name = '@Tag@'
 group by ps_creatorid
-order by sc desc
+order by sc desc, ps_creatorid
