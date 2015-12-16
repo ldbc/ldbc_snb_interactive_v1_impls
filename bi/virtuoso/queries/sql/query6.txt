@@ -10,4 +10,4 @@ from
 		 and pst_postid = ps_postid and t_tagid = pst_tagid and t_name = '@Tag@'
 		 ) psts
 	group by p_personid) sums
-order by sc desc
+order by sc desc, p_personid

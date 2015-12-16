@@ -4,7 +4,7 @@ from person, post, forum f,
      from forum, forum_person, person, country 
      where f_forumid = fp_forumid and p_personid = fp_personid 
      and p_placeid = ctry_city and ctry_name = '@Country@'
-     group by f_forumid order by cnt desc) tf
+     group by f_forumid order by cnt desc, f_forumid) tf
 where ps_creatorid = p_personid
       and ps_forumid = f.f_forumid 
       and f.f_forumid = tf.f_forumid
