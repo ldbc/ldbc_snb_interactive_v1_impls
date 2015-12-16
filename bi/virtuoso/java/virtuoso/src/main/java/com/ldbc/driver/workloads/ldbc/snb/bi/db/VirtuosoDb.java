@@ -418,6 +418,7 @@ public class VirtuosoDb extends Db {
 				if (state.isRunSql()) {
 					queryString = queryString.replaceAll("@Country@", operation.country());
 					queryString = queryString.replaceAll("@Limit@", String.valueOf(operation.limit()));
+					queryString = queryString.replaceAll("@Limit1@", String.valueOf(operation.popularForumLimit()));
 				}
 				else {
 
