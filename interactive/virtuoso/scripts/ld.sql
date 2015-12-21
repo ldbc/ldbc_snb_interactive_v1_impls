@@ -161,6 +161,7 @@ from place_f table option (from f)   where idn (p_placeid) is not null;
 
 
 ld_dir ('outputDir', '%.csv.gz', 'sql:snb_load (?)');
+ld_dir ('outputDir', '%.csv', 'sql:snb_load (?)');
 delete from load_list where ll_file like '%updateStrea%';
 
 rdf_loader_run () &

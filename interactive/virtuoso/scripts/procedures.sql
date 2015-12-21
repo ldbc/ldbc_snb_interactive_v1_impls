@@ -795,3 +795,5 @@ create procedure snb_result (in file varchar := 'driver/results/LDBC-results.jso
 		 get_keyword ('99th_percentile', rt));
     }		 
 }   
+
+checkpoint;
