@@ -44,7 +44,7 @@ create procedure snb_load (in f varchar)
   if (fname like '%post%')
     {
       insert into post(ps_postid, ps_imagefile, ps_creationdate, ps_locationip, ps_browserused, ps_language, ps_content, ps_length, ps_creatorid, ps_locationid, ps_forumid, ps_p_creatorid)
-select p_postid, p_imagefile, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), p_creationdate),
+select p_postid, case when p_imagefile = '' then null else p_imagefile end, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), p_creationdate),
        p_locationip, 
        p_browserused, p_language, p_content, p_length, p_creator, p_placeid, p_forumid, p_creator 
 from post_f table option (from f) where idn (p_postid) is not null;
