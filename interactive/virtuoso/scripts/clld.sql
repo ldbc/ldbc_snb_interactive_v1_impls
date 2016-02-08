@@ -1,13 +1,3 @@
-
-
-log_enable(2, 1);
-__dbf_set ('txn_after_image_limit', 10000000000);
-__dbf_set ('enable_mt_txn', 1);
-__dbf_set ('enable_mt_transact', 1);
-
-
-
-
 create procedure snb_load (in f varchar)
 {
   declare fname varchar;
@@ -160,8 +150,18 @@ from place_f table option (from f)   where idn (p_placeid) is not null;
 }
 
 
-ld_dir ('outputDir', '%.csv.gz', 'sql:snb_load (?)');
-delete from load_list where ll_file like '%updateStrea%';
+create procedure fill_load_list () {
+       declare i int;       
+       for (i := 1; i < length(cl_control(1, 'cl_host_map')); i := i + 2)
+       	      cl_exec ('ld_dir (''outputDir'', ''%.csv.gz'', ''sql:snb_load (?)'', txn => 0)', txn => 1, hosts => vector (i));
+}
+
+fill_load_list();
+
+log_enable(2, 1);
+#__dbf_set ('txn_after_image_limit', 10000000000);
+#__dbf_set ('enable_mt_txn', 1);
+#__dbf_set ('enable_mt_transact', 1);
 
 
 cl_exec ('rdf_ld_srv ()') &
@@ -185,3 +185,4 @@ group by p1, p2;
  
 
 cl_exec ('checkpoint');
+
