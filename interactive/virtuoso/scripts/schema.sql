@@ -237,6 +237,8 @@ create view country as select city.pl_placeid as ctry_city, ctry.pl_name as ctry
 
 create table  result_f (r_op varchar, r_sched bigint, r_start bigint, r_duration int, r_stat int);
 
+alter index result_f on result_f partition cluster REPLICATED;
+
 ft_set_file ('result_f', 'results/LDBC-results_log.csv', delimiter => '|', skip_rows=>1);
 
 create table  snb_result (sq_name varchar, sq_count int, sq_mean float, sq_min float, sq_max float, 
