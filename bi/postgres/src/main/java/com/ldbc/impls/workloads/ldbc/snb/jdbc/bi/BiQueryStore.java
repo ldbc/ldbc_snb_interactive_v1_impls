@@ -1,4 +1,4 @@
-package com.ldbc.impls.workloads.ldbc.snb.bi.jdbc.db;
+package com.ldbc.impls.workloads.ldbc.snb.jdbc.bi;
 
 import static java.nio.file.Files.readAllBytes;
 import static java.nio.file.Paths.get;
@@ -198,8 +198,8 @@ public class BiQueryStore {
 	
 	public String getQuery22(LdbcSnbBiQuery22InternationalDialog operation) {
 		return queries.get(QueryType.Query22)
-			.replace("--1--", operation.countryA())
-			.replace("--2--", operation.countryB());
+			.replace("--1--", operation.countryX())
+			.replace("--2--", operation.countryY());
 	}
 	
 	public String getQuery23(LdbcSnbBiQuery23HolidayDestinations operation) {

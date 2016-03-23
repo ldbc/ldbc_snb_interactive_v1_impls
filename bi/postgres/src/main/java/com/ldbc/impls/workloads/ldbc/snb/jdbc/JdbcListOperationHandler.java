@@ -40,9 +40,9 @@ public abstract class JdbcListOperationHandler<OperationType extends Operation<L
 			stmt.close();
 			conn.close();
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			throw new DbException(e);
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new DbException(e);
 		}
 		resultReporter.report(resultCount, results, operation);			
 	}

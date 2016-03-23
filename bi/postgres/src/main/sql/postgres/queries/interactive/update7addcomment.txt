@@ -1,0 +1,1 @@
+insert into post values(--1--, NULL, --2--, '--3--', '--4--', NULL, '--5--', --6--, --7--, NULL, --8--, NULL, --10-- + --9-- + 1, NULL);

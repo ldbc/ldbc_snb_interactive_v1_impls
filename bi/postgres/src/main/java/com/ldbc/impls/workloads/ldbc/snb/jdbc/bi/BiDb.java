@@ -1,15 +1,10 @@
-package com.ldbc.impls.workloads.ldbc.snb.bi.jdbc.db;
+package com.ldbc.impls.workloads.ldbc.snb.jdbc.bi;
 
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Map;
-import java.util.TimeZone;
 
-import com.ldbc.driver.Db;
-import com.ldbc.driver.DbConnectionState;
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.control.LoggingService;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery10TagPerson;
@@ -59,13 +54,12 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopics;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopicsResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForums;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForumsResult;
+import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcDb;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcDbConnectionStore;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcListOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcSingletonOperationHandler;
 
-public class BiJdbcDb extends Db {
-
-	JdbcDbConnectionStore<BiQueryStore> dbs;
+public class BiDb extends JdbcDb<BiQueryStore> {
 
 	@Override
 	protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
@@ -96,24 +90,6 @@ public class BiJdbcDb extends Db {
 		registerOperationHandler(LdbcSnbBiQuery22InternationalDialog.class, BiQuery22.class);
 		registerOperationHandler(LdbcSnbBiQuery23HolidayDestinations.class, BiQuery23.class);
 		registerOperationHandler(LdbcSnbBiQuery24MessagesByTopic.class, BiQuery24.class);
-	}
-
-	@Override
-	protected void onClose() throws IOException {
-		try {
-			dbs.close();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@Override
-	protected DbConnectionState getConnectionState() throws DbException {
-		return dbs;
-	}
-	
-	public static long timestampToTimestamp(ResultSet r, int column) throws SQLException {
-		return r.getTimestamp(column, Calendar.getInstance(TimeZone.getTimeZone("GMT"))).getTime();
 	}
 	
 	public static class BiQuery1 extends JdbcListOperationHandler<LdbcSnbBiQuery1PostingSummary, LdbcSnbBiQuery1PostingSummaryResult, BiQueryStore> {

@@ -1,7 +1,6 @@
 package com.ldbc.impls.workloads.ldbc.snb.jdbc;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -9,40 +8,37 @@ import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcNoResult;
 
-public abstract class JdbcSingletonOperationHandler<OperationType extends Operation<OperationResult>, OperationResult, QueryStore> 
+public abstract class JdbcUpdateOperationHandler<OperationType extends Operation<LdbcNoResult>, OperationResult, QueryStore> 
 implements OperationHandler<OperationType, JdbcDbConnectionStore<QueryStore>> {
 
 @Override
 public void executeOperation(OperationType operation, JdbcDbConnectionStore<QueryStore> state,
 		ResultReporter resultReporter) throws DbException {
 	Connection conn = state.getConnection();
-	OperationResult tuple = null;
-	int resultCount = 0;
 	try {
 		Statement stmt = conn.createStatement();
 		
 		String queryString = getQueryString(state, operation);
 		state.logQuery(operation.getClass().getSimpleName(), queryString);
 
-		ResultSet result = stmt.executeQuery(queryString);
-		if (result.next()) {
-			resultCount++;
-			
-			tuple = convertSingleResult(result);
-			if (state.isPrintResults())
-				System.out.println(tuple.toString());
-		}
+		stmt.execute(queryString);
 		stmt.close();
-		conn.close();
 	} catch (SQLException e) {
-		throw new DbException(e);
+		System.out.println(e);
+		throw new RuntimeException(e);
 	} catch (Exception e) {
-		throw new DbException(e);
+		throw new RuntimeException(e);
+	} finally {
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
 	}
-	resultReporter.report(resultCount, tuple, operation);			
 }
 
 public abstract String getQueryString(JdbcDbConnectionStore<QueryStore> state, OperationType operation);
-public abstract OperationResult convertSingleResult(ResultSet result) throws SQLException;
 }
