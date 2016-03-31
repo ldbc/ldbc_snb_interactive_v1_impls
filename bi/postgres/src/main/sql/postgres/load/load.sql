@@ -83,3 +83,5 @@ COPY post FROM PROGRAM 'cat PATHVAR/comment_0_0.csv | awk -F ''|'' ''{print $1"|
  ' WITH (FORCE_NOT_NULL ("ps_content"),  DELIMITER '|', HEADER, FORMAT csv);
 
 create view country as select city.pl_placeid as ctry_city, ctry.pl_name as ctry_name from place city, place ctry where city.pl_containerplaceid = ctry.pl_placeid and ctry.pl_type = 'country';
+
+vacuum analyze;

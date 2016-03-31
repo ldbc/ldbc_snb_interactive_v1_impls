@@ -1,5 +1,7 @@
 package com.ldbc.impls.workloads.ldbc.snb.jdbc.interactive;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -61,10 +63,10 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate7AddComment;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate8AddFriendship;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcDb;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcDbConnectionStore;
-import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcListOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcMultipleUpdateOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcSingletonOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcUpdateOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.jdbc.prepared.JdbcPreparedListOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.jdbc.prepared.JdbcPreparedSingletonOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.jdbc.prepared.JdbcPreparedUpdateOperationHandler;
 
 public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 	
@@ -76,7 +78,7 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 			throw new DbException(e);
 		}
 		
-		registerOperationHandler(LdbcQuery1.class, Query1.class);
+		//registerOperationHandler(LdbcQuery1.class, Query1.class); //ARRAY
 		registerOperationHandler(LdbcQuery2.class, Query2.class);
 		registerOperationHandler(LdbcQuery3.class, Query3.class);
 		registerOperationHandler(LdbcQuery4.class, Query4.class);
@@ -87,16 +89,16 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 		registerOperationHandler(LdbcQuery9.class, Query9.class);
 		registerOperationHandler(LdbcQuery10.class, Query10.class);
 		registerOperationHandler(LdbcQuery11.class, Query11.class);
-		registerOperationHandler(LdbcQuery12.class, Query12.class);
-		registerOperationHandler(LdbcQuery13.class, Query13.class);
-		registerOperationHandler(LdbcQuery14.class, Query14.class);
-		registerOperationHandler(LdbcShortQuery1PersonProfile.class, ShortQuery1PersonProfile.class);
-		registerOperationHandler(LdbcShortQuery2PersonPosts.class, ShortQuery2PersonPosts.class);
-		registerOperationHandler(LdbcShortQuery3PersonFriends.class, ShortQuery3PersonFriends.class);
-		registerOperationHandler(LdbcShortQuery4MessageContent.class, ShortQuery4MessageContent.class);
-		registerOperationHandler(LdbcShortQuery5MessageCreator.class, ShortQuery5MessageCreator.class);
-		registerOperationHandler(LdbcShortQuery6MessageForum.class, ShortQuery6MessageForum.class);
-		registerOperationHandler(LdbcShortQuery7MessageReplies.class, ShortQuery7MessageReplies.class);
+		//registerOperationHandler(LdbcQuery12.class, Query12.class); //ARRAY
+		//registerOperationHandler(LdbcQuery13.class, Query13.class);
+		//registerOperationHandler(LdbcQuery14.class, Query14.class);
+		//registerOperationHandler(LdbcShortQuery1PersonProfile.class, ShortQuery1PersonProfile.class);
+		//registerOperationHandler(LdbcShortQuery2PersonPosts.class, ShortQuery2PersonPosts.class);
+		//registerOperationHandler(LdbcShortQuery3PersonFriends.class, ShortQuery3PersonFriends.class);
+		//registerOperationHandler(LdbcShortQuery4MessageContent.class, ShortQuery4MessageContent.class);
+		//registerOperationHandler(LdbcShortQuery5MessageCreator.class, ShortQuery5MessageCreator.class);
+		//registerOperationHandler(LdbcShortQuery6MessageForum.class, ShortQuery6MessageForum.class);
+		//registerOperationHandler(LdbcShortQuery7MessageReplies.class, ShortQuery7MessageReplies.class);
 		registerOperationHandler(LdbcUpdate1AddPerson.class, Update1AddPerson.class);
 		registerOperationHandler(LdbcUpdate2AddPostLike.class, Update2AddPostLike.class);
 		registerOperationHandler(LdbcUpdate3AddCommentLike.class, Update3AddCommentLike.class);
@@ -107,221 +109,296 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 		registerOperationHandler(LdbcUpdate8AddFriendship.class, Update8AddFriendship.class);
 	}
 
-	public static class Query1 extends JdbcListOperationHandler<LdbcQuery1, LdbcQuery1Result, InteractiveQueryStore> {
+	public static class Query1 extends JdbcPreparedListOperationHandler<LdbcQuery1, LdbcQuery1Result, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery1 operation) {
-			return state.getQueryStore().getQuery1(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery1 operation) {
+			return state.getQueryStore().getStmtQuery1(operation,con);
 		}
 
 		@Override
 		public LdbcQuery1Result convertSingleResult(ResultSet result) throws SQLException {
-			// STUB
-			return new LdbcQuery1Result(0, "", 0, 0, 0, "", "", "", new ArrayList<String>(), new ArrayList<String>(), "", new ArrayList<List<Object>>(), new ArrayList<List<Object>>());
+			LdbcQuery1Result qr = new LdbcQuery1Result(
+					result.getLong(1),
+					result.getString(2),
+					result.getInt(13),
+					timestampToTimestamp(result, 3),
+					timestampToTimestamp(result, 4),
+					result.getString(5),
+					result.getString(6),
+					result.getString(7),
+					arrayToStringArray(result, 8),
+					arrayToStringArray(result, 9),
+					result.getString(10),
+					convertLists(arrayToObjectArray(result, 11)),
+					convertLists(arrayToObjectArray(result, 12)));
+			return qr;
 		}
 		
+		public Iterable<List<Object>> convertLists(Iterable<List<Object>> arr) {
+			Iterable<ArrayList<Object>> better_arr = (Iterable<ArrayList<Object>>)(Object)arr;
+			for (ArrayList<Object> entry : better_arr) {
+				entry.set(1, Integer.parseInt((String)entry.get(1)));
+			}
+			return (Iterable<List<Object>>) (Object)better_arr;
+		}
 	}
 	
-	public static class Query2 extends JdbcListOperationHandler<LdbcQuery2, LdbcQuery2Result, InteractiveQueryStore> {
+	public static class Query2 extends JdbcPreparedListOperationHandler<LdbcQuery2, LdbcQuery2Result, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery2 operation) {
-			return state.getQueryStore().getQuery2(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery2 operation) {
+			return state.getQueryStore().getStmtQuery2(operation,con);
 		}
 
 		@Override
 		public LdbcQuery2Result convertSingleResult(ResultSet result) throws SQLException {
-			// STUB
-			return new LdbcQuery2Result(0, "", "", 0, "", 0);
+			return new LdbcQuery2Result(
+					result.getLong(1),
+					result.getString(2),
+					result.getString(3),
+					result.getLong(4),
+					result.getString(5),
+					timestampToTimestamp(result, 6));
 		}
 		
 	}
 	
-	public static class Query3 extends JdbcListOperationHandler<LdbcQuery3, LdbcQuery3Result, InteractiveQueryStore> {
+	public static class Query3 extends JdbcPreparedListOperationHandler<LdbcQuery3, LdbcQuery3Result, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery3 operation) {
-			return state.getQueryStore().getQuery3(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery3 operation) {
+			return state.getQueryStore().getStmtQuery3(operation,con);
 		}
 
 		@Override
 		public LdbcQuery3Result convertSingleResult(ResultSet result) throws SQLException {
-			// STUB
-			return new LdbcQuery3Result(0, "", "", 0, 0, 0);
+			return new LdbcQuery3Result(
+					result.getLong(1),
+					result.getString(2),
+					result.getString(3),
+					result.getInt(4),
+					result.getInt(5),
+					result.getInt(6));
 		}
 		
 	}
 	
-	public static class Query4 extends JdbcListOperationHandler<LdbcQuery4, LdbcQuery4Result, InteractiveQueryStore> {
+	public static class Query4 extends JdbcPreparedListOperationHandler<LdbcQuery4, LdbcQuery4Result, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery4 operation) {
-			return state.getQueryStore().getQuery4(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery4 operation) {
+			return state.getQueryStore().getStmtQuery4(operation,con);
 		}
 
 		@Override
 		public LdbcQuery4Result convertSingleResult(ResultSet result) throws SQLException {
-			// STUB
-			return new LdbcQuery4Result("", 0);
+			return new LdbcQuery4Result(
+					result.getString(1),
+					result.getInt(2));
 		}
 		
 	}
 	
-	public static class Query5 extends JdbcListOperationHandler<LdbcQuery5, LdbcQuery5Result, InteractiveQueryStore> {
+	public static class Query5 extends JdbcPreparedListOperationHandler<LdbcQuery5, LdbcQuery5Result, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery5 operation) {
-			return state.getQueryStore().getQuery5(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery5 operation) {
+			return state.getQueryStore().getStmtQuery5(operation,con);
 		}
 
 		@Override
 		public LdbcQuery5Result convertSingleResult(ResultSet result) throws SQLException {
-			// STUB
-			return new LdbcQuery5Result("", 0);
+			return new LdbcQuery5Result(
+					result.getString(1),
+					result.getInt(2));
 		}
 		
 	}
 	
-	public static class Query6 extends JdbcListOperationHandler<LdbcQuery6, LdbcQuery6Result, InteractiveQueryStore> {
+	public static class Query6 extends JdbcPreparedListOperationHandler<LdbcQuery6, LdbcQuery6Result, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery6 operation) {
-			return state.getQueryStore().getQuery6(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery6 operation) {
+			return state.getQueryStore().getStmtQuery6(operation,con);
 		}
 
 		@Override
 		public LdbcQuery6Result convertSingleResult(ResultSet result) throws SQLException {
-			// STUB
-			return new LdbcQuery6Result("", 0);
+			return new LdbcQuery6Result(
+					result.getString(1),
+					result.getInt(2));
 		}
 		
 	}
 	
-	public static class Query7 extends JdbcListOperationHandler<LdbcQuery7, LdbcQuery7Result, InteractiveQueryStore> {
+	public static class Query7 extends JdbcPreparedListOperationHandler<LdbcQuery7, LdbcQuery7Result, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery7 operation) {
-			return state.getQueryStore().getQuery7(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery7 operation) {
+			return state.getQueryStore().getStmtQuery7(operation,con);
 		}
 
 		@Override
 		public LdbcQuery7Result convertSingleResult(ResultSet result) throws SQLException {
 			// STUB
-			return new LdbcQuery7Result(0, "", "", 0, 0, "", 0, false);
+			return new LdbcQuery7Result(
+					result.getLong(1),
+					result.getString(2),
+					result.getString(3),
+					timestampToTimestamp(result, 4),
+					result.getLong(5),
+					result.getString(6),
+					result.getInt(7),
+					result.getBoolean(8)
+					);
 		}
 		
 	}
 	
-	public static class Query8 extends JdbcListOperationHandler<LdbcQuery8, LdbcQuery8Result, InteractiveQueryStore> {
+	public static class Query8 extends JdbcPreparedListOperationHandler<LdbcQuery8, LdbcQuery8Result, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery8 operation) {
-			return state.getQueryStore().getQuery8(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery8 operation) {
+			return state.getQueryStore().getStmtQuery8(operation,con);
 		}
 
 		@Override
 		public LdbcQuery8Result convertSingleResult(ResultSet result) throws SQLException {
-			// STUB
-			return new LdbcQuery8Result(0, "", "", 0, 0, "");
+			return new LdbcQuery8Result(
+					result.getLong(1),
+					result.getString(2),
+					result.getString(3),
+					timestampToTimestamp(result, 4),
+					result.getLong(5),
+					result.getString(6));
 		}
 		
 	}
 	
-	public static class Query9 extends JdbcListOperationHandler<LdbcQuery9, LdbcQuery9Result, InteractiveQueryStore> {
+	public static class Query9 extends JdbcPreparedListOperationHandler<LdbcQuery9, LdbcQuery9Result, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery9 operation) {
-			return state.getQueryStore().getQuery9(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery9 operation) {
+			return state.getQueryStore().getStmtQuery9(operation,con);
 		}
 
 		@Override
 		public LdbcQuery9Result convertSingleResult(ResultSet result) throws SQLException {
-			// STUB
-			return new LdbcQuery9Result(0, "", "", 0, "", 0);
+			return new LdbcQuery9Result(
+					result.getLong(1),
+					result.getString(2),
+					result.getString(3),
+					result.getLong(4),
+					result.getString(5),
+					timestampToTimestamp(result,6));
 		}
 		
 	}
 	
-	public static class Query10 extends JdbcListOperationHandler<LdbcQuery10, LdbcQuery10Result, InteractiveQueryStore> {
+	public static class Query10 extends JdbcPreparedListOperationHandler<LdbcQuery10, LdbcQuery10Result, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery10 operation) {
-			return state.getQueryStore().getQuery10(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery10 operation) {
+			return state.getQueryStore().getStmtQuery10(operation,con);
 		}
 
 		@Override
 		public LdbcQuery10Result convertSingleResult(ResultSet result) throws SQLException {
-			// STUB
-			return new LdbcQuery10Result(0, "", "", 0, "", "");
+			return new LdbcQuery10Result(
+					result.getLong(1),
+					result.getString(2),
+					result.getString(3),
+					result.getInt(4),
+					result.getString(5),
+					result.getString(6));
 		}
 		
 	}
 	
-	public static class Query11 extends JdbcListOperationHandler<LdbcQuery11, LdbcQuery11Result, InteractiveQueryStore> {
+	public static class Query11 extends JdbcPreparedListOperationHandler<LdbcQuery11, LdbcQuery11Result, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery11 operation) {
-			return state.getQueryStore().getQuery11(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery11 operation) {
+			return state.getQueryStore().getStmtQuery11(operation,con);
 		}
 
 		@Override
 		public LdbcQuery11Result convertSingleResult(ResultSet result) throws SQLException {
-			// STUB
-			return new LdbcQuery11Result(0, "", "", "", 0);
+			return new LdbcQuery11Result(
+					result.getLong(1),
+					result.getString(2),
+					result.getString(3),
+					result.getString(4),
+					result.getInt(5));
 		}
 		
 	}
 	
-	public static class Query12 extends JdbcListOperationHandler<LdbcQuery12, LdbcQuery12Result, InteractiveQueryStore> {
+	public static class Query12 extends JdbcPreparedListOperationHandler<LdbcQuery12, LdbcQuery12Result, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery12 operation) {
-			return state.getQueryStore().getQuery12(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery12 operation) {
+			return state.getQueryStore().getStmtQuery12(operation,con);
 		}
 
 		@Override
 		public LdbcQuery12Result convertSingleResult(ResultSet result) throws SQLException {
-			// STUB
-			return new LdbcQuery12Result(0, "", "", new ArrayList<String>(), 0);
+			return new LdbcQuery12Result(
+					result.getLong(1),
+					result.getString(2),
+					result.getString(3),
+					arrayToStringArray(result, 4),
+					result.getInt(5));
 		}
 		
 	}
 	
-	public static class Query13 extends JdbcSingletonOperationHandler<LdbcQuery13, LdbcQuery13Result, InteractiveQueryStore> {
+	public static class Query13 extends JdbcPreparedSingletonOperationHandler<LdbcQuery13, LdbcQuery13Result, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery13 operation) {
-			return state.getQueryStore().getQuery13(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery13 operation) {
+			return state.getQueryStore().getStmtQuery13(operation,con);
 		}
 
 		@Override
 		public LdbcQuery13Result convertSingleResult(ResultSet result) throws SQLException {
-			// STUB
-			return new LdbcQuery13Result(0);
+			return new LdbcQuery13Result(result.getInt(1));
 		}
 		
 	}
 	
-	public static class Query14 extends JdbcListOperationHandler<LdbcQuery14, LdbcQuery14Result, InteractiveQueryStore> {
+	public static class Query14 extends JdbcPreparedListOperationHandler<LdbcQuery14, LdbcQuery14Result, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery14 operation) {
-			return state.getQueryStore().getQuery14(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery14 operation) {
+			return state.getQueryStore().getStmtQuery14(operation,con);
 		}
 
 		@Override
 		public LdbcQuery14Result convertSingleResult(ResultSet result) throws SQLException {
-			// STUB
-			return new LdbcQuery14Result(new ArrayList<Integer>(), 0.0);
+			return new LdbcQuery14Result(
+					convertLists(arrayToObjectArray(result, 1)), 
+					result.getInt(2));
+		}
+		
+		public Iterable<Long> convertLists(Iterable<List<Object>> arr) {
+			ArrayList<Long> new_arr = new ArrayList<>();
+			ArrayList<ArrayList<Object>> better_arr = (ArrayList<ArrayList<Object>>)(Object)arr;
+			for (ArrayList<Object> entry : better_arr) {
+				new_arr.add((Long)entry.get(0));
+			}
+			new_arr.add((Long)better_arr.get(better_arr.size()-1).get(1));
+			return new_arr;
 		}
 		
 	}
 	
-	public static class ShortQuery1PersonProfile extends JdbcSingletonOperationHandler<LdbcShortQuery1PersonProfile, LdbcShortQuery1PersonProfileResult, InteractiveQueryStore> {
+	public static class ShortQuery1PersonProfile extends JdbcPreparedSingletonOperationHandler<LdbcShortQuery1PersonProfile, LdbcShortQuery1PersonProfileResult, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcShortQuery1PersonProfile operation) {
-			return state.getQueryStore().getShortQuery1PersonProfile(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcShortQuery1PersonProfile operation) {
+			return state.getQueryStore().getStmtShortQuery1PersonProfile(operation,con);
 		}
 
 		@Override
@@ -339,11 +416,11 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 		
 	}
 	
-	public static class ShortQuery2PersonPosts extends JdbcListOperationHandler<LdbcShortQuery2PersonPosts, LdbcShortQuery2PersonPostsResult, InteractiveQueryStore> {
+	public static class ShortQuery2PersonPosts extends JdbcPreparedListOperationHandler<LdbcShortQuery2PersonPosts, LdbcShortQuery2PersonPostsResult, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcShortQuery2PersonPosts operation) {
-			return state.getQueryStore().getShortQuery2PersonPosts(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcShortQuery2PersonPosts operation) {
+			return state.getQueryStore().getStmtShortQuery2PersonPosts(operation,con);
 		}
 
 		@Override
@@ -360,11 +437,11 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 		
 	}
 	
-	public static class ShortQuery3PersonFriends extends JdbcListOperationHandler<LdbcShortQuery3PersonFriends, LdbcShortQuery3PersonFriendsResult, InteractiveQueryStore> {
+	public static class ShortQuery3PersonFriends extends JdbcPreparedListOperationHandler<LdbcShortQuery3PersonFriends, LdbcShortQuery3PersonFriendsResult, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcShortQuery3PersonFriends operation) {
-			return state.getQueryStore().getShortQuery3PersonFriends(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcShortQuery3PersonFriends operation) {
+			return state.getQueryStore().getStmtShortQuery3PersonFriends(operation,con);
 		}
 
 		@Override
@@ -378,11 +455,11 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 		
 	}
 	
-	public static class ShortQuery4MessageContent extends JdbcSingletonOperationHandler<LdbcShortQuery4MessageContent, LdbcShortQuery4MessageContentResult, InteractiveQueryStore> {
+	public static class ShortQuery4MessageContent extends JdbcPreparedSingletonOperationHandler<LdbcShortQuery4MessageContent, LdbcShortQuery4MessageContentResult, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcShortQuery4MessageContent operation) {
-			return state.getQueryStore().getShortQuery4MessageContent(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcShortQuery4MessageContent operation) {
+			return state.getQueryStore().getStmtShortQuery4MessageContent(operation,con);
 		}
 
 		@Override
@@ -394,11 +471,11 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 		
 	}
 	
-	public static class ShortQuery5MessageCreator extends JdbcSingletonOperationHandler<LdbcShortQuery5MessageCreator, LdbcShortQuery5MessageCreatorResult, InteractiveQueryStore> {
+	public static class ShortQuery5MessageCreator extends JdbcPreparedSingletonOperationHandler<LdbcShortQuery5MessageCreator, LdbcShortQuery5MessageCreatorResult, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcShortQuery5MessageCreator operation) {
-			return state.getQueryStore().getShortQuery5MessageCreator(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcShortQuery5MessageCreator operation) {
+			return state.getQueryStore().getStmtShortQuery5MessageCreator(operation,con);
 		}
 
 		@Override
@@ -411,11 +488,11 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 		
 	}
 	
-	public static class ShortQuery6MessageForum extends JdbcSingletonOperationHandler<LdbcShortQuery6MessageForum, LdbcShortQuery6MessageForumResult, InteractiveQueryStore> {
+	public static class ShortQuery6MessageForum extends JdbcPreparedSingletonOperationHandler<LdbcShortQuery6MessageForum, LdbcShortQuery6MessageForumResult, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcShortQuery6MessageForum operation) {
-			return state.getQueryStore().getShortQuery6MessageForum(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcShortQuery6MessageForum operation) {
+			return state.getQueryStore().getStmtShortQuery6MessageForum(operation,con);
 		}
 
 		@Override
@@ -430,11 +507,11 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 		
 	}
 	
-	public static class ShortQuery7MessageReplies extends JdbcListOperationHandler<LdbcShortQuery7MessageReplies, LdbcShortQuery7MessageRepliesResult, InteractiveQueryStore> {
+	public static class ShortQuery7MessageReplies extends JdbcPreparedListOperationHandler<LdbcShortQuery7MessageReplies, LdbcShortQuery7MessageRepliesResult, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcShortQuery7MessageReplies operation) {
-			return state.getQueryStore().getShortQuery7MessageReplies(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcShortQuery7MessageReplies operation) {
+			return state.getQueryStore().getStmtShortQuery7MessageReplies(operation,con);
 		}
 
 		@Override
@@ -459,20 +536,20 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 		}
 	}
 	
-	public static class Update2AddPostLike extends JdbcUpdateOperationHandler<LdbcUpdate2AddPostLike, LdbcNoResult, InteractiveQueryStore> {
+	public static class Update2AddPostLike extends JdbcPreparedUpdateOperationHandler<LdbcUpdate2AddPostLike, LdbcNoResult, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcUpdate2AddPostLike operation) {
-			return state.getQueryStore().getUpdate2AddPostLike(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcUpdate2AddPostLike operation) {
+			return state.getQueryStore().getStmtUpdate2AddPostLike(operation,con);
 		}
 		
 	}
 	
-	public static class Update3AddCommentLike extends JdbcUpdateOperationHandler<LdbcUpdate3AddCommentLike, LdbcNoResult, InteractiveQueryStore> {
+	public static class Update3AddCommentLike extends JdbcPreparedUpdateOperationHandler<LdbcUpdate3AddCommentLike, LdbcNoResult, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcUpdate3AddCommentLike operation) {
-			return state.getQueryStore().getUpdate3AddCommentLike(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcUpdate3AddCommentLike operation) {
+			return state.getQueryStore().getStmtUpdate3AddCommentLike(operation,con);
 		}
 	}
 	
@@ -484,11 +561,11 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 		}
 	}
 	
-	public static class Update5AddForumMembership extends JdbcUpdateOperationHandler<LdbcUpdate5AddForumMembership, LdbcNoResult, InteractiveQueryStore> {
+	public static class Update5AddForumMembership extends JdbcPreparedUpdateOperationHandler<LdbcUpdate5AddForumMembership, LdbcNoResult, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcUpdate5AddForumMembership operation) {
-			return state.getQueryStore().getUpdate5AddForumMembership(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcUpdate5AddForumMembership operation) {
+			return state.getQueryStore().getStmtUpdate5AddForumMembership(operation,con);
 		}
 	}
 	
@@ -509,11 +586,11 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 		
 	}
 	
-	public static class Update8AddFriendship extends JdbcUpdateOperationHandler<LdbcUpdate8AddFriendship, LdbcNoResult, InteractiveQueryStore> {
+	public static class Update8AddFriendship extends JdbcPreparedUpdateOperationHandler<LdbcUpdate8AddFriendship, LdbcNoResult, InteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcUpdate8AddFriendship operation) {
-			return state.getQueryStore().getUpdate8AddFriendship(operation);
+		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcUpdate8AddFriendship operation) {
+			return state.getQueryStore().getStmtUpdate8AddFriendship(operation,con);
 		}
 		
 	}

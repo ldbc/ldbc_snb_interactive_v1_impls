@@ -18,7 +18,7 @@ ALTER TABLE subclass ADD PRIMARY KEY (s_subtagclassid, s_supertagclassid);
 ALTER TABLE tag ADD PRIMARY KEY (t_tagid);
 ALTER TABLE tag_tagclass ADD PRIMARY KEY (ttc_tagid, ttc_tagclassid);
 
-
+vacuum analyze;
 # Additional indexes
 # create index p_placeid on person (p_placeid) partition (p_placeid int);
 # create column index l_personid on likes (l_postid) partition (l_postid int (0hexffff00));

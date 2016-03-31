@@ -1,9 +1,13 @@
 package com.ldbc.impls.workloads.ldbc.snb.jdbc;
 
 import java.io.IOException;
+import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 
 import com.ldbc.driver.Db;
@@ -30,5 +34,33 @@ public abstract class JdbcDb<DbQueryStore> extends Db {
 	
 	protected static long timestampToTimestamp(ResultSet r, int column) throws SQLException {
 		return r.getTimestamp(column, Calendar.getInstance(TimeZone.getTimeZone("GMT"))).getTime();
+	}
+	
+	protected static Iterable<String> arrayToStringArray(ResultSet r, int column) throws SQLException {
+		Array value = r.getArray(column);
+		if(value==null) {
+			return new ArrayList<>();
+		} else {
+			String[] strs=(String[])value.getArray();
+			ArrayList array = new ArrayList<>();
+			for (int i = 0; i < strs.length; i++) {
+				array.add(strs[i]);
+			}
+			return array;
+		}
+	}
+	
+	protected static Iterable<List<Object>> arrayToObjectArray(ResultSet r, int column) throws SQLException {
+		Array value = r.getArray(column);
+		if(value==null) {
+			return new ArrayList<>();
+		} else {
+			Object[][] strs=(Object[][])value.getArray();
+			ArrayList array = new ArrayList<>();
+			for (int i = 0; i < strs.length; i++) {
+				array.add(new ArrayList(Arrays.asList(strs[i])));
+			}
+			return array;
+		}
 	}
 }
