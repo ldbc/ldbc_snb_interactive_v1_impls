@@ -47,8 +47,8 @@ public abstract class JdbcPreparedListOperationHandler<OperationType extends Ope
 			throw new DbException("Type: "+operation.getClass()+ "Query: "+query,e);
 		} finally {
 			try {
-				conn.close();
-			} catch (SQLException e) {
+				state.freeConnection(conn);
+			} catch (DbException e) {
 				throw new DbException(e);
 			}
 		}

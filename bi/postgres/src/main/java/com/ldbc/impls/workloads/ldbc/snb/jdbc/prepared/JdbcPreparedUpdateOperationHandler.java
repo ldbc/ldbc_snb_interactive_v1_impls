@@ -23,16 +23,19 @@ public void executeOperation(OperationType operation, JdbcDbConnectionStore<Quer
 		PreparedStatement stmt = getStatement(conn, state, operation);
 		queryString=stmt.toString().replace("Pooled statement wrapping physical statement ", "");
 		state.logQuery(operation.getClass().getSimpleName(), queryString);
-		stmt.execute();
-		stmt.close();
+		if(stmt.execute()) {
+			stmt.getResultSet().close();
+		} else {
+			stmt.getUpdateCount();
+		}
 	} catch (SQLException e) {
 		throw new RuntimeException(queryString+e);
 	} catch (Exception e) {
 		throw new RuntimeException(e);
 	} finally {
 		try {
-			conn.close();
-		} catch (SQLException e) {
+			state.freeConnection(conn);
+		} catch (DbException e) {
 			throw new RuntimeException(e);
 		}
 		resultReporter.report(0, LdbcNoResult.INSTANCE, operation);

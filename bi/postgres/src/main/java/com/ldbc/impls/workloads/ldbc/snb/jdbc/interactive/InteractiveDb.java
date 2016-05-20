@@ -61,10 +61,12 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate5AddForumMembers
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate6AddPost;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate7AddComment;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate8AddFriendship;
+import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcCustomPoolingDbConnectionStore;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcDb;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcDbConnectionStore;
-import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcMultipleUpdateOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcPoolingDbConnectionStore;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.prepared.JdbcPreparedListOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.jdbc.prepared.JdbcPreparedMultipleUpdateOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.prepared.JdbcPreparedSingletonOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.prepared.JdbcPreparedUpdateOperationHandler;
 
@@ -73,12 +75,12 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 	@Override
 	protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
 		try {
-			dbs = new JdbcDbConnectionStore<InteractiveQueryStore>(properties, new InteractiveQueryStore(properties.get("queryDir")));
+			dbs = new JdbcCustomPoolingDbConnectionStore<InteractiveQueryStore>(properties, new InteractiveQueryStore(properties.get("queryDir")));
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new DbException(e);
 		}
 		
-		//registerOperationHandler(LdbcQuery1.class, Query1.class); //ARRAY
+		registerOperationHandler(LdbcQuery1.class, Query1.class); //ARRAY RESULT
 		registerOperationHandler(LdbcQuery2.class, Query2.class);
 		registerOperationHandler(LdbcQuery3.class, Query3.class);
 		registerOperationHandler(LdbcQuery4.class, Query4.class);
@@ -89,16 +91,16 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 		registerOperationHandler(LdbcQuery9.class, Query9.class);
 		registerOperationHandler(LdbcQuery10.class, Query10.class);
 		registerOperationHandler(LdbcQuery11.class, Query11.class);
-		//registerOperationHandler(LdbcQuery12.class, Query12.class); //ARRAY
-		//registerOperationHandler(LdbcQuery13.class, Query13.class);
-		//registerOperationHandler(LdbcQuery14.class, Query14.class);
-		//registerOperationHandler(LdbcShortQuery1PersonProfile.class, ShortQuery1PersonProfile.class);
-		//registerOperationHandler(LdbcShortQuery2PersonPosts.class, ShortQuery2PersonPosts.class);
-		//registerOperationHandler(LdbcShortQuery3PersonFriends.class, ShortQuery3PersonFriends.class);
-		//registerOperationHandler(LdbcShortQuery4MessageContent.class, ShortQuery4MessageContent.class);
-		//registerOperationHandler(LdbcShortQuery5MessageCreator.class, ShortQuery5MessageCreator.class);
-		//registerOperationHandler(LdbcShortQuery6MessageForum.class, ShortQuery6MessageForum.class);
-		//registerOperationHandler(LdbcShortQuery7MessageReplies.class, ShortQuery7MessageReplies.class);
+		registerOperationHandler(LdbcQuery12.class, Query12.class); //ARRAY RESULT
+		registerOperationHandler(LdbcQuery13.class, Query13.class); //NESTED WITH
+		registerOperationHandler(LdbcQuery14.class, Query14.class); //NESTED WITH
+		registerOperationHandler(LdbcShortQuery1PersonProfile.class, ShortQuery1PersonProfile.class);
+		registerOperationHandler(LdbcShortQuery2PersonPosts.class, ShortQuery2PersonPosts.class); //BUG
+		registerOperationHandler(LdbcShortQuery3PersonFriends.class, ShortQuery3PersonFriends.class);
+		registerOperationHandler(LdbcShortQuery4MessageContent.class, ShortQuery4MessageContent.class);
+		registerOperationHandler(LdbcShortQuery5MessageCreator.class, ShortQuery5MessageCreator.class);
+		registerOperationHandler(LdbcShortQuery6MessageForum.class, ShortQuery6MessageForum.class);
+		registerOperationHandler(LdbcShortQuery7MessageReplies.class, ShortQuery7MessageReplies.class);
 		registerOperationHandler(LdbcUpdate1AddPerson.class, Update1AddPerson.class);
 		registerOperationHandler(LdbcUpdate2AddPostLike.class, Update2AddPostLike.class);
 		registerOperationHandler(LdbcUpdate3AddCommentLike.class, Update3AddCommentLike.class);
@@ -135,6 +137,7 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 			return qr;
 		}
 		
+		@SuppressWarnings("unchecked")
 		public Iterable<List<Object>> convertLists(Iterable<List<Object>> arr) {
 			Iterable<ArrayList<Object>> better_arr = (Iterable<ArrayList<Object>>)(Object)arr;
 			for (ArrayList<Object> entry : better_arr) {
@@ -372,14 +375,15 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 
 		@Override
 		public PreparedStatement getStatement(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcQuery14 operation) {
-			return state.getQueryStore().getStmtQuery14(operation,con);
+			PreparedStatement stmt = state.getQueryStore().getStmtQuery14(operation,con);
+			return stmt;
 		}
 
 		@Override
 		public LdbcQuery14Result convertSingleResult(ResultSet result) throws SQLException {
 			return new LdbcQuery14Result(
 					convertLists(arrayToObjectArray(result, 1)), 
-					result.getInt(2));
+					result.getDouble(2));
 		}
 		
 		public Iterable<Long> convertLists(Iterable<List<Object>> arr) {
@@ -528,11 +532,11 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 		
 	}
 	
-	public static class Update1AddPerson extends JdbcMultipleUpdateOperationHandler<LdbcUpdate1AddPerson, LdbcNoResult, InteractiveQueryStore> {
+	public static class Update1AddPerson extends JdbcPreparedMultipleUpdateOperationHandler<LdbcUpdate1AddPerson, LdbcNoResult, InteractiveQueryStore> {
 
 		@Override
-		public List<String> getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcUpdate1AddPerson operation) {
-			return state.getQueryStore().getUpdate1AddPerson(operation);
+		public List<PreparedStatement> getStatements(Connection con,JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcUpdate1AddPerson operation) throws SQLException {
+			return state.getQueryStore().getStmtUpdate1AddPerson(operation,con);
 		}
 	}
 	
@@ -553,11 +557,11 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 		}
 	}
 	
-	public static class Update4AddForum extends JdbcMultipleUpdateOperationHandler<LdbcUpdate4AddForum, LdbcNoResult, InteractiveQueryStore> {
+	public static class Update4AddForum extends JdbcPreparedMultipleUpdateOperationHandler<LdbcUpdate4AddForum, LdbcNoResult, InteractiveQueryStore> {
 
 		@Override
-		public List<String> getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcUpdate4AddForum operation) {
-			return state.getQueryStore().getUpdate4AddForum(operation);
+		public List<PreparedStatement> getStatements(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcUpdate4AddForum operation) throws SQLException {
+			return state.getQueryStore().getStmtUpdate4AddForum(operation,con);
 		}
 	}
 	
@@ -569,19 +573,19 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 		}
 	}
 	
-	public static class Update6AddPost extends JdbcMultipleUpdateOperationHandler<LdbcUpdate6AddPost, LdbcNoResult, InteractiveQueryStore> {
+	public static class Update6AddPost extends JdbcPreparedMultipleUpdateOperationHandler<LdbcUpdate6AddPost, LdbcNoResult, InteractiveQueryStore> {
 
 		@Override
-		public List<String> getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcUpdate6AddPost operation) {
-			return state.getQueryStore().getUpdate6AddPost(operation);
+		public List<PreparedStatement> getStatements(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcUpdate6AddPost operation) throws SQLException {
+			return state.getQueryStore().getStmtUpdate6AddPost(operation, con);
 		}
 	}
 	
-	public static class Update7AddComment extends JdbcMultipleUpdateOperationHandler<LdbcUpdate7AddComment, LdbcNoResult, InteractiveQueryStore> {
+	public static class Update7AddComment extends JdbcPreparedMultipleUpdateOperationHandler<LdbcUpdate7AddComment, LdbcNoResult, InteractiveQueryStore> {
 
 		@Override
-		public List<String> getQueryString(JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcUpdate7AddComment operation) {
-			return state.getQueryStore().getUpdate7AddComment(operation);
+		public List<PreparedStatement> getStatements(Connection con, JdbcDbConnectionStore<InteractiveQueryStore> state, LdbcUpdate7AddComment operation) throws SQLException {
+			return state.getQueryStore().getStmtUpdate7AddComment(operation, con);
 		}
 		
 	}

@@ -42,7 +42,7 @@ public abstract class JdbcDb<DbQueryStore> extends Db {
 			return new ArrayList<>();
 		} else {
 			String[] strs=(String[])value.getArray();
-			ArrayList array = new ArrayList<>();
+			ArrayList<String> array = new ArrayList<>();
 			for (int i = 0; i < strs.length; i++) {
 				array.add(strs[i]);
 			}
@@ -56,7 +56,7 @@ public abstract class JdbcDb<DbQueryStore> extends Db {
 			return new ArrayList<>();
 		} else {
 			Object[][] strs=(Object[][])value.getArray();
-			ArrayList array = new ArrayList<>();
+			ArrayList<List<Object>> array = new ArrayList<>();
 			for (int i = 0; i < strs.length; i++) {
 				array.add(new ArrayList(Arrays.asList(strs[i])));
 			}

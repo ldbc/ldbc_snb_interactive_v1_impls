@@ -1,5 +1,6 @@
 package com.ldbc.impls.workloads.ldbc.snb.jdbc;
 
+import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -18,19 +19,24 @@ implements OperationHandler<OperationType, JdbcDbConnectionStore<QueryStore>> {
 public void executeOperation(OperationType operation, JdbcDbConnectionStore<QueryStore> state,
 		ResultReporter resultReporter) throws DbException {
 	Connection conn = state.getConnection();
+	String query="";
 	try {
 		List<String> queryStrings = getQueryString(state, operation);
 		for (String queryString : queryStrings) {
+			query=queryString;
 			Statement stmt = conn.createStatement();
 			state.logQuery(operation.getClass().getSimpleName(), queryString);
 			stmt.execute(queryString);
 			stmt.close();
 		}
+	} catch (BatchUpdateException e) {
+		System.out.println(e.getNextException().getNextException());
+		throw new RuntimeException(query+"::",e.getNextException());
 	} catch (SQLException e) {
-		System.out.println(e);
+		System.out.println(query+"::"+e);
 		throw new RuntimeException(e);
 	} catch (Exception e) {
-		throw new RuntimeException(e);
+		throw new RuntimeException(query+"::",e);
 	} finally {
 		try {
 			conn.close();

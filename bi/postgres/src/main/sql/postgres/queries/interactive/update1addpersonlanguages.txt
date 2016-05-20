@@ -1,1 +1,1 @@
-insert into person_language values --1--
+insert into person_language values (--1--, '--2--')

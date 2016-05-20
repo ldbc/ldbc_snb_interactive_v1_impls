@@ -19,27 +19,28 @@ implements OperationHandler<OperationType, JdbcDbConnectionStore<QueryStore>> {
 public void executeOperation(OperationType operation, JdbcDbConnectionStore<QueryStore> state,
 		ResultReporter resultReporter) throws DbException {
 	Connection conn = state.getConnection();
+	String query="";
 	try {
 		List<PreparedStatement> stmts = getStatements(conn, state, operation);
 		for (PreparedStatement stmt : stmts) {
-			state.logQuery(operation.getClass().getSimpleName(), stmt.toString());
-			stmt.execute();
-			stmt.close();
+			query=stmt.toString();
+			state.logQuery(operation.getClass().getSimpleName(), query);
+			stmt.executeBatch();
 		}
 	} catch (SQLException e) {
-		System.out.println(e);
+		System.out.println(query+"::"+e);
 		throw new RuntimeException(e);
 	} catch (Exception e) {
-		throw new RuntimeException(e);
+		throw new RuntimeException(query+"::",e);
 	} finally {
 		try {
-			conn.close();
-		} catch (SQLException e) {
+			state.freeConnection(conn);
+		} catch (DbException e) {
 			throw new RuntimeException(e);
 		}
 		resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
 	}
 }
 
-public abstract List<PreparedStatement> getStatements(Connection conn, JdbcDbConnectionStore<QueryStore> state, OperationType operation);
+public abstract List<PreparedStatement> getStatements(Connection conn, JdbcDbConnectionStore<QueryStore> state, OperationType operation) throws SQLException;
 }

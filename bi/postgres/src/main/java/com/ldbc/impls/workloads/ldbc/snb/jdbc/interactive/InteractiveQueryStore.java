@@ -42,7 +42,6 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery5MessageCrea
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery6MessageForum;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery7MessageReplies;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate1AddPerson;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate1AddPerson.Organization;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate2AddPostLike;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate3AddCommentLike;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate4AddForum;
@@ -74,21 +73,21 @@ public class InteractiveQueryStore {
 		ShortQuery5MessageCreator("shortquery5messagecreator.txt", typeList(Long.class)),
 		ShortQuery6MessageForum("shortquery6messageforum.txt", typeList(Long.class)),
 		ShortQuery7MessageReplies("shortquery7messagereplies.txt", typeList(Long.class)),
-		Update1AddPerson("update1addperson.txt"),
-		Update1AddPersonCompanies("update1addpersoncompanies.txt"),
-		Update1AddPersonEmails("update1addpersonemails.txt"),
-		Update1AddPersonLanguages("update1addpersonlanguages.txt"),
-		Update1AddPersonTags("update1addpersontags.txt"),
-		Update1AddPersonUniversities("update1addpersonuniversities.txt"),
+		Update1AddPerson("update1addperson.txt", typeList(Long.class, String.class, String.class, String.class, Timestamp.class, Timestamp.class, String.class, String.class, Long.class)),
+		Update1AddPersonCompanies("update1addpersoncompanies.txt", typeList(Long.class, Long.class, Integer.class)),
+		Update1AddPersonEmails("update1addpersonemails.txt", typeList(Long.class, String.class)),
+		Update1AddPersonLanguages("update1addpersonlanguages.txt", typeList(Long.class, String.class)),
+		Update1AddPersonTags("update1addpersontags.txt", typeList(Long.class, Long.class)),
+		Update1AddPersonUniversities("update1addpersonuniversities.txt", typeList(Long.class, Long.class, Integer.class)),
 		Update2AddPostLike("update2addpostlike.txt", typeList(Long.class, Long.class, Timestamp.class)),
 		Update3AddCommentLike("update3addcommentlike.txt", typeList(Long.class, Long.class, Timestamp.class)),
-		Update4AddForum("update4addforum.txt"),
-		Update4AddForumTags("update4addforumtags.txt"),
+		Update4AddForum("update4addforum.txt", typeList(Long.class, String.class, Timestamp.class, Long.class)),
+		Update4AddForumTags("update4addforumtags.txt", typeList(Long.class, Long.class)),
 		Update5AddForumMembership("update5addforummembership.txt", typeList(Long.class, Long.class, Timestamp.class)),
-		Update6AddPost("update6addpost.txt"),
-		Update6AddPostTags("update6addposttags.txt"),
-		Update7AddComment("update7addcomment.txt"),
-		Update7AddCommentTags("update7addcommenttags.txt"),
+		Update6AddPost("update6addpost.txt", typeList(Long.class, String.class, Timestamp.class, String.class, String.class, String.class, String.class, Integer.class, Long.class, Long.class, Long.class)),
+		Update6AddPostTags("update6addposttags.txt", typeList(Long.class, Long.class)),
+		Update7AddComment("update7addcomment.txt", typeList(Long.class, Timestamp.class, String.class, String.class, String.class, Integer.class, Long.class, Long.class, Long.class, Long.class)),
+		Update7AddCommentTags("update7addcommenttags.txt", typeList(Long.class, Long.class)),
 		Update8AddFriendship("update8addfriendship.txt", typeList(Long.class, Long.class, Timestamp.class));
 		
 		QueryType(String file) {
@@ -128,7 +127,7 @@ public class InteractiveQueryStore {
 		}
 	}
 	
-	private PreparedStatement getStmt(QueryType query, Connection con, Object... values) {
+	private PreparedStatement getStmt(QueryType query, Connection con, boolean batch, Object[] values) {
 		ConQuery cq = new ConQuery(query, con);
 		if(!stmts.containsKey(cq)) {
 			String queryStr = queries.get(query);
@@ -149,16 +148,34 @@ public class InteractiveQueryStore {
 		}
 		
 		try {
-			return stmts.get(cq).instantiate(query, values);
+			return stmts.get(cq).instantiate(query, batch, values);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
+	private PreparedStatement getStmtBatched(QueryType query, Connection con, Object... values) {
+		return getStmt(query, con, true, values);
+	}
+	
+	private PreparedStatement getStmt(QueryType query, Connection con, Object... values) {
+		return getStmt(query, con, false, values);
+	}
+	
 	private String getSql(QueryType query, Object... values) {
 		String queryStr = queries.get(query);
 		for (int i = 0; i < values.length; i++) {
-			queryStr=queryStr.replaceAll("--"+(i+1)+"--", values[i]+"");
+			if(values[i] instanceof String) {
+				values[i]=((String)values[i]).replaceAll("'", "''");
+			}
+			while(true) {
+				String newQuery=queryStr.replace("--"+(i+1)+"--", values[i].toString());
+				if(newQuery.equals(queryStr)) {
+					break;
+				} else {
+					queryStr=newQuery;
+				}
+			}
 		}
 		
 		return queryStr;
@@ -291,6 +308,135 @@ public class InteractiveQueryStore {
 				operation.messageId());
 	}
 	
+	public List<String> getUpdate1AddPerson(LdbcUpdate1AddPerson operation) {
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(getSql(QueryType.Update1AddPerson,
+				operation.personId(),
+				operation.personFirstName(),
+				operation.personLastName(),
+				operation.gender(),
+				convertDate(operation.birthday()),
+				convertDate(operation.creationDate()),
+				operation.locationIp(),
+				operation.browserUsed(),
+				operation.cityId()));
+		for (int i = 0; i < operation.workAt().size(); i++) {
+			list.add(getSql(QueryType.Update1AddPersonCompanies,
+					operation.personId(),
+					operation.workAt().get(i).organizationId(),
+					operation.workAt().get(i).year()));
+		}
+		for (int i = 0; i < operation.emails().size(); i++) {
+			list.add(getSql(QueryType.Update1AddPersonEmails,
+					operation.personId(),
+					operation.emails().get(i)));
+		}
+		for (int i = 0; i < operation.languages().size(); i++) {
+			list.add(getSql(QueryType.Update1AddPersonLanguages,
+					operation.personId(),
+					operation.languages().get(i)));
+		}
+		for (int i = 0; i < operation.tagIds().size(); i++) {
+			list.add(getSql(QueryType.Update1AddPersonTags,
+					operation.personId(),
+					operation.tagIds().get(i)));
+		}
+		for (int i = 0; i < operation.studyAt().size(); i++) {
+			list.add(getSql(QueryType.Update1AddPersonUniversities,
+					operation.personId(),
+					operation.studyAt().get(i).organizationId(),
+					operation.studyAt().get(i).year()));
+		}
+		return list;
+	}
+
+	public String getUpdate2AddPostLike(LdbcUpdate2AddPostLike operation) {
+		return getSql(QueryType.Update2AddPostLike,
+				operation.personId(),
+				operation.postId(),
+				convertDate(operation.creationDate()));
+	}
+
+	public String getUpdate3AddCommentLike(LdbcUpdate3AddCommentLike operation) {
+		return getSql(QueryType.Update3AddCommentLike,
+				operation.personId(),
+				operation.commentId(),
+				convertDate(operation.creationDate()));
+	}
+
+	public ArrayList<String> getUpdate4AddForum(LdbcUpdate4AddForum operation) {
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(getSql(QueryType.Update4AddForum,
+				operation.forumId(),
+				operation.forumTitle(),
+				convertDate(operation.creationDate()),
+				operation.moderatorPersonId()));
+		for (int i = 0; i < operation.tagIds().size(); i++) {
+			list.add(getSql(QueryType.Update4AddForumTags,
+					operation.forumId(),
+					operation.tagIds().get(i)));
+		}
+		return list;
+	}
+	
+
+	public String getUpdate5AddForumMembership(LdbcUpdate5AddForumMembership operation) {
+		return getSql(QueryType.Update5AddForumMembership,
+				operation.forumId(),
+				operation.personId(),
+				convertDate(operation.joinDate()));
+	}
+
+	public List<String> getUpdate6AddPost(LdbcUpdate6AddPost operation) {
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(getSql(QueryType.Update6AddPost,
+				operation.postId(),
+				operation.imageFile(),
+				convertDate(operation.creationDate()),
+				operation.locationIp(),
+				operation.browserUsed(),
+				operation.language(),
+				operation.content(),
+				operation.length(),
+				operation.authorPersonId(),
+				operation.forumId(),
+				operation.countryId()));
+		for (int i = 0; i < operation.tagIds().size(); i++) {
+			list.add(getSql(QueryType.Update6AddPostTags,
+					operation.postId(),
+					operation.tagIds().get(i)));
+		}
+		return list;
+	}
+
+	public List<String> getUpdate7AddComment(LdbcUpdate7AddComment operation) {
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(getSql(QueryType.Update7AddComment,
+				operation.commentId(),
+				convertDate(operation.creationDate()),
+				operation.locationIp(),
+				operation.browserUsed(),
+				operation.content(),
+				operation.length(),
+				operation.authorPersonId(),
+				operation.countryId(),
+				operation.replyToPostId(),
+				operation.replyToCommentId()));
+		for (int i = 0; i < operation.tagIds().size(); i++) {
+			list.add(getSql(QueryType.Update7AddCommentTags,
+					operation.commentId(),
+					operation.tagIds().get(i)));
+		}
+		return list;
+	}
+
+	public String getUpdate8AddFriendship(LdbcUpdate8AddFriendship operation) {
+		return getSql(QueryType.Update8AddFriendship,
+				operation.person1Id(),
+				operation.person2Id(),
+				convertDate(operation.creationDate()));
+	}
+	
 	public PreparedStatement getStmtQuery1(LdbcQuery1 operation, Connection con) {
 		return getStmt(QueryType.Query1, con,
 				operation.personId(),
@@ -418,122 +564,53 @@ public class InteractiveQueryStore {
 				operation.messageId());
 	}
 	
-	public List<String> getUpdate1AddPerson(LdbcUpdate1AddPerson operation) {
-		ArrayList<String> list = new ArrayList<String>();
-		list.add(queries.get(QueryType.Update1AddPerson)
-				.replace("--1--", operation.personId()+"")
-				.replace("--2--", operation.personFirstName())
-				.replace("--3--", operation.personLastName())
-				.replace("--4--", operation.gender())
-				.replace("--5--", convertDate(operation.birthday()).toString())
-				.replace("--6--", convertDate(operation.creationDate()).toString())
-				.replace("--7--", operation.locationIp())
-				.replace("--8--", operation.browserUsed())
-				.replace("--9--", operation.cityId()+""));
-		if(operation.workAt().size()>0) {
-			list.add(queries.get(QueryType.Update1AddPersonCompanies)
-					.replace("--1--", converToValueListOrganization(operation.personId(), operation.workAt())));
-		}
-		if(operation.emails().size()>0) {
-			list.add(queries.get(QueryType.Update1AddPersonEmails)
-					.replace("--1--", converToValueListString(operation.personId(), operation.emails())));
-		}
-		if(operation.languages().size()>0) {
-			list.add(queries.get(QueryType.Update1AddPersonLanguages)
-					.replace("--1--", converToValueListString(operation.personId(), operation.languages())));
-		}
-		if(operation.tagIds().size()>0) {
-			list.add(queries.get(QueryType.Update1AddPersonTags)
-					.replace("--1--", converToValueList(operation.personId(), operation.tagIds())));
-		}
-		if(operation.studyAt().size()>0) {
-			list.add(queries.get(QueryType.Update1AddPersonUniversities)
-					.replace("--1--", converToValueListOrganization(operation.personId(), operation.studyAt())));
-		}
-		return list;
-	}
-
-	public String getUpdate2AddPostLike(LdbcUpdate2AddPostLike operation) {
-		return getSql(QueryType.Update2AddPostLike,
+	public List<PreparedStatement> getStmtUpdate1AddPerson(LdbcUpdate1AddPerson operation, Connection con) throws SQLException {
+		ArrayList<PreparedStatement> list = new ArrayList<PreparedStatement>();
+		list.add(getStmt(QueryType.Update1AddPerson, con,
 				operation.personId(),
-				operation.postId(),
-				convertDate(operation.creationDate()));
-	}
-
-	public String getUpdate3AddCommentLike(LdbcUpdate3AddCommentLike operation) {
-		return getSql(QueryType.Update3AddCommentLike,
-				operation.personId(),
-				operation.commentId(),
-				convertDate(operation.creationDate()));
-	}
-
-	public ArrayList<String> getUpdate4AddForum(LdbcUpdate4AddForum operation) {
-		ArrayList<String> list = new ArrayList<String>();
-		list.add(queries.get(QueryType.Update4AddForum)
-				.replace("--1--", operation.forumId()+"")
-				.replace("--2--", operation.forumTitle())
-				.replace("--3--", convertDate(operation.creationDate()).toString())
-				.replace("--4--", operation.moderatorPersonId()+""));
-		if(operation.tagIds().size()>0) {
-			list.add(queries.get(QueryType.Update4AddForumTags)
-					.replace("--1--", converToValueList(operation.forumId(), operation.tagIds())));
+				operation.personFirstName(),
+				operation.personLastName(),
+				operation.gender(),
+				convertDate(operation.birthday()),
+				convertDate(operation.creationDate()),
+				operation.locationIp(),
+				operation.browserUsed(),
+				operation.cityId()));
+		list.get(0).addBatch();
+		PreparedStatement batchStmt = null;
+		for (int i = 0; i < operation.workAt().size(); i++) {
+			batchStmt = getStmtBatched(QueryType.Update1AddPersonCompanies, con,
+					operation.personId(),
+					operation.workAt().get(i).organizationId(),
+					operation.workAt().get(i).year());
 		}
-		return list;
-	}
-
-	public String getUpdate5AddForumMembership(LdbcUpdate5AddForumMembership operation) {
-		return getSql(QueryType.Update5AddForumMembership,
-				operation.forumId(),
-				operation.personId(),
-				convertDate(operation.joinDate()));
-	}
-
-	public List<String> getUpdate6AddPost(LdbcUpdate6AddPost operation) {
-		ArrayList<String> list = new ArrayList<String>();
-		list.add(queries.get(QueryType.Update6AddPost)
-				.replace("--1--", operation.postId()+"")
-				.replace("--2--", operation.imageFile())
-				.replace("--3--", convertDate(operation.creationDate()).toString())
-				.replace("--4--", operation.locationIp())
-				.replace("--5--", operation.browserUsed())
-				.replace("--6--", operation.language())
-				.replace("--7--", operation.content().replace("'", "''"))
-				.replace("--8--", operation.length()+"")
-				.replace("--9--", operation.authorPersonId()+"")
-				.replace("--10--", operation.forumId()+"")
-				.replace("--11--", operation.countryId()+""));
-		if(operation.tagIds().size()>0) {
-			list.add(queries.get(QueryType.Update6AddPostTags)
-					.replace("--1--", converToValueList(operation.postId(), operation.tagIds())));
+		if(batchStmt!=null) { list.add(batchStmt); batchStmt=null; };
+		for (int i = 0; i < operation.emails().size(); i++) {
+			batchStmt = getStmtBatched(QueryType.Update1AddPersonEmails, con,
+					operation.personId(),
+					operation.emails().get(i));
 		}
-		return list;
-	}
-
-	public List<String> getUpdate7AddComment(LdbcUpdate7AddComment operation) {
-		ArrayList<String> list = new ArrayList<String>();
-		list.add(queries.get(QueryType.Update7AddComment)
-				.replace("--1--", operation.commentId()+"")
-				.replace("--2--", convertDate(operation.creationDate()).toString())
-				.replace("--3--", operation.locationIp())
-				.replace("--4--", operation.browserUsed())
-				.replace("--5--", operation.content().replace("'", "''"))
-				.replace("--6--", operation.length()+"")
-				.replace("--7--", operation.authorPersonId()+"")
-				.replace("--8--", operation.countryId()+"")
-				.replace("--9--", operation.replyToPostId()+"")
-				.replace("--10--", operation.replyToCommentId()+""));
-		if(operation.tagIds().size()>0) {
-			list.add(queries.get(QueryType.Update7AddCommentTags)
-					.replace("--1--", converToValueList(operation.commentId(), operation.tagIds())));
+		if(batchStmt!=null) { list.add(batchStmt); batchStmt=null; };
+		for (int i = 0; i < operation.languages().size(); i++) {
+			batchStmt = getStmtBatched(QueryType.Update1AddPersonLanguages, con,
+					operation.personId(),
+					operation.languages().get(i));
 		}
+		if(batchStmt!=null) { list.add(batchStmt); batchStmt=null; };
+		for (int i = 0; i < operation.tagIds().size(); i++) {
+			batchStmt = getStmtBatched(QueryType.Update1AddPersonTags, con,
+					operation.personId(),
+					operation.tagIds().get(i));
+		}
+		if(batchStmt!=null) { list.add(batchStmt); batchStmt=null; };
+		for (int i = 0; i < operation.studyAt().size(); i++) {
+			batchStmt = getStmtBatched(QueryType.Update1AddPersonUniversities, con,
+					operation.personId(),
+					operation.studyAt().get(i).organizationId(),
+					operation.studyAt().get(i).year());
+		}
+		if(batchStmt!=null) { list.add(batchStmt); batchStmt=null; };
 		return list;
-	}
-
-	public String getUpdate8AddFriendship(LdbcUpdate8AddFriendship operation) {
-		return getSql(QueryType.Update8AddFriendship,
-				operation.person1Id(),
-				operation.person2Id(),
-				convertDate(operation.creationDate()));
 	}
 	
 	public PreparedStatement getStmtUpdate2AddPostLike(LdbcUpdate2AddPostLike operation, Connection con) {
@@ -549,6 +626,24 @@ public class InteractiveQueryStore {
 				operation.commentId(),
 				convertDate(operation.creationDate()));
 	}
+	
+	public ArrayList<PreparedStatement> getStmtUpdate4AddForum(LdbcUpdate4AddForum operation, Connection con) throws SQLException {
+		ArrayList<PreparedStatement> list = new ArrayList<PreparedStatement>();
+		list.add(getStmt(QueryType.Update4AddForum, con,
+				operation.forumId(),
+				operation.forumTitle(),
+				convertDate(operation.creationDate()),
+				operation.moderatorPersonId()));
+		list.get(0).addBatch();
+		PreparedStatement forumTags = null;
+		for (int i = 0; i < operation.tagIds().size(); i++) {
+			forumTags = getStmtBatched(QueryType.Update4AddForumTags, con,
+					operation.forumId(),
+					operation.tagIds().get(i));
+		}
+		if(forumTags!=null) { list.add(forumTags); };
+		return list;
+	}
 
 	public PreparedStatement getStmtUpdate5AddForumMembership(LdbcUpdate5AddForumMembership operation, Connection con) {
 		return getStmt(QueryType.Update5AddForumMembership, con,
@@ -556,51 +651,67 @@ public class InteractiveQueryStore {
 				operation.personId(),
 				convertDate(operation.joinDate()));
 	}
+	
+	public List<PreparedStatement> getStmtUpdate6AddPost(LdbcUpdate6AddPost operation, Connection con) throws SQLException {
+		ArrayList<PreparedStatement> list = new ArrayList<PreparedStatement>();
+		list.add(getStmt(QueryType.Update6AddPost, con,
+				operation.postId(),
+				operation.imageFile(),
+				convertDate(operation.creationDate()),
+				operation.locationIp(),
+				operation.browserUsed(),
+				operation.language(),
+				operation.content(),
+				operation.length(),
+				operation.authorPersonId(),
+				operation.forumId(),
+				operation.countryId()));
+		list.get(0).addBatch();
+		PreparedStatement tags = null;
+		for (int i = 0; i < operation.tagIds().size(); i++) {
+			tags = getStmtBatched(QueryType.Update6AddPostTags, con,
+					operation.postId(),
+					operation.tagIds().get(i));
+		}
+		if(tags!=null) { list.add(tags); };
+		return list;
+	}
 
+
+	public List<PreparedStatement> getStmtUpdate7AddComment(LdbcUpdate7AddComment operation, Connection con) throws SQLException {
+		ArrayList<PreparedStatement> list = new ArrayList<PreparedStatement>();
+		list.add(getStmt(QueryType.Update7AddComment, con,
+				operation.commentId(),
+				convertDate(operation.creationDate()),
+				operation.locationIp(),
+				operation.browserUsed(),
+				operation.content(),
+				operation.length(),
+				operation.authorPersonId(),
+				operation.countryId(),
+				operation.replyToPostId(),
+				operation.replyToCommentId()));
+		list.get(0).addBatch();
+		PreparedStatement tags = null;
+		for (int i = 0; i < operation.tagIds().size(); i++) {
+			tags = getStmtBatched(QueryType.Update7AddCommentTags, con,
+					operation.commentId(),
+					operation.tagIds().get(i));
+		}
+		if(tags!=null) { list.add(tags); };
+		return list;
+	}
+	
 	public PreparedStatement getStmtUpdate8AddFriendship(LdbcUpdate8AddFriendship operation, Connection con) {
 		return getStmt(QueryType.Update8AddFriendship, con,
 				operation.person1Id(),
 				operation.person2Id(),
 				convertDate(operation.creationDate()));
 	}
-
-	private String converToValueList(long id, List<Long> values) {
-		String res = "";
-		for (int i = 0; i < values.size(); i++) {
-			if(i>0) {
-				res+=",";
-			}
-			res+=" ("+id+"," + values.get(i)+") ";
-		}
-		return res;
-	}
-	
-	private String converToValueListString(long id, List<String> values) {
-		String res = "";
-		for (int i = 0; i < values.size(); i++) {
-			if(i>0) {
-				res+=",";
-			}
-			res+=" ("+id+",'" + values.get(i)+"') ";
-		}
-		return res;
-	}
-	
-	private String converToValueListOrganization(long id, List<Organization> values) {
-		String res = "";
-		for (int i = 0; i < values.size(); i++) {
-			if(i>0) {
-				res+=",";
-			}
-			res+=" ("+id+"," + values.get(i).organizationId() +"," + values.get(i).year() +") ";
-		}
-		return res;
-	}
 	
 	private static class SqlDate {
 		String dateCStr;
 		String dateStr;
-		long timestamp;
 		
 		public SqlDate(Date date) {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
@@ -609,7 +720,6 @@ public class InteractiveQueryStore {
 			
 			dateCStr = sdf.format(date).replace("+00:00", "");
 			dateStr = "'"+dateCStr+"'::timestamp";
-			timestamp = date.getTime();
 		}
 		
 		@Override
@@ -631,7 +741,7 @@ public class InteractiveQueryStore {
 		}
 	}
 	
-	private class ConQuery {
+	private static class ConQuery {
 		QueryType queryType;
 		Connection con;
 		
@@ -644,7 +754,6 @@ public class InteractiveQueryStore {
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;
-			result = prime * result + getOuterType().hashCode();
 			result = prime * result + ((con == null) ? 0 : con.hashCode());
 			result = prime * result + ((queryType == null) ? 0 : queryType.hashCode());
 			return result;
@@ -659,24 +768,18 @@ public class InteractiveQueryStore {
 			if (getClass() != obj.getClass())
 				return false;
 			ConQuery other = (ConQuery) obj;
-			if (!getOuterType().equals(other.getOuterType()))
-				return false;
 			if (con == null) {
 				if (other.con != null)
 					return false;
-			} else if (!con.equals(other.con))
+			} else if (!con.toString().equals(other.con.toString()))
 				return false;
 			if (queryType != other.queryType)
 				return false;
 			return true;
 		}
-
-		private InteractiveQueryStore getOuterType() {
-			return InteractiveQueryStore.this;
-		}
 	}
 	
-	private class PrepStmt {
+	private static class PrepStmt {
 		PreparedStatement stmt;
 		ArrayList<Integer> replacements;
 		
@@ -685,7 +788,7 @@ public class InteractiveQueryStore {
 			this.replacements = replacements;
 		}
 		
-		PreparedStatement instantiate(QueryType t, Object... values) throws SQLException {
+		PreparedStatement instantiate(QueryType t, boolean batched, Object... values) throws SQLException {
 			for (int i = 0; i < replacements.size(); i++) {
 				int value=replacements.get(i)-1;
 				Class<?> type=t.types.get(value);
@@ -701,11 +804,16 @@ public class InteractiveQueryStore {
 					throw new RuntimeException("Unsupported type: "+t.types.get(value)+" in Query: "+t);					
 				}
 			}
-//			if(t==QueryType.Query14) {
-//				System.out.println(stmt.toString());
-//				System.out.println(stmt.getParameterMetaData().toString());
-//			}
+			
+			if(batched) {
+				stmt.addBatch();
+			}
 			return stmt;
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return "Query store has "+stmts.size()+" prepared statements";
 	}
 }

@@ -57,6 +57,7 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForumsResult;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcDb;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcDbConnectionStore;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcListOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcPoolingDbConnectionStore;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcSingletonOperationHandler;
 
 public class BiDb extends JdbcDb<BiQueryStore> {
@@ -64,7 +65,7 @@ public class BiDb extends JdbcDb<BiQueryStore> {
 	@Override
 	protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
 		try {
-			dbs = new JdbcDbConnectionStore<BiQueryStore>(properties, new BiQueryStore(properties.get("queryDir")));
+			dbs = new JdbcPoolingDbConnectionStore<BiQueryStore>(properties, new BiQueryStore(properties.get("queryDir")));
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new DbException(e);
 		}

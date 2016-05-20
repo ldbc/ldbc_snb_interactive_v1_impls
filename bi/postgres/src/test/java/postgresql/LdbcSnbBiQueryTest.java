@@ -21,7 +21,7 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery7AuthoritativeUsers;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopics;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForums;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiWorkload;
-import com.ldbc.impls.workloads.ldbc.snb.bi.jdbc.db.BiJdbcDb;
+import com.ldbc.impls.workloads.ldbc.snb.jdbc.bi.BiDb;
 
 public class LdbcSnbBiQueryTest {
 	private static String endpoint = "localhost:5432";
@@ -46,7 +46,7 @@ public class LdbcSnbBiQueryTest {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static Object runOperation(BiJdbcDb db, Operation<?> op) throws DbException {
+	public static Object runOperation(BiDb db, Operation<?> op) throws DbException {
 		OperationHandlerRunnableContext handler = db.getOperationHandlerRunnableContext(op);
 		ResultReporter reporter = new ResultReporter.SimpleResultReporter(null);
 		handler.operationHandler().executeOperation(op, handler.dbConnectionState(), reporter);

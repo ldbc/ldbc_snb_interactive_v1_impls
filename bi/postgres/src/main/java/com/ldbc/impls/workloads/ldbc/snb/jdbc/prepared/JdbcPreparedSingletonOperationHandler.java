@@ -42,8 +42,8 @@ public void executeOperation(OperationType operation, JdbcDbConnectionStore<Quer
 		throw new DbException(e);
 	} finally {
 		try {
-			conn.close();
-		} catch (SQLException e) {
+			state.freeConnection(conn);
+		} catch (DbException e) {
 			throw new DbException(e);
 		}
 	}
