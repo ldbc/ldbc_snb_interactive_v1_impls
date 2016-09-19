@@ -1,4 +1,6 @@
-sparql select ?from ?first ?last ?dt ?rep ?content #Q8
+sparql select ?from ?first ?last  #Q8
+              bif:datediff('millisecond', bif:stringdate ('1970.1.1 00:00:00.000+00:00'), ?dt)
+	      ?rep ?content
 where {
   { select ?rep ?dt
     where {
@@ -9,7 +11,7 @@ where {
     limit 20
   } .
   ?rep snvoc:hasCreator ?from .
-  ?from snvoc:firstName ?first . ?from snvoc:lastName ?last . 
+  ?from snvoc:firstName ?first . ?from snvoc:lastName ?last .
   ?rep snvoc:content ?content.
 }
 order by desc(?dt) ?rep

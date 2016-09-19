@@ -126,4 +126,27 @@ create procedure c_weight_sparql (in p1 varchar, in p2 varchar)
 --      a.o = b.s and
 --      b.g = iri_to_id('sib') and b.p = iri_to_id('http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasPerson');
 
---sparql insert into graph <sib> {?s snvoc:knows ?o1} where { graph <sib> { ?s snvoc:knows ?o. ?o snvoc:hasPerson ?o1. }};
+--create procedure fill_knows () {
+--       vectored;
+--       for (
+--       	   select a.s as s, b.o as o, c.o as cd
+--	   from rdf_quad a, rdf_quad b, rdf_quad c
+--	   where a.g = iri_to_id('sib') and a.p = iri_to_id('http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/knows') and
+--	   	 a.o = b.s and
+--      		 b.g = iri_to_id('sib') and
+--		 b.p = iri_to_id('http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasPerson') and
+--		 a.o = c.s and
+--      		 c.g = iri_to_id('sib') and
+--		 c.p = iri_to_id('http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate')
+--       ) do {
+--         --sparql insert in graph <sib> { ?:s snvoc:knows ?:o };
+--       	 --sparql insert in graph <sib> { ?:o snvoc:knows ?:s };
+--	 sparql insert in graph <sib> { ?:o snvoc:knows _:knows_tmp. _:knows_tmp snvoc:hasPerson ?:s. _:knows_tmp snvoc:creationDate ?:cd. };
+--       }
+--}
+
+--fill_knows();
+
+__dbf_set( 'enable_qp', 1);
+sparql insert in graph <sib> {?s snvoc:knows ?o1. ?o1 snvoc:knows ?s. ?o1 snvoc:knows [snvoc:hasPerson ?s; snvoc:creationDate ?cd].} where { graph <sib> { ?s snvoc:knows ?o. ?o snvoc:hasPerson ?o1. ?o snvoc:creationDate ?cd. }};
+__dbf_set( 'enable_qp', 8);

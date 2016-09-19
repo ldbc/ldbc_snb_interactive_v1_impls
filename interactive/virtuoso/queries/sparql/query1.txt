@@ -1,4 +1,7 @@
-sparql select ?fr ?last min(?dist) as ?mindist  ?bday ?since ?gen ?browser ?locationIP #Q1
+sparql select ?fr ?last min(?dist) as ?mindist
+              bif:datediff('millisecond', bif:stringdate ('1970.1.1 00:00:00.000'), ?bday)
+              bif:datediff('millisecond', bif:stringdate ('1970.1.1 00:00:00.000+00:00'), ?since)
+	      ?gen ?browser ?locationIP #Q1
     ((select group_concat (?email, ", ")
         where {
             ?frr snvoc:email ?email .

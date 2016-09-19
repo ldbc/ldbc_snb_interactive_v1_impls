@@ -8,7 +8,6 @@ where {
     ?w snvoc:workFrom ?startdate .
     filter (?startdate < %Date0%) .
     {  select distinct ?fr
-       from <sib>
        where {
            {sn:pers%Person% snvoc:knows ?fr.} union {sn:pers%Person% snvoc:knows ?fr2. ?fr2 snvoc:knows ?fr. filter (?fr != sn:pers%Person%)}
        }
@@ -16,7 +15,5 @@ where {
     ?fr snvoc:firstName ?first .
     ?fr snvoc:lastName ?last .
 }
-order by ?startdate ?fr ?orgname
+order by ?startdate ?fr desc(?orgname)
 limit 10
-
-

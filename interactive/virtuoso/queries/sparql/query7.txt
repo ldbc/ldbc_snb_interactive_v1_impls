@@ -1,13 +1,23 @@
-sparql select ?liker ?first ?last ?ldt #Q7
-       (if ((exists {  sn:pers%Person% snvoc:knows ?liker}), 0, 1) as ?is_new)
-       ?post ?content (bif:datediff ("minute", ?dt, ?ldt) as ?lag) 
-from <sib>
+sparql select ?liker ?first ?last #Q7
+       bif:datediff('millisecond', bif:stringdate ('1970.1.1 00:00:00.000+00:00'), ?max_ldt)
+       (not exists {  sn:pers%Person% snvoc:knows ?liker} as ?is_new)
+       ?post ?content (bif:datediff ("millisecond", ?dt, ?max_ldt) / 60000 as ?lag) 
 where {
-  ?post snvoc:hasCreator sn:pers%Person% .
+  {{
+  select ?liker, (max(?ldt) as ?max_ldt)
+  where {
+  	?post snvoc:hasCreator sn:pers%Person% .
+  	{{ ?lk snvoc:hasPost ?post } union { ?lk snvoc:hasComment ?post }} .
+  	?liker snvoc:likes ?lk . ?lk snvoc:creationDate ?ldt .
+  }
+  group by ?liker
+  order by desc(2)
+  limit 20
+  }} .
+  {{ ?lk1 snvoc:hasPost ?post } union { ?lk1 snvoc:hasComment ?post }} .
+  ?liker snvoc:likes ?lk1 . ?lk1 snvoc:creationDate ?max_ldt .
   {{ ?post snvoc:content ?content } union {?post snvoc:imageFile ?content}} .
-  ?lk snvoc:hasPost ?post .
-  ?liker snvoc:likes ?lk . ?liker  snvoc:firstName ?first . ?liker snvoc:lastName ?last . 
-  ?post snvoc:creationDate ?dt . ?lk snvoc:creationDate ?ldt .
+  ?liker  snvoc:firstName ?first . ?liker snvoc:lastName ?last .
+  ?post snvoc:creationDate ?dt .   
 }
-order by desc (?ldt) ?liker
-limit 20
+order by desc(4) ?liker

@@ -62,10 +62,8 @@ public class VirtuosoDb extends Db {
 		try {
 			virtuosoDbConnectionState = new VirtuosoDbConnectionState(properties);
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -91,6 +89,7 @@ public class VirtuosoDb extends Db {
 		registerOperationHandler(LdbcShortQuery5MessageCreator.class, LdbcShortQuery5ToVirtuoso.class);
 		registerOperationHandler(LdbcShortQuery6MessageForum.class, LdbcShortQuery6ToVirtuoso.class);
 		registerOperationHandler(LdbcShortQuery7MessageReplies.class, LdbcShortQuery7ToVirtuoso.class);
+
 
 		if (properties.get("run_sql").equals("true")) {
 			registerOperationHandler(LdbcUpdate1AddPerson.class, LdbcUpdate1AddPersonToVirtuoso.class);
@@ -120,7 +119,6 @@ public class VirtuosoDb extends Db {
 		try {
 			virtuosoDbConnectionState.getDs().close();
 		} catch (SQLException e) {
-			//TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -173,7 +171,6 @@ public class VirtuosoDb extends Db {
 				tmp.setTransactionIsolation(2);
 				return tmp;
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block                                                                
 				e.printStackTrace();
 			}
 			return null;
@@ -205,7 +202,6 @@ public class VirtuosoDb extends Db {
 		}
 
 		public void close() throws IOException {
-			// TODO Auto-generated method stub
 
 		}
 
@@ -251,10 +247,11 @@ public class VirtuosoDb extends Db {
 					String ip = result.getString(8);
 					Collection<String> emails =  result.getString(9) == null ? new ArrayList<String>() : new ArrayList<String>(Arrays.asList(result.getString(9).split(", ")));
 					Collection<String> languages =  result.getString(10) == null ? new ArrayList<String>() : new ArrayList<String>(Arrays.asList(result.getString(10).split(", ")));
-					String place = result.getString(11);
+					String place = new String(result.getString(11).getBytes("ISO-8859-1"));
 					ArrayList<List<Object>> universities = null;
 					if (result.getString(12) != null) {
-						List<String> items = new ArrayList<String>(Arrays.asList(result.getString(12).split(", ")));
+					        String ss = new String(result.getString(12).getBytes("ISO-8859-1"));
+						List<String> items = new ArrayList<String>(Arrays.asList(ss.split(", ")));
 						universities = new ArrayList<List<Object>>();
 						for (int i = 0; i < items.size(); i++) {
 							universities.add(new ArrayList<Object>(Arrays.asList(items.get(i).split(" "))));
@@ -264,7 +261,8 @@ public class VirtuosoDb extends Db {
 						universities = new ArrayList<List<Object>>();
 					ArrayList<List<Object>> companies = null;
 					if (result.getString(13) != null) {
-						List<String> items = new ArrayList<String>(Arrays.asList(result.getString(13).split(", ")));
+					        String ss = new String(result.getString(13).getBytes("ISO-8859-1"));
+						List<String> items = new ArrayList<String>(Arrays.asList(ss.split(", ")));
 						companies = new ArrayList<List<Object>>();
 						for (int i = 0; i < items.size(); i++) {
 							companies.add(new ArrayList<Object>(Arrays.asList(items.get(i).split(" "))));
@@ -280,11 +278,9 @@ public class VirtuosoDb extends Db {
 				}
 				stmt.close();conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			resultReporter.report(results_count, RESULT, operation);
@@ -343,11 +339,9 @@ public class VirtuosoDb extends Db {
 				}
 				stmt.close();conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 
 			}
@@ -407,11 +401,9 @@ public class VirtuosoDb extends Db {
 				}
 				stmt.close();conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 
 			}
@@ -460,11 +452,9 @@ public class VirtuosoDb extends Db {
 				}
 				stmt.close();conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 
 			}
@@ -511,11 +501,9 @@ public class VirtuosoDb extends Db {
 				}
 				stmt.close();conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 
 			}
@@ -561,11 +549,9 @@ public class VirtuosoDb extends Db {
 				}
 				stmt.close();conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 
 			}
@@ -623,11 +609,9 @@ public class VirtuosoDb extends Db {
 				}
 				stmt.close();conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 
 			}
@@ -675,9 +659,7 @@ public class VirtuosoDb extends Db {
 						replyId = result.getLong(5);
 					else
 						replyId = Long.parseLong(result.getString(5).substring(47));
-					// TODO
 					String replyContent = new String(result.getString(6).getBytes("ISO-8859-1"));
-					//String replyContent = null;
 					LdbcQuery8Result tmp = new LdbcQuery8Result(personId, personFirstName, personLastName, replyCreationDate, replyId, replyContent);
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
@@ -685,11 +667,9 @@ public class VirtuosoDb extends Db {
 				}
 				stmt.close();conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 
 			}
@@ -748,11 +728,9 @@ public class VirtuosoDb extends Db {
 				}
 				stmt.close();conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 
 			}
@@ -773,12 +751,18 @@ public class VirtuosoDb extends Db {
 				if (state.isRunSql()) {
 					queryString = queryString.replaceAll("@Person@", String.valueOf(operation.personId()));
 					queryString = queryString.replaceAll("@HS0@", String.valueOf(operation.month()));
-					queryString = queryString.replaceAll("@HS1@", String.valueOf((operation.month() + 1)));
+					int nextMonth = operation.month() + 1;
+					if (nextMonth == 13)
+					    nextMonth = 1;
+					queryString = queryString.replaceAll("@HS1@", String.valueOf(nextMonth));
 				}
 				else {
 					queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
 					queryString = queryString.replaceAll("%HS0%", String.valueOf(operation.month()));
-					queryString = queryString.replaceAll("%HS1%", String.valueOf((operation.month() + 1)));
+					int nextMonth = operation.month() + 1;
+					if (nextMonth == 13)
+					    nextMonth = 1;
+					queryString = queryString.replaceAll("%HS1%", String.valueOf(nextMonth));
 				}
 				stmt = conn.createStatement();
 
@@ -806,11 +790,9 @@ public class VirtuosoDb extends Db {
 				}
 				stmt.close();conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 
 			}
@@ -864,11 +846,9 @@ public class VirtuosoDb extends Db {
 				}
 				stmt.close();conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 
 			}
@@ -919,11 +899,9 @@ public class VirtuosoDb extends Db {
 				}
 				stmt.close();conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 
 			}
@@ -967,11 +945,9 @@ public class VirtuosoDb extends Db {
 				}
 				stmt.close();conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 
 			}
@@ -1027,11 +1003,9 @@ public class VirtuosoDb extends Db {
 				}
 				stmt.close();conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { stmt.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 
 			}
@@ -1048,7 +1022,10 @@ public class VirtuosoDb extends Db {
 			CallableStatement stmt1 = null;
 
 			try {
-				stmt1 = conn.prepareCall("person_view_1(?)");
+			    	if (state.isRunSql())
+				    stmt1 = conn.prepareCall("person_view_1(?)");
+				else
+				    stmt1 = conn.prepareCall("person_view_1_sparql(?)");
 				stmt1.setLong(1, operation.personId());
 
 				if (state.isPrintNames())
@@ -1076,11 +1053,9 @@ public class VirtuosoDb extends Db {
 				}
 				stmt1.close();conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { stmt1.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			resultReporter.report(results_count, RESULT, operation);
@@ -1095,7 +1070,10 @@ public class VirtuosoDb extends Db {
 			Connection conn = state.getConn();
 			CallableStatement stmt1 = null;
 			try {
-				stmt1 = conn.prepareCall("person_view_2(?)");
+			        if (state.isRunSql())
+				    stmt1 = conn.prepareCall("person_view_2(?)");
+				else
+				    stmt1 = conn.prepareCall("person_view_2_sparql(?)");
 				stmt1.setLong(1, operation.personId());
 
 				if (state.isPrintNames())
@@ -1108,21 +1086,37 @@ public class VirtuosoDb extends Db {
 					ResultSet rs = stmt1.getResultSet();
 					while (rs.next()) {
 						results_count++;
-						long postId = rs.getLong(1);
-						String postContent = new String(rs.getString(2).getBytes("ISO-8859-1"));
+						long postId;
+						if (state.isRunSql())
+						    postId = rs.getLong(1);
+						else
+						    postId = Long.parseLong(rs.getString(1).substring(47));
+						String postContent = new String(rs.getString(2));
 						if (postContent == null || postContent.length() == 0)
-							postContent = new String(rs.getString(3).getBytes("ISO-8859-1"));
+						    postContent = new String(rs.getString(3).getBytes("ISO-8859-1"));
+						else
+						    postContent = new String(postContent.getBytes("ISO-8859-1"));
 						long postCreationTime = rs.getLong(4);
-						long origPostId = rs.getLong(5);
-						long origPersonId = rs.getLong(6);
-						String origFirstName = new String(rs.getString(7).getBytes("ISO-8859-1"));
-						String origLastName = new String(rs.getString(8).getBytes("ISO-8859-1"));
-						if (postId == 0)
-							System.out.println("1@@@@@@@@@@@@@@@@@@@@@@ - " + postId);
-						if (origPostId == 0)
-							System.out.println("2@@@@@@@@@@@@@@@@@@@@@@ - " + origPostId);
-						if (origPersonId == 0)
-							System.out.println("3@@@@@@@@@@@@@@@@@@@@@@ - " + origPersonId);
+						long origPostId = 0;
+						if (state.isRunSql())
+						    origPostId = rs.getLong(5);
+						else {
+						    if (rs.getString(5) != null)
+							origPostId = Long.parseLong(rs.getString(5).substring(47));
+						}
+						long origPersonId = 0;
+						if (state.isRunSql())
+						    origPersonId = rs.getLong(6);
+						else {
+						    if (rs.getString(6) != null)
+							origPersonId = Long.parseLong(rs.getString(6).substring(47));
+						}
+						String origFirstName = rs.getString(7);
+						if (origFirstName != null)
+						    origFirstName = new String(origFirstName.getBytes("ISO-8859-1"));
+						String origLastName = rs.getString(8);
+						if (origLastName != null)
+						    origLastName = new String(rs.getString(8).getBytes("ISO-8859-1"));
 						LdbcShortQuery2PersonPostsResult tmp = new LdbcShortQuery2PersonPostsResult(postId, postContent, postCreationTime, origPostId, origPersonId, origFirstName, origLastName);
 						if (state.isPrintResults())
 							System.out.println(tmp.toString());
@@ -1132,12 +1126,10 @@ public class VirtuosoDb extends Db {
 				stmt1.close();conn.close();
 			} catch (SQLException e) {
 				System.out.println("Err: LdbcShortQuery2 (" + operation.personId() + ")");
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { stmt1.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				System.out.println("Err: LdbcShortQuery2 (" + operation.personId() + ")");
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			resultReporter.report(results_count, RESULT, operation);
@@ -1152,7 +1144,10 @@ public class VirtuosoDb extends Db {
 			Connection conn = state.getConn();
 			CallableStatement stmt1 = null;
 			try {
-				stmt1 = conn.prepareCall("person_view_3(?)");
+			        if (state.isRunSql())
+				    stmt1 = conn.prepareCall("person_view_3(?)");
+				else
+				    stmt1 = conn.prepareCall("person_view_3_sparql(?)");
 				stmt1.setLong(1, operation.personId());
 
 				if (state.isPrintNames())
@@ -1165,7 +1160,11 @@ public class VirtuosoDb extends Db {
 					ResultSet rs = stmt1.getResultSet();
 					while (rs.next()) {
 						results_count++;
-						long personId = rs.getLong(1);
+						long personId;
+						if (state.isRunSql())
+						    personId = rs.getLong(1);
+						else
+						    personId = Long.parseLong(rs.getString(1).substring(47));
 						String firstName = new String(rs.getString(2).getBytes("ISO-8859-1"));;
 						String lastName = new String(rs.getString(3).getBytes("ISO-8859-1"));;
 						long since = rs.getLong(4);
@@ -1179,11 +1178,9 @@ public class VirtuosoDb extends Db {
 				}
 				stmt1.close();conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { stmt1.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			resultReporter.report(results_count, RESULT, operation);
@@ -1198,7 +1195,10 @@ public class VirtuosoDb extends Db {
 			Connection conn = state.getConn();
 			CallableStatement stmt1 = null;
 			try {
-				stmt1 = conn.prepareCall("post_view_1(?)");
+			        if (state.isRunSql())
+				    stmt1 = conn.prepareCall("post_view_1(?)");
+				else
+				    stmt1 = conn.prepareCall("post_view_1_sparql(?)");
 				stmt1.setLong(1, operation.messageId());
 
 				if (state.isPrintNames())
@@ -1211,9 +1211,11 @@ public class VirtuosoDb extends Db {
 					ResultSet rs = stmt1.getResultSet();
 					while (rs.next()) {
 						results_count++;
-						String messageContent = new String(rs.getString(1).getBytes("ISO-8859-1"));;
-						if (messageContent == null || messageContent.length() == 0)
+						String messageContent = null;
+						if (rs.getString(1) == null || rs.getString(1).length() == 0)
 							messageContent = new String(rs.getString(2).getBytes("ISO-8859-1"));
+						else
+						    messageContent = new String(rs.getString(1).getBytes("ISO-8859-1"));
 						long creationDate = rs.getLong(3);
 						RESULT = new LdbcShortQuery4MessageContentResult(messageContent, creationDate);
 						if (state.isPrintResults())
@@ -1222,12 +1224,10 @@ public class VirtuosoDb extends Db {
 				}
 				stmt1.close();conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				System.out.println("Err: LdbcShortQuery4 (" + operation.messageId() + ")");
 				e.printStackTrace();
 				try { stmt1.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				System.out.println("Err: LdbcShortQuery4 (" + operation.messageId() + ")");
 				e.printStackTrace();
 			}
@@ -1243,7 +1243,10 @@ public class VirtuosoDb extends Db {
 			Connection conn = state.getConn();
 			CallableStatement stmt1 = null;
 			try {
-				stmt1 = conn.prepareCall("post_view_2(?)");
+			        if (state.isRunSql())
+				    stmt1 = conn.prepareCall("post_view_2(?)");
+				else
+				    stmt1 = conn.prepareCall("post_view_2_sparql(?)");
 				stmt1.setLong(1, operation.messageId());
 
 				if (state.isPrintNames())
@@ -1256,7 +1259,11 @@ public class VirtuosoDb extends Db {
 					ResultSet rs = stmt1.getResultSet();
 					while (rs.next()) {
 						results_count++;
-						long personId = rs.getLong(1);
+						long personId;
+						if (state.isRunSql())
+						    personId = rs.getLong(1);
+						else
+						    personId = Long.parseLong(rs.getString(1).substring(47));
 						String firstName = new String(rs.getString(2).getBytes("ISO-8859-1"));;
 						String lastName = new String(rs.getString(3).getBytes("ISO-8859-1"));;
 						if (personId == 0)
@@ -1268,11 +1275,9 @@ public class VirtuosoDb extends Db {
 				}
 				stmt1.close();conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { stmt1.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			resultReporter.report(results_count, RESULT, operation);
@@ -1287,7 +1292,10 @@ public class VirtuosoDb extends Db {
 			Connection conn = state.getConn();
 			CallableStatement stmt1 = null;
 			try {
-				stmt1 = conn.prepareCall("post_view_3(?)");
+				if (state.isRunSql())
+				    stmt1 = conn.prepareCall("post_view_3(?)");
+				else
+				    stmt1 = conn.prepareCall("post_view_3_sparql(?)");
 				stmt1.setLong(1, operation.messageId());
 
 				if (state.isPrintNames())
@@ -1300,13 +1308,19 @@ public class VirtuosoDb extends Db {
 					ResultSet rs = stmt1.getResultSet();
 					while (rs.next()) {
 						results_count++;
-						long forumId = rs.getLong(1);
+						long forumId;
+						if (state.isRunSql())
+						    forumId = rs.getLong(1);
+						else
+						    forumId = Long.parseLong(rs.getString(1).substring(48));
 						String forumTitle = new String(rs.getString(2).getBytes("ISO-8859-1"));;
-						long moderatorId = rs.getLong(3);
+						long moderatorId;
+						if (state.isRunSql())
+						    moderatorId = rs.getLong(3);
+						else
+						    moderatorId = Long.parseLong(rs.getString(3).substring(47));
 						String moderatorFirstName = new String(rs.getString(4).getBytes("ISO-8859-1"));;
 						String moderatorLastName = new String(rs.getString(5).getBytes("ISO-8859-1"));;
-						if (moderatorId == 0)
-							System.out.println("6@@@@@@@@@@@@@@@@@@@@@@ - " + moderatorId);
 						RESULT = new LdbcShortQuery6MessageForumResult(forumId, forumTitle, moderatorId, moderatorFirstName, moderatorLastName);
 						if (state.isPrintResults())
 							System.out.println(RESULT.toString());
@@ -1314,11 +1328,9 @@ public class VirtuosoDb extends Db {
 				}
 				stmt1.close();conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { stmt1.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			resultReporter.report(results_count, RESULT, operation);
@@ -1333,7 +1345,10 @@ public class VirtuosoDb extends Db {
 			Connection conn = state.getConn();
 			CallableStatement stmt1 = null;
 			try {
-				stmt1 = conn.prepareCall("post_view_4(?)");
+				if (state.isRunSql())
+				    stmt1 = conn.prepareCall("post_view_4(?)");
+				else
+				    stmt1 = conn.prepareCall("post_view_4_sparql(?)");
 				stmt1.setLong(1, operation.messageId());
 
 				if (state.isPrintNames())
@@ -1346,10 +1361,18 @@ public class VirtuosoDb extends Db {
 					ResultSet rs = stmt1.getResultSet();
 					while (rs.next()) {
 						results_count++;
-						long commentId = rs.getLong(1);
+						long commentId;
+						if (state.isRunSql())
+						    commentId = rs.getLong(1);
+						else
+						    commentId = Long.parseLong(rs.getString(1).substring(47));
 						String commentContent = new String(rs.getString(2).getBytes("ISO-8859-1"));;
 						long creationDate = rs.getLong(3);
-						long personId = rs.getLong(4);
+						long personId;
+						if (state.isRunSql())
+						    personId = rs.getLong(4);
+						else
+						    personId = Long.parseLong(rs.getString(4).substring(47));
 						String firstName = new String(rs.getString(5).getBytes("ISO-8859-1"));;
 						String lastName = new String(rs.getString(6).getBytes("ISO-8859-1"));;
 						int knows = rs.getInt(7);
@@ -1366,11 +1389,9 @@ public class VirtuosoDb extends Db {
 				}
 				stmt1.close();conn.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { stmt1.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			resultReporter.report(results_count, RESULT, operation);
@@ -1464,7 +1485,6 @@ public class VirtuosoDb extends Db {
 				cs.close();
 				conn.close();
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { cs.close();conn.close(); } catch (SQLException e1) { }
 			}
@@ -1473,8 +1493,6 @@ public class VirtuosoDb extends Db {
 	}
 
 	public static class LdbcUpdate1AddPersonToVirtuosoSparql implements OperationHandler<LdbcUpdate1AddPerson, VirtuosoDbConnectionState> {
-
-
 
 		public void executeOperation(LdbcUpdate1AddPerson operation, VirtuosoDbConnectionState state, ResultReporter resultReporter) throws DbException {
 			try {
@@ -1518,22 +1536,23 @@ public class VirtuosoDb extends Db {
 				String queryString = "LdbcUpdateSparql(?)";
 				PreparedStatement cs = conn.prepareStatement(queryString);
 				String personUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.personId()) + ">";
-				DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
-				DateFormat df2 = new SimpleDateFormat("yyyy.MM.dd");
+				DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
+				DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd");
 				df1.setTimeZone(TimeZone.getTimeZone("GMT"));
 				df2.setTimeZone(TimeZone.getTimeZone("GMT"));
-				String triplets [] = new String[9 + operation.languages().size() + operation.emails().size() + operation.tagIds().size() + operation.studyAt().size() + operation.workAt().size()];
+				String triplets [] = new String[10 + operation.languages().size() + operation.emails().size() + operation.tagIds().size() + operation.studyAt().size() + operation.workAt().size()];
 				triplets[0] = personUri + " a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/Person> .";
 				triplets[1] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/firstName> \"" + operation.personFirstName() + "\" .";
 				triplets[2] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/lastName> \"" + operation.personLastName() + "\" .";
 				triplets[3] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/gender> \"" + operation.gender() + "\" .";
-				triplets[4] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/birthday> \"" + df2.format(operation.birthday()) + "\" .";
-				triplets[5] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\" .";
+				triplets[4] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/birthday> \"" + df2.format(operation.birthday()) + "\"^^xsd:date .";
+				triplets[5] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"^^xsd:dateTime .";
 				triplets[6] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/locationIP> \"" + operation.locationIp() + "\" .";
 				triplets[7] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/browserUsed> \"" + operation.browserUsed() + "\" .";
 				// TODO: isLocatedIn -> cityId vs <http://dbpedia.org/resource/Afghanistan>
 				triplets[8] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/isLocatedIn> \"" + operation.cityId() + "\" .";
-				int j = 9;
+				triplets[9] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> \"" + operation.personId() + "\"^^xsd:long .";
+				int j = 10;
 				for (int k = 0; k < operation.languages().size(); k++, j++)
 					triplets[j] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/speaks> \"" + operation.languages().get(k) + "\" .";
 				for (int k = 0; k < operation.emails().size(); k++, j++)
@@ -1552,7 +1571,6 @@ public class VirtuosoDb extends Db {
 				cs.close();
 				conn.close();
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -1582,7 +1600,6 @@ public class VirtuosoDb extends Db {
 				cs.close();
 				conn.close();
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { cs.close();conn.close(); } catch (SQLException e1) { }
 			}
@@ -1603,16 +1620,15 @@ public class VirtuosoDb extends Db {
 				PreparedStatement cs = conn.prepareStatement(queryString);
 				String personUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.personId()) + ">";
 				String postUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/post" + String.format("%020d", operation.postId()) + ">";
-				DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+				DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
 				df1.setTimeZone(TimeZone.getTimeZone("GMT"));
 				String triplets [] = new String[1];
-				triplets[0] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/likes> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasPost> " + postUri + "; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"] .";
+				triplets[0] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/likes> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasPost> " + postUri + "; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"^^xsd:dateTime ] .";
 				cs.setArray(1, conn.createArrayOf("varchar", triplets));
 				cs.execute();
 				cs.close();
 				conn.close();
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
@@ -1640,7 +1656,6 @@ public class VirtuosoDb extends Db {
 				cs.close();
 				conn.close();
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { cs.close();conn.close(); } catch (SQLException e1) { }
 			}
@@ -1661,16 +1676,15 @@ public class VirtuosoDb extends Db {
 				PreparedStatement cs = conn.prepareStatement(queryString);
 				String personUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.personId()) + ">";
 				String commentUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/comm" + String.format("%020d", operation.commentId()) + ">";
-				DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+				DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
 				df1.setTimeZone(TimeZone.getTimeZone("GMT"));
 				String triplets [] = new String[1];
-				triplets[0] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/likes> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasComment> " + commentUri + "; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"] .";
+				triplets[0] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/likes> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasComment> " + commentUri + "; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"^^xsd:dateTime ] .";
 				cs.setArray(1, conn.createArrayOf("varchar", triplets));
 				cs.execute();
 				cs.close();
 				conn.close();
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
@@ -1715,7 +1729,6 @@ public class VirtuosoDb extends Db {
 				cs.close();
 				conn.close();
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { cs.close();conn.close(); } catch (SQLException e1) { }
 			}
@@ -1745,22 +1758,22 @@ public class VirtuosoDb extends Db {
 				PreparedStatement cs = conn.prepareStatement(queryString);
 				String forumUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/forum" + String.format("%020d", operation.forumId()) + ">";
 				String moderatorUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.moderatorPersonId()) + ">";
-				DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+				DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
 				df1.setTimeZone(TimeZone.getTimeZone("GMT"));
-				String triplets [] = new String[4 + operation.tagIds().size()];
+				String triplets [] = new String[5 + operation.tagIds().size()];
 				triplets[0] = forumUri + " a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/Forum> .";
 				triplets[1] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/title> \"" + operation.forumTitle() + "\" .";
-				triplets[2] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\" .";
+				triplets[2] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"^^xsd:dateTime .";
 				triplets[3] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasModerator> " + moderatorUri + " .";
+				triplets[4] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> \"" + operation.forumId() + "\"^^xsd:long . ";
 				for (int k = 0; k < operation.tagIds().size(); k++)
 					//TODO: hasTag -> tagId vs <http://dbpedia.org/resource/Pablo_Picasso>
-					triplets[4 + k] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasTag> \"" + operation.tagIds().get(k) + "\" .";
+					triplets[5 + k] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasTag> \"" + operation.tagIds().get(k) + "\" .";
 				cs.setArray(1, conn.createArrayOf("varchar", triplets));
 				cs.execute();
 				cs.close();
 				conn.close();
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
@@ -1788,7 +1801,6 @@ public class VirtuosoDb extends Db {
 				cs.close();
 				conn.close();
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { cs.close();conn.close(); } catch (SQLException e1) { }
 			}
@@ -1811,7 +1823,7 @@ public class VirtuosoDb extends Db {
 				PreparedStatement cs = conn.prepareStatement(queryString);
 				String forumUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/forum" + String.format("%020d", operation.forumId()) + ">";
 				String memberUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.personId()) + ">";
-				DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+				DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
 				df1.setTimeZone(TimeZone.getTimeZone("GMT"));
 				String triplets [] = new String[1];
 				triplets[0] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasMember> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasPerson> " + memberUri + "; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/joinDate> \"" + df1.format(operation.joinDate()) + "\"] .";
@@ -1820,7 +1832,6 @@ public class VirtuosoDb extends Db {
 				cs.close();
 				conn.close();
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
@@ -1875,7 +1886,6 @@ public class VirtuosoDb extends Db {
 				cs.close();
 				conn.close();
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { cs.close();conn.close(); } catch (SQLException e1) { }
 			}
@@ -1910,45 +1920,46 @@ public class VirtuosoDb extends Db {
 				String postUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/post" + String.format("%020d", operation.postId()) + ">";
 				String forumUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/forum" + String.format("%020d", operation.forumId()) + ">";
 				String authorUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.authorPersonId()) + ">";
-				DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+				DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
 				df1.setTimeZone(TimeZone.getTimeZone("GMT"));
 				if (operation.imageFile().equals("")) {
-					String triplets [] = new String[10 + operation.tagIds().size()];
+					String triplets [] = new String[11 + operation.tagIds().size()];
 					triplets[0] = postUri + " a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/Post> .";
 					triplets[1] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/locationIP> \"" + operation.locationIp() + "\" .";
-					triplets[2] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\" .";
+					triplets[2] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"^^xsd:dateTime .";
 					triplets[3] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/browserUsed> \"" + operation.browserUsed() + "\" .";
 					triplets[4] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/language> \"" + operation.language() + "\" .";
-					triplets[5] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/content> \"" + operation.content() + "\" .";
+					triplets[5] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/content> \"" + new String(operation.content().getBytes("UTF-8"), "ISO-8859-1") + "\" .";
 					triplets[6] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/size()> \"" + operation.length() + "\" .";
 					triplets[7] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasCreator> " + authorUri + " .";
 					//TODO: countryId() -> long vs <http://dbpedia.org/resource/Sweden>
 					triplets[8] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/isLocatedIn> \"" + operation.countryId() + "\" .";
-					triplets[9] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/containerOf> " + postUri + " .";
+					triplets[9] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> \"" + operation.postId() + "\"^^xsd:long .";
+					triplets[10] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/containerOf> " + postUri + " .";
 					for (int k = 0; k < operation.tagIds().size(); k++)
 						//TODO: hasTag -> tagId vs <http://dbpedia.org/resource/Pablo_Picasso>
-						triplets[10 + k] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasTag> \"" + operation.tagIds().get(k) + "\" .";
+						triplets[11 + k] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasTag> \"" + operation.tagIds().get(k) + "\" .";
 					cs.setArray(1, conn.createArrayOf("varchar", triplets));
 					cs.execute();
 				}
 				else {
-					String triplets [] = new String[8];
+					String triplets [] = new String[9];
 					triplets[0] = postUri + " a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/Post> .";
 					triplets[1] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/locationIP> \"" + operation.locationIp() + "\" .";
-					triplets[2] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\" .";
+					triplets[2] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"^^xsd:dateTime .";
 					triplets[3] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/browserUsed> \"" + operation.browserUsed() + "\" .";
 					triplets[4] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/imageFile> \"" + operation.imageFile() + "\" .";
 					triplets[5] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasCreator> " + authorUri + " .";
 					//TODO: countryId() -> long vs <http://dbpedia.org/resource/Sweden>
 					triplets[6] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/isLocatedIn> \"" + operation.countryId() + "\" .";
-					triplets[7] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/containerOf> " + postUri + " .";
+					triplets[7] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> \"" + operation.postId() + "\"^^xsd:long .";
+					triplets[8] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/containerOf> " + postUri + " .";
 					cs.setArray(1, conn.createArrayOf("varchar", triplets));
 					cs.execute();
 				}
 				cs.close();
 				conn.close();
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
@@ -2004,7 +2015,6 @@ public class VirtuosoDb extends Db {
 				cs.close();
 				conn.close();
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { cs.close();conn.close(); } catch (SQLException e1) { }
 			}
@@ -2041,14 +2051,14 @@ public class VirtuosoDb extends Db {
 				String commentUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/comm" + String.format("%020d", operation.commentId()) + ">";
 				String authorUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.authorPersonId()) + ">";
 				String postUri = null;
-				DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+				DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
 				df1.setTimeZone(TimeZone.getTimeZone("GMT"));
-				String triplets [] = new String[9 + operation.tagIds().size()];
+				String triplets [] = new String[10 + operation.tagIds().size()];
 				triplets[0] = commentUri + " a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/Comment> .";
 				triplets[1] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/locationIP> \"" + operation.locationIp() + "\" .";
-				triplets[2] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\" .";
+				triplets[2] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"^^xsd:dateTime .";
 				triplets[3] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/browserUsed> \"" + operation.browserUsed() + "\" .";
-				triplets[4] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/content> \"" + operation.content() + "\" .";
+				triplets[4] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/content> \"" + new String(operation.content().getBytes("UTF-8"), "ISO-8859-1") + "\" .";
 				triplets[5] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/size()> \"" + operation.length() + "\" .";
 				triplets[6] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasCreator> " + authorUri + " .";
 				//TODO: countryId() -> long vs <http://dbpedia.org/resource/Sweden>
@@ -2058,9 +2068,10 @@ public class VirtuosoDb extends Db {
 				else
 					postUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/post" + String.format("%020d", operation.replyToPostId()) + ">";
 				triplets[8] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/replyOf> " + postUri + " .";
+				triplets[9] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> \"" + operation.commentId() + "\"^^xsd:long .";
 				for (int k = 0; k < operation.tagIds().size(); k++)
 					//TODO: hasTag -> tagId vs <http://dbpedia.org/resource/Pablo_Picasso>
-					triplets[9 + k] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasTag> \"" + operation.tagIds().get(k) + "\" .";
+					triplets[10 + k] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasTag> \"" + operation.tagIds().get(k) + "\" .";
 				cs.setArray(1, conn.createArrayOf("varchar", triplets));
 				cs.execute();
 				cs.close();
@@ -2096,7 +2107,6 @@ public class VirtuosoDb extends Db {
 				cs.close();
 				conn.close();
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				try { cs.close();conn.close(); } catch (SQLException e1) { }
 			}
@@ -2118,17 +2128,18 @@ public class VirtuosoDb extends Db {
 				PreparedStatement cs = conn.prepareStatement(queryString);
 				String person1Uri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.person1Id()) + ">";
 				String person2Uri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.person2Id()) + ">";
-				DateFormat df1 = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS'+00:00'");
+				DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
 				df1.setTimeZone(TimeZone.getTimeZone("GMT"));
-				String triplets [] = new String[2];
-				triplets[0] = person1Uri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/knows> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasPerson> " + person2Uri + "; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"] .";
-				triplets[1] = person1Uri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/knows> " + person2Uri + " .";
+				String triplets [] = new String[4];
+				triplets[0] = person1Uri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/knows> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasPerson> " + person2Uri + "; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"^^xsd:dateTime ] .";
+				triplets[1] = person2Uri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/knows> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasPerson> " + person1Uri + "; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"^^xsd:dateTime ] .";
+				triplets[2] = person1Uri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/knows> " + person2Uri + " .";
+				triplets[3] = person2Uri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/knows> " + person1Uri + " .";
 				cs.setArray(1, conn.createArrayOf("varchar", triplets));
 				cs.execute();
 				cs.close();
 				conn.close();
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			resultReporter.report(0, LdbcNoResult.INSTANCE, operation);

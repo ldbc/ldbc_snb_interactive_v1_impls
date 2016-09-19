@@ -1,6 +1,7 @@
 sparql select ?first ?last #Q10
     ((( select  count (distinct ?post)
         where {
+	    ?post a snvoc:Post .
             ?post snvoc:hasCreator ?fof .
             ?post snvoc:hasTag ?tag .
             sn:pers%Person% snvoc:hasInterest ?tag
@@ -9,9 +10,9 @@ sparql select ?first ?last #Q10
     -
     ((  select  count (distinct ?post)
         where {
+	    ?post a snvoc:Post .
             ?post snvoc:hasCreator ?fof .
-            ?post snvoc:hasTag ?tag .
-            filter (!exists {sn:pers%Person% snvoc:hasInterest ?tag})
+            filter (!exists {sn:pers%Person% snvoc:hasInterest ?tag. ?post snvoc:hasTag ?tag .})
         }
     )) as ?score)
     ?fof  ?gender ?locationname
@@ -31,7 +32,7 @@ where {
    ?fof snvoc:birthday ?bday .
    ?fof snvoc:isLocatedIn ?based .
    ?based foaf:name ?locationname .
-   filter (1 = if (bif:month (?bday) = %HS0%, if (bif:dayofmonth (?bday) > 21, 1, 0), if (bif:month (?bday) = %HS1%, if (bif:dayofmonth(?bday) < 22, 1, 0), 0)))
+   filter (1 = if (bif:month (?bday) = %HS0%, if (bif:dayofmonth (?bday) >= 21, 1, 0), if (bif:month (?bday) = %HS1%, if (bif:dayofmonth(?bday) < 22, 1, 0), 0)))
 }
 order by desc(3) ?fof
 limit 10

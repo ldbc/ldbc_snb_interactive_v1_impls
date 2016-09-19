@@ -1,12 +1,11 @@
-sparql select ?fr ?first ?last ?post ?content ?date #Q2
-from <sib>
+sparql select ?fr ?first ?last ?post ?content bif:datediff('millisecond', bif:stringdate ('1970.1.1 00:00:00.000+00:00'), ?date) #Q2
 where {
   sn:pers%Person% snvoc:knows ?fr.
   ?fr snvoc:firstName ?first. ?fr snvoc:lastName ?last .
   ?post snvoc:hasCreator ?fr.
   { {?post snvoc:content ?content } union { ?post snvoc:imageFile ?content }} .
   ?post snvoc:creationDate ?date.
-  filter (?date <= "%Date0%"^^xsd:date).
+  filter (?date <= "%Date0%"^^xsd:dateTime).
 }
-order by desc (?date) ?post
+order by desc(6) ?post
 limit 20
