@@ -4,7 +4,7 @@ where
   select ?path_no, sql:vector_agg (bif:vector (?via1, ?via2, ?cweight)) as ?path, sum (?cweight) as ?sc
   where
   {
-    select ?via1 ?via2 ?path_no ?step_no sql:c_weight_sparql(?via1, ?via2) as ?cweight
+    select ?via1 ?via2 ?path_no ?step_no sql:c_weight_sparql1(?via1, ?via2) as ?cweight
     where
     {
       {

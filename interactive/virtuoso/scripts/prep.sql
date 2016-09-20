@@ -39,16 +39,16 @@ create procedure path_str_sparql (in path any)
   return str;
 }
 
-create procedure c_weight_sparql1 (in p1 varchar, in p2 varchar)
+create function c_weight_sparql1 (in p1 varchar, in p2 varchar) returns decimal
 {
-  vectored;
+  -- TODO: vectored
   if (p1 is null or p2 is null)
      return 0;
-  return 0.5 + 
-  	 ( sparql select count(*) from <sib> where {?post1 snvoc:hasCreator ?:p1. ?post1 snvoc:replyOf ?post2. ?post2 snvoc:hasCreator ?:p2. ?post2 a snvoc:Post} ) +
-  	 ( sparql select count(*) from <sib> where {?post1 snvoc:hasCreator ?:p2. ?post1 snvoc:replyOf ?post2. ?post2 snvoc:hasCreator ?:p1. ?post2 a snvoc:Post} ) +
-  	 ( sparql select 0.5 * count(*) from <sib> where {?post1 snvoc:hasCreator ?:p1. ?post1 snvoc:replyOf ?post2. ?post2 snvoc:hasCreator ?:p2. ?post2 a snvoc:Comment} ) +
-  	 ( sparql select 0.5 * count(*) from <sib> where {?post1 snvoc:hasCreator ?:p2. ?post1 snvoc:replyOf ?post2. ?post2 snvoc:hasCreator ?:p1. ?post2 a snvoc:Comment} );
+  return
+  	 ( sparql select count(*) from <sib> where {?post1 snvoc:hasCreator  `iri(?:p1)`. ?post1 snvoc:replyOf ?post2. ?post2 snvoc:hasCreator  `iri(?:p2)`. ?post2 a snvoc:Post} ) +
+  	 ( sparql select count(*) from <sib> where {?post1 snvoc:hasCreator `iri(?:p2)`. ?post1 snvoc:replyOf ?post2. ?post2 snvoc:hasCreator  `iri(?:p1)`. ?post2 a snvoc:Post} ) +
+  	 ( sparql select 0.5 * count(*) from <sib> where {?post1 snvoc:hasCreator  `iri(?:p1)`. ?post1 snvoc:replyOf ?post2. ?post2 snvoc:hasCreator `iri(?:p2)`. ?post2 a snvoc:Comment} ) +
+  	 ( sparql select 0.5 * count(*) from <sib> where {?post1 snvoc:hasCreator `iri(?:p2)`. ?post1 snvoc:replyOf ?post2. ?post2 snvoc:hasCreator  `iri(?:p1)`. ?post2 a snvoc:Comment} );
 }
 
 create procedure c_weight_sparql (in p1 varchar, in p2 varchar)
@@ -56,7 +56,7 @@ create procedure c_weight_sparql (in p1 varchar, in p2 varchar)
   vectored;
   if (p1 is null or p2 is null)
      return 0;
-  return 0.5 + 
+  return 
     (SELECT COUNT (*)
      FROM RDF_QUAD AS r0
        INNER JOIN DB.DBA.RDF_QUAD AS r1
@@ -148,5 +148,5 @@ create procedure c_weight_sparql (in p1 varchar, in p2 varchar)
 --fill_knows();
 
 __dbf_set( 'enable_qp', 1);
-sparql insert in graph <sib> {?s snvoc:knows ?o1. ?o1 snvoc:knows ?s. ?o1 snvoc:knows [snvoc:hasPerson ?s; snvoc:creationDate ?cd].} where { graph <sib> { ?s snvoc:knows ?o. ?o snvoc:hasPerson ?o1. ?o snvoc:creationDate ?cd. }};
+--sparql insert in graph <sib> {?s snvoc:knows ?o1. ?o1 snvoc:knows ?s. ?o1 snvoc:knows [snvoc:hasPerson ?s; snvoc:creationDate ?cd].} where { graph <sib> { ?s snvoc:knows ?o. ?o snvoc:hasPerson ?o1. ?o snvoc:creationDate ?cd. }};
 __dbf_set( 'enable_qp', 8);

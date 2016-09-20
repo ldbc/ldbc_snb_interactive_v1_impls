@@ -982,18 +982,29 @@ public class VirtuosoDb extends Db {
 				ResultSet result = stmt.executeQuery(queryString);
 				while (result.next()) {
 					results_count++;
-					openlink.util.Vector o1 = (openlink.util.Vector)(result.getObject(1));
-					Long [] ttt = new Long[o1.size()];
-					for (int i = 0; i < o1.size(); i++) {
+					Long [] ttt = null;
+					if (state.isRunSql()) {
+					    openlink.util.Vector o1 = (openlink.util.Vector)(result.getObject(1));
+					    ttt = new Long[o1.size()];
+					    for (int i = 0; i < o1.size(); i++) {
 						if (o1.elementAt(i) instanceof Long)
-							ttt[i] = (Long)o1.elementAt(i);
+						    ttt[i] = (Long)o1.elementAt(i);
 						else if (o1.elementAt(i) instanceof Integer)
-							ttt[i] = new Long((Integer)o1.elementAt(i));
+						    ttt[i] = new Long((Integer)o1.elementAt(i));
 						else if (o1.elementAt(i) instanceof Short)
-							ttt[i] = new Long((Short)o1.elementAt(i));
+						    ttt[i] = new Long((Short)o1.elementAt(i));
 						else {
-							System.out.println("Error in Q14");
+						    System.out.println("Error in Q14");
 						}
+					    }
+					}
+					else {
+					    String path = result.getString(1);
+					    String [] parts = path.split("[)]");
+					    ttt = new Long[parts.length - 1];
+					    for (int j = 0; j < ttt.length; j++) {
+						ttt[j] = Long.parseLong(parts[j].split("-")[0].trim());
+					    }
 					}
 					double weight = result.getDouble(2);
 					LdbcQuery14Result tmp = new LdbcQuery14Result(new ArrayList<Long>(Arrays.asList(ttt)), weight);
