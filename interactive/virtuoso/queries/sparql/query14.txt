@@ -15,7 +15,6 @@ where
         }
       }
       option ( transitive,
-             t_distinct,
              t_in(?s),
              t_out(?o),
          t_shortest_only,
