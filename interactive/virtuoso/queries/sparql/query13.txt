@@ -1,4 +1,4 @@
-sparql select (count(*) - 1) #Q13
+sparql select (count(*) - 1) as ?distance #Q13
 where
   {
     {

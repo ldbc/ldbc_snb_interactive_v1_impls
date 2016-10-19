@@ -1,5 +1,5 @@
 sparql select ?from ?first ?last  #Q8
-              bif:datediff('millisecond', bif:stringdate ('1970.1.1 00:00:00.000+00:00'), ?dt)
+              (?dt - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?creationDate
 	      ?rep ?content
 where {
   { select ?rep ?dt
@@ -14,4 +14,4 @@ where {
   ?from snvoc:firstName ?first . ?from snvoc:lastName ?last .
   ?rep snvoc:content ?content.
 }
-order by desc(?dt) ?rep
+order by desc(?creationDate) ?rep

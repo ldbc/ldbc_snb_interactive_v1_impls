@@ -1,5 +1,5 @@
 sparql select ?fr ?first ?last ?post ?content #Q9
-              bif:datediff('millisecond', bif:stringdate ('1970.1.1 00:00:00.000+00:00'), ?date)
+              (?date - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?creationDate
 where {
   {select distinct ?fr
    where {
@@ -7,10 +7,9 @@ where {
    }
   }
   ?fr snvoc:firstName ?first . ?fr snvoc:lastName ?last .
-  ?post snvoc:hasCreator ?fr.
-  ?post snvoc:creationDate ?date.
+  ?post snvoc:hasCreator ?fr . ?post snvoc:creationDate ?date.
   filter (?date < "%Date0%"^^xsd:dateTime).
   {{?post snvoc:content ?content} union {?post snvoc:imageFile ?content}} .
 }
-order by desc (6) ?post
+order by desc(?creationDate) ?post
 limit 20
