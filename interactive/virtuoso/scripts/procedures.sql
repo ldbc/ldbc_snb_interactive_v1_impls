@@ -801,7 +801,7 @@ create procedure LdbcUpdateSparql (in triplets varchar array)
 create procedure post_view_1_sparql (in postid int) {
   declare content, imagefile, creationdate long varchar;
   result_names(content, imagefile, creationdate);
-  for (SPARQL SELECT ?con ?image bif:datediff('millisecond', bif:stringdate ('1970.1.1 00:00:00.000+00:00'), ?dt) as ?date
+  for (SPARQL SELECT ?con ?image (?dt - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?date
       where {
       	    ?post snvoc:id ?:postid .
 	    { {?post snvoc:content ?con } union { ?post snvoc:imageFile ?image }} .
@@ -847,7 +847,7 @@ create procedure post_view_4_sparql (in postid int) {
   result_names(origpostid, origpostcontent, creationdate, origautorid, origfirstname, origlastname, friendornot);
 
   for ( SPARQL SELECT ?comment ?content
-      	       	      bif:datediff('millisecond', bif:stringdate ('1970.1.1 00:00:00.000+00:00'), ?dt) as ?date
+                      (?dt - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?date
       	       	      ?creator ?creatorfirstname ?creatorlastname
                       (exists {  ?creator snvoc:knows ?author} as ?knows)
         where {
@@ -871,8 +871,8 @@ create procedure person_view_1_sparql (in personid int) {
   result_names(firstname, lastname, gender, birthday, creationdate, locationip, browserused, placeid);
 
   for ( SPARQL SELECT ?p_firstname ?p_lastname ?p_gender
-      	       	      bif:datediff('millisecond', bif:stringdate ('1970.1.1 00:00:00.000'), ?p_birthday) as ?p_bd
-                      bif:datediff('millisecond', bif:stringdate ('1970.1.1 00:00:00.000+00:00'), ?p_creationdate) as ?p_cd
+                      (?p_birthday - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?p_bd
+                      (?p_creationdate - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?p_cd
                       ?p_locationip ?p_browserused ?p_placeid
 	where {
 	  ?person snvoc:id ?:personid .
@@ -894,7 +894,7 @@ create procedure person_view_2_sparql (in personid int) {
   result_names(posturi, content, imagefile, postcreationdate, origpost, origperson, origfirstname, origlastname);
 
   for ( SPARQL SELECT ?post ?con ?image
-      	       	      bif:datediff('millisecond', bif:stringdate ('1970.1.1 00:00:00.000+00:00'), ?cd) as ?cdate
+                      (?cd - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?cdate
       	       	      ?orig ?person1 ?firstn ?lastn
         where {
 	  ?pers snvoc:id ?:personid .
@@ -918,7 +918,7 @@ create procedure person_view_3_sparql (in personid int) {
   result_names(friendpersonid, friendfirstname, friendlastname, since);
 
   for ( SPARQL SELECT ?fr ?p_friendfirstname ?p_friendlastname
-                      bif:datediff('millisecond', bif:stringdate ('1970.1.1 00:00:00.000+00:00'), ?k_since) as ?k_s
+                      (?k_since - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?k_s
         where {
 	  ?person snvoc:id ?:personid .
 	  ?person snvoc:knows ?tmp .
@@ -930,7 +930,5 @@ create procedure person_view_3_sparql (in personid int) {
 	order by desc(4) 1
   ) do result ("fr", "p_friendfirstname", "p_friendlastname", "k_s");
 }
-
-
 
 checkpoint;
