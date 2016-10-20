@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.HashMap;
 import virtuoso.jdbc4.VirtuosoConnectionPoolDataSource;
 
 public class VirtuosoDb extends Db {
@@ -138,6 +139,10 @@ public class VirtuosoDb extends Db {
 		private boolean printNames;
 		private boolean printStrings;
 		private boolean printResults;
+	        private HashMap<Long, String> placeMap;
+	    	private HashMap<Long, String> companyMap;
+   	        private HashMap<Long, String> universityMap;
+	        private HashMap<Long, String> tagMap;
 
 		VirtuosoDbConnectionState(Map<String, String> properties) throws ClassNotFoundException, SQLException {
 			super();
@@ -163,6 +168,92 @@ public class VirtuosoDb extends Db {
 			printStrings = properties.get("printQueryStrings").equals("true") ? true : false;
 			printResults = properties.get("printQueryResults").equals("true") ? true : false;
 
+			// Initialization of hash maps
+			if (!runSql) {
+			    placeMap = new HashMap<Long, String>();
+			    companyMap = new HashMap<Long, String>();
+			    universityMap = new HashMap<Long, String>();
+			    tagMap = new HashMap<Long, String>();
+
+			    Connection conn = getConn();
+			    Statement stmt = null;
+			    try {
+				String queryString = "sparql select distinct ?id ?s {?s snvoc:id ?id . ?s a <http://dbpedia.org/ontology/Place>}";
+				stmt = conn.createStatement();
+								
+				ResultSet result = stmt.executeQuery(queryString);
+				while (result.next()) {
+				    long id = result.getLong(1);
+				    String uri = result.getString(2);
+				    placeMap.put(id, uri);
+				}
+				stmt.close();conn.close();
+			    } catch (SQLException e) {
+				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
+			    } catch (Exception e) {
+				e.printStackTrace();
+			    }
+
+			    conn = getConn();
+			    try {
+				String queryString = "sparql select distinct ?id ?s {?s snvoc:id ?id . ?s a <http://dbpedia.org/ontology/Company>}";
+				stmt = conn.createStatement();
+								
+				ResultSet result = stmt.executeQuery(queryString);
+				while (result.next()) {
+				    long id = result.getLong(1);
+				    String uri = result.getString(2);
+				    companyMap.put(id, uri);
+				}
+				stmt.close();conn.close();
+			    } catch (SQLException e) {
+				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
+			    } catch (Exception e) {
+				e.printStackTrace();
+			    }
+
+			    conn = getConn();
+			    try {
+				String queryString = "sparql select distinct ?id ?s {?s snvoc:id ?id . ?s a <http://dbpedia.org/ontology/University>}";
+				stmt = conn.createStatement();
+								
+				ResultSet result = stmt.executeQuery(queryString);
+				while (result.next()) {
+				    long id = result.getLong(1);
+				    String uri = result.getString(2);
+				    universityMap.put(id, uri);
+				}
+				stmt.close();conn.close();
+			    } catch (SQLException e) {
+				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
+			    } catch (Exception e) {
+				e.printStackTrace();
+			    }
+
+			    conn = getConn();
+			    try {
+				String queryString = "sparql select distinct ?id ?tag {?tag snvoc:id ?id. ?tag a ?type. ?type a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/TagClass>}";
+				stmt = conn.createStatement();
+								
+				ResultSet result = stmt.executeQuery(queryString);
+				while (result.next()) {
+				    long id = result.getLong(1);
+				    String uri = result.getString(2);
+				    tagMap.put(id, uri);
+				}
+				stmt.close();conn.close();
+			    } catch (SQLException e) {
+				e.printStackTrace();
+				try { stmt.close();conn.close(); } catch (SQLException e1) { }
+			    } catch (Exception e) {
+				e.printStackTrace();
+			    }
+
+			}
+			
 		}
 
 		public Connection getConn() {
@@ -203,6 +294,22 @@ public class VirtuosoDb extends Db {
 
 		public void close() throws IOException {
 
+		}
+
+	        public String placeUri(long id) {
+		    return placeMap.get(id);
+		}
+
+	        public String companyUri(long id) {
+		    return companyMap.get(id);
+		}
+
+	        public String universityUri(long id) {
+		    return universityMap.get(id);
+		}
+
+	        public String tagUri(long id) {
+		    return tagMap.get(id);
 		}
 
 	}
@@ -321,8 +428,6 @@ public class VirtuosoDb extends Db {
 						id = result.getLong(1);
 					else
 						id = Long.parseLong(result.getString(1).substring(47));
-					if (id == 0)
-						System.out.println("@@@@@@@@@@@@@@@@@@@@@@ - " + id);
 					String firstName = new String(result.getString(2).getBytes("ISO-8859-1"));
 					String lastName = new String(result.getString(3).getBytes("ISO-8859-1"));
 					long postid;
@@ -1179,8 +1284,6 @@ public class VirtuosoDb extends Db {
 						String firstName = new String(rs.getString(2).getBytes("ISO-8859-1"));;
 						String lastName = new String(rs.getString(3).getBytes("ISO-8859-1"));;
 						long since = rs.getLong(4);
-						if (personId == 0)
-							System.out.println("4@@@@@@@@@@@@@@@@@@@@@@ - " + personId);
 						LdbcShortQuery3PersonFriendsResult tmp = new LdbcShortQuery3PersonFriendsResult(personId, firstName, lastName, since);
 						if (state.isPrintResults())
 							System.out.println(tmp.toString());
@@ -1277,8 +1380,6 @@ public class VirtuosoDb extends Db {
 						    personId = Long.parseLong(rs.getString(1).substring(47));
 						String firstName = new String(rs.getString(2).getBytes("ISO-8859-1"));;
 						String lastName = new String(rs.getString(3).getBytes("ISO-8859-1"));;
-						if (personId == 0)
-							System.out.println("5@@@@@@@@@@@@@@@@@@@@@@ - " + personId);
 						RESULT = new LdbcShortQuery5MessageCreatorResult(personId, firstName, lastName);
 						if (state.isPrintResults())
 							System.out.println(RESULT.toString());
@@ -1388,10 +1489,6 @@ public class VirtuosoDb extends Db {
 						String lastName = new String(rs.getString(6).getBytes("ISO-8859-1"));;
 						int knows = rs.getInt(7);
 						boolean knows_b = (knows == 1) ? true : false;
-						if (commentId == 0)
-							System.out.println("7@@@@@@@@@@@@@@@@@@@@@@ - " + commentId);
-						if (personId == 0)
-							System.out.println("8@@@@@@@@@@@@@@@@@@@@@@ - " + personId);
 						LdbcShortQuery7MessageRepliesResult tmp = new LdbcShortQuery7MessageRepliesResult(commentId, commentContent, creationDate, personId, firstName, lastName, knows_b);
 						if (state.isPrintResults())
 							System.out.println(tmp.toString());
@@ -1560,8 +1657,7 @@ public class VirtuosoDb extends Db {
 				triplets[5] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"^^xsd:dateTime .";
 				triplets[6] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/locationIP> \"" + operation.locationIp() + "\" .";
 				triplets[7] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/browserUsed> \"" + operation.browserUsed() + "\" .";
-				// TODO: isLocatedIn -> cityId vs <http://dbpedia.org/resource/Afghanistan>
-				triplets[8] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/isLocatedIn> \"" + operation.cityId() + "\" .";
+				triplets[8] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/isLocatedIn> <" + state.placeUri(operation.cityId()) + "> .";
 				triplets[9] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> \"" + operation.personId() + "\"^^xsd:long .";
 				int j = 10;
 				for (int k = 0; k < operation.languages().size(); k++, j++)
@@ -1569,14 +1665,11 @@ public class VirtuosoDb extends Db {
 				for (int k = 0; k < operation.emails().size(); k++, j++)
 					triplets[j] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/email> \"" + operation.emails().get(k) + "\" .";
 				for (int k = 0; k < operation.tagIds().size(); k++, j++)
-					//TODO: hasInterest -> tagId vs <http://dbpedia.org/resource/Pablo_Picasso>
-					triplets[j] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasInterest> \"" + operation.tagIds().get(k) + "\" .";
+				    triplets[j] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasInterest> <" + state.tagUri(operation.tagIds().get(k)) + "> .";
 				for (int k = 0; k < operation.studyAt().size(); k++, j++)
-					//TODO: studyAt -> organisationId vs <http://dbpedia.org/resource/Rutherford_University>
-					triplets[j] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/studyAt> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasOrganisation> \"" + operation.studyAt().get(k).organizationId() + "\"; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/classYear> \"" + operation.studyAt().get(k).year() + "\"] .";
+				    triplets[j] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/studyAt> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasOrganisation> <" + state.universityUri(operation.studyAt().get(k).organizationId()) + ">; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/classYear> \"" + operation.studyAt().get(k).year() + "\"] .";
 				for (int k = 0; k < operation.workAt().size(); k++, j++)
-					//TODO: workAt -> organisationId vs <http://dbpedia.org/resource/Hong_Kong_Air_International_Ltd>
-					triplets[j] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/workAt> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasOrganisation> \"" + operation.workAt().get(k).organizationId() + "\"; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/workFrom> \"" + operation.workAt().get(k).year() + "\"] .";
+				    triplets[j] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/workAt> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasOrganisation> <" + state.companyUri(operation.workAt().get(k).organizationId()) + ">; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/workFrom> \"" + operation.workAt().get(k).year() + "\"] .";
 				cs.setArray(1, conn.createArrayOf("varchar", triplets));
 				cs.execute();
 				cs.close();
@@ -1778,8 +1871,7 @@ public class VirtuosoDb extends Db {
 				triplets[3] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasModerator> " + moderatorUri + " .";
 				triplets[4] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> \"" + operation.forumId() + "\"^^xsd:long . ";
 				for (int k = 0; k < operation.tagIds().size(); k++)
-					//TODO: hasTag -> tagId vs <http://dbpedia.org/resource/Pablo_Picasso>
-					triplets[5 + k] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasTag> \"" + operation.tagIds().get(k) + "\" .";
+				    triplets[5 + k] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasTag> <" + state.tagUri(operation.tagIds().get(k)) + "> .";
 				cs.setArray(1, conn.createArrayOf("varchar", triplets));
 				cs.execute();
 				cs.close();
@@ -1941,15 +2033,13 @@ public class VirtuosoDb extends Db {
 					triplets[3] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/browserUsed> \"" + operation.browserUsed() + "\" .";
 					triplets[4] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/language> \"" + operation.language() + "\" .";
 					triplets[5] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/content> \"" + new String(operation.content().getBytes("UTF-8"), "ISO-8859-1") + "\" .";
-					triplets[6] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/size()> \"" + operation.length() + "\" .";
+					triplets[6] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/length> \"" + operation.length() + "\" .";
 					triplets[7] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasCreator> " + authorUri + " .";
-					//TODO: countryId() -> long vs <http://dbpedia.org/resource/Sweden>
-					triplets[8] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/isLocatedIn> \"" + operation.countryId() + "\" .";
+					triplets[8] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/isLocatedIn> <" + state.placeUri(operation.countryId()) + "> .";
 					triplets[9] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> \"" + operation.postId() + "\"^^xsd:long .";
 					triplets[10] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/containerOf> " + postUri + " .";
 					for (int k = 0; k < operation.tagIds().size(); k++)
-						//TODO: hasTag -> tagId vs <http://dbpedia.org/resource/Pablo_Picasso>
-						triplets[11 + k] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasTag> \"" + operation.tagIds().get(k) + "\" .";
+					    triplets[11 + k] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasTag> <" + state.tagUri(operation.tagIds().get(k)) + "> .";
 					cs.setArray(1, conn.createArrayOf("varchar", triplets));
 					cs.execute();
 				}
@@ -1961,8 +2051,7 @@ public class VirtuosoDb extends Db {
 					triplets[3] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/browserUsed> \"" + operation.browserUsed() + "\" .";
 					triplets[4] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/imageFile> \"" + operation.imageFile() + "\" .";
 					triplets[5] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasCreator> " + authorUri + " .";
-					//TODO: countryId() -> long vs <http://dbpedia.org/resource/Sweden>
-					triplets[6] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/isLocatedIn> \"" + operation.countryId() + "\" .";
+					triplets[6] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/isLocatedIn> <" + state.placeUri(operation.countryId()) + "> .";
 					triplets[7] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> \"" + operation.postId() + "\"^^xsd:long .";
 					triplets[8] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/containerOf> " + postUri + " .";
 					cs.setArray(1, conn.createArrayOf("varchar", triplets));
@@ -2070,10 +2159,9 @@ public class VirtuosoDb extends Db {
 				triplets[2] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"^^xsd:dateTime .";
 				triplets[3] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/browserUsed> \"" + operation.browserUsed() + "\" .";
 				triplets[4] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/content> \"" + new String(operation.content().getBytes("UTF-8"), "ISO-8859-1") + "\" .";
-				triplets[5] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/size()> \"" + operation.length() + "\" .";
+				triplets[5] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/length> \"" + operation.length() + "\" .";
 				triplets[6] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasCreator> " + authorUri + " .";
-				//TODO: countryId() -> long vs <http://dbpedia.org/resource/Sweden>
-				triplets[7] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/isLocatedIn> \"" + operation.countryId() + "\" .";
+				triplets[7] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/isLocatedIn> <" + state.placeUri(operation.countryId()) + "> .";
 				if (operation.replyToPostId() == -1)
 					postUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/comm" + String.format("%020d", operation.replyToCommentId()) + ">";
 				else
@@ -2081,14 +2169,12 @@ public class VirtuosoDb extends Db {
 				triplets[8] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/replyOf> " + postUri + " .";
 				triplets[9] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> \"" + operation.commentId() + "\"^^xsd:long .";
 				for (int k = 0; k < operation.tagIds().size(); k++)
-					//TODO: hasTag -> tagId vs <http://dbpedia.org/resource/Pablo_Picasso>
-					triplets[10 + k] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasTag> \"" + operation.tagIds().get(k) + "\" .";
+				    triplets[10 + k] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasTag> <" + state.tagUri(operation.tagIds().get(k)) + "> .";
 				cs.setArray(1, conn.createArrayOf("varchar", triplets));
 				cs.execute();
 				cs.close();
 				conn.close();
 			} catch (Throwable e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
