@@ -1,0 +1,16 @@
+sparql select ?first ?last ?startdate ?orgname ?fr #Q11
+where {
+    ?w snvoc:hasOrganisation ?org . ?org foaf:name ?orgname .
+    ?org snvoc:isLocatedIn ?country.
+    ?country foaf:name '%Country%' .
+    ?fr snvoc:workAt ?w . ?w snvoc:workFrom ?startdate .
+    filter (?startdate < %Date0%) .
+    {  select distinct ?fr
+       where {
+           {sn:pers%Person% snvoc:knows ?fr.} union {sn:pers%Person% snvoc:knows ?fr2. ?fr2 snvoc:knows ?fr. filter (?fr != sn:pers%Person%)}
+       }
+    } .
+    ?fr snvoc:firstName ?first . ?fr snvoc:lastName ?last .
+}
+order by ?startdate ?fr desc(?orgname)
+limit 10

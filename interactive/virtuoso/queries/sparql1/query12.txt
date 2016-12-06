@@ -1,0 +1,14 @@
+sparql select ?exp ?first ?last group_concat(distinct ?tagname, ', ') as ?tags  #Q12
+              count (distinct ?reply) as ?cnt
+where {
+    sn:pers%Person% snvoc:knows ?exp .
+    ?exp snvoc:firstName ?first . ?exp snvoc:lastName ?last .
+    ?reply snvoc:hasCreator ?exp . 
+    ?reply snvoc:replyOf  ?org_post . ?org_post a snvoc:Post .
+    ?org_post snvoc:hasTag ?tag . ?tag foaf:name ?tagname .
+    ?tag a ?type.
+    ?type rdfs:subClassOf* ?type1 . ?type1 rdfs:label "%TagType%" .
+}
+group by ?exp ?first ?last
+order by desc(?cnt) ?exp
+limit 20

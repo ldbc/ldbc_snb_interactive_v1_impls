@@ -1,0 +1,18 @@
+sparql select ?title ?group count(?post) as ?cnt #Q5
+where { 
+    {select distinct ?fr
+     where {
+       {sn:pers%Person% snvoc:knows ?fr.} union {sn:pers%Person% snvoc:knows ?fr2. ?fr2 snvoc:knows ?fr. filter (?fr != sn:pers%Person%)}
+     }
+    } .
+    ?group snvoc:title ?title. ?group snvoc:hasMember ?mem .
+    ?mem snvoc:hasPerson ?fr . ?mem snvoc:joinDate ?date .
+    filter (?date >= "%Date0%"^^xsd:dateTime) .
+    optional {
+      ?post snvoc:hasCreator ?fr .
+      ?group snvoc:containerOf ?post .
+    } .
+}
+group by ?title ?group
+order by desc(?cnt) ?group
+limit 20

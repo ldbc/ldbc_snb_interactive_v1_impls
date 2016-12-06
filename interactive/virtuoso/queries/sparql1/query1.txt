@@ -1,0 +1,67 @@
+sparql select ?fr ?last min(?dist) as ?mindist
+              (?bday - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?birthday
+              (?since - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?creationDate
+	      ?gen ?browser ?locationIP #Q1
+    ((select group_concat (?email, ", ")
+      where {
+            ?frr snvoc:email ?email .
+            filter (?frr = ?fr) .
+      }
+      group by ?frr)) as ?email
+    ((select group_concat (?lng, ", ")
+      where {
+            ?frr snvoc:speaks ?lng .
+            filter (?frr = ?fr) .
+      }
+      group by ?frr)) as ?lng
+    ?based
+    ((select group_concat ( bif:concat (?o_name, " ", ?year, " ", ?o_country), ", ")
+      where {
+            ?frr snvoc:studyAt ?w .
+            ?w snvoc:classYear ?year .
+            ?w snvoc:hasOrganisation ?org .
+            ?org snvoc:isLocatedIn ?o_countryURI .
+            ?o_countryURI foaf:name ?o_country .
+            ?org foaf:name ?o_name .
+            filter (?frr = ?fr) .
+      }
+      group by ?frr)) as ?studyAt
+    ((select group_concat ( bif:concat (?o_name, " ", ?year, " ", ?o_country), ", ")
+      where {
+            ?frr snvoc:workAt ?w .
+            ?w snvoc:workFrom ?year .
+            ?w snvoc:hasOrganisation ?org .
+            ?org snvoc:isLocatedIn ?o_countryURI .
+            ?o_countryURI foaf:name ?o_country .
+            ?org foaf:name ?o_name .
+            filter (?frr = ?fr) .
+      }
+      group by ?frr)) as ?workAt
+{
+    ?fr a snvoc:Person . ?fr snvoc:firstName "%Name%" . ?fr snvoc:lastName ?last .
+    ?fr snvoc:birthday ?bday . ?fr snvoc:isLocatedIn ?basedURI . ?basedURI foaf:name ?based .
+    ?fr snvoc:creationDate ?since . ?fr snvoc:gender ?gen . ?fr snvoc:locationIP ?locationIP .
+    ?fr snvoc:browserUsed ?browser .
+    {
+      { select distinct ?fr (1 as ?dist)
+        where {
+          sn:pers%Person% snvoc:knows ?fr.
+        }
+      }
+      union
+      { select distinct ?fr (2 as ?dist)
+        where {
+          sn:pers%Person% snvoc:knows ?fr2. ?fr2 snvoc:knows ?fr. filter (?fr != sn:pers%Person%).
+        }
+      }
+      union
+      { select distinct ?fr (3 as ?dist)
+        where {
+          sn:pers%Person% snvoc:knows ?fr2. ?fr2 snvoc:knows ?fr3. ?fr3 snvoc:knows ?fr. filter (?fr != sn:pers%Person%).
+        }
+      } .
+    }
+}
+group by ?fr ?last ?bday ?since ?gen ?browser ?locationIP ?based
+order by ?mindist ?last ?fr
+limit 20
