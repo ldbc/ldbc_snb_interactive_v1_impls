@@ -1207,7 +1207,7 @@ public class VirtuosoDb extends Db {
 						    postId = rs.getLong(1);
 						else
 						    postId = Long.parseLong(rs.getString(1).substring(47));
-						String postContent = new String(rs.getString(2));
+						String postContent = rs.getString(2);
 						if (postContent == null || postContent.length() == 0)
 						    postContent = new String(rs.getString(3).getBytes("ISO-8859-1"));
 						else

@@ -810,6 +810,19 @@ create procedure post_view_1_sparql (in postid int) {
   ) do result ("con", "image", "date");
 }
 
+-- This is for rich rdf
+create procedure post_view_1_sparql (in postid int) {
+  declare content, imagefile, creationdate long varchar;
+  result_names(content, imagefile, creationdate);
+  for (SPARQL SELECT ?con ?image (?dt - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?date
+      where {
+      	    ?post snvoc:id ?:postid .
+	    { {?post snvoc:content ?con } union { ?post snvoc:imageFile ?image } union { ?post snvoc:gifFile ?image }} .
+	    ?post snvoc:creationDate ?dt .
+      }
+  ) do result ("con", "image", "date");
+}
+
 create procedure post_view_2_sparql (in postid int) {
   declare firstname, lastname, personid long varchar;
   result_names(personid, firstname, lastname);
@@ -864,6 +877,29 @@ create procedure post_view_4_sparql (in postid int) {
   ) do result ( "comment", "content", "date", "creator", "creatorfirstname", "creatorlastname", "knows");
 }
 
+-- This is for rich rdf
+create procedure post_view_4_sparql (in postid int) {
+  declare origpostid, origpostcontent, creationdate, origautorid, origfirstname, origlastname, friendornot long varchar;
+  result_names(origpostid, origpostcontent, creationdate, origautorid, origfirstname, origlastname, friendornot);
+
+  for ( SPARQL SELECT ?comment ?content
+                      (?dt - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?date
+      	       	      ?creator ?creatorfirstname ?creatorlastname
+                      (exists {  ?creator snvoc:knows ?author} as ?knows)
+        where {
+	  ?post snvoc:id ?:postid .
+	  ?post snvoc:hasCreator ?author .
+	  ?comment snvoc:replyOf ?post .
+	  { {?comment snvoc:content ?content } union { ?comment snvoc:gifFile ?content }} .
+	  ?comment snvoc:creationDate ?dt .
+	  ?comment snvoc:hasCreator ?creator .
+	  ?creator snvoc:firstName ?creatorfirstname .
+	  ?creator snvoc:lastName ?creatorlastname .
+	}
+	order by desc(3) 4
+  ) do result ( "comment", "content", "date", "creator", "creatorfirstname", "creatorlastname", "knows");
+}
+
 -- TODO: placeid is missing because of
 -- Unplaced predicate in select layout in sqldf.c:7149
 create procedure person_view_1_sparql (in personid int) {
@@ -900,6 +936,32 @@ create procedure person_view_2_sparql (in personid int) {
 	  ?pers snvoc:id ?:personid .
 	  ?post snvoc:hasCreator ?pers .
 	  { {?post snvoc:content ?con } union { ?post snvoc:imageFile ?image }} .
+	  ?post snvoc:creationDate ?cd .
+	  OPTIONAL {
+	    ?post snvoc:replyOf ?orig .
+	    ?orig snvoc:hasCreator ?person1 .
+	    ?person1 snvoc:firstName ?firstn .
+	    ?person1 snvoc:lastName ?lastn .
+	  } .
+	}
+	order by desc(?cd)
+	limit 10
+  ) do result ("post", "con", "image", "cdate", "orig", "person1", "firstn", "lastn");
+}
+
+-- This is for rich rdf
+-- TODO: This is not compiled correctly (it returns different from the same query)
+create procedure person_view_2_sparql (in personid int) {
+  declare posturi, content, imagefile, postcreationdate, origpost, origperson, origfirstname, origlastname long varchar;
+  result_names(posturi, content, imagefile, postcreationdate, origpost, origperson, origfirstname, origlastname);
+
+  for ( SPARQL SELECT ?post ?con ?image
+                      (?cd - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?cdate
+      	       	      ?orig ?person1 ?firstn ?lastn
+        where {
+	  ?pers snvoc:id ?:personid .
+	  ?post snvoc:hasCreator ?pers .
+	  { {?post snvoc:content ?con } union { ?post snvoc:imageFile ?image } union { ?post snvoc:gifFile ?image }} .
 	  ?post snvoc:creationDate ?cd .
 	  OPTIONAL {
 	    ?post snvoc:replyOf ?orig .
