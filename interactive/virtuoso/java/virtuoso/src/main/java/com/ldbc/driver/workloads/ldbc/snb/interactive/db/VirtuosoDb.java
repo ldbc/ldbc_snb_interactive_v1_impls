@@ -1650,8 +1650,8 @@ public class VirtuosoDb extends Db {
 				df2.setTimeZone(TimeZone.getTimeZone("GMT"));
 				String triplets [] = new String[10 + operation.languages().size() + operation.emails().size() + operation.tagIds().size() + operation.studyAt().size() + operation.workAt().size()];
 				triplets[0] = personUri + " a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/Person> .";
-				triplets[1] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/firstName> \"" + operation.personFirstName() + "\" .";
-				triplets[2] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/lastName> \"" + operation.personLastName() + "\" .";
+				triplets[1] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/firstName> \"" + new String(operation.personFirstName().getBytes("UTF-8"), "ISO-8859-1") + "\" .";
+				triplets[2] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/lastName> \"" + new String(operation.personLastName().getBytes("UTF-8"), "ISO-8859-1") + "\" .";
 				triplets[3] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/gender> \"" + operation.gender() + "\" .";
 				triplets[4] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/birthday> \"" + df2.format(operation.birthday()) + "\"^^xsd:date .";
 				triplets[5] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"^^xsd:dateTime .";
@@ -2017,6 +2017,13 @@ public class VirtuosoDb extends Db {
 						System.out.println(tag);
 					}
 					System.out.println("]");
+					System.out.println("[");
+					for (long mentioned : operation.mentionedIds()) {
+						System.out.println(mentioned);
+					}
+					System.out.println("]");
+					System.out.println(operation.privacy());
+					System.out.println(operation.link());
 				}
 				String queryString = "LdbcUpdateSparql(?)";
 				PreparedStatement cs = conn.prepareStatement(queryString);
@@ -2026,34 +2033,62 @@ public class VirtuosoDb extends Db {
 				DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
 				df1.setTimeZone(TimeZone.getTimeZone("GMT"));
 				if (operation.imageFile().equals("")) {
-					String triplets [] = new String[11 + operation.tagIds().size()];
-					triplets[0] = postUri + " a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/Post> .";
-					triplets[1] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/locationIP> \"" + operation.locationIp() + "\" .";
-					triplets[2] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"^^xsd:dateTime .";
-					triplets[3] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/browserUsed> \"" + operation.browserUsed() + "\" .";
-					triplets[4] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/language> \"" + operation.language() + "\" .";
-					triplets[5] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/content> \"" + new String(operation.content().getBytes("UTF-8"), "ISO-8859-1") + "\" .";
-					triplets[6] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/length> \"" + operation.length() + "\" .";
-					triplets[7] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasCreator> " + authorUri + " .";
-					triplets[8] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/isLocatedIn> <" + state.placeUri(operation.countryId()) + "> .";
-					triplets[9] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> \"" + operation.postId() + "\"^^xsd:long .";
-					triplets[10] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/containerOf> " + postUri + " .";
+				        int total = 10 + operation.tagIds().size() + operation.mentionedIds().size();
+				        total += (operation.countryId() >= 0 ? 1 : 0);
+					total += (operation.privacy() != null ? 1 : 0);
+					total += (operation.link() != "" ? 1 : 0);
+				        String triplets [] = new String[total];
+				        int next = 0;
+					triplets[next++] = postUri + " a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/Post> .";
+					triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/locationIP> \"" + operation.locationIp() + "\" .";
+					triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"^^xsd:dateTime .";
+					triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/browserUsed> \"" + operation.browserUsed() + "\" .";
+					triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/language> \"" + operation.language() + "\" .";
+					triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/content> \"" + new String(operation.content().getBytes("UTF-8"), "ISO-8859-1") + "\" .";
+					triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/length> \"" + operation.length() + "\" .";
+					triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasCreator> " + authorUri + " .";
+					triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> \"" + operation.postId() + "\"^^xsd:long .";
+					triplets[next++] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/containerOf> " + postUri + " .";
+					if (operation.countryId() >= 0)
+					    triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/isLocatedIn> <" + state.placeUri(operation.countryId()) + "> .";
 					for (int k = 0; k < operation.tagIds().size(); k++)
-					    triplets[11 + k] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasTag> <" + state.tagUri(operation.tagIds().get(k)) + "> .";
+					    triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasTag> <" + state.tagUri(operation.tagIds().get(k)) + "> .";
+					for (int l = 0; l < operation.mentionedIds().size(); l++)
+					    triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/mentions> <http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.mentionedIds().get(l)) + "> .";
+					if (operation.privacy() != null)
+					    triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/visible> \"" + operation.privacy() + "\"^^xsd:boolean .";
+					if (operation.link() != "")
+					    triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/links> \"" + operation.link() + "\" .";
+					
 					cs.setArray(1, conn.createArrayOf("varchar", triplets));
 					cs.execute();
 				}
 				else {
-					String triplets [] = new String[9];
-					triplets[0] = postUri + " a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/Post> .";
-					triplets[1] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/locationIP> \"" + operation.locationIp() + "\" .";
-					triplets[2] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"^^xsd:dateTime .";
-					triplets[3] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/browserUsed> \"" + operation.browserUsed() + "\" .";
-					triplets[4] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/imageFile> \"" + operation.imageFile() + "\" .";
-					triplets[5] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasCreator> " + authorUri + " .";
-					triplets[6] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/isLocatedIn> <" + state.placeUri(operation.countryId()) + "> .";
-					triplets[7] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> \"" + operation.postId() + "\"^^xsd:long .";
-					triplets[8] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/containerOf> " + postUri + " .";
+				        int total = 8 + operation.tagIds().size() + operation.mentionedIds().size();
+					total += (operation.countryId() < 0 ? 0 : 1);
+					total += (operation.privacy() != null ? 1 : 0);
+					total += (operation.link() != "" ? 1 : 0);
+					String triplets [] = new String[total];
+					int next  = 0;
+					triplets[next++] = postUri + " a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/Post> .";
+					triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/locationIP> \"" + operation.locationIp() + "\" .";
+					triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"^^xsd:dateTime .";
+					triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/browserUsed> \"" + operation.browserUsed() + "\" .";
+					triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/imageFile> \"" + operation.imageFile() + "\" .";
+					triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasCreator> " + authorUri + " .";
+					triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> \"" + operation.postId() + "\"^^xsd:long .";
+					triplets[next++] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/containerOf> " + postUri + " .";
+					if (operation.countryId() >= 0)
+					    triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/isLocatedIn> <" + state.placeUri(operation.countryId()) + "> .";
+					for (int k =  0; k < operation.tagIds().size(); k++)
+					    triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasTag> <" + state.tagUri(operation.tagIds().get(k)) + "> .";
+					for (int l = 0; l < operation.mentionedIds().size(); l++)
+					    triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/mentions> <http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.mentionedIds().get(l)) + "> .";
+					if (operation.privacy() != null)
+					    triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/visible> \"" + operation.privacy() + "\"^^xsd:boolean .";
+					if (operation.link() != "")
+					    triplets[next++] = postUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/links> \"" + operation.link() + "\" .";
+					
 					cs.setArray(1, conn.createArrayOf("varchar", triplets));
 					cs.execute();
 				}
@@ -2077,7 +2112,6 @@ public class VirtuosoDb extends Db {
 				if (state.isPrintNames())
 					System.out.println("########### LdbcUpdate7");
 				if (state.isPrintStrings()) {
-					System.out.println("################################################ LdbcUpdate7AddComment");
 					System.out.println(operation.commentId());
 					System.out.println(operation.creationDate() + " " + operation.locationIp());
 					System.out.println(operation.browserUsed());
@@ -2145,6 +2179,14 @@ public class VirtuosoDb extends Db {
 						System.out.println(tag);
 					}
 					System.out.println("]");
+					System.out.println("[");
+					for (long mentioned : operation.mentionedIds()) {
+						System.out.println(mentioned);
+					}
+					System.out.println("]");
+					System.out.println(operation.privacy());
+					System.out.println(operation.link());
+					System.out.println(operation.gif());
 				}
 				String queryString = "LdbcUpdateSparql(?)";
 				PreparedStatement cs = conn.prepareStatement(queryString);
@@ -2153,23 +2195,42 @@ public class VirtuosoDb extends Db {
 				String postUri = null;
 				DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
 				df1.setTimeZone(TimeZone.getTimeZone("GMT"));
-				String triplets [] = new String[10 + operation.tagIds().size()];
-				triplets[0] = commentUri + " a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/Comment> .";
-				triplets[1] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/locationIP> \"" + operation.locationIp() + "\" .";
-				triplets[2] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"^^xsd:dateTime .";
-				triplets[3] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/browserUsed> \"" + operation.browserUsed() + "\" .";
-				triplets[4] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/content> \"" + new String(operation.content().getBytes("UTF-8"), "ISO-8859-1") + "\" .";
-				triplets[5] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/length> \"" + operation.length() + "\" .";
-				triplets[6] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasCreator> " + authorUri + " .";
-				triplets[7] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/isLocatedIn> <" + state.placeUri(operation.countryId()) + "> .";
+				int total = 8 + operation.tagIds().size() + operation.mentionedIds().size();
+				total += (operation.content() != "" ? 3 : 0);
+				total += (operation.countryId() >= 0 ? 1 : 0);
+				total += (operation.privacy() != null ? 1 : 0);
+				total += (operation.link() != "" ? 1 : 0);
+				total += (operation.gif() != "" ? 1 : 0);
+				String triplets [] = new String[total];
+				int next = 0;
+				triplets[next++] = commentUri + " a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/Comment> .";
+				triplets[next++] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/locationIP> \"" + operation.locationIp() + "\" .";
+				triplets[next++] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"^^xsd:dateTime .";
+				triplets[next++] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/browserUsed> \"" + operation.browserUsed() + "\" .";
+				if (operation.content() != "") {
+				    triplets[next++] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/content> \"" + new String(operation.content().getBytes("UTF-8"), "ISO-8859-1") + "\" .";
+				    triplets[next++] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/length> \"" + operation.length() + "\" .";   
+				}
+				triplets[next++] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasCreator> " + authorUri + " .";
 				if (operation.replyToPostId() == -1)
 					postUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/comm" + String.format("%020d", operation.replyToCommentId()) + ">";
 				else
 					postUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/post" + String.format("%020d", operation.replyToPostId()) + ">";
-				triplets[8] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/replyOf> " + postUri + " .";
-				triplets[9] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> \"" + operation.commentId() + "\"^^xsd:long .";
+				triplets[next++] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/replyOf> " + postUri + " .";
+				triplets[next++] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> \"" + operation.commentId() + "\"^^xsd:long .";
+				if (operation.countryId() >= 0)
+				    triplets[next++] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/isLocatedIn> <" + state.placeUri(operation.countryId()) + "> .";
 				for (int k = 0; k < operation.tagIds().size(); k++)
-				    triplets[10 + k] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasTag> <" + state.tagUri(operation.tagIds().get(k)) + "> .";
+				    triplets[next++] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasTag> <" + state.tagUri(operation.tagIds().get(k)) + "> .";
+				for (int l = 0; l < operation.mentionedIds().size(); l++)
+				    triplets[next++] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/mentions> <http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.mentionedIds().get(l)) + "> .";
+				if (operation.privacy() != null)
+				    triplets[next++] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/visible> \"" + operation.privacy() + "\"^^xsd:boolean .";
+				if (operation.link() != "")
+				    triplets[next++] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/links> \"" + operation.link() + "\" .";
+				if (operation.gif() != "")
+				    triplets[next++] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/gifFile> \"" + operation.gif() + "\" .";
+				
 				cs.setArray(1, conn.createArrayOf("varchar", triplets));
 				cs.execute();
 				cs.close();
