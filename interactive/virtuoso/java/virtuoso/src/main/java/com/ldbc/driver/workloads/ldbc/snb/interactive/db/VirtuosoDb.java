@@ -1866,7 +1866,7 @@ public class VirtuosoDb extends Db {
 				df1.setTimeZone(TimeZone.getTimeZone("GMT"));
 				String triplets [] = new String[5 + operation.tagIds().size()];
 				triplets[0] = forumUri + " a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/Forum> .";
-				triplets[1] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/title> \"" + operation.forumTitle() + "\" .";
+				triplets[1] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/title> \"" + new String(operation.forumTitle().getBytes("UTF-8"), "ISO-8859-1") + "\" .";
 				triplets[2] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"^^xsd:dateTime .";
 				triplets[3] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasModerator> " + moderatorUri + " .";
 				triplets[4] = forumUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> \"" + operation.forumId() + "\"^^xsd:long . ";
