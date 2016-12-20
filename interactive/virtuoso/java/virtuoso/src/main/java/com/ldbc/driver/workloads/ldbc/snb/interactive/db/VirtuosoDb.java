@@ -2166,7 +2166,6 @@ public class VirtuosoDb extends Db {
 				if (state.isPrintNames())
 					System.out.println("########### LdbcUpdate7");
 				if (state.isPrintStrings()) {
-					System.out.println("################################################ LdbcUpdate7AddComment");
 					System.out.println(operation.commentId());
 					System.out.println(operation.creationDate() + " " + operation.locationIp());
 					System.out.println(operation.browserUsed());
@@ -2195,8 +2194,8 @@ public class VirtuosoDb extends Db {
 				String postUri = null;
 				DateFormat df1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
 				df1.setTimeZone(TimeZone.getTimeZone("GMT"));
-				int total = 8 + operation.tagIds().size() + operation.mentionedIds().size();
-				total += (operation.content() != "" ? 3 : 0);
+				int total = 7 + operation.tagIds().size() + operation.mentionedIds().size();
+				total += (operation.content() != "" ? 2 : 0);
 				total += (operation.countryId() >= 0 ? 1 : 0);
 				total += (operation.privacy() != null ? 1 : 0);
 				total += (operation.link() != "" ? 1 : 0);
@@ -2230,7 +2229,7 @@ public class VirtuosoDb extends Db {
 				    triplets[next++] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/links> \"" + operation.link() + "\" .";
 				if (operation.gif() != "")
 				    triplets[next++] = commentUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/gifFile> \"" + operation.gif() + "\" .";
-				
+
 				cs.setArray(1, conn.createArrayOf("varchar", triplets));
 				cs.execute();
 				cs.close();
