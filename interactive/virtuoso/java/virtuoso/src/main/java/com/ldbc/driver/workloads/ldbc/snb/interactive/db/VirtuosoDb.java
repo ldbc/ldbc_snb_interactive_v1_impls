@@ -1648,28 +1648,31 @@ public class VirtuosoDb extends Db {
 				DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd");
 				df1.setTimeZone(TimeZone.getTimeZone("GMT"));
 				df2.setTimeZone(TimeZone.getTimeZone("GMT"));
-				String triplets [] = new String[10 + operation.languages().size() + operation.emails().size() + operation.tagIds().size() + operation.studyAt().size() + operation.workAt().size()];
-				triplets[0] = personUri + " a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/Person> .";
-				triplets[1] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/firstName> \"" + new String(operation.personFirstName().getBytes("UTF-8"), "ISO-8859-1") + "\" .";
-				triplets[2] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/lastName> \"" + new String(operation.personLastName().getBytes("UTF-8"), "ISO-8859-1") + "\" .";
-				triplets[3] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/gender> \"" + operation.gender() + "\" .";
-				triplets[4] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/birthday> \"" + df2.format(operation.birthday()) + "\"^^xsd:date .";
-				triplets[5] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"^^xsd:dateTime .";
-				triplets[6] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/locationIP> \"" + operation.locationIp() + "\" .";
-				triplets[7] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/browserUsed> \"" + operation.browserUsed() + "\" .";
-				triplets[8] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/isLocatedIn> <" + state.placeUri(operation.cityId()) + "> .";
-				triplets[9] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> \"" + operation.personId() + "\"^^xsd:long .";
-				int j = 10;
-				for (int k = 0; k < operation.languages().size(); k++, j++)
-					triplets[j] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/speaks> \"" + operation.languages().get(k) + "\" .";
-				for (int k = 0; k < operation.emails().size(); k++, j++)
-					triplets[j] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/email> \"" + operation.emails().get(k) + "\" .";
-				for (int k = 0; k < operation.tagIds().size(); k++, j++)
-				    triplets[j] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasInterest> <" + state.tagUri(operation.tagIds().get(k)) + "> .";
-				for (int k = 0; k < operation.studyAt().size(); k++, j++)
-				    triplets[j] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/studyAt> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasOrganisation> <" + state.universityUri(operation.studyAt().get(k).organizationId()) + ">; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/classYear> \"" + operation.studyAt().get(k).year() + "\"] .";
-				for (int k = 0; k < operation.workAt().size(); k++, j++)
-				    triplets[j] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/workAt> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasOrganisation> <" + state.companyUri(operation.workAt().get(k).organizationId()) + ">; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/workFrom> \"" + operation.workAt().get(k).year() + "\"] .";
+				String triplets [] = new String[7 + (operation.personFirstName()!=""?1:0) + (operation.personLastName()!=""?1:0) + (operation.birthday()!=null?1:0) + operation.languages().size() + operation.emails().size() + operation.tagIds().size() + operation.studyAt().size() + operation.workAt().size()];
+				int y = 0;
+				triplets[y++] = personUri + " a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/Person> .";
+				if (operation.personFirstName() != "")
+				    triplets[y++] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/firstName> \"" + new String(operation.personFirstName().getBytes("UTF-8"), "ISO-8859-1") + "\" .";
+				if (operation.personLastName() != "")
+				    triplets[y++] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/lastName> \"" + new String(operation.personLastName().getBytes("UTF-8"), "ISO-8859-1") + "\" .";
+				triplets[y++] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/gender> \"" + operation.gender() + "\" .";
+				if (operation.birthday() != null)
+				    triplets[y++] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/birthday> \"" + df2.format(operation.birthday()) + "\"^^xsd:date .";
+				triplets[y++] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/creationDate> \"" + df1.format(operation.creationDate()) + "\"^^xsd:dateTime .";
+				triplets[y++] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/locationIP> \"" + operation.locationIp() + "\" .";
+				triplets[y++] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/browserUsed> \"" + operation.browserUsed() + "\" .";
+				triplets[y++] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/isLocatedIn> <" + state.placeUri(operation.cityId()) + "> .";
+				triplets[y++] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/id> \"" + operation.personId() + "\"^^xsd:long .";
+				for (int k = 0; k < operation.languages().size(); k++)
+					triplets[y++] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/speaks> \"" + operation.languages().get(k) + "\" .";
+				for (int k = 0; k < operation.emails().size(); k++)
+					triplets[y++] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/email> \"" + operation.emails().get(k) + "\" .";
+				for (int k = 0; k < operation.tagIds().size(); k++)
+				    triplets[y++] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasInterest> <" + state.tagUri(operation.tagIds().get(k)) + "> .";
+				for (int k = 0; k < operation.studyAt().size(); k++)
+				    triplets[y++] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/studyAt> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasOrganisation> <" + state.universityUri(operation.studyAt().get(k).organizationId()) + ">; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/classYear> \"" + operation.studyAt().get(k).year() + "\"] .";
+				for (int k = 0; k < operation.workAt().size(); k++)
+				    triplets[y++] = personUri + " <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/workAt> [ <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/hasOrganisation> <" + state.companyUri(operation.workAt().get(k).organizationId()) + ">; <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/workFrom> \"" + operation.workAt().get(k).year() + "\"] .";
 				cs.setArray(1, conn.createArrayOf("varchar", triplets));
 				cs.execute();
 				cs.close();
