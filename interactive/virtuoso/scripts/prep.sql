@@ -147,7 +147,7 @@ create procedure c_weight_sparql (in p1 varchar, in p2 varchar)
 
 --fill_knows();
 
-__dbf_set( 'enable_qp', 1);
-log_enable(2);
-sparql insert in graph <sib> {?s snvoc:knows ?o1. ?o1 snvoc:knows ?s. ?o1 snvoc:knows [snvoc:hasPerson ?s; snvoc:creationDate ?cd].} where { graph <sib> { ?s snvoc:knows ?o. ?o snvoc:hasPerson ?o1. ?o snvoc:creationDate ?cd. }};
-__dbf_set( 'enable_qp', 24);
+--__dbf_set( 'enable_qp', 1);
+--log_enable(2);
+--sparql insert in graph <sib> {?s snvoc:knows ?o1. ?o1 snvoc:knows ?s. ?o1 snvoc:knows [snvoc:hasPerson ?s; snvoc:creationDate ?cd].} where { graph <sib> { ?s snvoc:knows ?o. ?o snvoc:hasPerson ?o1. ?o snvoc:creationDate ?cd. }};
+--__dbf_set( 'enable_qp', 24);
