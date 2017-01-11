@@ -11,7 +11,8 @@ where {
     limit 20
   } .
   ?rep snvoc:hasCreator ?from .
-  ?from snvoc:firstName ?first . ?from snvoc:lastName ?last .
+  optional { ?from snvoc:firstName ?first } .
+  optional { ?from snvoc:lastName ?last } .
   { {?rep snvoc:content ?content } union {?rep snvoc:gifFile ?content} } .
 }
 order by desc(?creationDate) ?rep

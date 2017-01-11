@@ -345,8 +345,11 @@ public class VirtuosoDb extends Db {
 						id = result.getLong(1);
 					else
 						id = Long.parseLong(result.getString(1).substring(47));
-					String lastName = new String(result.getString(2).getBytes("ISO-8859-1"));
+					String lastName = result.getString(2);
+					if (lastName != null)
+					    lastName = new String(lastName.getBytes("ISO-8859-1"));
 					int dist = result.getInt(3);
+					// TODO: Catch null value here
 					long birthday = result.getLong(4);
 					long creationDate = result.getLong(5);
 					String gender = result.getString(6);
@@ -428,8 +431,12 @@ public class VirtuosoDb extends Db {
 						id = result.getLong(1);
 					else
 						id = Long.parseLong(result.getString(1).substring(47));
-					String firstName = new String(result.getString(2).getBytes("ISO-8859-1"));
-					String lastName = new String(result.getString(3).getBytes("ISO-8859-1"));
+					String firstName = result.getString(2);
+					if (firstName != null)
+					    firstName = new String(firstName.getBytes("ISO-8859-1"));
+					String lastName = result.getString(3);
+					if (lastName != null)
+					    lastName = new String(lastName.getBytes("ISO-8859-1"));
 					long postid;
 					if (state.isRunSql())
 						postid = result.getLong(4);
@@ -494,8 +501,12 @@ public class VirtuosoDb extends Db {
 						id = result.getLong(1);
 					else
 						id = Long.parseLong(result.getString(1).substring(47));
-					String firstName = new String(result.getString(2).getBytes("ISO-8859-1"));
-					String lastName = new String(result.getString(3).getBytes("ISO-8859-1"));
+					String firstName = result.getString(2);
+					if (firstName != null)
+					    firstName = new String(firstName.getBytes("ISO-8859-1"));
+					String lastName = result.getString(3);
+					if (lastName != null)
+					    lastName = new String(lastName.getBytes("ISO-8859-1"));					
 					long ct1 = result.getLong(4);
 					long ct2 = result.getLong(5);
 					long total = result.getLong(6);
@@ -696,8 +707,12 @@ public class VirtuosoDb extends Db {
 						personId = result.getLong(1);
 					else
 						personId = Long.parseLong(result.getString(1).substring(47));
-					String personFirstName = new String(result.getString(2).getBytes("ISO-8859-1"));
-					String personLastName = new String(result.getString(3).getBytes("ISO-8859-1"));
+					String firstName = result.getString(2);
+					if (firstName != null)
+					    firstName = new String(firstName.getBytes("ISO-8859-1"));
+					String lastName = result.getString(3);
+					if (lastName != null)
+					    lastName = new String(lastName.getBytes("ISO-8859-1"));
 					long likeCreationDate = result.getLong(4);
 					boolean isNew = result.getInt(5) == 1 ? true : false;
 					long postId;
@@ -707,7 +722,7 @@ public class VirtuosoDb extends Db {
 						postId = Long.parseLong(result.getString(6).substring(47));
 					String postContent = new String(result.getString(7).getBytes("ISO-8859-1"));;
 					int milliSecondDelay = result.getInt(8);
-					LdbcQuery7Result tmp = new LdbcQuery7Result(personId, personFirstName, personLastName, likeCreationDate, postId, postContent, milliSecondDelay, isNew);
+					LdbcQuery7Result tmp = new LdbcQuery7Result(personId, firstName, lastName, likeCreationDate, postId, postContent, milliSecondDelay, isNew);
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
 					RESULT.add(tmp);
@@ -756,8 +771,12 @@ public class VirtuosoDb extends Db {
 						personId = result.getLong(1);
 					else
 						personId = Long.parseLong(result.getString(1).substring(47));
-					String personFirstName = new String(result.getString(2).getBytes("ISO-8859-1"));
-					String personLastName = new String(result.getString(3).getBytes("ISO-8859-1"));
+					String firstName = result.getString(2);
+					if (firstName != null)
+					    firstName = new String(firstName.getBytes("ISO-8859-1"));
+					String lastName = result.getString(3);
+					if (lastName != null)
+					    lastName = new String(lastName.getBytes("ISO-8859-1"));
 					long replyCreationDate = result.getLong(4);
 					long replyId;
 					if (state.isRunSql())
@@ -765,7 +784,7 @@ public class VirtuosoDb extends Db {
 					else
 						replyId = Long.parseLong(result.getString(5).substring(47));
 					String replyContent = new String(result.getString(6).getBytes("ISO-8859-1"));
-					LdbcQuery8Result tmp = new LdbcQuery8Result(personId, personFirstName, personLastName, replyCreationDate, replyId, replyContent);
+					LdbcQuery8Result tmp = new LdbcQuery8Result(personId, firstName, lastName, replyCreationDate, replyId, replyContent);
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
 					RESULT.add(tmp);
@@ -817,8 +836,12 @@ public class VirtuosoDb extends Db {
 						personId = result.getLong(1);
 					else
 						personId = Long.parseLong(result.getString(1).substring(47));
-					String personFirstName = new String(result.getString(2).getBytes("ISO-8859-1"));
-					String personLastName = new String(result.getString(3).getBytes("ISO-8859-1"));
+					String firstName = result.getString(2);
+					if (firstName != null)
+					    firstName = new String(firstName.getBytes("ISO-8859-1"));
+					String lastName = result.getString(3);
+					if (lastName != null)
+					    lastName = new String(lastName.getBytes("ISO-8859-1"));
 					long postOrCommentId;
 					if (state.isRunSql())
 						postOrCommentId = result.getLong(4);
@@ -826,7 +849,7 @@ public class VirtuosoDb extends Db {
 						postOrCommentId = Long.parseLong(result.getString(4).substring(47));
 					String postOrCommentContent = new String(result.getString(5).getBytes("ISO-8859-1"));
 					long postOrCommentCreationDate = result.getLong(6);
-					LdbcQuery9Result tmp = new LdbcQuery9Result(personId, personFirstName, personLastName, postOrCommentId, postOrCommentContent, postOrCommentCreationDate);
+					LdbcQuery9Result tmp = new LdbcQuery9Result(personId, firstName, lastName, postOrCommentId, postOrCommentContent, postOrCommentCreationDate);
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
 					RESULT.add(tmp);
@@ -878,20 +901,24 @@ public class VirtuosoDb extends Db {
 
 				ResultSet result = stmt.executeQuery(queryString);
 				while (result.next()) { results_count++;
-				String personFirstName = new String(result.getString(1).getBytes("ISO-8859-1"));
-				String personLastName = new String(result.getString(2).getBytes("ISO-8859-1"));
-				int commonInterestScore = result.getInt(3);
-				long personId;
-				if (state.isRunSql())
+				    String firstName = result.getString(1);
+				    if (firstName != null)
+					firstName = new String(firstName.getBytes("ISO-8859-1"));
+				    String lastName = result.getString(2);
+				    if (lastName != null)
+					lastName = new String(lastName.getBytes("ISO-8859-1"));
+				    int commonInterestScore = result.getInt(3);
+				    long personId;
+				    if (state.isRunSql())
 					personId = result.getLong(4);
-				else
+				    else
 					personId = Long.parseLong(result.getString(4).substring(47));
-				String gender = result.getString(5);
-				String personCityName = new String(result.getString(6).getBytes("ISO-8859-1"));
-				LdbcQuery10Result tmp = new LdbcQuery10Result(personId, personFirstName, personLastName, commonInterestScore, gender, personCityName);
-				if (state.isPrintResults())
+				    String gender = result.getString(5);
+				    String personCityName = new String(result.getString(6).getBytes("ISO-8859-1"));
+				    LdbcQuery10Result tmp = new LdbcQuery10Result(personId, firstName, lastName, commonInterestScore, gender, personCityName);
+				    if (state.isPrintResults())
 					System.out.println(tmp.toString());
-				RESULT.add(tmp);
+				    RESULT.add(tmp);
 				}
 				stmt.close();conn.close();
 			} catch (SQLException e) {
@@ -935,8 +962,12 @@ public class VirtuosoDb extends Db {
 				ResultSet result = stmt.executeQuery(queryString);
 				while (result.next()) {
 					results_count++;
-					String personFirstName = new String(result.getString(1).getBytes("ISO-8859-1"));
-					String personLastName = new String(result.getString(2).getBytes("ISO-8859-1"));
+					String firstName = result.getString(1);
+					if (firstName != null)
+					    firstName = new String(firstName.getBytes("ISO-8859-1"));
+					String lastName = result.getString(2);
+					if (lastName != null)
+					    lastName = new String(lastName.getBytes("ISO-8859-1"));
 					int organizationWorkFromYear = result.getInt(3);
 					String organizationName = new String(result.getString(4).getBytes("ISO-8859-1"));
 					long personId;
@@ -944,7 +975,7 @@ public class VirtuosoDb extends Db {
 						personId = result.getLong(5);
 					else
 						personId = Long.parseLong(result.getString(5).substring(47));;
-						LdbcQuery11Result tmp = new LdbcQuery11Result(personId, personFirstName, personLastName, organizationName, organizationWorkFromYear);
+						LdbcQuery11Result tmp = new LdbcQuery11Result(personId, firstName, lastName, organizationName, organizationWorkFromYear);
 						if (state.isPrintResults())
 							System.out.println(tmp.toString());
 						RESULT.add(tmp);
@@ -993,11 +1024,15 @@ public class VirtuosoDb extends Db {
 						personId = result.getLong(1);
 					else
 						personId = Long.parseLong(result.getString(1).substring(47));
-					String personFirstName = new String(result.getString(2).getBytes("ISO-8859-1"));
-					String personLastName = new String(result.getString(3).getBytes("ISO-8859-1"));
+					String firstName = result.getString(2);
+					if (firstName != null)
+					    firstName = new String(firstName.getBytes("ISO-8859-1"));
+					String lastName = result.getString(3);
+					if (lastName != null)
+					    lastName = new String(lastName.getBytes("ISO-8859-1"));
 					Collection<String> tagNames =  result.getString(4) == null ? new ArrayList<String>() : new ArrayList<String>(Arrays.asList(new String(result.getString(4).getBytes("ISO-8859-1")).split(", ")));
 					int replyCount = result.getInt(5);
-					LdbcQuery12Result tmp = new LdbcQuery12Result(personId, personFirstName, personLastName, tagNames, replyCount);
+					LdbcQuery12Result tmp = new LdbcQuery12Result(personId, firstName, lastName, tagNames, replyCount);
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
 					RESULT.add(tmp);
@@ -1154,8 +1189,12 @@ public class VirtuosoDb extends Db {
 					ResultSet rs = stmt1.getResultSet();
 					while (rs.next()) {
 						results_count++;
-						String firstName = new String(rs.getString(1).getBytes("ISO-8859-1"));
-						String lastName = new String(rs.getString(2).getBytes("ISO-8859-1"));
+						String firstName = rs.getString(1);
+						if (firstName != null)
+						    firstName = new String(firstName.getBytes("ISO-8859-1"));
+						String lastName = rs.getString(2);
+						if (lastName != null)
+						    lastName = new String(lastName.getBytes("ISO-8859-1"));
 						String gender = rs.getString(3);
 						long birthday = rs.getLong(4);
 						long creationDate = rs.getLong(5);
@@ -1281,8 +1320,12 @@ public class VirtuosoDb extends Db {
 						    personId = rs.getLong(1);
 						else
 						    personId = Long.parseLong(rs.getString(1).substring(47));
-						String firstName = new String(rs.getString(2).getBytes("ISO-8859-1"));;
-						String lastName = new String(rs.getString(3).getBytes("ISO-8859-1"));;
+						String firstName = rs.getString(2);
+						if (firstName != null)
+						    firstName = new String(firstName.getBytes("ISO-8859-1"));
+						String lastName = rs.getString(3);
+						if (lastName != null)
+						    lastName = new String(lastName.getBytes("ISO-8859-1"));
 						long since = rs.getLong(4);
 						LdbcShortQuery3PersonFriendsResult tmp = new LdbcShortQuery3PersonFriendsResult(personId, firstName, lastName, since);
 						if (state.isPrintResults())
@@ -1378,8 +1421,12 @@ public class VirtuosoDb extends Db {
 						    personId = rs.getLong(1);
 						else
 						    personId = Long.parseLong(rs.getString(1).substring(47));
-						String firstName = new String(rs.getString(2).getBytes("ISO-8859-1"));;
-						String lastName = new String(rs.getString(3).getBytes("ISO-8859-1"));;
+						String firstName = rs.getString(2);
+						if (firstName != null)
+						    firstName = new String(firstName.getBytes("ISO-8859-1"));
+						String lastName = rs.getString(3);
+						if (lastName != null)
+						    lastName = new String(lastName.getBytes("ISO-8859-1"));
 						RESULT = new LdbcShortQuery5MessageCreatorResult(personId, firstName, lastName);
 						if (state.isPrintResults())
 							System.out.println(RESULT.toString());
@@ -1431,8 +1478,12 @@ public class VirtuosoDb extends Db {
 						    moderatorId = rs.getLong(3);
 						else
 						    moderatorId = Long.parseLong(rs.getString(3).substring(47));
-						String moderatorFirstName = new String(rs.getString(4).getBytes("ISO-8859-1"));;
-						String moderatorLastName = new String(rs.getString(5).getBytes("ISO-8859-1"));;
+						String moderatorFirstName = rs.getString(4);
+						if (moderatorFirstName != null)
+						    moderatorFirstName = new String(moderatorFirstName.getBytes("ISO-8859-1"));
+						String moderatorLastName = rs.getString(5);
+						if (moderatorLastName != null)
+						    moderatorLastName = new String(moderatorLastName.getBytes("ISO-8859-1"));
 						RESULT = new LdbcShortQuery6MessageForumResult(forumId, forumTitle, moderatorId, moderatorFirstName, moderatorLastName);
 						if (state.isPrintResults())
 							System.out.println(RESULT.toString());
@@ -1485,8 +1536,12 @@ public class VirtuosoDb extends Db {
 						    personId = rs.getLong(4);
 						else
 						    personId = Long.parseLong(rs.getString(4).substring(47));
-						String firstName = new String(rs.getString(5).getBytes("ISO-8859-1"));;
-						String lastName = new String(rs.getString(6).getBytes("ISO-8859-1"));;
+						String firstName = rs.getString(5);
+						if (firstName != null)
+						    firstName = new String(firstName.getBytes("ISO-8859-1"));
+						String lastName = rs.getString(6);
+						if (lastName != null)
+						    lastName = new String(lastName.getBytes("ISO-8859-1"));
 						int knows = rs.getInt(7);
 						boolean knows_b = (knows == 1) ? true : false;
 						LdbcShortQuery7MessageRepliesResult tmp = new LdbcShortQuery7MessageRepliesResult(commentId, commentContent, creationDate, personId, firstName, lastName, knows_b);

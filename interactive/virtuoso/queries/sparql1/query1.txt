@@ -38,8 +38,10 @@ sparql select ?fr ?last min(?dist) as ?mindist
       }
       group by ?frr)) as ?workAt
 {
-    ?fr a snvoc:Person . ?fr snvoc:firstName "%Name%" . ?fr snvoc:lastName ?last .
-    ?fr snvoc:birthday ?bday . ?fr snvoc:isLocatedIn ?basedURI . ?basedURI foaf:name ?based .
+    ?fr a snvoc:Person . ?fr snvoc:firstName "%Name%" .
+    optional { ?fr snvoc:lastName ?last } .
+    optional { ?fr snvoc:birthday ?bday } .
+    ?fr snvoc:isLocatedIn ?basedURI . ?basedURI foaf:name ?based .
     ?fr snvoc:creationDate ?since . ?fr snvoc:gender ?gen . ?fr snvoc:locationIP ?locationIP .
     ?fr snvoc:browserUsed ?browser .
     {

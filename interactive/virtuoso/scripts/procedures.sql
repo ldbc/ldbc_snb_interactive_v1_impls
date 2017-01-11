@@ -831,8 +831,8 @@ create procedure post_view_2_sparql (in postid int) {
         where {
 	  ?post snvoc:id ?:postid .
 	  ?post snvoc:hasCreator ?creator .
-	  ?creator snvoc:firstName ?p_firstname .
-	  ?creator snvoc:lastName ?p_lastname .
+	  OPTIONAL { ?creator snvoc:firstName ?p_firstname } .
+	  OPTIONAL { ?creator snvoc:lastName ?p_lastname } .
 	}
   ) do result ( "creator", "p_firstname", "p_lastname");
 }
@@ -849,8 +849,8 @@ create procedure post_view_3_sparql (in postid int) {
 	  ?forum snvoc:containerOf ?orig .
 	  ?forum snvoc:title ?title .
 	  ?forum snvoc:hasModerator ?moderator .
-	  ?moderator snvoc:firstName ?first .
-	  ?moderator snvoc:lastName ?last .
+	  OPTIONAL { ?moderator snvoc:firstName ?first } .
+	  OPTIONAL { ?moderator snvoc:lastName ?last } .
 	}
   ) do result ("forum", "title", "moderator", "first", "last");
 }
@@ -893,8 +893,8 @@ create procedure post_view_4_sparql (in postid int) {
 	  { {?comment snvoc:content ?content } union { ?comment snvoc:gifFile ?content }} .
 	  ?comment snvoc:creationDate ?dt .
 	  ?comment snvoc:hasCreator ?creator .
-	  ?creator snvoc:firstName ?creatorfirstname .
-	  ?creator snvoc:lastName ?creatorlastname .
+	  OPTIONAL { ?creator snvoc:firstName ?creatorfirstname } .
+	  OPTIONAL { ?creator snvoc:lastName ?creatorlastname } .
 	}
 	order by desc(3) 4
   ) do result ( "comment", "content", "date", "creator", "creatorfirstname", "creatorlastname", "knows");
@@ -912,10 +912,10 @@ create procedure person_view_1_sparql (in personid int) {
                       ?p_locationip ?p_browserused ?p_placeid
 	where {
 	  ?person snvoc:id ?:personid .
-	  ?person snvoc:firstName ?p_firstname .
-	  ?person snvoc:lastName ?p_lastname .
+	  OPTIONAL { ?person snvoc:firstName ?p_firstname } .
+	  OPTIONAL { ?person snvoc:lastName ?p_lastname } .
 	  ?person snvoc:gender ?p_gender .
-	  ?person snvoc:birthday ?p_birthday .
+	  OPTIONAL { ?person snvoc:birthday ?p_birthday } .
 	  ?person snvoc:creationDate ?p_creationdate .
 	  ?person snvoc:locationIP ?p_locationip .
    	  ?person snvoc:isLocatedIn ?p_place .
@@ -966,8 +966,8 @@ create procedure person_view_2_sparql (in personid int) {
 	  OPTIONAL {
 	    ?post snvoc:replyOf ?orig .
 	    ?orig snvoc:hasCreator ?person1 .
-	    ?person1 snvoc:firstName ?firstn .
-	    ?person1 snvoc:lastName ?lastn .
+	    OPTIONAL { ?person1 snvoc:firstName ?firstn } .
+	    OPTIONAL { ?person1 snvoc:lastName ?lastn } .
 	  } .
 	}
 	order by desc(?cd)
@@ -986,8 +986,8 @@ create procedure person_view_3_sparql (in personid int) {
 	  ?person snvoc:knows ?tmp .
 	  ?tmp snvoc:creationDate ?k_since .
 	  ?tmp snvoc:hasPerson ?fr .
-	  ?fr snvoc:firstName ?p_friendfirstname .
-	  ?fr snvoc:lastName ?p_friendlastname .
+	  optional { ?fr snvoc:firstName ?p_friendfirstname } .
+	  optional { ?fr snvoc:lastName ?p_friendlastname } .
 	}
 	order by desc(4) 1
   ) do result ("fr", "p_friendfirstname", "p_friendlastname", "k_s");

@@ -25,7 +25,8 @@ where {
         minus { sn:pers%Person% snvoc:knows ?fof } .
     }
    } .
-   ?fof snvoc:firstName ?first .   ?fof snvoc:lastName ?last .
+   optional { ?fof snvoc:firstName ?first } .
+   optional { ?fof snvoc:lastName ?last } .
    ?fof snvoc:gender ?gender .     ?fof snvoc:birthday ?bday .
    ?fof snvoc:isLocatedIn ?based . ?based foaf:name ?locationname .
    filter (1 = if (month (?bday) = %HS0%, if (day(?bday) >= 21, 1, 0), if (month (?bday) = %HS1%, if (day(?bday) < 22, 1, 0), 0)))
