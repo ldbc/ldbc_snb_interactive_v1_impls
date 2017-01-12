@@ -350,7 +350,7 @@ public class VirtuosoDb extends Db {
 					if (state.isRunSql())
 						id = result.getLong(1);
 					else
-						id = Long.parseLong(result.getString(1).substring(48));
+						id = Long.parseLong(result.getString(1).substring(47));
 					String lastName = result.getString(2);
 					if (lastName != null)
 					    lastName = new String(lastName.getBytes("ISO-8859-1"));
@@ -436,7 +436,7 @@ public class VirtuosoDb extends Db {
 					if (state.isRunSql())
 						id = result.getLong(1);
 					else
-						id = Long.parseLong(result.getString(1).substring(48));
+						id = Long.parseLong(result.getString(1).substring(47));
 					String firstName = result.getString(2);
 					if (firstName != null)
 					    firstName = new String(firstName.getBytes("ISO-8859-1"));
@@ -447,7 +447,7 @@ public class VirtuosoDb extends Db {
 					if (state.isRunSql())
 						postid = result.getLong(4);
 					else
-						postid = Long.parseLong(result.getString(4).substring(48));
+						postid = Long.parseLong(result.getString(4).substring(47));
 					String content = new String(result.getString(5).getBytes("ISO-8859-1"));
 					long postdate = result.getLong(6);
 					LdbcQuery2Result tmp = new LdbcQuery2Result(id, firstName, lastName, postid, content, postdate);
@@ -506,7 +506,7 @@ public class VirtuosoDb extends Db {
 					if (state.isRunSql())
 						id = result.getLong(1);
 					else
-						id = Long.parseLong(result.getString(1).substring(48));
+						id = Long.parseLong(result.getString(1).substring(47));
 					String firstName = result.getString(2);
 					if (firstName != null)
 					    firstName = new String(firstName.getBytes("ISO-8859-1"));
@@ -712,7 +712,7 @@ public class VirtuosoDb extends Db {
 					if (state.isRunSql())
 						personId = result.getLong(1);
 					else
-						personId = Long.parseLong(result.getString(1).substring(48));
+						personId = Long.parseLong(result.getString(1).substring(47));
 					String firstName = result.getString(2);
 					if (firstName != null)
 					    firstName = new String(firstName.getBytes("ISO-8859-1"));
@@ -725,7 +725,7 @@ public class VirtuosoDb extends Db {
 					if (state.isRunSql())
 						postId = result.getLong(6);
 					else
-						postId = Long.parseLong(result.getString(6).substring(48));
+						postId = Long.parseLong(result.getString(6).substring(47));
 					String postContent = new String(result.getString(7).getBytes("ISO-8859-1"));;
 					int milliSecondDelay = result.getInt(8);
 					LdbcQuery7Result tmp = new LdbcQuery7Result(personId, firstName, lastName, likeCreationDate, postId, postContent, milliSecondDelay, isNew);
@@ -776,7 +776,7 @@ public class VirtuosoDb extends Db {
 					if (state.isRunSql())
 						personId = result.getLong(1);
 					else
-						personId = Long.parseLong(result.getString(1).substring(48));
+						personId = Long.parseLong(result.getString(1).substring(47));
 					String firstName = result.getString(2);
 					if (firstName != null)
 					    firstName = new String(firstName.getBytes("ISO-8859-1"));
@@ -788,7 +788,7 @@ public class VirtuosoDb extends Db {
 					if (state.isRunSql())
 						replyId = result.getLong(5);
 					else
-						replyId = Long.parseLong(result.getString(5).substring(48));
+						replyId = Long.parseLong(result.getString(5).substring(47));
 					String replyContent = new String(result.getString(6).getBytes("ISO-8859-1"));
 					LdbcQuery8Result tmp = new LdbcQuery8Result(personId, firstName, lastName, replyCreationDate, replyId, replyContent);
 					if (state.isPrintResults())
@@ -841,7 +841,7 @@ public class VirtuosoDb extends Db {
 					if (state.isRunSql())
 						personId = result.getLong(1);
 					else
-						personId = Long.parseLong(result.getString(1).substring(48));
+						personId = Long.parseLong(result.getString(1).substring(47));
 					String firstName = result.getString(2);
 					if (firstName != null)
 					    firstName = new String(firstName.getBytes("ISO-8859-1"));
@@ -852,7 +852,7 @@ public class VirtuosoDb extends Db {
 					if (state.isRunSql())
 						postOrCommentId = result.getLong(4);
 					else
-						postOrCommentId = Long.parseLong(result.getString(4).substring(48));
+						postOrCommentId = Long.parseLong(result.getString(4).substring(47));
 					String postOrCommentContent = new String(result.getString(5).getBytes("ISO-8859-1"));
 					long postOrCommentCreationDate = result.getLong(6);
 					LdbcQuery9Result tmp = new LdbcQuery9Result(personId, firstName, lastName, postOrCommentId, postOrCommentContent, postOrCommentCreationDate);
@@ -918,7 +918,7 @@ public class VirtuosoDb extends Db {
 				    if (state.isRunSql())
 					personId = result.getLong(4);
 				    else
-					personId = Long.parseLong(result.getString(4).substring(48));
+					personId = Long.parseLong(result.getString(4).substring(47));
 				    String gender = result.getString(5);
 				    String personCityName = new String(result.getString(6).getBytes("ISO-8859-1"));
 				    LdbcQuery10Result tmp = new LdbcQuery10Result(personId, firstName, lastName, commonInterestScore, gender, personCityName);
@@ -980,7 +980,7 @@ public class VirtuosoDb extends Db {
 					if (state.isRunSql())
 						personId = result.getLong(5);
 					else
-						personId = Long.parseLong(result.getString(5).substring(48));;
+						personId = Long.parseLong(result.getString(5).substring(47));;
 						LdbcQuery11Result tmp = new LdbcQuery11Result(personId, firstName, lastName, organizationName, organizationWorkFromYear);
 						if (state.isPrintResults())
 							System.out.println(tmp.toString());
@@ -1029,7 +1029,7 @@ public class VirtuosoDb extends Db {
 					if (state.isRunSql())
 						personId = result.getLong(1);
 					else
-						personId = Long.parseLong(result.getString(1).substring(48));
+						personId = Long.parseLong(result.getString(1).substring(47));
 					String firstName = result.getString(2);
 					if (firstName != null)
 					    firstName = new String(firstName.getBytes("ISO-8859-1"));
@@ -1299,7 +1299,7 @@ public class VirtuosoDb extends Db {
 						if (state.isRunSql())
 						    postId = rs.getLong(1);
 						else
-						    postId = Long.parseLong(rs.getString(1).substring(48));
+						    postId = Long.parseLong(rs.getString(1).substring(47));
 						String postContent = rs.getString(2);
 						if (postContent == null || postContent.length() == 0)
 						    postContent = new String(rs.getString(3).getBytes("ISO-8859-1"));
@@ -1311,14 +1311,14 @@ public class VirtuosoDb extends Db {
 						    origPostId = rs.getLong(5);
 						else {
 						    if (rs.getString(5) != null)
-							origPostId = Long.parseLong(rs.getString(5).substring(48));
+							origPostId = Long.parseLong(rs.getString(5).substring(47));
 						}
 						long origPersonId = 0;
 						if (state.isRunSql())
 						    origPersonId = rs.getLong(6);
 						else {
 						    if (rs.getString(6) != null)
-							origPersonId = Long.parseLong(rs.getString(6).substring(48));
+							origPersonId = Long.parseLong(rs.getString(6).substring(47));
 						}
 						String origFirstName = rs.getString(7);
 						if (origFirstName != null)
@@ -1397,7 +1397,7 @@ public class VirtuosoDb extends Db {
 						if (state.isRunSql())
 						    personId = rs.getLong(1);
 						else
-						    personId = Long.parseLong(rs.getString(1).substring(48));
+						    personId = Long.parseLong(rs.getString(1).substring(47));
 						String firstName = rs.getString(2);
 						if (firstName != null)
 						    firstName = new String(firstName.getBytes("ISO-8859-1"));
@@ -1546,7 +1546,7 @@ public class VirtuosoDb extends Db {
 						if (state.isRunSql())
 						    personId = rs.getLong(1);
 						else
-						    personId = Long.parseLong(rs.getString(1).substring(48));
+						    personId = Long.parseLong(rs.getString(1).substring(47));
 						String firstName = rs.getString(2);
 						if (firstName != null)
 						    firstName = new String(firstName.getBytes("ISO-8859-1"));
@@ -1621,13 +1621,13 @@ public class VirtuosoDb extends Db {
 						if (state.isRunSql())
 						    forumId = rs.getLong(1);
 						else
-						    forumId = Long.parseLong(rs.getString(1).substring(49));
+						    forumId = Long.parseLong(rs.getString(1).substring(48));
 						String forumTitle = new String(rs.getString(2).getBytes("ISO-8859-1"));;
 						long moderatorId;
 						if (state.isRunSql())
 						    moderatorId = rs.getLong(3);
 						else
-						    moderatorId = Long.parseLong(rs.getString(3).substring(48));
+						    moderatorId = Long.parseLong(rs.getString(3).substring(47));
 						String moderatorFirstName = rs.getString(4);
 						if (moderatorFirstName != null)
 						    moderatorFirstName = new String(moderatorFirstName.getBytes("ISO-8859-1"));
@@ -1702,14 +1702,14 @@ public class VirtuosoDb extends Db {
 						if (state.isRunSql())
 						    commentId = rs.getLong(1);
 						else
-						    commentId = Long.parseLong(rs.getString(1).substring(48));
+						    commentId = Long.parseLong(rs.getString(1).substring(47));
 						String commentContent = new String(rs.getString(2).getBytes("ISO-8859-1"));;
 						long creationDate = rs.getLong(3);
 						long personId;
 						if (state.isRunSql())
 						    personId = rs.getLong(4);
 						else
-						    personId = Long.parseLong(rs.getString(4).substring(48));
+						    personId = Long.parseLong(rs.getString(4).substring(47));
 						String firstName = rs.getString(5);
 						if (firstName != null)
 						    firstName = new String(firstName.getBytes("ISO-8859-1"));
