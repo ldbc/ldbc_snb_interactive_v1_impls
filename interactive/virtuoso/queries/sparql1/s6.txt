@@ -1,4 +1,4 @@
-sparql select *
+sparql select ?forum ?title ?moderator ?first ?last 
 where {
   ?post snvoc:id %Id% .
   ?post snvoc:replyOf* ?orig.
