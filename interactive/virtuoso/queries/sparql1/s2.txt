@@ -6,12 +6,11 @@ where {
   ?post snvoc:hasCreator ?pers .
   { {?post snvoc:content ?con } union { ?post snvoc:imageFile ?image } union { ?post snvoc:gifFile ?image }} .
   ?post snvoc:creationDate ?cd .
-  optional {
-    ?post snvoc:replyOf ?orig .
-    ?orig snvoc:hasCreator ?person1 .
-    optional { ?person1 snvoc:firstName ?firstn } .
-    optional { ?person1 snvoc:lastName ?lastn } .
-  } .
+  ?post snvoc:replyOf* ?orig .
+  ?orig a snvoc:Post .
+  ?orig snvoc:hasCreator ?person1 .
+  optional { ?person1 snvoc:firstName ?firstn } .
+  optional { ?person1 snvoc:lastName ?lastn } .
 }
 order by desc(?cd)
 limit 10

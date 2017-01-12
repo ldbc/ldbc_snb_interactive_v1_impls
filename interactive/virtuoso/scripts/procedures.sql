@@ -157,12 +157,11 @@ create procedure person_view_2_sparql_old (in personid int) {
 	  ?post snvoc:hasCreator ?pers .
 	  { {?post snvoc:content ?con } union { ?post snvoc:imageFile ?image }} .
 	  ?post snvoc:creationDate ?cd .
-	  OPTIONAL {
-	    ?post snvoc:replyOf ?orig .
-	    ?orig snvoc:hasCreator ?person1 .
-	    ?person1 snvoc:firstName ?firstn .
-	    ?person1 snvoc:lastName ?lastn .
-	  } .
+	  ?post snvoc:replyOf* ?orig .
+	  ?orig a snvoc:Post .
+	  ?orig snvoc:hasCreator ?person1 .
+	  ?person1 snvoc:firstName ?firstn .
+	  ?person1 snvoc:lastName ?lastn .
 	}
 	order by desc(?cd)
 	limit 10
@@ -182,12 +181,11 @@ create procedure person_view_2_sparql (in personid int) {
 	  ?post snvoc:hasCreator ?pers .
 	  { {?post snvoc:content ?con } union { ?post snvoc:imageFile ?image } union { ?post snvoc:gifFile ?image }} .
 	  ?post snvoc:creationDate ?cd .
-	  OPTIONAL {
-	    ?post snvoc:replyOf ?orig .
-	    ?orig snvoc:hasCreator ?person1 .
-	    OPTIONAL { ?person1 snvoc:firstName ?firstn } .
-	    OPTIONAL { ?person1 snvoc:lastName ?lastn } .
-	  } .
+	  ?post snvoc:replyOf* ?orig .
+	  ?orig a snvoc:Post .
+	  ?orig snvoc:hasCreator ?person1 .
+	  OPTIONAL { ?person1 snvoc:firstName ?firstn } .
+	  OPTIONAL { ?person1 snvoc:lastName ?lastn } .
 	}
 	order by desc(?cd)
 	limit 10
