@@ -1,0 +1,15 @@
+sparql select ?comment ?content
+                      (?dt - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?date
+      	       	      ?creator ?creatorfirstname ?creatorlastname
+                      (exists {  ?creator snvoc:knows ?author} as ?knows)
+where {
+  ?post snvoc:id %Id% .
+  ?post snvoc:hasCreator ?author .
+  ?comment snvoc:replyOf ?post .
+  { {?comment snvoc:content ?content } union { ?comment snvoc:gifFile ?content }} .
+  ?comment snvoc:creationDate ?dt .
+  ?comment snvoc:hasCreator ?creator .
+  optional { ?creator snvoc:firstName ?creatorfirstname } .
+  optional { ?creator snvoc:lastName ?creatorlastname } .
+}
+order by desc(3) 4

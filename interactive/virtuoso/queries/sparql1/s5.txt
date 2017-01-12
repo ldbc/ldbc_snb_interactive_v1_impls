@@ -1,0 +1,7 @@
+sparql select ?creator ?p_firstname ?p_lastname
+where {
+  ?post snvoc:id %Id% .
+  ?post snvoc:hasCreator ?creator .
+  optional { ?creator snvoc:firstName ?p_firstname } .
+  optional { ?creator snvoc:lastName ?p_lastname } .
+}
