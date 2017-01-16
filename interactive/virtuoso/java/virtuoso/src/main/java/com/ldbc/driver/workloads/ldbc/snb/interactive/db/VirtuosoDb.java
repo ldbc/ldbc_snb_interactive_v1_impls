@@ -1065,13 +1065,15 @@ public class VirtuosoDb extends Db {
 			int results_count = 0; RESULT.clear();
 			try {
 				String queryString = file2string(new File(state.getQueryDir(), "query13.txt"));
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
+				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 				if (state.isRunSql()) {
-					queryString = queryString.replaceAll("@Person1@", String.valueOf(operation.person1Id()));
-					queryString = queryString.replaceAll("@Person2@", String.valueOf(operation.person2Id()));
+				    //queryString = queryString.replaceAll("@Person1@", String.valueOf(operation.person1Id()));
+				    //queryString = queryString.replaceAll("@Person2@", String.valueOf(operation.person2Id()));
 				}
 				else {
-					queryString = queryString.replaceAll("%Person1%", String.format("%020d", operation.person1Id()));
-					queryString = queryString.replaceAll("%Person2%", String.format("%020d", operation.person2Id()));
+					queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
+					queryString = queryString.replaceAll("%Date0%", sdf.format(operation.maxDate()));
 				}
 				stmt = conn.createStatement();
 
@@ -1083,8 +1085,25 @@ public class VirtuosoDb extends Db {
 				ResultSet result = stmt.executeQuery(queryString);
 				while (result.next()) {
 					results_count++;
-					int shortestPathlength = result.getInt(1);
-					LdbcQuery13Result tmp = new LdbcQuery13Result(shortestPathlength);
+					long id;
+					if (state.isRunSql())
+						id = result.getLong(1);
+					else
+						id = Long.parseLong(result.getString(1).substring(47));
+					String firstName = result.getString(2);
+					if (firstName != null)
+					    firstName = new String(firstName.getBytes("ISO-8859-1"));
+					String lastName = result.getString(3);
+					if (lastName != null)
+					    lastName = new String(lastName.getBytes("ISO-8859-1"));
+					long postid;
+					if (state.isRunSql())
+						postid = result.getLong(4);
+					else
+						postid = Long.parseLong(result.getString(4).substring(47));
+					String content = new String(result.getString(5).getBytes("ISO-8859-1"));
+					long postdate = result.getLong(6);
+					LdbcQuery13Result tmp = new LdbcQuery13Result(id, firstName, lastName, postid, content, postdate);
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
 					RESULT.add(tmp);
@@ -1097,7 +1116,7 @@ public class VirtuosoDb extends Db {
 				e.printStackTrace();
 
 			}
-			resultReporter.report(results_count, RESULT.get(0), operation);
+			resultReporter.report(results_count, RESULT, operation);
 		}
 	}
 
@@ -1110,13 +1129,15 @@ public class VirtuosoDb extends Db {
 			int results_count = 0; RESULT.clear();
 			try {
 				String queryString = file2string(new File(state.getQueryDir(), "query14.txt"));
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
+				sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 				if (state.isRunSql()) {
-					queryString = queryString.replaceAll("@Person1@", String.valueOf(operation.person1Id()));
-					queryString = queryString.replaceAll("@Person2@", String.valueOf(operation.person2Id()));
+				    //queryString = queryString.replaceAll("@Person1@", String.valueOf(operation.person1Id()));
+				    //queryString = queryString.replaceAll("@Person2@", String.valueOf(operation.person2Id()));
 				}
 				else {
-					queryString = queryString.replaceAll("%Person1%", String.format("%020d", operation.person1Id()));
-					queryString = queryString.replaceAll("%Person2%", String.format("%020d", operation.person2Id()));
+					queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
+					queryString = queryString.replaceAll("%Date0%", sdf.format(operation.maxDate()));
 				}
 				stmt = conn.createStatement();
 
@@ -1128,32 +1149,9 @@ public class VirtuosoDb extends Db {
 				ResultSet result = stmt.executeQuery(queryString);
 				while (result.next()) {
 					results_count++;
-					Long [] ttt = null;
-					if (state.isRunSql()) {
-					    openlink.util.Vector o1 = (openlink.util.Vector)(result.getObject(1));
-					    ttt = new Long[o1.size()];
-					    for (int i = 0; i < o1.size(); i++) {
-						if (o1.elementAt(i) instanceof Long)
-						    ttt[i] = (Long)o1.elementAt(i);
-						else if (o1.elementAt(i) instanceof Integer)
-						    ttt[i] = new Long((Integer)o1.elementAt(i));
-						else if (o1.elementAt(i) instanceof Short)
-						    ttt[i] = new Long((Short)o1.elementAt(i));
-						else {
-						    System.out.println("Error in Q14");
-						}
-					    }
-					}
-					else {
-					    String path = result.getString(1);
-					    String [] parts = path.split("[)]");
-					    ttt = new Long[parts.length - 1];
-					    for (int j = 0; j < ttt.length; j++) {
-						ttt[j] = Long.parseLong(parts[j].split("-")[0].trim());
-					    }
-					}
-					double weight = result.getDouble(2);
-					LdbcQuery14Result tmp = new LdbcQuery14Result(new ArrayList<Long>(Arrays.asList(ttt)), weight);
+					String link = new String(result.getString(1).getBytes("ISO-8859-1"));
+					int linkCount = result.getInt(2);
+					LdbcQuery14Result tmp = new LdbcQuery14Result(link, linkCount);
 					if (state.isPrintResults())
 						System.out.println(tmp.toString());
 					RESULT.add(tmp);

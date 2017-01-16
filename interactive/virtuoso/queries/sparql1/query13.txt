@@ -1,21 +1,14 @@
-sparql select (count(*) - 1) as ?distance #Q13
-where
-  {
-    {
-      select ?s ?o
-      where
-        {
-          ?s snvoc:knows ?o.
-        }
-    }
-    option ( transitive,
-             t_distinct,
-             t_in(?s),
-             t_out(?o),
-             t_shortest_only,
-             t_direction 3,
-             t_step ('path_id') as ?path_no) .
-    filter ( ?s = sn:pers%Person1% ).
-    filter ( ?o = sn:pers%Person2% ).
-    filter (?path_no = 0).
-  }
+sparql select ?author ?fname ?lname ?post ?content #Q13
+              (?datetime - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000
+where {
+    sn:pers%Person% snvoc:knows ?fr .
+    ?post snvoc:mentions ?fr .
+    ?post snvoc:hasCreator ?author .
+    ?post snvoc:creationDate ?datetime .
+    filter (?datetime >= "%Date0%"^^xsd:dateTime) .
+    { {?post snvoc:content ?content } union { ?post snvoc:imageFile ?content } union { ?post snvoc:gifFile ?content }} .
+    optional { ?author snvoc:firstName ?fname } .
+    optional { ?author snvoc:lastName ?lname } .
+}
+order by desc (?datetime), ?post
+limit 20

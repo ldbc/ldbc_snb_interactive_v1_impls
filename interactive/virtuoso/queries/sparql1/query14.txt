@@ -1,32 +1,14 @@
-sparql select sql:path_str_sparql(?path) as ?path_str, ?sc #Q14
-where
-{
-  select ?path_no, sql:vector_agg (bif:vector (?via1, ?via2, ?cweight)) as ?path, sum (?cweight) as ?sc
-  where
-  {
-    select ?via1 ?via2 ?path_no ?step_no sql:c_weight_sparql1(?via1, ?via2) as ?cweight
-    where
-    {
-      {
-        select ?s bif:idn(?s) as ?via2 ?o
-        where
-        {
-          ?s snvoc:knows ?o.
+sparql select ?link, count (*) as ?shares #Q14
+where {
+        { select distinct ?fr
+                 where { { sn:pers%Person% snvoc:knows ?fr.} union {sn:pers%Person% snvoc:knows ?fr2. ?fr2 snvoc:knows ?fr. filter (?fr != sn:pers%Person%)} }
         }
-      }
-      option ( transitive,
-             t_in(?s),
-             t_out(?o),
-         t_shortest_only,
-         t_direction 3,
-         t_step (?s) as ?via1,
-         t_step ('path_id') as ?path_no,
-             t_step ('step_no') as ?step_no ) .
-      filter ( ?s = sn:pers%Person1% ).
-      filter ( ?o = sn:pers%Person2% ).
-    }
-  }
-  group by ?path_no
+        ?post snvoc:hasCreator ?fr .
+        ?post snvoc:links ?link .
+        ?post snvoc:creationDate ?datetime .
+        filter (?datetime >= "%Date0%"^^xsd:dateTime) .
+	filter (!exists {?post snvoc:visible "false"^^xsd:boolean }).
 }
-order by desc(?sc)
-limit 10
+group by ?link
+order by desc (?shares), ?link
+limit 20
