@@ -135,6 +135,7 @@ public class VirtuosoDb extends Db {
 		//        private String endPoint;
 		private String queryDir;
 		private boolean runSql;
+	        private boolean enableStoredProcedures;
 		private boolean runCluster;
 		private boolean printNames;
 		private boolean printStrings;
@@ -164,6 +165,7 @@ public class VirtuosoDb extends Db {
 			ds.fill();
 			queryDir = properties.get("queryDir");
 			runSql = properties.get("run_sql").equals("true") ? true : false;
+			enableStoredProcedures = properties.get("enable_stored_procedures").equals("true") ? true : false;
 			printNames = properties.get("printQueryNames").equals("true") ? true : false;
 			printStrings = properties.get("printQueryStrings").equals("true") ? true : false;
 			printResults = properties.get("printQueryResults").equals("true") ? true : false;
@@ -274,6 +276,10 @@ public class VirtuosoDb extends Db {
 
 		public boolean isRunSql() {
 			return runSql;
+		}
+
+	        public boolean isStoredProceduresEnabled() {
+		        return enableStoredProcedures;
 		}
 
 		public boolean isPrintNames() {
@@ -1136,6 +1142,7 @@ public class VirtuosoDb extends Db {
 			int results_count = 0;
 			Connection conn = state.getConn();
 			CallableStatement stmt1 = null;
+			Statement stmt2 = null;
 
 			try {
 			    	if (state.isRunSql())
@@ -1144,14 +1151,37 @@ public class VirtuosoDb extends Db {
 				    stmt1 = conn.prepareCall("person_view_1_sparql(?)");
 				stmt1.setLong(1, operation.personId());
 
+				stmt2 = conn.createStatement();
+
+				String queryString = null;
+				if (!state.isStoredProceduresEnabled()) {
+				    queryString = file2string(new File(state.getQueryDir(), "s1.txt"));
+				    if (state.isRunSql()) {
+					//TODO:
+					
+				    }
+				    else {
+					queryString = queryString.replaceAll("%Id%", String.format("%d", operation.personId()));
+				    }
+				}
+
 				if (state.isPrintNames())
 					System.out.println("########### LdbcShortQuery1");
 				if (state.isPrintStrings())
+				    if (state.isStoredProceduresEnabled())
 					System.out.println("LdbcShortQuery1 (" + operation.personId() + ")");
+				    else
+					System.out.println(queryString);
 
-				boolean results = stmt1.execute();
-				if (results) {
-					ResultSet rs = stmt1.getResultSet();
+				boolean results = false;
+				if (state.isStoredProceduresEnabled())
+				    results = stmt1.execute();
+				if (results || !state.isStoredProceduresEnabled()) {
+					ResultSet rs = null;
+					if (state.isStoredProceduresEnabled())
+					    rs = stmt1.getResultSet();
+					else
+					    rs = stmt2.executeQuery(queryString);
 					while (rs.next()) {
 						results_count++;
 						String firstName = new String(rs.getString(1).getBytes("ISO-8859-1"));
@@ -1167,10 +1197,10 @@ public class VirtuosoDb extends Db {
 							System.out.println(RESULT.toString());
 					}
 				}
-				stmt1.close();conn.close();
+				stmt1.close();stmt2.close();conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
-				try { stmt1.close();conn.close(); } catch (SQLException e1) { }
+				try { stmt1.close();stmt2.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -1185,21 +1215,45 @@ public class VirtuosoDb extends Db {
 			int results_count = 0;
 			Connection conn = state.getConn();
 			CallableStatement stmt1 = null;
+			Statement stmt2 = null;
+			
 			try {
 			        if (state.isRunSql())
 				    stmt1 = conn.prepareCall("person_view_2(?)");
 				else
 				    stmt1 = conn.prepareCall("person_view_2_sparql(?)");
 				stmt1.setLong(1, operation.personId());
+				stmt2 = conn.createStatement();
 
+				String queryString = null;
+				if (!state.isStoredProceduresEnabled()) {
+				    queryString = file2string(new File(state.getQueryDir(), "s2.txt"));
+				    if (state.isRunSql()) {
+					//TODO:
+					
+				    }
+				    else {
+					queryString = queryString.replaceAll("%Id%", String.format("%d", operation.personId()));
+				    }
+				}
+				
 				if (state.isPrintNames())
 					System.out.println("########### LdbcShortQuery2");
 				if (state.isPrintStrings())
+				    if (state.isStoredProceduresEnabled())
 					System.out.println("LdbcShortQuery2 (" + operation.personId() + ")");
+				    else
+					System.out.println(queryString);
 
-				boolean results = stmt1.execute();
-				if (results) {
-					ResultSet rs = stmt1.getResultSet();
+				boolean results = false;
+				if (state.isStoredProceduresEnabled())
+				    results = stmt1.execute();
+				if (results || !state.isStoredProceduresEnabled()) {
+				        ResultSet rs = null;
+					if (state.isStoredProceduresEnabled())
+					    rs = stmt1.getResultSet();
+					else
+					    rs = stmt2.executeQuery(queryString);
 					while (rs.next()) {
 						results_count++;
 						long postId;
@@ -1239,11 +1293,11 @@ public class VirtuosoDb extends Db {
 						RESULT.add(tmp);
 					}
 				}
-				stmt1.close();conn.close();
+				stmt1.close();stmt2.close();conn.close();
 			} catch (SQLException e) {
 				System.out.println("Err: LdbcShortQuery2 (" + operation.personId() + ")");
 				e.printStackTrace();
-				try { stmt1.close();conn.close(); } catch (SQLException e1) { }
+				try { stmt1.close();stmt2.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				System.out.println("Err: LdbcShortQuery2 (" + operation.personId() + ")");
 				e.printStackTrace();
@@ -1259,21 +1313,45 @@ public class VirtuosoDb extends Db {
 			int results_count = 0;
 			Connection conn = state.getConn();
 			CallableStatement stmt1 = null;
+			Statement stmt2 = null;
+			
 			try {
 			        if (state.isRunSql())
 				    stmt1 = conn.prepareCall("person_view_3(?)");
 				else
 				    stmt1 = conn.prepareCall("person_view_3_sparql(?)");
 				stmt1.setLong(1, operation.personId());
+				stmt2 = conn.createStatement();
+
+				String queryString = null;
+				if (!state.isStoredProceduresEnabled()) {
+				    queryString = file2string(new File(state.getQueryDir(), "s3.txt"));
+				    if (state.isRunSql()) {
+					//TODO:
+					
+				    }
+				    else {
+					queryString = queryString.replaceAll("%Id%", String.format("%d", operation.personId()));
+				    }
+				}
 
 				if (state.isPrintNames())
 					System.out.println("########### LdbcShortQuery3");
 				if (state.isPrintStrings())
+				    if (state.isStoredProceduresEnabled())
 					System.out.println("LdbcShortQuery3 (" + operation.personId() + ")");
+				    else
+					System.out.println(queryString);
 
-				boolean results = stmt1.execute();
-				if (results) {
-					ResultSet rs = stmt1.getResultSet();
+				boolean results = false;
+				if (state.isStoredProceduresEnabled())
+				    results = stmt1.execute();
+				if (results || !state.isStoredProceduresEnabled()) {
+				        ResultSet rs = null;
+					if (state.isStoredProceduresEnabled())
+					    rs = stmt1.getResultSet();
+					else
+					    rs = stmt2.executeQuery(queryString);
 					while (rs.next()) {
 						results_count++;
 						long personId;
@@ -1290,10 +1368,10 @@ public class VirtuosoDb extends Db {
 						RESULT.add(tmp);
 					}
 				}
-				stmt1.close();conn.close();
+				stmt1.close();stmt2.close();conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
-				try { stmt1.close();conn.close(); } catch (SQLException e1) { }
+				try { stmt1.close();stmt2.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -1308,21 +1386,45 @@ public class VirtuosoDb extends Db {
 			int results_count = 0;
 			Connection conn = state.getConn();
 			CallableStatement stmt1 = null;
+			Statement stmt2 = null;
+			
 			try {
 			        if (state.isRunSql())
 				    stmt1 = conn.prepareCall("post_view_1(?)");
 				else
 				    stmt1 = conn.prepareCall("post_view_1_sparql(?)");
 				stmt1.setLong(1, operation.messageId());
+				stmt2 = conn.createStatement();
+ 
+				String queryString = null;
+				if (!state.isStoredProceduresEnabled()) {
+				    queryString = file2string(new File(state.getQueryDir(), "s4.txt"));
+				    if (state.isRunSql()) {
+					//TODO:
+					
+				    }
+				    else {
+					queryString = queryString.replaceAll("%Id%", String.format("%d", operation.messageId()));
+				    }
+				}
 
 				if (state.isPrintNames())
 					System.out.println("########### LdbcShortQuery4");
 				if (state.isPrintStrings())
+				    if (state.isStoredProceduresEnabled())
 					System.out.println("LdbcShortQuery4 (" + operation.messageId() + ")");
+				    else
+					System.out.println(queryString);
 
-				boolean results = stmt1.execute();
-				if (results) {
-					ResultSet rs = stmt1.getResultSet();
+				boolean results = false;
+				if (state.isStoredProceduresEnabled())
+				    results = stmt1.execute();
+				if (results || !state.isStoredProceduresEnabled()) {
+				        ResultSet rs = null;
+					if (state.isStoredProceduresEnabled())
+					    rs = stmt1.getResultSet();
+					else
+					    rs = stmt2.executeQuery(queryString);
 					while (rs.next()) {
 						results_count++;
 						String messageContent = null;
@@ -1336,11 +1438,11 @@ public class VirtuosoDb extends Db {
 							System.out.println(RESULT.toString());
 					}
 				}
-				stmt1.close();conn.close();
+				stmt1.close();stmt2.close();conn.close();
 			} catch (SQLException e) {
 				System.out.println("Err: LdbcShortQuery4 (" + operation.messageId() + ")");
 				e.printStackTrace();
-				try { stmt1.close();conn.close(); } catch (SQLException e1) { }
+				try { stmt1.close();stmt2.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				System.out.println("Err: LdbcShortQuery4 (" + operation.messageId() + ")");
 				e.printStackTrace();
@@ -1356,21 +1458,45 @@ public class VirtuosoDb extends Db {
 			int results_count = 0;
 			Connection conn = state.getConn();
 			CallableStatement stmt1 = null;
+			Statement stmt2 = null;
+			
 			try {
 			        if (state.isRunSql())
 				    stmt1 = conn.prepareCall("post_view_2(?)");
 				else
 				    stmt1 = conn.prepareCall("post_view_2_sparql(?)");
 				stmt1.setLong(1, operation.messageId());
+				stmt2 = conn.createStatement();
+ 
+				String queryString = null;
+				if (!state.isStoredProceduresEnabled()) {
+				    queryString = file2string(new File(state.getQueryDir(), "s5.txt"));
+				    if (state.isRunSql()) {
+					//TODO:
+					
+				    }
+				    else {
+					queryString = queryString.replaceAll("%Id%", String.format("%d", operation.messageId()));
+				    }
+				}
 
 				if (state.isPrintNames())
 					System.out.println("########### LdbcShortQuery5");
 				if (state.isPrintStrings())
+				    if (state.isStoredProceduresEnabled())
 					System.out.println("LdbcShortQuery5 (" + operation.messageId() + ")");
+				    else
+					System.out.println(queryString);
 
-				boolean results = stmt1.execute();
-				if (results) {
-					ResultSet rs = stmt1.getResultSet();
+				boolean results = false;
+				if (state.isStoredProceduresEnabled())
+				    results = stmt1.execute();
+				if (results || !state.isStoredProceduresEnabled()) {
+				        ResultSet rs = null;
+					if (state.isStoredProceduresEnabled())
+					    rs = stmt1.getResultSet();
+					else
+					    rs = stmt2.executeQuery(queryString);
 					while (rs.next()) {
 						results_count++;
 						long personId;
@@ -1385,10 +1511,10 @@ public class VirtuosoDb extends Db {
 							System.out.println(RESULT.toString());
 					}
 				}
-				stmt1.close();conn.close();
+				stmt1.close();stmt2.close();conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
-				try { stmt1.close();conn.close(); } catch (SQLException e1) { }
+				try { stmt1.close();stmt2.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -1403,21 +1529,45 @@ public class VirtuosoDb extends Db {
 			int results_count = 0;
 			Connection conn = state.getConn();
 			CallableStatement stmt1 = null;
+			Statement stmt2 = null;
+			
 			try {
 				if (state.isRunSql())
 				    stmt1 = conn.prepareCall("post_view_3(?)");
 				else
 				    stmt1 = conn.prepareCall("post_view_3_sparql(?)");
 				stmt1.setLong(1, operation.messageId());
-
+				stmt2 = conn.createStatement();
+ 
+				String queryString = null;
+				if (!state.isStoredProceduresEnabled()) {
+				    queryString = file2string(new File(state.getQueryDir(), "s6.txt"));
+				    if (state.isRunSql()) {
+					//TODO:
+					
+				    }
+				    else {
+					queryString = queryString.replaceAll("%Id%", String.format("%d", operation.messageId()));
+				    }
+				}
+				
 				if (state.isPrintNames())
 					System.out.println("########### LdbcShortQuery6");
 				if (state.isPrintStrings())
+				    if (state.isStoredProceduresEnabled())
 					System.out.println("LdbcShortQuery6 (" + operation.messageId() + ")");
+				    else
+					System.out.println(queryString);
 
-				boolean results = stmt1.execute();
-				if (results) {
-					ResultSet rs = stmt1.getResultSet();
+				boolean results = false;
+				if (state.isStoredProceduresEnabled())
+				    results = stmt1.execute();
+				if (results || !state.isStoredProceduresEnabled()) {
+				        ResultSet rs = null;
+					if (state.isStoredProceduresEnabled())
+					    rs = stmt1.getResultSet();
+					else
+					    rs = stmt2.executeQuery(queryString);
 					while (rs.next()) {
 						results_count++;
 						long forumId;
@@ -1438,10 +1588,10 @@ public class VirtuosoDb extends Db {
 							System.out.println(RESULT.toString());
 					}
 				}
-				stmt1.close();conn.close();
+				stmt1.close();stmt2.close();conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
-				try { stmt1.close();conn.close(); } catch (SQLException e1) { }
+				try { stmt1.close();stmt2.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -1456,21 +1606,45 @@ public class VirtuosoDb extends Db {
 			int results_count = 0;
 			Connection conn = state.getConn();
 			CallableStatement stmt1 = null;
+			Statement stmt2 = null;
+			
 			try {
 				if (state.isRunSql())
 				    stmt1 = conn.prepareCall("post_view_4(?)");
 				else
 				    stmt1 = conn.prepareCall("post_view_4_sparql(?)");
 				stmt1.setLong(1, operation.messageId());
+				stmt2 = conn.createStatement();
+ 
+				String queryString = null;
+				if (!state.isStoredProceduresEnabled()) {
+				    queryString = file2string(new File(state.getQueryDir(), "s7.txt"));
+				    if (state.isRunSql()) {
+					//TODO:
+					
+				    }
+				    else {
+					queryString = queryString.replaceAll("%Id%", String.format("%d", operation.messageId()));
+				    }
+				}
 
 				if (state.isPrintNames())
 					System.out.println("########### LdbcShortQuery7");
 				if (state.isPrintStrings())
+				    if (state.isStoredProceduresEnabled())
 					System.out.println("LdbcShortQuery7 (" + operation.messageId() + ")");
+				    else
+					System.out.println(queryString);
 
-				boolean results = stmt1.execute();
-				if (results) {
-					ResultSet rs = stmt1.getResultSet();
+				boolean results = false;
+				if (state.isStoredProceduresEnabled())
+				    results = stmt1.execute();
+				if (results || !state.isStoredProceduresEnabled()) {
+				        ResultSet rs = null;
+					if (state.isStoredProceduresEnabled())
+					    rs = stmt1.getResultSet();
+					else
+					    rs = stmt2.executeQuery(queryString);
 					while (rs.next()) {
 						results_count++;
 						long commentId;
@@ -1495,10 +1669,10 @@ public class VirtuosoDb extends Db {
 						RESULT.add(tmp);
 					}
 				}
-				stmt1.close();conn.close();
+				stmt1.close();stmt2.close();conn.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
-				try { stmt1.close();conn.close(); } catch (SQLException e1) { }
+				try { stmt1.close();stmt2.close();conn.close(); } catch (SQLException e1) { }
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -1640,7 +1814,8 @@ public class VirtuosoDb extends Db {
 						System.out.println(tag.organizationId() + " - " + tag.year());
 					}
 					System.out.println("]");
-				}        		
+				}
+				//TODO: This has to be done with and WITHOUT stored procedure
 				String queryString = "LdbcUpdateSparql(?)";
 				PreparedStatement cs = conn.prepareStatement(queryString);
 				String personUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.personId()) + ">";
@@ -1720,6 +1895,7 @@ public class VirtuosoDb extends Db {
 					System.out.println("########### LdbcUpdate2");
 				if (state.isPrintStrings())
 					System.out.println(operation.personId() + " " + operation.postId() + " " + operation.creationDate());
+				//TODO: This has to be done with and WITHOUT stored procedure
 				String queryString = "LdbcUpdateSparql(?)";
 				PreparedStatement cs = conn.prepareStatement(queryString);
 				String personUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.personId()) + ">";
@@ -1776,6 +1952,7 @@ public class VirtuosoDb extends Db {
 					System.out.println("########### LdbcUpdate3");
 				if (state.isPrintStrings())
 					System.out.println(operation.personId() + " " + operation.commentId() + " " + operation.creationDate());
+				//TODO: This has to be done with and WITHOUT stored procedure
 				String queryString = "LdbcUpdateSparql(?)";
 				PreparedStatement cs = conn.prepareStatement(queryString);
 				String personUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.personId()) + ">";
@@ -1858,6 +2035,7 @@ public class VirtuosoDb extends Db {
 					}
 					System.out.println("]");
 				}
+				//TODO: This has to be done with and WITHOUT stored procedure
 				String queryString = "LdbcUpdateSparql(?)";
 				PreparedStatement cs = conn.prepareStatement(queryString);
 				String forumUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/forum" + String.format("%020d", operation.forumId()) + ">";
@@ -1922,6 +2100,7 @@ public class VirtuosoDb extends Db {
 					System.out.println("########### LdbcUpdate5");
 				if (state.isPrintStrings())
 					System.out.println(operation.forumId() + " " + operation.personId() + " " + operation.joinDate());
+				//TODO: This has to be done with and WITHOUT stored procedure
 				String queryString = "LdbcUpdateSparql(?)";
 				PreparedStatement cs = conn.prepareStatement(queryString);
 				String forumUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/forum" + String.format("%020d", operation.forumId()) + ">";
@@ -2018,6 +2197,7 @@ public class VirtuosoDb extends Db {
 					}
 					System.out.println("]");
 				}
+				//TODO: This has to be done with and WITHOUT stored procedure
 				String queryString = "LdbcUpdateSparql(?)";
 				PreparedStatement cs = conn.prepareStatement(queryString);
 				String postUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/post" + String.format("%020d", operation.postId()) + ">";
@@ -2146,6 +2326,7 @@ public class VirtuosoDb extends Db {
 					}
 					System.out.println("]");
 				}
+				//TODO: This has to be done with and WITHOUT stored procedure
 				String queryString = "LdbcUpdateSparql(?)";
 				PreparedStatement cs = conn.prepareStatement(queryString);
 				String commentUri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/comm" + String.format("%020d", operation.commentId()) + ">";
@@ -2221,6 +2402,7 @@ public class VirtuosoDb extends Db {
 					System.out.println("########### LdbcUpdate8");
 				if (state.isPrintStrings())
 					System.out.println(operation.person1Id() + " " + operation.person2Id() + " " + operation.creationDate());
+				//TODO: This has to be done with and WITHOUT stored procedure
 				String queryString = "LdbcUpdateSparql(?)";
 				PreparedStatement cs = conn.prepareStatement(queryString);
 				String person1Uri = "<http://www.ldbc.eu/ldbc_socialnet/1.0/data/pers" + String.format("%020d", operation.person1Id()) + ">";

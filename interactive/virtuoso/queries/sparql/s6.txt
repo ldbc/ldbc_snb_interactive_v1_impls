@@ -1,0 +1,11 @@
+sparql select ?forum ?title ?moderator ?first ?last 
+where {
+  ?post snvoc:id %Id% .
+  ?post snvoc:replyOf* ?orig.
+  ?orig a snvoc:Post .
+  ?forum snvoc:containerOf ?orig .
+  ?forum snvoc:title ?title .
+  ?forum snvoc:hasModerator ?moderator .
+  ?moderator snvoc:firstName ?first .
+  ?moderator snvoc:lastName ?last .
+}
