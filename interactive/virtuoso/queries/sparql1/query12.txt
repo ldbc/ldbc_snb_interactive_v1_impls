@@ -1,5 +1,5 @@
-sparql select ?exp ?first ?last group_concat(distinct ?tagname, ', ') as ?tags  #Q12
-              count (distinct ?reply) as ?cnt
+sparql select ?exp ?first ?last (group_concat(distinct ?tagname; separator=', ') as ?tags)  #Q12
+              (count (distinct ?reply) as ?cnt)
 where {
     sn:pers%Person% snvoc:knows ?exp .
     optional { ?exp snvoc:firstName ?first } .
