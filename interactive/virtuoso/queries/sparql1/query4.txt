@@ -1,4 +1,4 @@
-sparql select ?tagname count (*) as ?cnt #Q4
+sparql select ?tagname (count (*) as ?cnt) #Q4
 where {
     ?post a snvoc:Post . ?post snvoc:hasCreator ?fr .
     ?post snvoc:hasTag ?tag . ?tag foaf:name ?tagname .

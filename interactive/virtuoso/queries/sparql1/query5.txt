@@ -1,4 +1,4 @@
-sparql select ?title ?group count(?post) as ?cnt #Q5
+sparql select ?title ?group (count(?post) as ?cnt) #Q5
 where { 
     {select distinct ?fr
      where {

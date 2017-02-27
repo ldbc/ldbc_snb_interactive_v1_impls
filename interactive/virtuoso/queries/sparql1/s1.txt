@@ -1,6 +1,6 @@
 sparql select ?p_firstname ?p_lastname ?p_gender
-              (?p_birthday - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?p_bd
-              (?p_creationdate - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?p_cd
+              ((?p_birthday - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?p_bd)
+              ((?p_creationdate - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?p_cd)
               ?p_locationip ?p_browserused ?p_placeid
 where {
   ?person snvoc:id %Id% .

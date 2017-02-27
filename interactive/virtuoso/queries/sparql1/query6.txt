@@ -1,4 +1,4 @@
-sparql select ?tagname count(*) as ?cnt #Q6
+sparql select ?tagname (count(*) as ?cnt) #Q6
 where {  
     {  select distinct ?fr
        where {

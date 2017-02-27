@@ -1,5 +1,5 @@
 sparql select ?fr ?p_friendfirstname ?p_friendlastname
-              (?k_since - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?k_s
+              ((?k_since - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?k_s)
 where {
   ?person snvoc:id %Id% .
   ?person snvoc:knows ?tmp .
@@ -8,4 +8,4 @@ where {
   optional { ?fr snvoc:firstName ?p_friendfirstname } .
   optional { ?fr snvoc:lastName ?p_friendlastname } .
 }
-order by desc(4) 1
+order by desc(?k_s) ?fr

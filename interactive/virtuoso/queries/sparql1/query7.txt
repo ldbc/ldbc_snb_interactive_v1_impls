@@ -1,10 +1,10 @@
 sparql select ?liker ?first ?last #Q7
-       (?max_ldt - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?max_ldate
+       ((?max_ldt - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?max_ldate)
        (not exists {  sn:pers%Person% snvoc:knows ?liker} as ?is_new)
-       ?post ?content (?max_ldt - ?dt)/60 as ?lag
+       ?post ?content ((?max_ldt - ?dt)/60 as ?lag)
 where {
   {{
-    select ?liker, (max(?ldt) as ?max_ldt)
+    select ?liker (max(?ldt) as ?max_ldt)
     where {
   	?post snvoc:hasCreator sn:pers%Person% .
   	{{ ?lk snvoc:hasPost ?post } union { ?lk snvoc:hasComment ?post }} .
