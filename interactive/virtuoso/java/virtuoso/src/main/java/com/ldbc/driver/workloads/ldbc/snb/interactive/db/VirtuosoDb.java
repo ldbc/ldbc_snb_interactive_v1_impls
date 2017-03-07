@@ -132,7 +132,7 @@ public class VirtuosoDb extends Db {
 	public class VirtuosoDbConnectionState extends DbConnectionState {
 		private VirtuosoConnectionPoolDataSource ds;
 		//    	private Connection conn;
-		//        private String endPoint;
+		private String endpoint;
 		private String queryDir;
 		private boolean runSql;
 	        private boolean enableStoredProcedures;
@@ -140,35 +140,46 @@ public class VirtuosoDb extends Db {
 		private boolean printNames;
 		private boolean printStrings;
 		private boolean printResults;
+	        private boolean useJena;
 	        private HashMap<Long, String> placeMap;
 	    	private HashMap<Long, String> companyMap;
    	        private HashMap<Long, String> universityMap;
 	        private HashMap<Long, String> tagMap;
+	        private HashMap<String, String> prefix;
 
 		VirtuosoDbConnectionState(Map<String, String> properties) throws ClassNotFoundException, SQLException {
 			super();
 			//			Class.forName("virtuoso.jdbc4.Driver");
 			//	        endPoint = properties.get("endpoint");
 			//			conn = DriverManager.getConnection(endPoint, properties.get("user"), properties.get("password"));;
-			ds = new VirtuosoConnectionPoolDataSource();
-			ds.setDataSourceName("MyPool");
-			ds.setServerName(properties.get("endpoint"));
-			ds.setUser(properties.get("user"));
-			ds.setPassword(properties.get("password"));
-			ds.setMinPoolSize(1);
-			//ds.setMaxPoolSize(Integer.parseInt(properties.get("tc")) * 2);
-			ds.setMaxPoolSize(64);
-			runCluster = properties.get("run_cluster").equals("true") ? true : false;
-			if (runCluster)
+			useJena = properties.get("useJenaAPI").equals("true") ? true : false;
+			endpoint = properties.get("endpoint");
+			if (useJena == false) {
+			    ds = new VirtuosoConnectionPoolDataSource();
+			    ds.setDataSourceName("MyPool");
+			    ds.setServerName(endpoint);
+			    ds.setUser(properties.get("user"));
+			    ds.setPassword(properties.get("password"));
+			    ds.setMinPoolSize(1);
+			    //ds.setMaxPoolSize(Integer.parseInt(properties.get("tc")) * 2);
+			    ds.setMaxPoolSize(64);
+			    runCluster = properties.get("run_cluster").equals("true") ? true : false;
+			    if (runCluster)
 				ds.setRoundrobin(true);
-			//ds.setCharset("UTF-8");
-			ds.fill();
+			    //ds.setCharset("UTF-8");
+			    ds.fill();
+			    runSql = properties.get("run_sql").equals("true") ? true : false;
+			    enableStoredProcedures = properties.get("enable_stored_procedures").equals("true") ? true : false;
+			}
 			queryDir = properties.get("queryDir");
-			runSql = properties.get("run_sql").equals("true") ? true : false;
-			enableStoredProcedures = properties.get("enable_stored_procedures").equals("true") ? true : false;
 			printNames = properties.get("printQueryNames").equals("true") ? true : false;
 			printStrings = properties.get("printQueryStrings").equals("true") ? true : false;
 			printResults = properties.get("printQueryResults").equals("true") ? true : false;
+
+			prefix = new HashMap<String, String>();
+			prefix.put("snvoc", "PREFIX snvoc:   <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>\n");
+			prefix.put("sn", "PREFIX sn:   <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>\n");
+			prefix.put("xsd", "PREFIX xsd:   <http://www.w3.org/2001/XMLSchema#>\n");
 
 			// Initialization of hash maps
 			if (!runSql) {
@@ -177,88 +188,143 @@ public class VirtuosoDb extends Db {
 			    universityMap = new HashMap<Long, String>();
 			    tagMap = new HashMap<Long, String>();
 
-			    Connection conn = getConn();
-			    Statement stmt = null;
-			    try {
-				String queryString = "sparql select distinct ?id ?s {?s snvoc:id ?id . ?s a <http://dbpedia.org/ontology/Place>}";
-				stmt = conn.createStatement();
-								
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) {
-				    long id = result.getLong(1);
-				    String uri = result.getString(2);
-				    placeMap.put(id, uri);
+			    if (useJena == false) {
+				Connection conn = getConn();
+				Statement stmt = null;
+				try {
+				    String queryString = "sparql select distinct ?id ?s {?s snvoc:id ?id . ?s a <http://dbpedia.org/ontology/Place>}";
+				    stmt = conn.createStatement();
+				    
+				    ResultSet result = stmt.executeQuery(queryString);
+				    while (result.next()) {
+					long id = result.getLong(1);
+					String uri = result.getString(2);
+					placeMap.put(id, uri);
+				    }
+				    stmt.close();conn.close();
+				} catch (SQLException e) {
+				    e.printStackTrace();
+				    try { stmt.close();conn.close(); } catch (SQLException e1) { }
+				} catch (Exception e) {
+				    e.printStackTrace();
 				}
-				stmt.close();conn.close();
-			    } catch (SQLException e) {
-				e.printStackTrace();
-				try { stmt.close();conn.close(); } catch (SQLException e1) { }
-			    } catch (Exception e) {
-				e.printStackTrace();
-			    }
-
-			    conn = getConn();
-			    try {
-				String queryString = "sparql select distinct ?id ?s {?s snvoc:id ?id . ?s a <http://dbpedia.org/ontology/Company>}";
-				stmt = conn.createStatement();
-								
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) {
-				    long id = result.getLong(1);
-				    String uri = result.getString(2);
-				    companyMap.put(id, uri);
+				
+				conn = getConn();
+				try {
+				    String queryString = "sparql select distinct ?id ?s {?s snvoc:id ?id . ?s a <http://dbpedia.org/ontology/Company>}";
+				    stmt = conn.createStatement();
+				    
+				    ResultSet result = stmt.executeQuery(queryString);
+				    while (result.next()) {
+					long id = result.getLong(1);
+					String uri = result.getString(2);
+					companyMap.put(id, uri);
+				    }
+				    stmt.close();conn.close();
+				} catch (SQLException e) {
+				    e.printStackTrace();
+				    try { stmt.close();conn.close(); } catch (SQLException e1) { }
+				} catch (Exception e) {
+				    e.printStackTrace();
 				}
-				stmt.close();conn.close();
-			    } catch (SQLException e) {
-				e.printStackTrace();
-				try { stmt.close();conn.close(); } catch (SQLException e1) { }
-			    } catch (Exception e) {
-				e.printStackTrace();
-			    }
-
-			    conn = getConn();
-			    try {
-				String queryString = "sparql select distinct ?id ?s {?s snvoc:id ?id . ?s a <http://dbpedia.org/ontology/University>}";
-				stmt = conn.createStatement();
-								
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) {
-				    long id = result.getLong(1);
-				    String uri = result.getString(2);
-				    universityMap.put(id, uri);
+				
+				conn = getConn();
+				try {
+				    String queryString = "sparql select distinct ?id ?s {?s snvoc:id ?id . ?s a <http://dbpedia.org/ontology/University>}";
+				    stmt = conn.createStatement();
+				    
+				    ResultSet result = stmt.executeQuery(queryString);
+				    while (result.next()) {
+					long id = result.getLong(1);
+					String uri = result.getString(2);
+					universityMap.put(id, uri);
+				    }
+				    stmt.close();conn.close();
+				} catch (SQLException e) {
+				    e.printStackTrace();
+				    try { stmt.close();conn.close(); } catch (SQLException e1) { }
+				} catch (Exception e) {
+				    e.printStackTrace();
 				}
-				stmt.close();conn.close();
-			    } catch (SQLException e) {
-				e.printStackTrace();
-				try { stmt.close();conn.close(); } catch (SQLException e1) { }
-			    } catch (Exception e) {
-				e.printStackTrace();
-			    }
-
-			    conn = getConn();
-			    try {
-				String queryString = "sparql select distinct ?id ?tag {?tag snvoc:id ?id. ?tag a ?type. ?type a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/TagClass>}";
-				stmt = conn.createStatement();
-								
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) {
-				    long id = result.getLong(1);
-				    String uri = result.getString(2);
-				    tagMap.put(id, uri);
+				
+				conn = getConn();
+				try {
+				    String queryString = "sparql select distinct ?id ?tag {?tag snvoc:id ?id. ?tag a ?type. ?type a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/TagClass>}";
+				    stmt = conn.createStatement();
+				    
+				    ResultSet result = stmt.executeQuery(queryString);
+				    while (result.next()) {
+					long id = result.getLong(1);
+					String uri = result.getString(2);
+					tagMap.put(id, uri);
+				    }
+				    stmt.close();conn.close();
+				} catch (SQLException e) {
+				    e.printStackTrace();
+				    try { stmt.close();conn.close(); } catch (SQLException e1) { }
+				} catch (Exception e) {
+				    e.printStackTrace();
 				}
-				stmt.close();conn.close();
-			    } catch (SQLException e) {
-				e.printStackTrace();
-				try { stmt.close();conn.close(); } catch (SQLException e1) { }
-			    } catch (Exception e) {
-				e.printStackTrace();
 			    }
+			    else {
+				String queryString = prefix("snvoc") + "select distinct ?id ?s {?s snvoc:id ?id . ?s a <http://dbpedia.org/ontology/Place>}";
+				org.apache.jena.query.Query query = org.apache.jena.query.QueryFactory.create(queryString);
+				org.apache.jena.query.QueryExecution qexec = org.apache.jena.query.QueryExecutionFactory.sparqlService(endpoint, query);
+				org.apache.jena.query.ResultSet results = qexec.execSelect() ;
+				for ( ; results.hasNext() ; )
+				    {
+					org.apache.jena.query.QuerySolution soln = results.nextSolution() ;
+					org.apache.jena.rdf.model.Resource x = soln.getResource("s") ; // Get a result variable - must be a resource
+					org.apache.jena.rdf.model.Literal y = soln.getLiteral("id") ;   // Get a result variable - must be a literal
+					placeMap.put(y.getLong(), x.toString());
+				    }
+				qexec.close();
 
+				queryString = prefix("snvoc") + "select distinct ?id ?s {?s snvoc:id ?id . ?s a <http://dbpedia.org/ontology/Company>}";
+				query = org.apache.jena.query.QueryFactory.create(queryString);
+				qexec = org.apache.jena.query.QueryExecutionFactory.sparqlService(endpoint, query);
+				results = qexec.execSelect() ;
+				for ( ; results.hasNext() ; )
+				    {
+					org.apache.jena.query.QuerySolution soln = results.nextSolution() ;
+					org.apache.jena.rdf.model.Resource x = soln.getResource("s") ; // Get a result variable - must be a resource
+					org.apache.jena.rdf.model.Literal y = soln.getLiteral("id") ;   // Get a result variable - must be a literal
+					companyMap.put(y.getLong(), x.toString());
+				    }
+				qexec.close();
+
+				queryString = prefix("snvoc") + "select distinct ?id ?s {?s snvoc:id ?id . ?s a <http://dbpedia.org/ontology/University>}";
+				query = org.apache.jena.query.QueryFactory.create(queryString);
+				qexec = org.apache.jena.query.QueryExecutionFactory.sparqlService(endpoint, query);
+				results = qexec.execSelect() ;
+				for ( ; results.hasNext() ; )
+				    {
+					org.apache.jena.query.QuerySolution soln = results.nextSolution() ;
+					org.apache.jena.rdf.model.Resource x = soln.getResource("s") ; // Get a result variable - must be a resource
+					org.apache.jena.rdf.model.Literal y = soln.getLiteral("id") ;   // Get a result variable - must be a literal
+					universityMap.put(y.getLong(), x.toString());
+				    }
+				qexec.close();
+
+				queryString = prefix("snvoc") + "select distinct ?id ?tag {?tag snvoc:id ?id. ?tag a ?type. ?type a <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/TagClass>}";
+				query = org.apache.jena.query.QueryFactory.create(queryString);
+				qexec = org.apache.jena.query.QueryExecutionFactory.sparqlService(endpoint, query);
+				results = qexec.execSelect() ;
+				for ( ; results.hasNext() ; )
+				    {
+					org.apache.jena.query.QuerySolution soln = results.nextSolution() ;
+					org.apache.jena.rdf.model.Resource x = soln.getResource("tag") ; // Get a result variable - must be a resource
+					org.apache.jena.rdf.model.Literal y = soln.getLiteral("id") ;   // Get a result variable - must be a literal
+					tagMap.put(y.getLong(), x.toString());
+				    }
+				qexec.close();				
+			    }
 			}
 			
 		}
 
 		public Connection getConn() {
+		        if (useJena) return null;
 			try {
 				Connection tmp = ds.getPooledConnection().getConnection();
 				tmp.setTransactionIsolation(2);
@@ -272,6 +338,10 @@ public class VirtuosoDb extends Db {
 
 		public String getQueryDir() {
 			return queryDir;
+		}
+
+	        public String getEndpoint() {
+		        return endpoint;
 		}
 
 		public boolean isRunSql() {
@@ -292,6 +362,10 @@ public class VirtuosoDb extends Db {
 
 		public boolean isPrintResults() {
 			return printResults;
+		}
+
+	        public boolean useJena() {
+			return useJena;
 		}
 
 		public VirtuosoConnectionPoolDataSource getDs() {
@@ -316,6 +390,10 @@ public class VirtuosoDb extends Db {
 
 	        public String tagUri(long id) {
 		    return tagMap.get(id);
+		}
+
+	    	public String prefix(String s) {
+		    return prefix.get(s);
 		}
 
 	}
@@ -422,40 +500,75 @@ public class VirtuosoDb extends Db {
 					queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
 					queryString = queryString.replaceAll("%Date0%", sdf.format(operation.maxDate()));
 				}
-				stmt = conn.createStatement();
+				if (state.useJena()) queryString = state.prefix("snvoc") + state.prefix("sn") + state.prefix("xsd") + queryString.replaceAll("sparql ", "");
+				
+				if (!state.useJena()) stmt = conn.createStatement();
 
 				if (state.isPrintNames())
 					System.out.println("########### LdbcQuery2");
 				if (state.isPrintStrings())
 					System.out.println(queryString);
 
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) {
+				if (!state.useJena()) {
+				    ResultSet result = stmt.executeQuery(queryString);
+				    while (result.next()) {
 					results_count++;
 					long id;
 					if (state.isRunSql())
-						id = result.getLong(1);
+					    id = result.getLong(1);
 					else
-						id = Long.parseLong(result.getString(1).substring(47));
+					    id = Long.parseLong(result.getString(1).substring(47));
 					String firstName = result.getString(2);
 					if (firstName != null)
 					    firstName = new String(firstName.getBytes("ISO-8859-1"));
+					else
+					    firstName = "";
 					String lastName = result.getString(3);
 					if (lastName != null)
 					    lastName = new String(lastName.getBytes("ISO-8859-1"));
+					else
+					    lastName = "";
 					long postid;
 					if (state.isRunSql())
-						postid = result.getLong(4);
+					    postid = result.getLong(4);
 					else
-						postid = Long.parseLong(result.getString(4).substring(47));
+					    postid = Long.parseLong(result.getString(4).substring(47));
 					String content = new String(result.getString(5).getBytes("ISO-8859-1"));
 					long postdate = result.getLong(6);
 					LdbcQuery2Result tmp = new LdbcQuery2Result(id, firstName, lastName, postid, content, postdate);
 					if (state.isPrintResults())
-						System.out.println(tmp.toString());
+					    System.out.println(tmp.toString());
 					RESULT.add(tmp);
+				    }
+				    stmt.close();conn.close();
 				}
-				stmt.close();conn.close();
+				else {
+				    org.apache.jena.query.Query query = org.apache.jena.query.QueryFactory.create(queryString);
+				    org.apache.jena.query.QueryExecution qexec = org.apache.jena.query.QueryExecutionFactory.sparqlService(state.getEndpoint(), query);
+				    org.apache.jena.query.ResultSet results = qexec.execSelect() ;
+				    for ( ; results.hasNext() ; )
+					{
+					    results_count++;
+					    org.apache.jena.query.QuerySolution soln = results.nextSolution() ;
+					    org.apache.jena.rdf.model.Resource x = soln.getResource("s") ; // Get a result variable - must be a resource
+					    org.apache.jena.rdf.model.Literal y = soln.getLiteral("id") ;   // Get a result variable - must be a literal
+					    long id = Long.parseLong(soln.getResource("fr").toString().substring(47));
+					    org.apache.jena.rdf.model.Literal firstName1 = soln.getLiteral("first");
+					    String firstName = "";
+					    if (firstName1 != null) firstName = firstName1.getString();
+					    org.apache.jena.rdf.model.Literal lastName1 = soln.getLiteral("last");
+					    String lastName = "";
+					    if (lastName1 != null) lastName = lastName1.getString();
+					    long postid = Long.parseLong(soln.getResource("post").toString().substring(47));
+					    String content = soln.getLiteral("content").getString();
+					    long postdate = Long.parseLong(soln.getLiteral("creationDate").getString());
+					    LdbcQuery2Result tmp = new LdbcQuery2Result(id, firstName, lastName, postid, content, postdate);
+					    if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					    RESULT.add(tmp);
+					}
+				    qexec.close();
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 				try { stmt.close();conn.close(); } catch (SQLException e1) { }
