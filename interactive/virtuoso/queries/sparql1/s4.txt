@@ -1,6 +1,6 @@
-sparql select ?con ?image ((?dt - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?date)
+sparql select ?con ((?dt - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?date)
 where {
   ?post snvoc:id %Id% .
-  { {?post snvoc:content ?con } union { ?post snvoc:imageFile ?image } union { ?post snvoc:gifFile ?image }} .
+  { {?post snvoc:content ?con } union { ?post snvoc:imageFile ?con } union { ?post snvoc:gifFile ?con }} .
   ?post snvoc:creationDate ?dt .
 }
