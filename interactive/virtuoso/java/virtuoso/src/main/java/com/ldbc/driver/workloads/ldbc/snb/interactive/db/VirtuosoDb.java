@@ -182,7 +182,7 @@ public class VirtuosoDb extends Db {
 			prefix.put("xsd", "PREFIX xsd:   <http://www.w3.org/2001/XMLSchema#>\n");
 			prefix.put("dbpedia", "PREFIX dbpedia:   <http://dbpedia.org/resource/>\n");
 			prefix.put("foaf", "PREFIX foaf:   <http://xmlns.com/foaf/0.1/>\n");
-			
+			prefix.put("rdfs", "PREFIX rdfs:   <http://www.w3.org/2000/01/rdf-schema#>\n");
 
 			// Initialization of hash maps
 			if (!runSql) {
@@ -627,9 +627,15 @@ public class VirtuosoDb extends Db {
 					String firstName = result.getString(2);
 					if (firstName != null)
 					    firstName = new String(firstName.getBytes("ISO-8859-1"));
+					else
+					    firstName = "";
+					
 					String lastName = result.getString(3);
 					if (lastName != null)
-					    lastName = new String(lastName.getBytes("ISO-8859-1"));					
+					    lastName = new String(lastName.getBytes("ISO-8859-1"));
+					else
+					    lastName = "";
+					
 					long ct1 = result.getLong(4);
 					long ct2 = result.getLong(5);
 					long total = result.getLong(6);
@@ -901,42 +907,79 @@ public class VirtuosoDb extends Db {
 				else {
 					queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
 				}
-				stmt = conn.createStatement();        		
+				if (state.useJena()) queryString = state.prefix("snvoc") + state.prefix("sn") + state.prefix("xsd") + queryString.replaceAll("sparql ", "");
+				
+				if (!state.useJena()) stmt = conn.createStatement();
 
 				if (state.isPrintNames())
 					System.out.println("########### LdbcQuery7");
 				if (state.isPrintStrings())
 					System.out.println(queryString);
 
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) {
+				if (!state.useJena()) {
+				    ResultSet result = stmt.executeQuery(queryString);
+				    while (result.next()) {
 					results_count++;
 					long personId;
 					if (state.isRunSql())
-						personId = result.getLong(1);
+					    personId = result.getLong(1);
 					else
-						personId = Long.parseLong(result.getString(1).substring(47));
+					    personId = Long.parseLong(result.getString(1).substring(47));
 					String firstName = result.getString(2);
 					if (firstName != null)
 					    firstName = new String(firstName.getBytes("ISO-8859-1"));
+					else
+					    firstName = "";
+					
 					String lastName = result.getString(3);
 					if (lastName != null)
 					    lastName = new String(lastName.getBytes("ISO-8859-1"));
+					else
+					    lastName = "";
+					
 					long likeCreationDate = result.getLong(4);
 					boolean isNew = result.getInt(5) == 1 ? true : false;
 					long postId;
 					if (state.isRunSql())
-						postId = result.getLong(6);
+					    postId = result.getLong(6);
 					else
-						postId = Long.parseLong(result.getString(6).substring(47));
+					    postId = Long.parseLong(result.getString(6).substring(47));
 					String postContent = new String(result.getString(7).getBytes("ISO-8859-1"));;
 					int milliSecondDelay = result.getInt(8);
 					LdbcQuery7Result tmp = new LdbcQuery7Result(personId, firstName, lastName, likeCreationDate, postId, postContent, milliSecondDelay, isNew);
 					if (state.isPrintResults())
-						System.out.println(tmp.toString());
+					    System.out.println(tmp.toString());
 					RESULT.add(tmp);
+				    }
+				    stmt.close();conn.close();
 				}
-				stmt.close();conn.close();
+				else {
+				    org.apache.jena.query.Query query = org.apache.jena.query.QueryFactory.create(queryString);
+				    org.apache.jena.query.QueryExecution qexec = org.apache.jena.query.QueryExecutionFactory.sparqlService(state.getEndpoint(), query);
+				    org.apache.jena.query.ResultSet results = qexec.execSelect() ;
+				    for ( ; results.hasNext() ; )
+					{
+					    results_count++;
+					    org.apache.jena.query.QuerySolution soln = results.nextSolution() ;
+					    long personId = Long.parseLong(soln.getResource("liker").toString().substring(47));
+					    org.apache.jena.rdf.model.Literal firstName1 = soln.getLiteral("first");
+					    String firstName = "";
+					    if (firstName1 != null) firstName = firstName1.getString();
+					    org.apache.jena.rdf.model.Literal lastName1 = soln.getLiteral("last");
+					    String lastName = "";
+					    if (lastName1 != null) lastName = lastName1.getString();
+
+					    long likeCreationDate = Long.parseLong(soln.getLiteral("max_ldate").getString());
+					    boolean isNew = Integer.parseInt(soln.getLiteral("is_new").getString()) == 1 ? true : false;
+					    long postId = Long.parseLong(soln.getResource("post").toString().substring(47));
+					    String postContent = soln.getLiteral("content").getString();
+					    int milliSecondDelay = (int)Double.parseDouble(soln.getLiteral("lag").getString());
+					    LdbcQuery7Result tmp = new LdbcQuery7Result(personId, firstName, lastName, likeCreationDate, postId, postContent, milliSecondDelay, isNew);
+					    if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					    RESULT.add(tmp);
+					}
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 				try { stmt.close();conn.close(); } catch (SQLException e1) { }
@@ -965,40 +1008,73 @@ public class VirtuosoDb extends Db {
 				else {
 					queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));        			
 				}
-				stmt = conn.createStatement();
+				if (state.useJena()) queryString = state.prefix("snvoc") + state.prefix("sn") + state.prefix("xsd") + queryString.replaceAll("sparql ", "");
+				
+				if (!state.useJena()) stmt = conn.createStatement();
 
 				if (state.isPrintNames())
 					System.out.println("########### LdbcQuery8");
 				if (state.isPrintStrings())
 					System.out.println(queryString);
 
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) {
+				if (!state.useJena()) {
+				    ResultSet result = stmt.executeQuery(queryString);
+				    while (result.next()) {
 					results_count++;
 					long personId;
 					if (state.isRunSql())
-						personId = result.getLong(1);
+					    personId = result.getLong(1);
 					else
-						personId = Long.parseLong(result.getString(1).substring(47));
+					    personId = Long.parseLong(result.getString(1).substring(47));
 					String firstName = result.getString(2);
 					if (firstName != null)
 					    firstName = new String(firstName.getBytes("ISO-8859-1"));
+					else
+					    firstName = "";
 					String lastName = result.getString(3);
 					if (lastName != null)
 					    lastName = new String(lastName.getBytes("ISO-8859-1"));
+					else
+					    lastName = "";
 					long replyCreationDate = result.getLong(4);
 					long replyId;
 					if (state.isRunSql())
-						replyId = result.getLong(5);
+					    replyId = result.getLong(5);
 					else
-						replyId = Long.parseLong(result.getString(5).substring(47));
+					    replyId = Long.parseLong(result.getString(5).substring(47));
 					String replyContent = new String(result.getString(6).getBytes("ISO-8859-1"));
 					LdbcQuery8Result tmp = new LdbcQuery8Result(personId, firstName, lastName, replyCreationDate, replyId, replyContent);
 					if (state.isPrintResults())
-						System.out.println(tmp.toString());
+					    System.out.println(tmp.toString());
 					RESULT.add(tmp);
+				    }
+				    stmt.close();conn.close();
 				}
-				stmt.close();conn.close();
+				else {
+				    org.apache.jena.query.Query query = org.apache.jena.query.QueryFactory.create(queryString);
+				    org.apache.jena.query.QueryExecution qexec = org.apache.jena.query.QueryExecutionFactory.sparqlService(state.getEndpoint(), query);
+				    org.apache.jena.query.ResultSet results = qexec.execSelect() ;
+				    for ( ; results.hasNext() ; )
+					{
+					    results_count++;
+					    org.apache.jena.query.QuerySolution soln = results.nextSolution() ;
+					    long personId = Long.parseLong(soln.getResource("from").toString().substring(47));
+					    org.apache.jena.rdf.model.Literal firstName1 = soln.getLiteral("first");
+					    String firstName = "";
+					    if (firstName1 != null) firstName = firstName1.getString();
+					    org.apache.jena.rdf.model.Literal lastName1 = soln.getLiteral("last");
+					    String lastName = "";
+					    if (lastName1 != null) lastName = lastName1.getString();
+
+					    long replyCreationDate = Long.parseLong(soln.getLiteral("creationDate").getString());
+					    long replyId = Long.parseLong(soln.getResource("rep").toString().substring(47));
+					    String replyContent = soln.getLiteral("content").getString();
+					    LdbcQuery8Result tmp = new LdbcQuery8Result(personId, firstName, lastName, replyCreationDate, replyId, replyContent);
+					    if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					    RESULT.add(tmp);
+					}
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 				try { stmt.close();conn.close(); } catch (SQLException e1) { }
@@ -1030,40 +1106,72 @@ public class VirtuosoDb extends Db {
 					queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
 					queryString = queryString.replaceAll("%Date0%", sdf.format(operation.maxDate()));
 				}
-				stmt = conn.createStatement();
+				if (state.useJena()) queryString = state.prefix("snvoc") + state.prefix("sn") + state.prefix("xsd") + queryString.replaceAll("sparql ", "");
+				
+				if (!state.useJena()) stmt = conn.createStatement();
 
 				if (state.isPrintNames())
 					System.out.println("########### LdbcQuery9");
 				if (state.isPrintStrings())
 					System.out.println(queryString);
 
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) {
+				if (!state.useJena()) {
+				    ResultSet result = stmt.executeQuery(queryString);
+				    while (result.next()) {
 					results_count++;
 					long personId;
 					if (state.isRunSql())
-						personId = result.getLong(1);
+					    personId = result.getLong(1);
 					else
-						personId = Long.parseLong(result.getString(1).substring(47));
+					    personId = Long.parseLong(result.getString(1).substring(47));
 					String firstName = result.getString(2);
 					if (firstName != null)
 					    firstName = new String(firstName.getBytes("ISO-8859-1"));
+					else
+					    firstName = "";
 					String lastName = result.getString(3);
 					if (lastName != null)
 					    lastName = new String(lastName.getBytes("ISO-8859-1"));
+					else
+					    lastName = "";
 					long postOrCommentId;
 					if (state.isRunSql())
-						postOrCommentId = result.getLong(4);
+					    postOrCommentId = result.getLong(4);
 					else
-						postOrCommentId = Long.parseLong(result.getString(4).substring(47));
+					    postOrCommentId = Long.parseLong(result.getString(4).substring(47));
 					String postOrCommentContent = new String(result.getString(5).getBytes("ISO-8859-1"));
 					long postOrCommentCreationDate = result.getLong(6);
 					LdbcQuery9Result tmp = new LdbcQuery9Result(personId, firstName, lastName, postOrCommentId, postOrCommentContent, postOrCommentCreationDate);
 					if (state.isPrintResults())
-						System.out.println(tmp.toString());
+					    System.out.println(tmp.toString());
 					RESULT.add(tmp);
+				    }
+				    stmt.close();conn.close();
 				}
-				stmt.close();conn.close();
+				else {
+				    org.apache.jena.query.Query query = org.apache.jena.query.QueryFactory.create(queryString);
+				    org.apache.jena.query.QueryExecution qexec = org.apache.jena.query.QueryExecutionFactory.sparqlService(state.getEndpoint(), query);
+				    org.apache.jena.query.ResultSet results = qexec.execSelect() ;
+				    for ( ; results.hasNext() ; )
+					{
+					    results_count++;
+					    org.apache.jena.query.QuerySolution soln = results.nextSolution() ;
+					    long personId = Long.parseLong(soln.getResource("fr").toString().substring(47));
+					    org.apache.jena.rdf.model.Literal firstName1 = soln.getLiteral("first");
+					    String firstName = "";
+					    if (firstName1 != null) firstName = firstName1.getString();
+					    org.apache.jena.rdf.model.Literal lastName1 = soln.getLiteral("last");
+					    String lastName = "";
+					    if (lastName1 != null) lastName = lastName1.getString();
+					    long postOrCommentId = Long.parseLong(soln.getResource("post").toString().substring(47));
+					    String postOrCommentContent = soln.getLiteral("content").getString();
+					    long postOrCommentCreationDate = Long.parseLong(soln.getLiteral("creationDate").getString());
+					    LdbcQuery9Result tmp = new LdbcQuery9Result(personId, firstName, lastName, postOrCommentId, postOrCommentContent, postOrCommentCreationDate);
+					    if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					    RESULT.add(tmp);
+					}
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 				try { stmt.close();conn.close(); } catch (SQLException e1) { }
@@ -1101,35 +1209,67 @@ public class VirtuosoDb extends Db {
 					    nextMonth = 1;
 					queryString = queryString.replaceAll("%HS1%", String.valueOf(nextMonth));
 				}
-				stmt = conn.createStatement();
+				if (state.useJena()) queryString = state.prefix("snvoc") + state.prefix("sn") + state.prefix("foaf") + queryString.replaceAll("sparql ", "");
+				
+				if (!state.useJena()) stmt = conn.createStatement();
 
 				if (state.isPrintNames())
 					System.out.println("########### LdbcQuery10");
 				if (state.isPrintStrings())
 					System.out.println(queryString);
 
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) { results_count++;
-				    String firstName = result.getString(1);
-				    if (firstName != null)
-					firstName = new String(firstName.getBytes("ISO-8859-1"));
-				    String lastName = result.getString(2);
-				    if (lastName != null)
-					lastName = new String(lastName.getBytes("ISO-8859-1"));
-				    int commonInterestScore = result.getInt(3);
-				    long personId;
-				    if (state.isRunSql())
-					personId = result.getLong(4);
-				    else
-					personId = Long.parseLong(result.getString(4).substring(47));
-				    String gender = result.getString(5);
-				    String personCityName = new String(result.getString(6).getBytes("ISO-8859-1"));
-				    LdbcQuery10Result tmp = new LdbcQuery10Result(personId, firstName, lastName, commonInterestScore, gender, personCityName);
-				    if (state.isPrintResults())
-					System.out.println(tmp.toString());
-				    RESULT.add(tmp);
+				if (!state.useJena()) {
+				    ResultSet result = stmt.executeQuery(queryString);
+				    while (result.next()) { results_count++;
+					String firstName = result.getString(1);
+					if (firstName != null)
+					    firstName = new String(firstName.getBytes("ISO-8859-1"));
+					else
+					    firstName = "";
+					String lastName = result.getString(2);
+					if (lastName != null)
+					    lastName = new String(lastName.getBytes("ISO-8859-1"));
+					else
+					    lastName = "";
+					int commonInterestScore = result.getInt(3);
+					long personId;
+					if (state.isRunSql())
+					    personId = result.getLong(4);
+					else
+					    personId = Long.parseLong(result.getString(4).substring(47));
+					String gender = result.getString(5);
+					String personCityName = new String(result.getString(6).getBytes("ISO-8859-1"));
+					LdbcQuery10Result tmp = new LdbcQuery10Result(personId, firstName, lastName, commonInterestScore, gender, personCityName);
+					if (state.isPrintResults())
+					    System.out.println(tmp.toString());
+					RESULT.add(tmp);
+				    }
+				    stmt.close();conn.close();
 				}
-				stmt.close();conn.close();
+				else {
+				    org.apache.jena.query.Query query = org.apache.jena.query.QueryFactory.create(queryString);
+				    org.apache.jena.query.QueryExecution qexec = org.apache.jena.query.QueryExecutionFactory.sparqlService(state.getEndpoint(), query);
+				    org.apache.jena.query.ResultSet results = qexec.execSelect() ;
+				    for ( ; results.hasNext() ; )
+					{
+					    results_count++;
+					    org.apache.jena.query.QuerySolution soln = results.nextSolution() ;
+					    org.apache.jena.rdf.model.Literal firstName1 = soln.getLiteral("first");
+					    String firstName = "";
+					    if (firstName1 != null) firstName = firstName1.getString();
+					    org.apache.jena.rdf.model.Literal lastName1 = soln.getLiteral("last");
+					    String lastName = "";
+					    if (lastName1 != null) lastName = lastName1.getString();
+					    int commonInterestScore = Integer.parseInt(soln.getLiteral("score").getString());
+					    long personId = Long.parseLong(soln.getResource("fof").toString().substring(47));
+					    String gender = soln.getLiteral("gender").getString();
+					    String personCityName = soln.getLiteral("locationname").getString();
+					    LdbcQuery10Result tmp = new LdbcQuery10Result(personId, firstName, lastName, commonInterestScore, gender, personCityName);
+					    if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					    RESULT.add(tmp);
+					}
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 				try { stmt.close();conn.close(); } catch (SQLException e1) { }
@@ -1161,35 +1301,66 @@ public class VirtuosoDb extends Db {
 					queryString = queryString.replaceAll("%Date0%", String.valueOf(operation.workFromYear()));
 					queryString = queryString.replaceAll("%Country%", operation.countryName());
 				}
-				stmt = conn.createStatement();
+				if (state.useJena()) queryString = state.prefix("snvoc") + state.prefix("sn") + state.prefix("foaf") + queryString.replaceAll("sparql ", "");
+				
+				if (!state.useJena()) stmt = conn.createStatement();
 
 				if (state.isPrintNames())
 					System.out.println("########### LdbcQuery11");
 				if (state.isPrintStrings())
 					System.out.println(queryString);
 
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) {
+				if (!state.useJena()) {
+				    ResultSet result = stmt.executeQuery(queryString);
+				    while (result.next()) {
 					results_count++;
 					String firstName = result.getString(1);
 					if (firstName != null)
 					    firstName = new String(firstName.getBytes("ISO-8859-1"));
+					else
+					    firstName = "";
 					String lastName = result.getString(2);
 					if (lastName != null)
 					    lastName = new String(lastName.getBytes("ISO-8859-1"));
+					else
+					    lastName = "";
 					int organizationWorkFromYear = result.getInt(3);
 					String organizationName = new String(result.getString(4).getBytes("ISO-8859-1"));
 					long personId;
 					if (state.isRunSql())
-						personId = result.getLong(5);
+					    personId = result.getLong(5);
 					else
-						personId = Long.parseLong(result.getString(5).substring(47));;
-						LdbcQuery11Result tmp = new LdbcQuery11Result(personId, firstName, lastName, organizationName, organizationWorkFromYear);
-						if (state.isPrintResults())
-							System.out.println(tmp.toString());
-						RESULT.add(tmp);
+					    personId = Long.parseLong(result.getString(5).substring(47));;
+					LdbcQuery11Result tmp = new LdbcQuery11Result(personId, firstName, lastName, organizationName, organizationWorkFromYear);
+					if (state.isPrintResults())
+					    System.out.println(tmp.toString());
+					RESULT.add(tmp);
+				    }
+				    stmt.close();conn.close();
 				}
-				stmt.close();conn.close();
+				else {
+				    org.apache.jena.query.Query query = org.apache.jena.query.QueryFactory.create(queryString);
+				    org.apache.jena.query.QueryExecution qexec = org.apache.jena.query.QueryExecutionFactory.sparqlService(state.getEndpoint(), query);
+				    org.apache.jena.query.ResultSet results = qexec.execSelect() ;
+				    for ( ; results.hasNext() ; )
+					{
+					    results_count++;
+					    org.apache.jena.query.QuerySolution soln = results.nextSolution() ;
+					    org.apache.jena.rdf.model.Literal firstName1 = soln.getLiteral("first");
+					    String firstName = "";
+					    if (firstName1 != null) firstName = firstName1.getString();
+					    org.apache.jena.rdf.model.Literal lastName1 = soln.getLiteral("last");
+					    String lastName = "";
+					    if (lastName1 != null) lastName = lastName1.getString();
+					    int organizationWorkFromYear = Integer.parseInt(soln.getLiteral("startdate").getString());
+					    String organizationName = soln.getLiteral("orgname").getString();
+					    long personId = Long.parseLong(soln.getResource("fr").toString().substring(47));
+					    LdbcQuery11Result tmp = new LdbcQuery11Result(personId, firstName, lastName, organizationName, organizationWorkFromYear);
+					    if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					    RESULT.add(tmp);
+					}
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 				try { stmt.close();conn.close(); } catch (SQLException e1) { }
@@ -1218,35 +1389,68 @@ public class VirtuosoDb extends Db {
 					queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
 					queryString = queryString.replaceAll("%TagType%", operation.tagClassName());
 				}
-				stmt = conn.createStatement();
+				if (state.useJena()) queryString = state.prefix("snvoc") + state.prefix("sn") + state.prefix("foaf") + state.prefix("rdfs") + queryString.replaceAll("sparql ", "");
+				
+				if (!state.useJena()) stmt = conn.createStatement();
 
 				if (state.isPrintNames())
 					System.out.println("########### LdbcQuery12");
 				if (state.isPrintStrings())
 					System.out.println(queryString);
 
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) {
+				if (!state.useJena()) {
+				    ResultSet result = stmt.executeQuery(queryString);
+				    while (result.next()) {
 					results_count++;
 					long personId;
 					if (state.isRunSql())
-						personId = result.getLong(1);
+					    personId = result.getLong(1);
 					else
-						personId = Long.parseLong(result.getString(1).substring(47));
+					    personId = Long.parseLong(result.getString(1).substring(47));
 					String firstName = result.getString(2);
 					if (firstName != null)
 					    firstName = new String(firstName.getBytes("ISO-8859-1"));
+					else
+					    firstName = "";
 					String lastName = result.getString(3);
 					if (lastName != null)
 					    lastName = new String(lastName.getBytes("ISO-8859-1"));
+					else
+					    lastName = "";
 					Collection<String> tagNames =  result.getString(4) == null ? new ArrayList<String>() : new ArrayList<String>(Arrays.asList(new String(result.getString(4).getBytes("ISO-8859-1")).split(", ")));
 					int replyCount = result.getInt(5);
 					LdbcQuery12Result tmp = new LdbcQuery12Result(personId, firstName, lastName, tagNames, replyCount);
 					if (state.isPrintResults())
-						System.out.println(tmp.toString());
+					    System.out.println(tmp.toString());
 					RESULT.add(tmp);
+				    }
+				    stmt.close();conn.close();
 				}
-				stmt.close();conn.close();
+				else {
+				    org.apache.jena.query.Query query = org.apache.jena.query.QueryFactory.create(queryString);
+				    org.apache.jena.query.QueryExecution qexec = org.apache.jena.query.QueryExecutionFactory.sparqlService(state.getEndpoint(), query);
+				    org.apache.jena.query.ResultSet results = qexec.execSelect() ;
+				    for ( ; results.hasNext() ; )
+					{
+					    results_count++;
+					    org.apache.jena.query.QuerySolution soln = results.nextSolution() ;
+					    long personId = Long.parseLong(soln.getResource("exp").toString().substring(47));
+
+					    org.apache.jena.rdf.model.Literal firstName1 = soln.getLiteral("first");
+					    String firstName = "";
+					    if (firstName1 != null) firstName = firstName1.getString();
+					    org.apache.jena.rdf.model.Literal lastName1 = soln.getLiteral("last");
+					    String lastName = "";
+					    if (lastName1 != null) lastName = lastName1.getString();
+					    Collection<String> tagNames =  soln.getLiteral("tags").getString() == null ? new ArrayList<String>() : new ArrayList<String>(Arrays.asList(soln.getLiteral("tags").getString().split(", ")));
+					    int replyCount = Integer.parseInt(soln.getLiteral("cnt").getString());
+					    LdbcQuery12Result tmp = new LdbcQuery12Result(personId, firstName, lastName, tagNames, replyCount);
+					    if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					    RESULT.add(tmp);
+					}
+
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 				try { stmt.close();conn.close(); } catch (SQLException e1) { }
@@ -1278,40 +1482,72 @@ public class VirtuosoDb extends Db {
 					queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
 					queryString = queryString.replaceAll("%Date0%", sdf.format(operation.maxDate()));
 				}
-				stmt = conn.createStatement();
+				if (state.useJena()) queryString = state.prefix("snvoc") + state.prefix("sn") + state.prefix("xsd") + queryString.replaceAll("sparql ", "");
+				
+				if (!state.useJena()) stmt = conn.createStatement();
 
 				if (state.isPrintNames())
 					System.out.println("########### LdbcQuery13");
 				if (state.isPrintStrings())
 					System.out.println(queryString);
 
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) {
+				if (!state.useJena()) {
+				    ResultSet result = stmt.executeQuery(queryString);
+				    while (result.next()) {
 					results_count++;
 					long id;
 					if (state.isRunSql())
-						id = result.getLong(1);
+					    id = result.getLong(1);
 					else
-						id = Long.parseLong(result.getString(1).substring(47));
+					    id = Long.parseLong(result.getString(1).substring(47));
 					String firstName = result.getString(2);
 					if (firstName != null)
 					    firstName = new String(firstName.getBytes("ISO-8859-1"));
+					else
+					    firstName = "";
 					String lastName = result.getString(3);
 					if (lastName != null)
 					    lastName = new String(lastName.getBytes("ISO-8859-1"));
+					else
+					    lastName = "";
 					long postid;
 					if (state.isRunSql())
-						postid = result.getLong(4);
+					    postid = result.getLong(4);
 					else
-						postid = Long.parseLong(result.getString(4).substring(47));
+					    postid = Long.parseLong(result.getString(4).substring(47));
 					String content = new String(result.getString(5).getBytes("ISO-8859-1"));
 					long postdate = result.getLong(6);
 					LdbcQuery13Result tmp = new LdbcQuery13Result(id, firstName, lastName, postid, content, postdate);
 					if (state.isPrintResults())
-						System.out.println(tmp.toString());
+					    System.out.println(tmp.toString());
 					RESULT.add(tmp);
+				    }
+				    stmt.close();conn.close();
 				}
-				stmt.close();conn.close();
+				else {
+				    org.apache.jena.query.Query query = org.apache.jena.query.QueryFactory.create(queryString);
+				    org.apache.jena.query.QueryExecution qexec = org.apache.jena.query.QueryExecutionFactory.sparqlService(state.getEndpoint(), query);
+				    org.apache.jena.query.ResultSet results = qexec.execSelect() ;
+				    for ( ; results.hasNext() ; )
+					{
+					    results_count++;
+					    org.apache.jena.query.QuerySolution soln = results.nextSolution() ;
+					    long id = Long.parseLong(soln.getResource("author").toString().substring(47));
+					    org.apache.jena.rdf.model.Literal firstName1 = soln.getLiteral("fname");
+					    String firstName = "";
+					    if (firstName1 != null) firstName = firstName1.getString();
+					    org.apache.jena.rdf.model.Literal lastName1 = soln.getLiteral("lname");
+					    String lastName = "";
+					    if (lastName1 != null) lastName = lastName1.getString();
+					    long postid = Long.parseLong(soln.getResource("post").toString().substring(47));
+					    String content = soln.getLiteral("content").getString();
+					    long postdate = Long.parseLong(soln.getLiteral("creationDate").getString());
+					    LdbcQuery13Result tmp = new LdbcQuery13Result(id, firstName, lastName, postid, content, postdate);
+					    if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					    RESULT.add(tmp);
+					}
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 				try { stmt.close();conn.close(); } catch (SQLException e1) { }
@@ -1342,24 +1578,44 @@ public class VirtuosoDb extends Db {
 					queryString = queryString.replaceAll("%Person%", String.format("%020d", operation.personId()));
 					queryString = queryString.replaceAll("%Date0%", sdf.format(operation.maxDate()));
 				}
-				stmt = conn.createStatement();
+				if (state.useJena()) queryString = state.prefix("snvoc") + state.prefix("sn") + state.prefix("xsd") + queryString.replaceAll("sparql ", "");
+				
+				if (!state.useJena()) stmt = conn.createStatement();
 
 				if (state.isPrintNames())
 					System.out.println("########### LdbcQuery14");
 				if (state.isPrintStrings())
 					System.out.println(queryString);
 
-				ResultSet result = stmt.executeQuery(queryString);
-				while (result.next()) {
+				if (!state.useJena()) {
+				    ResultSet result = stmt.executeQuery(queryString);
+				    while (result.next()) {
 					results_count++;
 					String link = new String(result.getString(1).getBytes("ISO-8859-1"));
 					int linkCount = result.getInt(2);
 					LdbcQuery14Result tmp = new LdbcQuery14Result(link, linkCount);
 					if (state.isPrintResults())
-						System.out.println(tmp.toString());
+					    System.out.println(tmp.toString());
 					RESULT.add(tmp);
+				    }
+				    stmt.close();conn.close();
 				}
-				stmt.close();conn.close();
+				else {
+				    org.apache.jena.query.Query query = org.apache.jena.query.QueryFactory.create(queryString);
+				    org.apache.jena.query.QueryExecution qexec = org.apache.jena.query.QueryExecutionFactory.sparqlService(state.getEndpoint(), query);
+				    org.apache.jena.query.ResultSet results = qexec.execSelect() ;
+				    for ( ; results.hasNext() ; )
+					{
+					    results_count++;
+					    org.apache.jena.query.QuerySolution soln = results.nextSolution() ;
+					    String link = soln.getLiteral("link").getString();
+					    int linkCount = soln.getLiteral("shares").getInt();
+					    LdbcQuery14Result tmp = new LdbcQuery14Result(link, linkCount);
+					    if (state.isPrintResults())
+						System.out.println(tmp.toString());
+					    RESULT.add(tmp);
+					}
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 				try { stmt.close();conn.close(); } catch (SQLException e1) { }
