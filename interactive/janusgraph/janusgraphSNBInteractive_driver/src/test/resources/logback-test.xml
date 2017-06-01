@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration> <!--<configuration debug="true">-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+        </layout>
+    </appender>
+
+    <logger name="com.ldbc.driver" level="INFO"/>
+    <logger name="hpl.alp2.titan.importers.TitanImporter" level="INFO"/>
+    <logger name="hpl.alp2.titan.drivers" level="DEBUG"/>
+    <logger name="hpl.alp2.titan.test" level="DEBUG"/>
+    <logger name="com.thinkaurelius.titan" level="INFO"/>
+    <!--<logger name="com.thinkaurelius.titan.core.util.ReflectiveConfigOptionLoader" level="DEBUG"/>-->
+
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
