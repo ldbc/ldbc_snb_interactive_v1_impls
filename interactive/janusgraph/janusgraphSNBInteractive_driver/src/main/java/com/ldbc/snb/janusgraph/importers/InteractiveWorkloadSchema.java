@@ -91,7 +91,7 @@ public class InteractiveWorkloadSchema implements WorkLoadSchema {
                 , "gender", "birthday", "email", "language", "browserUsed", "locationIP"})));
         vpMap.put("Organisation", new HashSet<>(Arrays.asList(new String[]{"id","type", "name", "url"})));
         vpMap.put("Place", new HashSet<>(Arrays.asList(new String[]{"id","name", "url", "type"})));
-        vpMap.put("Post", new HashSet<>(Arrays.asList(new String[]{"id","creationDate", "browserUsed", "locationIP", "content", "length", "lang", "imageFile"})));
+        vpMap.put("Post", new HashSet<>(Arrays.asList(new String[]{"id","creationDate", "browserUsed", "locationIP", "content", "length", "language", "imageFile"})));
         vpMap.put("Comment", new HashSet<>(Arrays.asList(new String[]{"id","creationDate", "browserUsed", "locationIP", "content", "length"})));
         vpMap.put("Forum", new HashSet<>(Arrays.asList(new String[]{"id","title", "creationDate"})));
         vpMap.put("Tag", new HashSet<>(Arrays.asList(new String[]{"id","name", "url"})));
