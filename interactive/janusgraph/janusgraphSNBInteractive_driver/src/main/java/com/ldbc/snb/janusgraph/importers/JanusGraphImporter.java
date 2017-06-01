@@ -232,9 +232,11 @@ public class JanusGraphImporter implements DBgenImporter {
                     throw e;
                 }
                 int rowLength = header.length;
+                logger.info("Number of columns "+rowLength);
                 String[] classNames = new String[rowLength];
                 for (int i = 0; i < rowLength; i++) {
                     String prop = header[i];
+                    logger.info("Column "+prop);
                     Class clazz = s.getVPropertyClass(vLabel, prop);
                     classNames[i] = clazz.getSimpleName();
                 }
@@ -244,12 +246,10 @@ public class JanusGraphImporter implements DBgenImporter {
                     int counter = 0;
                     while ((line = br.readLine()) != null) {
                         if(counter%100 == 0) {
-                            logger.info("Loading vertex "+counter);
+                            logger.info("Loading "+vLabel+" "+counter);
                         }
                         String[] row = line.split(CSVSPLIT);
                         JanusGraphVertex vertex = graph.addVertex(vLabel);
-                        Object[] properties = new Object[row.length];
-                        //This is safe since the header has been validated against the property map
                         for (int i = 0; i < row.length; ++i) {
                             String prop = header[i];
                             Object value = parseEntry(row[i], classNames[i]);
