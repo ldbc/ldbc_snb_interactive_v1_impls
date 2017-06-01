@@ -224,7 +224,6 @@ public class JanusGraphImporter implements DBgenImporter {
                 if (line==null)
                     throw new IOException("Empty file" + fName);
                 String[] header = line.split(CSVSPLIT);
-                short suffix;
                 try {
                     validateVHeader(s, vLabel, header);
                 } catch (SchemaViolationException e) {
@@ -285,7 +284,7 @@ public class JanusGraphImporter implements DBgenImporter {
         WorkLoadSchema s = this.workload.getSchema();
         for (Map.Entry<String,String> ent : eMap.entrySet()) {
             HashSet<String> fileSet = new HashSet<>();
-            final String fNamePrefix = ent.getKey().replace(".", "_");
+            final String fNamePrefix = ent.getValue();
             fileSet.addAll(Arrays.asList(dir.list(new FilenameFilter() {
                 @Override
                 public boolean accept(File dir, String name) {
@@ -298,7 +297,6 @@ public class JanusGraphImporter implements DBgenImporter {
                         new InputStreamReader(
                                 new FileInputStream(new File(dir, fName))
                                 ,"UTF-8"));
-
 
                 //Read title line and map to vertex properties, throw exception if doesn't match
                 String line = br.readLine();
@@ -369,11 +367,11 @@ public class JanusGraphImporter implements DBgenImporter {
 
         for (Map.Entry<String,String> entry : vpMap.entrySet()) {
             HashSet<String> fileSet = new HashSet<>();
-            final String fNameSuffix = entry.getValue().replace("_0.csv", "");
+            final String fNameSuffix = entry.getValue();
             fileSet.addAll(Arrays.asList(dir.list(new FilenameFilter() {
                 @Override
                 public boolean accept(File dir, String name) {
-                    return name.matches(fNameSuffix + "_\\d+_0\\.csv");
+                    return name.matches(fNameSuffix + "_\\d+_\\d+\\.csv");
                 }
             })));
             for (String fName : fileSet) {

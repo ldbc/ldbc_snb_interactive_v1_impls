@@ -103,32 +103,32 @@ public class InteractiveWorkloadSchema implements WorkLoadSchema {
         ePMap.put("likes", new HashSet<>(Arrays.asList(new String[]{"creationDate"})));
         ePMap.put("hasMember", new HashSet<>(Arrays.asList(new String[]{"joinDate"})));
 
-        eFileMap.put("Comment.hasCreator.Person", "comment_hasCreator_person_0_0.csv");
-        eFileMap.put("Comment.hasTag.Tag", "comment_hasTag_tag_0_0.csv");
-        eFileMap.put("Comment.isLocatedIn.Place", "comment_isLocatedIn_place_0_0.csv");
-        eFileMap.put("Comment.replyOf.Comment", "comment_replyOf_comment_0_0.csv");
-        eFileMap.put("Comment.replyOf.Post", "comment_replyOf_post_0_0.csv");
-        eFileMap.put("Forum.containerOf.Post", "forum_containerOf_post_0_0.csv");
-        eFileMap.put("Forum.hasMember.Person", "forum_hasMember_person_0_0.csv");
-        eFileMap.put("Forum.hasModerator.Person", "forum_hasModerator_person_0_0.csv");
-        eFileMap.put("Forum.hasTag.Tag", "forum_hasTag_tag_0_0.csv");
-        eFileMap.put("Organisation.isLocatedIn.Place", "organisation_isLocatedIn_place_0_0.csv");
-        eFileMap.put("Person.hasInterest.Tag", "person_hasInterest_tag_0_0.csv");
-        eFileMap.put("Person.isLocatedIn.Place", "person_isLocatedIn_place_0_0.csv");
-        eFileMap.put("Person.knows.Person", "person_knows_person_0_0.csv");
-        eFileMap.put("Person.likes.Comment", "person_likes_comment_0_0.csv");
-        eFileMap.put("Person.likes.Post", "person_likes_post_0_0.csv");
-        eFileMap.put("Person.studyAt.Organisation", "person_studyAt_organisation_0_0.csv");
-        eFileMap.put("Person.workAt.Organisation", "person_workAt_organisation_0_0.csv");
-        eFileMap.put("Place.isPartOf.Place", "place_isPartOf_place_0_0.csv");
-        eFileMap.put("Post.hasCreator.Person", "post_hasCreator_person_0_0.csv");
-        eFileMap.put("Post.hasTag.Tag", "post_hasTag_tag_0_0.csv");
-        eFileMap.put("Post.isLocatedIn.Place", "post_isLocatedIn_place_0_0.csv");
-        eFileMap.put("TagClass.isSubclassOf.TagClass", "tagclass_isSubclassOf_tagclass_0_0.csv");
-        eFileMap.put("Tag.hasType.TagClass", "tag_hasType_tagclass_0_0.csv");
+        eFileMap.put("Comment.hasCreator.Person", "comment_hasCreator_person");
+        eFileMap.put("Comment.hasTag.Tag", "comment_hasTag_tag");
+        eFileMap.put("Comment.isLocatedIn.Place", "comment_isLocatedIn_place");
+        eFileMap.put("Comment.replyOf.Comment", "comment_replyOf_comment");
+        eFileMap.put("Comment.replyOf.Post", "comment_replyOf_post");
+        eFileMap.put("Forum.containerOf.Post", "forum_containerOf_post");
+        eFileMap.put("Forum.hasMember.Person", "forum_hasMember_person");
+        eFileMap.put("Forum.hasModerator.Person", "forum_hasModerator_person");
+        eFileMap.put("Forum.hasTag.Tag", "forum_hasTag_tag");
+        eFileMap.put("Organisation.isLocatedIn.Place", "organisation_isLocatedIn_place");
+        eFileMap.put("Person.hasInterest.Tag", "person_hasInterest_tag");
+        eFileMap.put("Person.isLocatedIn.Place", "person_isLocatedIn_place");
+        eFileMap.put("Person.knows.Person", "person_knows_person");
+        eFileMap.put("Person.likes.Comment", "person_likes_comment");
+        eFileMap.put("Person.likes.Post", "person_likes_post");
+        eFileMap.put("Person.studyAt.Organisation", "person_studyAt_organisation");
+        eFileMap.put("Person.workAt.Organisation", "person_workAt_organisation");
+        eFileMap.put("Place.isPartOf.Place", "place_isPartOf_place");
+        eFileMap.put("Post.hasCreator.Person", "post_hasCreator_person");
+        eFileMap.put("Post.hasTag.Tag", "post_hasTag_tag");
+        eFileMap.put("Post.isLocatedIn.Place", "post_isLocatedIn_place");
+        eFileMap.put("TagClass.isSubclassOf.TagClass", "tagclass_isSubclassOf_tagclass");
+        eFileMap.put("Tag.hasType.TagClass", "tag_hasType_tagclass");
 
-        vpFileMap.put("Person.email", "person_email_emailaddress_0_0.csv");
-        vpFileMap.put("Person.language", "person_speaks_language_0_0.csv");
+        vpFileMap.put("Person.email", "person_email_emailaddress");
+        vpFileMap.put("Person.language", "person_speaks_language");
 
     }
 
