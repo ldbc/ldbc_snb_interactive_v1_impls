@@ -66,7 +66,7 @@ public class InteractiveWorkloadSchema implements WorkLoadSchema {
         vPClassMap.put("Post.locationIP", String.class);
         vPClassMap.put("Post.content", String.class);
         vPClassMap.put("Post.length", Integer.class);
-        vPClassMap.put("Post.lang", String.class);
+        vPClassMap.put("Post.language", String.class);
         vPClassMap.put("Post.imageFile", String.class);
         vPClassMap.put("Comment.id", Long.class);
         vPClassMap.put("Comment.creationDate", Date.class);
