@@ -388,10 +388,9 @@ public class JanusGraphImporter implements DBgenImporter {
                 if (line==null)
                     throw new IOException("Empty file" + fName);
                 String[] header = line.split(CSVSPLIT);
-                short suffix;
                 String vLabel = entry.getKey().split(TUPLESPLIT)[0];
                 try {
-                    validateVHeader(s, vLabel, header);
+                    validateVPHeader(s, vLabel, header);
                 } catch (SchemaViolationException e) {
                     br.close();
                     throw e;
@@ -414,10 +413,8 @@ public class JanusGraphImporter implements DBgenImporter {
                         }
                         //This is safe since the header has been validated against the property map
 
-                        for (int i = 1; i < rowLength; i++) {
-                            vertex.property(header[i], parseEntry(row[i],
-                                    s.getVPropertyClass(vLabel, header[i]).getSimpleName()));
-                        }
+                        vertex.property(vLabel+"."+header[1], parseEntry(row[1],
+                                s.getVPropertyClass(vLabel, header[1]).getSimpleName()));
                         counter++;
                     }
                 } catch (Exception e) {
@@ -450,14 +447,11 @@ public class JanusGraphImporter implements DBgenImporter {
         for (String col : header) {
 
             if (!props.contains(col)) {
-                /*
-                This is a due to the fact that Titan has
-                global property keys and language has SINGLE
-                cardinality for Post.language and LIST cardinality
-                in Person.language.
-                */
-                if (col.equals("language") && props.contains("lang"))
+                if (col.equals("language") && props.contains("language")) {
                     continue;
+                }if (col.equals("email") && props.contains("email")) {
+                    continue;
+                }
                 else
                     throw new SchemaViolationException("Unknown property for vertex Type" + vLabel
                             + ", found " + col + " expected " + props);
@@ -466,6 +460,17 @@ public class JanusGraphImporter implements DBgenImporter {
 
             if (s.getVPropertyClass(vLabel, col) == null)
                 throw new SchemaViolationException("Class definition missing for " + vLabel + "." + col);
+        }
+    }
+
+    private void validateVPHeader(WorkLoadSchema s, String vLabel, String[] header) throws SchemaViolationException {
+        Set<String> props = s.getVertexProperties().get(vLabel);
+        if (props == null)
+            throw new SchemaViolationException("No properties found for the vertex label " + vLabel);
+
+        if (!header[0].equals(vLabel+".id") || !props.contains(header[1])) {
+            throw new SchemaViolationException("Unknown property for vertex Type" + vLabel
+                    + ", found " + header[1] + " expected " + props);
         }
     }
 
