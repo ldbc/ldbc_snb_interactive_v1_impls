@@ -408,7 +408,7 @@ public class JanusGraphImporter implements DBgenImporter {
                         Vertex vertex = transaction.traversal().V().has(header[0],vertexId).next();
                         if (vertex == null) {
                             logger.error("Vertex property update failed, since no vertex with id {} from line {}",row[0], line );
-                            continue;
+                            throw new RuntimeException("Vertex "+vertexId+" does not exists");
                         }
                         //This is safe since the header has been validated against the property map
                         String janusgraphKey = vLabel+"."+header[1];
