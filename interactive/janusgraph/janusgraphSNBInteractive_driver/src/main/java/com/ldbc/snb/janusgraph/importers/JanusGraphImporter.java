@@ -46,11 +46,12 @@ public class JanusGraphImporter implements DBgenImporter {
         logger.info("entered init");
         DATE_TIME_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
         DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
-        graph = JanusGraphFactory.build().set("storage.batch-loading","true")
+        /*graph = JanusGraphFactory.build().set("storage.batch-loading","true")
                                          .set("storage.backend","cassandra")
-                //                         .set("storage.hostname","127.0.0.1")
                                           .set("storage.hostname","147.83.34.145")
-                                         .open();
+                                         .open();*/
+
+        graph = JanusGraphFactory.open(connectionURL);
         this.workload = workload;
         System.out.println("Connected");
         if (!buildSchema(workload.getSchema())) {
@@ -243,12 +244,13 @@ public class JanusGraphImporter implements DBgenImporter {
                 //Read and load rest of file
                 try {
                     int counter = 0;
+                    Transaction transaction = graph.newTransaction();
                     while ((line = br.readLine()) != null) {
-                        if(counter%100 == 0) {
+                        if(counter%1000 == 0) {
                             logger.info("Loading "+vLabel+" "+counter);
                         }
                         String[] row = line.split(CSVSPLIT);
-                        JanusGraphVertex vertex = graph.addVertex(vLabel);
+                        JanusGraphVertex vertex = transaction.addVertex(vLabel);
                         for (int i = 0; i < row.length; ++i) {
                             String prop = header[i];
                             Object value = parseEntry(row[i], classNames[i]);
@@ -316,7 +318,7 @@ public class JanusGraphImporter implements DBgenImporter {
                 try {
                     int counter = 0;
                     while ((line = br.readLine()) != null) {
-                        if(counter%100 == 0) {
+                        if(counter%1000 == 0) {
                             logger.info("Loading edge "+counter);
                         }
                         String[] row = line.split(CSVSPLIT);
@@ -400,7 +402,7 @@ public class JanusGraphImporter implements DBgenImporter {
                 try {
                     int counter = 0;
                     while ((line = br.readLine()) != null) {
-                        if(counter%100 == 0) {
+                        if(counter%1000 == 0) {
                             logger.info("Loading property "+counter);
                         }
                         String[] row = line.split(CSVSPLIT);

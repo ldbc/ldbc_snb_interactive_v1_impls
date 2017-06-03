@@ -28,7 +28,7 @@ public class Main {
         JanusGraphImporter importer = new JanusGraphImporter();
         try {
             //importer.init("src/main/resources/bdb.conf", WorkloadEnum.INTERACTIVE);
-            importer.init("cassandra:localhost", WorkloadEnum.INTERACTIVE);
+            importer.init("src/main/resources/bdb.conf", WorkloadEnum.INTERACTIVE);
             importer.importData(new File("/home/aprat/projects/uniserver-ldbc-sparksee/datasets/0001/social_network"));
         } catch (Exception e){
             e.printStackTrace();
