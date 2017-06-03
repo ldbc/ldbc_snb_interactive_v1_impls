@@ -395,7 +395,6 @@ public class JanusGraphImporter implements DBgenImporter {
                     br.close();
                     throw e;
                 }
-                int rowLength = header.length;
                 //Read and load rest of file
                 try {
                     JanusGraphTransaction transaction = graph.newTransaction();
@@ -412,7 +411,8 @@ public class JanusGraphImporter implements DBgenImporter {
                             continue;
                         }
                         //This is safe since the header has been validated against the property map
-
+                        String janusgraphKey = vLabel+"."+header[1];
+                        logger.info("Added {} to {}",janusgraphKey, row[1]);
                         vertex.property(vLabel+"."+header[1], parseEntry(row[1],
                                 s.getVPropertyClass(vLabel, header[1]).getSimpleName()));
                         counter++;
@@ -420,7 +420,6 @@ public class JanusGraphImporter implements DBgenImporter {
                     transaction.commit();
                 } catch (Exception e) {
                     System.err.println("Failed to add properties in " + entry.getKey());
-                    System.err.println(e.getMessage());
                     e.printStackTrace();
                 } finally {
                     br.close();
