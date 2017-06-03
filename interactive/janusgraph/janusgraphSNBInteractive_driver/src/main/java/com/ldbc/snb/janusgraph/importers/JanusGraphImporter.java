@@ -407,7 +407,6 @@ public class JanusGraphImporter implements DBgenImporter {
                         String[] row = line.split(CSVSPLIT);
                         Long vertexId = Long.parseLong(row[0]);
                         String janusgraphKey = vLabel+"."+header[1];
-                        logger.info("Adding {} {} to {}",janusgraphKey, row[1], vertexId);
                         Vertex vertex =  transaction.traversal().V().has(header[0],vertexId).next();
                         if (vertex == null) {
                             logger.error("Vertex property update failed, since no vertex with id {} from line {}",row[0], line );
@@ -422,9 +421,9 @@ public class JanusGraphImporter implements DBgenImporter {
                 } catch (Exception e) {
                     System.err.println("Failed to add properties in " + entry.getKey());
                     e.printStackTrace();
+                    graph.close();
                 } finally {
                     br.close();
-                    graph.close();
                 }
             }
         }
