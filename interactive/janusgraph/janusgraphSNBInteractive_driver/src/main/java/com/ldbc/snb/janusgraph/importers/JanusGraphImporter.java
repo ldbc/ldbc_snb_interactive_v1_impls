@@ -397,8 +397,8 @@ public class JanusGraphImporter implements DBgenImporter {
                 }
                 int rowLength = header.length;
                 //Read and load rest of file
-                JanusGraphTransaction transaction = graph.newTransaction();
                 try {
+                    JanusGraphTransaction transaction = graph.newTransaction();
                     int counter = 0;
                     while ((line = br.readLine()) != null) {
                         if(counter%1000 == 0) {
@@ -417,15 +417,15 @@ public class JanusGraphImporter implements DBgenImporter {
                                 s.getVPropertyClass(vLabel, header[1]).getSimpleName()));
                         counter++;
                     }
+                    transaction.commit();
                 } catch (Exception e) {
                     System.err.println("Failed to add properties in " + entry.getKey());
-                    br.close();
-                    graph.close();
+                    System.err.println(e.getMessage());
                     e.printStackTrace();
                 } finally {
                     br.close();
+                    graph.close();
                 }
-                transaction.commit();
             }
         }
         logger.info("completed load VP");
