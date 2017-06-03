@@ -420,6 +420,7 @@ public class JanusGraphImporter implements DBgenImporter {
                     transaction.commit();
                 } catch (Exception e) {
                     System.err.println("Failed to add properties in " + entry.getKey());
+                    System.err.println(e.getMessage());
                     e.printStackTrace();
                 } finally {
                     br.close();
