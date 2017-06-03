@@ -244,7 +244,7 @@ public class JanusGraphImporter implements DBgenImporter {
                 //Read and load rest of file
                 try {
                     int counter = 0;
-                    Transaction transaction = graph.newTransaction();
+                    JanusGraphTransaction transaction = graph.newTransaction();
                     while ((line = br.readLine()) != null) {
                         if(counter%1000 == 0) {
                             logger.info("Loading "+vLabel+" "+counter);
@@ -258,6 +258,7 @@ public class JanusGraphImporter implements DBgenImporter {
                         }
                         counter++;
                     }
+                    transaction.commit();
                 } catch (Exception e) {
                     System.err.println("Vertex load failed");
                     e.printStackTrace();
@@ -314,8 +315,8 @@ public class JanusGraphImporter implements DBgenImporter {
                 int rowLength = header.length;
                 String eLabel = ent.getKey().split(TUPLESPLIT)[1];
                 //Read and load rest of file
-                JanusGraphTransaction transaction= graph.newTransaction();
                 try {
+                    JanusGraphTransaction transaction= graph.newTransaction();
                     int counter = 0;
                     while ((line = br.readLine()) != null) {
                         if(counter%1000 == 0) {
@@ -329,8 +330,8 @@ public class JanusGraphImporter implements DBgenImporter {
                         }
                         Long idTail = Long.parseLong(row[0]);
                         Long idHead = Long.parseLong(row[1]);
-                        Vertex tail = graph.traversal().V().has(header[0],idTail).next();
-                        Vertex head = graph.traversal().V().has(header[1],idHead).next();
+                        Vertex tail = transaction.traversal().V().has(header[0],idTail).next();
+                        Vertex head = transaction.traversal().V().has(header[1],idHead).next();
                         Edge edge = tail.addEdge(eLabel,head);
                         //This is safe since the header has been validated against the property map
                         for (int i = 2; i < row.length; i++) {
@@ -339,6 +340,7 @@ public class JanusGraphImporter implements DBgenImporter {
                         }
                         counter++;
                     }
+                    transaction.commit();
                 } catch (Exception e) {
                     logger.error("Failed to add edge {} from line {} ", ent.getKey(), line);
                     br.close();
@@ -347,7 +349,6 @@ public class JanusGraphImporter implements DBgenImporter {
                 } finally {
                     br.close();
                 }
-                transaction.commit();
             }
             logger.info("completed {}" , ent.getKey());
         }
@@ -397,8 +398,8 @@ public class JanusGraphImporter implements DBgenImporter {
                 }
                 //Read and load rest of file
                 try {
-                    JanusGraphTransaction transaction = graph.newTransaction();
                     int counter = 0;
+                    JanusGraphTransaction transaction = graph.newTransaction();
                     while ((line = br.readLine()) != null) {
                         if(counter%1000 == 0) {
                             logger.info("Loading property "+counter);
@@ -407,7 +408,7 @@ public class JanusGraphImporter implements DBgenImporter {
                         Long vertexId = Long.parseLong(row[0]);
                         String janusgraphKey = vLabel+"."+header[1];
                         logger.info("Adding {} {} to {}",janusgraphKey, row[1], vertexId);
-                        Vertex vertex = transaction.traversal().V().has(header[0],vertexId).next();
+                        Vertex vertex =  transaction.traversal().V().has(header[0],vertexId).next();
                         if (vertex == null) {
                             logger.error("Vertex property update failed, since no vertex with id {} from line {}",row[0], line );
                             throw new RuntimeException("Vertex "+vertexId+" does not exists");
