@@ -413,14 +413,13 @@ public class JanusGraphImporter implements DBgenImporter {
                             throw new RuntimeException("Vertex "+vertexId+" does not exists");
                         }
                         //This is safe since the header has been validated against the property map
-                        vertex.property(janusgraphKey, parseEntry(row[1],
-                                s.getVPropertyClass(vLabel, header[1]).getSimpleName()));
+                        /*vertex.property(janusgraphKey, parseEntry(row[1],
+                                s.getVPropertyClass(vLabel, header[1]).getSimpleName()));*/
                         counter++;
                     }
                     transaction.commit();
                 } catch (Exception e) {
                     System.err.println("Failed to add properties in " + entry.getKey());
-                    System.err.println(e.getMessage());
                     e.printStackTrace();
                 } finally {
                     br.close();
