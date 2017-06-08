@@ -7,6 +7,7 @@ import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.structure.T;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.janusgraph.core.*;
+import org.janusgraph.core.schema.JanusGraphIndex;
 import org.janusgraph.core.schema.JanusGraphManagement;
 import org.janusgraph.core.schema.SchemaAction;
 import org.janusgraph.graphdb.idmanagement.IDManager;
@@ -36,7 +37,7 @@ public class JanusGraphImporter implements DBgenImporter {
     private JanusGraph graph;
     private WorkloadEnum workload;
     private Logger logger = LoggerFactory.getLogger("org.janusgraph");
-    private HashMap<PropertyKey,String> vertexIndexes = new HashMap<PropertyKey,String>();
+    private ArrayList<String> vertexIndexes = new ArrayList<String>();
 
     /* (non-Javadoc)
      * @see hpl.alp2.titan.importers.DBgenImporter#init(java.lang.String)
@@ -117,7 +118,7 @@ public class JanusGraphImporter implements DBgenImporter {
 
                     if(p.compareTo("id") == 0 || p.compareTo("creationDate") == 0) {
                         //management.buildIndex("by" + janusPropertyKey, Vertex.class).addKey(pk).buildCompositeIndex();
-                        vertexIndexes.put(pk,"by" + janusPropertyKey);
+                        vertexIndexes.add(janusPropertyKey);
                     }
                     management.commit();
                 }
@@ -161,12 +162,13 @@ public class JanusGraphImporter implements DBgenImporter {
     }
 
     private void buildIndexes() {
-        JanusGraphManagement management = graph.openManagement();
-        for( Map.Entry<PropertyKey,String> entry : vertexIndexes.entrySet()) {
-            management.buildIndex(entry.getValue(), Vertex.class).addKey(entry.getKey()).buildCompositeIndex();
-            management.updateIndex(management.getGraphIndex(entry.getValue()), SchemaAction.REINDEX);
+        for( String property : vertexIndexes) {
+            JanusGraphManagement management = graph.openManagement();
+            PropertyKey pk = management.getPropertyKey(property);
+            JanusGraphIndex index = management.buildIndex("by"+property, Vertex.class).addKey(pk).buildCompositeIndex();
+            management.updateIndex(index, SchemaAction.REINDEX);
+            management.commit();
         }
-        management.commit();
     }
 
 
