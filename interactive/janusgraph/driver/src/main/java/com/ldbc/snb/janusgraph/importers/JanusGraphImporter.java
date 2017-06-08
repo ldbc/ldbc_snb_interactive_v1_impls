@@ -19,6 +19,7 @@ import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * @author Tomer Sagi
@@ -29,10 +30,6 @@ public class JanusGraphImporter implements DBgenImporter {
 
     public final static String CSVSPLIT = "\\|";
     public final static String TUPLESPLIT = "\\.";
-    private final static String DATE_TIME_FORMAT_STRING = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-    private final static SimpleDateFormat DATE_TIME_FORMAT = new SimpleDateFormat(DATE_TIME_FORMAT_STRING);
-    private final static String DATE_FORMAT_STRING = "yyyy-MM-dd";
-    private final static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DATE_FORMAT_STRING);
     private static Class<?>[] VALID_CLASSES = {Integer.class, Long.class, String.class, Date.class, BigDecimal.class, Double.class, BigInteger.class};
     private JanusGraph graph;
     private WorkloadEnum workload;
@@ -44,8 +41,6 @@ public class JanusGraphImporter implements DBgenImporter {
     @Override
     public void init(String connectionURL, WorkloadEnum workload) throws ConnectionException {
         logger.info("entered init");
-        DATE_TIME_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
-        DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
         /*graph = JanusGraphFactory.build().set("storage.batch-loading","true")
                                          .set("storage.backend","cassandra")
                                           .set("storage.hostname","147.83.34.145")
@@ -120,10 +115,6 @@ public class JanusGraphImporter implements DBgenImporter {
                     if(p.compareTo("id") == 0 || p.compareTo("creationDate") == 0) {
                         management.buildIndex("by" + janusPropertyKey, Vertex.class).addKey(pk).buildCompositeIndex();
                     }
-                    /*if (clazz.equals(String.class))
-                        management.buildIndex("by" + janusPropertyKey, Vertex.class).addKey(pk).buildCompositeIndex();
-                    else
-                        management.buildIndex("by" + janusPropertyKey, Vertex.class).addKey(pk).buildMixedIndex("search");*/
                     management.commit();
                 }
             }
@@ -157,11 +148,6 @@ public class JanusGraphImporter implements DBgenImporter {
                     if(p.compareTo("id") == 0 || p.compareTo("creationDate") == 0) {
                         management.buildIndex("by" + janusPropertyKey, Vertex.class).addKey(pk).buildCompositeIndex();
                     }
-                    /*if (clazz.equals(String.class))
-                        management.buildIndex("by" + janusPropertyKey, Edge.class).addKey(pk).buildCompositeIndex();
-                    else
-                        management.buildIndex("by" + janusPropertyKey, Edge.class).addKey(pk).buildMixedIndex("search");
-                    */
                     management.commit();
                 }
             }
@@ -189,8 +175,8 @@ public class JanusGraphImporter implements DBgenImporter {
         Map<String, String> eMap = s.getEFileMap();
 
         loadVertices(dir, s.getVertexTypes().keySet());
-        loadVertexProperties(dir, vpMap);
-        loadEdges(dir, eMap);
+        //loadVertexProperties(dir, vpMap);
+        //loadEdges(dir, eMap);
         logger.info("completed import data");
         return true;
     }
@@ -233,30 +219,36 @@ public class JanusGraphImporter implements DBgenImporter {
                 }
                 int rowLength = header.length;
                 logger.info("Number of columns "+rowLength);
-                String[] classNames = new String[rowLength];
+                Class[] classes = new Class[rowLength];
                 for (int i = 0; i < rowLength; i++) {
                     String prop = header[i];
                     logger.info("Column "+prop);
-                    Class clazz = s.getVPropertyClass(vLabel, prop);
-                    classNames[i] = clazz.getSimpleName();
+                    classes[i] = s.getVPropertyClass(vLabel, prop);
                 }
 
                 //Read and load rest of file
                 try {
                     int counter = 0;
                     JanusGraphTransaction transaction = graph.newTransaction();
+                    Function<String,Object> parsers[] = new Function[header.length];
+                    for(int i = 0; i < header.length; ++i) {
+                        parsers[i] = Parsers.getParser(classes[i]);
+                    }
+                    long start = System.currentTimeMillis();
                     while ((line = br.readLine()) != null) {
-                        if(counter%1000 == 0) {
-                            logger.info("Loading "+vLabel+" "+counter);
-                        }
                         String[] row = line.split(CSVSPLIT);
                         JanusGraphVertex vertex = transaction.addVertex(vLabel);
                         for (int i = 0; i < row.length; ++i) {
                             String prop = header[i];
-                            Object value = parseEntry(row[i], classNames[i]);
+                            Object value = parsers[i].apply(row[i]);
                             vertex.property(vLabel+"."+prop,value);
                         }
                         counter++;
+                        if(counter%1000 == 0) {
+                            long end = System.currentTimeMillis();
+                            logger.info("Loading "+vLabel+" "+counter+" at a rate of "+(1000000/(end-start))+" per second");
+                            start = System.currentTimeMillis();
+                        }
                     }
                     transaction.commit();
                 } catch (Exception e) {
@@ -312,15 +304,19 @@ public class JanusGraphImporter implements DBgenImporter {
                     br.close();
                     throw e;
                 }
-                int rowLength = header.length;
                 String eLabel = ent.getKey().split(TUPLESPLIT)[1];
                 //Read and load rest of file
                 try {
                     JanusGraphTransaction transaction= graph.newTransaction();
+                    Function<String,Object> parsers[] = new Function[header.length];
+                    for(int i = 0; i < header.length; ++i) {
+                        parsers[i] = Parsers.getParser(s.getEPropertyClass(eLabel, header[i]));
+                    }
+
                     int counter = 0;
                     while ((line = br.readLine()) != null) {
                         if(counter%1000 == 0) {
-                            logger.info("Loading edge "+counter);
+                            logger.info("Loading "+eLabel+" "+counter);
                         }
                         String[] row = line.split(CSVSPLIT);
                         if (row.length < 2 || row[0].equals("") || row[1].equals("")) {
@@ -335,8 +331,7 @@ public class JanusGraphImporter implements DBgenImporter {
                         Edge edge = tail.addEdge(eLabel,head);
                         //This is safe since the header has been validated against the property map
                         for (int i = 2; i < row.length; i++) {
-                            edge.property(eLabel + "." + header[i], parseEntry(row[i],
-                                    s.getEPropertyClass(eLabel, header[i]).getSimpleName()));
+                            edge.property(eLabel + "." + header[i], parsers[i].apply(row[i]));
                         }
                         counter++;
                     }
@@ -400,6 +395,7 @@ public class JanusGraphImporter implements DBgenImporter {
                 try {
                     int counter = 0;
                     JanusGraphTransaction transaction = graph.newTransaction();
+                    Function<String,Object> parser = Parsers.getParser(s.getVPropertyClass(vLabel, header[1]));
                     while ((line = br.readLine()) != null) {
                         if(counter%1000 == 0) {
                             logger.info("Loading property "+counter);
@@ -413,8 +409,7 @@ public class JanusGraphImporter implements DBgenImporter {
                             throw new RuntimeException("Vertex "+vertexId+" does not exists");
                         }
                         //This is safe since the header has been validated against the property map
-                        vertex.property(janusgraphKey, parseEntry(row[1],
-                                s.getVPropertyClass(vLabel, header[1]).getSimpleName()));
+                        vertex.property(janusgraphKey, parser.apply(row[1]));
                         counter++;
                     }
                     transaction.commit();
@@ -517,36 +512,4 @@ public class JanusGraphImporter implements DBgenImporter {
                 throw new SchemaViolationException("Unknown property, found " + col + "expected" + props);
         }
     }
-
-    /**
-     * Converts string to appropriate Object according to class simple name
-     * Currently supports String, Integer, Long, DateTime, Date and Arrays (assumed string arrays)
-     *
-     * @param entry           string to convert
-     * @param simpleClassName name of the class to convert to
-     * @return Object typed by the class with value from the string
-     * @throws ClassCastException if simpleName is not supported.
-     */
-    public static Object parseEntry(String entry, String simpleClassName) throws ClassCastException, ParseException {
-        switch (simpleClassName) {
-            case "String":
-            case "Arrays":
-                return entry;
-            case "Date":
-                Date dateTime;
-                if (entry.length() > 10) {
-                    dateTime = DATE_TIME_FORMAT.parse(entry);
-                } else {
-                    dateTime = DATE_FORMAT.parse(entry);
-                }
-                return dateTime.getTime();
-            case "Integer":
-                return Integer.parseInt(entry);
-            case "Long":
-                return Long.parseLong(entry);
-            default:
-                throw new ClassCastException("No parse strategy for " + simpleClassName);
-        }
-    }
-
 }
