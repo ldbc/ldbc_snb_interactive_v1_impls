@@ -165,7 +165,10 @@ public class JanusGraphImporter implements DBgenImporter {
         for( String property : vertexIndexes) {
             JanusGraphManagement management = graph.openManagement();
             PropertyKey pk = management.getPropertyKey(property);
-            JanusGraphIndex index = management.buildIndex("by"+property, Vertex.class).addKey(pk).buildCompositeIndex();
+            management.buildIndex("by"+property, Vertex.class).addKey(pk).buildCompositeIndex();
+            management.commit();
+            management = graph.openManagement();
+            JanusGraphIndex index = management.getGraphIndex("by"+property);
             management.updateIndex(index, SchemaAction.REINDEX);
             management.commit();
         }
