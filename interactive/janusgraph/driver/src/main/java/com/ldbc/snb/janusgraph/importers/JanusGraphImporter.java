@@ -4,6 +4,7 @@
 package com.ldbc.snb.janusgraph.importers;
 
 import org.apache.tinkerpop.gremlin.structure.Edge;
+import org.apache.tinkerpop.gremlin.structure.T;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.janusgraph.core.*;
 import org.janusgraph.core.schema.JanusGraphManagement;
@@ -34,6 +35,7 @@ public class JanusGraphImporter implements DBgenImporter {
     private JanusGraph graph;
     private WorkloadEnum workload;
     private Logger logger = LoggerFactory.getLogger("org.janusgraph");
+    private HashMap<PropertyKey,String> vertexIndexes = new HashMap<PropertyKey,String>();
 
     /* (non-Javadoc)
      * @see hpl.alp2.titan.importers.DBgenImporter#init(java.lang.String)
@@ -113,7 +115,8 @@ public class JanusGraphImporter implements DBgenImporter {
                     }
 
                     if(p.compareTo("id") == 0 || p.compareTo("creationDate") == 0) {
-                        management.buildIndex("by" + janusPropertyKey, Vertex.class).addKey(pk).buildCompositeIndex();
+                        //management.buildIndex("by" + janusPropertyKey, Vertex.class).addKey(pk).buildCompositeIndex();
+                        vertexIndexes.put(pk,"by" + janusPropertyKey);
                     }
                     management.commit();
                 }
@@ -156,6 +159,15 @@ public class JanusGraphImporter implements DBgenImporter {
         return true;
     }
 
+    private void buildIndexes() {
+        JanusGraphManagement management = graph.openManagement();
+        for( Map.Entry<PropertyKey,String> entry : vertexIndexes.entrySet()) {
+            management.buildIndex(entry.getValue(), Vertex.class).addKey(entry.getKey()).buildCompositeIndex();
+        }
+        management.commit();
+    }
+
+
     /* (non-Javadoc)
      * @see hpl.alp2.titan.importers.DBgenImporter#importData(java.io.File)
      */
@@ -175,6 +187,7 @@ public class JanusGraphImporter implements DBgenImporter {
         Map<String, String> eMap = s.getEFileMap();
 
         loadVertices(dir, s.getVertexTypes().keySet());
+        buildIndexes();
         //loadVertexProperties(dir, vpMap);
         //loadEdges(dir, eMap);
         logger.info("completed import data");
@@ -229,11 +242,13 @@ public class JanusGraphImporter implements DBgenImporter {
                 //Read and load rest of file
                 try {
                     int counter = 0;
+                    PropertyKey pkey = graph.getPropertyKey(vLabel);
                     JanusGraphTransaction transaction = graph.newTransaction();
                     Function<String,Object> parsers[] = new Function[header.length];
                     for(int i = 0; i < header.length; ++i) {
                         parsers[i] = Parsers.getParser(classes[i]);
                     }
+
                     long start = System.currentTimeMillis();
                     while ((line = br.readLine()) != null) {
                         String[] row = line.split(CSVSPLIT);
