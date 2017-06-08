@@ -8,6 +8,7 @@ import org.apache.tinkerpop.gremlin.structure.T;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.janusgraph.core.*;
 import org.janusgraph.core.schema.JanusGraphManagement;
+import org.janusgraph.core.schema.SchemaAction;
 import org.janusgraph.graphdb.idmanagement.IDManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -163,6 +164,7 @@ public class JanusGraphImporter implements DBgenImporter {
         JanusGraphManagement management = graph.openManagement();
         for( Map.Entry<PropertyKey,String> entry : vertexIndexes.entrySet()) {
             management.buildIndex(entry.getValue(), Vertex.class).addKey(entry.getKey()).buildCompositeIndex();
+            management.updateIndex(management.getGraphIndex(entry.getValue()), SchemaAction.REINDEX);
         }
         management.commit();
     }
