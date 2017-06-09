@@ -46,7 +46,7 @@ public class InteractiveWorkloadSchema implements WorkLoadSchema {
         vPClassMap.put("Person.lastName", String.class);
         vPClassMap.put("Person.gender", String.class);
         vPClassMap.put("Person.email", Arrays.class);
-        vPClassMap.put("Person.birthday", Date.class);
+        vPClassMap.put("Person.birthday", Long.class);
         vPClassMap.put("Person.language", Arrays.class);
         vPClassMap.put("Person.browserUsed", String.class);
         vPClassMap.put("Person.locationIP", String.class);
@@ -86,7 +86,7 @@ public class InteractiveWorkloadSchema implements WorkLoadSchema {
         ePClassMap.put("studyAt.classYear", Integer.class);
         ePClassMap.put("workAt.workFrom", Integer.class);
         ePClassMap.put("likes.creationDate", Long.class);
-        ePClassMap.put("hasMember.joinDate", Date.class);
+        ePClassMap.put("hasMember.joinDate", Long.class);
 
         vpMap.put("Person", new HashSet<>(Arrays.asList(new String[]{"id","creationDate", "firstName", "lastName"
                 , "gender", "birthday", "email", "language", "browserUsed", "locationIP"})));
