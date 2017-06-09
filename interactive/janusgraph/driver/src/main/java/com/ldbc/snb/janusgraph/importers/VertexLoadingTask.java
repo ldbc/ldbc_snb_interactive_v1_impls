@@ -134,9 +134,7 @@ public class VertexLoadingTask implements Runnable {
             } finally {
                 br.close();
             }
-            logger.info("completed {}", vertexLabel);
-
-            logger.info("completed load vertices");
+            logger.info("completed {} loading", fileName);
         } catch (Exception e) {
         }
     }
