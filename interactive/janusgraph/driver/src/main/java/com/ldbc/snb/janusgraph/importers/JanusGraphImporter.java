@@ -3,6 +3,7 @@
  */
 package com.ldbc.snb.janusgraph.importers;
 
+import com.ldbc.snb.janusgraph.importers.utils.ThreadPool;
 import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.janusgraph.core.*;
@@ -233,87 +234,29 @@ public class JanusGraphImporter implements DBgenImporter {
     private void loadVertices(File dir, Set<String> vSet)
             throws IOException, SchemaViolationException {
         logger.info("entered load vertices");
-        WorkLoadSchema s = this.workload.getSchema();
-        for (final String vLabel : vSet) {
+        List<VertexLoadingTask> tasks = new ArrayList<VertexLoadingTask>();
+        WorkLoadSchema schema = this.workload.getSchema();
+        for (final String vertexLabel : vSet) {
             HashSet<String> fileSet = new HashSet<>();
             fileSet.addAll(Arrays.asList(dir.list(new FilenameFilter() {
                 @Override
                 public boolean accept(File dir, String name) {
-                    return name.matches(vLabel.toLowerCase() + "_\\d+_\\d+\\.csv");
+                    return name.matches(vertexLabel.toLowerCase() + "_\\d+_\\d+\\.csv");
                 }
             })));
-            for (String fName : fileSet) {
-                logger.info("reading file {}", fName);
-                File csvFile = new File(dir, fName);
-                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(csvFile), Charset.forName("UTF-8")));
-
-                //Read title line and map to vertex properties, throw exception if doesn't match
-                String line = br.readLine();
-                if (line==null)
-                    throw new IOException("Empty file" + fName);
-                String[] header = line.split(CSVSPLIT);
-                try {
-                    validateVHeader(s, vLabel, header);
-                } catch (SchemaViolationException e) {
-                    br.close();
-                    throw e;
-                }
-                int rowLength = header.length;
-                logger.info("Number of columns "+rowLength);
-                Class[] classes = new Class[rowLength];
-                for (int i = 0; i < rowLength; i++) {
-                    String prop = header[i];
-                    logger.info("Column "+prop);
-                    classes[i] = s.getVPropertyClass(vLabel, prop);
-                }
-
-                //Read and load rest of file
-                try {
-                    int counter = 0;
-                    Function<String,Object> parsers[] = new Function[header.length];
-                    for(int i = 0; i < header.length; ++i) {
-                        parsers[i] = Parsers.getParser(classes[i]);
-                    }
-
-                    JanusGraphTransaction transaction = graph.newTransaction();
-                    int transactionCount = 0;
-                    long start = System.currentTimeMillis();
-                    while ((line = br.readLine()) != null) {
-                        if(transactionCount>=TRANSACTIONSIZE) {
-                            transaction.commit();
-                            transaction = graph.newTransaction();
-                            transactionCount=0;
-                        }
-                        String[] row = line.split(CSVSPLIT);
-                        JanusGraphVertex vertex = transaction.addVertex(vLabel);
-                        for (int i = 0; i < row.length; ++i) {
-                            String prop = header[i];
-                            Object value = parsers[i].apply(row[i]);
-                            vertex.property(vLabel+"."+prop,value);
-                        }
-                        transactionCount++;
-                        counter++;
-                        if(counter%1000 == 0) {
-                            logger.info("Loaded "+vLabel+" "+counter+" at a rate of "+(counter*1000/(System.currentTimeMillis()-start))+" per second");
-                        }
-                    }
-                    transaction.commit();
-                    long diff =System.currentTimeMillis() - start;
-                    if(diff > 0) {
-                        logger.info("Loaded " + vLabel + " at a rate of " + (counter * 1000 / (diff))+ " per second");
-                    }
-                } catch (Exception e) {
-                    System.err.println("Vertex load failed");
-                    e.printStackTrace();
-                    graph.close();
-                } finally {
-                    br.close();
-                }
+            for (String fileName : fileSet) {
+                tasks.add(new VertexLoadingTask(graph,schema,dir+"/"+fileName,vertexLabel,TRANSACTIONSIZE));
             }
-            logger.info("completed {}" , vLabel);
         }
-
-        logger.info("completed load vertices");
+        ThreadPool threadPool = new ThreadPool(4,tasks.size());
+        for(VertexLoadingTask task : tasks) {
+            try {
+                threadPool.execute(task);
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        threadPool.join();
     }
 
     /**
@@ -476,37 +419,6 @@ public class JanusGraphImporter implements DBgenImporter {
         logger.info("completed load VP");
     }
 
-    /**
-     * Validates the file header against the schema used by the importer
-     *
-     * @param s      schema to validate against
-     * @param vLabel vertex type to validate against
-     * @param header header of csv file
-     * @return suffix of this vertex
-     */
-    private void validateVHeader(WorkLoadSchema s, String vLabel, String[] header) throws SchemaViolationException {
-        Set<String> props = s.getVertexProperties().get(vLabel);
-        if (props == null)
-            throw new SchemaViolationException("No properties found for the vertex label " + vLabel);
-
-        for (String col : header) {
-
-            if (!props.contains(col)) {
-                if (col.equals("language") && props.contains("language")) {
-                    continue;
-                }if (col.equals("email") && props.contains("email")) {
-                    continue;
-                }
-                else
-                    throw new SchemaViolationException("Unknown property for vertex Type" + vLabel
-                            + ", found " + col + " expected " + props);
-            }
-
-
-            if (s.getVPropertyClass(vLabel, col) == null)
-                throw new SchemaViolationException("Class definition missing for " + vLabel + "." + col);
-        }
-    }
 
     private void validateVPHeader(WorkLoadSchema s, String vLabel, String[] header) throws SchemaViolationException {
         Set<String> props = s.getVertexProperties().get(vLabel);
