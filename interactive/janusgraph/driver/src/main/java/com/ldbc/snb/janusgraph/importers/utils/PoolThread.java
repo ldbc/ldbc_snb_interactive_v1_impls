@@ -9,6 +9,7 @@ public class PoolThread extends Thread {
 
     private BlockingQueue taskQueue = null;
     private boolean       isStopped = false;
+    private boolean       isExecuting = false;
 
     public PoolThread(BlockingQueue queue){
         taskQueue = queue;
@@ -34,4 +35,5 @@ public class PoolThread extends Thread {
     public synchronized boolean isStopped(){
         return isStopped;
     }
+
 }

@@ -28,6 +28,8 @@ public class VertexLoadingTask implements Runnable {
     public int numberOfVerticesLoaded = 0;
     public long elapsedTime = 0;
 
+    public boolean executed = false;
+
     private Logger logger = LoggerFactory.getLogger("org.janusgraph");
 
     public VertexLoadingTask(JanusGraph graph, WorkLoadSchema schema, String fileName, String vertexLabel, int transactionSize) {
@@ -137,6 +139,7 @@ public class VertexLoadingTask implements Runnable {
             logger.info("completed {} loading", fileName);
         } catch (Exception e) {
         }
+        executed = true;
     }
 
     public void printStats(){

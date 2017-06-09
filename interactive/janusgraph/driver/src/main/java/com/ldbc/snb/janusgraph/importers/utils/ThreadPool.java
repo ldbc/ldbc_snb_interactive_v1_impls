@@ -40,15 +40,8 @@ public class ThreadPool {
         }
     }
 
-    public synchronized void join(){
-        for(PoolThread thread : threads){
-            try {
-                thread.join();
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
-        }
-        this.isStopped = true;
+    public synchronized boolean isEmpty() {
+        return taskQueue.isEmpty();
     }
 
 }

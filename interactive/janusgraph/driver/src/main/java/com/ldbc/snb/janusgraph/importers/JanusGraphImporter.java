@@ -257,7 +257,18 @@ public class JanusGraphImporter implements DBgenImporter {
                 e.printStackTrace();
             }
         }
-        threadPool.join();
+
+        try {
+            for (VertexLoadingTask task : tasks) {
+                while (!task.executed) {
+                    Thread.sleep(10000);
+                }
+            }
+        } catch ( Exception e ) {
+            e.printStackTrace();
+        }
+        threadPool.stop();
+
         long end = System.currentTimeMillis();
         long totalLoadedVertices = 0;
         for(VertexLoadingTask task : tasks) {
