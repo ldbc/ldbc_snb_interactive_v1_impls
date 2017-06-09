@@ -248,6 +248,7 @@ public class JanusGraphImporter implements DBgenImporter {
                 tasks.add(new VertexLoadingTask(graph,schema,dir+"/"+fileName,vertexLabel,TRANSACTIONSIZE));
             }
         }
+        long start = System.currentTimeMillis();
         ThreadPool threadPool = new ThreadPool(Runtime.getRuntime().availableProcessors(),tasks.size());
         for(VertexLoadingTask task : tasks) {
             try {
@@ -257,9 +258,13 @@ public class JanusGraphImporter implements DBgenImporter {
             }
         }
         threadPool.join();
+        long end = System.currentTimeMillis();
+        long totalLoadedVertices = 0;
         for(VertexLoadingTask task : tasks) {
             task.printStats();
+            totalLoadedVertices+=task.numberOfVerticesLoaded;
         }
+        logger.info("Loaded a total of "+totalLoadedVertices+" at an average rate of "+(totalLoadedVertices*1000/(end-start)));
     }
 
     /**
