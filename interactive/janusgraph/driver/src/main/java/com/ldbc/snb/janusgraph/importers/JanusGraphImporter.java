@@ -298,8 +298,10 @@ public class JanusGraphImporter implements DBgenImporter {
                         }
                     }
                     transaction.commit();
-                    long end = System.currentTimeMillis();
-                    logger.info("Loaded "+vLabel+" at a rate of "+(counter*1000/(end-start))+" per second");
+                    long diff =System.currentTimeMillis() - start;
+                    if(diff > 0) {
+                        logger.info("Loaded " + vLabel + " at a rate of " + (counter * 1000 / (end - start)) + " per second");
+                    }
                 } catch (Exception e) {
                     System.err.println("Vertex load failed");
                     e.printStackTrace();
