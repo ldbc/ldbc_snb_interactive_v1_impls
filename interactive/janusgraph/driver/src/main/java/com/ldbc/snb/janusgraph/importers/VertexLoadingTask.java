@@ -6,7 +6,6 @@ import org.janusgraph.core.JanusGraphVertex;
 import org.janusgraph.core.SchemaViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Set;
@@ -25,7 +24,7 @@ public class VertexLoadingTask implements Runnable {
     public int transactionSize = 100000;
     public WorkLoadSchema schema = null;
     public String vertexLabel = null;
-    public int numberOfVerticesLoaded = 0;
+    public long numberOfVerticesLoaded = 0;
     public long elapsedTime = 0;
 
     public boolean executed = false;
@@ -46,19 +45,10 @@ public class VertexLoadingTask implements Runnable {
             throw new SchemaViolationException("No properties found for the vertex label " + vLabel);
 
         for (String col : header) {
-
             if (!props.contains(col)) {
-                if (col.equals("language") && props.contains("language")) {
-                    continue;
-                }if (col.equals("email") && props.contains("email")) {
-                    continue;
-                }
-                else
-                    throw new SchemaViolationException("Unknown property for vertex Type" + vLabel
-                            + ", found " + col + " expected " + props);
+                throw new SchemaViolationException("Unknown property for vertex Type" + vLabel
+                        + ", found " + col + " expected " + props);
             }
-
-
             if (s.getVPropertyClass(vLabel, col) == null)
                 throw new SchemaViolationException("Class definition missing for " + vLabel + "." + col);
         }
@@ -94,7 +84,7 @@ public class VertexLoadingTask implements Runnable {
 
             //Read and load rest of file
             try {
-                int counter = 0;
+                long counter = 0;
                 Function<String, Object> parsers[] = new Function[header.length];
                 for (int i = 0; i < header.length; ++i) {
                     parsers[i] = Parsers.getParser(classes[i]);
@@ -105,7 +95,9 @@ public class VertexLoadingTask implements Runnable {
                 long start = System.currentTimeMillis();
                 while ((line = br.readLine()) != null) {
                     if (transactionCount >= transactionSize) {
+                        logger.info("Commiting transaction ...");
                         transaction.commit();
+                        logger.info("Transaction commited");
                         transaction = graph.newTransaction();
                         transactionCount = 0;
                     }
@@ -119,13 +111,13 @@ public class VertexLoadingTask implements Runnable {
                     transactionCount++;
                     counter++;
                     if (counter % REPORTING_INTERVAL == 0) {
-                        logger.info("Loaded " + vertexLabel + " " + counter + " at a rate of " + (counter * 1000 / (System.currentTimeMillis() - start)) + " per second");
+                        logger.info("Loaded " + vertexLabel + " " + counter + " at a rate of " + (counter * 1000L / (System.currentTimeMillis() - start)) + " per second");
                     }
                 }
                 transaction.commit();
                 long diff = System.currentTimeMillis() - start;
                 if (diff > 0) {
-                    logger.info("Loaded " + vertexLabel + " at a rate of " + (counter * 1000 / (diff)) + " per second");
+                    logger.info("Loaded " + vertexLabel + " at a rate of " + (counter * 1000L / (diff)) + " per second");
                 }
                 elapsedTime = diff;
                 numberOfVerticesLoaded = counter;
@@ -144,7 +136,7 @@ public class VertexLoadingTask implements Runnable {
 
     public void printStats(){
        if(elapsedTime > 0) {
-           logger.info("Loaded "+numberOfVerticesLoaded+" "+vertexLabel+" at a rate of"+numberOfVerticesLoaded*1000/elapsedTime+" vertices per second");
+           logger.info("Loaded "+numberOfVerticesLoaded+" "+vertexLabel+" at a rate of "+numberOfVerticesLoaded*1000/elapsedTime+" vertices per second");
        } else {
            logger.info("Loaded "+numberOfVerticesLoaded+" "+vertexLabel+" at the speed of light ;)");
        }

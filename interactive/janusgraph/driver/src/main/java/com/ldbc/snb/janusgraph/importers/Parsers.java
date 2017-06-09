@@ -31,7 +31,7 @@ public class Parsers {
 
                     @Override
                     public Object apply(String s) {
-                        /*DATE_TIME_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
+                        DATE_TIME_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
                         DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
                         try {
                             if (s.length() > 10) {
@@ -42,8 +42,7 @@ public class Parsers {
                         } catch(Exception e) {
                             throw new RuntimeException("Error parsing date: "+s);
                         }
-                        return dateTime.getTime();*/
-                        return 0L;
+                        return dateTime.getTime();
                     }
                 };
             case "Integer":

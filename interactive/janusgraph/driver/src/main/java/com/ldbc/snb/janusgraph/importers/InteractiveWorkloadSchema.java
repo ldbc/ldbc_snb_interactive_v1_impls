@@ -41,7 +41,7 @@ public class InteractiveWorkloadSchema implements WorkLoadSchema {
         vTypeReverse.put(7, "TagClass");
 
         vPClassMap.put("Person.id", Long.class);
-        vPClassMap.put("Person.creationDate", Date.class);
+        vPClassMap.put("Person.creationDate", Long.class);
         vPClassMap.put("Person.firstName", String.class);
         vPClassMap.put("Person.lastName", String.class);
         vPClassMap.put("Person.gender", String.class);
@@ -60,9 +60,9 @@ public class InteractiveWorkloadSchema implements WorkLoadSchema {
         vPClassMap.put("Organisation.url", String.class);
         vPClassMap.put("Forum.id", Long.class);
         vPClassMap.put("Forum.title", String.class);
-        vPClassMap.put("Forum.creationDate", Date.class);
+        vPClassMap.put("Forum.creationDate", Long.class);
         vPClassMap.put("Post.id", Long.class);
-        vPClassMap.put("Post.creationDate", Date.class);
+        vPClassMap.put("Post.creationDate", Long.class);
         vPClassMap.put("Post.browserUsed", String.class);
         vPClassMap.put("Post.locationIP", String.class);
         vPClassMap.put("Post.content", String.class);
@@ -70,7 +70,7 @@ public class InteractiveWorkloadSchema implements WorkLoadSchema {
         vPClassMap.put("Post.language", String.class);
         vPClassMap.put("Post.imageFile", String.class);
         vPClassMap.put("Comment.id", Long.class);
-        vPClassMap.put("Comment.creationDate", Date.class);
+        vPClassMap.put("Comment.creationDate", Long.class);
         vPClassMap.put("Comment.browserUsed", String.class);
         vPClassMap.put("Comment.locationIP", String.class);
         vPClassMap.put("Comment.content", String.class);
@@ -82,10 +82,10 @@ public class InteractiveWorkloadSchema implements WorkLoadSchema {
         vPClassMap.put("TagClass.name", String.class);
         vPClassMap.put("TagClass.url", String.class);
 
-        ePClassMap.put("knows.creationDate", Date.class);
+        ePClassMap.put("knows.creationDate", Long.class);
         ePClassMap.put("studyAt.classYear", Integer.class);
         ePClassMap.put("workAt.workFrom", Integer.class);
-        ePClassMap.put("likes.creationDate", Date.class);
+        ePClassMap.put("likes.creationDate", Long.class);
         ePClassMap.put("hasMember.joinDate", Date.class);
 
         vpMap.put("Person", new HashSet<>(Arrays.asList(new String[]{"id","creationDate", "firstName", "lastName"
