@@ -30,6 +30,7 @@ public class InteractiveWorkloadSchema implements WorkLoadSchema {
         vTypes.put("Tag", 6);
         vTypes.put("TagClass", 7);
 
+
         vTypeReverse.put(0, "Place");
         vTypeReverse.put(1, "Person");
         vTypeReverse.put(2, "Organisation");

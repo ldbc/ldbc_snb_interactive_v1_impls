@@ -4,13 +4,12 @@
 package com.ldbc.snb.janusgraph.importers;
 
 import org.apache.tinkerpop.gremlin.structure.Edge;
-import org.apache.tinkerpop.gremlin.structure.T;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.janusgraph.core.*;
-import org.janusgraph.core.schema.JanusGraphIndex;
 import org.janusgraph.core.schema.JanusGraphManagement;
 import org.janusgraph.core.schema.SchemaAction;
-import org.janusgraph.graphdb.idmanagement.IDManager;
+import org.janusgraph.core.schema.SchemaStatus;
+import org.janusgraph.graphdb.database.management.ManagementSystem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +30,7 @@ import java.util.function.Function;
  */
 public class JanusGraphImporter implements DBgenImporter {
 
+    public int TRANSACTIONSIZE=10000;
     public final static String CSVSPLIT = "\\|";
     public final static String TUPLESPLIT = "\\.";
     private static Class<?>[] VALID_CLASSES = {Integer.class, Long.class, String.class, Date.class, BigDecimal.class, Double.class, BigInteger.class};
@@ -57,6 +57,10 @@ public class JanusGraphImporter implements DBgenImporter {
             logger.error("failed to create schema");
         }
         logger.info("Completed init");
+    }
+
+    public void setTransactionSize(int transactionSize) {
+        this.TRANSACTIONSIZE = transactionSize;
     }
 
     /**
@@ -117,13 +121,15 @@ public class JanusGraphImporter implements DBgenImporter {
                     }
 
                     if(p.compareTo("id") == 0 || p.compareTo("creationDate") == 0) {
-                        //management.buildIndex("by" + janusPropertyKey, Vertex.class).addKey(pk).buildCompositeIndex();
-                        vertexIndexes.add(janusPropertyKey);
+                        management.buildIndex("by" + janusPropertyKey, Vertex.class).addKey(pk).buildCompositeIndex();
+                        //vertexIndexes.add(janusPropertyKey);
                     }
                     management.commit();
                 }
             }
         }
+
+        //buildIndexes();
 
         //Create Edge Property Labels
         for (String e : s.getEdgeProperties().keySet()) {
@@ -157,20 +163,36 @@ public class JanusGraphImporter implements DBgenImporter {
                 }
             }
         }
+        graph.tx().commit();
         logger.info("created property keys and finished build schema");
         return true;
     }
 
     private void buildIndexes() {
         for( String property : vertexIndexes) {
+            String indexName = "by"+property;
             JanusGraphManagement management = graph.openManagement();
             PropertyKey pk = management.getPropertyKey(property);
-            management.buildIndex("by"+property, Vertex.class).addKey(pk).buildCompositeIndex();
+            management.buildIndex(indexName, Vertex.class).addKey(pk).buildCompositeIndex();
             management.commit();
+            graph.tx().commit();
+
+            try {
+                ManagementSystem.awaitGraphIndexStatus(graph, indexName).status(SchemaStatus.REGISTERED).call();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+
             management = graph.openManagement();
-            JanusGraphIndex index = management.getGraphIndex("by"+property);
-            management.updateIndex(index, SchemaAction.REINDEX);
+            management.updateIndex(management.getGraphIndex(indexName), SchemaAction.REINDEX);
             management.commit();
+            graph.tx().commit();
+
+            try {
+                ManagementSystem.awaitGraphIndexStatus(graph, indexName).status(SchemaStatus.ENABLED).call();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -194,7 +216,6 @@ public class JanusGraphImporter implements DBgenImporter {
         Map<String, String> eMap = s.getEFileMap();
 
         loadVertices(dir, s.getVertexTypes().keySet());
-        buildIndexes();
         //loadVertexProperties(dir, vpMap);
         //loadEdges(dir, eMap);
         logger.info("completed import data");
@@ -249,15 +270,20 @@ public class JanusGraphImporter implements DBgenImporter {
                 //Read and load rest of file
                 try {
                     int counter = 0;
-                    PropertyKey pkey = graph.getPropertyKey(vLabel);
-                    JanusGraphTransaction transaction = graph.newTransaction();
                     Function<String,Object> parsers[] = new Function[header.length];
                     for(int i = 0; i < header.length; ++i) {
                         parsers[i] = Parsers.getParser(classes[i]);
                     }
 
+                    JanusGraphTransaction transaction = graph.newTransaction();
+                    int transactionCount = 0;
                     long start = System.currentTimeMillis();
                     while ((line = br.readLine()) != null) {
+                        if(transactionCount>=TRANSACTIONSIZE) {
+                            transaction.commit();
+                            transaction = graph.newTransaction();
+                            transactionCount=0;
+                        }
                         String[] row = line.split(CSVSPLIT);
                         JanusGraphVertex vertex = transaction.addVertex(vLabel);
                         for (int i = 0; i < row.length; ++i) {
@@ -265,14 +291,15 @@ public class JanusGraphImporter implements DBgenImporter {
                             Object value = parsers[i].apply(row[i]);
                             vertex.property(vLabel+"."+prop,value);
                         }
+                        transactionCount++;
                         counter++;
                         if(counter%1000 == 0) {
-                            long end = System.currentTimeMillis();
-                            logger.info("Loading "+vLabel+" "+counter+" at a rate of "+(1000000/(end-start))+" per second");
-                            start = System.currentTimeMillis();
+                            logger.info("Loaded "+vLabel+" "+counter+" at a rate of "+(counter*1000/(System.currentTimeMillis()-start))+" per second");
                         }
                     }
                     transaction.commit();
+                    long end = System.currentTimeMillis();
+                    logger.info("Loaded "+vLabel+" at a rate of "+(counter*1000/(end-start))+" per second");
                 } catch (Exception e) {
                     System.err.println("Vertex load failed");
                     e.printStackTrace();

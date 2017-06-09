@@ -29,6 +29,9 @@ public class Main {
         try {
             //importer.init("src/main/resources/bdb.conf", WorkloadEnum.INTERACTIVE);
             importer.init("src/main/resources/bdb.conf", WorkloadEnum.INTERACTIVE);
+            if(args.length == 1) {
+                importer.setTransactionSize(Integer.parseInt(args[0]));
+            }
             importer.importData(new File("/home/aprat/projects/uniserver-ldbc-sparksee/datasets/0001/social_network"));
         } catch (Exception e){
             e.printStackTrace();
