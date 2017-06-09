@@ -257,6 +257,9 @@ public class JanusGraphImporter implements DBgenImporter {
             }
         }
         threadPool.join();
+        for(VertexLoadingTask task : tasks) {
+            task.printStats();
+        }
     }
 
     /**

@@ -140,4 +140,12 @@ public class VertexLoadingTask implements Runnable {
         } catch (Exception e) {
         }
     }
+
+    public void printStats(){
+       if(elapsedTime > 0) {
+           logger.info("Loaded "+numberOfVerticesLoaded+" "+vertexLabel+" at a rate of"+numberOfVerticesLoaded*1000/elapsedTime+" vertices per second");
+       } else {
+           logger.info("Loaded "+numberOfVerticesLoaded+" "+vertexLabel+" at the speed of light ;)");
+       }
+    }
 }
