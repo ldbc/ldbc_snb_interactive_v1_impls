@@ -249,7 +249,8 @@ public class JanusGraphImporter implements DBgenImporter {
             }
         }
         long start = System.currentTimeMillis();
-        ThreadPool threadPool = new ThreadPool(Runtime.getRuntime().availableProcessors(),tasks.size());
+        //ThreadPool threadPool = new ThreadPool(Runtime.getRuntime().availableProcessors(),tasks.size());
+        ThreadPool threadPool = new ThreadPool(1,tasks.size());
         for(VertexLoadingTask task : tasks) {
             try {
                 threadPool.execute(task);

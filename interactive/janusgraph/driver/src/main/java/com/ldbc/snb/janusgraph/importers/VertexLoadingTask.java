@@ -96,8 +96,11 @@ public class VertexLoadingTask implements Runnable {
                 while ((line = br.readLine()) != null) {
                     if (transactionCount >= transactionSize) {
                         logger.info("Commiting transaction ...");
+                        long commitStart = System.currentTimeMillis();
                         transaction.commit();
-                        logger.info("Transaction commited");
+                        long commitEnd = System.currentTimeMillis();
+                        long diff = commitEnd - commitStart;
+                        logger.info("Transaction commited in "+diff+" ms");
                         transaction = graph.newTransaction();
                         transactionCount = 0;
                     }
