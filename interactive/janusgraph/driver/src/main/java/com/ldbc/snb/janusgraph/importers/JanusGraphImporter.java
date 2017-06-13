@@ -3,6 +3,8 @@
  */
 package com.ldbc.snb.janusgraph.importers;
 
+import com.ldbc.snb.janusgraph.importers.utils.LoadingStats;
+import com.ldbc.snb.janusgraph.importers.utils.StatsReportingThread;
 import com.ldbc.snb.janusgraph.importers.utils.ThreadPool;
 import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 import org.apache.tinkerpop.gremlin.structure.Edge;
@@ -13,7 +15,6 @@ import org.janusgraph.core.schema.SchemaAction;
 import org.janusgraph.core.schema.SchemaStatus;
 import org.janusgraph.graphdb.database.StandardJanusGraph;
 import org.janusgraph.graphdb.database.management.ManagementSystem;
-import org.janusgraph.graphdb.tinkerpop.JanusGraphBlueprintsGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,9 +22,6 @@ import javax.naming.directory.SchemaViolationException;
 import java.io.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.nio.charset.Charset;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Function;
 
@@ -34,7 +32,6 @@ import java.util.function.Function;
  */
 public class JanusGraphImporter {
 
-    public int TRANSACTIONSIZE=10000;
     public final static String CSVSPLIT = "\\|";
     public final static String TUPLESPLIT = "\\.";
     private static Class<?>[] VALID_CLASSES = {Integer.class, Long.class, String.class, Date.class, BigDecimal.class, Double.class, BigInteger.class};
@@ -59,17 +56,13 @@ public class JanusGraphImporter {
         logger.info("Completed init");
     }
 
-    public void setTransactionSize(int transactionSize) {
-        this.TRANSACTIONSIZE = transactionSize;
-    }
-
     /**
      * Builds interactive workload schema in database
      *
      * @return true if building the schema succeeded
      */
     private boolean buildSchema(WorkLoadSchema s) {
-        logger.info("entered build schema");
+        logger.info("Building Schema");
         JanusGraphManagement management;
         //Create Vertex Labels and assign id suffix
         Set<String> vTypes = s.getVertexTypes().keySet();
@@ -81,8 +74,7 @@ public class JanusGraphImporter {
             }
         }
 
-        logger.info("created vertex labels");
-        //Create Edge Labels
+        logger.info("Creating Vertex Labels");
         for (String e : s.getEdgeTypes()) {
             management = graph.openManagement();
             if (!graph.containsRelationType(e)) {
@@ -90,15 +82,12 @@ public class JanusGraphImporter {
                 management.commit();
             }
         }
-        logger.info("created edge labels");
-        //Titan doesn't care if a property is used for edges or vertices,
-        // hence we collect all properties and create them
 
+        logger.info("Creating edge labels");
         //Create Vertex Property Labels
         Set<Class<?>> allowed = new HashSet<>(Arrays.asList(VALID_CLASSES));
         for (String v : s.getVertexProperties().keySet()) {
             for (String p : s.getVertexProperties().get(v)) {
-
                 String janusPropertyKey = v+"."+p;
                 logger.info("Created Property Key "+janusPropertyKey);
                 if (!graph.containsRelationType(p)) {
@@ -129,9 +118,7 @@ public class JanusGraphImporter {
             }
         }
 
-        //buildIndexes();
-
-        //Create Edge Property Labels
+        logger.info("Creating edge property labels");
         for (String e : s.getEdgeProperties().keySet()) {
             for (String p : s.getEdgeProperties().get(e)) {
 
@@ -164,60 +151,36 @@ public class JanusGraphImporter {
             }
         }
         graph.tx().commit();
-        logger.info("created property keys and finished build schema");
+        logger.info("Finished schema creation");
         return true;
     }
-
-    private void buildIndexes() {
-        for( String property : vertexIndexes) {
-            String indexName = "by"+property;
-            JanusGraphManagement management = graph.openManagement();
-            PropertyKey pk = management.getPropertyKey(property);
-            management.buildIndex(indexName, Vertex.class).addKey(pk).buildCompositeIndex();
-            management.commit();
-            graph.tx().commit();
-
-            try {
-                ManagementSystem.awaitGraphIndexStatus(graph, indexName).status(SchemaStatus.REGISTERED).call();
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
-
-            management = graph.openManagement();
-            management.updateIndex(management.getGraphIndex(indexName), SchemaAction.REINDEX);
-            management.commit();
-            graph.tx().commit();
-
-            try {
-                ManagementSystem.awaitGraphIndexStatus(graph, indexName).status(SchemaStatus.ENABLED).call();
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
 
     /* (non-Javadoc)
      * @see hpl.alp2.titan.importers.DBgenImporter#importData(java.io.File)
      */
     public boolean importData(File dir) throws IOException, SchemaViolationException {
-        //Based upon http://s3.thinkaurelius.com/docs/titan/current/bulk-loading.html
-        //Enabled the storage.batch-loading configuration option in bdb.conf
-        //Disabled automatic type creation by setting schema.default=none in bdb.conf
-        //Using a local variation of BatchLoad https://github.com/tinkerpop/blueprints/wiki/Batch-Implementation
-
         logger.info("entered import data, dir is: {}", dir.getAbsolutePath() );
         if (!dir.isDirectory())
             return false;
+
+        LoadingStats stats = new LoadingStats();
+
+        StatsReportingThread statsThread = new StatsReportingThread(stats,5000);
+        statsThread.start();
 
         WorkLoadSchema s = this.workload.getSchema();
         Map<String, String> vpMap = s.getVPFileMap();
         Map<String, String> eMap = s.getEFileMap();
 
-        loadVertices(dir, s.getVertexTypes().keySet());
+        loadVertices(dir, s.getVertexTypes().keySet(), stats);
         //loadVertexProperties(dir, vpMap);
         //loadEdges(dir, eMap);
         logger.info("completed import data");
+        try {
+            statsThread.interrupt();
+        } catch(Exception e) {
+
+        }
         return true;
     }
 
@@ -229,11 +192,15 @@ public class JanusGraphImporter {
      * @throws IOException              if has trouble reading the file
      * @throws SchemaViolationException if file doesn't match the expected schema according to the workload definition
      */
-    private void loadVertices(File dir, Set<String> vSet)
+    private void loadVertices(File dir, Set<String> vSet, LoadingStats stats)
             throws IOException, SchemaViolationException {
         logger.info("entered load vertices");
-        List<VertexLoadingTask> tasks = new ArrayList<VertexLoadingTask>();
+        List<VertexFileReadingTask> tasks = new ArrayList<VertexFileReadingTask>();
         WorkLoadSchema schema = this.workload.getSchema();
+
+
+        ThreadPool vertexLoadingThreadPool = new ThreadPool(config.getNumThreads(),config.getNumThreads());
+
         for (final String vertexLabel : vSet) {
             HashSet<String> fileSet = new HashSet<>();
             fileSet.addAll(Arrays.asList(dir.list(new FilenameFilter() {
@@ -243,47 +210,36 @@ public class JanusGraphImporter {
                 }
             })));
             for (String fileName : fileSet) {
-                tasks.add(new VertexLoadingTask(graph,schema,dir+"/"+fileName,vertexLabel,config.getTransactionSize()));
+                tasks.add(new VertexFileReadingTask(graph,schema,dir+"/"+fileName,vertexLabel,vertexLoadingThreadPool.getTaskQueue(),config.getTransactionSize(),stats));
             }
         }
+
+        ThreadPool fileReadingThreadPool = new ThreadPool(1,tasks.size());
         long start = System.currentTimeMillis();
-        ThreadPool threadPool = new ThreadPool(config.getNumThreads(),tasks.size());
-        for(VertexLoadingTask task : tasks) {
+        for(VertexFileReadingTask task : tasks) {
             try {
-                threadPool.execute(task);
+                fileReadingThreadPool.execute(task);
             } catch(Exception e) {
                 e.printStackTrace();
             }
         }
 
         try {
-            for (VertexLoadingTask task : tasks) {
-                while (!task.executed) {
+            for (VertexFileReadingTask task : tasks) {
+                while (!task.isExecuted()) {
                     Thread.sleep(10000);
                 }
             }
         } catch ( Exception e ) {
             e.printStackTrace();
         }
-        threadPool.stop();
+        fileReadingThreadPool.stop();
 
-        long end = System.currentTimeMillis();
-        long totalLoadedVertices = 0;
-        for(VertexLoadingTask task : tasks) {
-            task.printStats();
-            totalLoadedVertices+=task.numberOfVerticesLoaded;
-        }
-        logger.info("Loaded a total of "+totalLoadedVertices+" at an average rate of "+(totalLoadedVertices*1000/(end-start)));
+        //logger.info("Loaded a total of "+totalLoadedVertices+" at an average rate of "+(totalLoadedVertices*1000/(end-start)));
     }
 
-    /**
-     * Loads edges and their properties from the csv files
-     *
-     * @param dir     Directory in which the files reside
-     * @param eMap    Map between edge description triples (FromVertexType.EdgeLabel.ToVertexType) nd expected filenames
-     * @throws IOException              if has trouble reading the file
-     * @throws SchemaViolationException if file doesn't match the expected schema according to the workload definition
-     */
+    /*
+
     private void loadEdges(File dir, Map<String, String> eMap)
             throws IOException, SchemaViolationException {
         logger.info("entered load edges");
@@ -361,14 +317,6 @@ public class JanusGraphImporter {
         logger.info("completed load edges");
     }
 
-    /**
-     * Loads n-Cardinality (1NF violating) vertex properties from the csv files
-     *
-     * @param dir     Directory in which the files reside
-     * @param vpMap   Map between vertices and their property files
-     * @throws IOException              thrown if files / directory are inaccessible
-     * @throws SchemaViolationException if file schema doesn't match workload schema
-     */
     private void loadVertexProperties(File dir, Map<String, String> vpMap)
             throws IOException, SchemaViolationException {
         logger.info("entered load VP");
@@ -448,15 +396,6 @@ public class JanusGraphImporter {
         }
     }
 
-    /**
-     * Validates the file header against the schema used by the importer
-     *
-     * @param s       schema to validate against
-     * @param eTriple edge triple to validate against (triple = Vertex.Edge.Vertex)
-     * @param header  header of csv file
-     * @return short array of size two with the suffixes of
-     * the source ([0]) and target ([1]) vertices
-     */
     private void validateEHeader(WorkLoadSchema s, String eTriple, String[] header)
             throws SchemaViolationException, IllegalArgumentException {
         String[] triple = eTriple.split(TUPLESPLIT);
@@ -492,4 +431,5 @@ public class JanusGraphImporter {
                 throw new SchemaViolationException("Unknown property, found " + col + "expected" + props);
         }
     }
+    */
 }

@@ -7,10 +7,10 @@ import com.beust.jcommander.Parameter;
  */
 public class JanusGraphImporterConfig {
 
-    @Parameter(names = {"--numThreads, -n"}, description = "Number of worker threads to use to read the input files")
+    @Parameter(names = {"--numThreads","-n"}, description = "Number of worker threads to use to read the input files")
     private int numThreads = 1;
 
-    @Parameter(names = {"--trasactionSize, -s"}, description = "The maximum size of a transaction")
+    @Parameter(names = {"--transactionSize", "-s"}, description = "The maximum size of a transaction")
     private int transactionSize = 1000;
 
     public int getNumThreads() {

@@ -40,6 +40,10 @@ public class ThreadPool {
         }
     }
 
+    public BlockingQueue getTaskQueue() {
+        return taskQueue;
+    }
+
     public synchronized boolean isEmpty() {
         return taskQueue.isEmpty();
     }

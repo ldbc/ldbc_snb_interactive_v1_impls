@@ -9,7 +9,7 @@ public class PoolThread extends Thread {
 
     private BlockingQueue taskQueue = null;
     private boolean       isStopped = false;
-    private boolean       isExecuting = false;
+    private boolean       isRunningTask = false;
 
     public PoolThread(BlockingQueue queue){
         taskQueue = queue;
