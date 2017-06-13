@@ -1,5 +1,6 @@
 package com.ldbc.snb.janusgraph.importers;
 
+import com.beust.jcommander.JCommander;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.janusgraph.core.Cardinality;
 import org.janusgraph.core.PropertyKey;
@@ -27,11 +28,9 @@ public class Main {
         //Load database
         JanusGraphImporter importer = new JanusGraphImporter();
         try {
-            //importer.init("src/main/resources/bdb.conf", WorkloadEnum.INTERACTIVE);
-            importer.init("src/main/resources/bdb.conf", WorkloadEnum.INTERACTIVE);
-            if(args.length == 1) {
-                importer.setTransactionSize(Integer.parseInt(args[0]));
-            }
+            JanusGraphImporterConfig config = new JanusGraphImporterConfig();
+            new JCommander(config,args);
+            importer.init("src/main/resources/bdb.conf", WorkloadEnum.INTERACTIVE, config);
             importer.importData(new File("/home/aprat/temp/datasets/0001/social_network"));
         } catch (Exception e){
             e.printStackTrace();

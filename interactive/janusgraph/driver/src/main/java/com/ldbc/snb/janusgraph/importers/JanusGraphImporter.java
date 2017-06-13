@@ -4,13 +4,16 @@
 package com.ldbc.snb.janusgraph.importers;
 
 import com.ldbc.snb.janusgraph.importers.utils.ThreadPool;
+import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
 import org.apache.tinkerpop.gremlin.structure.Edge;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.janusgraph.core.*;
 import org.janusgraph.core.schema.JanusGraphManagement;
 import org.janusgraph.core.schema.SchemaAction;
 import org.janusgraph.core.schema.SchemaStatus;
+import org.janusgraph.graphdb.database.StandardJanusGraph;
 import org.janusgraph.graphdb.database.management.ManagementSystem;
+import org.janusgraph.graphdb.tinkerpop.JanusGraphBlueprintsGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,30 +32,26 @@ import java.util.function.Function;
  *         <p/>
  *         Importer for a titan database
  */
-public class JanusGraphImporter implements DBgenImporter {
+public class JanusGraphImporter {
 
     public int TRANSACTIONSIZE=10000;
     public final static String CSVSPLIT = "\\|";
     public final static String TUPLESPLIT = "\\.";
     private static Class<?>[] VALID_CLASSES = {Integer.class, Long.class, String.class, Date.class, BigDecimal.class, Double.class, BigInteger.class};
-    private JanusGraph graph;
+    private StandardJanusGraph graph;
     private WorkloadEnum workload;
     private Logger logger = LoggerFactory.getLogger("org.janusgraph");
     private ArrayList<String> vertexIndexes = new ArrayList<String>();
+    private JanusGraphImporterConfig config;
 
     /* (non-Javadoc)
      * @see hpl.alp2.titan.importers.DBgenImporter#init(java.lang.String)
      */
-    @Override
-    public void init(String connectionURL, WorkloadEnum workload) throws ConnectionException {
+    public void init(String connectionURL, WorkloadEnum workload, JanusGraphImporterConfig config) throws ConnectionException {
         logger.info("entered init");
-        /*graph = JanusGraphFactory.build().set("storage.batch-loading","true")
-                                         .set("storage.backend","cassandra")
-                                          .set("storage.hostname","147.83.34.145")
-                                         .open();*/
-
-        graph = JanusGraphFactory.open(connectionURL);
+        graph = (StandardJanusGraph)JanusGraphFactory.open(connectionURL);
         this.workload = workload;
+        this.config = config;
         System.out.println("Connected");
         if (!buildSchema(workload.getSchema())) {
             logger.error("failed to create schema");
@@ -201,7 +200,6 @@ public class JanusGraphImporter implements DBgenImporter {
     /* (non-Javadoc)
      * @see hpl.alp2.titan.importers.DBgenImporter#importData(java.io.File)
      */
-    @Override
     public boolean importData(File dir) throws IOException, SchemaViolationException {
         //Based upon http://s3.thinkaurelius.com/docs/titan/current/bulk-loading.html
         //Enabled the storage.batch-loading configuration option in bdb.conf
@@ -245,12 +243,11 @@ public class JanusGraphImporter implements DBgenImporter {
                 }
             })));
             for (String fileName : fileSet) {
-                tasks.add(new VertexLoadingTask(graph,schema,dir+"/"+fileName,vertexLabel,TRANSACTIONSIZE));
+                tasks.add(new VertexLoadingTask(graph,schema,dir+"/"+fileName,vertexLabel,config.getTransactionSize()));
             }
         }
         long start = System.currentTimeMillis();
-        //ThreadPool threadPool = new ThreadPool(Runtime.getRuntime().availableProcessors(),tasks.size());
-        ThreadPool threadPool = new ThreadPool(1,tasks.size());
+        ThreadPool threadPool = new ThreadPool(config.getNumThreads(),tasks.size());
         for(VertexLoadingTask task : tasks) {
             try {
                 threadPool.execute(task);

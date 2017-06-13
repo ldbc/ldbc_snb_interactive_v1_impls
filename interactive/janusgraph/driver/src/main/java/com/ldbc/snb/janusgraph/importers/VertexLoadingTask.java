@@ -4,6 +4,7 @@ import org.janusgraph.core.JanusGraph;
 import org.janusgraph.core.JanusGraphTransaction;
 import org.janusgraph.core.JanusGraphVertex;
 import org.janusgraph.core.SchemaViolationException;
+import org.janusgraph.graphdb.tinkerpop.JanusGraphBlueprintsGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.*;
@@ -20,7 +21,7 @@ public class VertexLoadingTask implements Runnable {
     public final static int REPORTING_INTERVAL = 10000;
 
     public String fileName = null;
-    public JanusGraph graph = null;
+    public JanusGraphBlueprintsGraph graph = null;
     public int transactionSize = 100000;
     public WorkLoadSchema schema = null;
     public String vertexLabel = null;
@@ -31,7 +32,7 @@ public class VertexLoadingTask implements Runnable {
 
     private Logger logger = LoggerFactory.getLogger("org.janusgraph");
 
-    public VertexLoadingTask(JanusGraph graph, WorkLoadSchema schema, String fileName, String vertexLabel, int transactionSize) {
+    public VertexLoadingTask(JanusGraphBlueprintsGraph graph, WorkLoadSchema schema, String fileName, String vertexLabel, int transactionSize) {
         this.graph = graph;
         this.schema = schema;
         this.fileName = fileName;
@@ -90,7 +91,7 @@ public class VertexLoadingTask implements Runnable {
                     parsers[i] = Parsers.getParser(classes[i]);
                 }
 
-                JanusGraphTransaction transaction = graph.newTransaction();
+                JanusGraphTransaction transaction = graph.newThreadBoundTransaction()  ;
                 int transactionCount = 0;
                 long start = System.currentTimeMillis();
                 while ((line = br.readLine()) != null) {
