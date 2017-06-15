@@ -34,18 +34,29 @@ public class ThreadPool {
     }
 
     public synchronized void stop(){
+        while(!taskQueue.isEmpty()) {
+            try{
+                Thread.sleep(1000);
+            } catch( InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         this.isStopped = true;
         for(PoolThread thread : threads){
            thread.doStop();
+        }
+
+        try {
+            for (PoolThread thread : threads) {
+                thread.join();
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
         }
     }
 
     public BlockingQueue getTaskQueue() {
         return taskQueue;
-    }
-
-    public synchronized boolean isEmpty() {
-        return taskQueue.isEmpty();
     }
 
 }

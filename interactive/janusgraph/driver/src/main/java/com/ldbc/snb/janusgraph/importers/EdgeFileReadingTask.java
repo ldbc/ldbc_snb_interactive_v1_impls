@@ -8,13 +8,13 @@ import java.util.concurrent.BlockingQueue;
 /**
  * Created by aprat on 13/06/17.
  */
-public class VertexFileReadingTask extends FileReadingTask<VertexLoadingTask> {
+public class EdgeFileReadingTask extends FileReadingTask<EdgeLoadingTask> {
 
     private StandardJanusGraph graph = null;
     private WorkLoadSchema schema = null;
     private LoadingStats stats;
 
-    public VertexFileReadingTask(StandardJanusGraph graph, WorkLoadSchema schema, String fileName, String label, BlockingQueue<VertexLoadingTask> outputQueue, int blockSize, LoadingStats stats) {
+    public EdgeFileReadingTask(StandardJanusGraph graph, WorkLoadSchema schema, String fileName, String label, BlockingQueue<EdgeLoadingTask> outputQueue, int blockSize, LoadingStats stats) {
         super(fileName, label, outputQueue, blockSize);
         this.graph = graph;
         this.schema = schema;
@@ -22,7 +22,7 @@ public class VertexFileReadingTask extends FileReadingTask<VertexLoadingTask> {
     }
 
     @Override
-    protected VertexLoadingTask createTask(String header, String[] rows, int numRows) {
-        return new VertexLoadingTask(graph,schema,label,stats,header,rows, numRows);
+    protected EdgeLoadingTask createTask(String header, String[] rows, int numRows) {
+        return new EdgeLoadingTask(graph,schema,label,stats,header,rows, numRows);
     }
 }

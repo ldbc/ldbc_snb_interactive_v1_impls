@@ -32,6 +32,7 @@ public class Main {
             new JCommander(config,args);
             importer.init("src/main/resources/bdb.conf", WorkloadEnum.INTERACTIVE, config);
             importer.importData(new File("/home/aprat/temp/datasets/0001/social_network"));
+            System.exit(0);
         } catch (Exception e){
             e.printStackTrace();
         }

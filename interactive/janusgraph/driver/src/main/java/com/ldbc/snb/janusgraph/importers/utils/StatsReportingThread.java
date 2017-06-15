@@ -36,7 +36,8 @@ public class StatsReportingThread extends Thread {
             try {
                 Thread.sleep(sleepTime);
             } catch( Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
+                logger.info("Stats reporting thread interrupted");
             }
         }
 

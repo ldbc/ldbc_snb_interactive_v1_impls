@@ -19,11 +19,13 @@ public abstract class LoadingTask implements Runnable {
     private boolean executed = false;
     private String header;
     private String [] rows;
+    private int numRows;
 
 
-    public LoadingTask(String header, String [] rows) {
+    public LoadingTask(String header, String [] rows, int numRows) {
         this.header = header;
         this.rows = rows;
+        this.numRows = numRows;
     }
 
     protected abstract void validateHeader(String[] header);
@@ -38,8 +40,8 @@ public abstract class LoadingTask implements Runnable {
         validateHeader(columnNames);
 
         //Read and load rest of file
-        for( String row : rows) {
-            String[] cells = row.split(CSVSPLIT);
+        for( int i = 0; i < numRows; ++i) {
+            String[] cells = rows[i].split(CSVSPLIT);
             parseRow(cells);
         }
         afterRows();

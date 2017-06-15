@@ -30,7 +30,7 @@ public abstract class FileReadingTask<T> implements Runnable  {
         this.blockSize = blockSize;
     }
 
-    protected abstract T createTask(String header, String[] rows);
+    protected abstract T createTask(String header, String[] rows, int numRows);
 
     @Override
     public void run() {
@@ -46,14 +46,15 @@ public abstract class FileReadingTask<T> implements Runnable  {
                     rows[counter] = line;
                     counter++;
                     if(counter >= blockSize) {
-                        T task = createTask(header,rows);
+                        T task = createTask(header,rows, counter);
                         outputQueue.put(task);
                         counter = 0;
+                        rows = new String[blockSize];
                     }
                 }
 
                 if(counter > 0) {
-                    T task = createTask(header,rows);
+                    T task = createTask(header,rows, counter);
                     outputQueue.put(task);
                 }
 

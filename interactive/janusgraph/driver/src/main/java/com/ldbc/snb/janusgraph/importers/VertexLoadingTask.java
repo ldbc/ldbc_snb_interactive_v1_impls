@@ -30,8 +30,8 @@ public class VertexLoadingTask extends LoadingTask {
 
     JanusGraphTransaction transaction;
 
-    public VertexLoadingTask(StandardJanusGraph graph, WorkLoadSchema schema, String vertexLabel, LoadingStats stats, String header, String[] rows) {
-        super(header,rows);
+    public VertexLoadingTask(StandardJanusGraph graph, WorkLoadSchema schema, String vertexLabel, LoadingStats stats, String header, String[] rows, int numRows) {
+        super(header,rows, numRows);
         this.graph = graph;
         this.schema = schema;
         this.vertexLabel = vertexLabel;
@@ -46,7 +46,7 @@ public class VertexLoadingTask extends LoadingTask {
 
         for (String col : header) {
             if (!props.contains(col)) {
-                throw new SchemaViolationException("Unknown property for vertex Type" + vertexLabel
+                throw new SchemaViolationException("Unknown property for vertex Type " + vertexLabel
                         + ", found " + col + " expected " + props);
             }
             if (schema.getVPropertyClass(vertexLabel, col) == null)

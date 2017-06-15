@@ -4,6 +4,7 @@
 package com.ldbc.snb.janusgraph.importers;
 
 import com.ldbc.snb.janusgraph.importers.utils.LoadingStats;
+import com.ldbc.snb.janusgraph.importers.utils.PoolThread;
 import com.ldbc.snb.janusgraph.importers.utils.StatsReportingThread;
 import com.ldbc.snb.janusgraph.importers.utils.ThreadPool;
 import com.netflix.astyanax.connectionpool.exceptions.ConnectionException;
@@ -141,8 +142,6 @@ public class JanusGraphImporter {
                         continue;
                     }
 
-                    //if Date / number - make a mixed index to allow range queries
-
                     if(p.compareTo("id") == 0 || p.compareTo("creationDate") == 0) {
                         management.buildIndex("by" + janusPropertyKey, Vertex.class).addKey(pk).buildCompositeIndex();
                     }
@@ -173,14 +172,16 @@ public class JanusGraphImporter {
         Map<String, String> eMap = s.getEFileMap();
 
         loadVertices(dir, s.getVertexTypes().keySet(), stats);
-        //loadVertexProperties(dir, vpMap);
-        //loadEdges(dir, eMap);
+        loadEdges(dir, eMap,stats);
+        //loadVertexProperties(dir, vpMap, stats);
         logger.info("completed import data");
         try {
             statsThread.interrupt();
         } catch(Exception e) {
 
         }
+        statsThread.interrupt();
+        logger.info("Number of vertices loaded: {}. Number of edges loaded {}", stats.getNumVertices(), stats.getNumEdges());
         return true;
     }
 
@@ -195,9 +196,9 @@ public class JanusGraphImporter {
     private void loadVertices(File dir, Set<String> vSet, LoadingStats stats)
             throws IOException, SchemaViolationException {
         logger.info("entered load vertices");
+
         List<VertexFileReadingTask> tasks = new ArrayList<VertexFileReadingTask>();
         WorkLoadSchema schema = this.workload.getSchema();
-
 
         ThreadPool vertexLoadingThreadPool = new ThreadPool(config.getNumThreads(),config.getNumThreads());
 
@@ -215,7 +216,6 @@ public class JanusGraphImporter {
         }
 
         ThreadPool fileReadingThreadPool = new ThreadPool(1,tasks.size());
-        long start = System.currentTimeMillis();
         for(VertexFileReadingTask task : tasks) {
             try {
                 fileReadingThreadPool.execute(task);
@@ -225,25 +225,21 @@ public class JanusGraphImporter {
         }
 
         try {
-            for (VertexFileReadingTask task : tasks) {
-                while (!task.isExecuted()) {
-                    Thread.sleep(10000);
-                }
-            }
+            fileReadingThreadPool.stop();
+            vertexLoadingThreadPool.stop();
         } catch ( Exception e ) {
             e.printStackTrace();
         }
-        fileReadingThreadPool.stop();
-
-        //logger.info("Loaded a total of "+totalLoadedVertices+" at an average rate of "+(totalLoadedVertices*1000/(end-start)));
     }
 
-    /*
 
-    private void loadEdges(File dir, Map<String, String> eMap)
+    private void loadEdges(File dir, Map<String, String> eMap, LoadingStats stats)
             throws IOException, SchemaViolationException {
         logger.info("entered load edges");
-        WorkLoadSchema s = this.workload.getSchema();
+        List<EdgeFileReadingTask> tasks = new ArrayList<EdgeFileReadingTask>();
+        WorkLoadSchema schema = this.workload.getSchema();
+
+        ThreadPool edgeLoadingThreadPool = new ThreadPool(config.getNumThreads(),config.getNumThreads());
         for (Map.Entry<String,String> ent : eMap.entrySet()) {
             HashSet<String> fileSet = new HashSet<>();
             final String fNamePrefix = ent.getValue();
@@ -253,70 +249,29 @@ public class JanusGraphImporter {
                     return name.matches(fNamePrefix + "_\\d+_\\d+\\.csv");
                 }
             })));
-            for (String fName : fileSet) {
-                logger.info("reading {}" , fName);
-                BufferedReader br = new BufferedReader(
-                        new InputStreamReader(
-                                new FileInputStream(new File(dir, fName))
-                                ,"UTF-8"));
-
-                //Read title line and map to vertex properties, throw exception if doesn't match
-                String line = br.readLine();
-                if (line==null)
-                    throw new IOException("Empty file" + fName);
-                String[] header = line.split(CSVSPLIT);
-                try {
-                    validateEHeader(s, ent.getKey(), header);
-                } catch (SchemaViolationException e) {
-                    br.close();
-                    throw e;
-                }
-                String eLabel = ent.getKey().split(TUPLESPLIT)[1];
-                //Read and load rest of file
-                try {
-                    JanusGraphTransaction transaction= graph.newTransaction();
-                    Function<String,Object> parsers[] = new Function[header.length];
-                    for(int i = 0; i < header.length; ++i) {
-                        parsers[i] = Parsers.getParser(s.getEPropertyClass(eLabel, header[i]));
-                    }
-
-                    int counter = 0;
-                    while ((line = br.readLine()) != null) {
-                        if(counter%1000 == 0) {
-                            logger.info("Loading "+eLabel+" "+counter);
-                        }
-                        String[] row = line.split(CSVSPLIT);
-                        if (row.length < 2 || row[0].equals("") || row[1].equals("")) {
-                            br.close();
-                            graph.close();
-                            throw new NumberFormatException("In " + fName + " expected long id, got" + Arrays.toString(row));
-                        }
-                        Long idTail = Long.parseLong(row[0]);
-                        Long idHead = Long.parseLong(row[1]);
-                        Vertex tail = transaction.traversal().V().has(header[0],idTail).next();
-                        Vertex head = transaction.traversal().V().has(header[1],idHead).next();
-                        Edge edge = tail.addEdge(eLabel,head);
-                        //This is safe since the header has been validated against the property map
-                        for (int i = 2; i < row.length; i++) {
-                            edge.property(eLabel + "." + header[i], parsers[i].apply(row[i]));
-                        }
-                        counter++;
-                    }
-                    transaction.commit();
-                } catch (Exception e) {
-                    logger.error("Failed to add edge {} from line {} ", ent.getKey(), line);
-                    br.close();
-                    graph.close();
-                    e.printStackTrace();
-                } finally {
-                    br.close();
-                }
+            for (String fileName : fileSet) {
+                tasks.add(new EdgeFileReadingTask(graph,schema,dir+"/"+fileName,ent.getKey(),edgeLoadingThreadPool.getTaskQueue(),config.getTransactionSize(),stats));
             }
-            logger.info("completed {}" , ent.getKey());
         }
-        logger.info("completed load edges");
+
+        ThreadPool fileReadingThreadPool = new ThreadPool(1,tasks.size());
+        for(EdgeFileReadingTask task : tasks) {
+            try {
+                fileReadingThreadPool.execute(task);
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            fileReadingThreadPool.stop();
+            edgeLoadingThreadPool.stop();
+        } catch ( Exception e ) {
+            e.printStackTrace();
+        }
     }
 
+    /*
     private void loadVertexProperties(File dir, Map<String, String> vpMap)
             throws IOException, SchemaViolationException {
         logger.info("entered load VP");
