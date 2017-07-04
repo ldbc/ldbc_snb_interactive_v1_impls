@@ -1,23 +1,21 @@
 package com.ldbc.snb.janusgraph.importers;
 
 import com.ldbc.snb.janusgraph.importers.utils.LoadingStats;
-import org.janusgraph.core.JanusGraph;
+import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.janusgraph.core.JanusGraphTransaction;
 import org.janusgraph.core.JanusGraphVertex;
 import org.janusgraph.core.SchemaViolationException;
 import org.janusgraph.graphdb.database.StandardJanusGraph;
-import org.janusgraph.graphdb.tinkerpop.JanusGraphBlueprintsGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.io.*;
-import java.nio.charset.Charset;
+
 import java.util.Set;
 import java.util.function.Function;
 
 /**
  * Created by aprat on 9/06/17.
  */
-public class VertexLoadingTask extends LoadingTask {
+public class VertexPropertyLoadingTask extends LoadingTask {
 
     public StandardJanusGraph graph = null;
     public WorkLoadSchema schema = null;
@@ -27,11 +25,10 @@ public class VertexLoadingTask extends LoadingTask {
     private String propertyNames[];
     private LoadingStats stats;
     private long numLoaded = 0;
-    private long numPropertiesLoaded = 0;
 
     JanusGraphTransaction transaction;
 
-    public VertexLoadingTask(StandardJanusGraph graph, WorkLoadSchema schema, String vertexLabel, LoadingStats stats, String header, String[] rows, int numRows) {
+    public VertexPropertyLoadingTask(StandardJanusGraph graph, WorkLoadSchema schema, String vertexLabel, LoadingStats stats, String header, String[] rows, int numRows) {
         super(header,rows, numRows);
         this.graph = graph;
         this.schema = schema;
@@ -41,17 +38,14 @@ public class VertexLoadingTask extends LoadingTask {
 
     @Override
     protected void validateHeader(String[] header) throws SchemaViolationException {
+
         Set<String> props = schema.getVertexProperties().get(vertexLabel);
         if (props == null)
             throw new SchemaViolationException("No properties found for the vertex label " + vertexLabel);
 
-        for (String col : header) {
-            if (!props.contains(col)) {
-                throw new SchemaViolationException("Unknown property for vertex Type " + vertexLabel
-                        + ", found " + col + " expected " + props);
-            }
-            if (schema.getVPropertyClass(vertexLabel, col) == null)
-                throw new SchemaViolationException("Class definition missing for " + vertexLabel + "." + col);
+        if (!header[0].equals(vertexLabel+".id") || !props.contains(header[1])) {
+            throw new SchemaViolationException("Unknown property for vertex Type" + vertexLabel
+                    + ", found " + header[1] + " expected " + props);
         }
 
         Class[] classes = new Class[header.length];
@@ -62,21 +56,27 @@ public class VertexLoadingTask extends LoadingTask {
         // Obtaining parsers for the fields and property names
         parsers = new Function[header.length];
         propertyNames = new String[header.length];
-        for (int i = 0; i < header.length; ++i) {
+        for (int i = 1; i < header.length; ++i) {
             parsers[i] = Parsers.getParser(classes[i]);
             propertyNames[i] = vertexLabel + "." + header[i];
         }
+        parsers[0] = Parsers.getParser(Long.class);
+        propertyNames[0] = vertexLabel+".id";
 
         transaction = graph.newThreadBoundTransaction()  ;
     }
 
     @Override
     protected void parseRow(String[] row) {
-        JanusGraphVertex vertex = transaction.addVertex(vertexLabel);
-        for (int i = 0; i < row.length; ++i) {
+        Long vertexId = Long.parseLong(row[0]);
+        Vertex vertex =  transaction.traversal().V().has(propertyNames[0],vertexId).next();
+        if (vertex == null) {
+            logger.error("Vertex property update failed, since no vertex with id {} from line {}",row[0]);
+            throw new RuntimeException("Vertex "+vertexId+" does not exists");
+        }
+        for (int i = 1; i < row.length; ++i) {
             Object value = parsers[i].apply(row[i]);
             vertex.property(propertyNames[i], value);
-            numPropertiesLoaded++;
         }
         numLoaded++;
     }
@@ -84,8 +84,7 @@ public class VertexLoadingTask extends LoadingTask {
     @Override
     protected void afterRows() {
         transaction.commit();
-        stats.addVertices(numLoaded);
-        stats.addProperties(numPropertiesLoaded);
+        stats.addProperties(numLoaded);
     }
 
 }

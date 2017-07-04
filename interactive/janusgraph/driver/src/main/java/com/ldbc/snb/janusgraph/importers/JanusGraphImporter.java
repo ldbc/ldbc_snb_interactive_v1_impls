@@ -173,7 +173,7 @@ public class JanusGraphImporter {
 
         loadVertices(dir, s.getVertexTypes().keySet(), stats);
         loadEdges(dir, eMap,stats);
-        //loadVertexProperties(dir, vpMap, stats);
+        loadVertexProperties(dir, vpMap, stats);
         logger.info("completed import data");
         try {
             statsThread.interrupt();
@@ -200,8 +200,7 @@ public class JanusGraphImporter {
         List<VertexFileReadingTask> tasks = new ArrayList<VertexFileReadingTask>();
         WorkLoadSchema schema = this.workload.getSchema();
 
-        ThreadPool vertexLoadingThreadPool = new ThreadPool(config.getNumThreads(),config.getNumThreads());
-
+        ThreadPool vertexLoadingThreadPool = new ThreadPool(config.getNumThreads(),2*config.getNumThreads());
         for (final String vertexLabel : vSet) {
             HashSet<String> fileSet = new HashSet<>();
             fileSet.addAll(Arrays.asList(dir.list(new FilenameFilter() {
@@ -230,6 +229,7 @@ public class JanusGraphImporter {
         } catch ( Exception e ) {
             e.printStackTrace();
         }
+        logger.info("completed loading of Vertices");
     }
 
 
@@ -269,122 +269,50 @@ public class JanusGraphImporter {
         } catch ( Exception e ) {
             e.printStackTrace();
         }
+        logger.info("completed loading of Edges");
     }
 
-    /*
-    private void loadVertexProperties(File dir, Map<String, String> vpMap)
+    private void loadVertexProperties(File dir, Map<String, String> vpMap, LoadingStats stats)
             throws IOException, SchemaViolationException {
         logger.info("entered load VP");
         WorkLoadSchema s = this.workload.getSchema();
 
-        for (Map.Entry<String,String> entry : vpMap.entrySet()) {
+        List<VertexPropertyFileReadingTask> tasks = new ArrayList<VertexPropertyFileReadingTask>();
+        WorkLoadSchema schema = this.workload.getSchema();
+
+        ThreadPool vertexPropertyLoadingThreadPool = new ThreadPool(config.getNumThreads(),2*config.getNumThreads());
+        for (final Map.Entry<String,String> entry : vpMap.entrySet()) {
             HashSet<String> fileSet = new HashSet<>();
-            final String fNameSuffix = entry.getValue();
             fileSet.addAll(Arrays.asList(dir.list(new FilenameFilter() {
                 @Override
                 public boolean accept(File dir, String name) {
-                    return name.matches(fNameSuffix + "_\\d+_\\d+\\.csv");
+                    return name.matches(entry.getValue() + "_\\d+_\\d+\\.csv");
                 }
             })));
-            for (String fName : fileSet) {
-                logger.info("reading {}", fName);
-                BufferedReader br = new BufferedReader(
-                        new InputStreamReader(
-                                new FileInputStream(new File(dir, fName))
-                                ,"UTF-8"));
-
-                //Read title line and map to vertex properties, throw exception if doesn't match
-                String line = br.readLine();
-                if (line==null)
-                    throw new IOException("Empty file" + fName);
-                String[] header = line.split(CSVSPLIT);
-                String vLabel = entry.getKey().split(TUPLESPLIT)[0];
-                try {
-                    validateVPHeader(s, vLabel, header);
-                } catch (SchemaViolationException e) {
-                    br.close();
-                    throw e;
-                }
-                //Read and load rest of file
-                try {
-                    int counter = 0;
-                    JanusGraphTransaction transaction = graph.newTransaction();
-                    Function<String,Object> parser = Parsers.getParser(s.getVPropertyClass(vLabel, header[1]));
-                    while ((line = br.readLine()) != null) {
-                        if(counter%1000 == 0) {
-                            logger.info("Loading property "+counter);
-                        }
-                        String[] row = line.split(CSVSPLIT);
-                        Long vertexId = Long.parseLong(row[0]);
-                        String janusgraphKey = vLabel+"."+header[1];
-                        Vertex vertex =  transaction.traversal().V().has(header[0],vertexId).next();
-                        if (vertex == null) {
-                            logger.error("Vertex property update failed, since no vertex with id {} from line {}",row[0], line );
-                            throw new RuntimeException("Vertex "+vertexId+" does not exists");
-                        }
-                        //This is safe since the header has been validated against the property map
-                        vertex.property(janusgraphKey, parser.apply(row[1]));
-                        counter++;
-                    }
-                    transaction.commit();
-                } catch (Exception e) {
-                    System.err.println("Failed to add properties in " + entry.getKey());
-                    e.printStackTrace();
-                    graph.close();
-                } finally {
-                    br.close();
-                }
+            String vertexLabel = entry.getKey().substring(0,entry.getKey().indexOf("."));
+            for (String fileName : fileSet) {
+                tasks.add(new VertexPropertyFileReadingTask(graph,schema,dir+"/"+fileName,vertexLabel,vertexPropertyLoadingThreadPool.getTaskQueue(),config.getTransactionSize(),stats));
             }
         }
-        logger.info("completed load VP");
-    }
 
-
-    private void validateVPHeader(WorkLoadSchema s, String vLabel, String[] header) throws SchemaViolationException {
-        Set<String> props = s.getVertexProperties().get(vLabel);
-        if (props == null)
-            throw new SchemaViolationException("No properties found for the vertex label " + vLabel);
-
-        if (!header[0].equals(vLabel+".id") || !props.contains(header[1])) {
-            throw new SchemaViolationException("Unknown property for vertex Type" + vLabel
-                    + ", found " + header[1] + " expected " + props);
+        ThreadPool fileReadingThreadPool = new ThreadPool(1,tasks.size());
+        for(VertexPropertyFileReadingTask task : tasks) {
+            try {
+                fileReadingThreadPool.execute(task);
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
         }
-    }
 
-    private void validateEHeader(WorkLoadSchema s, String eTriple, String[] header)
-            throws SchemaViolationException, IllegalArgumentException {
-        String[] triple = eTriple.split(TUPLESPLIT);
-        if (triple.length != 3)
-            throw new IllegalArgumentException("Expected parameter eTriple to " +
-                    "contain a string with two '.' delimiters, found" + eTriple);
-        String vF = triple[0];
-        String eLabel = triple[1];
-        String vT = triple[2];
-
-        Set<String> vTypes = s.getVertexTypes().keySet();
-        if (!vTypes.contains(vF) || !vTypes.contains(vT))
-            throw new SchemaViolationException("Vertex types not found for triple" + eTriple + ", found " + vTypes);
-
-        Set<String> eTypes = s.getEdgeTypes();
-        if (!eTypes.contains(eLabel))
-            throw new SchemaViolationException("Edge type not found for triple" + eTriple + ", found " + eTypes);
-
-        //This may be null and that's fine, not all edges have properties
-        Set<String> props = s.getEdgeProperties().get(eLabel);
-
-        if (!header[0].equals(vF + ".id"))
-            throw new SchemaViolationException("First column is not labeled " + vF + ".id, but:" + header[0]);
-
-        if (!header[1].equals(vT + ".id"))
-            throw new SchemaViolationException("Second column is not labeled " + vT + ".id, but:" + header[0]);
-
-        for (String col : header) {
-            if (col.contains(".id"))
-                continue;
-
-            if (props == null || !props.contains(col))
-                throw new SchemaViolationException("Unknown property, found " + col + "expected" + props);
+        try {
+            fileReadingThreadPool.stop();
+            vertexPropertyLoadingThreadPool.stop();
+        } catch ( Exception e ) {
+            e.printStackTrace();
         }
+
+        logger.info("completed loading of Vertex Properties");
     }
-    */
+
+
 }

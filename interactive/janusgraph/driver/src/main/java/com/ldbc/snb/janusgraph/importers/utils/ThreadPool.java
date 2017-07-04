@@ -16,7 +16,7 @@ public class ThreadPool {
     private boolean isStopped = false;
 
     public ThreadPool(int noOfThreads, int maxNoOfTasks){
-        taskQueue = new ArrayBlockingQueue<Runnable>(maxNoOfTasks);
+        taskQueue = new ArrayBlockingQueue<Runnable>(Math.max(maxNoOfTasks,1));
 
         for(int i=0; i<noOfThreads; i++){
             threads.add(new PoolThread(taskQueue));

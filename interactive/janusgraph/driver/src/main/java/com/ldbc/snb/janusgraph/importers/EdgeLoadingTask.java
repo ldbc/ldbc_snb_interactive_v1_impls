@@ -30,6 +30,7 @@ public class EdgeLoadingTask extends LoadingTask {
     private String propertyNames[];
     private LoadingStats stats;
     private long numLoaded = 0;
+    private long numPropertiesLoaded = 0;
     private Vertex lastVertexTail = null;
     private long lastVertexTailId = -1;
     private Vertex lastVertexHead = null;
@@ -110,6 +111,7 @@ public class EdgeLoadingTask extends LoadingTask {
         Edge edge = tail.addEdge(edgeLabel,head);
         for (int i = 2; i < row.length; i++) {
             edge.property(propertyNames[i], parsers[i].apply(row[i]));
+            numPropertiesLoaded++;
         }
         numLoaded++;
     }
@@ -118,6 +120,7 @@ public class EdgeLoadingTask extends LoadingTask {
     protected void afterRows() {
         transaction.commit();
         stats.addEdges(numLoaded);
+        stats.addProperties(numPropertiesLoaded);
     }
 
 }

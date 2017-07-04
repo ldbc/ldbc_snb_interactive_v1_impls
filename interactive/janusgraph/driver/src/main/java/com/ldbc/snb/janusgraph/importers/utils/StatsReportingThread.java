@@ -27,11 +27,14 @@ public class StatsReportingThread extends Thread {
             long current = System.currentTimeMillis();
             long loadedVerticesInterval = stats.getNumVertices() - lastStats.getNumVertices();
             long loadedEdgesInterval = stats.getNumEdges() - lastStats.getNumEdges();
+            long loadedPropertiesInterval = stats.getNumProperties() - lastStats.getNumProperties();
             long loadedVerticesRate = (current - start) > 0 ? (loadedVerticesInterval*1000) / (current - start) : 0;
             long loadedEdgesRate = (current - start) > 0 ? (loadedEdgesInterval*1000) / (current - start) : 0;
-            logger.info("Vertices Loaded {}, Edges Loaded {}, Current vertices loaded/s {}, Current edges loaded/s {}",stats.getNumVertices(), stats.getNumEdges(), loadedVerticesRate, loadedEdgesRate);
+            long loadedPropertiesRate = (current - start) > 0 ? (loadedPropertiesInterval*1000) / (current - start) : 0;
+            logger.info("Vertices Loaded {}, Edges Loaded {}, Properties Loaded {}, Current vertices loaded/s {}, Current edges loaded/s {}, Current properties loaded/s {}",stats.getNumVertices(), stats.getNumEdges(), stats.getNumProperties(), loadedVerticesRate, loadedEdgesRate, loadedPropertiesRate);
             lastStats.setNumVertices(stats.getNumVertices());
             lastStats.setNumEdges(stats.getNumEdges());
+            lastStats.setNumProperties(stats.getNumProperties());
             start = current;
             try {
                 Thread.sleep(sleepTime);
