@@ -22,15 +22,14 @@ public class InteractiveWorkloadSchema implements WorkLoadSchema {
     public InteractiveWorkloadSchema() {
         super();
 
-        //vTypes.put("Place", 0);
+        vTypes.put("Place", 0);
         vTypes.put("Person", 1);
-        /*vTypes.put("Organisation", 2);
+        vTypes.put("Organisation", 2);
         vTypes.put("Comment", 3);
         vTypes.put("Post", 4);
         vTypes.put("Forum", 5);
         vTypes.put("Tag", 6);
         vTypes.put("TagClass", 7);
-        */
 
         vPClassMap.put("Person.id", Long.class);
         vPClassMap.put("Person.creationDate", Long.class);
@@ -42,7 +41,7 @@ public class InteractiveWorkloadSchema implements WorkLoadSchema {
         vPClassMap.put("Person.language", Arrays.class);
         vPClassMap.put("Person.browserUsed", String.class);
         vPClassMap.put("Person.locationIP", String.class);
-        /*vPClassMap.put("Place.id", Long.class);
+        vPClassMap.put("Place.id", Long.class);
         vPClassMap.put("Place.name", String.class);
         vPClassMap.put("Place.type", String.class);
         vPClassMap.put("Place.url", String.class);
@@ -79,11 +78,10 @@ public class InteractiveWorkloadSchema implements WorkLoadSchema {
         ePClassMap.put("workAt.workFrom", Integer.class);
         ePClassMap.put("likes.creationDate", Long.class);
         ePClassMap.put("hasMember.joinDate", Long.class);
-        */
 
         vpMap.put("Person", new HashSet<>(Arrays.asList(new String[]{"id","creationDate", "firstName", "lastName"
                 , "gender", "birthday", "email", "language", "browserUsed", "locationIP"})));
-        /*
+
         vpMap.put("Organisation", new HashSet<>(Arrays.asList(new String[]{"id","type", "name", "url"})));
         vpMap.put("Place", new HashSet<>(Arrays.asList(new String[]{"id","name", "url", "type"})));
         vpMap.put("Post", new HashSet<>(Arrays.asList(new String[]{"id","creationDate", "browserUsed", "locationIP", "content", "length", "language", "imageFile"})));
@@ -121,7 +119,6 @@ public class InteractiveWorkloadSchema implements WorkLoadSchema {
         eFileMap.put("Post.isLocatedIn.Place", "post_isLocatedIn_place");
         eFileMap.put("TagClass.isSubclassOf.TagClass", "tagclass_isSubclassOf_tagclass");
         eFileMap.put("Tag.hasType.TagClass", "tag_hasType_tagclass");
-        */
 
         vpFileMap.put("Person.email", "person_email_emailaddress");
         vpFileMap.put("Person.language", "person_speaks_language");

@@ -43,6 +43,5 @@ public class StatsReportingThread extends Thread {
                 logger.info("Stats reporting thread interrupted");
             }
         }
-
     }
 }
