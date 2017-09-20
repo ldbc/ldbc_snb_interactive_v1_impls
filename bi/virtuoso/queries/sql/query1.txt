@@ -1,0 +1,12 @@
+select  year (dateadd('millisecond', ps_creationdate, stringdate ('1970.1.1 00:00:00.000+00:00'))) as year, case when ps_replyof is null then 0 else 1 end as is_reply, 
+	case when ps_length < 40 then 0
+	     when ps_length < 80 then 1
+	     when ps_length < 160 then 2
+	     else 3 end as size, 
+	count (*) as cnt, avg (ps_length) as avg_len, 
+	sum (ps_length) as total,
+	cast (count (*) as float) / (select count (*) from post where ps_creationdate < @Date@)  as pct
+from post 
+where ps_creationdate <  @Date@ and ps_imagefile is null
+group by year, is_reply, size
+order by year, is_reply, size

@@ -1,0 +1,10 @@
+select top @Limit@ p_personid, count (*) as cnt,
+       sum (case when exists (select 1 from knows
+		       	      where k_person1id = teen.p_personid and k_person2id = org.ps_creatorid)
+	    then 0 else 1 end) as strangercnt
+from person teen, post org, post rep
+where p_birthday > @Date@
+      and rep.ps_creatorid = teen.p_personid 
+      and org.ps_postid = rep.ps_replyof 
+group by teen.p_personid
+order by cnt desc

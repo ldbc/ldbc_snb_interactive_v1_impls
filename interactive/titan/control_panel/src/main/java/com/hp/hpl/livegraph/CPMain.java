@@ -1,17 +1,3 @@
-/**(c) Copyright [2015] Hewlett-Packard Development Company, L.P.
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-**/
 package com.hp.hpl.livegraph;
 
 import com.ldbc.driver.Client;
@@ -22,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
@@ -56,7 +41,7 @@ public class CPMain {
 
             File dbConf = new File(args.get(1));
             if (!dbConf.exists())
-                die("Missing db.conf file at supplied path" + dbConf.getPath());
+                die("Missing db.conf file at supplied path " + dbConf.getPath());
 
             TitanImporter ti = new TitanImporter();
             try {
@@ -75,22 +60,25 @@ public class CPMain {
             }
         }
         else if (args.get(0).equalsIgnoreCase("-R")) {
-            if (args.size()<3)
+            if (args.size()<4)
                 die("Missing arguments - property files path");
 
 
             String dbClassName = "hpl.alp2.titan.drivers.interactive.TitanFTMDb";
             File workloadPropsPath = new File(args.get(1));
             File driverPropsPath = new File(args.get(2));
+            File updateStreamPath = new File(args.get(3));
 
             if (!workloadPropsPath.exists())
                 logger.error("invalid path for workload properties");
             else if (!driverPropsPath.exists())
                 logger.error("invalid path for driver properties");
+            else if (!updateStreamPath.exists())
+                logger.error("invalid path for update strem");
             else {
-                String[] cargs = new String[]{"-db", dbClassName,
-                        "-P ", workloadPropsPath.getPath(),
-                        "-P ", driverPropsPath.getPath()};
+                String[] cargs = new String[]{"-db", dbClassName,"-oc","15000",
+                        "-P", workloadPropsPath.getPath(),
+                        driverPropsPath.getPath(), updateStreamPath.getPath()};
                 try {
                     Client.main(cargs);
                 } catch (ClientException e) {

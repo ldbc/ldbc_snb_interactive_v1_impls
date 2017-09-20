@@ -10,9 +10,11 @@
     <name>LDBC interactive workload driver</name>
     <description>An workload driver for LDBC's interactive workload on titanFTM</description>
     <properties>
-        <titan.version>0.5.2</titan.version>
+        <titan.version>0.5.5-SNAPSHOT</titan.version>
         <titan.groupId>com.thinkaurelius.titan</titan.groupId>
         <!--Use com.hp.alps2 for hp titan-->
+        <!--version>0.0.1-SNAPSHOT</version-->
+        <!--Use 0.5.5-mapdb version of com.thinkaurelius.titan for titanWithMapDB -->
         <!-- use this property to point towards location of toy example or set at run time, e.g.: -DtoyFolderName=C:\\social_network_toy-->
         <toyFolderName>../social_network_toy</toyFolderName>
 
@@ -21,27 +23,51 @@
         <dependency>
         <groupId>com.ldbc.driver</groupId>
             <artifactId>jeeves</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>${titan.groupId}</groupId>
             <artifactId>titan-core</artifactId>
             <version>${titan.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>${titan.groupId}</groupId>
-            <artifactId>titan-berkeleyje</artifactId>
+            <artifactId>titan-mapdb</artifactId>
             <version>${titan.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>${titan.groupId}</groupId>
             <artifactId>titan-lucene</artifactId>
             <version>${titan.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>${titan.groupId}</groupId>
             <artifactId>titan-es</artifactId>
             <version>${titan.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.tinkerpop.blueprints</groupId>
@@ -49,17 +75,10 @@
             <version>2.5.0</version>
         </dependency>
         <dependency>
-            <groupId>org.elasticsearch</groupId>
-            <artifactId>elasticsearch</artifactId>
-            <version>1.2.1</version>
-        </dependency>
-        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.2.4</version>
         </dependency>
-
-
     </dependencies>
 
     <dependencyManagement>
@@ -67,7 +86,7 @@
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>15.0</version>
+                <version>18.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

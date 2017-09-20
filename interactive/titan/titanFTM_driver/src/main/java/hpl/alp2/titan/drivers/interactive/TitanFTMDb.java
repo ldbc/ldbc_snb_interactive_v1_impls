@@ -1,23 +1,12 @@
 /**
- (c) Copyright [2015] Hewlett-Packard Development Company, L.P.
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 package hpl.alp2.titan.drivers.interactive;
 
 import com.ldbc.driver.Db;
 import com.ldbc.driver.DbConnectionState;
 import com.ldbc.driver.DbException;
+import com.ldbc.driver.control.LoggingService;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
 import com.thinkaurelius.titan.core.TitanFactory;
 import com.thinkaurelius.titan.core.TitanGraph;
@@ -52,7 +41,7 @@ public class TitanFTMDb extends Db {
      * @see com.ldbc.driver.Db#onInit(java.util.Map)
      */
     @Override
-    protected void onInit(Map<String, String> properties) throws DbException {
+    protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
         String configFile = properties.get("confFile");
         if (configFile==null)
             throw new DbException("Titan LDBC implementation is missing a configuration parameter named confFile pointing to the titan config file");

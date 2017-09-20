@@ -1,0 +1,10 @@
+select top @Limit@ ctry_name, month (dateadd('millisecond', ps_creationdate, stringdate ('1970.1.1 00:00:00.000+00:00'))) as mm, p_gender,
+       p_age_group (p_birthday, @EndDate@) as age, t_name, count (*) as cnt
+from person, post, post_tag, tag, country 
+where ps_creatorid = p_personid and p_placeid = ctry_city
+      and pst_postid = ps_postid and t_tagid = pst_tagid 
+      and ps_creationdate between @Date1@ and @Date2@
+      and ctry_name in (@Names@)
+group by ctry_name, mm, p_gender, age, t_name
+having cnt > @MessageThreshold@
+order by cnt desc

@@ -1,20 +1,6 @@
-/**
- (c) Copyright [2015] Hewlett-Packard Development Company, L.P.
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package hpl.alp2.titan.drivers.interactive;
 
+import com.ldbc.driver.DbException;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1;
@@ -43,7 +29,7 @@ public class LdbcShortQuery1Handler implements OperationHandler<LdbcShortQuery1P
     final static Logger logger = LoggerFactory.getLogger(LdbcShortQuery1Handler.class);
 
     @Override
-    public void executeOperation(final LdbcShortQuery1PersonProfile operation,TitanFTMDb.BasicDbConnectionState dbConnectionState,ResultReporter resultReporter) {
+    public void executeOperation(final LdbcShortQuery1PersonProfile operation,TitanFTMDb.BasicDbConnectionState dbConnectionState,ResultReporter resultReporter) throws DbException {
         List<LdbcQuery1Result> result = new ArrayList<>();
         long person_id = operation.personId();
         TitanFTMDb.BasicClient client = dbConnectionState.client();
@@ -60,7 +46,7 @@ public class LdbcShortQuery1Handler implements OperationHandler<LdbcShortQuery1P
                     (Long) root.getProperty("creationDate"));
 
             resultReporter.report(result.size(), res, operation);
-        } catch (Exception e) {
+        } catch (SchemaViolationException e) {
         e.printStackTrace();
         resultReporter.report(-1, null, operation);
     }

@@ -126,7 +126,7 @@ create table likes (
 
 alter index likes on likes partition (l_postid int (0hexffff00));
 
-create column index l_personid on likes (l_postid) partition (l_postid int (0hexffff00));
+create column index l_personid on likes (l_personid, l_creationdate, l_postid) partition (l_personid int (0hexffff00));
 
 create table person_language (
    plang_personid bigint not null,
@@ -182,7 +182,7 @@ create table tagclass (
    tc_url varchar not null
 );
 
-alter index tagclass on tagclass partition (tc_tagclassid int (0hexffff00));
+alter index tagclass on tagclass partition cluster REPLICATED;
 
 create table subclass (
    s_subtagclassid bigint not null,
@@ -190,7 +190,7 @@ create table subclass (
    primary key (s_subtagclassid, s_supertagclassid) column
 );
 
-alter index subclass on subclass partition (s_subtagclassid int (0hexffff00));
+alter index subclass on subclass partition cluster REPLICATED;
 
 create table tag (
    t_tagid bigint primary key (column),
@@ -198,7 +198,7 @@ create table tag (
    t_url varchar not null
 );
 
-alter index tag on tag partition (t_tagid int (0hexffff00));
+alter index tag on tag partition cluster REPLICATED;
 
 create table tag_tagclass (
    ttc_tagid bigint not null,
@@ -206,22 +206,23 @@ create table tag_tagclass (
    primary key (ttc_tagid, ttc_tagclassid) column
 );
 
-alter index tag_tagclass on tag_tagclass partition (ttc_tagid int (0hexffff00));
+alter index tag_tagclass on tag_tagclass partition cluster REPLICATED;
 
 
 
 create column index k_p2 on knows (k_person2id, k_person1id) partition (k_person2id int (0hexffff00));
 
 create column index ps_creatorid on post (ps_creatorid, ps_creationdate) partition (ps_creatorid int (0hexffff00));
-create column not null index ps_p_creatorid on post (ps_p_creatorid) partition (ps_creatorid int (0hexffff00));
+create column not null index ps_p_creatorid on post (ps_p_creatorid) partition (ps_p_creatorid int (0hexffff00));
 create column index ps_replyof on post (ps_replyof) partition (ps_replyof int (0hexffff00));
+--create column index ps_replyof on post (ps_replyof, ps_creatorid, ps_creationdate) partition (ps_replyof int (0hexffff00));
 create column index ps_forumid on post (ps_forumid, ps_creatorid) partition (ps_forumid int (0hexffff00));
 
-create column index fp_personid on forum_person (fp_personid) partition (fp_personid int (0hexffff00));
+create column index fp_personid on forum_person (fp_personid, fp_creationdate, fp_forumid) partition (fp_personid int (0hexffff00));
 
 
-create table k_weight (kw_p1 bigint, kw_p2 bigint, kw_weight int,
-  primary key (kw_p1, kw_p2) column);
+create table k_weight (kw_p1 bigint, kw_p2 bigint, kw_weight real,
+  primary key (kw_p1, kw_p2) not column);
 alter index k_weight on k_weight partition (kw_p1 int (0hexffff00));
 
 
@@ -232,3 +233,12 @@ alter index c_sum on c_sum partition (cs_p1 int (0hexffff00));
 
 
 create view country as select city.pl_placeid as ctry_city, ctry.pl_name as ctry_name from place city, place ctry where city.pl_containerplaceid = ctry.pl_placeid and ctry.pl_type = 'country';
+
+
+create table  result_f (r_op varchar, r_sched bigint, r_start bigint, r_duration int, r_stat int);
+
+ft_set_file ('result_f', 'results/LDBC-results_log.csv', delimiter => '|', skip_rows=>1);
+
+create table  snb_result (sq_name varchar, sq_count int, sq_mean float, sq_min float, sq_max float, 
+       sq_50 float, sq_90 float, sq_95 float, sq_99 float);
+

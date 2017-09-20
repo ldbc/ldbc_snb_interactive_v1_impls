@@ -1,0 +1,15 @@
+select top @Limit@ p_personid, p_firstname, p_lastname, p_creationdate, count (*) as cnt1
+from person, post, forum f,
+     (select top @Limit1@ f_forumid, count (*) as cnt
+     from forum, forum_person, person, country 
+     where f_forumid = fp_forumid and p_personid = fp_personid 
+     and p_placeid = ctry_city and ctry_name = '@Country@'
+     group by f_forumid order by cnt desc, f_forumid) tf
+where ps_creatorid = p_personid
+      and ps_forumid = f.f_forumid 
+      and f.f_forumid = tf.f_forumid
+      and (f.f_moderatorid = p_personid or 
+      	   exists (select 1 from forum_person where fp_forumid = f.f_forumid and fp_personid = p_personid)
+      )
+group by p_personid
+order by cnt1 desc, p_personid

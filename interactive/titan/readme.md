@@ -10,7 +10,7 @@ This implementation contains:
 ```
      <groupId>com.ldbc.driver</groupId>
      <artifactId>jeeves</artifactId>
-     <version>0.2-SNAPSHOT</version>
+     <version>0.3-SNAPSHOT</version>
 ```
 
 * A control panel application is in the works to allow easy running of the importer and driver. Exmaple for importer:

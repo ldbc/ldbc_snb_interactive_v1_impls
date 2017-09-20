@@ -3,7 +3,7 @@
   <parent>
     <artifactId>ldbc_benchmarkFTM</artifactId>
     <groupId>com.hp.alps2</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>control_panel</artifactId>
@@ -51,15 +51,7 @@
       </exclusions>
     </dependency>
   </dependencies>
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>com.google.guava</groupId>
-        <artifactId>guava</artifactId>
-        <version>15.0</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+  <dependencyManagement />
   <properties>
     <jettyVersion>9.2.3.v20140905</jettyVersion>
   </properties>

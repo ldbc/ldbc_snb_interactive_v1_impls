@@ -1,20 +1,6 @@
-/**
- (c) Copyright [2015] Hewlett-Packard Development Company, L.P.
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package hpl.alp2.titan.drivers.interactive;
 
+import com.ldbc.driver.DbException;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1;
@@ -40,7 +26,7 @@ public class LdbcQuery1Handler implements OperationHandler<LdbcQuery1,TitanFTMDb
     final static Logger logger = LoggerFactory.getLogger(LdbcQuery1Handler.class);
 
     @Override
-    public void executeOperation(final LdbcQuery1 operation,TitanFTMDb.BasicDbConnectionState dbConnectionState,ResultReporter resultReporter) {
+    public void executeOperation(final LdbcQuery1 operation,TitanFTMDb.BasicDbConnectionState dbConnectionState,ResultReporter resultReporter) throws DbException {
         /*Given a start Person, find up to 20 Persons with a given first name that the start Person is
         connected to (excluding start Person) by at most 3 steps via Knows relationships. Return Persons, including
         summaries of the Persons workplaces and places of study. Sort results ascending by their distance from the

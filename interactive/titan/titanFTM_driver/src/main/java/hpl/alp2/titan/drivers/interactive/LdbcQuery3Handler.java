@@ -1,20 +1,6 @@
-/**
- (c) Copyright [2015] Hewlett-Packard Development Company, L.P.
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package hpl.alp2.titan.drivers.interactive;
 
+import com.ldbc.driver.DbException;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery3;
@@ -44,7 +30,7 @@ public class LdbcQuery3Handler implements OperationHandler<LdbcQuery3,TitanFTMDb
     Sort results descending by total number of Posts/Comments, and then ascending by Person identifier. */
 
     @Override
-    public void executeOperation(final LdbcQuery3 operation,TitanFTMDb.BasicDbConnectionState dbConnectionState,ResultReporter resultReporter) {
+    public void executeOperation(final LdbcQuery3 operation,TitanFTMDb.BasicDbConnectionState dbConnectionState,ResultReporter resultReporter) throws DbException {
 
         long person_id = operation.personId();
         final String country_x = operation.countryXName();
@@ -145,9 +131,7 @@ public class LdbcQuery3Handler implements OperationHandler<LdbcQuery3,TitanFTMDb
 
         @Override
         public boolean equals(Object o) {
-            if (!this.getClass().isInstance(o))
-                return false;
-            return (this.x==((Q3Res) o).x && this.y==((Q3Res) o).y);
+            return this.getClass().isInstance(o) && (this.x == ((Q3Res) o).x && this.y == ((Q3Res) o).y);
         }
         @Override
         public int compareTo(Q3Res o) {
@@ -156,10 +140,5 @@ public class LdbcQuery3Handler implements OperationHandler<LdbcQuery3,TitanFTMDb
             } else
                 return 0;
         }
-        @Override
-        public int hashCode() {
-            return x*((int)Math.pow(10,String.valueOf(y).length()))+y;
-        }
-
     }
 }

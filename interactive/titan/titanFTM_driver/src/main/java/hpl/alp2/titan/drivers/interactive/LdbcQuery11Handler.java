@@ -1,6 +1,6 @@
-
 package hpl.alp2.titan.drivers.interactive;
 
+import com.ldbc.driver.DbException;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery11;
@@ -25,7 +25,7 @@ public class LdbcQuery11Handler implements OperationHandler<LdbcQuery11,TitanFTM
     final static Logger logger = LoggerFactory.getLogger(LdbcQuery11Handler.class);
 
     @Override
-    public void executeOperation(final LdbcQuery11 operation,TitanFTMDb.BasicDbConnectionState dbConnectionState,ResultReporter resultReporter) {
+    public void executeOperation(final LdbcQuery11 operation,TitanFTMDb.BasicDbConnectionState dbConnectionState,ResultReporter resultReporter) throws DbException {
         long person_id = operation.personId();
         String countryName = operation.countryName();
         int year = operation.workFromYear();
