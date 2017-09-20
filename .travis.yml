@@ -2,6 +2,8 @@ dist: trusty
 sudo: required
 language: java
 install: true
+services:
+  - postgresql
 script:
   - cd bi/postgres
   - mvn test -B
