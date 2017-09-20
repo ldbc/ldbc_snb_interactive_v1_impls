@@ -1,0 +1,12 @@
+dist: trusty
+sudo: required
+language: java
+install: true
+script:
+  - cd bi/postgres
+  - mvn test -B
+notifications:
+  slack: ldbcouncil:JRXP43nDV4KRgtclmoNZJpyq
+  email: false
+  on_success: change
+  on_failure: always
