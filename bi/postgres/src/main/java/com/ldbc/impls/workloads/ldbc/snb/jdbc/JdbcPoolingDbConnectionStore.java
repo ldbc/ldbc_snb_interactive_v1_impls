@@ -1,13 +1,12 @@
 package com.ldbc.impls.workloads.ldbc.snb.jdbc;
 
+import com.ldbc.driver.DbException;
+import org.postgresql.ds.jdbc4.AbstractJdbc4PoolingDataSource;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
-
-import org.postgresql.ds.jdbc4.AbstractJdbc4PoolingDataSource;
-
-import com.ldbc.driver.DbException;
 
 public class JdbcPoolingDbConnectionStore<DbQueryStore> extends JdbcDbConnectionStore<DbQueryStore> {
 	AbstractJdbc4PoolingDataSource ds;

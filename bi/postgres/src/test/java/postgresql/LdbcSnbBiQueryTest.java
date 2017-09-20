@@ -1,27 +1,18 @@
 package postgresql;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.junit.Test;
-
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;
 import com.ldbc.driver.OperationHandlerRunnableContext;
 import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.Workload;
-import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery10TagPerson;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery1PostingSummary;
-import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery3TagEvolution;
-import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery4PopularCountryTopics;
-import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery5TopCountryPosters;
-import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery6ActivePosters;
-import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery7AuthoritativeUsers;
-import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopics;
-import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForums;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiWorkload;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.bi.BiDb;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LdbcSnbBiQueryTest {
 	private static String endpoint = "localhost:5432";
@@ -32,7 +23,7 @@ public class LdbcSnbBiQueryTest {
 	private static String queryDir = "src/main/sql/postgres/queries/bi";
 	
 	private static Map<String, String> getProperties() {
-		HashMap<String, String> properties = new HashMap<String, String>();
+		Map<String, String> properties = new HashMap<>();
 		properties.put("endpoint", endpoint);
 		properties.put("user", user);
 		properties.put("password", password);
@@ -46,7 +37,7 @@ public class LdbcSnbBiQueryTest {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static Object runOperation(BiDb db, Operation<?> op) throws DbException {
+	public Object runOperation(BiDb db, Operation<?> op) throws DbException {
 		OperationHandlerRunnableContext handler = db.getOperationHandlerRunnableContext(op);
 		ResultReporter reporter = new ResultReporter.SimpleResultReporter(null);
 		handler.operationHandler().executeOperation(op, handler.dbConnectionState(), reporter);
@@ -56,15 +47,15 @@ public class LdbcSnbBiQueryTest {
 	
 	@Test
 	public void testQueries() throws DbException, IOException {
-//		System.out.println(System.getProperty("user.dir"));
-//		Workload workload = new LdbcSnbBiWorkload();
-//		@SuppressWarnings("rawtypes")
-//		Map<Integer, Class<? extends Operation>> mapping = workload.operationTypeToClassMapping();
-//		BiJdbcDb sqldb = new BiJdbcDb();
-//		sqldb.init(getProperties(), null, mapping);
-//
-//		LdbcSnbBiQuery1PostingSummary q1 = new LdbcSnbBiQuery1PostingSummary(630);
-//		System.out.println(runOperation(sqldb, q1));
+		System.out.println(System.getProperty("user.dir"));
+		Workload workload = new LdbcSnbBiWorkload();
+		@SuppressWarnings("rawtypes")
+		Map<Integer, Class<? extends Operation>> mapping = workload.operationTypeToClassMapping();
+		BiDb sqldb = new BiDb();
+		sqldb.init(getProperties(), null, mapping);
+
+		LdbcSnbBiQuery1PostingSummary q1 = new LdbcSnbBiQuery1PostingSummary(630);
+		System.out.println(runOperation(sqldb, q1));
 ////		
 //////		LdbcSnbBiQuery2TopTags q2 = new LdbcSnbBiQuery2TopTags(dateA, dateB, countryA, countryB, minMessageCount, limit)
 //////		System.out.println(runOperation(sqldb, q1));
