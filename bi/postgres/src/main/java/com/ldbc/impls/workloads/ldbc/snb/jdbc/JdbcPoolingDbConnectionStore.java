@@ -26,7 +26,7 @@ public class JdbcPoolingDbConnectionStore<DbQueryStore> extends JdbcDbConnection
 		}
 
 		ds.setDataSourceName("MyPool");
-		ds.setDatabaseName(properties.get("jdbcdatabase"));
+		ds.setDatabaseName(properties.get("database"));
 		ds.setServerName(endPoint);
 		ds.setUser(properties.get("user"));
 		ds.setPassword(properties.get("password"));
