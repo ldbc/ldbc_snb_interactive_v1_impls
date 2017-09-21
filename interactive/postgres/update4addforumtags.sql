@@ -1,0 +1,1 @@
+insert into forum_tag values (--1--, --2--)
