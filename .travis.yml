@@ -11,6 +11,7 @@ install:
   - mvn install -DskipTests
   - cd ..
 script:
+  - chmod 755 ~
   - cd bi/postgres/sql/load
   - ./load.sh bi $(pwd)/../data postgres
   - cd ../../../..
