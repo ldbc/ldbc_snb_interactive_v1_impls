@@ -8,4 +8,3 @@ PATH=$2
 /usr/bin/psql -d $DBNAME -a -f schema.sql
 (/bin/cat load.sql| /bin/sed "s|PATHVAR|$PATH|g"; echo "\q\n") | /usr/bin/psql -d $DBNAME
 /usr/bin/psql -d $DBNAME -a -f schema_constraints.sql
-

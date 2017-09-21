@@ -1,21 +1,3 @@
--- COPY forum to '/tmp/forum_ldbc.csv';
--- COPY forum_person to '/tmp/forum_person_ldbc.csv';
--- COPY person to '/tmp/person_ldbc.csv';
--- COPY knows to '/tmp/knows_ldbc.csv';
--- COPY likes to '/tmp/likes_ldbc.csv';
--- COPY post to '/tmp/post_ldbc.csv';
--- COPY (SELECT * from country) to '/tmp/country_ldbc.csv';
-
--- COPY forum from '/tmp/forum_ldbc.csv';
--- COPY forum_person from '/tmp/forum_person_ldbc.csv';
--- COPY person from '/tmp/person_ldbc.csv';
--- COPY knows from '/tmp/knows_ldbc.csv';
--- COPY likes from '/tmp/likes_ldbc.csv';
--- COPY post from '/tmp/post_ldbc.csv';
--- create table country (ctry_city bigint not null, ctry_name varchar not null);
--- COPY country from '/tmp/country_ldbc.csv';
-
-
 -- Populate forum table
 COPY forum FROM 'PATHVAR/forum_0_0.csv' WITH DELIMITER '|' CSV HEADER;
 
