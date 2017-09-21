@@ -9,11 +9,13 @@
   	<dependency>
   		<groupId>com.ldbc.driver</groupId>
   		<artifactId>jeeves</artifactId>
+      <version>0.3-SNAPSHOT</version>
+  	</dependency>
 	</dependency>
 	<dependency>
 	  <groupId>virtuoso</groupId>
 	  <artifactId>virtjdbc4</artifactId>
-          <version>4.0</version>
+    <version>4.0</version>
 	  <scope>system</scope>
 	  <systemPath>${project.basedir}/virtjdbc4_lib/virtjdbc4.jar</systemPath>
 	</dependency>

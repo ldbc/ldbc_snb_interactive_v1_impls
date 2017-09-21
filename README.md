@@ -1,4 +1,5 @@
-ldbc_snb_interactive_vendors
-============================
+# LDBC SNB implementations
 
-Implementations for the Workload components of the LDBC Social Network Benchmark
+[![Build Status](https://travis-ci.org/ldbc/ldbc_snb_implementations.svg?branch=master)](https://travis-ci.org/ldbc/ldbc_snb_implementations)
+
+Implementations for the Workload components of the LDBC Social Network Benchmark.
