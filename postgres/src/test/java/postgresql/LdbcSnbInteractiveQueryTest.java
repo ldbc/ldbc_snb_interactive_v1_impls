@@ -8,12 +8,14 @@ import com.ldbc.driver.Workload;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcSnbInteractiveWorkload;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.interactive.InteractiveDb;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Ignore
 public class LdbcSnbInteractiveQueryTest {
 	private static String endpoint = "localhost:5432";
 	private static String user = "postgres";
