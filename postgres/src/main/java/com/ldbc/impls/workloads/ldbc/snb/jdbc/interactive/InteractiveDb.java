@@ -1,13 +1,5 @@
 package com.ldbc.impls.workloads.ldbc.snb.jdbc.interactive;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.control.LoggingService;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcNoResult;
@@ -61,7 +53,6 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate5AddForumMembers
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate6AddPost;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate7AddComment;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate8AddFriendship;
-import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcCustomPoolingDbConnectionStore;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcDb;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcDbConnectionStore;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcPoolingDbConnectionStore;
@@ -70,12 +61,21 @@ import com.ldbc.impls.workloads.ldbc.snb.jdbc.prepared.JdbcPreparedMultipleUpdat
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.prepared.JdbcPreparedSingletonOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.prepared.JdbcPreparedUpdateOperationHandler;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 	
 	@Override
 	protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
 		try {
-			dbs = new JdbcCustomPoolingDbConnectionStore<InteractiveQueryStore>(properties, new InteractiveQueryStore(properties.get("queryDir")));
+//			dbs = new JdbcCustomPoolingDbConnectionStore<InteractiveQueryStore>(properties, new InteractiveQueryStore(properties.get("queryDir")));
+			dbs = new JdbcPoolingDbConnectionStore<InteractiveQueryStore>(properties, new InteractiveQueryStore(properties.get("queryDir")));
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new DbException(e);
 		}

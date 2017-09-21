@@ -1,24 +1,5 @@
 package com.ldbc.impls.workloads.ldbc.snb.jdbc.interactive;
 
-import static java.nio.file.Files.readAllBytes;
-import static java.nio.file.Paths.get;
-
-import java.io.File;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TimeZone;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10;
@@ -50,45 +31,64 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate6AddPost;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate7AddComment;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate8AddFriendship;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.TimeZone;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static java.nio.file.Files.readAllBytes;
+import static java.nio.file.Paths.get;
+
 public class InteractiveQueryStore {
 	public static enum QueryType {
-		Query1("query1.txt", typeList(Long.class, String.class)),
-		Query2("query2.txt", typeList(Long.class, Timestamp.class)),
-		Query3("query3.txt", typeList(Long.class, String.class, String.class, Timestamp.class, Integer.class)),
-		Query4("query4.txt", typeList(Long.class, Timestamp.class, Integer.class)),
-		Query5("query5.txt", typeList(Long.class, Timestamp.class)),
-		Query6("query6.txt", typeList(Long.class, String.class)),
-		Query7("query7.txt", typeList(Long.class)),
-		Query8("query8.txt", typeList(Long.class)),
-		Query9("query9.txt", typeList(Long.class, Timestamp.class)),
-		Query10("query10.txt", typeList(Long.class, Integer.class, Integer.class)),
-		Query11("query11.txt", typeList(Long.class, Integer.class, String.class)),
-		Query12("query12.txt", typeList(Long.class, String.class)),
-		Query13("query13.txt", typeList(Long.class, Long.class)),
-		Query14("query14.txt", typeList(Long.class, Long.class)),
-		ShortQuery1PersonProfile("shortquery1personprofile.txt", typeList(Long.class)),
-		ShortQuery2PersonPosts("shortquery2personposts.txt", typeList(Long.class)),
-		ShortQuery3PersonFriends("shortquery3personfriends.txt", typeList(Long.class)),
-		ShortQuery4MessageContent("shortquery4messagecontent.txt", typeList(Long.class)),
-		ShortQuery5MessageCreator("shortquery5messagecreator.txt", typeList(Long.class)),
-		ShortQuery6MessageForum("shortquery6messageforum.txt", typeList(Long.class)),
-		ShortQuery7MessageReplies("shortquery7messagereplies.txt", typeList(Long.class)),
-		Update1AddPerson("update1addperson.txt", typeList(Long.class, String.class, String.class, String.class, Timestamp.class, Timestamp.class, String.class, String.class, Long.class)),
-		Update1AddPersonCompanies("update1addpersoncompanies.txt", typeList(Long.class, Long.class, Integer.class)),
-		Update1AddPersonEmails("update1addpersonemails.txt", typeList(Long.class, String.class)),
-		Update1AddPersonLanguages("update1addpersonlanguages.txt", typeList(Long.class, String.class)),
-		Update1AddPersonTags("update1addpersontags.txt", typeList(Long.class, Long.class)),
-		Update1AddPersonUniversities("update1addpersonuniversities.txt", typeList(Long.class, Long.class, Integer.class)),
-		Update2AddPostLike("update2addpostlike.txt", typeList(Long.class, Long.class, Timestamp.class)),
-		Update3AddCommentLike("update3addcommentlike.txt", typeList(Long.class, Long.class, Timestamp.class)),
-		Update4AddForum("update4addforum.txt", typeList(Long.class, String.class, Timestamp.class, Long.class)),
-		Update4AddForumTags("update4addforumtags.txt", typeList(Long.class, Long.class)),
-		Update5AddForumMembership("update5addforummembership.txt", typeList(Long.class, Long.class, Timestamp.class)),
-		Update6AddPost("update6addpost.txt", typeList(Long.class, String.class, Timestamp.class, String.class, String.class, String.class, String.class, Integer.class, Long.class, Long.class, Long.class)),
-		Update6AddPostTags("update6addposttags.txt", typeList(Long.class, Long.class)),
-		Update7AddComment("update7addcomment.txt", typeList(Long.class, Timestamp.class, String.class, String.class, String.class, Integer.class, Long.class, Long.class, Long.class, Long.class)),
-		Update7AddCommentTags("update7addcommenttags.txt", typeList(Long.class, Long.class)),
-		Update8AddFriendship("update8addfriendship.txt", typeList(Long.class, Long.class, Timestamp.class));
+		Query1("query1.sql", typeList(Long.class, String.class)),
+		Query2("query2.sql", typeList(Long.class, Timestamp.class)),
+		Query3("query3.sql", typeList(Long.class, String.class, String.class, Timestamp.class, Integer.class)),
+		Query4("query4.sql", typeList(Long.class, Timestamp.class, Integer.class)),
+		Query5("query5.sql", typeList(Long.class, Timestamp.class)),
+		Query6("query6.sql", typeList(Long.class, String.class)),
+		Query7("query7.sql", typeList(Long.class)),
+		Query8("query8.sql", typeList(Long.class)),
+		Query9("query9.sql", typeList(Long.class, Timestamp.class)),
+		Query10("query10.sql", typeList(Long.class, Integer.class, Integer.class)),
+		Query11("query11.sql", typeList(Long.class, Integer.class, String.class)),
+		Query12("query12.sql", typeList(Long.class, String.class)),
+		Query13("query13.sql", typeList(Long.class, Long.class)),
+		Query14("query14.sql", typeList(Long.class, Long.class)),
+		ShortQuery1PersonProfile("shortquery1personprofile.sql", typeList(Long.class)),
+		ShortQuery2PersonPosts("shortquery2personposts.sql", typeList(Long.class)),
+		ShortQuery3PersonFriends("shortquery3personfriends.sql", typeList(Long.class)),
+		ShortQuery4MessageContent("shortquery4messagecontent.sql", typeList(Long.class)),
+		ShortQuery5MessageCreator("shortquery5messagecreator.sql", typeList(Long.class)),
+		ShortQuery6MessageForum("shortquery6messageforum.sql", typeList(Long.class)),
+		ShortQuery7MessageReplies("shortquery7messagereplies.sql", typeList(Long.class)),
+		Update1AddPerson("update1addperson.sql", typeList(Long.class, String.class, String.class, String.class, Timestamp.class, Timestamp.class, String.class, String.class, Long.class)),
+		Update1AddPersonCompanies("update1addpersoncompanies.sql", typeList(Long.class, Long.class, Integer.class)),
+		Update1AddPersonEmails("update1addpersonemails.sql", typeList(Long.class, String.class)),
+		Update1AddPersonLanguages("update1addpersonlanguages.sql", typeList(Long.class, String.class)),
+		Update1AddPersonTags("update1addpersontags.sql", typeList(Long.class, Long.class)),
+		Update1AddPersonUniversities("update1addpersonuniversities.sql", typeList(Long.class, Long.class, Integer.class)),
+		Update2AddPostLike("update2addpostlike.sql", typeList(Long.class, Long.class, Timestamp.class)),
+		Update3AddCommentLike("update3addcommentlike.sql", typeList(Long.class, Long.class, Timestamp.class)),
+		Update4AddForum("update4addforum.sql", typeList(Long.class, String.class, Timestamp.class, Long.class)),
+		Update4AddForumTags("update4addforumtags.sql", typeList(Long.class, Long.class)),
+		Update5AddForumMembership("update5addforummembership.sql", typeList(Long.class, Long.class, Timestamp.class)),
+		Update6AddPost("update6addpost.sql", typeList(Long.class, String.class, Timestamp.class, String.class, String.class, String.class, String.class, Integer.class, Long.class, Long.class, Long.class)),
+		Update6AddPostTags("update6addposttags.sql", typeList(Long.class, Long.class)),
+		Update7AddComment("update7addcomment.sql", typeList(Long.class, Timestamp.class, String.class, String.class, String.class, Integer.class, Long.class, Long.class, Long.class, Long.class)),
+		Update7AddCommentTags("update7addcommenttags.sql", typeList(Long.class, Long.class)),
+		Update8AddFriendship("update8addfriendship.sql", typeList(Long.class, Long.class, Timestamp.class));
 		
 		QueryType(String file) {
 			fileName = file;
