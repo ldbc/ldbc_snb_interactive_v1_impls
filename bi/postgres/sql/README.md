@@ -21,3 +21,15 @@ ldbc.snb.datagen.serializer.personActivitySerializer:ldbc.snb.datagen.serializer
 ldbc.snb.datagen.generator.numThreads:1
 ldbc.snb.datagen.serializer.outputDir:./test_data/
 ```
+
+Run the load script:
+
+```bash
+./load.sh bi <data_dir> <your_pg_user>
+```
+
+If you get "Permission denied" errors, change the permissions of your home directory to 755 - but please make sure you understand its implications first:
+
+```bash
+chmod 755 ~
+```
