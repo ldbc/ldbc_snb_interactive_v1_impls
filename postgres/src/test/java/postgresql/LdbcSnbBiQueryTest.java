@@ -24,10 +24,10 @@ import java.util.Map;
 public class LdbcSnbBiQueryTest {
 	private static String endpoint = "localhost:5432";
 	private static String user = "postgres";
-	private static String password = "";
-	private static String database = "bi";
+	private static String password = "foo";
+	private static String database = "ldbcsf1";
 	private static String jdbcDriver = "org.postgresql.ds.PGPoolingDataSource";
-	private static String queryDir = "sql/queries";
+	private static String queryDir = "sql/bi";
 	
 	private static Map<String, String> getProperties() {
 		Map<String, String> properties = new HashMap<>();
@@ -56,6 +56,7 @@ public class LdbcSnbBiQueryTest {
 	public void testQueries() throws DbException, IOException {
 		System.out.println(System.getProperty("user.dir"));
 		Workload workload = new LdbcSnbBiWorkload();
+
 		@SuppressWarnings("rawtypes")
 		Map<Integer, Class<? extends Operation>> mapping = workload.operationTypeToClassMapping();
 		BiDb sqldb = new BiDb();
@@ -90,6 +91,9 @@ public class LdbcSnbBiQueryTest {
 
 		LdbcSnbBiQuery10TagPerson q10 = new LdbcSnbBiQuery10TagPerson("Abraham_Lincoln", 100);
 		System.out.println(runOperation(sqldb, q10));
+
+//		LdbcQuery1 interactiveQ1 = new LdbcQuery1(1, "Abraham_Lincoln", 100);
+//		System.out.println(runOperation(sqldb, interactiveQ1));
 
 		sqldb.close();
 		workload.close();

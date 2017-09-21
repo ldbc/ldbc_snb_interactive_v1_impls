@@ -3,7 +3,7 @@ language: java
 services:
   - postgresql
 before_script:
-  - psql -c 'create database bi;' -U postgres
+  - psql -c "ALTER ROLE postgres PASSWORD 'foo'" -U postgres
 install:
   - git clone --depth=1 https://github.com/ldbc/ldbc_snb_driver
   - cd ldbc_snb_driver
@@ -11,10 +11,10 @@ install:
   - cd ..
 script:
   - chmod 755 ~
-  - cd bi/postgres/sql/load
-  - ./load.sh bi $(pwd)/../data postgres
-  - cd ../../../..
-  - cd bi/postgres
+  - cd postgres/sql/load
+  - ./load.sh
+  - cd ../../..
+  - cd postgres
   - mvn test -B
 notifications:
   slack: ldbcouncil:JRXP43nDV4KRgtclmoNZJpyq

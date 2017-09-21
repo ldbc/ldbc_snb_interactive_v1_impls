@@ -1,8 +1,20 @@
-For example, if you would like to create a user `usr` with a password `pwd`:
+# LDBC SNB Postgres implementation
+
+The default configuration uses the `ldbcsf1` database.
+
+For example, if you would like to create a user `usr` with a password `pwd`.
+
+On a typical Ubuntu install, you might want to run:
+
+```bash
+sudo -u postgres psql
+```
+
+Create your user and grant the required privileges and set the password (e.g. `foo`):
 
 ```
-CREATE USER usr PASSWORD 'pwd';
-ALTER ROLE usr WITH login createdb superuser;
+CREATE USER ldbc PASSWORD 'ldbc';
+ALTER ROLE ldbc WITH login createdb superuser;
 ```
 
 Use the following `params.ini` configuration for testing:
@@ -25,10 +37,10 @@ ldbc.snb.datagen.serializer.outputDir:./test_data/
 Run the load script:
 
 ```bash
-./load.sh bi <data_dir> <your_pg_user>
+./load.sh ldbcsf1 <data_dir> <your_pg_user> <your_pg_password>
 ```
 
-If you get "Permission denied" errors, change the permissions of your home directory to 755 - but please make sure you understand its implications first:
+If you get _Permission denied_ errors, change the permissions of your home directory to 755 - but please make sure you understand its implications first:
 
 ```bash
 chmod 755 ~

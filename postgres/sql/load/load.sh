@@ -1,8 +1,8 @@
 #!/bin/sh
 
-DBNAME=$1
-PATH=$2
-PG_USER=$3
+DBNAME=${1:-ldbcsf1}
+PATH=${2:-$(pwd)/../data}
+PG_USER=${3:-$USER}
 
 /usr/bin/dropdb $DBNAME -U $PG_USER
 /usr/bin/createdb $DBNAME -U $PG_USER --template template0 -l "C"
