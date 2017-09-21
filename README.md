@@ -4,6 +4,8 @@
 
 Implementations for the Workload components of the LDBC Social Network Benchmark.
 
+For documentation on the PostgreSQL implementation, visit the [postgres](postgres/) directory.
+
 1. Download and install the LDBC driver:
 
   You can find the detailed information about this task here:

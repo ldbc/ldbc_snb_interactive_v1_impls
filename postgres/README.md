@@ -1,8 +1,8 @@
 # LDBC SNB Postgres implementation
 
-The default configuration uses the `ldbcsf1` database.
+## Configuring the database
 
-For example, if you would like to create a user `usr` with a password `pwd`.
+The default configuration uses the `ldbcsf1` database.
 
 On a typical Ubuntu install, you might want to run:
 
@@ -10,14 +10,24 @@ On a typical Ubuntu install, you might want to run:
 sudo -u postgres psql
 ```
 
-Create your user and grant the required privileges and set the password (e.g. `foo`):
+To allow access from JDBC, you have to set a password. For example, to set the default password of `foo`, issue the following command:
 
 ```
-CREATE USER ldbc PASSWORD 'ldbc';
-ALTER ROLE ldbc WITH login createdb superuser;
+ALTER ROLE usr PASSWORD 'foo';
 ```
 
-Use the following `params.ini` configuration for testing:
+If you want to create a separate user `usr` with the password `foo`, use the following commands:
+
+```
+CREATE USER usr PASSWORD 'foo';
+ALTER ROLE usr WITH login createdb superuser;
+```
+
+## Generaring test models
+
+The load script expect models generated with the `CSVMergeForeign` serializers.
+
+An example `params.ini` configuration for testing:
 
 ```
 ldbc.snb.datagen.generator.scaleFactor:snb.interactive.1
@@ -34,11 +44,15 @@ ldbc.snb.datagen.generator.numThreads:1
 ldbc.snb.datagen.serializer.outputDir:./test_data/
 ```
 
+## Loading the data
+
 Run the load script:
 
 ```bash
-./load.sh ldbcsf1 <data_dir> <your_pg_user> <your_pg_password>
+./load.sh <database> <data_dir> <your_pg_user>
 ```
+
+The `load.sh` has default options. If these fit your installation, you can run it without any arguments (`./load.sh`).
 
 If you get _Permission denied_ errors, change the permissions of your home directory to 755 - but please make sure you understand its implications first:
 
