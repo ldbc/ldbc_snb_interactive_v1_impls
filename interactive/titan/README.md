@@ -9,17 +9,17 @@ This implementation contains:
 
 * The implementation depends upon the ldbc driver. You should build and package it as a jar  and install it to your local maven repo with the following coordinates:
 
-  ```xml
-  <groupId>com.ldbc.driver</groupId>
-  <artifactId>jeeves</artifactId>
-  <version>0.3-SNAPSHOT</version>
-  ```
+    ```xml
+    <groupId>com.ldbc.driver</groupId>
+    <artifactId>jeeves</artifactId>
+    <version>0.3-SNAPSHOT</version>
+    ```
 
 * A control panel application is in the works to allow easy running of the importer and driver. Exmaple for importer:
 
-  ```
-  java -Dlogback.configurationFile=./logback.xml -jar liveGraphCP.jar cli -L ./db.conf /local/ldbcData/
-  ```
+    ```bash
+    java -Dlogback.configurationFile=./logback.xml -jar liveGraphCP.jar cli -L ./db.conf /local/ldbcData/
+    ```
 
 ### Arguments
 
