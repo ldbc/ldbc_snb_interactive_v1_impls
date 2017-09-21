@@ -1,1 +1,0 @@
-insert into likes values(--1--, --2--, --3--::timestamp);
