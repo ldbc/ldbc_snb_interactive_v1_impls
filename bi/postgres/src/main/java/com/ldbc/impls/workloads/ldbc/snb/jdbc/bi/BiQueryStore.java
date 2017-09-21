@@ -1,16 +1,5 @@
 package com.ldbc.impls.workloads.ldbc.snb.jdbc.bi;
 
-import static java.nio.file.Files.readAllBytes;
-import static java.nio.file.Paths.get;
-
-import java.io.File;
-import java.io.IOException;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TimeZone;
-
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery10TagPerson;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery12TrendingPosts;
@@ -36,31 +25,44 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery7AuthoritativeUsers;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopics;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForums;
 
+import java.io.File;
+import java.io.IOException;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.TimeZone;
+
+import static java.nio.file.Files.readAllBytes;
+import static java.nio.file.Paths.get;
+
 public class BiQueryStore {
 	public static enum QueryType { 
-		Query1("query1.txt"),
-		Query2("query2.txt"),
-		Query3("query3.txt"),
-		Query4("query4.txt"),
-		Query5("query5.txt"),
-		Query6("query6.txt"),
-		Query7("query7.txt"),
-		Query8("query8.txt"),
-		Query9("query9.txt"),
-		Query10("query10.txt"),
-		Query12("query12.txt"),
-		Query13("query13.txt"),
-		Query14("query14.txt"),
-		Query15("query15.txt"),
-		Query16("query16.txt"),
-		Query17("query17.txt"),
-		Query18("query18.txt"),
-		Query19("query19.txt"),
-		Query20("query20.txt"),
-		Query21("query21.txt"),
-		Query22("query22.txt"),
-		Query23("query23.txt"),
-		Query24("query24.txt"),;
+		Query1("query1.sql"),
+		Query2("query2.sql"),
+		Query3("query3.sql"),
+		Query4("query4.sql"),
+		Query5("query5.sql"),
+		Query6("query6.sql"),
+		Query7("query7.sql"),
+		Query8("query8.sql"),
+		Query9("query9.sql"),
+		Query10("query10.sql"),
+		Query12("query12.sql"),
+		Query13("query13.sql"),
+		Query14("query14.sql"),
+		Query15("query15.sql"),
+		Query16("query16.sql"),
+		Query17("query17.sql"),
+		Query18("query18.sql"),
+		Query19("query19.sql"),
+		Query20("query20.sql"),
+		Query21("query21.sql"),
+		Query22("query22.sql"),
+		Query23("query23.sql"),
+		Query24("query24.sql"),
+//		Query25("query25.sql"),
+		;
 		
 		QueryType(String file) {
 			fileName = file;
@@ -210,6 +212,12 @@ public class BiQueryStore {
 	public String getQuery24(LdbcSnbBiQuery24MessagesByTopic operation) {
 		return queries.get(QueryType.Query24)
 			.replace("--1--",operation.tagClass());
+	}
+
+	public String getQuery25(LdbcSnbBiQuery24MessagesByTopic operation) {
+		throw new UnsupportedOperationException( );
+//		return queries.get(QueryType.Query25)
+//				.replace("--1--",operation.tagClass());
 	}
 	
 	
