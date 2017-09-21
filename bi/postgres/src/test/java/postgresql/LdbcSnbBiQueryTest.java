@@ -23,8 +23,8 @@ import java.util.Map;
 
 public class LdbcSnbBiQueryTest {
 	private static String endpoint = "localhost:5432";
-	private static String user = "szarnyasg";
-	private static String password = "bar";
+	private static String user = "postgres";
+	private static String password = "";
 	private static String database = "bi";
 	private static String jdbcDriver = "org.postgresql.ds.PGPoolingDataSource";
 	private static String queryDir = "sql/queries";

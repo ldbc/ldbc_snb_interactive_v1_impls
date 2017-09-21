@@ -4,13 +4,16 @@ language: java
 services:
   - postgresql
 before_script:
-  - psql -c 'create database travis_ci_test;' -U postgres
+  - psql -c 'create database bi;' -U postgres
 install:
   - git clone --depth=1 https://github.com/ldbc/ldbc_snb_driver
   - cd ldbc_snb_driver
   - mvn install -DskipTests
   - cd ..
 script:
+  - cd bi/postgres/sql/load
+  - ./load.sh bi $(pwd)/../data postgres
+  - cd ../../../..
   - cd bi/postgres
   - mvn test -B
 notifications:
