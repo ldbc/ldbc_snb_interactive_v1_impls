@@ -16,6 +16,7 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery21Zombies;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery22InternationalDialog;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery23HolidayDestinations;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery24MessagesByTopic;
+import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery25WeightedPaths;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery2TopTags;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery3TagEvolution;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery4PopularCountryTopics;
@@ -37,7 +38,7 @@ import static java.nio.file.Files.readAllBytes;
 import static java.nio.file.Paths.get;
 
 public class BiQueryStore {
-	public static enum QueryType { 
+	public enum QueryType {
 		Query1("query1.sql"),
 		Query2("query2.sql"),
 		Query3("query3.sql"),
@@ -48,6 +49,7 @@ public class BiQueryStore {
 		Query8("query8.sql"),
 		Query9("query9.sql"),
 		Query10("query10.sql"),
+//		Query11("query11.sql"),
 		Query12("query12.sql"),
 		Query13("query13.sql"),
 		Query14("query14.sql"),
@@ -214,7 +216,7 @@ public class BiQueryStore {
 			.replace("--1--",operation.tagClass());
 	}
 
-	public String getQuery25(LdbcSnbBiQuery24MessagesByTopic operation) {
+	public String getQuery25(LdbcSnbBiQuery25WeightedPaths operation) {
 		throw new UnsupportedOperationException( );
 //		return queries.get(QueryType.Query25)
 //				.replace("--1--",operation.tagClass());

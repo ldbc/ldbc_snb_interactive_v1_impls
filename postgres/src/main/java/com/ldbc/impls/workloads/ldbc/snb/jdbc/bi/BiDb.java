@@ -1,10 +1,5 @@
 package com.ldbc.impls.workloads.ldbc.snb.jdbc.bi;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Map;
-
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.control.LoggingService;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery10TagPerson;
@@ -38,6 +33,8 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery23HolidayDestinations
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery23HolidayDestinationsResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery24MessagesByTopic;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery24MessagesByTopicResult;
+import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery25WeightedPaths;
+import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery25WeightedPathsResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery2TopTags;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery2TopTagsResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery3TagEvolution;
@@ -59,6 +56,11 @@ import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcDbConnectionStore;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcListOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcPoolingDbConnectionStore;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcSingletonOperationHandler;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class BiDb extends JdbcDb<BiQueryStore> {
 
@@ -87,10 +89,12 @@ public class BiDb extends JdbcDb<BiQueryStore> {
 		registerOperationHandler(LdbcSnbBiQuery17FriendshipTriangles.class, BiQuery17.class);
 		registerOperationHandler(LdbcSnbBiQuery18PersonPostCounts.class, BiQuery18.class);
 		registerOperationHandler(LdbcSnbBiQuery19StrangerInteraction.class, BiQuery19.class);
+		registerOperationHandler(LdbcSnbBiQuery20HighLevelTopics.class, BiQuery20.class);
 		registerOperationHandler(LdbcSnbBiQuery21Zombies.class, BiQuery21.class);
 		registerOperationHandler(LdbcSnbBiQuery22InternationalDialog.class, BiQuery22.class);
 		registerOperationHandler(LdbcSnbBiQuery23HolidayDestinations.class, BiQuery23.class);
 		registerOperationHandler(LdbcSnbBiQuery24MessagesByTopic.class, BiQuery24.class);
+		registerOperationHandler(LdbcSnbBiQuery25WeightedPaths.class, BiQuery25.class);
 	}
 	
 	public static class BiQuery1 extends JdbcListOperationHandler<LdbcSnbBiQuery1PostingSummary, LdbcSnbBiQuery1PostingSummaryResult, BiQueryStore> {
@@ -486,6 +490,21 @@ public class BiDb extends JdbcDb<BiQueryStore> {
 			int messageCount = result.getInt(4);
 			int likeCount = result.getInt(5);
 			return new LdbcSnbBiQuery24MessagesByTopicResult(messageCount, likeCount, year, month, continent);
+		}
+	}
+
+	public static class BiQuery25 extends JdbcListOperationHandler<LdbcSnbBiQuery25WeightedPaths, LdbcSnbBiQuery25WeightedPathsResult, BiQueryStore> {
+
+		@Override
+		public String getQueryString(JdbcDbConnectionStore<BiQueryStore> state, LdbcSnbBiQuery25WeightedPaths operation) {
+			return state.getQueryStore().getQuery25(operation);
+		}
+
+		@Override
+		public LdbcSnbBiQuery25WeightedPathsResult convertSingleResult(ResultSet result) throws SQLException {
+//			List<Long> personIds = ???
+//			return new LdbcSnbBiQuery25WeightedPathsResult(personIds);
+			throw new UnsupportedOperationException("Query 25 not yet supported.");
 		}
 	}
 }
