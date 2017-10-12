@@ -80,15 +80,15 @@ public class LdbcSnbBiQueryTest {
 		sqldb.init(getProperties(), null, mapping);
 
 		run(sqldb, new LdbcSnbBiQuery1PostingSummary(630));
-		run(sqldb, new LdbcSnbBiQuery2TopTags(0L, 1L, Arrays.asList("United States", "Canada"), 0, 0L, LIMIT));
-		run(sqldb, new LdbcSnbBiQuery3TagEvolution(0,0,0,0, 100 ));
+		run(sqldb, new LdbcSnbBiQuery2TopTags(0L, 1L, "United States", "Canada", LIMIT));
+		run(sqldb, new LdbcSnbBiQuery3TagEvolution(2015, 12, 100 ));
 		run(sqldb, new LdbcSnbBiQuery4PopularCountryTopics("Artist", "United_States", LIMIT));
 		run(sqldb, new LdbcSnbBiQuery5TopCountryPosters("Cameroon", 100, LIMIT));
 		run(sqldb, new LdbcSnbBiQuery6ActivePosters("Al_Gore", LIMIT));
 		run(sqldb, new LdbcSnbBiQuery7AuthoritativeUsers("Abraham_Lincoln", LIMIT));
 		run(sqldb, new LdbcSnbBiQuery8RelatedTopics("Abraham_Lincoln", LIMIT));
 		run(sqldb, new LdbcSnbBiQuery9RelatedForums("Artist", "BaseballPlayer", 100, LIMIT));
-		run(sqldb, new LdbcSnbBiQuery10TagPerson("Abraham_Lincoln", LIMIT));
+		run(sqldb, new LdbcSnbBiQuery10TagPerson("Abraham_Lincoln", 0, LIMIT));
 //		run(sqldb, new LdbcSnbBiQuery11UnrelatedReplies("United States", Arrays.asList("someWord"), LIMIT));
 		run(sqldb, new LdbcSnbBiQuery12TrendingPosts(0L, 0, LIMIT));
 		run(sqldb, new LdbcSnbBiQuery13PopularMonthlyTags("United States", LIMIT));
