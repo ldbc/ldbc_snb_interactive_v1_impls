@@ -1,4 +1,4 @@
--- Top competitors.  Mentioned in reply whennot in org and org has tag
+-- Top competitors.  Mentioned in reply when not in org and org has tag
 
 select
   t_name,

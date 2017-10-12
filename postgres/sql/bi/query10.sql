@@ -28,7 +28,10 @@ person_friends_score(pfs_personid, pfs_score) as (
   join knows on (a.pts_personid = k_person2id)
   join person_total_score b on k_person1id = b.pts_personid
 )
-select pts_personid, pts_score, sum(coalesce(pfs_score,0))
+select
+  pts_personid,
+  pts_score,
+  sum(coalesce(pfs_score,0))
 from person_total_score
 left join person_friends_score on pts_personid = pfs_personid
 group by pts_personid, pts_score

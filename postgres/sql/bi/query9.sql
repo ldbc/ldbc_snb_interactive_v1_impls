@@ -2,7 +2,10 @@
 --  - Tagclass A (linear to number of posts per tagclass)
 --  - Tagclass B ( linear to number of posts per tagclass)
 
-select f_forumid, sum(competing) as comp, sum (ours) as ours2
+select
+  f_forumid,
+  sum(competing) as comp,
+  sum (ours) as ours2
 from (
   select
     f_forumid, (

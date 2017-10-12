@@ -14,7 +14,9 @@ with
   post_tag_likes as (
     select * from post_tag left join likes on ps_postid = l_postid
   )
-select ps_creatorid, sum(coalesce(popularity.pop_auth,0)) as sc
+select
+  ps_creatorid,
+  sum(coalesce(popularity.pop_auth,0)) as sc
 from post_tag_likes left join popularity on pop_personid = l_personid
 group by ps_creatorid
 order by

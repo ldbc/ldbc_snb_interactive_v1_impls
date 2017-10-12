@@ -10,7 +10,9 @@ with recursive
     from subclass s, hierarchy h
     where s.s_supertagclassid = h.h_subtagclassid
   )
-select tc_name, count(*) as cnt
+select
+  tc_name,
+  count(*) as cnt
 from tagclass, tag_tagclass, tag, post_tag, hierarchy
 where t_tagid = ttc_tagid
   and ttc_tagclassid = h_subtagclassid
