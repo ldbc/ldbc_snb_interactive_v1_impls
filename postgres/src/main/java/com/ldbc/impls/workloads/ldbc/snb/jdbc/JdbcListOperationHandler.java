@@ -1,16 +1,16 @@
 package com.ldbc.impls.workloads.ldbc.snb.jdbc;
 
+import com.ldbc.driver.DbException;
+import com.ldbc.driver.Operation;
+import com.ldbc.driver.OperationHandler;
+import com.ldbc.driver.ResultReporter;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.ldbc.driver.DbException;
-import com.ldbc.driver.Operation;
-import com.ldbc.driver.OperationHandler;
-import com.ldbc.driver.ResultReporter;
 
 public abstract class JdbcListOperationHandler<OperationType extends Operation<List<OperationResult>>, OperationResult, QueryStore> 
 	implements OperationHandler<OperationType, JdbcDbConnectionStore<QueryStore>> {
@@ -32,7 +32,7 @@ public abstract class JdbcListOperationHandler<OperationType extends Operation<L
 			ResultSet result = stmt.executeQuery(queryString);
 			while (result.next()) {
 				resultCount++;
-				
+
 				OperationResult tuple = convertSingleResult(result);
 				if (state.isPrintResults())
 					System.out.println(tuple.toString());

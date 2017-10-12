@@ -1,14 +1,14 @@
 package com.ldbc.impls.workloads.ldbc.snb.jdbc;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public abstract class JdbcSingletonOperationHandler<OperationType extends Operation<OperationResult>, OperationResult, QueryStore> 
 implements OperationHandler<OperationType, JdbcDbConnectionStore<QueryStore>> {
