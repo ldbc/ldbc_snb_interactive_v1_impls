@@ -90,63 +90,60 @@ public class BiQueryStore {
 	
 	public String getQuery2(LdbcSnbBiQuery2TopTags operation) {
 		return queries.get(QueryType.Query2)
-			.replace("--1--", convertDate(operation.dateA()))
-			.replace("--2--", convertDate(operation.dateB()))
-			.replace("--3--", convertStringList(operation.countries()))
-			.replace("--4--", convertDate(operation.endOfSimulationTime()))
-			.replace("--5--", operation.messageThreshold()+"");
+			.replace("--1--", convertDate(operation.date1()))
+			.replace("--2--", convertDate(operation.date2()))
+			.replace("--3--", operation.country1())
+			.replace("--4--", operation.country2());
 	}
 	
 	public String getQuery3(LdbcSnbBiQuery3TagEvolution operation) {
 		return queries.get(QueryType.Query3)
-			.replace("--1--", convertDate(operation.range1Start()))
-			.replace("--2--", convertDate(operation.range1End()))
-			.replace("--3--", convertDate(operation.range2Start()))
-			.replace("--4--", convertDate(operation.range2End()));
+			.replace("--1--", convertDate(operation.year()))
+			.replace("--2--", convertDate(operation.month()));
 	}
 	
 	public String getQuery4(LdbcSnbBiQuery4PopularCountryTopics operation) {
 		return queries.get(QueryType.Query4)
-			.replace("--1--", operation.tagClass()+"")
-			.replace("--2--", operation.country()+"");
+			.replace("--1--", operation.tagClass())
+			.replace("--2--", operation.country());
 	}
 	
 	public String getQuery5(LdbcSnbBiQuery5TopCountryPosters operation) {
 		return queries.get(QueryType.Query5)
-			.replace("--1--", operation.country()+"");
+			.replace("--1--", operation.country());
 	}
 	
 	public String getQuery6(LdbcSnbBiQuery6ActivePosters operation) {
 		return queries.get(QueryType.Query6)
-			.replace("--1--", operation.tag()+"");
+			.replace("--1--", operation.tag());
 	}
 	
 	public String getQuery7(LdbcSnbBiQuery7AuthoritativeUsers operation) {
 		return queries.get(QueryType.Query7)
-			.replace("--1--", operation.tag()+"");
+			.replace("--1--", operation.tag());
 	}
 	
 	public String getQuery8(LdbcSnbBiQuery8RelatedTopics operation) {
 		return queries.get(QueryType.Query8)
-			.replace("--1--", operation.tag()+"");
+			.replace("--1--", operation.tag());
 	}
 	
 	public String getQuery9(LdbcSnbBiQuery9RelatedForums operation) {
 		return queries.get(QueryType.Query9)
-			.replace("--1--", operation.tagClassA()+"")
-			.replace("--2--", operation.tagClassB()+"")
-			.replace("--3--", operation.threshold()+"");
+			.replace("--1--", operation.tagClassA())
+			.replace("--2--", operation.tagClassB())
+			.replace("--3--", Integer.toString(operation.threshold()));
 	}
 	
 	public String getQuery10(LdbcSnbBiQuery10TagPerson operation) {
 		return queries.get(QueryType.Query10)
-			.replace("--1--", operation.tag()+"");
+			.replace("--1--", operation.tag());
 	}
 	
 	public String getQuery12(LdbcSnbBiQuery12TrendingPosts operation) {
 		return queries.get(QueryType.Query12)
-			.replace("--1--",convertDate(operation.date()))
-			.replace("--2--", operation.likeCount()+"");
+			.replace("--1--", convertDate(operation.date()))
+			.replace("--2--", Integer.toString(operation.likeThreshold()));
 	}
 	
 	public String getQuery13(LdbcSnbBiQuery13PopularMonthlyTags operation) {
@@ -167,7 +164,7 @@ public class BiQueryStore {
 	
 	public String getQuery16(LdbcSnbBiQuery16ExpertsInSocialCircle operation) {
 		return queries.get(QueryType.Query16)
-			.replace("--1--",operation.person()+"")
+			.replace("--1--", Long.toString(operation.person()))
 			.replace("--2--",operation.country())
 			.replace("--3--",operation.tagClass());
 	}
@@ -185,8 +182,8 @@ public class BiQueryStore {
 	public String getQuery19(LdbcSnbBiQuery19StrangerInteraction operation) {
 		return queries.get(QueryType.Query19)
 			.replace("--1--",convertDate(operation.date()))
-			.replace("--2--", operation.tagClassA()+"")
-			.replace("--3--", operation.tagClassB()+"");
+			.replace("--2--", operation.tagClassA())
+			.replace("--3--", operation.tagClassB());
 	}
 	
 	public String getQuery20(LdbcSnbBiQuery20HighLevelTopics operation) {
@@ -202,8 +199,8 @@ public class BiQueryStore {
 	
 	public String getQuery22(LdbcSnbBiQuery22InternationalDialog operation) {
 		return queries.get(QueryType.Query22)
-			.replace("--1--", operation.countryX())
-			.replace("--2--", operation.countryY());
+			.replace("--1--", operation.country1())
+			.replace("--2--", operation.country2());
 	}
 	
 	public String getQuery23(LdbcSnbBiQuery23HolidayDestinations operation) {

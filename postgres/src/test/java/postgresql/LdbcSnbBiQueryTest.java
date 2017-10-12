@@ -20,8 +20,6 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery21Zombies;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery22InternationalDialog;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery23HolidayDestinations;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery24MessagesByTopic;
-import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery2TopTags;
-import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery3TagEvolution;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery4PopularCountryTopics;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery5TopCountryPosters;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery6ActivePosters;
@@ -80,8 +78,8 @@ public class LdbcSnbBiQueryTest {
 		sqldb.init(getProperties(), null, mapping);
 
 		run(sqldb, new LdbcSnbBiQuery1PostingSummary(630));
-		run(sqldb, new LdbcSnbBiQuery2TopTags(0L, 1L, "United States", "Canada", LIMIT));
-		run(sqldb, new LdbcSnbBiQuery3TagEvolution(2015, 12, 100 ));
+//		run(sqldb, new LdbcSnbBiQuery2TopTags(0L, 1L, "United States", "Canada", LIMIT));
+//		run(sqldb, new LdbcSnbBiQuery3TagEvolution(2015, 12, 100 ));
 		run(sqldb, new LdbcSnbBiQuery4PopularCountryTopics("Artist", "United_States", LIMIT));
 		run(sqldb, new LdbcSnbBiQuery5TopCountryPosters("Cameroon", 100, LIMIT));
 		run(sqldb, new LdbcSnbBiQuery6ActivePosters("Al_Gore", LIMIT));
