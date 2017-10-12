@@ -19,4 +19,5 @@ where t_tagid = ttc_tagid
 group by tc_name
 order by
   cnt desc,
-  tc_name asc;
+  tc_name asc
+limit 100;

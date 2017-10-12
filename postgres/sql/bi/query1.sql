@@ -17,7 +17,7 @@ from (
       when ps_length < 40  then 0 -- 'short'
       when ps_length < 80  then 1 -- 'one liner'
       when ps_length < 160 then 2 -- 'tweet'
-      else 3
+      else 3                      -- 'long'
     end as size,
     ps_length
   from post

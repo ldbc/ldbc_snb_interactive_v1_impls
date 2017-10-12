@@ -21,4 +21,5 @@ group by extract(year from ps_creationdate), extract(month from ps_creationdate)
 order by
   extract(year from ps_creationdate) asc,
   extract(month from ps_creationdate) asc,
-  continent asc;
+  continent asc
+limit 100;

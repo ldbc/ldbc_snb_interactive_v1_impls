@@ -30,4 +30,4 @@ where p.p_birthday > --1--
   )
 group by p.p_personid
 order by cnt desc
-limit 10;
+limit 100;

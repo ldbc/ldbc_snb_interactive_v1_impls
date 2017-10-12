@@ -33,4 +33,5 @@ order by
   yy asc,
   mm asc,
   cnt desc,
-  t_name asc;
+  t_name asc
+limit 100;
