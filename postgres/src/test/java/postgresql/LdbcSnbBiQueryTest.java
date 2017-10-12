@@ -77,7 +77,7 @@ public class LdbcSnbBiQueryTest {
 		BiDb sqldb = new BiDb();
 		sqldb.init(getProperties(), null, mapping);
 
-		run(sqldb, new LdbcSnbBiQuery1PostingSummary(630));
+		run(sqldb, new LdbcSnbBiQuery1PostingSummary(630L));
 //		run(sqldb, new LdbcSnbBiQuery2TopTags(0L, 1L, "United States", "Canada", LIMIT));
 //		run(sqldb, new LdbcSnbBiQuery3TagEvolution(2015, 12, 100 ));
 		run(sqldb, new LdbcSnbBiQuery4PopularCountryTopics("Artist", "United_States", LIMIT));
