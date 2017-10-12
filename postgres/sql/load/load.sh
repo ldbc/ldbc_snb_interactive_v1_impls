@@ -1,7 +1,7 @@
 #!/bin/sh
 
-DBNAME=${1:-ldbcsf1}
-PATH=${2:-$(pwd)/../data}
+PATH=${1:-$(pwd)/../data}
+DBNAME=${2:-ldbcsf1}
 PG_USER=${3:-$USER}
 
 /usr/bin/dropdb $DBNAME -U $PG_USER

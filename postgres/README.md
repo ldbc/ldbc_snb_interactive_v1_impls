@@ -49,7 +49,7 @@ ldbc.snb.datagen.serializer.outputDir:./test_data/
 Run the load script:
 
 ```bash
-./load.sh <database> <data_dir> <your_pg_user>
+./load.sh <data_dir> <database> <your_pg_user>
 ```
 
 The `load.sh` has default options. If these fit your installation, you can run it without any arguments (`./load.sh`).
