@@ -1,4 +1,4 @@
-# LDBC SNB Postgres implementation
+# LDBC SNB PostgreSQL implementation
 
 ## Configuring the database
 
@@ -58,4 +58,13 @@ If you get _Permission denied_ errors, change the permissions of your home direc
 
 ```bash
 chmod 755 ~
+```
+
+To play around with the data, join PostgreSQL and switch to the database:
+
+```sql
+postgres=# \c ldbcsf1
+You are now connected to database "ldbcsf1" as user "postgres".
+ldbcsf1=# select count(*) from person;
+# ...
 ```
