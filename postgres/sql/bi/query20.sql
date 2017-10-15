@@ -1,6 +1,6 @@
 with recursive
   subroots(s_tagclassid) as (
-    select distinct tc_tagclassid from tagclass tc -- where tc_name in (--1--)
+    select distinct tc_tagclassid from tagclass tc where tc_name in (--1--)
   ),
   hierarchy(h_subtagclassid, h_supertagclassid) as (
     select s_subtagclassid, s_supertagclassid from subclass s
