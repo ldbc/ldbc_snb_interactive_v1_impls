@@ -36,18 +36,18 @@ public class LdbcSnbBiQueryTest {
 	private static String endpoint = "localhost:5432";
 	private static String user = "postgres";
 	private static String password = "foo";
-	private static String database = "ldbcsf1";
+	private static String databaseName = "ldbcsf1";
 	private static String jdbcDriver = "org.postgresql.ds.PGPoolingDataSource";
 	private static String queryDir = "sql/bi";
 
 	private static int LIMIT = 100;
-	
+
 	private static Map<String, String> getProperties() {
 		Map<String, String> properties = new HashMap<>();
 		properties.put("endpoint", endpoint);
 		properties.put("user", user);
 		properties.put("password", password);
-		properties.put("database", database);
+		properties.put("databaseName", databaseName);
 		properties.put("queryDir", queryDir);
 		properties.put("jdbcDriver", jdbcDriver);
 		properties.put("printQueryNames", "true");
@@ -55,7 +55,7 @@ public class LdbcSnbBiQueryTest {
 		properties.put("printQueryResults", "true");
 		return properties;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public Object runOperation(BiDb db, Operation<?> op) throws DbException {
 		OperationHandlerRunnableContext handler = db.getOperationHandlerRunnableContext(op);
@@ -64,7 +64,7 @@ public class LdbcSnbBiQueryTest {
 		handler.cleanup();
 		return reporter.result();
 	}
-	
+
 	@Test
 	public void testQueries() throws DbException, IOException {
 		Workload workload = new LdbcSnbBiWorkload();

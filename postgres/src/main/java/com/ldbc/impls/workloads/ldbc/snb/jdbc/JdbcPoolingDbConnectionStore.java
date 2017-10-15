@@ -25,7 +25,7 @@ public class JdbcPoolingDbConnectionStore<DbQueryStore> extends JdbcDbConnection
 		}
 
 		ds.setDataSourceName("MyPool");
-		ds.setDatabaseName(properties.get("database"));
+		ds.setDatabaseName(properties.get("databaseName"));
 		ds.setServerName(endPoint);
 		ds.setUser(properties.get("user"));
 		ds.setPassword(properties.get("password"));
@@ -40,7 +40,7 @@ public class JdbcPoolingDbConnectionStore<DbQueryStore> extends JdbcDbConnection
 			throw new DbException(e);
 		}
 	}
-	
+
 	@Override
 	public void freeConnection(Connection con) throws DbException {
 		try {
