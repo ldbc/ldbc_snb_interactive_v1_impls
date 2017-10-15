@@ -3,11 +3,8 @@ services:
   - postgresql
 before_script:
   - psql -c "ALTER ROLE postgres PASSWORD 'foo'" -U postgres
-addons:
-  apt:
-    packages:
-      - original-awk
 install:
+  - cat postgres/sql/data/post_0_0.csv | awk -F '|' '{ print $1"|"$2"|"$3"|"$4"|"$5"|"$6"|"$7"|"$8"|"$9"|"$9"|"$11"|"$10"||"}'
   - git clone --depth=1 https://github.com/ldbc/ldbc_snb_driver
   - cd ldbc_snb_driver
   - mvn install -DskipTests
