@@ -2,19 +2,17 @@ package com.ldbc.impls.workloads.ldbc.snb.jdbc;
 
 import com.ldbc.driver.DbConnectionState;
 import com.ldbc.driver.DbException;
+import org.neo4j.driver.v1.Session;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Map;
 
-public abstract class JdbcDbConnectionStore<DbQueryStore> extends DbConnectionState {
+public abstract class CypherDriverConnectionStore<DbQueryStore> extends DbConnectionState {
 	private DbQueryStore queryStore;
 	private boolean printNames;
 	private boolean printStrings;
 	private boolean printResults;
 
-	public JdbcDbConnectionStore(Map<String, String> properties, DbQueryStore store) throws ClassNotFoundException, SQLException, DbException {
+	public CypherDriverConnectionStore(Map<String, String> properties, DbQueryStore store) {
 		super();
 		
 		queryStore = store;
@@ -40,9 +38,8 @@ public abstract class JdbcDbConnectionStore<DbQueryStore> extends DbConnectionSt
 		}
 	}
 
-	public abstract Connection getConnection() throws DbException;
+	public abstract Session getSession() throws DbException;
 	
-	public abstract void freeConnection(Connection con) throws DbException;
-	
-	public void close() throws IOException {} 
+	public abstract void freeSession(Session session) throws DbException;
+
 }

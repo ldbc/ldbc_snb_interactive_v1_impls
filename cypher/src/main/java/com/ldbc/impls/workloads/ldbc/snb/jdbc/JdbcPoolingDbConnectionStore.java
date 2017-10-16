@@ -1,58 +1,38 @@
 package com.ldbc.impls.workloads.ldbc.snb.jdbc;
 
 import com.ldbc.driver.DbException;
-import org.postgresql.ds.jdbc4.AbstractJdbc4PoolingDataSource;
+import org.neo4j.driver.v1.AuthTokens;
+import org.neo4j.driver.v1.Driver;
+import org.neo4j.driver.v1.GraphDatabase;
+import org.neo4j.driver.v1.Session;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Map;
 
-public class JdbcPoolingDbConnectionStore<DbQueryStore> extends JdbcDbConnectionStore<DbQueryStore> {
-	AbstractJdbc4PoolingDataSource ds;
-	private String endPoint;
+public class JdbcPoolingDbConnectionStore<DbQueryStore> extends CypherDriverConnectionStore<DbQueryStore> {
+	protected final Driver driver;
 
-	public JdbcPoolingDbConnectionStore(Map<String, String> properties, DbQueryStore store) throws ClassNotFoundException, SQLException, DbException {
+	public JdbcPoolingDbConnectionStore(Map<String, String> properties, DbQueryStore store) {
 		super(properties, store);
 
-		endPoint = properties.get("endpoint");
-		try {
-			ds = this.getClass().getClassLoader()
-			        .loadClass(properties.get("jdbcDriver"))
-			        .asSubclass(AbstractJdbc4PoolingDataSource.class).newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new RuntimeException("Could not instantiate pooling data source", e);
-		}
-
-		ds.setDataSourceName("MyPool");
-		ds.setDatabaseName(properties.get("databaseName"));
-		ds.setServerName(endPoint);
-		ds.setUser(properties.get("user"));
-		ds.setPassword(properties.get("password"));
-		ds.setMaxConnections(1);
+		String endPoint = properties.get("endpoint");
+		String user = properties.get("user");
+		String password = properties.get("password");
+		driver = GraphDatabase.driver(endPoint, AuthTokens.basic(user, password));
 	}
 
 	@Override
-	public Connection getConnection() throws DbException {
-		try {
-			return ds.getConnection();
-		} catch (SQLException e) {
-			throw new DbException(e);
-		}
+	public Session getSession() throws DbException {
+		return driver.session();
 	}
 
 	@Override
-	public void freeConnection(Connection con) throws DbException {
-		try {
-			con.close();
-		} catch (SQLException e) {
-			throw new DbException(e);
-		}
+	public void freeSession(Session session) throws DbException {
+		session.close();
 	}
 
 	@Override
 	public void close() throws IOException {
-		ds.close();
-		super.close();
+		driver.close();
 	}
 }

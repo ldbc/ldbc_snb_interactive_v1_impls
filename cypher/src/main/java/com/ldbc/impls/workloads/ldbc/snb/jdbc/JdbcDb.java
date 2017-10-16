@@ -1,22 +1,18 @@
 package com.ldbc.impls.workloads.ldbc.snb.jdbc;
 
-import java.io.IOException;
-import java.sql.Array;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
-import java.util.TimeZone;
-
 import com.ldbc.driver.Db;
 import com.ldbc.driver.DbConnectionState;
 import com.ldbc.driver.DbException;
 
+import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.TimeZone;
+
 public abstract class JdbcDb<DbQueryStore> extends Db {
 	
-	protected JdbcDbConnectionStore<DbQueryStore> dbs;
+	protected CypherDriverConnectionStore<DbQueryStore> dbs;
 
 	@Override
 	protected final void onClose() throws IOException {

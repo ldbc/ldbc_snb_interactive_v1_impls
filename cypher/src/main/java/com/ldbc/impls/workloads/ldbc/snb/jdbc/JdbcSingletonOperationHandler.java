@@ -4,45 +4,37 @@ import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
+import org.neo4j.driver.v1.Session;
+import org.neo4j.driver.v1.StatementResult;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public abstract class JdbcSingletonOperationHandler<OperationType extends Operation<OperationResult>, OperationResult, QueryStore> 
-implements OperationHandler<OperationType, JdbcDbConnectionStore<QueryStore>> {
+implements OperationHandler<OperationType, CypherDriverConnectionStore<QueryStore>> {
 
 @Override
-public void executeOperation(OperationType operation, JdbcDbConnectionStore<QueryStore> state,
+public void executeOperation(OperationType operation, CypherDriverConnectionStore<QueryStore> state,
 		ResultReporter resultReporter) throws DbException {
-	Connection conn = state.getConnection();
+	Session session = state.getSession();
 	OperationResult tuple = null;
 	int resultCount = 0;
-	String queryString = getQueryString(state, operation);
-	try {
-		Statement stmt = conn.createStatement();
-		
-		state.logQuery(operation.getClass().getSimpleName(), queryString);
 
-		ResultSet result = stmt.executeQuery(queryString);
-		if (result.next()) {
-			resultCount++;
-			
-			tuple = convertSingleResult(result);
-			if (state.isPrintResults())
-				System.out.println(tuple.toString());
-		}
-		stmt.close();
-		conn.close();
-	} catch (SQLException e) {
-		throw new DbException(queryString+e);
-	} catch (Exception e) {
-		throw new DbException(e);
+	final String queryString = getQueryString(state, operation);
+	state.logQuery(operation.getClass().getSimpleName(), queryString);
+	final StatementResult result = session.run(queryString);
+	if (result.hasNext()) {
+		resultCount++;
+
+//		tuple = convertSingleResult(result);
+//		if (state.isPrintResults())
+//			System.out.println(tuple.toString());
 	}
+	session.close();
+
 	resultReporter.report(resultCount, tuple, operation);			
 }
 
-public abstract String getQueryString(JdbcDbConnectionStore<QueryStore> state, OperationType operation);
+public abstract String getQueryString(CypherDriverConnectionStore<QueryStore> state, OperationType operation);
 public abstract OperationResult convertSingleResult(ResultSet result) throws SQLException;
 }
