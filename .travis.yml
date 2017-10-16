@@ -5,6 +5,7 @@ before_script:
   - psql -c "ALTER ROLE postgres PASSWORD 'foo'" -U postgres
 install:
   - git clone --depth=1 https://github.com/ldbc/ldbc_snb_driver
+  - git checkout bi-op-classes
   - cd ldbc_snb_driver
   - mvn install -DskipTests
   - cd ..
