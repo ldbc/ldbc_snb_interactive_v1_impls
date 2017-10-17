@@ -1,0 +1,1 @@
+insert into person_company values (--1--, --2--, --3--)

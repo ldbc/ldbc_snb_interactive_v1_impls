@@ -1,0 +1,23 @@
+language: java
+services:
+  - postgresql
+before_script:
+  - psql -c "ALTER ROLE postgres PASSWORD 'foo'" -U postgres
+install:
+  - git clone https://github.com/ldbc/ldbc_snb_driver
+  - cd ldbc_snb_driver
+  - git checkout bi-op-classes
+  - mvn install -DskipTests
+  - cd ..
+script:
+  - chmod 755 ~
+  - cd postgres/sql/load
+  - ./load.sh
+  - cd ../../..
+  - cd postgres
+  - mvn test -B
+notifications:
+  slack: ldbcouncil:JRXP43nDV4KRgtclmoNZJpyq
+  email: false
+  on_success: change
+  on_failure: always
