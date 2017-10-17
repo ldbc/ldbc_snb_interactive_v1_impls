@@ -24,7 +24,6 @@ public class JdbcPoolingDbConnectionStore<DbQueryStore> extends JdbcDbConnection
 			throw new RuntimeException("Could not instantiate pooling data source", e);
 		}
 
-		ds.setDataSourceName("MyPool");
 		ds.setDatabaseName(properties.get("databaseName"));
 		ds.setServerName(endPoint);
 		ds.setUser(properties.get("user"));
