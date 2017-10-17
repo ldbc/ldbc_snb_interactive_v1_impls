@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PG_CSV_DIR=${1:-$(pwd)/../data}
+PG_CSV_DIR=${1:-$(pwd)/../test-data}
 DB_NAME=${2:-ldbcsf1}
 PG_USER=${3:-$USER}
 

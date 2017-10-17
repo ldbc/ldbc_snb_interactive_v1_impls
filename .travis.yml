@@ -11,9 +11,9 @@ install:
   - cd ..
 script:
   - chmod 755 ~
-  - cd postgres/sql/load
+  - cd postgres/load-scripts
   - ./load.sh
-  - cd ../../..
+  - cd ../..
   - cd postgres
   - mvn test -B
 notifications:
