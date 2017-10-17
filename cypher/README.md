@@ -1,70 +1,75 @@
-# LDBC SNB PostgreSQL implementation
+# LDBC SNB Cypher implementation
 
-## Configuring the database
+[(open)Cypher](http://www.opencypher.org/) implementation for the [LDBC SNB BI benchmark](https://github.com/ldbc/ldbc_snb_docs) page.
 
-The default configuration uses the `ldbcsf1` database.
+## Data set
 
-On a typical Ubuntu install, you might want to run:
+The data set needs to be generated and preprocessed before loading it to the database.
+
+### Generating the data set
+
+Use the standard `CSVSerializer` classes of the LDBC SNB [DATAGEN](https://github.com/ldbc/ldbc_snb_datagen/) project:
+
+```
+ldbc.snb.datagen.serializer.personSerializer:ldbc.snb.datagen.serializer.snb.interactive.CSVPersonSerializer
+ldbc.snb.datagen.serializer.invariantSerializer:ldbc.snb.datagen.serializer.snb.interactive.CSVInvariantSerializer
+ldbc.snb.datagen.serializer.personActivitySerializer:ldbc.snb.datagen.serializer.snb.interactive.CSVPersonActivitySerializer
+```
+
+### Preprocessing the data set
+
+CSV files require a bit of preprocessing.
 
 ```bash
-sudo -u postgres psql
+./fix-labels.sh
+./replace-headers.sh
 ```
 
-To allow access from JDBC, you have to set a password. For example, to set the default password of `foo`, issue the following command:
+## Neo4j import
 
-```
-ALTER ROLE usr PASSWORD 'foo';
-```
-
-If you want to create a separate user `usr` with the password `foo`, use the following commands:
-
-```
-CREATE USER usr PASSWORD 'foo';
-ALTER ROLE usr WITH login createdb superuser;
-```
-
-## Generaring test models
-
-The load script expect models generated with the `CSVMergeForeign` serializers.
-
-An example `params.ini` configuration for testing:
-
-```
-ldbc.snb.datagen.generator.scaleFactor:snb.interactive.1
-
-ldbc.snb.datagen.generator.numPersons:50
-ldbc.snb.datagen.generator.numYears:1
-ldbc.snb.datagen.generator.startYear:2010
-
-ldbc.snb.datagen.serializer.personSerializer:ldbc.snb.datagen.serializer.snb.interactive.CSVMergeForeignPersonSerializer
-ldbc.snb.datagen.serializer.invariantSerializer:ldbc.snb.datagen.serializer.snb.interactive.CSVMergeForeignInvariantSerializer
-ldbc.snb.datagen.serializer.personActivitySerializer:ldbc.snb.datagen.serializer.snb.interactive.CSVMergeForeignPersonActivitySerializer
-
-ldbc.snb.datagen.generator.numThreads:1
-ldbc.snb.datagen.serializer.outputDir:./test_data/
-```
-
-## Loading the data
-
-Run the load script:
+Set the `$NEO4J_HOME` and the following environment variables appropriately:
 
 ```bash
-./load.sh <absolute_path_of_data_dir> <database> <your_pg_user>
+export DATA_DIR=/path/do/the/csv/files
+export DB_DIR=$NEO4J_HOME/data/databases/graph.db
+export POSTFIX=_0_0.csv
 ```
 
-The `load.sh` has default options. If these fit your installation, you can run it without any arguments (`./load.sh`).
+### Delete your database and load the SNB CSVs
 
-If you get _Permission denied_ errors, change the permissions of your home directory to 755 - but please make sure you understand its implications first:
+Be careful -- this deletes all data in your database.
 
 ```bash
-chmod 755 ~
+./delete-neo4j-database.sh
+./import-to-neo4j.sh
 ```
 
-To play around with the data, join PostgreSQL and switch to the database:
+Restart Neo4j.
 
-```sql
-postgres=# \c ldbcsf1
-You are now connected to database "ldbcsf1" as user "postgres".
-ldbcsf1=# select count(*) from person;
-# ...
-```
+## Stuff currently ignored
+
+We ignore some files as they are difficult to load and none of the queries need them.
+
+### Property files
+
+These files store lists in a normalized form:
+
+* `person_speaks_language`
+
+  ```
+  Person.id	language
+  8796093022220	es
+  8796093022220	en
+  2199023255591	ru
+  2199023255591	en
+  ```
+
+* `person_email_emailaddress`
+
+  ```
+  Person.id	email
+  8796093022220	Jose8796093022220@gmail.com
+  8796093022220	Jose8796093022220@gmx.com
+  2199023255591	Alexei2199023255591@gmail.com
+  2199023255591	Alexei2199023255591@zoho.com
+  ```

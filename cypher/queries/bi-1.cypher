@@ -1,16 +1,16 @@
 // Posting summary
 MATCH (message:Message)
-WHERE message.creationDate <= --1--
+WHERE message.creationDate <= '2011-01-01T00:00:00.000+0000'
 UNWIND labels(message) AS label
 WITH
   message,
-  toInteger(substring(message.creationDate, 0, 4)) AS year,
+  toInt(substring(message.creationDate, 0, 4)) AS year,
   length(message.content) AS length,
   label
 WITH
   message,
   year,
-  CASE
+  CASE 
     WHEN length < 40 THEN 'short'
     WHEN length < 80 THEN 'one liner'
     WHEN length < 160 THEN 'tweet'
