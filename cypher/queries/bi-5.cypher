@@ -1,5 +1,7 @@
 // Top posters in a country
-MATCH (:Country)<-[:isPartOf]-(:City)<-[:isLocatedIn]-(person:Person)<-[:hasMember]-(forum:Forum)
+MATCH
+  (:Country {name: $country})<-[:isPartOf]-(:City)<-[:isLocatedIn]-
+  (person:Person)<-[:hasMember]-(forum:Forum)
 WITH forum, count(person) AS numberOfMembers
 ORDER BY numberOfMembers DESC
 LIMIT 100

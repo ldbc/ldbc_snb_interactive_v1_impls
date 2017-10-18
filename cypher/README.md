@@ -46,6 +46,10 @@ Be careful -- this deletes all data in your database.
 
 Restart Neo4j.
 
+## Experimenting
+
+It's possible to provide parameters on the Neo4j browser's web UI. To see how, type `:help param`.
+
 ## Stuff currently ignored
 
 We ignore some files as they are difficult to load and none of the queries need them.

@@ -1,6 +1,6 @@
 // Posting summary
 MATCH (message:Message)
-WHERE message.creationDate <= '2011-01-01T00:00:00.000+0000'
+WHERE message.creationDate <= $date
 UNWIND labels(message) AS label
 WITH
   message,
