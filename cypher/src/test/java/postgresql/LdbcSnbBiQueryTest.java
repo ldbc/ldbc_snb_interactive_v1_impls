@@ -18,7 +18,7 @@ public class LdbcSnbBiQueryTest {
 	private static String endpoint = "bolt://localhost:7687";
 	private static String user = "neo4j";
 	private static String password = "admin";
-	private static String queryDir = "cypher/";
+	private static String queryDir = "queries/";
 
 	private static int LIMIT = 100;
 

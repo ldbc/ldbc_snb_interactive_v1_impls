@@ -1,4 +1,6 @@
-// Tag evolution
+// Q3. Tag evolution
+// :param year
+// :param month
 WITH $year AS year, $month AS month
 WITH
   year AS year1,
@@ -24,5 +26,7 @@ RETURN
   countMonth1,
   countMonth2,
   abs(countMonth1-countMonth2) AS diff
-ORDER BY diff DESC, tag.name ASC
+ORDER BY
+  diff DESC,
+  tag.name ASC
 LIMIT 100

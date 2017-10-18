@@ -84,7 +84,7 @@ public class BiQueryStore {
 
 	public String getQuery1(LdbcSnbBiQuery1PostingSummary operation) {
 		return queries.get(QueryType.Query1)
-			.replace("--1--", convertDate(operation.date()));
+			.replace("$date", convertDate(operation.date()));
 	}
 	
 	
