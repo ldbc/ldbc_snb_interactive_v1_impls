@@ -1,4 +1,6 @@
-# LDBC SNB implementations
+![LDBC_LOGO](https://raw.githubusercontent.com/wiki/ldbc/ldbc_snb_datagen/images/ldbc-logo.png)
+LDBC SNB implementations
+------------------------
 
 [![Build Status](https://travis-ci.org/ldbc/ldbc_snb_implementations.svg?branch=master)](https://travis-ci.org/ldbc/ldbc_snb_implementations)
 
