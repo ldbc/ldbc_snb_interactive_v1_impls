@@ -1,17 +1,17 @@
 package com.ldbc.impls.workloads.ldbc.snb.jdbc.prepared;
 
+import com.ldbc.driver.DbException;
+import com.ldbc.driver.Operation;
+import com.ldbc.driver.OperationHandler;
+import com.ldbc.driver.ResultReporter;
+import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcDbConnectionStore;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.ldbc.driver.DbException;
-import com.ldbc.driver.Operation;
-import com.ldbc.driver.OperationHandler;
-import com.ldbc.driver.ResultReporter;
-import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcDbConnectionStore;
 
 public abstract class JdbcPreparedListOperationHandler<OperationType extends Operation<List<OperationResult>>, OperationResult, QueryStore> 
 	implements OperationHandler<OperationType, JdbcDbConnectionStore<QueryStore>> {
