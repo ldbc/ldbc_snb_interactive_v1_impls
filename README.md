@@ -26,14 +26,14 @@ PostgreSQL
 
 | query                 | [11](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-11.yaml) | [12](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-12.yaml) | [13](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-13.yaml) | [14](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-14.yaml) | [15](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-15.yaml) | [16](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-16.yaml) | [17](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-17.yaml) | [18](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-18.yaml) | [19](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-19.yaml) | [20](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-20.yaml) |
 | --------------------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Neo4j (Cypher) | [WIP](postgres/queries/bi/query11.cypher) | [WIP](postgres/queries/bi/query12.cypher) | [WIP](postgres/queries/bi/query13.cypher) | [WIP](postgres/queries/bi/query14.cypher) | [WIP](postgres/queries/bi/query15.cypher) | [WIP](postgres/queries/bi/query16.cypher) | [WIP](postgres/queries/bi/query17.cypher) | [WIP](postgres/queries/bi/query18.cypher) | [WIP](postgres/queries/bi/query19.cypher) | [WIP](postgres/queries/bi/query20.cypher) |
+| Neo4j (Cypher) | [WIP](cypher/queries/bi-11.cypher) | [WIP](cypher/queries/bi-12.cypher) | [WIP](cypher/queries/bi-13.cypher) | [WIP](cypher/queries/bi-14.cypher) | [WIP](cypher/queries/bi-15.cypher) | [WIP](cypher/queries/bi-16.cypher) | [WIP](cypher/queries/bi-17.cypher) | [WIP](cypher/queries/bi-18.cypher) | [WIP](cypher/queries/bi-19.cypher) | [WIP](cypher/queries/bi-20.cypher) |
 | PostgreSQL     | [OK](postgres/queries/bi/query11.sql) | [OK](postgres/queries/bi/query12.sql) | [params missing](postgres/queries/bi/query13.sql) | [?](postgres/queries/bi/query14.sql) | [OK](postgres/queries/bi/query15.sql) | [WIP](postgres/queries/bi/query16.sql) | [WIP](postgres/queries/bi/query17.sql) | [WIP](postgres/queries/bi/query18.sql) | [WIP](postgres/queries/bi/query19.sql) | [WIP](postgres/queries/bi/query10.sql) |
 | Sparksee       | | | | | | | | | | |
 
 | query                 | [21](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-21.yaml) | [22](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-22.yaml) | [23](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-23.yaml) | [24](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-24.yaml) | [25](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-25.yaml) |
 | --------------------- | --- | --- | --- | --- | --- |
 | Neo4j (Cypher) | [WIP](cypher/queries/bi-21.cypher) | [WIP](cypher/queries/bi-22.cypher) | [WIP](cypher/queries/bi-23.cypher) | [WIP](cypher/queries/bi-24.cypher) | [WIP](cypher/queries/bi-25.cypher) |
-| PostgreSQL     | [WIP](postgres/queries/bi/query21.sql) | [WIP](postgres/queries/bi/query22.sql) | [WIP](postgres/queries/bi/query23.sql) | [WIP](postgres/queries/bi/query24.sql) | [WIP](postgres/queries/bi/query25.sql) |
+| PostgreSQL     | [WIP](postgres/queries/bi/query21.sql) | [WIP](postgres/queries/bi/query22.sql) | [WIP](postgres/queries/bi/query23.sql) | [WIP](postgres/queries/bi/query24.sql) | [missing](postgres/queries/bi/query25.sql) |
 | Sparksee       | | | | | |
 
 
@@ -55,7 +55,7 @@ Download and install the LDBC SNB driver:
 
 :warning: **TODO** :warning: This section is deprecated.
 
-Compile Db class for the JDBC database:
+* Compile Db class for the JDBC database:
 
     Run:
 
@@ -63,7 +63,7 @@ Compile Db class for the JDBC database:
     mvn clean package
     ```
 
-Running the driver against Postgres:
+* Running the driver against Postgres:
 
     You have to update the paths in the `run.sh` script, and use it for
     running the benchmark.  Before that, please update the 3 configuration
