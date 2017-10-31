@@ -12,18 +12,18 @@ sudo -u postgres psql
 
 To allow access from JDBC, you have to set a password. For example, to set the default password of `foo`, issue the following command:
 
-```
+```sql
 ALTER ROLE usr PASSWORD 'foo';
 ```
 
 If you want to create a separate user `usr` with the password `foo`, use the following commands:
 
-```
+```sql
 CREATE USER usr PASSWORD 'foo';
 ALTER ROLE usr WITH login createdb superuser;
 ```
 
-## Generaring test models
+## Generating test models
 
 The load script expect models generated with the `CSVMergeForeign` serializers.
 
@@ -46,13 +46,13 @@ ldbc.snb.datagen.serializer.outputDir:./test_data/
 
 ## Loading the data
 
-Run the load script:
+To run the load script, go the `load-scripts` directory and issue the following command:
 
 ```bash
 ./load.sh <absolute_path_of_data_dir> <database> <your_pg_user>
 ```
 
-The `load.sh` has default options. If these fit your installation, you can run it without any arguments (`./load.sh`).
+The `load.sh` has default options that will load a small dataset to the `ldbcsf1` database with your current user. If these fit your installation, just run the script as `./load.sh`.
 
 If you get _Permission denied_ errors, change the permissions of your home directory to 755 - but please make sure you understand its implications first:
 
@@ -65,6 +65,6 @@ To play around with the data, join PostgreSQL and switch to the database:
 ```sql
 postgres=# \c ldbcsf1
 You are now connected to database "ldbcsf1" as user "postgres".
-ldbcsf1=# select count(*) from person;
+ldbcsf1=# SELECT count(*) FROM person;
 # ...
 ```
