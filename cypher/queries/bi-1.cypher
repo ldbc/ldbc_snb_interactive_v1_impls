@@ -9,6 +9,7 @@ WHERE message.creationDate <= $date
 WITH toFloat(count(message)) AS totalMessageCount // this should be a subquery once Cypher supports it
 MATCH (message:Message)
 WHERE message.creationDate <= $date
+  AND message.content IS NOT NULL
 WITH
   totalMessageCount,
   message,
@@ -38,5 +39,5 @@ RETURN
   messageCount / totalMessageCount AS percentageOfMessages
 ORDER BY
   year DESC,
-  messageType DESC, // TODO spec says 'ASC', using 'DESC' to confirm with the Sparksee impl
+  messageType DESC, // spec says 'ASC', where Posts come first and Comments second
   lengthCategoryIndexed[0] ASC
