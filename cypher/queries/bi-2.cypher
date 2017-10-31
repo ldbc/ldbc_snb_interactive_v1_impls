@@ -1,13 +1,17 @@
 // Q2. Top tags for country, age, gender, time
-// :param date1
-// :param date2
-// :param country1
-// :param country2
+/*
+  :param {
+    date1: '2009-12-31T23:00:00.000+0000',
+    date2: '2010-04-21T22:00:00.000+0000',
+    country1: 'Romania',
+    country2: 'Yemen'
+  }
+*/
 MATCH
     (country:Country)<-[:isPartOf]-(:City)<-[:isLocatedIn]-(person:Person)
     <-[:hasCreator]-(message:Message)-[:hasTag]->(tag:Tag)
-WHERE message.date >= $date1
-  AND message.date <= $date2
+WHERE message.creationDate >= $date1
+  AND message.creationDate <= $date2
   AND (country.name = $country1 OR country.name = $country2)
 WITH
   country.name AS countryName,
