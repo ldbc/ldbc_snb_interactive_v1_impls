@@ -15,9 +15,6 @@ Each project has its own README:
 
 The queries in this repository are work-in-progress.
 
-Cypher
-PostgreSQL
-
 | query                 | [01](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-01.yaml) | [02](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-02.yaml) | [03](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-03.yaml) | [04](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-04.yaml) | [05](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-05.yaml) | [06](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-06.yaml) | [07](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-07.yaml) | [08](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-08.yaml) | [09](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-09.yaml) | [10](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-10.yaml) |
 | --------------------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Neo4j (Cypher) | [OK](cypher/queries/bi-1.cypher) | [OK](cypher/queries/bi-2.cypher) | [params missing](cypher/queries/bi-3.cypher) | [?](cypher/queries/bi-4.cypher) | [OK](cypher/queries/bi-5.cypher) | [WIP](cypher/queries/bi-6.cypher) | [WIP](cypher/queries/bi-7.cypher) | [WIP](cypher/queries/bi-8.cypher) | [WIP](cypher/queries/bi-9.cypher) | [WIP](cypher/queries/bi-10.cypher) |
