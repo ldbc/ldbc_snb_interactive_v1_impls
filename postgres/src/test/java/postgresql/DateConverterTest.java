@@ -1,0 +1,15 @@
+package postgresql;
+
+import com.ldbc.impls.workloads.ldbc.snb.DateConverter;
+import org.junit.Assert;
+import org.junit.Test;
+
+public class DateConverterTest {
+
+    @Test
+    public void test() {
+        Assert.assertEquals("'2009-12-31T23:00:00.000+00:00'::timestamp", DateConverter.convertDate(1262300400000L));
+    }
+
+}
+

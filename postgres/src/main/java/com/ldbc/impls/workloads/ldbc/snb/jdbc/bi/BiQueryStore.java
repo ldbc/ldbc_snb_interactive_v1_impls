@@ -28,12 +28,10 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForums;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TimeZone;
 
+import static com.ldbc.impls.workloads.ldbc.snb.DateConverter.convertDate;
 import static java.nio.file.Files.readAllBytes;
 import static java.nio.file.Paths.get;
 
@@ -230,16 +228,7 @@ public class BiQueryStore {
 		}
 		return res;
 	}
-	
-	
-	private String convertDate(long timestamp) {
-		//return "to_timestamp("+timestamp+")::timestamp";
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
-		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-		
-		return "'"+sdf.format(new Date(timestamp))+"'::timestamp";
-	}
-	
+
 	private String loadQueryFromFile(String path, String fileName) throws DbException {
 		try {
 			return new String(readAllBytes(get(path+File.separator+fileName)));
