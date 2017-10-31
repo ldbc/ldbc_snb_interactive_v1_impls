@@ -20,20 +20,20 @@ PostgreSQL
 
 | query                 | [01](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-01.yaml) | [02](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-02.yaml) | [03](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-03.yaml) | [04](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-04.yaml) | [05](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-05.yaml) | [06](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-06.yaml) | [07](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-07.yaml) | [08](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-08.yaml) | [09](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-09.yaml) | [10](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-10.yaml) |
 | --------------------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Neo4j (Cypher) | OK | OK | params missing | ? | OK | | | | | |
-| PostgreSQL     | | | | | | | | | | |
+| Neo4j (Cypher) | [OK](cypher/queries/bi-1.cypher) | [OK](cypher/queries/bi-2.cypher) | [params missing](cypher/queries/bi-3.cypher) | [?](cypher/queries/bi-4.cypher) | [OK](cypher/queries/bi-5.cypher) | [WIP](cypher/queries/bi-6.cypher) | [WIP](cypher/queries/bi-7.cypher) | [WIP](cypher/queries/bi-8.cypher) | [WIP](cypher/queries/bi-9.cypher) | [WIP](cypher/queries/bi-10.cypher) |
+| PostgreSQL     | [OK](postgres/queries/bi/query1.cypher) | [OK](postgres/queries/bi/query2.cypher) | [params missing](postgres/queries/bi/query3.cypher) | [?](postgres/queries/bi/query4.cypher) | [OK](postgres/queries/bi/query5.cypher) | [WIP](postgres/queries/bi/query6.cypher) | [WIP](postgres/queries/bi/query7.cypher) | [WIP](postgres/queries/bi/query8.cypher) | [WIP](postgres/queries/bi/query9.cypher) | [WIP](postgres/queries/bi/query10.cypher) |
 | Sparksee       | OK | OK | params missing | ? | OK | | | | | |
 
 | query                 | [11](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-11.yaml) | [12](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-12.yaml) | [13](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-13.yaml) | [14](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-14.yaml) | [15](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-15.yaml) | [16](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-16.yaml) | [17](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-17.yaml) | [18](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-18.yaml) | [19](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-19.yaml) | [20](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-20.yaml) |
 | --------------------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Neo4j (Cypher) | | | | | | | | | | |
+| Neo4j (Cypher) | [WIP](postgres/queries/bi/query11.cypher) | [WIP](postgres/queries/bi/query12.cypher) | [WIP](postgres/queries/bi/query13.cypher) | [WIP](postgres/queries/bi/query14.cypher) | [WIP](postgres/queries/bi/query15.cypher) | [WIP](postgres/queries/bi/query16.cypher) | [WIP](postgres/queries/bi/query17.cypher) | [WIP](postgres/queries/bi/query18.cypher) | [WIP](postgres/queries/bi/query19.cypher) | [WIP](postgres/queries/bi/query20.cypher) |
 | PostgreSQL     | | | | | | | | | | |
 | Sparksee       | | | | | | | | | | |
 
 | query                 | [21](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-21.yaml) | [22](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-22.yaml) | [23](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-23.yaml) | [24](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-24.yaml) | [25](https://github.com/ldbc/ldbc_snb_docs/tree/master/query-specifications/bi-read-25.yaml) |
 | --------------------- | --- | --- | --- | --- | --- |
-| Neo4j (Cypher) | | | | | |
-| PostgreSQL     | | | | | |
+| Neo4j (Cypher) | [WIP](cypher/queries/bi-21.cypher) | [WIP](cypher/queries/bi-22.cypher) | [WIP](cypher/queries/bi-23.cypher) | [WIP](cypher/queries/bi-24.cypher) | [WIP](cypher/queries/bi-25.cypher) |
+| PostgreSQL     | [WIP](postgres/queries/bi/query21.cypher) | [WIP](postgres/queries/bi/query22.cypher) | [WIP](postgres/queries/bi/query23.cypher) | [WIP](postgres/queries/bi/query24.cypher) | [WIP](postgres/queries/bi/query25.cypher) |
 | Sparksee       | | | | | |
 
 
