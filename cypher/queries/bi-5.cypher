@@ -1,12 +1,21 @@
 // Q5. Top posters in a country
-// :param country
+/*
+  :param {
+    country: 'Yemen'
+  }
+*/
 MATCH
   (:Country {name: $country})<-[:isPartOf]-(:City)<-[:isLocatedIn]-
   (person:Person)<-[:hasMember]-(forum:Forum)
 WITH forum, count(person) AS numberOfMembers
 ORDER BY numberOfMembers DESC
 LIMIT 100
-MATCH (forum)-[:hasMember]->(person:Person)<-[:hasCreator]-(post:Post)
+WITH collect(forum) AS popularForums
+UNWIND popularForums AS forum
+MATCH
+  (forum)-[:hasMember]->(person:Person)<-[:hasCreator]-(post:Post)
+  <-[:containerOf]-(popularForum:Forum)
+WHERE popularForum IN popularForums
 RETURN
   person.id,
   person.firstName,
