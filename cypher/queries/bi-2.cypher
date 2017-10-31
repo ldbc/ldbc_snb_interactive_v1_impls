@@ -2,9 +2,9 @@
 /*
   :param {
     date1: '2009-12-31T23:00:00.000+0000',
-    date2: '2010-04-21T22:00:00.000+0000',
-    country1: 'Romania',
-    country2: 'Yemen'
+    date2: '2010-11-07T23:00:00.000+0000',
+    country1: 'Ethiopia',
+    country2: 'Spain'
   }
 */
 MATCH
