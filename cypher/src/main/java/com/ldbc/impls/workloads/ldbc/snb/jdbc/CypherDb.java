@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-public abstract class JdbcDb<DbQueryStore> extends Db {
+public abstract class CypherDb<DbQueryStore> extends Db {
 	
 	protected CypherDriverConnectionStore<DbQueryStore> dbs;
 

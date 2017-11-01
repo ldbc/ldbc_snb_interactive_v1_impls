@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class JdbcListOperationHandler<OperationType extends Operation<List<OperationResult>>, OperationResult, QueryStore> 
+public abstract class CypherListOperationHandler<OperationType extends Operation<List<OperationResult>>, OperationResult, QueryStore>
 	implements OperationHandler<OperationType, CypherDriverConnectionStore<QueryStore>> {
 
 	@Override

@@ -76,7 +76,7 @@ public class BiQueryStore {
 	private HashMap<QueryType, String> queries;
 	
 	public BiQueryStore(String path) throws DbException {
-		queries = new HashMap<BiQueryStore.QueryType, String>();
+		queries = new HashMap<>();
 		for (QueryType queryType : QueryType.values()) {
 			queries.put(queryType, loadQueryFromFile(path, queryType.fileName));
 		}

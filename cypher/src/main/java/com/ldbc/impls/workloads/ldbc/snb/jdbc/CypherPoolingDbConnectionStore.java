@@ -9,10 +9,10 @@ import org.neo4j.driver.v1.Session;
 import java.io.IOException;
 import java.util.Map;
 
-public class JdbcPoolingDbConnectionStore<DbQueryStore> extends CypherDriverConnectionStore<DbQueryStore> {
+public class CypherPoolingDbConnectionStore<DbQueryStore> extends CypherDriverConnectionStore<DbQueryStore> {
 	protected final Driver driver;
 
-	public JdbcPoolingDbConnectionStore(Map<String, String> properties, DbQueryStore store) {
+	public CypherPoolingDbConnectionStore(Map<String, String> properties, DbQueryStore store) {
 		super(properties, store);
 
 		String endPoint = properties.get("endpoint");

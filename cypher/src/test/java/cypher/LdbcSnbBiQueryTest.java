@@ -1,4 +1,4 @@
-package postgresql;
+package cypher;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;

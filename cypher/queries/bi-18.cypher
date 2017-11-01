@@ -2,9 +2,18 @@
 /*
   :param {
     date: '2010-08-22T04:00:00.000+0000',
-    lengthThreshold: 20,
+    lengthThreshold: 240,
     languages: ['ar']
   }
 */
-WITH $languages AS languages
-...
+// note: thresholds like 20 are way too low
+MATCH
+  (person:Person)<-[:hasCreator]-(message:Message)<-[:replyOf*0..]-(post:Post)
+WHERE message.content IS NOT NULL
+  AND message.length <= $lengthThreshold
+  AND message.creationDate > $date
+  AND post.language IN $languages
+WITH person, count(message) AS messageCount
+RETURN messageCount, count(person) AS personCount
+ORDER BY messageCount DESC
+LIMIT 100

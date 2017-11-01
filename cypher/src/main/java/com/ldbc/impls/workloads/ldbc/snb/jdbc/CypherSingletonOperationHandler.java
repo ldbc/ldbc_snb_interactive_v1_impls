@@ -10,7 +10,7 @@ import org.neo4j.driver.v1.StatementResult;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public abstract class JdbcSingletonOperationHandler<OperationType extends Operation<OperationResult>, OperationResult, QueryStore> 
+public abstract class CypherSingletonOperationHandler<OperationType extends Operation<OperationResult>, OperationResult, QueryStore>
 implements OperationHandler<OperationType, CypherDriverConnectionStore<QueryStore>> {
 
 @Override
