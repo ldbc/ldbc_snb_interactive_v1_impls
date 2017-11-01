@@ -1,5 +1,9 @@
 // Q8. Related Topics
-// :param tag
+/*
+  :param {
+    tag: ''
+  }
+*/
 MATCH
   (tag:Tag {name: $tag})<-[:hasTag]-(:Message)<-[:replyOf*]-
   (comment:Comment)-[:hasTag]->(relatedTag:Tag)

@@ -1,7 +1,11 @@
 // Q9. Forum with related Tags
-// :param tagClass1
-// :param tagClass2
-// :param threshold
+/*
+  :param {
+    tagClass1: '',
+    tagClass2: '',
+    threshold: 
+  }
+*/
 MATCH
   (forum:Forum),
   (forum)-[:containerOf]->(post1:Post)-[:hasTag]->(:Tag)-[:hasType]->(:TagClass {name: $tagClass1}),

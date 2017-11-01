@@ -1,5 +1,9 @@
 // Q20. High-level topics
-// :param tagClasses
+/*
+  :param {
+    tagClasses: ''
+  }
+*/
 MATCH (tagClass:TagClass)<-[:isSubclassOf*0..]-(:TagClass)<-[:hasType]-(tag:Tag)<-[:hasTag]-(message:Message)
 RETURN
   tagClass.name,

@@ -1,6 +1,10 @@
 // Q18. How many persons have a given number of posts
-// :param date
-// :param lengthThreshold
-// :param languages
+/*
+  :param {
+    date: ,
+    lengthThreshold: ,
+    languages:
+  }
+*/
 WITH $languages AS languages
 ...

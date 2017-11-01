@@ -1,5 +1,9 @@
 // Q7. Most authoritative users on a given topic
-// :param tag
+/*
+  :param {
+    tag: ''
+  }
+*/
 MATCH
   (tag:Tag {name: $tag})<-[:hasTag]-(:Message)-[:hasCreator]->(person1:Person)
 MATCH

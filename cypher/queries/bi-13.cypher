@@ -1,5 +1,9 @@
 // Q13. Popular Tags per month in a country
-// :param country
+/*
+  :param {
+    country: ''
+  }
+*/
 MATCH (:Country)<-[:isLocatedIn]-(message:Message)-[:hasTag]->(tag:Tag)
 WITH
   toInteger(substring(message.creationDate, 0, 4)) AS year,

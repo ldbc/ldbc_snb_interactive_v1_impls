@@ -1,6 +1,10 @@
 // Q14. Top thread initiators
-// :param begin
-// :param end
+/*
+  :param {
+    begin: ,
+    end:
+  }
+*/
 MATCH (person:Person)<-[:hasCreator]-(message:Message)<-[:replyOf*]-(reply:Message)
 WHERE message.creationDate >= '2010-01-01T00:00:00.000+0000'
   AND message.creationDate <= '2011-01-01T00:00:00.000+0000'

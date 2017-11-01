@@ -1,5 +1,9 @@
 // Q15. Social normals
-// :param country
+/*
+  :param {
+    country: ''
+  }
+*/
 MATCH
   (country:Country),
   (country)<-[:isPartOf]-(:City)<-[:isLocatedIn]-(somePerson:Person),

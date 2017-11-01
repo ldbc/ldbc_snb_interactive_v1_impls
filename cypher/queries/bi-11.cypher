@@ -1,6 +1,10 @@
 // Q11. Unrelated replies
-// :param country
-// :param blacklist
+/*
+  :param {
+    country: '',
+    blacklist: []
+  }
+*/
 WITH $blacklist AS blacklist
 MATCH
   (country:Country {name: $country})<-[:isPartOf]-(:City)<-[:isLocatedIn]-

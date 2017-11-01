@@ -1,5 +1,9 @@
 // Q6. Most active Posters of a given Topic
-// :param tag
+/*
+  :param {
+    tag: ''
+  }
+*/
 MATCH (:Tag {name: $tag})<-[:hasTag]-(message:Message)-[:hasCreator]->(person: Person),
   (message)<-[:likes]-(fan:Person),
   (message)<-[:replyOf*]-(comment:Comment)

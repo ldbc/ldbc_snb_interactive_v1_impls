@@ -1,3 +1,7 @@
 // Q22. International dialog
-// :param country1
-// :param country2
+/*
+  :param {
+    country1: '',
+    country2: ''
+  }
+*/

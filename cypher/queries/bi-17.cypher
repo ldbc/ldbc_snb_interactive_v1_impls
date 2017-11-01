@@ -1,3 +1,7 @@
 // Q17. Friend triangles
-// :param country
+/*
+  :param {
+    country: ''
+  }
+*/
 hint: use ordering

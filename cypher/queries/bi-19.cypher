@@ -1,7 +1,11 @@
 // Q19. Stranger's interaction
-// :param date
-// :param tagClass1
-// :param tagClass2
+/*
+  :param {
+    date: ,
+    tagClass1: '',
+    tagClass2: ''
+  }
+*/
 MATCH
   (:TagClass)<-[:hasType]-(:Tag)<-[:hasTag]-(forum1:Forum),
   (:TagClass)<-[:hasType]-(:Tag)<-[:hasTag]-(forum2:Forum),
