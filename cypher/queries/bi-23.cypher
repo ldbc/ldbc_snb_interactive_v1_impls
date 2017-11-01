@@ -1,7 +1,7 @@
 // Q23. Holiday destinations
 /*
   :param {
-    country: ''
+    country: 'Spain'
   }
 */
 MATCH (homeCountry:Country)<-[:isPartOf]-(:City)<-[:isLocatedIn]-(:Person)<-[:hasCreator]-(message:Message)-[:isLocatedIn]->(country:Country)

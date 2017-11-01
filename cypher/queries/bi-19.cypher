@@ -1,9 +1,9 @@
 // Q19. Stranger's interaction
 /*
   :param {
-    date: ,
-    tagClass1: '',
-    tagClass2: ''
+    date: '1989-01-01T05:00:00.000+0000',
+    tagClass1: 'MusicalArtist',
+    tagClass2: 'OfficeHolder'
   }
 */
 MATCH

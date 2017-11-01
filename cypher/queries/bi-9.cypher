@@ -1,9 +1,9 @@
 // Q9. Forum with related Tags
 /*
   :param {
-    tagClass1: '',
-    tagClass2: '',
-    threshold: 
+    tagClass1: 'TennisPlayer',
+    tagClass2: 'President',
+    threshold: 200
   }
 */
 MATCH

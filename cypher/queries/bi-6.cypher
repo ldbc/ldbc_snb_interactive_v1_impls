@@ -1,7 +1,7 @@
 // Q6. Most active Posters of a given Topic
 /*
   :param {
-    tag: ''
+    tag: 'Napoleon'
   }
 */
 MATCH (:Tag {name: $tag})<-[:hasTag]-(message:Message)-[:hasCreator]->(person: Person),

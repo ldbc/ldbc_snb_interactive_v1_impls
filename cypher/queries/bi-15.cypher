@@ -1,7 +1,7 @@
 // Q15. Social normals
 /*
   :param {
-    country: ''
+    country: 'Spain'
   }
 */
 MATCH

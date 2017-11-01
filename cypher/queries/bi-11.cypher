@@ -1,8 +1,8 @@
 // Q11. Unrelated replies
 /*
   :param {
-    country: '',
-    blacklist: []
+    country: 'Pakistan',
+    blacklist: ['one', 'has', 'David']
   }
 */
 WITH $blacklist AS blacklist

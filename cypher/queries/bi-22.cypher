@@ -1,7 +1,7 @@
 // Q22. International dialog
 /*
   :param {
-    country1: '',
-    country2: ''
+    country1: 'Japan',
+    country2: 'Ethiopia'
   }
 */

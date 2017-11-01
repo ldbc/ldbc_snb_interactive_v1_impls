@@ -1,8 +1,8 @@
 // Q10. Central Person for a Tag
 /*
   :param {
-    tag: '',
-    date
+    tag: 'Franz_Liszt',
+    date: '2010-08-22T04:00:00.000+0000'
   }
 */
 MATCH (person:Person), (tag:Tag)

@@ -1,7 +1,7 @@
 // Q13. Popular Tags per month in a country
 /*
   :param {
-    country: ''
+    country: 'Spain'
   }
 */
 MATCH (:Country)<-[:isLocatedIn]-(message:Message)-[:hasTag]->(tag:Tag)

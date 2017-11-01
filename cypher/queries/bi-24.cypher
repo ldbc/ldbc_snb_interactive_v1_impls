@@ -1,7 +1,7 @@
 // Q24. Messages by Topic and Continent
 /*
   :param {
-    tagClass: ''
+    tagClass: 'Single'
   }
 */
 MATCH

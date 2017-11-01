@@ -1,7 +1,7 @@
 // Q20. High-level topics
 /*
   :param {
-    tagClasses: ''
+    tagClasses: ['Writer', 'Single', 'Country']
   }
 */
 MATCH (tagClass:TagClass)<-[:isSubclassOf*0..]-(:TagClass)<-[:hasType]-(tag:Tag)<-[:hasTag]-(message:Message)

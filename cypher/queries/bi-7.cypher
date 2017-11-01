@@ -1,7 +1,7 @@
 // Q7. Most authoritative users on a given topic
 /*
   :param {
-    tag: ''
+    tag: 'Franz_Liszt'
   }
 */
 MATCH

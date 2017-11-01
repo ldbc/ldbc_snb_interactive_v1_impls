@@ -1,7 +1,7 @@
 // Q8. Related Topics
 /*
   :param {
-    tag: ''
+    tag: 'Sammy_Sosa'
   }
 */
 MATCH
