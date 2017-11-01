@@ -1,8 +1,6 @@
 // Q5. Top posters in a country
 /*
-  :param {
-    country: 'Yemen'
-  }
+  :param { country: 'Yemen' }
 */
 MATCH
   (:Country {name: $country})<-[:isPartOf]-(:City)<-[:isLocatedIn]-

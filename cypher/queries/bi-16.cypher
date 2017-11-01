@@ -8,9 +8,10 @@
     maxPathDistance: 5
   }
 */
-MATCH p=(person:Person)-[:knows*1..2]-(:Person)
-// not an efficient solution, only using for simplicity
+// This is not an efficient solution, i.e. will not work for any large data set
+// only using for simplicity. Added a constant for testing.
+MATCH p=(person:Person)-[:knows*5]-(:Person)
 WHERE $minPathDistance <= length(p)
   AND $maxPathDistance >= length(p)
 RETURN person.id
-TODO
+//TODO

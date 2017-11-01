@@ -1,8 +1,6 @@
 // Q7. Most authoritative users on a given topic
 /*
-  :param {
-    tag: 'Franz_Liszt'
-  }
+  :param { tag: 'Franz_Liszt' }
 */
 MATCH
   (tag:Tag {name: $tag})<-[:hasTag]-(:Message)-[:hasCreator]->(person1:Person)

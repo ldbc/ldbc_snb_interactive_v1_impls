@@ -1,11 +1,9 @@
 // Q24. Messages by Topic and Continent
 /*
-  :param {
-    tagClass: 'Single'
-  }
+  :param { tagClass: 'Single' }
 */
 MATCH
-  (:TagClass)<-[:hasType]-(:Tag)<-[:hasTag]-(message:Message)<-[:likes]-(person:Person),
+  (:TagClass {name: $tagClass})<-[:hasType]-(:Tag)<-[:hasTag]-(message:Message)<-[:likes]-(person:Person),
   (message)-[:isLocatedIn]->(:Country)-[:isPartOf]->(continent:Continent)
 WITH
   message,

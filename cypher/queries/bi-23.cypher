@@ -1,12 +1,15 @@
 // Q23. Holiday destinations
 /*
-  :param {
-    country: 'Spain'
-  }
+  :param { country: 'Spain' }
 */
-MATCH (homeCountry:Country)<-[:isPartOf]-(:City)<-[:isLocatedIn]-(:Person)<-[:hasCreator]-(message:Message)-[:isLocatedIn]->(country:Country)
+MATCH
+  (homeCountry:Country {name: $country})<-[:isPartOf]-(:City)<-[:isLocatedIn]-
+  (:Person)<-[:hasCreator]-(message:Message)-[:isLocatedIn]->(country:Country)
 WHERE homeCountry <> country
-WITH message, country, toInteger(substring(message.creationDate, 5, 2)) AS month
+WITH
+  message,
+  country,
+  toInteger(substring(message.creationDate, 5, 2)) AS month
 RETURN
   count(message) AS messageCount,
   country.name,

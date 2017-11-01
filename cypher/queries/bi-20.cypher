@@ -1,10 +1,11 @@
 // Q20. High-level topics
 /*
-  :param {
-    tagClasses: ['Writer', 'Single', 'Country']
-  }
+  :param { tagClasses: ['Writer', 'Single', 'Country'] }
 */
-MATCH (tagClass:TagClass)<-[:isSubclassOf*0..]-(:TagClass)<-[:hasType]-(tag:Tag)<-[:hasTag]-(message:Message)
+UNWIND $tagClasses AS tagClassName
+MATCH
+  (tagClass:TagClass {name: tagClassName})<-[:isSubclassOf*0..]-
+  (:TagClass)<-[:hasType]-(tag:Tag)<-[:hasTag]-(message:Message)
 RETURN
   tagClass.name,
   count(message) AS postCount

@@ -1,8 +1,6 @@
 // Q8. Related Topics
 /*
-  :param {
-    tag: 'Sammy_Sosa'
-  }
+  :param { tag: 'Sammy_Sosa' }
 */
 MATCH
   (tag:Tag {name: $tag})<-[:hasTag]-(:Message)<-[:replyOf*]-
@@ -15,3 +13,4 @@ RETURN
 ORDER BY
   count,
   relatedTag.name
+LIMIT 100

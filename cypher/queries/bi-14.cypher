@@ -6,10 +6,10 @@
   }
 */
 MATCH (person:Person)<-[:hasCreator]-(message:Message)<-[:replyOf*]-(reply:Message)
-WHERE message.creationDate >= '2010-01-01T00:00:00.000+0000'
-  AND message.creationDate <= '2011-01-01T00:00:00.000+0000'
-  AND reply.creationDate   >= '2010-01-01T00:00:00.000+0000'
-  AND reply.creationDate   <= '2011-01-01T00:00:00.000+0000'
+WHERE message.creationDate >= $begin
+  AND message.creationDate <= $end
+  AND reply.creationDate   >= $begin
+  AND reply.creationDate   <= $end
 RETURN
   person.id,
   person.firstName,
