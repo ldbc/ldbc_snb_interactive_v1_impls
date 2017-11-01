@@ -14,4 +14,12 @@ public class DateConverter {
         return "'"+sdf.format(new Date(timestamp))+"'::timestamp";
     }
 
+    public static String convertDateDatagenFormat(long timestamp) {
+        //return "to_timestamp("+timestamp+")::timestamp";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+0000'");
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        return sdf.format(new Date(timestamp));
+    }
+
 }
