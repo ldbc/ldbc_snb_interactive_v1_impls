@@ -38,15 +38,13 @@ The queries in this repository are work-in-progress.
 
 Download and install the LDBC SNB driver:
 
-    You can find the detailed information about this task here:
-    <https://github.com/ldbc/ldbc_snb_driver>
+You can find the detailed information about this task here: <https://github.com/ldbc/ldbc_snb_driver>
 
-    After that, you can install the JAR file of ldbc_snb_driver to the local
-    Maven repository. Go to the root directory of ldbc_snb_driver, and run:
+After that, you can install the JAR file of ldbc_snb_driver to the local Maven repository. Go to the root directory of ldbc_snb_driver, and run:
 
-    ```
-    mvn clean install -Dmaven.compiler.source=1.7 -Dmaven.compiler.target=1.7 -DskipTests
-    ```
+```bash
+mvn clean install -Dmaven.compiler.source=1.7 -Dmaven.compiler.target=1.7 -DskipTests
+```
 
 ## Running the driver.
 
@@ -56,7 +54,7 @@ Download and install the LDBC SNB driver:
 
     Run:
 
-    ```
+    ```bash
     mvn clean package
     ```
 
