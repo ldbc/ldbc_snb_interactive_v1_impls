@@ -2,6 +2,7 @@ package com.ldbc.impls.workloads.ldbc.snb.cypher.bi;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery10TagPerson;
+import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery11UnrelatedReplies;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery12TrendingPosts;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery13PopularMonthlyTags;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery14TopThreadInitiators;
@@ -49,7 +50,7 @@ public class BiQueryStore {
 		Query8("bi-8.cypher"),
 		Query9("bi-9.cypher"),
 		Query10("bi-10.cypher"),
-//		Query11("bi-11.cypher"),
+		Query11("bi-11.cypher"),
 		Query12("bi-12.cypher"),
 		Query13("bi-13.cypher"),
 		Query14("bi-14.cypher"),
@@ -63,7 +64,7 @@ public class BiQueryStore {
 		Query22("bi-22.cypher"),
 		Query23("bi-23.cypher"),
 		Query24("bi-24.cypher"),
-//		Query25("bi-25.cypher"),
+		Query25("bi-25.cypher"),
 		;
 		
 		QueryType(String file) {
@@ -90,133 +91,140 @@ public class BiQueryStore {
 	
 	public String getQuery2(LdbcSnbBiQuery2TopTags operation) {
 		return queries.get(QueryType.Query2)
-			.replace("--1--", convertDate(operation.date1()))
-			.replace("--2--", convertDate(operation.date2()))
-			.replace("--3--", operation.country1())
-			.replace("--4--", operation.country2());
+			.replace("$date1", convertDate(operation.date1()))
+			.replace("$date2", convertDate(operation.date2()))
+			.replace("$country1", operation.country1())
+			.replace("$country2", operation.country2());
 	}
 	
 	public String getQuery3(LdbcSnbBiQuery3TagEvolution operation) {
 		return queries.get(QueryType.Query3)
-			.replace("--1--", convertDate(operation.year()))
-			.replace("--2--", convertDate(operation.month()));
+			.replace("$year", Integer.toString(operation.year()))
+			.replace("$month", Integer.toString(operation.month()));
 	}
 	
 	public String getQuery4(LdbcSnbBiQuery4PopularCountryTopics operation) {
 		return queries.get(QueryType.Query4)
-			.replace("--1--", operation.tagClass())
-			.replace("--2--", operation.country());
+			.replace("$tagClass", operation.tagClass())
+			.replace("$country", operation.country());
 	}
 	
 	public String getQuery5(LdbcSnbBiQuery5TopCountryPosters operation) {
 		return queries.get(QueryType.Query5)
-			.replace("--1--", operation.country());
+			.replace("$country", operation.country());
 	}
 	
 	public String getQuery6(LdbcSnbBiQuery6ActivePosters operation) {
 		return queries.get(QueryType.Query6)
-			.replace("--1--", operation.tag());
+			.replace("$tag", operation.tag());
 	}
 	
 	public String getQuery7(LdbcSnbBiQuery7AuthoritativeUsers operation) {
 		return queries.get(QueryType.Query7)
-			.replace("--1--", operation.tag());
+			.replace("$tag", operation.tag());
 	}
 	
 	public String getQuery8(LdbcSnbBiQuery8RelatedTopics operation) {
 		return queries.get(QueryType.Query8)
-			.replace("--1--", operation.tag());
+			.replace("$tag", operation.tag());
 	}
 	
 	public String getQuery9(LdbcSnbBiQuery9RelatedForums operation) {
 		return queries.get(QueryType.Query9)
-			.replace("--1--", operation.tagClassA())
-			.replace("--2--", operation.tagClassB())
-			.replace("--3--", Integer.toString(operation.threshold()));
+			.replace("$tagClass1", operation.tagClass1())
+			.replace("$tagClass2", operation.tagClass2())
+			.replace("$threshold", Integer.toString(operation.threshold()));
 	}
-	
+
 	public String getQuery10(LdbcSnbBiQuery10TagPerson operation) {
-		return queries.get(QueryType.Query10)
-			.replace("--1--", operation.tag());
+		return queries.get(QueryType.Query10).replace("$tag", operation.tag());
 	}
-	
+
+	public String getQuery11(LdbcSnbBiQuery11UnrelatedReplies operation) {
+		return queries.get(QueryType.Query11)
+			.replace("$country", operation.country())
+			.replace("$blackList", convertStringList(operation.blackList()));
+	}
+
 	public String getQuery12(LdbcSnbBiQuery12TrendingPosts operation) {
 		return queries.get(QueryType.Query12)
-			.replace("--1--", convertDate(operation.date()))
-			.replace("--2--", Integer.toString(operation.likeThreshold()));
+			.replace("$date", convertDate(operation.date()))
+			.replace("$likeThreshold", Integer.toString(operation.likeThreshold()));
 	}
 	
 	public String getQuery13(LdbcSnbBiQuery13PopularMonthlyTags operation) {
 		return queries.get(QueryType.Query13)
-			.replace("--1--",operation.country());
+			.replace("$country", operation.country());
 	}
 	
 	public String getQuery14(LdbcSnbBiQuery14TopThreadInitiators operation) {
 		return queries.get(QueryType.Query14)
-			.replace("--1--",convertDate(operation.beginDate()))
-			.replace("--2--",convertDate(operation.endDate()));
+			.replace("$begin", convertDate(operation.beginDate()))
+			.replace("$end", convertDate(operation.endDate()));
 	}
 	
 	public String getQuery15(LdbcSnbBiQuery15SocialNormals operation) {
 		return queries.get(QueryType.Query15)
-			.replace("--1--",operation.country());
+			.replace("$country", operation.country());
 	}
 	
 	public String getQuery16(LdbcSnbBiQuery16ExpertsInSocialCircle operation) {
 		return queries.get(QueryType.Query16)
-			.replace("--1--", Long.toString(operation.person()))
-			.replace("--2--",operation.country())
-			.replace("--3--",operation.tagClass());
+			.replace("$personId", Long.toString(operation.personId()))
+			.replace("$country", operation.country())
+			.replace("$tagClass", operation.tagClass());
 	}
 	
 	public String getQuery17(LdbcSnbBiQuery17FriendshipTriangles operation) {
 		return queries.get(QueryType.Query17)
-			.replace("--1--",operation.country());
+			.replace("$country", operation.country());
 	}
 	
 	public String getQuery18(LdbcSnbBiQuery18PersonPostCounts operation) {
 		return queries.get(QueryType.Query18)
-			.replace("--1--",convertDate(operation.date()));
+			.replace("$date", convertDate(operation.date()));
 	}
 	
 	public String getQuery19(LdbcSnbBiQuery19StrangerInteraction operation) {
 		return queries.get(QueryType.Query19)
-			.replace("--1--",convertDate(operation.date()))
-			.replace("--2--", operation.tagClassA())
-			.replace("--3--", operation.tagClassB());
+			.replace("$date", convertDate(operation.date()))
+			.replace("$tagClass1", operation.tagClass1())
+			.replace("$tagClass2", operation.tagClass2());
 	}
 	
 	public String getQuery20(LdbcSnbBiQuery20HighLevelTopics operation) {
 		return queries.get(QueryType.Query20)
-			.replace("--1--", convertStringList(operation.tagClasses()));
+			.replace("$tagClasses", convertStringList(operation.tagClasses()));
 	}
 	
 	public String getQuery21(LdbcSnbBiQuery21Zombies operation) {
 		return queries.get(QueryType.Query21)
-			.replace("--1--", operation.country())
-			.replace("--2--",convertDate(operation.endDate()));
+			.replace("$country", operation.country())
+			.replace("$endDate", convertDate(operation.endDate()));
 	}
 	
 	public String getQuery22(LdbcSnbBiQuery22InternationalDialog operation) {
 		return queries.get(QueryType.Query22)
-			.replace("--1--", operation.country1())
-			.replace("--2--", operation.country2());
+			.replace("$country1", operation.country1())
+			.replace("$country2", operation.country2());
 	}
 	
 	public String getQuery23(LdbcSnbBiQuery23HolidayDestinations operation) {
 		return queries.get(QueryType.Query23)
-			.replace("--1--",operation.country());
+			.replace("$country", operation.country());
 	}
 
 	public String getQuery24(LdbcSnbBiQuery24MessagesByTopic operation) {
 		return queries.get(QueryType.Query24)
-			.replace("--1--",operation.tagClass());
+			.replace("$tagClass", operation.tagClass());
 	}
 
 	public String getQuery25(LdbcSnbBiQuery25WeightedPaths operation) {
-		throw new UnsupportedOperationException( );
-//		return queries.get(QueryType.Query25)
-//				.replace("--1--",operation.tagClass());
+		return queries.get(QueryType.Query25)
+				.replace("$person1Id", Long.toString(operation.person1Id()))
+				.replace("$person2Id", Long.toString(operation.person2Id()))
+				.replace("$startDate", convertDate(operation.startDate()))
+				.replace("$endDate", convertDate(operation.endDate()));
 	}
 	
 	
