@@ -17,14 +17,14 @@ OPTIONAL MATCH
   (:Message)<-[:hasCreator]-(person2)
 WITH
   person1, person2, city1,
-  score + (CASE WHEN count(c) = 0 THEN 0 ELSE 4 END) AS score
+  score + (CASE WHEN c IN NULL THEN 0 ELSE 4 END) AS score
 // subscore 2
 OPTIONAL MATCH
   (person1)<-[:hasCreator]-(m:Message)<-[:replyOf]-
   (:Comment)<-[:hasCreator]-(person2)
 WITH
   person1, person2, city1,
-  score + (CASE WHEN count(m) = 0 THEN 0 ELSE 1 END) AS score
+  score + (CASE WHEN m IS NULL THEN 0 ELSE 1 END) AS score
 // subscore 3
 OPTIONAL MATCH (person1)-[k:knows]-(person2)
 WITH
@@ -34,12 +34,12 @@ WITH
 OPTIONAL MATCH (person1)-[:likes]->(m:Message)<-[:hasCreator]-(person2)
 WITH
   person1, person2, city1,
-  score + (CASE WHEN count(m) = 0 THEN 0 ELSE 10 END) AS score
+  score + (CASE WHEN m IS NULL THEN 0 ELSE 10 END) AS score
 // subscore 5
 OPTIONAL MATCH (person1)<-[:hasCreator]-(m:Message)<-[:likes]-(person2)
 WITH
   person1, person2, city1,
-  score + (CASE WHEN count(m) = 0 THEN 0 ELSE 1 END) AS score
+  score + (CASE WHEN m IS NULL THEN 0 ELSE 1 END) AS score
 // preorder
 ORDER BY
   city1.name ASC,
