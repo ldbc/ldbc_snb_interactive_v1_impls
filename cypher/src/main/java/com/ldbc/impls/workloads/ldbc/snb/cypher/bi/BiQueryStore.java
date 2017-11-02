@@ -1,4 +1,4 @@
-package com.ldbc.impls.workloads.ldbc.snb.jdbc.bi;
+package com.ldbc.impls.workloads.ldbc.snb.cypher.bi;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery10TagPerson;

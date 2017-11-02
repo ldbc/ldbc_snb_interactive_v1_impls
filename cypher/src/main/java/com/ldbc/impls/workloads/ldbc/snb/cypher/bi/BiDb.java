@@ -1,4 +1,4 @@
-package com.ldbc.impls.workloads.ldbc.snb.jdbc.bi;
+package com.ldbc.impls.workloads.ldbc.snb.cypher.bi;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.control.LoggingService;
@@ -51,11 +51,11 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopics;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopicsResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForums;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForumsResult;
-import com.ldbc.impls.workloads.ldbc.snb.jdbc.CypherDb;
-import com.ldbc.impls.workloads.ldbc.snb.jdbc.CypherDriverConnectionStore;
-import com.ldbc.impls.workloads.ldbc.snb.jdbc.CypherListOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.jdbc.CypherPoolingDbConnectionStore;
-import com.ldbc.impls.workloads.ldbc.snb.jdbc.CypherSingletonOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherDb;
+import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherDriverConnectionStore;
+import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherListOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherPoolingDbConnectionStore;
+import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherSingletonOperationHandler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -1,4 +1,4 @@
-package com.ldbc.impls.workloads.ldbc.snb.jdbc;
+package com.ldbc.impls.workloads.ldbc.snb.cypher;
 
 import com.ldbc.driver.Db;
 import com.ldbc.driver.DbConnectionState;

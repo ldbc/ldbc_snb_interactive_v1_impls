@@ -7,7 +7,7 @@ import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.Workload;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery1PostingSummary;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiWorkload;
-import com.ldbc.impls.workloads.ldbc.snb.jdbc.bi.BiDb;
+import com.ldbc.impls.workloads.ldbc.snb.cypher.bi.BiDb;
 import org.junit.Test;
 
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package com.ldbc.impls.workloads.ldbc.snb.jdbc;
+package com.ldbc.impls.workloads.ldbc.snb.cypher;
 
 import com.ldbc.driver.DbException;
 import org.neo4j.driver.v1.AuthTokens;
