@@ -2,16 +2,31 @@
 /*
   :param {
     personId: 6597069777419,
-    country: Pakistan
+    country: 'Pakistan',
     tagClass: 'MusicalArtist',
     minPathDistance: 3,
     maxPathDistance: 5
   }
 */
-// This is not an efficient solution, i.e. will not work for any large data set
-// only using for simplicity. Added a constant for testing.
-MATCH p=(person:Person)-[:knows*5]-(:Person)
-WHERE $minPathDistance <= length(p)
-  AND $maxPathDistance >= length(p)
-RETURN person.id
-//TODO
+// This query will not work in a browser as is. I tried alternatives approaches,
+// e.g. enabling path of arbitrary lengths, saving the path to a variable p and
+// checking for `$minPathDistance <= length(p)`, but these could not be
+// evaluated due to the excessive amount of paths.
+// If you would like to test the query in the browser, replace the values of
+// $minPathDistance and $maxPathDistance to a constant.
+MATCH
+  (:Person {id: $personId})-[:knows*$minPathDistance..$maxPathDistance]-
+  (person:Person)-[:isLocatedIn]->(:City)-[:isPartOf]->
+  (:Country {name: $country}),
+  (person)<-[:hasCreator]-(message:Message)-[:hasTag]->(:Tag)-[:hasType]->
+  (:TagClass {name: $tagClass})
+MATCH (message)-[:hasTag]->(tag:Tag)
+RETURN
+  person.id,
+  tag.name,
+  count(message) AS messageCount
+ORDER BY
+  messageCount DESC,
+  tag.name ASC,
+  person.id ASC
+LIMIT 100
