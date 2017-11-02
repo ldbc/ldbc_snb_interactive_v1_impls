@@ -3,7 +3,7 @@ select
   count(distinct stranger.p_personid) as strangercnt,
   count(distinct rep.ps_postid) as cnt
 from person p, post org, post rep, person stranger
-where p.p_birthday > --1--
+where p.p_birthday > $date
   and org.ps_postid = rep.ps_replyof
   and rep.ps_creatorid = p.p_personid
   and org.ps_creatorid = stranger.p_personid
@@ -18,7 +18,7 @@ where p.p_birthday > --1--
     where ft_forumid = fp_forumid
       and ft_tagid = ttc_tagid
       and ttc_tagclassid = tc_tagclassid
-      and tc_name = '--2--'
+      and tc_name = '$tagClass1'
   )
   and stranger.p_personid in (
     select fp_personid
@@ -26,7 +26,7 @@ where p.p_birthday > --1--
     where ft_forumid = fp_forumid
       and ft_tagid = ttc_tagid
       and ttc_tagclassid = tc_tagclassid
-      and tc_name = '--3--'
+      and tc_name = '$tagClass2'
   )
 group by p.p_personid
 order by cnt desc

@@ -18,7 +18,7 @@ from
        where ps_creatorid = p_personid
          and pst_postid = ps_postid
          and t_tagid = pst_tagid
-         and t_name = '--1--'
+         and t_name = '$tag'
        ) psts
     group by p_personid
   ) sums

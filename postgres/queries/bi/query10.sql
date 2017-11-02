@@ -1,16 +1,17 @@
+-- TODO add $date
 with person_tag_post_score(ptps_personid, ptps_score) as (
   select ps_creatorid, count(*)
   from tag
   join post_tag on t_tagid = pst_tagid
   join post on pst_postid = ps_postid
-  where t_name = '--1--'
+  where t_name = '$tag'
   group by ps_creatorid
 ),
 person_interest_score(pis_personid, pis_score) as (
   select pt_personid, 100
   from person_tag
   join tag on t_tagid = pt_tagid
-  where t_name = '--1--'
+  where t_name = '$tag'
 ),
 person_total_score(pts_personid, pts_score) as (
   select coalesce(ptps_personid, pis_personid), coalesce(pis_score,0)+coalesce(ptps_score,0)

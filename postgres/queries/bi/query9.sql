@@ -1,6 +1,6 @@
 -- Where are competitor brands discussed but not this one?
---  - Tagclass A (linear to number of posts per tagclass)
---  - Tagclass B ( linear to number of posts per tagclass)
+--  - TagClass A (linear to number of posts per tagclass)
+--  - TagClass B ( linear to number of posts per tagclass)
 
 select
   f_forumid,
@@ -20,7 +20,7 @@ from (
               select ttc_tagid
               from tagclass, tag_tagclass
               where ttc_tagclassid = tc_tagclassid
-                and tc_name = '--1--'
+                and tc_name = '$tagClass1'
             )
         )
     ) as competing, (
@@ -35,12 +35,12 @@ from (
               select ttc_tagid
               from tagclass, tag_tagclass
               where ttc_tagclassid = tc_tagclassid
-              and tc_name = '--2--'
+              and tc_name = '$tagClass2'
             )
         )
     ) as ours
   from forum
-  where (select count(*) from forum_person where fp_forumid = f_forumid) > --3--
+  where (select count(*) from forum_person where fp_forumid = f_forumid) > $threshold
 ) mindshare
 where competing > 0
   and ours > 0

@@ -5,7 +5,7 @@ select
   count(*) as cnt,
   avg(ps_length) as avg_len,
   sum(ps_length) as total,
-  (0.0 + count(*)) / (select count(*) from post where ps_creationdate < --1--) as pct
+  (0.0 + count(*)) / (select count(*) from post where ps_creationdate < $date) as pct
 from (
   select
     extract(year from ps_creationdate) as year,
@@ -21,7 +21,7 @@ from (
     end as size,
     ps_length
   from post
-  where ps_creationdate < --1--
+  where ps_creationdate < $date
     and ps_imagefile is null
 ) data
 group by year, is_reply, size

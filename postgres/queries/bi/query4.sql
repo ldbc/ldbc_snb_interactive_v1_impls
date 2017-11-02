@@ -12,7 +12,7 @@ from forum, person, country,
   (
     select distinct post.*
     from post, post_tag, tag_tagclass, tagclass
-    where tc_name = '--1--'
+    where tc_name = '$tagClass'
       and ttc_tagclassid = tc_tagclassid
       and ttc_tagid = pst_tagid
       and pst_postid = ps_postid
@@ -20,7 +20,7 @@ from forum, person, country,
 where ps_forumid = f_forumid
   and f_moderatorid = p_personid
   and p_placeid = ctry_city
-  and ctry_name = '--2--'
+  and ctry_name = '$country'
 group by f_forumid, f_title, f_creationdate, f_moderatorid
 order by
   cnt desc,

@@ -11,7 +11,7 @@ from
       from person, post
       where ps_creatorid = p_personid
       group by p_personid, p_creationdate
-      having count(*) < extract(day from (--2-- - p_creationdate))/30
+      having count(*) < extract(day from ($endDate - p_creationdate))/30
     ) noproducer, post, likes
     where likes.l_personid = noproducer.p_personid
       and likes.l_postid = post.ps_postid
@@ -25,7 +25,7 @@ from
   ) reallikes, country, person p
 where zombielikes.ps_creatorid = reallikes.ps_creatorid
   and p.p_placeid = ctry_city
-  and ctry_name = '--1--'
+  and ctry_name = '$country'
   and zombielikes.ps_creatorid = p.p_personid
 order by
   zombielikes.cnt::float/reallikes.cnt desc,

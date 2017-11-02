@@ -14,7 +14,7 @@ from
 where pst_tagid in (
     select ttc_tagid
     from tag_tagclass, tagclass
-    where tc_name = '--1--'
+    where tc_name = '$tagClass'
       and ttc_tagclassid = tc_tagclassid
   )
 group by extract(year from ps_creationdate), extract(month from ps_creationdate), continent

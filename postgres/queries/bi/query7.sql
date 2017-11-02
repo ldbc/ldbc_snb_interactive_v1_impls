@@ -9,7 +9,7 @@ with
   ),
   post_tag as (
     select * from post join post_tag on pst_postid = ps_postid
-    join tag on pst_tagid = t_tagid where t_name = '--1--'
+    join tag on pst_tagid = t_tagid where t_name = '$tag'
   ),
   post_tag_likes as (
     select * from post_tag left join likes on ps_postid = l_postid

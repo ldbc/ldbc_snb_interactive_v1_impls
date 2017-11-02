@@ -3,8 +3,8 @@ select
   extract(month from ps_creationdate) as mm,
   count(*) as cnt
 from person, post, place dest, country resid
-where resid.ctry_name = '--1--'
-  and dest.pl_name <> '--1--'
+where resid.ctry_name = '$country'
+  and dest.pl_name <> '$country'
   and p_placeid = resid.ctry_city
   and ps_locationid = dest.pl_placeid
   and p_personid = ps_creatorid

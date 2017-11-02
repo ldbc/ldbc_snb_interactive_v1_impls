@@ -13,7 +13,7 @@ from
     where f_forumid = fp_forumid
      and p_personid = fp_personid
      and p_placeid = ctry_city
-     and ctry_name = '--1--'
+     and ctry_name = '$country'
     group by f_forumid order by cnt desc, f_forumid asc limit 100
   ) tf
   inner join post on ps_forumid = f_forumid
@@ -26,7 +26,7 @@ from
        where f_forumid = fp_forumid
          and p_personid = fp_personid
          and p_placeid = ctry_city
-         and ctry_name = '--1--'
+         and ctry_name = '$country'
        group by f_forumid, f_moderatorid
        order by cnt desc, f_forumid asc limit 100
     ) tf

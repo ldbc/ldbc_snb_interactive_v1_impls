@@ -9,7 +9,7 @@ with histogram(yy, mm, t_name, cnt) as (
       join place pcity on pcity.pl_placeid = p_placeid
       join place ctry on ctry.pl_placeid = pcity.pl_containerplaceid
       left join (select t_name, pst_postid from post_tag, tag where t_tagid = pst_tagid) tags on pst_postid = ps_postid
-    where ctry.pl_name = '--1--'
+    where ctry.pl_name = '$country'
     group by extract(year from ps_creationdate), extract(month from ps_creationdate), t_name
     having count(*) > 1
     order by yy, mm, cnt desc

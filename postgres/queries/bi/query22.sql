@@ -24,9 +24,9 @@ with related(p1, p2, score) as (
     where contact.p_personid = p1
       and contacted.p_personid = p2
       and contacted.p_placeid = target.ctry_city
-      and target.ctry_name = '--1--'
+      and target.ctry_name = '$country1'
       and contact.p_placeid = source.ctry_city
-      and source.ctry_name = '--2--'
+      and source.ctry_name = '$country2'
     group by contact.p_personid, contact.p_firstname, contact.p_lastname,contact.p_placeid
     order by s desc
   )

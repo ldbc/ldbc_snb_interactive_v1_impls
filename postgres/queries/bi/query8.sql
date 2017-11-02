@@ -11,13 +11,13 @@ where rep.ps_replyof = ps.ps_postid
     select 1 from post_tag, tag
     where pst_postid = ps.ps_postid
      and pst_tagid = t_tagid
-     and t_name = '--1--'
+     and t_name = '$tag'
   )
   and not exists (
     select 1 from post_tag, tag
     where pst_postid = rep.ps_postid
       and pst_tagid = t_tagid
-      and t_name = '--1--'
+      and t_name = '$tag'
     )
   and pst_postid = rep.ps_postid
   and t_tagid = pst_tagid
