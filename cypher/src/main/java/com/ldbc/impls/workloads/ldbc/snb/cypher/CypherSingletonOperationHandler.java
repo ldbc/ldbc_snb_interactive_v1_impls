@@ -4,6 +4,7 @@ import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
+import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Session;
 import org.neo4j.driver.v1.StatementResult;
 
@@ -24,11 +25,15 @@ public void executeOperation(OperationType operation, CypherDriverConnectionStor
 	state.logQuery(operation.getClass().getSimpleName(), queryString);
 	final StatementResult result = session.run(queryString);
 	if (result.hasNext()) {
+		final Record record = result.next();
 		resultCount++;
 
 //		tuple = convertSingleResult(result);
 //		if (state.isPrintResults())
 //			System.out.println(tuple.toString());
+		if (state.isPrintResults()) {
+			System.out.println(record);
+		}
 	}
 	session.close();
 

@@ -4,6 +4,7 @@ import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
+import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Session;
 import org.neo4j.driver.v1.StatementResult;
 
@@ -27,7 +28,7 @@ public abstract class CypherListOperationHandler<OperationType extends Operation
 		state.logQuery(operation.getClass().getSimpleName(), queryString);
 		final StatementResult result = session.run(queryString);
 		while (result.hasNext()) {
-			System.out.println(result.next());
+			final Record record = result.next();
 
 //				resultCount++;
 //
@@ -35,6 +36,9 @@ public abstract class CypherListOperationHandler<OperationType extends Operation
 //				if (state.isPrintResults())
 //					System.out.println(tuple.toString());
 //				results.add(tuple);
+			if (state.isPrintResults()) {
+				System.out.println(record);
+			}
 		}
 		session.close();
 		resultReporter.report(resultCount, results, operation);

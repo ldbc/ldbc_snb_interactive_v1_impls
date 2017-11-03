@@ -93,8 +93,8 @@ public class BiQueryStore {
 		return queries.get(QueryType.Query2)
 			.replace("$date1", convertDate(operation.date1()))
 			.replace("$date2", convertDate(operation.date2()))
-			.replace("$country1", operation.country1())
-			.replace("$country2", operation.country2());
+			.replace("$country1", convertString(operation.country1()))
+			.replace("$country2", convertString(operation.country2()));
 	}
 	
 	public String getQuery3(LdbcSnbBiQuery3TagEvolution operation) {
@@ -105,45 +105,46 @@ public class BiQueryStore {
 	
 	public String getQuery4(LdbcSnbBiQuery4PopularCountryTopics operation) {
 		return queries.get(QueryType.Query4)
-			.replace("$tagClass", operation.tagClass())
-			.replace("$country", operation.country());
+			.replace("$tagClass", convertString(operation.tagClass()))
+			.replace("$country", convertString(operation.country()));
 	}
 	
 	public String getQuery5(LdbcSnbBiQuery5TopCountryPosters operation) {
 		return queries.get(QueryType.Query5)
-			.replace("$country", operation.country());
+			.replace("$country", convertString(operation.country()));
 	}
 	
 	public String getQuery6(LdbcSnbBiQuery6ActivePosters operation) {
 		return queries.get(QueryType.Query6)
-			.replace("$tag", operation.tag());
+			.replace("$tag", convertString(operation.tag()));
 	}
 	
 	public String getQuery7(LdbcSnbBiQuery7AuthoritativeUsers operation) {
 		return queries.get(QueryType.Query7)
-			.replace("$tag", operation.tag());
+			.replace("$tag", convertString(operation.tag()));
 	}
 	
 	public String getQuery8(LdbcSnbBiQuery8RelatedTopics operation) {
 		return queries.get(QueryType.Query8)
-			.replace("$tag", operation.tag());
+			.replace("$tag", convertString(operation.tag()));
 	}
 	
 	public String getQuery9(LdbcSnbBiQuery9RelatedForums operation) {
 		return queries.get(QueryType.Query9)
-			.replace("$tagClass1", operation.tagClass1())
-			.replace("$tagClass2", operation.tagClass2())
+			.replace("$tagClass1", convertString(operation.tagClass1()))
+			.replace("$tagClass2", convertString(operation.tagClass2()))
 			.replace("$threshold", Integer.toString(operation.threshold()));
 	}
 
 	public String getQuery10(LdbcSnbBiQuery10TagPerson operation) {
-		return queries.get(QueryType.Query10).replace("$tag", operation.tag());
+		return queries.get(QueryType.Query10)
+			.replace("$tag", convertString(operation.tag()));
 	}
 
 	public String getQuery11(LdbcSnbBiQuery11UnrelatedReplies operation) {
 		return queries.get(QueryType.Query11)
-			.replace("$country", operation.country())
-			.replace("$blackList", convertStringList(operation.blackList()));
+			.replace("$country", convertString(operation.country()))
+			.replace("$blacklist", convertStringList(operation.blackList()));
 	}
 
 	public String getQuery12(LdbcSnbBiQuery12TrendingPosts operation) {
@@ -154,7 +155,7 @@ public class BiQueryStore {
 	
 	public String getQuery13(LdbcSnbBiQuery13PopularMonthlyTags operation) {
 		return queries.get(QueryType.Query13)
-			.replace("$country", operation.country());
+			.replace("$country", convertString(operation.country()));
 	}
 	
 	public String getQuery14(LdbcSnbBiQuery14TopThreadInitiators operation) {
@@ -165,31 +166,35 @@ public class BiQueryStore {
 	
 	public String getQuery15(LdbcSnbBiQuery15SocialNormals operation) {
 		return queries.get(QueryType.Query15)
-			.replace("$country", operation.country());
+			.replace("$country", convertString(operation.country()));
 	}
 	
 	public String getQuery16(LdbcSnbBiQuery16ExpertsInSocialCircle operation) {
 		return queries.get(QueryType.Query16)
 			.replace("$personId", Long.toString(operation.personId()))
-			.replace("$country", operation.country())
-			.replace("$tagClass", operation.tagClass());
+			.replace("$country", convertString(operation.country()))
+			.replace("$tagClass", convertString(operation.tagClass()))
+			.replace("$minPathDistance", Integer.toString(operation.minPathDistance()))
+			.replace("$maxPathDistance", Integer.toString(operation.maxPathDistance()));
 	}
 	
 	public String getQuery17(LdbcSnbBiQuery17FriendshipTriangles operation) {
 		return queries.get(QueryType.Query17)
-			.replace("$country", operation.country());
+			.replace("$country", convertString(operation.country()));
 	}
 	
 	public String getQuery18(LdbcSnbBiQuery18PersonPostCounts operation) {
 		return queries.get(QueryType.Query18)
-			.replace("$date", convertDate(operation.date()));
+			.replace("$date", convertDate(operation.date()))
+			.replace("$lengthThreshold", Integer.toString(operation.lengthThreshold()))
+			.replace("$languages", convertStringList(operation.languages()));
 	}
 	
 	public String getQuery19(LdbcSnbBiQuery19StrangerInteraction operation) {
 		return queries.get(QueryType.Query19)
 			.replace("$date", convertDate(operation.date()))
-			.replace("$tagClass1", operation.tagClass1())
-			.replace("$tagClass2", operation.tagClass2());
+			.replace("$tagClass1", convertString(operation.tagClass1()))
+			.replace("$tagClass2", convertString(operation.tagClass2()));
 	}
 	
 	public String getQuery20(LdbcSnbBiQuery20HighLevelTopics operation) {
@@ -199,24 +204,24 @@ public class BiQueryStore {
 	
 	public String getQuery21(LdbcSnbBiQuery21Zombies operation) {
 		return queries.get(QueryType.Query21)
-			.replace("$country", operation.country())
+			.replace("$country", convertString(operation.country()))
 			.replace("$endDate", convertDate(operation.endDate()));
 	}
 	
 	public String getQuery22(LdbcSnbBiQuery22InternationalDialog operation) {
 		return queries.get(QueryType.Query22)
-			.replace("$country1", operation.country1())
-			.replace("$country2", operation.country2());
+			.replace("$country1", convertString(operation.country1()))
+			.replace("$country2", convertString(operation.country2()));
 	}
 	
 	public String getQuery23(LdbcSnbBiQuery23HolidayDestinations operation) {
 		return queries.get(QueryType.Query23)
-			.replace("$country", operation.country());
+			.replace("$country", convertString(operation.country()));
 	}
 
 	public String getQuery24(LdbcSnbBiQuery24MessagesByTopic operation) {
 		return queries.get(QueryType.Query24)
-			.replace("$tagClass", operation.tagClass());
+			.replace("$tagClass", convertString(operation.tagClass()));
 	}
 
 	public String getQuery25(LdbcSnbBiQuery25WeightedPaths operation) {
@@ -226,19 +231,22 @@ public class BiQueryStore {
 				.replace("$startDate", convertDate(operation.startDate()))
 				.replace("$endDate", convertDate(operation.endDate()));
 	}
-	
+
+	private String convertString(String value) {
+		return "'" + value + "'";
+	}
 	
 	private String convertStringList(List<String> values) {
-		String res = "";
+		String res = "[";
 		for (int i = 0; i < values.size(); i++) {
 			if(i>0) {
 				res+=",";
 			}
 			res+="'"+values.get(i)+"'";
 		}
+		res += "]";
 		return res;
 	}
-
 
 	private String convertDate(long timestamp) {
 		//return "to_timestamp("+timestamp+")::timestamp";
