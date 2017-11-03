@@ -2,8 +2,6 @@ package postgresql;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;
-import com.ldbc.driver.OperationHandlerRunnableContext;
-import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.Workload;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery10TagPerson;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery12TrendingPosts;
@@ -24,16 +22,15 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery5TopCountryPosters;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery7AuthoritativeUsers;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopics;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiWorkload;
-import com.ldbc.impls.workloads.ldbc.snb.jdbc.bi.BiDb;
+import com.ldbc.impls.workloads.ldbc.snb.jdbc.bi.PostgresBiDb;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
-public class LdbcSnbBiQueryTest extends LdbcSnbQueryTest<BiDb> {
+public class LdbcSnbBiQueryTest extends LdbcSnbQueryTest<PostgresBiDb> {
 
 	@Before
 	public void initProperties() {
@@ -49,7 +46,7 @@ public class LdbcSnbBiQueryTest extends LdbcSnbQueryTest<BiDb> {
 
 		@SuppressWarnings("rawtypes")
 		Map<Integer, Class<? extends Operation>> mapping = workload.operationTypeToClassMapping();
-		BiDb sqldb = new BiDb();
+		PostgresBiDb sqldb = new PostgresBiDb();
 		sqldb.init(properties, null, mapping);
 
 		run(sqldb, new LdbcSnbBiQuery1PostingSummary(1311307200000L));
@@ -82,7 +79,7 @@ public class LdbcSnbBiQueryTest extends LdbcSnbQueryTest<BiDb> {
 		workload.close();
 	}
 
-	private void run( BiDb sqldb, Operation op ) throws DbException {
+	private void run(PostgresBiDb sqldb, Operation op ) throws DbException {
 		runOperation( sqldb, op );
 	}
 }

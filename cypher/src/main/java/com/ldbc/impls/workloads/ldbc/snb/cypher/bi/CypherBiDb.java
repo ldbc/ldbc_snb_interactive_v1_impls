@@ -64,11 +64,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class BiDb extends CypherDb<BiQueryStore> {
+public class CypherBiDb extends CypherDb {
 
 	@Override
 	protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
-		dbs = new CypherPoolingDbConnectionStore<>(properties, new BiQueryStore(properties.get("queryDir")));
+		dbs = new CypherPoolingDbConnectionStore(properties, new CypherBiQueryStore(properties.get("queryDir")));
 
 		registerOperationHandler(LdbcSnbBiQuery1PostingSummary.class, BiQuery1.class);
 		registerOperationHandler(LdbcSnbBiQuery2TopTags.class, BiQuery2.class);
@@ -97,10 +97,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 		registerOperationHandler(LdbcSnbBiQuery25WeightedPaths.class, BiQuery25.class);
 	}
 	
-	public static class BiQuery1 extends CypherListOperationHandler<LdbcSnbBiQuery1PostingSummary, LdbcSnbBiQuery1PostingSummaryResult, BiQueryStore> {
+	public static class BiQuery1 extends CypherListOperationHandler<LdbcSnbBiQuery1PostingSummary, LdbcSnbBiQuery1PostingSummaryResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery1PostingSummary operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery1PostingSummary operation) {
 			return state.getQueryStore().getQuery1(operation);
 		}
 
@@ -119,10 +119,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 		
 	}
 
-	public static class BiQuery2 extends CypherListOperationHandler<LdbcSnbBiQuery2TopTags, LdbcSnbBiQuery2TopTagsResult, BiQueryStore> {
+	public static class BiQuery2 extends CypherListOperationHandler<LdbcSnbBiQuery2TopTags, LdbcSnbBiQuery2TopTagsResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery2TopTags operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery2TopTags operation) {
 			return state.getQueryStore().getQuery2(operation);
 		}
 
@@ -139,10 +139,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 		
 	}
 	
-	public static class BiQuery3 extends CypherListOperationHandler<LdbcSnbBiQuery3TagEvolution, LdbcSnbBiQuery3TagEvolutionResult, BiQueryStore> {
+	public static class BiQuery3 extends CypherListOperationHandler<LdbcSnbBiQuery3TagEvolution, LdbcSnbBiQuery3TagEvolutionResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery3TagEvolution operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery3TagEvolution operation) {
 			return state.getQueryStore().getQuery3(operation);
 		}
 
@@ -157,10 +157,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 		
 	}
 	
-	public static class BiQuery4 extends CypherListOperationHandler<LdbcSnbBiQuery4PopularCountryTopics, LdbcSnbBiQuery4PopularCountryTopicsResult, BiQueryStore> {
+	public static class BiQuery4 extends CypherListOperationHandler<LdbcSnbBiQuery4PopularCountryTopics, LdbcSnbBiQuery4PopularCountryTopicsResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery4PopularCountryTopics operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery4PopularCountryTopics operation) {
 			return state.getQueryStore().getQuery4(operation);
 		}
 
@@ -176,10 +176,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 		
 	}
 	
-	public static class BiQuery5 extends CypherListOperationHandler<LdbcSnbBiQuery5TopCountryPosters, LdbcSnbBiQuery5TopCountryPostersResult, BiQueryStore> {
+	public static class BiQuery5 extends CypherListOperationHandler<LdbcSnbBiQuery5TopCountryPosters, LdbcSnbBiQuery5TopCountryPostersResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery5TopCountryPosters operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery5TopCountryPosters operation) {
 			return state.getQueryStore().getQuery5(operation);
 		}
 
@@ -195,10 +195,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 		
 	}
 	
-	public static class BiQuery6 extends CypherListOperationHandler<LdbcSnbBiQuery6ActivePosters, LdbcSnbBiQuery6ActivePostersResult, BiQueryStore> {
+	public static class BiQuery6 extends CypherListOperationHandler<LdbcSnbBiQuery6ActivePosters, LdbcSnbBiQuery6ActivePostersResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery6ActivePosters operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery6ActivePosters operation) {
 			return state.getQueryStore().getQuery6(operation);
 		}
 
@@ -214,10 +214,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 		
 	}
 
-	public static class BiQuery7 extends CypherListOperationHandler<LdbcSnbBiQuery7AuthoritativeUsers, LdbcSnbBiQuery7AuthoritativeUsersResult, BiQueryStore> {
+	public static class BiQuery7 extends CypherListOperationHandler<LdbcSnbBiQuery7AuthoritativeUsers, LdbcSnbBiQuery7AuthoritativeUsersResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery7AuthoritativeUsers operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery7AuthoritativeUsers operation) {
 			return state.getQueryStore().getQuery7(operation);
 		}
 
@@ -230,10 +230,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 		
 	}
 	
-	public static class BiQuery8 extends CypherListOperationHandler<LdbcSnbBiQuery8RelatedTopics, LdbcSnbBiQuery8RelatedTopicsResult, BiQueryStore> {
+	public static class BiQuery8 extends CypherListOperationHandler<LdbcSnbBiQuery8RelatedTopics, LdbcSnbBiQuery8RelatedTopicsResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery8RelatedTopics operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery8RelatedTopics operation) {
 			return state.getQueryStore().getQuery8(operation);
 		}
 
@@ -246,10 +246,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 		
 	}
 	
-	public static class BiQuery9 extends CypherListOperationHandler<LdbcSnbBiQuery9RelatedForums, LdbcSnbBiQuery9RelatedForumsResult, BiQueryStore> {
+	public static class BiQuery9 extends CypherListOperationHandler<LdbcSnbBiQuery9RelatedForums, LdbcSnbBiQuery9RelatedForumsResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery9RelatedForums operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery9RelatedForums operation) {
 			return state.getQueryStore().getQuery9(operation);
 		}
 
@@ -263,10 +263,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 		
 	}
 	
-	public static class BiQuery10 extends CypherListOperationHandler<LdbcSnbBiQuery10TagPerson, LdbcSnbBiQuery10TagPersonResult, BiQueryStore> {
+	public static class BiQuery10 extends CypherListOperationHandler<LdbcSnbBiQuery10TagPerson, LdbcSnbBiQuery10TagPersonResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery10TagPerson operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery10TagPerson operation) {
 			return state.getQueryStore().getQuery10(operation);
 		}
 
@@ -280,10 +280,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 		
 	}
 
-	public static class BiQuery11 extends CypherListOperationHandler<LdbcSnbBiQuery11UnrelatedReplies, LdbcSnbBiQuery11UnrelatedRepliesResult, BiQueryStore> {
+	public static class BiQuery11 extends CypherListOperationHandler<LdbcSnbBiQuery11UnrelatedReplies, LdbcSnbBiQuery11UnrelatedRepliesResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery11UnrelatedReplies operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery11UnrelatedReplies operation) {
 			return state.getQueryStore().getQuery11(operation);
 		}
 
@@ -298,10 +298,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 
 	}
 
-	public static class BiQuery12 extends CypherListOperationHandler<LdbcSnbBiQuery12TrendingPosts, LdbcSnbBiQuery12TrendingPostsResult, BiQueryStore> {
+	public static class BiQuery12 extends CypherListOperationHandler<LdbcSnbBiQuery12TrendingPosts, LdbcSnbBiQuery12TrendingPostsResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery12TrendingPosts operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery12TrendingPosts operation) {
 			return state.getQueryStore().getQuery12(operation);
 		}
 
@@ -316,10 +316,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 		}
 	}
 	
-	public static class BiQuery13 extends CypherListOperationHandler<LdbcSnbBiQuery13PopularMonthlyTags, LdbcSnbBiQuery13PopularMonthlyTagsResult, BiQueryStore> {
+	public static class BiQuery13 extends CypherListOperationHandler<LdbcSnbBiQuery13PopularMonthlyTags, LdbcSnbBiQuery13PopularMonthlyTagsResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery13PopularMonthlyTags operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery13PopularMonthlyTags operation) {
 			return state.getQueryStore().getQuery13(operation);
 		}
 
@@ -334,10 +334,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 		}
 	}
 	
-	public static class BiQuery14 extends CypherListOperationHandler<LdbcSnbBiQuery14TopThreadInitiators, LdbcSnbBiQuery14TopThreadInitiatorsResult, BiQueryStore> {
+	public static class BiQuery14 extends CypherListOperationHandler<LdbcSnbBiQuery14TopThreadInitiators, LdbcSnbBiQuery14TopThreadInitiatorsResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery14TopThreadInitiators operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery14TopThreadInitiators operation) {
 			return state.getQueryStore().getQuery14(operation);
 		}
 
@@ -352,10 +352,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 		}
 	}
 	
-	public static class BiQuery15 extends CypherListOperationHandler<LdbcSnbBiQuery15SocialNormals, LdbcSnbBiQuery15SocialNormalsResult, BiQueryStore> {
+	public static class BiQuery15 extends CypherListOperationHandler<LdbcSnbBiQuery15SocialNormals, LdbcSnbBiQuery15SocialNormalsResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery15SocialNormals operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery15SocialNormals operation) {
 			return state.getQueryStore().getQuery15(operation);
 		}
 
@@ -367,10 +367,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 		}
 	}
 	
-	public static class BiQuery16 extends CypherListOperationHandler<LdbcSnbBiQuery16ExpertsInSocialCircle, LdbcSnbBiQuery16ExpertsInSocialCircleResult, BiQueryStore> {
+	public static class BiQuery16 extends CypherListOperationHandler<LdbcSnbBiQuery16ExpertsInSocialCircle, LdbcSnbBiQuery16ExpertsInSocialCircleResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery16ExpertsInSocialCircle operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery16ExpertsInSocialCircle operation) {
 			return state.getQueryStore().getQuery16(operation);
 		}
 
@@ -383,10 +383,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 		}
 	}
 	
-	public static class BiQuery17 extends CypherSingletonOperationHandler<LdbcSnbBiQuery17FriendshipTriangles, LdbcSnbBiQuery17FriendshipTrianglesResult, BiQueryStore> {
+	public static class BiQuery17 extends CypherSingletonOperationHandler<LdbcSnbBiQuery17FriendshipTriangles, LdbcSnbBiQuery17FriendshipTrianglesResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery17FriendshipTriangles operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery17FriendshipTriangles operation) {
 			return state.getQueryStore().getQuery17(operation);
 		}
 
@@ -397,10 +397,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 		}
 	}
 	
-	public static class BiQuery18 extends CypherListOperationHandler<LdbcSnbBiQuery18PersonPostCounts, LdbcSnbBiQuery18PersonPostCountsResult, BiQueryStore> {
+	public static class BiQuery18 extends CypherListOperationHandler<LdbcSnbBiQuery18PersonPostCounts, LdbcSnbBiQuery18PersonPostCountsResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery18PersonPostCounts operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery18PersonPostCounts operation) {
 			return state.getQueryStore().getQuery18(operation);
 		}
 
@@ -413,10 +413,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 	}
 	
 	
-	public static class BiQuery19 extends CypherListOperationHandler<LdbcSnbBiQuery19StrangerInteraction, LdbcSnbBiQuery19StrangerInteractionResult, BiQueryStore> {
+	public static class BiQuery19 extends CypherListOperationHandler<LdbcSnbBiQuery19StrangerInteraction, LdbcSnbBiQuery19StrangerInteractionResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery19StrangerInteraction operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery19StrangerInteraction operation) {
 			return state.getQueryStore().getQuery19(operation);
 		}
 
@@ -429,10 +429,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 		}
 	}
 	
-	public static class BiQuery20 extends CypherListOperationHandler<LdbcSnbBiQuery20HighLevelTopics, LdbcSnbBiQuery20HighLevelTopicsResult, BiQueryStore> {
+	public static class BiQuery20 extends CypherListOperationHandler<LdbcSnbBiQuery20HighLevelTopics, LdbcSnbBiQuery20HighLevelTopicsResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery20HighLevelTopics operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery20HighLevelTopics operation) {
 			return state.getQueryStore().getQuery20(operation);
 		}
 
@@ -444,10 +444,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 		}
 	}
 	
-	public static class BiQuery21 extends CypherListOperationHandler<LdbcSnbBiQuery21Zombies, LdbcSnbBiQuery21ZombiesResult, BiQueryStore> {
+	public static class BiQuery21 extends CypherListOperationHandler<LdbcSnbBiQuery21Zombies, LdbcSnbBiQuery21ZombiesResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery21Zombies operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery21Zombies operation) {
 			return state.getQueryStore().getQuery21(operation);
 		}
 
@@ -461,10 +461,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 		}
 	}
 	
-	public static class BiQuery22 extends CypherListOperationHandler<LdbcSnbBiQuery22InternationalDialog, LdbcSnbBiQuery22InternationalDialogResult, BiQueryStore> {
+	public static class BiQuery22 extends CypherListOperationHandler<LdbcSnbBiQuery22InternationalDialog, LdbcSnbBiQuery22InternationalDialogResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery22InternationalDialog operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery22InternationalDialog operation) {
 			return state.getQueryStore().getQuery22(operation);
 		}
 
@@ -476,10 +476,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 		}
 	}
 	
-	public static class BiQuery23 extends CypherListOperationHandler<LdbcSnbBiQuery23HolidayDestinations, LdbcSnbBiQuery23HolidayDestinationsResult, BiQueryStore> {
+	public static class BiQuery23 extends CypherListOperationHandler<LdbcSnbBiQuery23HolidayDestinations, LdbcSnbBiQuery23HolidayDestinationsResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery23HolidayDestinations operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery23HolidayDestinations operation) {
 			return state.getQueryStore().getQuery23(operation);
 		}
 
@@ -493,10 +493,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 	}
 	
 	
-	public static class BiQuery24 extends CypherListOperationHandler<LdbcSnbBiQuery24MessagesByTopic, LdbcSnbBiQuery24MessagesByTopicResult, BiQueryStore> {
+	public static class BiQuery24 extends CypherListOperationHandler<LdbcSnbBiQuery24MessagesByTopic, LdbcSnbBiQuery24MessagesByTopicResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery24MessagesByTopic operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery24MessagesByTopic operation) {
 			return state.getQueryStore().getQuery24(operation);
 		}
 
@@ -511,10 +511,10 @@ public class BiDb extends CypherDb<BiQueryStore> {
 		}
 	}
 
-	public static class BiQuery25 extends CypherListOperationHandler<LdbcSnbBiQuery25WeightedPaths, LdbcSnbBiQuery25WeightedPathsResult, BiQueryStore> {
+	public static class BiQuery25 extends CypherListOperationHandler<LdbcSnbBiQuery25WeightedPaths, LdbcSnbBiQuery25WeightedPathsResult, CypherBiQueryStore> {
 
 		@Override
-		public String getQueryString(CypherDriverConnectionStore<BiQueryStore> state, LdbcSnbBiQuery25WeightedPaths operation) {
+		public String getQueryString(CypherDriverConnectionStore<CypherBiQueryStore> state, LdbcSnbBiQuery25WeightedPaths operation) {
 			return state.getQueryStore().getQuery25(operation);
 		}
 

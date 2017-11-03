@@ -28,7 +28,8 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery6ActivePosters;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopics;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForums;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiWorkload;
-import com.ldbc.impls.workloads.ldbc.snb.cypher.bi.BiDb;
+import com.ldbc.impls.workloads.ldbc.snb.bi.test.LdbcSnbBiQueryTest;
+import com.ldbc.impls.workloads.ldbc.snb.cypher.bi.CypherBiDb;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -36,28 +37,27 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LdbcSnbBiQueryTest {
-	private static String endpoint = "bolt://localhost:7687";
-	private static String user = "neo4j";
-	private static String password = "admin";
-	private static String queryDir = "queries/";
+public class LdbcSnbBiCypherTest extends LdbcSnbBiQueryTest {
+	private final String endpoint = "bolt://localhost:7687";
+	private final String user = "neo4j";
+	private final String password = "admin";
+	private final String queryDir = "queries/";
 
-	private static int LIMIT = 100;
-
-	private static Map<String, String> getProperties() {
+	@Override
+	protected final Map<String, String> getProperties() {
 		Map<String, String> properties = new HashMap<>();
 		properties.put("endpoint", endpoint);
 		properties.put("user", user);
 		properties.put("password", password);
 		properties.put("queryDir", queryDir);
 		properties.put("printQueryNames", "true");
-		properties.put("printQueryStrings", "false");
+		properties.put("printQueryStrings", "true");
 		properties.put("printQueryResults", "false");
 		return properties;
 	}
 
 	@SuppressWarnings("unchecked")
-	public Object runOperation(BiDb db, Operation<?> op) throws DbException {
+	public Object runOperation(CypherBiDb db, Operation<?> op) throws DbException {
 		OperationHandlerRunnableContext handler = db.getOperationHandlerRunnableContext(op);
 		ResultReporter reporter = new ResultReporter.SimpleResultReporter(null);
 		handler.operationHandler().executeOperation(op, handler.dbConnectionState(), reporter);
@@ -71,7 +71,7 @@ public class LdbcSnbBiQueryTest {
 
 		@SuppressWarnings("rawtypes")
 		Map<Integer, Class<? extends Operation>> mapping = workload.operationTypeToClassMapping();
-		BiDb sqldb = new BiDb();
+		CypherBiDb sqldb = new CypherBiDb();
 		sqldb.init(getProperties(), null, mapping);
 
 		run(sqldb, new LdbcSnbBiQuery1PostingSummary(1311307200000L));
@@ -104,7 +104,7 @@ public class LdbcSnbBiQueryTest {
 		workload.close();
 	}
 
-	private void run( BiDb sqldb, Operation op ) throws DbException {
+	private void run(CypherBiDb sqldb, Operation op ) throws DbException {
 		runOperation( sqldb, op );
 	}
 }

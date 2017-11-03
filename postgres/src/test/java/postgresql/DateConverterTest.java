@@ -1,6 +1,6 @@
 package postgresql;
 
-import com.ldbc.impls.workloads.ldbc.snb.DateConverter;
+import com.ldbc.impls.workloads.ldbc.snb.util.DateConverter;
 import org.junit.Assert;
 import org.junit.Test;
 

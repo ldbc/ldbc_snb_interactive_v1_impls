@@ -1,6 +1,7 @@
 package com.ldbc.impls.workloads.ldbc.snb.cypher;
 
 import com.ldbc.driver.DbException;
+import com.ldbc.impls.workloads.ldbc.snb.cypher.bi.CypherBiQueryStore;
 import org.neo4j.driver.v1.AuthTokens;
 import org.neo4j.driver.v1.Driver;
 import org.neo4j.driver.v1.GraphDatabase;
@@ -9,10 +10,10 @@ import org.neo4j.driver.v1.Session;
 import java.io.IOException;
 import java.util.Map;
 
-public class CypherPoolingDbConnectionStore<DbQueryStore> extends CypherDriverConnectionStore<DbQueryStore> {
+public class CypherPoolingDbConnectionStore extends CypherDriverConnectionStore {
 	protected final Driver driver;
 
-	public CypherPoolingDbConnectionStore(Map<String, String> properties, DbQueryStore store) {
+	public CypherPoolingDbConnectionStore(Map<String, String> properties, CypherBiQueryStore store) {
 		super(properties, store);
 
 		String endPoint = properties.get("endpoint");

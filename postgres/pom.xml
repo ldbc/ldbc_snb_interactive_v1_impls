@@ -1,30 +1,27 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.ldbc.driver</groupId>
+
+	<parent>
+		<groupId>com.ldbc.snb</groupId>
+		<artifactId>implementations</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
 	<artifactId>postgresql</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>PostgreSQL DB class</name>
 	<description>PostgreSQL connector for LDBC driver</description>
-	<properties>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
-	</properties>
+
 	<dependencies>
 		<dependency>
-			<groupId>com.ldbc.driver</groupId>
-			<artifactId>jeeves</artifactId>
-			<version>0.3-SNAPSHOT</version>
+			<groupId>com.ldbc.snb</groupId>
+			<artifactId>common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>9.4-1206-jdbc42</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
 		</dependency>
 	</dependencies>
 	  <build>

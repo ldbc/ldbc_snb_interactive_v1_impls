@@ -51,6 +51,7 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopics;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopicsResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForums;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForumsResult;
+import com.ldbc.impls.workloads.ldbc.snb.bi.BiQueryStore;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcDb;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcDbConnectionStore;
 import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcListOperationHandler;
@@ -62,12 +63,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class BiDb extends JdbcDb<BiQueryStore> {
+public class PostgresBiDb extends JdbcDb<BiQueryStore> {
 
 	@Override
 	protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
 		try {
-			dbs = new JdbcPoolingDbConnectionStore<BiQueryStore>(properties, new BiQueryStore(properties.get("queryDir")));
+			dbs = new JdbcPoolingDbConnectionStore<BiQueryStore>(properties, new PostgresQueryStore(properties.get("queryDir")));
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new DbException(e);
 		}
