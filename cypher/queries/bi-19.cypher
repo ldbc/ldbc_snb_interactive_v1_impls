@@ -14,12 +14,12 @@ MATCH
 // --> may be use two MATCH clauses?
   (:TagClass {name: $tagClass1})<-[:hasType]-(:Tag)<-[:hasTag]-(forum1:Forum),
   (:TagClass {name: $tagClass2})<-[:hasType]-(:Tag)<-[:hasTag]-(forum2:Forum),
-  (forum1)-[:hasMember]->(stranger:Person)<-[:hasMember]-(forum2),
-  (person)-[:knows]-(stranger)
+  (forum1)-[:hasMember]->(stranger:Person)<-[:hasMember]-(forum2)
 WHERE NOT (person)-[:knows]-(stranger)
 WITH person, stranger
 OPTIONAL MATCH
-  (person)  <-[:hasCreator]-(comment1:Comment)-[:replyOf]->(:Message)-[:hasCreator]->(stranger),
+    (person)<-[:hasCreator]-(comment1:Comment)-[:replyOf]->(:Message)-[:hasCreator]->(stranger)
+OPTIONAL MATCH
   (stranger)<-[:hasCreator]-(comment2:Comment)-[:replyOf]->(:Message)-[:hasCreator]->(person)
 WITH
   person,
@@ -30,7 +30,7 @@ RETURN
   person.id,
   strangersCount,
   comment1Count + comment2Count AS interactionCount
-  ORDER BY
+ORDER BY
   interactionCount DESC,
   person.id ASC
-  LIMIT 100
+LIMIT 100
