@@ -4,6 +4,8 @@
 
 Implementations for the Workload components of the LDBC Social Network Benchmark ([specification](https://ldbc.github.io/ldbc_snb_docs/)).
 
+:warning: Implementations in this repository are work-in-progress and are neither validated nor audited. Therefore, they should not be considered as official implementations until they are published in a peer-reviewed paper (planned for Q2 2018).
+
 ## Implementations
 
 Each project has its own README:
