@@ -14,8 +14,7 @@ script:
   - cd postgres/load-scripts
   - ./load.sh
   - cd ../..
-  - cd postgres
-  - mvn test -B
+  - mvn build -DskipTests
 notifications:
   slack: ldbcouncil:JRXP43nDV4KRgtclmoNZJpyq
   email: false
