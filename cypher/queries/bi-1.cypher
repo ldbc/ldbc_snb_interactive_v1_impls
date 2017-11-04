@@ -19,18 +19,18 @@ WITH
   year,
   messageType,
   CASE
-    WHEN length <  40 THEN [0, 'short'    ]
-    WHEN length <  80 THEN [1, 'one liner']
-    WHEN length < 160 THEN [2, 'tweet'    ]
-    ELSE                   [3, 'long'     ]
-  END AS lengthCategoryIndexed,
+    WHEN length <  40 THEN 0
+    WHEN length <  80 THEN 1
+    WHEN length < 160 THEN 2
+    ELSE                   3
+  END AS lengthCategory,
   count(message) AS messageCount,
   floor(avg(message.length)) AS averageMessageLength,
   sum(message.length) AS sumMessageLength
 RETURN
   year,
   messageType,
-  lengthCategoryIndexed[1] AS lengthCategory,
+  lengthCategory,
   messageCount,
   averageMessageLength,
   sumMessageLength,
@@ -38,4 +38,4 @@ RETURN
 ORDER BY
   year DESC,
   messageType DESC, // spec says 'ASC', where Posts come first and Comments second
-  lengthCategoryIndexed[0] ASC
+  lengthCategory ASC
