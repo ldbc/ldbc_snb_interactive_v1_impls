@@ -37,6 +37,19 @@ import java.util.Arrays;
 import java.util.Map;
 
 public abstract class LdbcSnbBiQueryTest {
+
+    protected final SnbDb db;
+    protected final Workload workload;
+
+    public LdbcSnbBiQueryTest(SnbDb db) throws DbException {
+        this.db = db;
+        this.workload = new LdbcSnbBiWorkload();
+
+        @SuppressWarnings("rawtypes")
+        Map<Integer, Class<? extends Operation>> mapping = workload.operationTypeToClassMapping();
+        db.init(getProperties(), null, mapping);
+    }
+
     @SuppressWarnings("unchecked")
     public Object runOperation(SnbDb<BiQueryStore> db, Operation<?> op) throws DbException {
         OperationHandlerRunnableContext handler = db.getOperationHandlerRunnableContext(op);
@@ -49,47 +62,40 @@ public abstract class LdbcSnbBiQueryTest {
     protected final int LIMIT = 100;
     protected abstract Map<String, String> getProperties();
 
-        @Test
+    @Test
     public void testQueries() throws DbException, IOException {
-        Workload workload = new LdbcSnbBiWorkload();
+        run(db, new LdbcSnbBiQuery1PostingSummary(1311307200000L));
+        run(db, new LdbcSnbBiQuery2TopTags(1262322000000L, 128919240000L, "Ethiopia", "Spain", LIMIT));
+        run(db, new LdbcSnbBiQuery3TagEvolution(2015, 12, 100 ));
+        run(db, new LdbcSnbBiQuery4PopularCountryTopics("MusicalArtist", "Netherlands", LIMIT));
+        run(db, new LdbcSnbBiQuery5TopCountryPosters("Ethiopia", LIMIT));
+        run(db, new LdbcSnbBiQuery6ActivePosters("Ehud_Olmert", LIMIT));
+//		run(db, new LdbcSnbBiQuery7AuthoritativeUsers("Che_Guevara", LIMIT));
+        run(db, new LdbcSnbBiQuery8RelatedTopics("Imelda_Marcos", LIMIT));
+        run(db, new LdbcSnbBiQuery9RelatedForums("BaseballPlayer", "ChristianBishop", 200, LIMIT));
+//		run(db, new LdbcSnbBiQuery10TagPerson("Che_Guevara", 1311307200000L, LIMIT));
+        run(db, new LdbcSnbBiQuery11UnrelatedReplies("Germany", Arrays.asList("also"), LIMIT));
+        run(db, new LdbcSnbBiQuery12TrendingPosts(1311307200000L, 400, LIMIT));
+        run(db, new LdbcSnbBiQuery13PopularMonthlyTags("Ethiopia", LIMIT));
+        run(db, new LdbcSnbBiQuery14TopThreadInitiators(1338523200000L, 1341115200000L, LIMIT));
+        run(db, new LdbcSnbBiQuery15SocialNormals("Ethiopia", LIMIT));
+        run(db, new LdbcSnbBiQuery16ExpertsInSocialCircle(19791209310731L, "MusicalArtist", "Germany", 1, 2, LIMIT));
+        run(db, new LdbcSnbBiQuery17FriendshipTriangles("Ethiopia"));
+        run(db, new LdbcSnbBiQuery18PersonPostCounts(1311307200000L, 0, Arrays.asList("English"), LIMIT));
+//		run(db, new LdbcSnbBiQuery19StrangerInteraction(599634000000L, "MusicalArtist", "OfficeHolder", LIMIT));
+        run(db, new LdbcSnbBiQuery20HighLevelTopics(Arrays.asList("Country"), LIMIT));
+        run(db, new LdbcSnbBiQuery21Zombies("Ethiopia", 1357016400000L, 0, LIMIT));
+        run(db, new LdbcSnbBiQuery22InternationalDialog("Mexico", "Indonesia", LIMIT));
+        run(db, new LdbcSnbBiQuery23HolidayDestinations("Ethiopia", LIMIT));
+        run(db, new LdbcSnbBiQuery24MessagesByTopic("Single", LIMIT));
+        run(db, new LdbcSnbBiQuery25WeightedPaths(0L, 1L, 0L, 1L));
 
-        @SuppressWarnings("rawtypes")
-        Map<Integer, Class<? extends Operation>> mapping = workload.operationTypeToClassMapping();
-        SnbDb<BiQueryStore> sqldb = null;//new SnbDb<BiQueryStore>();
-        sqldb.init(getProperties(), null, mapping);
-
-        run(sqldb, new LdbcSnbBiQuery1PostingSummary(1311307200000L));
-        run(sqldb, new LdbcSnbBiQuery2TopTags(1262322000000L, 128919240000L, "Ethiopia", "Spain", LIMIT));
-        run(sqldb, new LdbcSnbBiQuery3TagEvolution(2015, 12, 100 ));
-        run(sqldb, new LdbcSnbBiQuery4PopularCountryTopics("MusicalArtist", "Netherlands", LIMIT));
-        run(sqldb, new LdbcSnbBiQuery5TopCountryPosters("Ethiopia", LIMIT));
-        run(sqldb, new LdbcSnbBiQuery6ActivePosters("Ehud_Olmert", LIMIT));
-//		run(sqldb, new LdbcSnbBiQuery7AuthoritativeUsers("Che_Guevara", LIMIT));
-        run(sqldb, new LdbcSnbBiQuery8RelatedTopics("Imelda_Marcos", LIMIT));
-        run(sqldb, new LdbcSnbBiQuery9RelatedForums("BaseballPlayer", "ChristianBishop", 200, LIMIT));
-//		run(sqldb, new LdbcSnbBiQuery10TagPerson("Che_Guevara", 1311307200000L, LIMIT));
-        run(sqldb, new LdbcSnbBiQuery11UnrelatedReplies("Germany", Arrays.asList("also"), LIMIT));
-        run(sqldb, new LdbcSnbBiQuery12TrendingPosts(1311307200000L, 400, LIMIT));
-        run(sqldb, new LdbcSnbBiQuery13PopularMonthlyTags("Ethiopia", LIMIT));
-        run(sqldb, new LdbcSnbBiQuery14TopThreadInitiators(1338523200000L, 1341115200000L, LIMIT));
-        run(sqldb, new LdbcSnbBiQuery15SocialNormals("Ethiopia", LIMIT));
-        run(sqldb, new LdbcSnbBiQuery16ExpertsInSocialCircle(19791209310731L, "MusicalArtist", "Germany", 1, 2, LIMIT));
-        run(sqldb, new LdbcSnbBiQuery17FriendshipTriangles("Ethiopia"));
-        run(sqldb, new LdbcSnbBiQuery18PersonPostCounts(1311307200000L, 0, Arrays.asList("English"), LIMIT));
-//		run(sqldb, new LdbcSnbBiQuery19StrangerInteraction(599634000000L, "MusicalArtist", "OfficeHolder", LIMIT));
-        run(sqldb, new LdbcSnbBiQuery20HighLevelTopics(Arrays.asList("Country"), LIMIT));
-        run(sqldb, new LdbcSnbBiQuery21Zombies("Ethiopia", 1357016400000L, 0, LIMIT));
-        run(sqldb, new LdbcSnbBiQuery22InternationalDialog("Mexico", "Indonesia", LIMIT));
-        run(sqldb, new LdbcSnbBiQuery23HolidayDestinations("Ethiopia", LIMIT));
-        run(sqldb, new LdbcSnbBiQuery24MessagesByTopic("Single", LIMIT));
-        run(sqldb, new LdbcSnbBiQuery25WeightedPaths(0L, 1L, 0L, 1L));
-
-        sqldb.close();
+        db.close();
         workload.close();
     }
 
-    private void run(SnbDb<BiQueryStore> sqldb, Operation op ) throws DbException {
-        runOperation( sqldb, op );
+    private void run(SnbDb<BiQueryStore> db, Operation op ) throws DbException {
+        runOperation( db, op );
     }
 }
 

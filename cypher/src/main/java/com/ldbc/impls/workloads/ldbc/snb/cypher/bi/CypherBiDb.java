@@ -520,7 +520,8 @@ public class CypherBiDb extends CypherDb {
 
 		@Override
 		public LdbcSnbBiQuery25WeightedPathsResult convertSingleResult(ResultSet result) throws SQLException {
-//			List<Long> personIds = ???
+			final Object personIds = result.getArray(1).getArray();
+			// TODO
 //			return new LdbcSnbBiQuery25WeightedPathsResult(personIds);
 			throw new UnsupportedOperationException("Query 25 not yet supported.");
 		}

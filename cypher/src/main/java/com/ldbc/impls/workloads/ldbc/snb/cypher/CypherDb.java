@@ -1,9 +1,9 @@
 package com.ldbc.impls.workloads.ldbc.snb.cypher;
 
-import com.ldbc.driver.Db;
 import com.ldbc.driver.DbConnectionState;
 import com.ldbc.driver.DbException;
-import com.ldbc.impls.workloads.ldbc.snb.DriverConnectionStore;
+import com.ldbc.impls.workloads.ldbc.snb.SnbDb;
+import com.ldbc.impls.workloads.ldbc.snb.cypher.bi.CypherBiQueryStore;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -11,12 +11,12 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-public abstract class CypherDb extends Db {
+public abstract class CypherDb extends SnbDb<CypherBiQueryStore> {
 	
 	protected CypherDriverConnectionStore dbs;
 
 	@Override
-	protected final void onClose() throws IOException {
+	protected void onClose() throws IOException {
 		try {
 			dbs.close();
 		} catch (IOException e) {
@@ -25,7 +25,7 @@ public abstract class CypherDb extends Db {
 	}
 
 	@Override
-	protected final DbConnectionState getConnectionState() throws DbException {
+	protected DbConnectionState getConnectionState() throws DbException {
 		return dbs;
 	}
 	

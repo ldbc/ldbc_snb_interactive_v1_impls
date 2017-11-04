@@ -2,6 +2,7 @@ package com.ldbc.impls.workloads.ldbc.snb.cypher.bi;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.impls.workloads.ldbc.snb.bi.BiQueryStore;
+import com.ldbc.impls.workloads.ldbc.snb.util.Converter;
 
 public class CypherBiQueryStore extends BiQueryStore {
 
@@ -9,4 +10,8 @@ public class CypherBiQueryStore extends BiQueryStore {
 		super(path, "bi-", ".cypher");
 	}
 
+	@Override
+	protected Converter getConverter() {
+		return new Converter();
+	}
 }

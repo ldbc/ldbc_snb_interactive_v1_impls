@@ -4,6 +4,8 @@ import com.ldbc.driver.DbException;
 import com.ldbc.driver.control.LoggingService;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery10TagPerson;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery10TagPersonResult;
+import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery11UnrelatedReplies;
+import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery11UnrelatedRepliesResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery12TrendingPosts;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery12TrendingPostsResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery13PopularMonthlyTags;
@@ -61,6 +63,8 @@ import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcSingletonOperationHandler;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public class PostgresBiDb extends JdbcDb<BiQueryStore> {
@@ -68,7 +72,7 @@ public class PostgresBiDb extends JdbcDb<BiQueryStore> {
 	@Override
 	protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
 		try {
-			dbs = new JdbcPoolingDbConnectionStore<BiQueryStore>(properties, new PostgresQueryStore(properties.get("queryDir")));
+			dbs = new JdbcPoolingDbConnectionStore<>(properties, new PostgresQueryStore(properties.get("queryDir")));
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new DbException(e);
 		}
@@ -82,6 +86,7 @@ public class PostgresBiDb extends JdbcDb<BiQueryStore> {
 		registerOperationHandler(LdbcSnbBiQuery8RelatedTopics.class, BiQuery8.class);
 		registerOperationHandler(LdbcSnbBiQuery9RelatedForums.class, BiQuery9.class);
 		registerOperationHandler(LdbcSnbBiQuery10TagPerson.class, BiQuery10.class);
+		registerOperationHandler(LdbcSnbBiQuery11UnrelatedReplies.class, BiQuery11.class);
 		registerOperationHandler(LdbcSnbBiQuery12TrendingPosts.class, BiQuery12.class);
 		registerOperationHandler(LdbcSnbBiQuery13PopularMonthlyTags.class, BiQuery13.class);
 		registerOperationHandler(LdbcSnbBiQuery14TopThreadInitiators.class, BiQuery14.class);
@@ -280,7 +285,25 @@ public class PostgresBiDb extends JdbcDb<BiQueryStore> {
 		}
 		
 	}
-	
+
+	public static class BiQuery11 extends JdbcListOperationHandler<LdbcSnbBiQuery11UnrelatedReplies, LdbcSnbBiQuery11UnrelatedRepliesResult, BiQueryStore> {
+
+		@Override
+		public String getQueryString(JdbcDbConnectionStore<BiQueryStore> state, LdbcSnbBiQuery11UnrelatedReplies operation) {
+			return state.getQueryStore().getQuery11(operation);
+		}
+
+		@Override
+		public LdbcSnbBiQuery11UnrelatedRepliesResult convertSingleResult(ResultSet result) throws SQLException {
+			long personId = result.getLong(1);
+			String tagName = result.getString(2);
+			int countLikes = result.getInt(3);
+			int countReplies = result.getInt(4);
+			return new LdbcSnbBiQuery11UnrelatedRepliesResult(personId, tagName, countLikes, countReplies);
+		}
+
+	}
+
 	public static class BiQuery12 extends JdbcListOperationHandler<LdbcSnbBiQuery12TrendingPosts, LdbcSnbBiQuery12TrendingPostsResult, BiQueryStore> {
 
 		@Override
@@ -503,9 +526,9 @@ public class PostgresBiDb extends JdbcDb<BiQueryStore> {
 
 		@Override
 		public LdbcSnbBiQuery25WeightedPathsResult convertSingleResult(ResultSet result) throws SQLException {
-//			List<Long> personIds = ???
-//			return new LdbcSnbBiQuery25WeightedPathsResult(personIds);
-			throw new UnsupportedOperationException("Query 25 not yet supported.");
+			final Long[] array = (Long[]) result.getArray(1).getArray();
+			final List<Long> personIds = Arrays.asList(array);
+			return new LdbcSnbBiQuery25WeightedPathsResult(personIds);
 		}
 	}
 }

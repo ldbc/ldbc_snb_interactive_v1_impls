@@ -1,5 +1,9 @@
 package com.ldbc.impls.workloads.ldbc.snb.jdbc;
 
+import com.ldbc.driver.DbConnectionState;
+import com.ldbc.driver.DbException;
+import com.ldbc.impls.workloads.ldbc.snb.SnbDb;
+
 import java.io.IOException;
 import java.sql.Array;
 import java.sql.ResultSet;
@@ -10,11 +14,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
-import com.ldbc.driver.Db;
-import com.ldbc.driver.DbConnectionState;
-import com.ldbc.driver.DbException;
-
-public abstract class JdbcDb<DbQueryStore> extends Db {
+public abstract class JdbcDb<DbQueryStore> extends SnbDb {
 	
 	protected JdbcDbConnectionStore<DbQueryStore> dbs;
 
