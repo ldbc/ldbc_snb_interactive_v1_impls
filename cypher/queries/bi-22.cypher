@@ -17,7 +17,7 @@ OPTIONAL MATCH
   (:Message)<-[:hasCreator]-(person2)
 WITH
   person1, person2, city1,
-  score + (CASE WHEN c IN NULL THEN 0 ELSE 4 END) AS score
+  score + (CASE WHEN c IS NULL THEN 0 ELSE 4 END) AS score
 // subscore 2
 OPTIONAL MATCH
   (person1)<-[:hasCreator]-(m:Message)<-[:replyOf]-
