@@ -8,9 +8,6 @@ import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Session;
 import org.neo4j.driver.v1.StatementResult;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 public abstract class CypherSingletonOperationHandler<OperationType extends Operation<OperationResult>, OperationResult, QueryStore>
 implements OperationHandler<OperationType, CypherDriverConnectionStore<QueryStore>> {
 
@@ -28,11 +25,9 @@ public void executeOperation(OperationType operation, CypherDriverConnectionStor
 		final Record record = result.next();
 		resultCount++;
 
-//		tuple = convertSingleResult(result);
-//		if (state.isPrintResults())
-//			System.out.println(tuple.toString());
+		tuple = convertSingleResult(record);
 		if (state.isPrintResults()) {
-			System.out.println(record);
+			System.out.println(tuple.toString());
 		}
 	}
 	session.close();
@@ -41,5 +36,5 @@ public void executeOperation(OperationType operation, CypherDriverConnectionStor
 }
 
 public abstract String getQueryString(CypherDriverConnectionStore<QueryStore> state, OperationType operation);
-public abstract OperationResult convertSingleResult(ResultSet result) throws SQLException;
+public abstract OperationResult convertSingleResult(Record record);
 }

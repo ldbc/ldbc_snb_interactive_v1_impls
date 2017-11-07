@@ -8,8 +8,7 @@ import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Session;
 import org.neo4j.driver.v1.StatementResult;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,20 +29,22 @@ public abstract class CypherListOperationHandler<OperationType extends Operation
 		while (result.hasNext()) {
 			final Record record = result.next();
 
-//				resultCount++;
-//
-//				OperationResult tuple = convertSingleResult(result);
-//				if (state.isPrintResults())
-//					System.out.println(tuple.toString());
-//				results.add(tuple);
-			if (state.isPrintResults()) {
-				System.out.println(record);
+			resultCount++;
+			OperationResult tuple = null;
+			try {
+				tuple = convertSingleResult(record);
+			} catch (ParseException e) {
+				throw new DbException(e);
 			}
+			if (state.isPrintResults()) {
+				System.out.println(tuple.toString());
+			}
+			results.add(tuple);
 		}
 		session.close();
 		resultReporter.report(resultCount, results, operation);
 	}
 	
 	public abstract String getQueryString(CypherDriverConnectionStore<QueryStore> state, OperationType operation);
-	public abstract OperationResult convertSingleResult(ResultSet result) throws SQLException;
+	public abstract OperationResult convertSingleResult(Record record) throws ParseException;
 }

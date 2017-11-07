@@ -1,5 +1,6 @@
 package com.ldbc.impls.workloads.ldbc.snb.cypher.bi;
 
+import com.google.common.primitives.Ints;
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.control.LoggingService;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery10TagPerson;
@@ -10,7 +11,6 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery12TrendingPosts;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery12TrendingPostsResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery13PopularMonthlyTags;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery13PopularMonthlyTagsResult;
-import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery13PopularMonthlyTagsResult.TagPopularity;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery14TopThreadInitiators;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery14TopThreadInitiatorsResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery15SocialNormals;
@@ -58,10 +58,13 @@ import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherDriverConnectionStore;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherListOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherPoolingDbConnectionStore;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherSingletonOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.util.Converter;
+import org.neo4j.driver.v1.Record;
+import org.neo4j.driver.v1.Values;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class CypherBiDb extends CypherDb {
@@ -96,7 +99,7 @@ public class CypherBiDb extends CypherDb {
 		registerOperationHandler(LdbcSnbBiQuery24MessagesByTopic.class, BiQuery24.class);
 		registerOperationHandler(LdbcSnbBiQuery25WeightedPaths.class, BiQuery25.class);
 	}
-	
+
 	public static class BiQuery1 extends CypherListOperationHandler<LdbcSnbBiQuery1PostingSummary, LdbcSnbBiQuery1PostingSummaryResult, CypherBiQueryStore> {
 
 		@Override
@@ -105,18 +108,18 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery1PostingSummaryResult convertSingleResult(ResultSet result) throws SQLException {
-			int year = result.getInt(1);
-			boolean isComment = result.getBoolean(2);
-			int size = result.getInt(3);
-			long count = result.getLong(4);
-			int avgLen = result.getInt(5);
-			int total = result.getInt(6);
-			double pct = result.getDouble(7);
-			
+		public LdbcSnbBiQuery1PostingSummaryResult convertSingleResult(Record record) {
+			int year = record.get(0).asInt();
+			boolean isComment = record.get(1).asBoolean();
+			int size = record.get(2).asInt();
+			long count = record.get(3).asLong();
+			int avgLen = record.get(4).asInt();
+			int total = record.get(5).asInt();
+			double pct = record.get(6).asDouble();
+
 			return new LdbcSnbBiQuery1PostingSummaryResult(year, isComment, size, count, avgLen, total, (float) pct);
 		}
-		
+
 	}
 
 	public static class BiQuery2 extends CypherListOperationHandler<LdbcSnbBiQuery2TopTags, LdbcSnbBiQuery2TopTagsResult, CypherBiQueryStore> {
@@ -127,18 +130,18 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery2TopTagsResult convertSingleResult(ResultSet result) throws SQLException {
-			String country = result.getString(1);
-			int month = result.getInt(2);
-			String gender = result.getString(3);
-			int ageGroup = result.getInt(4);
-			String tag = result.getString(5);
-			int count = result.getInt(6);
+		public LdbcSnbBiQuery2TopTagsResult convertSingleResult(Record record) {
+			String country = record.get(0).asString();
+			int month = record.get(1).asInt();
+			String gender = record.get(2).asString();
+			int ageGroup = record.get(3).asInt();
+			String tag = record.get(4).asString();
+			int count = record.get(5).asInt();
 			return new LdbcSnbBiQuery2TopTagsResult(country, month, gender, ageGroup, tag, count);
 		}
-		
+
 	}
-	
+
 	public static class BiQuery3 extends CypherListOperationHandler<LdbcSnbBiQuery3TagEvolution, LdbcSnbBiQuery3TagEvolutionResult, CypherBiQueryStore> {
 
 		@Override
@@ -147,16 +150,16 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery3TagEvolutionResult convertSingleResult(ResultSet result) throws SQLException {
-			String tagName = result.getString(1);
-			int countA = result.getInt(2);
-			int countB = result.getInt(3);
-			int diffCount = result.getInt(4);
+		public LdbcSnbBiQuery3TagEvolutionResult convertSingleResult(Record record) {
+			String tagName = record.get(0).asString();
+			int countA = record.get(1).asInt();
+			int countB = record.get(2).asInt();
+			int diffCount = record.get(3).asInt();
 			return new LdbcSnbBiQuery3TagEvolutionResult(tagName, countA, countB, diffCount);
 		}
-		
+
 	}
-	
+
 	public static class BiQuery4 extends CypherListOperationHandler<LdbcSnbBiQuery4PopularCountryTopics, LdbcSnbBiQuery4PopularCountryTopicsResult, CypherBiQueryStore> {
 
 		@Override
@@ -165,17 +168,17 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery4PopularCountryTopicsResult convertSingleResult(ResultSet result) throws SQLException {
-			long forumId = result.getLong(1);
-			String title = result.getString(2);
-			long creationDate = timestampToTimestamp(result,3);
-			long moderator = result.getLong(4);
-			int count = result.getInt(5);
+		public LdbcSnbBiQuery4PopularCountryTopicsResult convertSingleResult(Record record) throws ParseException {
+			long forumId = record.get(0).asLong();
+			String title = record.get(1).asString();
+			long creationDate = new Converter().convertTimestampToEpoch(record.get(2).asString());
+			long moderator = record.get(3).asLong();
+			int count = record.get(4).asInt();
 			return new LdbcSnbBiQuery4PopularCountryTopicsResult(forumId, title, creationDate, moderator, count);
 		}
-		
+
 	}
-	
+
 	public static class BiQuery5 extends CypherListOperationHandler<LdbcSnbBiQuery5TopCountryPosters, LdbcSnbBiQuery5TopCountryPostersResult, CypherBiQueryStore> {
 
 		@Override
@@ -184,17 +187,17 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery5TopCountryPostersResult convertSingleResult(ResultSet result) throws SQLException {
-			long personId = result.getLong(1);
-			String firstName = result.getString(2);
-			String lastName = result.getString(3);
-			long creationDate = timestampToTimestamp(result, 4);
-			int count = result.getInt(5);
+		public LdbcSnbBiQuery5TopCountryPostersResult convertSingleResult(Record record) throws ParseException {
+			long personId = record.get(0).asLong();
+			String firstName = record.get(1).asString();
+			String lastName = record.get(2).asString();
+			long creationDate = new Converter().convertTimestampToEpoch(record.get(3).asString());
+			int count = record.get(4).asInt();
 			return new LdbcSnbBiQuery5TopCountryPostersResult(personId, firstName, lastName, creationDate, count);
 		}
-		
+
 	}
-	
+
 	public static class BiQuery6 extends CypherListOperationHandler<LdbcSnbBiQuery6ActivePosters, LdbcSnbBiQuery6ActivePostersResult, CypherBiQueryStore> {
 
 		@Override
@@ -203,15 +206,15 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery6ActivePostersResult convertSingleResult(ResultSet result) throws SQLException {
-			long personId = result.getLong(1);
-			int postCount = result.getInt(2);
-			int replyCount = result.getInt(3);
-			int likeCount = result.getInt(4);
-			int score = result.getInt(5);
+		public LdbcSnbBiQuery6ActivePostersResult convertSingleResult(Record record) {
+			long personId = record.get(0).asLong();
+			int postCount = record.get(1).asInt();
+			int replyCount = record.get(2).asInt();
+			int likeCount = record.get(3).asInt();
+			int score = record.get(4).asInt();
 			return new LdbcSnbBiQuery6ActivePostersResult(personId, postCount, replyCount, likeCount, score);
 		}
-		
+
 	}
 
 	public static class BiQuery7 extends CypherListOperationHandler<LdbcSnbBiQuery7AuthoritativeUsers, LdbcSnbBiQuery7AuthoritativeUsersResult, CypherBiQueryStore> {
@@ -222,14 +225,14 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery7AuthoritativeUsersResult convertSingleResult(ResultSet result) throws SQLException {
-			long personId = result.getLong(1);
-			int score = result.getInt(2);
+		public LdbcSnbBiQuery7AuthoritativeUsersResult convertSingleResult(Record record) {
+			long personId = record.get(0).asLong();
+			int score = record.get(1).asInt();
 			return new LdbcSnbBiQuery7AuthoritativeUsersResult(personId, score);
 		}
-		
+
 	}
-	
+
 	public static class BiQuery8 extends CypherListOperationHandler<LdbcSnbBiQuery8RelatedTopics, LdbcSnbBiQuery8RelatedTopicsResult, CypherBiQueryStore> {
 
 		@Override
@@ -238,14 +241,14 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery8RelatedTopicsResult convertSingleResult(ResultSet result) throws SQLException {
-			String tag = result.getString(1);
-			int count = result.getInt(2);
+		public LdbcSnbBiQuery8RelatedTopicsResult convertSingleResult(Record record) {
+			String tag = record.get(0).asString();
+			int count = record.get(1).asInt();
 			return new LdbcSnbBiQuery8RelatedTopicsResult(tag, count);
 		}
-		
+
 	}
-	
+
 	public static class BiQuery9 extends CypherListOperationHandler<LdbcSnbBiQuery9RelatedForums, LdbcSnbBiQuery9RelatedForumsResult, CypherBiQueryStore> {
 
 		@Override
@@ -254,15 +257,15 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery9RelatedForumsResult convertSingleResult(ResultSet result) throws SQLException {
-			long forumId = result.getLong(1);
-			int sumA = result.getInt(2);
-			int sumB = result.getInt(3);
+		public LdbcSnbBiQuery9RelatedForumsResult convertSingleResult(Record record) {
+			long forumId = record.get(0).asLong();
+			int sumA = record.get(1).asInt();
+			int sumB = record.get(2).asInt();
 			return new LdbcSnbBiQuery9RelatedForumsResult(forumId, sumA, sumB);
 		}
-		
+
 	}
-	
+
 	public static class BiQuery10 extends CypherListOperationHandler<LdbcSnbBiQuery10TagPerson, LdbcSnbBiQuery10TagPersonResult, CypherBiQueryStore> {
 
 		@Override
@@ -271,13 +274,13 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery10TagPersonResult convertSingleResult(ResultSet result) throws SQLException {
-			long personId = result.getLong(1);
-			int score = result.getInt(2);
-			int friendsScore = result.getInt(3);
+		public LdbcSnbBiQuery10TagPersonResult convertSingleResult(Record record) {
+			long personId = record.get(0).asLong();
+			int score = record.get(1).asInt();
+			int friendsScore = record.get(2).asInt();
 			return new LdbcSnbBiQuery10TagPersonResult(personId, score, friendsScore);
 		}
-		
+
 	}
 
 	public static class BiQuery11 extends CypherListOperationHandler<LdbcSnbBiQuery11UnrelatedReplies, LdbcSnbBiQuery11UnrelatedRepliesResult, CypherBiQueryStore> {
@@ -288,11 +291,11 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery11UnrelatedRepliesResult convertSingleResult(ResultSet result) throws SQLException {
-			long personId = result.getLong(1);
-			String tagName = result.getString(2);
-			int countLikes = result.getInt(3);
-			int countReplies = result.getInt(4);
+		public LdbcSnbBiQuery11UnrelatedRepliesResult convertSingleResult(Record record) {
+			long personId = record.get(0).asLong();
+			String tagName = record.get(1).asString();
+			int countLikes = record.get(2).asInt();
+			int countReplies = record.get(3).asInt();
 			return new LdbcSnbBiQuery11UnrelatedRepliesResult(personId, tagName, countLikes, countReplies);
 		}
 
@@ -306,16 +309,16 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery12TrendingPostsResult convertSingleResult(ResultSet result) throws SQLException {
-			long personId = result.getLong(1);
-			String firstName = result.getString(2);
-			String lastName = result.getString(3);
-			long creationDate = timestampToTimestamp(result, 4);
-			int likeCount = result.getInt(5);
+		public LdbcSnbBiQuery12TrendingPostsResult convertSingleResult(Record record) throws ParseException {
+			long personId = record.get(0).asLong();
+			String firstName = record.get(1).asString();
+			String lastName = record.get(2).asString();
+			long creationDate = new Converter().convertTimestampToEpoch(record.get(3).asString());
+			int likeCount = record.get(4).asInt();
 			return new LdbcSnbBiQuery12TrendingPostsResult(personId, firstName, lastName, creationDate, likeCount);
 		}
 	}
-	
+
 	public static class BiQuery13 extends CypherListOperationHandler<LdbcSnbBiQuery13PopularMonthlyTags, LdbcSnbBiQuery13PopularMonthlyTagsResult, CypherBiQueryStore> {
 
 		@Override
@@ -324,16 +327,22 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery13PopularMonthlyTagsResult convertSingleResult(ResultSet result) throws SQLException {
-			int year = result.getInt(1);
-			int month = result.getInt(2);
-			String tag = result.getString(3);
-			int count = result.getInt(4);
-			//return new LdbcSnbBiQuery13PopularMonthlyTagsResult(year, month, tag, count);
-			return new LdbcSnbBiQuery13PopularMonthlyTagsResult(year, month, new ArrayList<TagPopularity>());
+		public LdbcSnbBiQuery13PopularMonthlyTagsResult convertSingleResult(Record record) {
+			int year = record.get(0).asInt();
+			int month = record.get(1).asInt();
+			final List<List<Object>> tagPopularitiesRaw = record.get(2).asList(Values.ofList());
+
+			final List<LdbcSnbBiQuery13PopularMonthlyTagsResult.TagPopularity> tagPopularities = new ArrayList<>();
+			for (List<Object> tagPopularityRaw : tagPopularitiesRaw) {
+				final String tag = (String) tagPopularityRaw.get(0);
+				final int popularity = Ints.saturatedCast((long) tagPopularityRaw.get(1));
+				tagPopularities.add(new LdbcSnbBiQuery13PopularMonthlyTagsResult.TagPopularity(tag, popularity));
+			}
+
+			return new LdbcSnbBiQuery13PopularMonthlyTagsResult(year, month, new ArrayList<>());
 		}
 	}
-	
+
 	public static class BiQuery14 extends CypherListOperationHandler<LdbcSnbBiQuery14TopThreadInitiators, LdbcSnbBiQuery14TopThreadInitiatorsResult, CypherBiQueryStore> {
 
 		@Override
@@ -342,16 +351,16 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery14TopThreadInitiatorsResult convertSingleResult(ResultSet result) throws SQLException {
-			long personId = result.getLong(1);
-			String firstName = result.getString(2);
-			String lastName = result.getString(3);
-			int count = result.getInt(4);
-			int threadCount = result.getInt(5);
+		public LdbcSnbBiQuery14TopThreadInitiatorsResult convertSingleResult(Record record) {
+			long personId = record.get(0).asLong();
+			String firstName = record.get(1).asString();
+			String lastName = record.get(2).asString();
+			int count = record.get(3).asInt();
+			int threadCount = record.get(4).asInt();
 			return new LdbcSnbBiQuery14TopThreadInitiatorsResult(personId, firstName, lastName, count, threadCount);
 		}
 	}
-	
+
 	public static class BiQuery15 extends CypherListOperationHandler<LdbcSnbBiQuery15SocialNormals, LdbcSnbBiQuery15SocialNormalsResult, CypherBiQueryStore> {
 
 		@Override
@@ -360,13 +369,13 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery15SocialNormalsResult convertSingleResult(ResultSet result) throws SQLException {
-			long personId = result.getLong(1);
-			int count = result.getInt(2);
+		public LdbcSnbBiQuery15SocialNormalsResult convertSingleResult(Record record) {
+			long personId = record.get(0).asLong();
+			int count = record.get(1).asInt();
 			return new LdbcSnbBiQuery15SocialNormalsResult(personId, count);
 		}
 	}
-	
+
 	public static class BiQuery16 extends CypherListOperationHandler<LdbcSnbBiQuery16ExpertsInSocialCircle, LdbcSnbBiQuery16ExpertsInSocialCircleResult, CypherBiQueryStore> {
 
 		@Override
@@ -375,14 +384,14 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery16ExpertsInSocialCircleResult convertSingleResult(ResultSet result) throws SQLException {
-			long personId = result.getLong(1);
-			String tag = result.getString(2);
-			int count = result.getInt(3);
+		public LdbcSnbBiQuery16ExpertsInSocialCircleResult convertSingleResult(Record record) {
+			long personId = record.get(0).asLong();
+			String tag = record.get(1).asString();
+			int count = record.get(2).asInt();
 			return new LdbcSnbBiQuery16ExpertsInSocialCircleResult(personId, tag, count);
 		}
 	}
-	
+
 	public static class BiQuery17 extends CypherSingletonOperationHandler<LdbcSnbBiQuery17FriendshipTriangles, LdbcSnbBiQuery17FriendshipTrianglesResult, CypherBiQueryStore> {
 
 		@Override
@@ -391,12 +400,12 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery17FriendshipTrianglesResult convertSingleResult(ResultSet result) throws SQLException {
-			int count = result.getInt(1);
+		public LdbcSnbBiQuery17FriendshipTrianglesResult convertSingleResult(Record record) {
+			int count = record.get(0).asInt();
 			return new LdbcSnbBiQuery17FriendshipTrianglesResult(count);
 		}
 	}
-	
+
 	public static class BiQuery18 extends CypherListOperationHandler<LdbcSnbBiQuery18PersonPostCounts, LdbcSnbBiQuery18PersonPostCountsResult, CypherBiQueryStore> {
 
 		@Override
@@ -405,14 +414,14 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery18PersonPostCountsResult convertSingleResult(ResultSet result) throws SQLException {
-			int postCount = result.getInt(1);
-			int count = result.getInt(2);
+		public LdbcSnbBiQuery18PersonPostCountsResult convertSingleResult(Record record) {
+			int postCount = record.get(0).asInt();
+			int count = record.get(1).asInt();
 			return new LdbcSnbBiQuery18PersonPostCountsResult(postCount, count);
 		}
 	}
-	
-	
+
+
 	public static class BiQuery19 extends CypherListOperationHandler<LdbcSnbBiQuery19StrangerInteraction, LdbcSnbBiQuery19StrangerInteractionResult, CypherBiQueryStore> {
 
 		@Override
@@ -421,14 +430,14 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery19StrangerInteractionResult convertSingleResult(ResultSet result) throws SQLException {
-			long personId = result.getLong(1);
-			int strangerCount = result.getInt(2);
-			int count = result.getInt(3);
+		public LdbcSnbBiQuery19StrangerInteractionResult convertSingleResult(Record record) {
+			long personId = record.get(0).asLong();
+			int strangerCount = record.get(1).asInt();
+			int count = record.get(2).asInt();
 			return new LdbcSnbBiQuery19StrangerInteractionResult(personId, strangerCount, count);
 		}
 	}
-	
+
 	public static class BiQuery20 extends CypherListOperationHandler<LdbcSnbBiQuery20HighLevelTopics, LdbcSnbBiQuery20HighLevelTopicsResult, CypherBiQueryStore> {
 
 		@Override
@@ -437,13 +446,13 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery20HighLevelTopicsResult convertSingleResult(ResultSet result) throws SQLException {
-			String tagClass = result.getString(1);
-			int count = result.getInt(2);
+		public LdbcSnbBiQuery20HighLevelTopicsResult convertSingleResult(Record record) {
+			String tagClass = record.get(0).asString();
+			int count = record.get(1).asInt();
 			return new LdbcSnbBiQuery20HighLevelTopicsResult(tagClass, count);
 		}
 	}
-	
+
 	public static class BiQuery21 extends CypherListOperationHandler<LdbcSnbBiQuery21Zombies, LdbcSnbBiQuery21ZombiesResult, CypherBiQueryStore> {
 
 		@Override
@@ -452,15 +461,15 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery21ZombiesResult convertSingleResult(ResultSet result) throws SQLException {
-			long personId = result.getLong(1);
-			int zombieCount = result.getInt(2);
-			int realCount = result.getInt(3);
-			int score = result.getInt(4);
+		public LdbcSnbBiQuery21ZombiesResult convertSingleResult(Record record) {
+			long personId = record.get(0).asLong();
+			int zombieCount = record.get(1).asInt();
+			int realCount = record.get(2).asInt();
+			double score = record.get(3).asDouble();
 			return new LdbcSnbBiQuery21ZombiesResult(personId, zombieCount, realCount, score);
 		}
 	}
-	
+
 	public static class BiQuery22 extends CypherListOperationHandler<LdbcSnbBiQuery22InternationalDialog, LdbcSnbBiQuery22InternationalDialogResult, CypherBiQueryStore> {
 
 		@Override
@@ -469,13 +478,15 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery22InternationalDialogResult convertSingleResult(ResultSet result) throws SQLException {
-			long personIdA = result.getLong(1);
-			int score = result.getInt(2);
-			return new LdbcSnbBiQuery22InternationalDialogResult(personIdA,personIdA,score); //HACK!
+		public LdbcSnbBiQuery22InternationalDialogResult convertSingleResult(Record record) {
+			long personIdA = record.get(0).asLong();
+			long personIdB = record.get(1).asLong();
+			String cityName = record.get(2).asString();
+			int  score = record.get(3).asInt();
+			return new LdbcSnbBiQuery22InternationalDialogResult(personIdA, personIdB, score);
 		}
 	}
-	
+
 	public static class BiQuery23 extends CypherListOperationHandler<LdbcSnbBiQuery23HolidayDestinations, LdbcSnbBiQuery23HolidayDestinationsResult, CypherBiQueryStore> {
 
 		@Override
@@ -484,15 +495,15 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery23HolidayDestinationsResult convertSingleResult(ResultSet result) throws SQLException {
-			String place = result.getString(1);
-			int month = result.getInt(2);
-			int count = result.getInt(3);
-			return new LdbcSnbBiQuery23HolidayDestinationsResult(place, month, count);
+		public LdbcSnbBiQuery23HolidayDestinationsResult convertSingleResult(Record record) {
+			int count = record.get(0).asInt();
+			String countryName = record.get(1).asString();
+			int month = record.get(2).asInt();
+			return new LdbcSnbBiQuery23HolidayDestinationsResult(countryName, month, count);
 		}
 	}
-	
-	
+
+
 	public static class BiQuery24 extends CypherListOperationHandler<LdbcSnbBiQuery24MessagesByTopic, LdbcSnbBiQuery24MessagesByTopicResult, CypherBiQueryStore> {
 
 		@Override
@@ -501,12 +512,12 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery24MessagesByTopicResult convertSingleResult(ResultSet result) throws SQLException {
-			int year = result.getInt(1);
-			int month = result.getInt(2);
-			String continent = result.getString(3);
-			int messageCount = result.getInt(4);
-			int likeCount = result.getInt(5);
+		public LdbcSnbBiQuery24MessagesByTopicResult convertSingleResult(Record record) {
+			int messageCount = record.get(0).asInt();
+			int likeCount = record.get(1).asInt();
+			int year = record.get(2).asInt();
+			int month = record.get(3).asInt();
+			String continent = record.get(4).asString();
 			return new LdbcSnbBiQuery24MessagesByTopicResult(messageCount, likeCount, year, month, continent);
 		}
 	}
@@ -519,11 +530,9 @@ public class CypherBiDb extends CypherDb {
 		}
 
 		@Override
-		public LdbcSnbBiQuery25WeightedPathsResult convertSingleResult(ResultSet result) throws SQLException {
-			final Object personIds = result.getArray(1).getArray();
-			// TODO
-//			return new LdbcSnbBiQuery25WeightedPathsResult(personIds);
-			throw new UnsupportedOperationException("Query 25 not yet supported.");
+		public LdbcSnbBiQuery25WeightedPathsResult convertSingleResult(Record record) {
+			List<Long> personIds = record.get(0).asList(Values.ofLong());
+			return new LdbcSnbBiQuery25WeightedPathsResult(personIds);
 		}
 	}
 }

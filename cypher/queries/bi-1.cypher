@@ -12,12 +12,14 @@ WITH
   totalMessageCount,
   message,
   toInteger(substring(message.creationDate, 0, 4)) AS year,
-  length(message.content) AS length,
-  [label IN labels(message) WHERE label <> 'Message'][0] AS messageType
+  length(message.content) AS length
 WITH
   totalMessageCount,
   year,
-  messageType,
+  CASE (message:Comment)
+    WHEN true THEN true
+    ELSE false
+  END AS isComment,
   CASE
     WHEN length <  40 THEN 0
     WHEN length <  80 THEN 1
@@ -29,7 +31,7 @@ WITH
   sum(message.length) AS sumMessageLength
 RETURN
   year,
-  messageType,
+  isComment,
   lengthCategory,
   messageCount,
   averageMessageLength,
@@ -37,5 +39,5 @@ RETURN
   messageCount / totalMessageCount AS percentageOfMessages
 ORDER BY
   year DESC,
-  messageType DESC, // spec says 'ASC', where Posts come first and Comments second
+  isComment ASC,
   lengthCategory ASC

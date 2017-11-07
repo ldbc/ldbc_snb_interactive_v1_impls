@@ -89,7 +89,7 @@ public abstract class LdbcSnbBiQueryTest {
         run(db, new LdbcSnbBiQuery22InternationalDialog("Mexico", "Indonesia", LIMIT));
         run(db, new LdbcSnbBiQuery23HolidayDestinations("Ethiopia", LIMIT));
         run(db, new LdbcSnbBiQuery24MessagesByTopic("Single", LIMIT));
-        run(db, new LdbcSnbBiQuery25WeightedPaths(0L, 1L, 0L, 1L));
+        run(db, new LdbcSnbBiQuery25WeightedPaths(2199023264119L, 8796093028894L, 1275364800000L, 1277956800000L));
 
         db.close();
         workload.close();
