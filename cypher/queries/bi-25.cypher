@@ -50,7 +50,6 @@ WHERE forum.creationDate >= $startDate AND forum.creationDate <= $endDate
 WITH path, pA, pB, weight + count(c)*0.5 AS weight
 
 RETURN
-  [person IN nodes(path) | person.id],
-  weight
+  [person IN nodes(path) | person.id]
 ORDER BY
   weight DESC
