@@ -5,7 +5,6 @@
 //import com.ldbc.driver.Workload;
 //import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1;
 //import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcSnbInteractiveWorkload;
-//import com.ldbc.impls.workloads.ldbc.snb.bi.test.LdbcSnbBiQueryTest;
 //import com.ldbc.impls.workloads.ldbc.snb.jdbc.interactive.InteractiveDb;
 //import org.junit.Before;
 //import org.junit.Ignore;

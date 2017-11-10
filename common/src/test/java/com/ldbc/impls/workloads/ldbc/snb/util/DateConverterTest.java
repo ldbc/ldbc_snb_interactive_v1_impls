@@ -4,22 +4,19 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.text.ParseException;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 
 public class DateConverterTest {
 
     @Test
-    public void test() throws ParseException {
-        Assert.assertEquals(
-                "'2009-12-31T23:00:00.000+0000'",
-                new Converter().convertDate(1262300400000L)
-        );
+    public void epochToTimestampTest() throws ParseException {
+        String timestamp = new Converter().convertDate(1262300400000L);
+        Assert.assertEquals("'2009-12-31T23:00:00.000+0000'", timestamp);
+    }
 
-        long timestamp = new Converter().convertTimestampToEpoch("2009-12-31T23:00:00.000+0000");
-        ZonedDateTime actual = ZonedDateTime.ofInstant(Instant.ofEpochSecond(timestamp), ZoneId.of("GMT"));
-        Assert.assertEquals(1262300400000L, actual);
+    @Test
+    public void timestampToEpochTest() throws ParseException {
+        long epoch = new Converter().convertTimestampToEpoch("2009-12-31T23:00:00.000+0000");
+        Assert.assertEquals(1262300400000L, epoch);
     }
 
 }

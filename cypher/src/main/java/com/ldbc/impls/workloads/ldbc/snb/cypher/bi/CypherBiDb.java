@@ -315,7 +315,7 @@ public class CypherBiDb extends CypherDb {
 			String lastName = record.get(2).asString();
 			long creationDate = new Converter().convertTimestampToEpoch(record.get(3).asString());
 			int likeCount = record.get(4).asInt();
-			return new LdbcSnbBiQuery12TrendingPostsResult(personId, firstName, lastName, creationDate, likeCount);
+			return new LdbcSnbBiQuery12TrendingPostsResult(personId, creationDate, firstName, lastName, likeCount);
 		}
 	}
 
@@ -481,9 +481,9 @@ public class CypherBiDb extends CypherDb {
 		public LdbcSnbBiQuery22InternationalDialogResult convertSingleResult(Record record) {
 			long personIdA = record.get(0).asLong();
 			long personIdB = record.get(1).asLong();
-			String cityName = record.get(2).asString();
+			String city1Name = record.get(2).asString();
 			int  score = record.get(3).asInt();
-			return new LdbcSnbBiQuery22InternationalDialogResult(personIdA, personIdB, score);
+			return new LdbcSnbBiQuery22InternationalDialogResult(personIdA, personIdB, city1Name, score);
 		}
 	}
 
@@ -496,10 +496,10 @@ public class CypherBiDb extends CypherDb {
 
 		@Override
 		public LdbcSnbBiQuery23HolidayDestinationsResult convertSingleResult(Record record) {
-			int count = record.get(0).asInt();
-			String countryName = record.get(1).asString();
+			int messageCount = record.get(0).asInt();
+			String country = record.get(1).asString();
 			int month = record.get(2).asInt();
-			return new LdbcSnbBiQuery23HolidayDestinationsResult(countryName, month, count);
+			return new LdbcSnbBiQuery23HolidayDestinationsResult(messageCount, country, month);
 		}
 	}
 

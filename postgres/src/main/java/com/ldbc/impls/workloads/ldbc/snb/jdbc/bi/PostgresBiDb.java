@@ -318,7 +318,7 @@ public class PostgresBiDb extends JdbcDb<BiQueryStore> {
 			String lastName = result.getString(3);
 			long creationDate = timestampToTimestamp(result, 4);
 			int likeCount = result.getInt(5);
-			return new LdbcSnbBiQuery12TrendingPostsResult(personId, firstName, lastName, creationDate, likeCount);
+			return new LdbcSnbBiQuery12TrendingPostsResult(personId, creationDate, firstName, lastName, likeCount);
 		}
 	}
 	
@@ -476,9 +476,11 @@ public class PostgresBiDb extends JdbcDb<BiQueryStore> {
 
 		@Override
 		public LdbcSnbBiQuery22InternationalDialogResult convertSingleResult(ResultSet result) throws SQLException {
-			long personIdA = result.getLong(1);
-			int score = result.getInt(2);
-			return new LdbcSnbBiQuery22InternationalDialogResult(personIdA,personIdA,score); //HACK!
+			long personIdA = result.getLong(0);
+			long personIdB = result.getLong(1);
+			String city1Name = result.getString(2);
+			int  score = result.getInt(3);
+			return new LdbcSnbBiQuery22InternationalDialogResult(personIdA, personIdB, city1Name, score);
 		}
 	}
 	
@@ -491,10 +493,10 @@ public class PostgresBiDb extends JdbcDb<BiQueryStore> {
 
 		@Override
 		public LdbcSnbBiQuery23HolidayDestinationsResult convertSingleResult(ResultSet result) throws SQLException {
-			String place = result.getString(1);
-			int month = result.getInt(2);
-			int count = result.getInt(3);
-			return new LdbcSnbBiQuery23HolidayDestinationsResult(place, month, count);
+			int messageCount = result.getInt(1);
+			String country = result.getString(2);
+			int month = result.getInt(3);
+			return new LdbcSnbBiQuery23HolidayDestinationsResult(messageCount, country, month);
 		}
 	}
 	
