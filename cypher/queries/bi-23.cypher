@@ -9,7 +9,7 @@ WHERE homeCountry <> country
 WITH
   message,
   country,
-  toInteger(substring(message.creationDate, 5, 2)) AS month
+  message.creationDate/100000000000%100 AS month,
 RETURN
   count(message) AS messageCount,
   country.name,

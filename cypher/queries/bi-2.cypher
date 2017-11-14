@@ -1,8 +1,8 @@
 // Q2. Top tags for country, age, gender, time
 /*
   :param {
-    date1: '2009-12-31T23:00:00.000+0000',
-    date2: '2010-11-07T23:00:00.000+0000',
+    date1: 200912312300,
+    date2: 201011072300,
     country1: 'Ethiopia',
     country2: 'Spain'
   }
@@ -15,9 +15,9 @@ WHERE message.creationDate >= $date1
   AND (country.name = $country1 OR country.name = $country2)
 WITH
   country.name AS countryName,
-  toInteger(substring(message.creationDate, 5, 2)) AS month,
+  message.creationDate/100000000000%100 AS month,
   person.gender AS gender,
-  floor(toFloat(2013-toInteger(substring(person.birthday, 0, 4)))/5) AS ageGroup,
+  floor((2013 - person.birthday/10000000000000) / 5.0) AS ageGroup,
   tag.name AS tagName,
   message
 WITH

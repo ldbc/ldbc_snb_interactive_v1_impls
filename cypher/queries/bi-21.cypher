@@ -2,15 +2,14 @@
 /*
   :param {
     country: 'Spain',
-    endDate: '2013-01-01T05:00:00.000+0000'
+    endDate: '201301010500'
   }
 */
 MATCH (country:Country {name: $country})
 WITH
   country,
-  $endDate AS endDate,
-  toInteger(substring($endDate, 0, 4)) AS endDateYear,
-  toInteger(substring($endDate, 5, 2)) AS endDateMonth
+  $endDate/10000000000000   AS endDateYear,
+  $endDate/100000000000%100 AS endDateMonth
 MATCH
   (country)<-[:isPartOf]-(:City)<-[:isLocatedIn]-
   (person:Person)<-[:hasCreator]-(message:Message)
@@ -21,8 +20,8 @@ WITH
   person,
   endDateYear,
   endDateMonth,
-  toInteger(substring(message.creationDate, 0, 4)) AS personCreationYear,
-  toInteger(substring(message.creationDate, 5, 2)) AS personCreationMonth,
+  message.creationDate/10000000000000   AS personCreationYear,
+  message.creationDate/100000000000%100 AS personCreationMonth,
   count(message) AS messageCount
 WITH
   country,

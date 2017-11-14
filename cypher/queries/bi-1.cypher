@@ -1,6 +1,6 @@
 // Q1. Posting summary
 /*
-  :param { date: '2010-09-14T22:00:00.000+0000' }
+  :param { date: 201009142200 }
 */
 MATCH (message:Message)
 WHERE message.creationDate <= $date
@@ -11,7 +11,7 @@ WHERE message.creationDate <= $date
 WITH
   totalMessageCount,
   message,
-  toInteger(substring(message.creationDate, 0, 4)) AS year,
+  message.creationDate/10000000000000 AS year,
   message.length AS length
 WITH
   totalMessageCount,

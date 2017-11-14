@@ -4,8 +4,8 @@
 */
 MATCH (:Country {name: $country})<-[:isLocatedIn]-(message:Message)-[:hasTag]->(tag:Tag)
 WITH
-  toInteger(substring(message.creationDate, 0, 4)) AS year,
-  toInteger(substring(message.creationDate, 5, 2)) AS month,
+  message.creationDate/10000000000000   AS year,
+  message.creationDate/100000000000%100 AS month,
   message,
   tag
 WITH year, month, count(message) AS popularity, tag
