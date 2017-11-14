@@ -21,8 +21,7 @@ export POSTFIX=_0_0.csv
 CSV files require a bit of preprocessing.
 
 ```bash
-./fix-labels.sh
-./replace-headers.sh
+./convert-csvs.sh
 ```
 
 ### Neo4j: delete your database and load the SNB CSVs
