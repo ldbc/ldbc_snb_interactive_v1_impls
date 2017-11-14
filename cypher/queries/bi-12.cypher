@@ -1,7 +1,7 @@
 // Q12. Trending Posts
 /*
   :param {
-    date: '2010-08-22T04:00:00.000+0000',
+    date: 201008220400000000000,
     likeThreshold: 400
   }
 */

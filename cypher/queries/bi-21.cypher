@@ -2,7 +2,7 @@
 /*
   :param {
     country: 'Spain',
-    endDate: '201301010500'
+    endDate: 201301010500
   }
 */
 MATCH (country:Country {name: $country})

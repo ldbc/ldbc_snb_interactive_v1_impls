@@ -2,7 +2,7 @@
 /*
   :param {
     tag: 'Franz_Liszt',
-    date: '2010-08-22T04:00:00.000+0000'
+    date: 20100822040000000
   }
 */
 MATCH (tag:Tag {name: $tag}), (person:Person)

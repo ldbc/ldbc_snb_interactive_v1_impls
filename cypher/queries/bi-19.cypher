@@ -1,7 +1,7 @@
 // Q19. Stranger's interaction
 /*
   :param {
-    date: '1989-01-01',
+    date: 19890101,
     tagClass1: 'MusicalArtist',
     tagClass2: 'OfficeHolder'
   }
