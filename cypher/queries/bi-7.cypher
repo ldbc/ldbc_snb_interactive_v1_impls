@@ -9,7 +9,7 @@ MATCH
   (message)<-[:likes]-(person2:Person)<-[:hasCreator]-(:Message)<-[l:likes]-(person3:Person)
 RETURN
   person1.id,
-  count(l) AS authorityScore
+  count(DISTINCT l) AS authorityScore
 ORDER BY
   authorityScore DESC,
   person1.id ASC
