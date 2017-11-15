@@ -1,6 +1,10 @@
 ## Import the CSV files to Neo4j/ingraph
 
-Use the standard CSVSerializers of the LDBC SNB [DATAGEN](https://github.com/ldbc/ldbc_snb_datagen/) project:
+The data set needs to be generated and preprocessed before loading it to the database.
+
+### Generating the data set
+
+Use the standard `CSVSerializer` classes of the LDBC SNB [DATAGEN](https://github.com/ldbc/ldbc_snb_datagen/) project:
 
 ```
 ldbc.snb.datagen.serializer.personSerializer:ldbc.snb.datagen.serializer.snb.interactive.CSVPersonSerializer
@@ -16,15 +20,21 @@ export DB_DIR=$NEO4J_HOME/data/databases/graph.db
 export POSTFIX=_0_0.csv
 ```
 
-### Duplicate ids and fix labels
+### Preprocessing
 
-CSV files require a bit of preprocessing.
+The CSV files require a bit of preprocessing:
+
+* replace headers with Neo4j-compatible ones
+* replace labels (e.g. change `city` to `City`)
+* convert date and datetime formats
+
+The following script takes care of those steps:
 
 ```bash
 ./convert-csvs.sh
 ```
 
-### Neo4j: delete your database and load the SNB CSVs
+### Delete your database and load the SNB CSVs
 
 Be careful -- this deletes all data in your database.
 
