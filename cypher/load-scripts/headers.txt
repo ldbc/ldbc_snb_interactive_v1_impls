@@ -1,7 +1,7 @@
 comment id:ID(Comment)|creationDate:LONG|locationIP:STRING|browserUsed:STRING|content:STRING|length:INT
 forum id:ID(Forum)|title:STRING|creationDate:LONG
 organisation id:ID(Organisation)|:LABEL|name:STRING|url:STRING
-person id:ID(Person)|firstName:STRING|lastName:STRING|gender:STRING|birthday:STRING|creationDate:LONG|locationIP:STRING|browserUsed:STRING
+person id:ID(Person)|firstName:STRING|lastName:STRING|gender:STRING|birthday:LONG|creationDate:LONG|locationIP:STRING|browserUsed:STRING
 place id:ID(Place)|name:STRING|url:STRING|:LABEL
 post id:ID(Post)|imageFile:STRING|creationDate:LONG|locationIP:STRING|browserUsed:STRING|language:STRING|content:STRING|length:INT
 tagclass id:ID(TagClass)|name:STRING|url:STRING
