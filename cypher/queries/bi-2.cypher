@@ -8,8 +8,8 @@
   }
 */
 MATCH
-    (country:Country)<-[:isPartOf]-(:City)<-[:isLocatedIn]-(person:Person)
-    <-[:hasCreator]-(message:Message)-[:hasTag]->(tag:Tag)
+  (country:Country)<-[:isPartOf]-(:City)<-[:isLocatedIn]-(person:Person)
+  <-[:hasCreator]-(message:Message)-[:hasTag]->(tag:Tag)
 WHERE message.creationDate >= $date1
   AND message.creationDate <= $date2
   AND (country.name = $country1 OR country.name = $country2)
