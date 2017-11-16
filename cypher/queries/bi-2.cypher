@@ -15,7 +15,7 @@ WHERE message.creationDate >= $date1
   AND (country.name = $country1 OR country.name = $country2)
 WITH
   country.name AS countryName,
-  message.creationDate/100000000000%100 AS month,
+  message.creationDate/1000000%100 AS month,
   person.gender AS gender,
   floor((2013 - person.birthday/10000000000000) / 5.0) AS ageGroup,
   tag.name AS tagName,
