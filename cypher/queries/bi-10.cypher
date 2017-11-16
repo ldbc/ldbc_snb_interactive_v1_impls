@@ -13,7 +13,7 @@ WHERE m.creationDate > $date
 WITH
   tag,
   person,
-  count(i) + count(m) AS score
+  count(i)*100 + count(m) AS score
 // friendsScore
 OPTIONAL MATCH (person)-[:knows]-(friend:Person)
 OPTIONAL MATCH (friend)-[i:hasInterest]->(tag)
@@ -22,7 +22,7 @@ WHERE m.creationDate > $date
 WITH
   person,
   score,
-  count(i) + count(m) AS individualFriendsScore
+  count(i)*100 + count(m) AS individualFriendsScore
 RETURN
   person.id,
   score,
