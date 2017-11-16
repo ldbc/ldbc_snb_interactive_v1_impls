@@ -7,24 +7,25 @@
     country2: 'Spain'
   }
 */
+WITH
+     apoc.date.parse('2013-01-01','ms','yyyy-MM-dd') AS end,
+     365*24*60*60*1000.0 AS year
 MATCH
-  (country:Country)<-[:isPartOf]-(:City)<-[:isLocatedIn]-(person:Person)
-  <-[:hasCreator]-(message:Message)-[:hasTag]->(tag:Tag)
+  (country:Country)<-[:IS_PART_OF]-(:City)<-[:PERSON_IS_LOCATED_IN]-(person:Person)
+  <-[:COMMENT_HAS_CREATOR|POST_HAS_CREATOR]-(message:Message)-[:COMMENT_HAS_TAG|POST_HAS_TAG]->(tag:Tag)
 WHERE message.creationDate >= $date1
   AND message.creationDate <= $date2
   AND (country.name = $country1 OR country.name = $country2)
 WITH
-  country.name AS countryName,
-  message.creationDate/100000000000%100 AS month,
+  country,
+  apoc.date.field(message.creationDate,'month') AS month,
   person.gender AS gender,
-  floor((2013 - person.birthday/10000000000000) / 5.0) AS ageGroup,
+  floor((end-person.birthday)/year/5) AS ageGroup,
   tag.name AS tagName,
-  message
-WITH
-  countryName, month, gender, ageGroup, tagName, count(message) AS messageCount
+  count(message) AS messageCount
 WHERE messageCount > 100
 RETURN
-  countryName,
+  country.name AS countryName,
   month,
   gender,
   ageGroup,

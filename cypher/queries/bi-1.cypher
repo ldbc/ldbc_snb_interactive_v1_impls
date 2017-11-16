@@ -10,21 +10,16 @@ WHERE message.creationDate <= $date
   AND message.content IS NOT NULL
 WITH
   totalMessageCount,
-  message,
-  message.creationDate/10000000000000 AS year,
-  message.length AS length
-WITH
-  totalMessageCount,
-  year,
+  apoc.date.field(message.creationDate,'year') AS year,
   (message:Comment) AS isComment,
   CASE
-    WHEN length <  40 THEN 0
-    WHEN length <  80 THEN 1
-    WHEN length < 160 THEN 2
-    ELSE                   3
+    WHEN message.length <  40 THEN 0
+    WHEN message.length <  80 THEN 1
+    WHEN message.length < 160 THEN 2
+    ELSE                           3
   END AS lengthCategory,
   count(message) AS messageCount,
-  floor(avg(length)) AS averageMessageLength,
+  floor(avg(message.length)) AS averageMessageLength,
   sum(message.length) AS sumMessageLength
 RETURN
   year,
