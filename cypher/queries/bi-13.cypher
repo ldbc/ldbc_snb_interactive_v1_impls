@@ -10,6 +10,7 @@ WITH
   tag
 WITH year, month, count(message) AS popularity, tag
 ORDER BY popularity DESC, tag.name ASC
+LIMIT 5
 RETURN
   year,
   month,
