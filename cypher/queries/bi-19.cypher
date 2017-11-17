@@ -15,7 +15,8 @@ MATCH
   (:TagClass {name: $tagClass1})<-[:hasType]-(:Tag)<-[:hasTag]-(forum1:Forum),
   (:TagClass {name: $tagClass2})<-[:hasType]-(:Tag)<-[:hasTag]-(forum2:Forum),
   (forum1)-[:hasMember]->(stranger:Person)<-[:hasMember]-(forum2)
-WHERE NOT (person)-[:knows]-(stranger)
+WHERE person <> stranger
+  AND NOT (person)-[:knows]-(stranger)
 WITH person, stranger
 OPTIONAL MATCH
     (person)<-[:hasCreator]-(comment1:Comment)-[:replyOf]->(:Message)-[:hasCreator]->(stranger)
