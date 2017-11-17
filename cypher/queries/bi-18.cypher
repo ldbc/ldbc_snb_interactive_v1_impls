@@ -8,7 +8,7 @@
 */
 // note: thresholds like 20 are way too low
 MATCH
-  (person:Person)<-[:hasCreator]-(message:Message)<-[:replyOf*0..]-(post:Post)
+  (person:Person)<-[:hasCreator]-(message:Message)-[:replyOf*0..]->(post:Post)
 WHERE message.content IS NOT NULL
   AND message.length <= $lengthThreshold
   AND message.creationDate > $date
