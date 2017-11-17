@@ -10,27 +10,27 @@ $NEO4J_HOME/bin/neo4j-import --into $DB_DIR \
   --nodes:Message:Post "${DATA_DIR}/post${POSTFIX}" \
   --nodes:TagClass "${DATA_DIR}/tagclass${POSTFIX}" \
   --nodes:Tag "${DATA_DIR}/tag${POSTFIX}" \
-  --relationships:hasCreator "${DATA_DIR}/comment_hasCreator_person${POSTFIX}" \
-  --relationships:isLocatedIn "${DATA_DIR}/comment_isLocatedIn_place${POSTFIX}" \
-  --relationships:replyOf "${DATA_DIR}/comment_replyOf_comment${POSTFIX}" \
-  --relationships:replyOf "${DATA_DIR}/comment_replyOf_post${POSTFIX}" \
-  --relationships:containerOf "${DATA_DIR}/forum_containerOf_post${POSTFIX}" \
-  --relationships:hasMember "${DATA_DIR}/forum_hasMember_person${POSTFIX}" \
-  --relationships:hasModerator "${DATA_DIR}/forum_hasModerator_person${POSTFIX}" \
-  --relationships:hasTag "${DATA_DIR}/forum_hasTag_tag${POSTFIX}" \
-  --relationships:hasInterest "${DATA_DIR}/person_hasInterest_tag${POSTFIX}" \
-  --relationships:isLocatedIn "${DATA_DIR}/person_isLocatedIn_place${POSTFIX}" \
-  --relationships:knows "${DATA_DIR}/person_knows_person${POSTFIX}" \
-  --relationships:likes "${DATA_DIR}/person_likes_comment${POSTFIX}" \
-  --relationships:likes "${DATA_DIR}/person_likes_post${POSTFIX}" \
-  --relationships:isPartOf "${DATA_DIR}/place_isPartOf_place${POSTFIX}" \
-  --relationships:hasCreator "${DATA_DIR}/post_hasCreator_person${POSTFIX}" \
-  --relationships:hasTag "${DATA_DIR}/comment_hasTag_tag${POSTFIX}" \
-  --relationships:hasTag "${DATA_DIR}/post_hasTag_tag${POSTFIX}" \
-  --relationships:isLocatedIn "${DATA_DIR}/post_isLocatedIn_place${POSTFIX}" \
-  --relationships:isSubclassOf "${DATA_DIR}/tagclass_isSubclassOf_tagclass${POSTFIX}" \
-  --relationships:hasType "${DATA_DIR}/tag_hasType_tagclass${POSTFIX}" \
-  --relationships:studyAt "${DATA_DIR}/person_studyAt_organisation${POSTFIX}" \
-  --relationships:workAt "${DATA_DIR}/person_workAt_organisation${POSTFIX}" \
-  --relationships:isLocatedIn "${DATA_DIR}/organisation_isLocatedIn_place${POSTFIX}" \
+  --relationships:HAS_CREATOR "${DATA_DIR}/comment_hasCreator_person${POSTFIX}" \
+  --relationships:IS_LOCATED_IN "${DATA_DIR}/comment_isLocatedIn_place${POSTFIX}" \
+  --relationships:REPLY_OF "${DATA_DIR}/comment_replyOf_comment${POSTFIX}" \
+  --relationships:REPLY_OF "${DATA_DIR}/comment_replyOf_post${POSTFIX}" \
+  --relationships:CONTAINER_OF "${DATA_DIR}/forum_containerOf_post${POSTFIX}" \
+  --relationships:HAS_MEMBER "${DATA_DIR}/forum_hasMember_person${POSTFIX}" \
+  --relationships:HAS_MODERATOR "${DATA_DIR}/forum_hasModerator_person${POSTFIX}" \
+  --relationships:HAS_TAG "${DATA_DIR}/forum_hasTag_tag${POSTFIX}" \
+  --relationships:HAS_INTEREST "${DATA_DIR}/person_hasInterest_tag${POSTFIX}" \
+  --relationships:IS_LOCATED_IN "${DATA_DIR}/person_isLocatedIn_place${POSTFIX}" \
+  --relationships:KNOWS "${DATA_DIR}/person_knows_person${POSTFIX}" \
+  --relationships:LIKES "${DATA_DIR}/person_likes_comment${POSTFIX}" \
+  --relationships:LIKES "${DATA_DIR}/person_likes_post${POSTFIX}" \
+  --relationships:IS_PART_OF "${DATA_DIR}/place_isPartOf_place${POSTFIX}" \
+  --relationships:HAS_CREATOR "${DATA_DIR}/post_hasCreator_person${POSTFIX}" \
+  --relationships:HAS_TAG "${DATA_DIR}/comment_hasTag_tag${POSTFIX}" \
+  --relationships:HAS_TAG "${DATA_DIR}/post_hasTag_tag${POSTFIX}" \
+  --relationships:IS_LOCATED_IN "${DATA_DIR}/post_isLocatedIn_place${POSTFIX}" \
+  --relationships:IS_SUBCLASS_OF "${DATA_DIR}/tagclass_isSubclassOf_tagclass${POSTFIX}" \
+  --relationships:HAS_TYPE "${DATA_DIR}/tag_hasType_tagclass${POSTFIX}" \
+  --relationships:STUDY_AT "${DATA_DIR}/person_studyAt_organisation${POSTFIX}" \
+  --relationships:WORK_AT "${DATA_DIR}/person_workAt_organisation${POSTFIX}" \
+  --relationships:IS_LOCATED_IN "${DATA_DIR}/organisation_isLocatedIn_place${POSTFIX}" \
   --delimiter '|'
