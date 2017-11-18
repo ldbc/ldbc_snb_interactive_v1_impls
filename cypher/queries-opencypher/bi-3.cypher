@@ -2,15 +2,14 @@
 /*
   :param {
     year: 2010,
-    month: 6
+    month: 10
   }
 */
-WITH $year AS year, $month AS month
 WITH
-  year AS year1,
-  month AS month1,
-  year + toInteger(month / 12.0) AS year2,
-  month % 12 + 1 AS month2
+  $year AS year1,
+  $month AS month1,
+  $year + toInteger($month / 12.0) AS year2,
+  $month % 12 + 1 AS month2
 // year-month 1
 MATCH (tag:Tag)
 OPTIONAL MATCH (message1:Message)-[:HAS_TAG]->(tag)
