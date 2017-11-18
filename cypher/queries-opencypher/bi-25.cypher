@@ -7,7 +7,7 @@
     endDate: 20100701040000000
   }
 */
-MATCH path=(p1:Person {id: $person1Id})-[:KNOWS*]-(p2:Person {id: $person2Id}))
+MATCH path=(p1:Person {id: $person1Id})-[:KNOWS*]-(p2:Person {id: $person2Id})
 WITH p1, p2, path
 ORDER BY length(path)
 WITH p1, p2, collect(path)[0] AS path // select the shortest path

@@ -14,7 +14,6 @@ RETURN
   person.id,
   person.firstName,
   person.lastName,
-  person.creationDate,
   count(message) AS threadCount,
   count(reply) AS messageCount
 ORDER BY

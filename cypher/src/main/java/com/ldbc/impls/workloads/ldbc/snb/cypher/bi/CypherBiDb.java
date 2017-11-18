@@ -58,7 +58,7 @@ import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherDriverConnectionStore;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherListOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherPoolingDbConnectionStore;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherSingletonOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.util.Converter;
+import com.ldbc.impls.workloads.ldbc.snb.util.CypherConverter;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Values;
 
@@ -171,7 +171,7 @@ public class CypherBiDb extends CypherDb {
 		public LdbcSnbBiQuery4PopularCountryTopicsResult convertSingleResult(Record record) throws ParseException {
 			long forumId = record.get(0).asLong();
 			String title = record.get(1).asString();
-			long creationDate = new Converter().convertTimestampToEpoch(record.get(2).asString());
+			long creationDate = new CypherConverter().convertLongTimestampToEpoch(record.get(2).asLong());
 			long moderator = record.get(3).asLong();
 			int count = record.get(4).asInt();
 			return new LdbcSnbBiQuery4PopularCountryTopicsResult(forumId, title, creationDate, moderator, count);
@@ -191,7 +191,7 @@ public class CypherBiDb extends CypherDb {
 			long personId = record.get(0).asLong();
 			String firstName = record.get(1).asString();
 			String lastName = record.get(2).asString();
-			long creationDate = new Converter().convertTimestampToEpoch(record.get(3).asString());
+			long creationDate = new CypherConverter().convertLongTimestampToEpoch(record.get(3).asLong());
 			int count = record.get(4).asInt();
 			return new LdbcSnbBiQuery5TopCountryPostersResult(personId, firstName, lastName, creationDate, count);
 		}
@@ -311,9 +311,9 @@ public class CypherBiDb extends CypherDb {
 		@Override
 		public LdbcSnbBiQuery12TrendingPostsResult convertSingleResult(Record record) throws ParseException {
 			long personId = record.get(0).asLong();
-			String firstName = record.get(1).asString();
-			String lastName = record.get(2).asString();
-			long creationDate = new Converter().convertTimestampToEpoch(record.get(3).asString());
+			long creationDate = new CypherConverter().convertLongTimestampToEpoch(record.get(1).asLong());
+			String firstName = record.get(2).asString();
+			String lastName = record.get(3).asString();
 			int likeCount = record.get(4).asInt();
 			return new LdbcSnbBiQuery12TrendingPostsResult(personId, creationDate, firstName, lastName, likeCount);
 		}

@@ -12,7 +12,7 @@ public class LdbcSnbBiCypherTest extends LdbcSnbBiQueryTest {
 	private final String endpoint = "bolt://localhost:7687";
 	private final String user = "neo4j";
 	private final String password = "admin";
-	private final String queryDir = "queries/";
+	private final String queryDir = "queries-opencypher/";
 
 	public LdbcSnbBiCypherTest() throws DbException {
 		super(new CypherBiDb());
@@ -26,7 +26,7 @@ public class LdbcSnbBiCypherTest extends LdbcSnbBiQueryTest {
 		properties.put("password", password);
 		properties.put("queryDir", queryDir);
 		properties.put("printQueryNames", "true");
-		properties.put("printQueryStrings", "false");
+		properties.put("printQueryStrings", "true");
 		properties.put("printQueryResults", "false");
 		return properties;
 	}

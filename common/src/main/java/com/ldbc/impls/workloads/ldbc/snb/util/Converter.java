@@ -9,30 +9,30 @@ import java.util.stream.Collectors;
 
 public class Converter {
 
-    final String FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'+0000'";
+    final static String DATAGEN_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'+0000'";
 
     /**
      * Converts epoch seconds to a date to the same format as produced by DATAGEN
-     * and surrounds it in single quotes.
+     * {@value #DATAGEN_FORMAT} and surrounds it in single quotes.
      *
      * @param timestamp
      * @return
      */
     public String convertDate(long timestamp) {
-        final SimpleDateFormat sdf = new SimpleDateFormat(FORMAT);
+        final SimpleDateFormat sdf = new SimpleDateFormat(DATAGEN_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         return "'"+sdf.format(new Date(timestamp))+"'";
     }
 
-
     /**
-     * Converts timestamp strings (in the format produced by DATAGEN) to a date.
+     * Converts timestamp strings (in the format produced by DATAGEN) ({@value #DATAGEN_FORMAT})
+     * to a date.
      *
      * @param timestamp
      * @return
      */
     public long convertTimestampToEpoch(String timestamp) throws ParseException {
-        final SimpleDateFormat sdf = new SimpleDateFormat(FORMAT);
+        final SimpleDateFormat sdf = new SimpleDateFormat(DATAGEN_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         return sdf.parse(timestamp).toInstant().toEpochMilli();
     }

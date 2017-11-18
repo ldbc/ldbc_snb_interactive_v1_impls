@@ -25,7 +25,6 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery3TagEvolution;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery4PopularCountryTopics;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery5TopCountryPosters;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery6ActivePosters;
-import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery7AuthoritativeUsers;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopics;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForums;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiWorkload;
@@ -71,7 +70,7 @@ public abstract class LdbcSnbBiQueryTest {
         run(db, new LdbcSnbBiQuery4PopularCountryTopics("MusicalArtist", "Netherlands", LIMIT));
         run(db, new LdbcSnbBiQuery5TopCountryPosters("Ethiopia", LIMIT));
         run(db, new LdbcSnbBiQuery6ActivePosters("Ehud_Olmert", LIMIT));
-		run(db, new LdbcSnbBiQuery7AuthoritativeUsers("Che_Guevara", LIMIT));
+//		run(db, new LdbcSnbBiQuery7AuthoritativeUsers("Che_Guevara", LIMIT));
         run(db, new LdbcSnbBiQuery8RelatedTopics("Imelda_Marcos", LIMIT));
         run(db, new LdbcSnbBiQuery9RelatedForums("BaseballPlayer", "ChristianBishop", 200, LIMIT));
 //		run(db, new LdbcSnbBiQuery10TagPerson("Che_Guevara", 1311307200000L, LIMIT));
