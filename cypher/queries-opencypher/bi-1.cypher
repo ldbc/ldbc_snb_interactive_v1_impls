@@ -1,6 +1,6 @@
 // Q1. Posting summary
 /*
-  :param { date: 201009142200 }
+  :param { date: 20110721220000000 }
 */
 MATCH (message:Message)
 WHERE message.creationDate <= $date
@@ -11,20 +11,19 @@ WHERE message.creationDate <= $date
 WITH
   totalMessageCount,
   message,
-  message.creationDate/10000000000000 AS year,
-  message.length AS length
+  message.creationDate/10000000000000 AS year
 WITH
   totalMessageCount,
   year,
   (message:Comment) AS isComment,
   CASE
-    WHEN length <  40 THEN 0
-    WHEN length <  80 THEN 1
-    WHEN length < 160 THEN 2
-    ELSE                   3
+    WHEN message.length <  40 THEN 0
+    WHEN message.length <  80 THEN 1
+    WHEN message.length < 160 THEN 2
+    ELSE                           3
   END AS lengthCategory,
   count(message) AS messageCount,
-  floor(avg(length)) AS averageMessageLength,
+  floor(avg(message.length)) AS averageMessageLength,
   sum(message.length) AS sumMessageLength
 RETURN
   year,
