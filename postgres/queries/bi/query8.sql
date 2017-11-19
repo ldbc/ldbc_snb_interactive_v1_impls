@@ -2,7 +2,9 @@
 -- tag: Genghis_Khan
 select
   t_name,
-  count(*) as cnt from post ps,
+  count(*) as cnt
+from
+  post ps,
   post rep,
   post_tag,
   tag
