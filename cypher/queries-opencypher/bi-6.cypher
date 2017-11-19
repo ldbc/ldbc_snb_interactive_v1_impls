@@ -3,12 +3,9 @@
   :param { tag: 'Abbas_I_of_Persia' }
 */
 MATCH (tag:Tag {name: $tag})<-[:HAS_TAG]-(message:Message)-[:HAS_CREATOR]->(person:Person)
-WITH person, message
-OPTIONAL MATCH (fan:Person)-[:LIKES]->(message)
-WITH person, message, count(fan) AS likeCount
+OPTIONAL MATCH (:Person)-[l:LIKES]->(message)
 OPTIONAL MATCH (message)<-[:REPLY_OF]-(comment:Comment)
-WITH person, message, likeCount, count(comment) AS replyCount
-WITH person, sum(likeCount) AS likeCount, sum(replyCount) AS replyCount, count(message) AS messageCount
+WITH person, count(distinct l) AS likeCount, count(distinct comment) AS replyCount, count(distinct message) AS messageCount
 RETURN
   person.id,
   messageCount,
