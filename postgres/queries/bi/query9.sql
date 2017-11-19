@@ -1,7 +1,7 @@
--- Where are competitor brands discussed but not this one?
---  - TagClass A (linear to number of posts per tagclass)
---  - TagClass B ( linear to number of posts per tagclass)
-
+-- Q9. Forum with related Tags
+-- tagClass1: BaseballPlayer
+-- tagClass2: ChristianBishop
+-- threshold: 200
 select
   f_forumid,
   sum(competing) as comp,

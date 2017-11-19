@@ -1,5 +1,5 @@
--- top posters in top 100 forums
---  - Country (linear to number of posts in country)
+-- Q5. Top posters in a country
+-- country: Belarus
 select
   p_personid,
   p_firstname,

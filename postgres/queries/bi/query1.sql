@@ -1,3 +1,5 @@
+-- Q1. Posting summary
+-- date: '2011-07-21T22:00:00.000+00:00'::timestamp
 select
   year,
   is_reply,

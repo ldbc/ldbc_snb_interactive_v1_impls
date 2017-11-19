@@ -1,8 +1,8 @@
--- Top tags for country, age, gender, time
---  - Country names (Needs number of posts per country)(Complexity linear to total number of posts written by persons in all countries)
---  - Current date (does not effect complexity)
---  - Time range (Needs number of posts per month)
-
+-- Q2. Top tags for country, age, gender, time
+-- date1: '2009-12-31T23:00:00.000+00:00'::timestamp
+-- date2: '2010-11-07T23:00:00.000+00:00'::timestamp
+-- country1: Ethiopia
+-- country2: Belarus
 select
   ctry_name,
   mm,

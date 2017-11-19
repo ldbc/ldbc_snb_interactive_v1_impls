@@ -1,6 +1,5 @@
-  -- Top poster on tag, score on reps, likes
---  - Tag (linear to number of posts in tags)
-
+-- Q6. Most active Posters of a given Topic
+-- tag: Abbas_I_of_Persia
 select
   p_personid,
   n_posts,

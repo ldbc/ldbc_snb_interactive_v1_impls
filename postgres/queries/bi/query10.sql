@@ -1,4 +1,6 @@
--- TODO add $date
+-- Q10. Central Person for a Tag
+-- tag: Che_Guevara
+-- date: '2011-07-21T22:00:00.000+00:00'::timestamp
 with person_tag_post_score(ptps_personid, ptps_score) as (
   select ps_creatorid, count(*)
   from tag

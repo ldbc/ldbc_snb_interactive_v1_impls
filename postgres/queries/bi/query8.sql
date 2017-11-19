@@ -1,5 +1,5 @@
--- Top competitors.  Mentioned in reply when not in org and org has tag
-
+-- Q8. Related Topics
+-- tag: Genghis_Khan
 select
   t_name,
   count(*) as cnt from post ps,

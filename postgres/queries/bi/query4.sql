@@ -1,7 +1,6 @@
--- Top forum for tagclass, country
---  - Tagclasse  ( Number of posts per tag class )
---  - Country  ( Number of persons per country => number of posts )
-
+-- Q4. Popular topics in a country
+-- tagClass: MusicalArtist
+-- country: Burma
 select
   f_forumid,
   f_title,

@@ -1,6 +1,5 @@
--- Most liked poster on tag, likes from much liked posters count for more
---  - Tag (Linear to number of posts)
-
+-- // Q7. Most authoritative users on a given topic
+-- tag: Charles_V,_Holy_Roman_Emperor
 with
   popularity as (
     select ps_creatorid as pop_personid, count(*) as pop_auth
