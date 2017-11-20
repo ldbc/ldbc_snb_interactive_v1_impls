@@ -52,5 +52,5 @@ RETURN
   zombieLikeCount / totalLikeCount AS zombieScore
 ORDER BY
   zombieScore DESC,
-  person.ID ASC
+  person.id ASC
 LIMIT 100
