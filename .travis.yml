@@ -6,7 +6,7 @@ before_script:
 install:
   - git clone https://github.com/ldbc/ldbc_snb_driver
   - cd ldbc_snb_driver
-  - git checkout bi-op-classes
+  - git checkout dev
   - mvn install -DskipTests
   - cd ..
 script:
