@@ -4,7 +4,7 @@
 */
 MATCH
   (homeCountry:Country {name: $country})<-[:IS_PART_OF]-(:City)<-[:IS_LOCATED_IN]-
-  (:Person)<-[:HAS_CREATOR]-(message:Message)-[:IS_LOCATED_IN]->(country:Country)
+  (:Person)<-[:HAS_CREATOR]-(message:Message)-[:IS_LOCATED_IN]->(:City)-[:IS_PART_OF]->(country:Country)
 WHERE homeCountry <> country
 WITH
   message,
