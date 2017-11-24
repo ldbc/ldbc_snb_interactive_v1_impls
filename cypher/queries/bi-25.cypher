@@ -8,7 +8,7 @@
   }
 */
 MATCH
-  path=shortestPath(
+  path=allShortestPaths(
     (p1:Person {id: $person1Id})-[:knows*]-(p2:Person {id: $person2Id})
   )
 UNWIND relationships(path) AS k
