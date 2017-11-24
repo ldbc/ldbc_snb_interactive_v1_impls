@@ -14,14 +14,14 @@ WITH person1, person2, city1, 0 AS score
 // subscore 1
 OPTIONAL MATCH
   (person1)<-[:HAS_CREATOR]-(c:Comment)-[:REPLY_OF]->
-  (:Message)<-[:HAS_CREATOR]-(person2)
+  (:Message)-[:HAS_CREATOR]->(person2)
 WITH
   person1, person2, city1,
   score + (CASE c WHEN null THEN 0 ELSE 4 END) AS score
 // subscore 2
 OPTIONAL MATCH
   (person1)<-[:HAS_CREATOR]-(m:Message)<-[:REPLY_OF]-
-  (:Comment)<-[:HAS_CREATOR]-(person2)
+  (:Comment)-[:HAS_CREATOR]->(person2)
 WITH
   person1, person2, city1,
   score + (CASE m WHEN null THEN 0 ELSE 1 END) AS score
@@ -31,7 +31,7 @@ WITH
   person1, person2, city1,
   score + (CASE k WHEN null THEN 0 ELSE 15 END) AS score
 // subscore 4
-OPTIONAL MATCH (person1)-[:LIKES]->(m:Message)<-[:HAS_CREATOR]-(person2)
+OPTIONAL MATCH (person1)-[:LIKES]->(m:Message)-[:HAS_CREATOR]->(person2)
 WITH
   person1, person2, city1,
   score + (CASE m WHEN null THEN 0 ELSE 10 END) AS score
