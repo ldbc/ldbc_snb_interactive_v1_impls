@@ -1,6 +1,6 @@
 // Q13. Popular Tags per month in a country
 /*
-  :param { country: 'Spain' }
+  :param { country: 'Burma' }
 */
 MATCH (:Country {name: $country})<-[:IS_LOCATED_IN]-(message:Message)-[:HAS_TAG]->(tag:Tag)
 WITH
@@ -10,11 +10,15 @@ WITH
   tag
 WITH year, month, count(message) AS popularity, tag
 ORDER BY popularity DESC, tag.name ASC
-LIMIT 5
-RETURN
+WITH
   year,
   month,
   collect([tag.name, popularity]) AS popularTags
+RETURN
+  year,
+  month,
+  [i IN range(0, (CASE size(popularTags) < 5 WHEN true THEN size(popularTags) ELSE 5 END)-1) 
+  | popularTags[i]] AS topPopularTags
 ORDER BY
   year DESC,
   month ASC
