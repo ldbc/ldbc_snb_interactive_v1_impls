@@ -1,15 +1,15 @@
 // Q12. Trending Posts
 /*
   :param {
-    date: 201008220400000000000,
+    date: 20110721220000000,
     likeThreshold: 400
   }
 */
 MATCH
   (message:Message)-[:HAS_CREATOR]->(creator:Person),
-  (message)<-[:LIKES]-(fan:Person)
+  (message)<-[like:LIKES]-(:Person)
 WHERE message.creationDate > $date
-WITH message, creator, count(fan) AS likeCount
+WITH message, creator, count(like) AS likeCount
 WHERE likeCount > $likeThreshold
 RETURN
   message.id,
