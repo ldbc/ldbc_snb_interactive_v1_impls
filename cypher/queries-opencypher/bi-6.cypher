@@ -5,7 +5,7 @@
 MATCH (tag:Tag {name: $tag})<-[:HAS_TAG]-(message:Message)-[:HAS_CREATOR]->(person:Person)
 OPTIONAL MATCH (:Person)-[like:LIKES]->(message)
 OPTIONAL MATCH (message)<-[:REPLY_OF]-(comment:Comment)
-WITH person, count(distinct like) AS likeCount, count(distinct comment) AS replyCount, count(distinct message) AS messageCount
+WITH person, count(DISTINCT like) AS likeCount, count(DISTINCT comment) AS replyCount, count(DISTINCT message) AS messageCount
 RETURN
   person.id,
   messageCount,
