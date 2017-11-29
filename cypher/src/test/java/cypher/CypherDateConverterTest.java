@@ -26,6 +26,13 @@ public class CypherDateConverterTest {
         // Q10
         System.out.println(new CypherConverter().convertDate(1311285600000L));
         System.out.println();
+        // Q12
+        System.out.println(new CypherConverter().convertDate(1311285600000L));
+        System.out.println();
+        // Q13
+        System.out.println(new CypherConverter().convertDate(1338501600000L));
+        System.out.println(new CypherConverter().convertDate(1341093600000L));
+        System.out.println();
     }
 
 }
