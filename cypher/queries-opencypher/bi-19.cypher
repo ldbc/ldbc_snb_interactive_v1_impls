@@ -14,7 +14,7 @@ MATCH
 // --> may be use two MATCH clauses?
   (:TagClass {name: $tagClass1})<-[:HAS_TYPE]-(:Tag)<-[:HAS_TAG]-(forum1:Forum),
   (:TagClass {name: $tagClass2})<-[:HAS_TYPE]-(:Tag)<-[:HAS_TAG]-(forum2:Forum),
-  (forum1)-[:HAS_MEMBER]->(stranger:Person)<-[:hasMember]-(forum2)
+  (forum1)-[:HAS_MEMBER]->(stranger:Person)<-[:HAS_MEMBER]-(forum2)
 WHERE person <> stranger
   AND NOT (person)-[:KNOWS]-(stranger)
 WITH person, stranger
