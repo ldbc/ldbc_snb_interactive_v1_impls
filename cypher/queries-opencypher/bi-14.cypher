@@ -1,21 +1,21 @@
 // Q14. Top thread initiators
 /*
   :param {
-    begin: 20101001040000000,
-    end: 20101101040000000
+    startDate: 20120531220000000,
+    endDate: 20120630220000000
   }
 */
-MATCH (person:Person)<-[:HAS_CREATOR]-(message:Message)<-[:REPLY_OF*]-(reply:Message)
-WHERE message.creationDate >= $begin
-  AND message.creationDate <= $end
-  AND reply.creationDate   >= $begin
-  AND reply.creationDate   <= $end
+MATCH (person:Person)<-[:HAS_CREATOR]-(post:Post)<-[:REPLY_OF*0..]-(reply:Message)
+WHERE post.creationDate >= $startDate
+  AND post.creationDate <= $endDate
+  AND reply.creationDate   >= $startDate
+  AND reply.creationDate   <= $endDate
 RETURN
   person.id,
   person.firstName,
   person.lastName,
-  count(message) AS threadCount,
-  count(reply) AS messageCount
+  count(DISTINCT post) AS threadCount,
+  count(DISTINCT reply) AS messageCount
 ORDER BY
   messageCount DESC,
   person.id ASC

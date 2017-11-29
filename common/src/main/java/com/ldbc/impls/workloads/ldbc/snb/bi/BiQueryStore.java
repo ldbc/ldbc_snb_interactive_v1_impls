@@ -163,8 +163,8 @@ public abstract class BiQueryStore {
 
 	public String getQuery14(LdbcSnbBiQuery14TopThreadInitiators operation) {
 		return queries.get(QueryType.Query14)
-				.replace("$begin", getConverter().convertDate(operation.beginDate()))
-				.replace("$end", getConverter().convertDate(operation.endDate()));
+				.replace("$startDate", getConverter().convertDate(operation.beginDate()))
+				.replace("$endDate", getConverter().convertDate(operation.endDate()));
 	}
 
 	public String getQuery15(LdbcSnbBiQuery15SocialNormals operation) {
