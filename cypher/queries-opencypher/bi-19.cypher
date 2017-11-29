@@ -6,16 +6,17 @@
     tagClass2: 'OfficeHolder'
   }
 */
+MATCH
+  (:TagClass {name: $tagClass1})<-[:HAS_TYPE]-(:Tag)<-[:HAS_TAG]-
+  (forum1:Forum)-[:HAS_MEMBER]->(stranger:Person)
+WITH DISTINCT stranger
+MATCH
+  (:TagClass {name: $tagClass2})<-[:HAS_TYPE]-(:Tag)<-[:HAS_TAG]-
+  (forum2:Forum)-[:HAS_MEMBER]->(stranger)
+WITH DISTINCT stranger
 MATCH (person:Person)
 WHERE person.birthday > $date
-MATCH
-// The tags may be attached to the same Forum
-// or they may not be attached to different Forums.
-// --> may be use two MATCH clauses?
-  (:TagClass {name: $tagClass1})<-[:HAS_TYPE]-(:Tag)<-[:HAS_TAG]-(forum1:Forum),
-  (:TagClass {name: $tagClass2})<-[:HAS_TYPE]-(:Tag)<-[:HAS_TAG]-(forum2:Forum),
-  (forum1)-[:HAS_MEMBER]->(stranger:Person)<-[:HAS_MEMBER]-(forum2)
-WHERE person <> stranger
+  AND person <> stranger
   AND NOT (person)-[:KNOWS]-(stranger)
 WITH person, stranger
 OPTIONAL MATCH
