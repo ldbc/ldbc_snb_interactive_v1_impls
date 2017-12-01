@@ -6,7 +6,7 @@ MATCH
   (country:Country {name: $country})
 MATCH
   (country)<-[:IS_PART_OF]-(:City)<-[:IS_LOCATED_IN]-(person1:Person)
-MATCH
+OPTIONAL MATCH
   // start a new MATCH as friend might live in the same City
   // and thus can reuse the IS_PART_OF edge
   (country)<-[:IS_PART_OF]-(:City)<-[:IS_LOCATED_IN]-(friend1:Person),
