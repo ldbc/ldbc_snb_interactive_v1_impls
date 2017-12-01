@@ -14,13 +14,15 @@ MATCH
   (:TagClass {name: $tagClass2})<-[:HAS_TYPE]-(:Tag)<-[:HAS_TAG]-
   (forum2:Forum)-[:HAS_MEMBER]->(stranger)
 WITH DISTINCT stranger
-MATCH (person:Person)
+MATCH
+  (person:Person)<-[:HAS_CREATOR]-(:Message)-[:REPLY_OF]-
+  (:Message)-[:HAS_CREATOR]->(stranger)
 WHERE person.birthday > $date
   AND person <> stranger
   AND NOT (person)-[:KNOWS]-(stranger)
 WITH person, stranger
 OPTIONAL MATCH
-    (person)<-[:HAS_CREATOR]-(comment1:Comment)-[:REPLY_OF]->(:Message)-[:HAS_CREATOR]->(stranger)
+  (person)<-[:HAS_CREATOR]-(comment1:Comment)-[:REPLY_OF]->(:Message)-[:HAS_CREATOR]->(stranger)
 OPTIONAL MATCH
   (stranger)<-[:HAS_CREATOR]-(comment2:Comment)-[:REPLY_OF]->(:Message)-[:HAS_CREATOR]->(person)
 WITH
