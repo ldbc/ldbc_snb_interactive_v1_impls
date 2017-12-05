@@ -17,7 +17,7 @@ WITH
   country.name AS countryName,
   message.creationDate/100000000000%100 AS month,
   person.gender AS gender,
-  floor((2013 - person.birthday/10000) / 5.0) AS ageGroup,
+  floor((20130101 - person.birthday) / 10000 / 5.0)
   tag.name AS tagName,
   message
 WITH
