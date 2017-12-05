@@ -7,17 +7,17 @@
   }
 */
 MATCH
-  (forum:Forum)-[:CONTAINER_OF]->(post1:Post)-[:HAS_TAG]->
+  (forum:Forum)-[:HAS_MEMBER]->(person:Person)
+WITH forum, count(person) AS members
+WHERE members > $threshold
+MATCH
+  (forum)-[:CONTAINER_OF]->(post1:Post)-[:HAS_TAG]->
   (:Tag)-[:HAS_TYPE]->(:TagClass {name: $tagClass1})
-WITH forum, count(post1) AS count1,  collect(post1) AS post1s
+WITH forum, count(DISTINCT post1) AS count1
 MATCH
   (forum)-[:CONTAINER_OF]->(post2:Post)-[:HAS_TAG]->
   (:Tag)-[:HAS_TYPE]->(:TagClass {name: $tagClass2})
-WITH forum, count1, count(post2) AS count2
-MATCH
-  (forum)-[:HAS_MEMBER]->(person:Person)
-WITH forum, count1, count2, count(person) AS members
-WHERE members > $threshold
+WITH forum, count1, count(DISTINCT post2) AS count2
 RETURN
   forum.id,
   count1,
