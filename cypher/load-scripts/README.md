@@ -4,12 +4,12 @@ The data set needs to be generated and preprocessed before loading it to the dat
 
 ### Generating the data set
 
-Use the standard `CSVSerializer` classes of the LDBC SNB [DATAGEN](https://github.com/ldbc/ldbc_snb_datagen/) project:
+Use the `CSVCompositeSerializer` classes of the  [DATAGEN](https://github.com/ldbc/ldbc_snb_datagen/) project:
 
 ```
-ldbc.snb.datagen.serializer.personSerializer:ldbc.snb.datagen.serializer.snb.interactive.CSVPersonSerializer
-ldbc.snb.datagen.serializer.invariantSerializer:ldbc.snb.datagen.serializer.snb.interactive.CSVInvariantSerializer
-ldbc.snb.datagen.serializer.personActivitySerializer:ldbc.snb.datagen.serializer.snb.interactive.CSVPersonActivitySerializer
+ldbc.snb.datagen.serializer.personSerializer:ldbc.snb.datagen.serializer.snb.interactive.CSVCompositePersonSerializer
+ldbc.snb.datagen.serializer.invariantSerializer:ldbc.snb.datagen.serializer.snb.interactive.CSVCompositeInvariantSerializer
+ldbc.snb.datagen.serializer.personActivitySerializer:ldbc.snb.datagen.serializer.snb.interactive.CSVCompositePersonActivitySerializer
 ```
 
 Set the `$NEO4J_HOME` and the following environment variables appropriately:
@@ -44,34 +44,6 @@ Be careful -- this deletes all data in your database.
 ```
 
 Restart Neo4j.
-
-## Stuff currently ignored
-
-We ignore some files as they are difficult to load and none of the queries need them.
-
-### Property files
-
-These files store lists in a normalized form:
-
-* `person_speaks_language`
-
-  ```
-  Person.id	language
-  8796093022220	es
-  8796093022220	en
-  2199023255591	ru
-  2199023255591	en
-  ```
-
-* `person_email_emailaddress`
-
-  ```
-  Person.id	email
-  8796093022220	Jose8796093022220@gmail.com
-  8796093022220	Jose8796093022220@gmx.com
-  2199023255591	Alexei2199023255591@gmail.com
-  2199023255591	Alexei2199023255591@zoho.com
-  ```
 
 ## Misc
 
