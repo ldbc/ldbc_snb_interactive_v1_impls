@@ -141,7 +141,8 @@ public abstract class BiQueryStore {
 
 	public String getQuery10(LdbcSnbBiQuery10TagPerson operation) {
 		return queries.get(QueryType.Query10)
-				.replace("$tag", getConverter().convertString(operation.tag()));
+				.replace("$tag", getConverter().convertString(operation.tag()))
+				.replace("$date", getConverter().convertDate(operation.date()));
 	}
 
 	public String getQuery11(LdbcSnbBiQuery11UnrelatedReplies operation) {
