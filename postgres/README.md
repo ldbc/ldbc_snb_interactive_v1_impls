@@ -23,7 +23,7 @@ CREATE USER usr PASSWORD 'foo';
 ALTER ROLE usr WITH login createdb superuser;
 ```
 
-## Generating test models
+## Generating small test graphs for PostgreSQL
 
 The load script expect models generated with the `CSVMergeForeign` serializers.
 
@@ -44,7 +44,7 @@ ldbc.snb.datagen.generator.numThreads:1
 ldbc.snb.datagen.serializer.outputDir:./test_data/
 ```
 
-## Loading the data
+## Loading the data to PostgreSQL
 
 To run the load script, go the `load-scripts` directory and issue the following command:
 
@@ -68,3 +68,5 @@ You are now connected to database "ldbcsf1" as user "postgres".
 ldbcsf1=# SELECT count(*) FROM person;
 # ...
 ```
+
+## Generating the validation data set

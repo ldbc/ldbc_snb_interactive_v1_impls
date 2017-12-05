@@ -50,21 +50,25 @@ After that, you can install the JAR file of ldbc_snb_driver to the local Maven r
 mvn clean install -Dmaven.compiler.source=1.7 -Dmaven.compiler.target=1.7 -DskipTests
 ```
 
-## Running the driver.
+## Generating the validation data set
 
-:warning: **TODO** :warning: This section is deprecated.
+1. Grab the driver source code from: https://github.com/ldbc/ldbc_snb_driver
+2. Install the driver artifact to the local Maven repository:
 
-* Compile Db class for the JDBC database:
+   ```bash
+   mvn clean install -DskipTests
+   ```
 
-    Run:
+3. Go to the LDBC implementations directory (e.g. `postgres` or `cypher`) and generate that shaded JAR file:
 
-    ```bash
-    mvn clean package
-    ```
+   ```bash
+   mvn clean package -DskipTests
+   ```
 
-* Running the driver against Postgres:
+4. Set the parameters according to your system configuration and run the driver in validation generation mode. For example, to generate the validation data set for PostgreSQL, use the following command.
 
-    You have to update the paths in the `run.sh` script, and use it for
-    running the benchmark.  Before that, please update the 3 configuration
-    files with your options. This process is explained here:
-    <https://github.com/ldbc/ldbc_snb_driver/wiki>
+   ```bash
+   java -cp target/postgres-0.0.1-SNAPSHOT.jar com.ldbc.driver.Client -db  com.ldbc.impls.workloads.ldbc.snb.jdbc.bi.PostgresBiDb -P readwrite_postgres--ldbc_driver_config--validation_parameter_creation.properties
+   ```
+
+For more details, on validating and benchmarking, visit <https://github.com/ldbc/ldbc_snb_driver/wiki>.
