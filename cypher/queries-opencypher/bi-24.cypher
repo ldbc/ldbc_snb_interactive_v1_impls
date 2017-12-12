@@ -4,9 +4,8 @@
 */
 MATCH (:TagClass {name: $tagClass})<-[:HAS_TYPE]-(:Tag)<-[:HAS_TAG]-(message:Message)
 WITH DISTINCT message
-MATCH
-  (message)<-[like:LIKES]-(:Person),
-  (message)-[:IS_LOCATED_IN]->(:Country)-[:IS_PART_OF]->(continent:Continent)
+MATCH (message)-[:IS_LOCATED_IN]->(:Country)-[:IS_PART_OF]->(continent:Continent)
+OPTIONAL MATCH (message)<-[like:LIKES]-(:Person)
 WITH
   message,
   message.creationDate/10000000000000   AS year,

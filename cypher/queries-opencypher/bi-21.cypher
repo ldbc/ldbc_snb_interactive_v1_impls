@@ -2,7 +2,7 @@
 /*
   :param {
     country: 'Spain',
-    endDate: 20130101050000000
+    endDate: 20121231180000000
   }
 */
 MATCH (country:Country {name: $country})
@@ -52,8 +52,8 @@ RETURN
   zombie.id,
   zombieLikeCount,
   totalLikeCount,
-  CASE
-    WHEN totalLikeCount = 0 THEN 1
+  CASE totalLikeCount
+    WHEN 0 THEN 1
     ELSE zombieLikeCount / toFloat(totalLikeCount)
   END AS zombieScore
 ORDER BY
