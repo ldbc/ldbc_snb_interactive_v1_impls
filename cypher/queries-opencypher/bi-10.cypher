@@ -5,28 +5,25 @@
     date: 20110721220000000
   }
 */
-MATCH (tag:Tag {name: $tag}), (person:Person)
+MATCH (tag:Tag {name: $tag})
 // score
-OPTIONAL MATCH (person)-[i:HAS_INTEREST]->(tag)
-OPTIONAL MATCH (person)<-[:HAS_CREATOR]-(m:Message)-[:HAS_TAG]->(tag)
-WHERE m.creationDate > $date
+OPTIONAL MATCH (tag)<-[interest:HAS_INTEREST]-(person:Person)
+OPTIONAL MATCH (tag)<-[:HAS_TAG]-(message:Message)-[:HAS_CREATOR]->(person:Person)
+WHERE message.creationDate > $date
+  AND person IS NOT NULL
 WITH
   tag,
   person,
-  count(i)*100 + count(m) AS score
+  count(interest)*100 + count(message) AS score
 // friendsScore
-OPTIONAL MATCH (person)-[:KNOWS]-(friend:Person)
-OPTIONAL MATCH (friend)-[i:HAS_INTEREST]->(tag)
-OPTIONAL MATCH (friend)<-[:HAS_CREATOR]-(m:Message)-[:HAS_TAG]->(tag)
-WHERE m.creationDate > $date
-WITH
-  person,
-  score,
-  count(i)*100 + count(m) AS individualFriendsScore
+MATCH (person)-[:KNOWS]-(friend:Person)
+OPTIONAL MATCH (tag)<-[interest:HAS_INTEREST]-(friend)
+OPTIONAL MATCH (tag)<-[:HAS_TAG]-(message:Message)-[:HAS_CREATOR]->(friend)
+WHERE message.creationDate > $date
 RETURN
   person.id,
   score,
-  sum(individualFriendsScore) AS friendsScore
+  count(interest)*100 + count(message) AS friendsScore
 ORDER BY
   score + friendsScore DESC,
   person.id ASC
