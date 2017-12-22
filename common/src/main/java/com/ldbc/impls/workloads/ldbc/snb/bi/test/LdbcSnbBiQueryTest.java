@@ -84,7 +84,7 @@ public abstract class LdbcSnbBiQueryTest {
         run(db, new LdbcSnbBiQuery18PersonPostCounts(1311307200000L, 0, Arrays.asList("English"), LIMIT));
 //		run(db, new LdbcSnbBiQuery19StrangerInteraction(599634000000L, "MusicalArtist", "OfficeHolder", LIMIT));
         run(db, new LdbcSnbBiQuery20HighLevelTopics(Arrays.asList("Country"), LIMIT));
-        run(db, new LdbcSnbBiQuery21Zombies("Ethiopia", 1357016400000L, 0, LIMIT));
+        run(db, new LdbcSnbBiQuery21Zombies("Ethiopia", 1357016400000L, LIMIT));
         run(db, new LdbcSnbBiQuery22InternationalDialog("Mexico", "Indonesia", LIMIT));
         run(db, new LdbcSnbBiQuery23HolidayDestinations("Ethiopia", LIMIT));
         run(db, new LdbcSnbBiQuery24MessagesByTopic("Single", LIMIT));
