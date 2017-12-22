@@ -6,8 +6,8 @@
     languages: ['ar']
   }
 */
-MATCH
-  (person:Person)<-[:HAS_CREATOR]-(message:Message)-[:REPLY_OF*0..]->(post:Post)
+MATCH (person:Person)
+OPTIONAL MATCH (person)<-[:HAS_CREATOR]-(message:Message)-[:REPLY_OF*0..]->(post:Post)
 WHERE message.content IS NOT NULL
   AND message.length < $lengthThreshold
   AND message.creationDate > $date
