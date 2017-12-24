@@ -1,8 +1,8 @@
 // Q21. Zombies in a country
 /*
   :param {
-    country: 'Spain',
-    endDate: 20121231180000000
+    country: 'Ethiopia',
+    endDate: 20130101000000000
   }
 */
 MATCH (country:Country {name: $country})

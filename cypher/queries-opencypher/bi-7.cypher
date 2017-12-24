@@ -1,10 +1,11 @@
 // Q7. Most authoritative users on a given topic
 /*
-  :param { tag: 'Charles_V,_Holy_Roman_Emperor' }
+  :param { tag: 'Arnold_Schwarzenegger' }
 */
-MATCH (tag:Tag {name: $tag})<-[:HAS_TAG]-(message1:Message)-[:HAS_CREATOR]->(person1:Person)
-MATCH (person1)<-[:HAS_CREATOR]-(message2:Message)-[:HAS_TAG]->(tag)
-OPTIONAL MATCH (message2)<-[:LIKES]-(person2:Person)<-[:HAS_CREATOR]-(message3:Message)<-[like:LIKES]-(:Person)
+MATCH (tag:Tag {name: $tag})
+MATCH (tag)<-[:HAS_TAG]-(message1:Message)-[:HAS_CREATOR]->(person1:Person)
+MATCH (tag)<-[:HAS_TAG]-(message2:Message)-[:HAS_CREATOR]->(person1)
+OPTIONAL MATCH (message2)<-[:LIKES]-(person2:Person)<-[:HAS_CREATOR]-(message3:Message)<-[like:LIKES]-(p3:Person)
 RETURN
   person1.id,
   count(DISTINCT like) AS authorityScore
