@@ -6,10 +6,10 @@
   }
 */
 MATCH (person:Person)<-[:HAS_CREATOR]-(post:Post)<-[:REPLY_OF*0..]-(reply:Message)
-WHERE post.creationDate >= $startDate
-  AND post.creationDate <= $endDate
-  AND reply.creationDate   >= $startDate
-  AND reply.creationDate   <= $endDate
+WHERE  post.creationDate >= $startDate
+  AND  post.creationDate <= $endDate
+  AND reply.creationDate >= $startDate
+  AND reply.creationDate <= $endDate
 RETURN
   person.id,
   person.firstName,
