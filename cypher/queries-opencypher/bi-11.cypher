@@ -10,10 +10,11 @@ MATCH
   (country:Country {name: $country})<-[:IS_PART_OF]-(:City)<-[:IS_LOCATED_IN]-
   (person:Person)<-[:HAS_CREATOR]-(reply:Comment)-[:REPLY_OF]->(message:Message),
   (reply)-[:HAS_TAG]->(tag:Tag)
-OPTIONAL MATCH
-  (:Person)-[like:LIKES]->(reply)
 WHERE NOT (message)-[:HAS_TAG]->(:Tag)<-[:HAS_TAG]-(reply)
   AND size([word IN blacklist WHERE reply.content CONTAINS word | word]) = 0
+WITH *
+OPTIONAL MATCH
+  (:Person)-[like:LIKES]->(reply)
 RETURN
   person.id,
   tag.name,
