@@ -339,7 +339,7 @@ public class CypherBiDb extends CypherDb {
 				tagPopularities.add(new LdbcSnbBiQuery13PopularMonthlyTagsResult.TagPopularity(tag, popularity));
 			}
 
-			return new LdbcSnbBiQuery13PopularMonthlyTagsResult(year, month, new ArrayList<>());
+			return new LdbcSnbBiQuery13PopularMonthlyTagsResult(year, month, tagPopularities);
 		}
 	}
 
