@@ -19,7 +19,7 @@ RETURN
   person.firstName,
   person.lastName,
   person.creationDate,
-  count(post) AS postCount
+  count(DISTINCT post) AS postCount
 ORDER BY
   postCount DESC,
   person.id ASC
