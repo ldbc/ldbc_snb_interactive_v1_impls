@@ -17,5 +17,5 @@ RETURN
 ORDER BY
   messageCount DESC,
   destination.name ASC,
-  month DESC
+  month ASC
 LIMIT 100
