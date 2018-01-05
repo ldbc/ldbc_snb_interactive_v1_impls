@@ -6,3 +6,4 @@ release.properties
 dependency-reduced-pom.xml
 .idea/
 *.iml
+validation_params.csv
