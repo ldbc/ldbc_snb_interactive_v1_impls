@@ -18,8 +18,7 @@ RETURN
   person.id,
   tag.name,
   count(DISTINCT like) AS countLikes,
-  count(DISTINCT reply) AS countReplies,
-  reply.content
+  count(DISTINCT reply) AS countReplies
 ORDER BY
   countLikes DESC,
   person.id ASC,
