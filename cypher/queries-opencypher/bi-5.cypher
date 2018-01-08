@@ -11,8 +11,9 @@ LIMIT 100
 WITH collect(forum) AS popularForums
 UNWIND popularForums AS forum
 MATCH
-  (forum)-[:HAS_MEMBER]->(person:Person)<-[:HAS_CREATOR]-(post:Post)
-  <-[:CONTAINER_OF]-(popularForum:Forum)
+  (forum)-[:HAS_MEMBER]->(person:Person)
+OPTIONAL MATCH
+  (person)<-[:HAS_CREATOR]-(post:Post)<-[:CONTAINER_OF]-(popularForum:Forum)
 WHERE popularForum IN popularForums
 RETURN
   person.id,
