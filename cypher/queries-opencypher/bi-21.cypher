@@ -53,7 +53,7 @@ RETURN
   zombieLikeCount,
   totalLikeCount,
   CASE totalLikeCount
-    WHEN 0 THEN 1
+    WHEN 0 THEN 0
     ELSE zombieLikeCount / toFloat(totalLikeCount)
   END AS zombieScore
 ORDER BY
