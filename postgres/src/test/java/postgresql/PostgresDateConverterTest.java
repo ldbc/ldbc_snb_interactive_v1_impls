@@ -19,6 +19,9 @@ public class PostgresDateConverterTest {
         // Q10
         System.out.println(new PostgresConverter().convertDate(1311285600000L));
         System.out.println();
+        // Q18
+        System.out.println(new PostgresConverter().convertDate(1311292800000L));
+        System.out.println();
     }
 
 }

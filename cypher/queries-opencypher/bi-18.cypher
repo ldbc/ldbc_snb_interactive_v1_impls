@@ -1,7 +1,7 @@
 // Q18. How many persons have a given number of posts
 /*
   :param {
-    date: 20120122000000000,
+    date: 20110722020000000,
     lengthThreshold: 20,
     languages: ['ar']
   }
