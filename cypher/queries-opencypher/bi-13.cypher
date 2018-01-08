@@ -2,7 +2,8 @@
 /*
   :param { country: 'Burma' }
 */
-MATCH (:Country {name: $country})<-[:IS_LOCATED_IN]-(message:Message)-[:HAS_TAG]->(tag:Tag)
+MATCH (:Country {name: $country})<-[:IS_LOCATED_IN]-(message:Message)
+OPTIONAL MATCH (message)-[:HAS_TAG]->(tag:Tag)
 WITH
   message.creationDate/10000000000000   AS year,
   message.creationDate/100000000000%100 AS month,
@@ -14,10 +15,14 @@ WITH
   year,
   month,
   collect([tag.name, popularity]) AS popularTags
+WITH
+  year,
+  month,
+  [popularTag IN popularTags WHERE popularTag[0] IS NOT NULL] AS popularTags
 RETURN
   year,
   month,
-  [i IN range(0, (CASE size(popularTags) < 5 WHEN true THEN size(popularTags) ELSE 5 END)-1) 
+  [i IN range(0, (CASE size(popularTags) < 5 WHEN true THEN size(popularTags) ELSE 5 END)-1)
   | popularTags[i]] AS topPopularTags
 ORDER BY
   year DESC,
