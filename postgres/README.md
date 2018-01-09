@@ -70,3 +70,11 @@ ldbcsf1=# SELECT count(*) FROM person;
 ```
 
 ## Generating the validation data set
+
+1. Follow the steps in the parent directory's README to set up the environment.
+
+2. Generate the validation data set with the following parameters:
+
+   ```bash
+   java -cp target/postgres-0.0.1-SNAPSHOT.jar com.ldbc.driver.Client -db  com.ldbc.impls.workloads.ldbc.snb.jdbc.bi.PostgresBiDb -P readwrite_postgres--ldbc_driver_config--validation_parameter_creation.properties
+   ```

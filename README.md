@@ -65,10 +65,6 @@ mvn clean install -Dmaven.compiler.source=1.7 -Dmaven.compiler.target=1.7 -Dskip
    mvn clean package -DskipTests
    ```
 
-4. Set the parameters according to your system configuration and run the driver in validation generation mode. For example, to generate the validation data set for PostgreSQL, use the following command.
-
-   ```bash
-   java -cp target/postgres-0.0.1-SNAPSHOT.jar com.ldbc.driver.Client -db  com.ldbc.impls.workloads.ldbc.snb.jdbc.bi.PostgresBiDb -P readwrite_postgres--ldbc_driver_config--validation_parameter_creation.properties
-   ```
+4. Set the parameters according to your system configuration and run the driver in validation generation mode. For more details, refer to the README of the implementation-specific subprojects.
 
 For more details, on validating and benchmarking, visit <https://github.com/ldbc/ldbc_snb_driver/wiki>.

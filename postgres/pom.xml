@@ -8,7 +8,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>postgre</artifactId>
+	<artifactId>postgres</artifactId>
 	<name>PostgreSQL DB class</name>
 	<description>PostgreSQL connector for LDBC driver</description>
 
