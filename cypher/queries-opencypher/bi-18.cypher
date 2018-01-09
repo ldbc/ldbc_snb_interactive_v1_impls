@@ -21,4 +21,3 @@ RETURN
 ORDER BY
   personCount DESC,
   messageCount DESC
-LIMIT 100
