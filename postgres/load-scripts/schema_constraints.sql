@@ -24,3 +24,7 @@ vacuum analyze;
 -- create column index l_personid on likes (l_postid) partition (l_postid int (0hexffff00));
 -- create index pl_containerplaceid on place (pl_containerplaceid) partition cluster REPLICATED;
 -- create column index pst_tagid on post_tag (pst_tagid) partition (pst_tagid int (0hexffff00));
+
+-- create index on foreign keys
+-- TODO: other FK indexes to be added
+CREATE INDEX post_replyof ON post (ps_replyof);
