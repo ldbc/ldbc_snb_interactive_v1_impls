@@ -72,7 +72,7 @@ public class PostgresBiDb extends JdbcDb<BiQueryStore> {
 	@Override
 	protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
 		try {
-			dbs = new JdbcPoolingDbConnectionStore<>(properties, new PostgresQueryStore(properties.get("queryDir")));
+			dbs = new JdbcPoolingDbConnectionStore<>(properties, new PostgresBiQueryStore(properties.get("queryDir")));
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new DbException(e);
 		}
