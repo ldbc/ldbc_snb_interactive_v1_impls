@@ -15,7 +15,7 @@ WITH
 WITH
   totalMessageCount,
   year,
-  (message:Comment) AS isComment,
+  message:Comment AS isComment,
   CASE
     WHEN message.length <  40 THEN 0
     WHEN message.length <  80 THEN 1
