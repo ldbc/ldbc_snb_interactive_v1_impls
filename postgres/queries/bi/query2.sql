@@ -1,35 +1,32 @@
--- Q2. Top tags for country, age, gender, time
--- date1: '2009-12-31T23:00:00.000+00:00'::timestamp
--- date2: '2010-11-07T23:00:00.000+00:00'::timestamp
--- country1: Ethiopia
--- country2: Belarus
-select
-  ctry_name,
-  mm,
-  p_gender,
-  age,
-  t_name, count(*) as cnt
-from
-  (
-    -- according to the specs, the end of simulation is hard-coded as 2013-01-01
-    select p_gender, floor(2013) - extract(year from (p_birthday))/5 as age, ps_postid, extract(month from ps_creationdate) as mm, ctry_name
-    from person, post, country
-    where ps_creatorid = p_personid
-      and p_placeid = ctry_city
-      and ps_creationdate >= $date1
-      and ps_creationdate <= $date2
-      and ctry_name in ('$country1', '$country2')
-  ) person_posts,
-  post_tag, tag
-where ps_postid = pst_postid
-  and t_tagid = pst_tagid
-group by ctry_name, mm, p_gender, age, t_name
-having count(*) > 100
-order by
-  cnt desc,
-  t_name asc,
-  age asc,
-  p_gender asc,
-  mm asc,
-  ctry_name asc
-limit 100;
+/* Q2. Top tags for country, age, gender, time
+\set startDate '\'2010-01-01T00:00:00.000+00:00\''::timestamp
+\set endDate   '\'2010-11-08T00:00:00.000+00:00\''::timestamp
+\set country1  '\'Ethiopia\''
+\set country2  '\'Belarus\''
+ */
+SELECT co.pl_name AS "country.name"
+     , extract(MONTH FROM p.ps_creationdate) as messageMonth
+     , cr.p_gender AS "person.gender"
+     , floor(extract(YEARS FROM age('2013-01-01'::date, cr.p_birthday))/5) AS ageGroup
+     , t.t_name AS "tag.name"
+     , count(*) AS messageCount
+  FROM post p
+     , post_tag pt
+     , tag t
+     , person cr -- creator
+     , place  ci  -- city
+     , place  co  -- country
+ WHERE 1=1
+    -- join
+   AND p.ps_postid = pt.pst_postid
+   AND pt.pst_tagid = t.t_tagid
+   AND p.ps_creatorid = cr.p_personid
+   AND cr.p_placeid = ci.pl_placeid
+   AND ci.pl_containerplaceid = co.pl_placeid
+    -- filter
+   AND co.pl_name in (:country1, :country2)
+   AND p.ps_creationdate BETWEEN :startDate AND :endDate
+ GROUP BY co.pl_name, messageMonth, cr.p_gender, t.t_name, ageGroup
+HAVING count(*) > 100
+ LIMIT 100
+;
