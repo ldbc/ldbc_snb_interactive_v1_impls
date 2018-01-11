@@ -1,33 +1,36 @@
--- Q1. Posting summary
--- date: '2011-07-21T22:00:00.000+00:00'::timestamp
-select
-  year,
-  is_reply,
-  size,
-  count(*) as cnt,
-  avg(ps_length) as avg_len,
-  sum(ps_length) as total,
-  (0.0 + count(*)) / (select count(*) from post where ps_creationdate < $date) as pct
-from (
-  select
-    extract(year from ps_creationdate) as year,
-    case
-      when ps_replyof is null then 0
-      else 1
-    end as is_reply,
-    case
-      when ps_length < 40  then 0 -- 'short'
-      when ps_length < 80  then 1 -- 'one liner'
-      when ps_length < 160 then 2 -- 'tweet'
-      else 3                      -- 'long'
-    end as size,
-    ps_length
-  from post
-  where ps_creationdate < $date
-    and ps_imagefile is null
-) data
-group by year, is_reply, size
-order by
-  year desc,
-  is_reply asc,
-  size asc;
+/* Q1. Posting summary
+\set date '\'2011-07-21T22:00:00.000+00:00\''::timestamp
+ */
+WITH 
+  post_count AS (
+    SELECT 0.0 + count(*) AS cnt
+      FROM post
+     WHERE 1=1
+       AND ps_creationdate < :date
+)
+, post_prep AS (
+    SELECT extract(year from ps_creationdate) AS messageYear
+         , ps_replyof IS NOT NULL AS isComment
+         , CASE
+             WHEN ps_length <  40 THEN 0 -- short
+             WHEN ps_length <  80 THEN 1 -- one liner
+             WHEN ps_length < 160 THEN 2 -- tweet
+             ELSE                      3 -- long
+           END AS lengthCategory
+         , ps_length
+      FROM post
+     WHERE 1=1
+       AND ps_creationdate < :date
+       --AND ps_content IS NOT NULL
+       AND ps_imagefile IS NULL -- FIXME CHECKME: posts w/ ps_imagefile IS NOT NULL should have ps_content IS NULL
+)
+SELECT messageYear, isComment, lengthCategory
+     , count(*) AS messageCount
+     , avg(ps_length) AS averageMessageLength
+     , sum(ps_length) AS sumMessageLength
+     , count(*) / pc.cnt AS percentageOfMessages
+  FROM post_prep
+     , post_count pc
+ GROUP BY messageYear, isComment, lengthCategory, pc.cnt
+ ORDER BY messageYear DESC, isComment ASC, lengthCategory ASC
+;
