@@ -8,9 +8,9 @@ OPTIONAL MATCH (message)<-[:REPLY_OF]-(comment:Comment)
 WITH person, count(DISTINCT like) AS likeCount, count(DISTINCT comment) AS replyCount, count(DISTINCT message) AS messageCount
 RETURN
   person.id,
-  messageCount,
   replyCount,
   likeCount,
+  messageCount,
   1*messageCount + 2*replyCount + 10*likeCount AS score
 ORDER BY
   score DESC,
