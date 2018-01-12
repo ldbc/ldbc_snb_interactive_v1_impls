@@ -1,27 +1,61 @@
--- Q6. Most active Posters of a given Topic
--- tag: Abbas_I_of_Persia
-select
-  p_personid,
-  n_posts,
-  n_replies,
-  n_likes,
-  n_posts + 2 * n_replies + 10 * n_likes as sc
-from
-  (
-    select p_personid, count(*) as n_posts, sum(n_lks) as n_likes, sum (n_reps) as n_replies
-    from
-      (select p_personid, ps_postid,
-        (select count(*) from likes where l_postid = ps_postid) as n_lks,
-        (select count(*) from post p2 where p2.ps_replyof = p1.ps_postid) as n_reps
-       from person, post p1, post_tag, tag
-       where ps_creatorid = p_personid
-         and pst_postid = ps_postid
-         and t_tagid = pst_tagid
-         and t_name = '$tag'
-       ) psts
-    group by p_personid
-  ) sums
-order by
-  sc desc,
-  p_personid asc
-limit 100;
+/* Q6. Most active Posters of a given Topic
+\set tag '\'Abbas_I_of_Persia\''
+ */
+WITH detail AS (
+SELECT cr.p_personid AS person_id
+     , count(DISTINCT r.ps_postid)  AS replyCount
+     , count(DISTINCT l.l_postid||' '||l.l_personid) AS likeCount
+     , count(DISTINCT m.ps_postid)  AS messageCount
+     , null as score
+  FROM tag t
+     , post_tag pt
+     , post m LEFT JOIN post  r ON (m.ps_postid = r.ps_replyof) -- m: all messages, not just posts; r: direct reply to m
+              LEFT JOIN likes l ON (m.ps_postid = l.l_postid)  -- l: likes to m
+     , person cr -- creator
+ WHERE 1=1
+    -- join
+   AND t.t_tagid = pt.pst_tagid
+   AND pt.pst_postid = m.ps_postid
+   AND m.ps_creatorid = cr.p_personid
+    -- filter
+   AND t.t_name = :tag
+ GROUP BY cr.p_personid
+)
+SELECT person_id AS "person.id"
+     , messageCount
+     , replyCount
+     , likeCount
+     , messageCount + 2*replyCount + 10*likeCount AS score
+  FROM detail
+ ORDER BY score DESC, person_id
+ LIMIT 100
+;
+WITH detail AS (
+SELECT cr.p_personid AS person_id
+     , count(DISTINCT r.ps_postid)  AS replyCount
+     , count(DISTINCT l.l_postid||' '||l.l_personid) AS likeCount
+     , count(DISTINCT m.ps_postid)  AS messageCount
+     , null as score
+  FROM tag t
+     , post_tag pt
+     , post m LEFT JOIN post  r ON (m.ps_postid = r.ps_replyof) -- m: all messages, not just posts; r: direct reply to m
+              LEFT JOIN likes l ON (m.ps_postid = l.l_postid)  -- l: likes to m
+     , person cr -- creator
+ WHERE 1=1
+    -- join
+   AND t.t_tagid = pt.pst_tagid
+   AND pt.pst_postid = m.ps_postid
+   AND m.ps_creatorid = cr.p_personid
+    -- filter
+   AND t.t_name = :tag
+ GROUP BY cr.p_personid
+)
+SELECT person_id AS "person.id"
+     , messageCount
+     , replyCount
+     , likeCount
+     , messageCount + 2*replyCount + 10*likeCount AS score
+  FROM detail
+ ORDER BY score DESC, person_id
+ LIMIT 100
+;
