@@ -21,7 +21,7 @@ public class PostgresConverter extends Converter {
     }
 
     public String convertString(String value) {
-        return value;
+        return "'" + value + "'";
     }
 
     public String convertStringList(List<String> values) {
