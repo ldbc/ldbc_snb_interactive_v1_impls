@@ -44,7 +44,7 @@ ldbc.snb.datagen.generator.numThreads:1
 ldbc.snb.datagen.serializer.outputDir:./test_data/
 ```
 
-## Loading the data to PostgreSQL
+## Loading the data set
 
 To run the load script, go the `load-scripts` directory and issue the following command:
 
@@ -69,12 +69,24 @@ ldbcsf1=# SELECT count(*) FROM person;
 # ...
 ```
 
-## Generating the validation data set
+## Running the implementation
 
-1. Follow the steps in the parent directory's README to set up the environment.
+First, follow the steps in the parent directory's README to set up the environment.
 
-2. Generate the validation data set with the following parameters:
+To create the validation data set, run:
 
-   ```bash
-   java -cp target/postgres-0.0.1-SNAPSHOT.jar com.ldbc.driver.Client -db  com.ldbc.impls.workloads.ldbc.snb.jdbc.bi.PostgresBiDb -P readwrite_postgres--ldbc_driver_config--validation_parameter_creation.properties
-   ```
+```bash
+java -cp target/postgres-0.0.1-SNAPSHOT.jar com.ldbc.driver.Client -db  com.ldbc.impls.workloads.ldbc.snb.jdbc.bi.PostgresBiDb -P postgres-create_validation_parameters.properties
+```
+
+To validate the database, run:
+
+```bash
+java -cp target/postgres-0.0.1-SNAPSHOT.jar com.ldbc.driver.Client -db  com.ldbc.impls.workloads.ldbc.snb.jdbc.bi.PostgresBiDb -P postgres-validate_db.properties
+```
+
+To execute the benchmark, run:
+
+```bash
+java -cp target/postgres-0.0.1-SNAPSHOT.jar com.ldbc.driver.Client -db  com.ldbc.impls.workloads.ldbc.snb.jdbc.bi.PostgresBiDb -P postgres-benchmark.properties
+```

@@ -2,14 +2,28 @@
 
 [(open)Cypher](http://www.opencypher.org/) implementation for the [LDBC SNB BI benchmark](https://github.com/ldbc/ldbc_snb_docs) page.
 
+## Loading the data set
+
 See the [`load-scripts`](load-scripts/) directory on how to load the data set.
 
-## Generating the validation data set
+## Running the implementation
 
-1. Follow the steps in the parent directory's README to set up the environment.
+First, follow the steps in the parent directory's README to set up the environment.
 
-2. Generate the validation data set with the following parameters:
+To create the validation data set, run:
 
-   ```bash
-   java -cp target/cypher-0.0.1-SNAPSHOT.jar com.ldbc.driver.Client -db com.ldbc.impls.workloads.ldbc.snb.cypher.bi.CypherBiDb -P readwrite_cypher--ldbc_driver_config--validation_parameter_creation.properties
-   ```
+```bash
+java -cp target/cypher-0.0.1-SNAPSHOT.jar com.ldbc.driver.Client -db com.ldbc.impls.workloads.ldbc.snb.cypher.bi.CypherBiDb -P cypher-create_validation_parameters.properties
+```
+
+To validate the database, run:
+
+```bash
+java -cp target/cypher-0.0.1-SNAPSHOT.jar com.ldbc.driver.Client -db com.ldbc.impls.workloads.ldbc.snb.cypher.bi.CypherBiDb -P cypher-validate_db.properties
+```
+
+To execute the benchmark, run:
+
+```bash
+java -cp target/cypher-0.0.1-SNAPSHOT.jar com.ldbc.driver.Client -db com.ldbc.impls.workloads.ldbc.snb.cypher.bi.CypherBiDb -P cypher-benchmark.properties
+```
