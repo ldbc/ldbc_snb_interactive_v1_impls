@@ -4,17 +4,35 @@ services:
 before_script:
   - psql -c "ALTER ROLE postgres PASSWORD 'foo'" -U postgres
 install:
+  - cd cypher
+  - ./get-neo4j.sh
+  - export NEO4J_HOME=`pwd`/neo4j-server
+  - export DB_DIR=$NEO4_HOME/data/databases/graph.db
+  - $NEO4J_HOME/bin/neo4j-admin set-initial-password admin
+  - cd ..
   - git clone https://github.com/ldbc/ldbc_snb_driver
   - cd ldbc_snb_driver
   - git checkout dev
   - mvn install -DskipTests
   - cd ..
 script:
+  # Postgres
   - chmod 755 ~
   - cd postgres/load-scripts
   - ./load.sh
   - cd ../..
-  - mvn compile
+  # Cypher
+  - cd cypher
+  - cp test-data/raw/*.csv test-data/converted
+  - export DATA_DIR=`pwd`/test-data/converted
+  - export DB_DIR=$NEO4J_HOME/data/databases/graph.db
+  - export POSTFIX=_0_0.csv
+  - cd load-scripts
+  - ./convert-csvs.sh
+  - ./import-to-neo4j.sh
+  - ./restart-neo4j.sh
+  - cd ../..
+  - mvn test -B
 notifications:
   slack: ldbcouncil:JRXP43nDV4KRgtclmoNZJpyq
   email: false
