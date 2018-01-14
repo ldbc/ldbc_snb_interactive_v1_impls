@@ -67,4 +67,4 @@ mvn clean install -Dmaven.compiler.source=1.7 -Dmaven.compiler.target=1.7 -Dskip
 
 4. Set the parameters according to your system configuration and run the driver in validation generation mode. For more details, refer to the README of the implementation-specific subprojects.
 
-For more details, on validating and benchmarking, visit <https://github.com/ldbc/ldbc_snb_driver/wiki>.
+For more details, on validating and benchmarking, visit the [driver wiki](https://github.com/ldbc/ldbc_snb_driver/wiki).
