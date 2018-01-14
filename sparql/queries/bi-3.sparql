@@ -8,57 +8,27 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-    
-SELECT ?tagName (SUM(?countMonth1) as ?countMonth1) (SUM(?countMonth2) as ?countMonth2) (ABS( SUM(?countMonth1) - SUM(?countMonth2) ) as ?diff)
+SELECT ?tagName (SUM(?isFirstInt) as ?countMonth1) (SUM(?isSecondInt) as ?countMonth2) (ABS(?countMonth1 - ?countMonth2) as ?diff)
 WHERE
-{ 
-  {
-    SELECT ?tagName (COUNT(?message) as ?innerCountMonth1)
-    WHERE {
-
-      BIND ( 2010 as ?year1 ) .
-      BIND ( 9 as ?month1 ) .
-      BIND ( ?year1 + FLOOR(?month1 / 12.0) as ?year2 ) .
-      BIND ( IF (?month1 = 12, 1, ?month1 + 1) as ?month2 ) .
-        
-      {
-        ?message rdf:type snvoc:Comment 
-      } UNION {
-        ?message rdf:type snvoc:Post 
-      } .
-      ?message snvoc:creationDate ?creationDate .
-      FILTER ((year(?creationDate) = ?year1 && month(?creationDate) = ?month1) )
-
-      ?message snvoc:hasTag ?tag .
-      ?tag foaf:name ?tagName .
-
-    }
-    GROUP BY ?tagName
-  } UNION {
-    SELECT ?tagName (COUNT(?message) as ?innerCountMonth2)
-    WHERE {
-      
-      BIND ( 2010 as ?year1 ) .
-      BIND ( 9 as ?month1 ) .
-      BIND ( ?year1 + FLOOR(?month1 / 12.0) as ?year2 ) .
-      BIND ( IF (?month1 = 12, 1, ?month1 + 1) as ?month2 ) .
-      {
-        ?message rdf:type snvoc:Comment 
-      } UNION {
-        ?message rdf:type snvoc:Post 
-      } .
-      ?message snvoc:creationDate ?creationDate .
-      FILTER (year(?creationDate) = ?year2 && month(?creationDate) = ?month2 ) 
-
-      ?message snvoc:hasTag ?tag .
-      ?tag foaf:name ?tagName .
-
-    }
-    GROUP BY  ?tagName
-  }
-
-  BIND ( COALESCE(?innerCountMonth1, 0) as ?countMonth1 )
-  BIND ( COALESCE(?innerCountMonth2, 0) as ?countMonth2 )
+{
+    VALUES (?year1 ?month1) {(2010 9)}
+    VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
+    ?message a ?type ;
+    snvoc:hasTag/foaf:name ?tagName ;
+    snvoc:creationDate ?creationDate .
+    BIND (year(?creationDate) AS ?year).
+    BIND (month(?creationDate) AS ?month).
+    BIND (((?month1 = ?month) && (?year1 = ?year)) AS ?isFirst)
+    BIND (
+         (
+           ((?month1 != 12) && (?month = ?month1 + 1) && (?year = ?year1    )) ||
+           ((?month1  = 12) && (?month =           1) && (?year = ?year1 + 1))
+         )  AS ?isSecond 
+       )
+    FILTER (?isFirst || ?isSecond) .
+    BIND (xsd:integer(?isFirst) AS ?isFirstInt) .
+    BIND (xsd:integer(?isSecond) AS ?isSecondInt)
 }
 GROUP BY ?tagName
 ORDER BY DESC(?diff) ?tagName
+LIMIT 100
