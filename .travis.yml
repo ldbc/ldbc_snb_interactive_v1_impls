@@ -4,12 +4,18 @@ services:
 before_script:
   - psql -c "ALTER ROLE postgres PASSWORD 'foo'" -U postgres
 install:
+  # Cypher
   - cd cypher
   - ./get-neo4j.sh
   - export NEO4J_HOME=`pwd`/neo4j-server
   - export DB_DIR=$NEO4_HOME/data/databases/graph.db
   - $NEO4J_HOME/bin/neo4j-admin set-initial-password admin
   - cd ..
+  # Blazegraph
+  - cd sparql
+  - wget https://kent.dl.sourceforge.net/project/bigdata/bigdata/2.1.4/blazegraph.jar
+  - cd ..
+  # driver
   - git clone https://github.com/ldbc/ldbc_snb_driver
   - cd ldbc_snb_driver
   - git checkout dev
@@ -32,6 +38,11 @@ script:
   - ./import-to-neo4j.sh
   - ./restart-neo4j.sh
   - cd ../..
+  # SPARQL
+  - cd sparql
+  - java -cp blazegraph.jar com.bigdata.rdf.store.DataLoader blazegraph.properties test-data/*.ttl
+  - cd ..
+  # tests
   - mvn test -B
 notifications:
   slack: ldbcouncil:JRXP43nDV4KRgtclmoNZJpyq

@@ -1,0 +1,64 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX sntag: <http://www.ldbc.eu/ldbc_socialnet/1.0/tag/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dbpedia: <http://dbpedia.org/resource/>
+PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
+
+    
+SELECT ?tagName (SUM(?countMonth1) as ?countMonth1) (SUM(?countMonth2) as ?countMonth2) (ABS( SUM(?countMonth1) - SUM(?countMonth2) ) as ?diff)
+WHERE
+{ 
+  {
+    SELECT ?tagName (COUNT(?message) as ?innerCountMonth1)
+    WHERE {
+
+      BIND ( 2010 as ?year1 ) .
+      BIND ( 9 as ?month1 ) .
+      BIND ( ?year1 + FLOOR(?month1 / 12.0) as ?year2 ) .
+      BIND ( IF (?month1 = 12, 1, ?month1 + 1) as ?month2 ) .
+        
+      {
+        ?message rdf:type snvoc:Comment 
+      } UNION {
+        ?message rdf:type snvoc:Post 
+      } .
+      ?message snvoc:creationDate ?creationDate .
+      FILTER ((year(?creationDate) = ?year1 && month(?creationDate) = ?month1) )
+
+      ?message snvoc:hasTag ?tag .
+      ?tag foaf:name ?tagName .
+
+    }
+    GROUP BY ?tagName
+  } UNION {
+    SELECT ?tagName (COUNT(?message) as ?innerCountMonth2)
+    WHERE {
+      
+      BIND ( 2010 as ?year1 ) .
+      BIND ( 9 as ?month1 ) .
+      BIND ( ?year1 + FLOOR(?month1 / 12.0) as ?year2 ) .
+      BIND ( IF (?month1 = 12, 1, ?month1 + 1) as ?month2 ) .
+      {
+        ?message rdf:type snvoc:Comment 
+      } UNION {
+        ?message rdf:type snvoc:Post 
+      } .
+      ?message snvoc:creationDate ?creationDate .
+      FILTER (year(?creationDate) = ?year2 && month(?creationDate) = ?month2 ) 
+
+      ?message snvoc:hasTag ?tag .
+      ?tag foaf:name ?tagName .
+
+    }
+    GROUP BY  ?tagName
+  }
+
+  BIND ( COALESCE(?innerCountMonth1, 0) as ?countMonth1 )
+  BIND ( COALESCE(?innerCountMonth2, 0) as ?countMonth2 )
+}
+GROUP BY ?tagName
+ORDER BY DESC(?diff) ?tagName

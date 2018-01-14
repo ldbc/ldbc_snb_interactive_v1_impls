@@ -19,6 +19,7 @@
 		<module>common</module>
 		<module>cypher</module>
 		<module>postgres</module>
+		<module>sparql</module>
 	</modules>
 
 	<build>

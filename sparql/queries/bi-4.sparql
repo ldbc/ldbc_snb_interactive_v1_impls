@@ -1,0 +1,35 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX sntag: <http://www.ldbc.eu/ldbc_socialnet/1.0/tag/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dbpedia: <http://dbpedia.org/resource/>
+PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
+
+SELECT ?forumId ?forumTitle ?forumCreationDate ?personId (COUNT(DISTINCT ?post) AS ?postCount)
+WHERE {
+  ?person rdf:type snvoc:Person .
+  ?country rdf:type dbpedia-owl:Country .
+  ?city rdf:type dbpedia-owl:City .
+  ?post rdf:type snvoc:Post .
+  ?tag rdf:type ?tagClass .
+  ?tagClass rdf:type snvoc:TagClass .
+
+  ?country foaf:name "Burma" .
+  ?tagClass rdfs:label "MusicalArtist" .
+
+  ?person snvoc:isLocatedIn ?city .
+  ?city snvoc:isPartOf ?country .
+  ?forum snvoc:hasModerator ?person .
+  ?forum snvoc:containerOf ?post .
+  ?post snvoc:hasTag ?tag .
+
+  ?forum snvoc:id ?forumId .
+  ?forum snvoc:title ?forumTitle .
+  ?forum snvoc:creationDate ?forumCreationDate .
+  ?person snvoc:id ?personId .
+}
+GROUP BY ?forumId ?forumTitle ?forumCreationDate ?personId
+ORDER BY DESC(?postCount) ASC(?forumId)
