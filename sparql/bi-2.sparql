@@ -1,0 +1,41 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX sntag: <http://www.ldbc.eu/ldbc_socialnet/1.0/tag/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dbpedia: <http://dbpedia.org/resource/>
+PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
+ 
+
+SELECT ?countryName ?messageMonth ?gender ?ageGroup ?tagName (COUNT(?message) AS ?messageCount)
+WHERE {
+
+  {
+    ?message rdf:type snvoc:Comment 
+  } UNION {
+    ?message rdf:type snvoc:Post 
+  } .  
+  ?message snvoc:creationDate ?creationDate .
+  ?message snvoc:hasCreator ?person .
+  ?message snvoc:hasTag ?tag .
+  ?tag foaf:name ?tagName .
+  
+  ?person snvoc:gender ?gender .
+  ?person snvoc:birthday ?birthday .
+  ?person snvoc:isLocatedIn ?city .
+  ?city snvoc:isPartOf ?country .
+  ?country foaf:name ?countryName .
+
+  FILTER (?creationDate < "2017-11-15T11:00:00" && ?creationDate > "2009-07-15T11:00:00") .
+  FILTER (?countryName = "India" || ?countryName = "China") .
+  
+  BIND ( FLOOR( (2013 - year(?birthday)) / 5.0) as ?ageGroup) .
+  BIND ( month(?creationDate) as ?messageMonth) .
+  
+}
+GROUP BY ?countryName ?messageMonth ?gender ?ageGroup ?tagName
+HAVING (?messageCount > 100)
+ORDER BY DESC(?messageCount) ?tagName ?ageGroup ?gender ?messageMonth ?countryName
+

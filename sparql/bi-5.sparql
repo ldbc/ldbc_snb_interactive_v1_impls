@@ -1,0 +1,39 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX sntag: <http://www.ldbc.eu/ldbc_socialnet/1.0/tag/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dbpedia: <http://dbpedia.org/resource/>
+PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
+
+SELECT ?forum ?forum2 ?person ?post
+WHERE
+{
+  {
+    SELECT ?forum  (COUNT(?person) as ?memberCount)
+    WHERE {
+      ?forum rdf:type snvoc:Forum .
+      ?forum snvoc:hasMember ?memberSerial .
+      ?memberSerial snvoc:hasPerson ?person .
+      ?person rdf:type snvoc:Person .
+      ?person snvoc:isLocatedIn ?city .
+      ?city rdf:type dbpedia-owl:City .
+      ?city snvoc:isPartOf ?country .
+      ?country rdf:type dbpedia-owl:Country .
+      ?country foaf:name "Brazil"
+    }
+    GROUP BY ?forum
+    ORDER BY DESC(?memberCount)
+    LIMIT 100
+  }
+  ?forum snvoc:hasMember ?memberSerial .
+  ?memberSerial snvoc:hasPerson ?person .
+  ?person rdf:type snvoc:Person .
+  ?post rdf:type snvoc:Post .
+  ?post snvoc:hasCreator ?person .
+  ?forum2 snvoc:containerOf ?post .
+  FILTER (?forum = ?forum2)
+}
+ORDER BY ?forum ?forum2
