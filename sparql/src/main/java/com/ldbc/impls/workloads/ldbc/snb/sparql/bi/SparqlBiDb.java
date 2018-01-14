@@ -13,6 +13,7 @@ import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlDriverConnectionStore;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlListOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlPoolingDbConnectionStore;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlSingletonOperationHandler;
+import org.openrdf.model.Literal;
 import org.openrdf.model.impl.BooleanLiteralImpl;
 import org.openrdf.model.impl.IntegerLiteralImpl;
 import org.openrdf.query.BindingSet;
@@ -353,7 +354,7 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery17FriendshipTrianglesResult convertSingleResult(BindingSet bs) {
-			int count = ((IntegerLiteralImpl) bs.getBinding("count")).intValue();
+			int count = ((Literal) bs.getBinding("count").getValue()).intValue();
 			return new LdbcSnbBiQuery17FriendshipTrianglesResult(count);
 		}
 	}

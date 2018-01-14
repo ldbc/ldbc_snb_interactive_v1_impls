@@ -25,23 +25,8 @@
         </dependency>
         <dependency>
             <groupId>com.blazegraph</groupId>
-            <artifactId>bigdata-core</artifactId>
-            <version>${blazegraph.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.blazegraph</groupId>
             <artifactId>bigdata-client</artifactId>
             <version>${blazegraph.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-repository-sail</artifactId>
-            <version>${sesame.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-sail-api</artifactId>
-            <version>${sesame.version}</version>
         </dependency>
     </dependencies>
 	  <build>

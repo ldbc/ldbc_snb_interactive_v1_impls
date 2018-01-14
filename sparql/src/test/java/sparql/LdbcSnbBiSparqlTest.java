@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class LdbcSnbBiSparqlTest extends LdbcSnbBiQueryTest {
 
-//	private static String endpoint = "http://localhost:9999/bigdata/sparql";
+	private static String endpoint = "http://localhost:9999/blazegraph";
 	private static String queryDir = "queries/";
 
 	public LdbcSnbBiSparqlTest() throws DbException {
@@ -19,11 +19,11 @@ public class LdbcSnbBiSparqlTest extends LdbcSnbBiQueryTest {
 	@Override
 	public Map<String, String> getProperties() {
 		final Map<String, String> properties = new HashMap<>();
-//		properties.put("endpoint", endpoint);
+		properties.put("endpoint", endpoint);
 		properties.put("queryDir", queryDir);
 		properties.put("printQueryNames", "true");
-		properties.put("printQueryStrings", "true");
-		properties.put("printQueryResults", "true");
+		properties.put("printQueryStrings", "false");
+		properties.put("printQueryResults", "false");
 		return properties;
 	}
 
