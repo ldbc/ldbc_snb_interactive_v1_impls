@@ -1,0 +1,38 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX sntag: <http://www.ldbc.eu/ldbc_socialnet/1.0/tag/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dbpedia: <http://dbpedia.org/resource/>
+PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
+
+SELECT ?messageId ?creationDate ?firstName ?lastName (COUNT(?like) AS ?likeCount) 
+WHERE
+{
+    BIND ("2010-08-15T11:50:56" AS ?date) 
+    BIND ( 800 AS ?likeTreshold )
+    VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
+    ?message a ?type .
+    ?message snvoc:creationDate ?creationDate .
+    FILTER( ?creationDate > ?date ) 
+    ?message snvoc:id ?messageId .
+    ?message snvoc:hasCreator ?person .
+    ?person a snvoc:Person .
+    ?person snvoc:firstName ?firstName .
+    ?person snvoc:lastName ?lastName .
+    ?personWhoLikes a snvoc:Person .
+    ?personWhoLikes snvoc:likes ?like
+    {
+        ?like snvoc:hasComment ?message
+    } UNION {
+        ?like snvoc:hasPost ?message
+    }
+    
+}
+GROUP BY ?messageId ?creationDate ?firstName ?lastName ?likeTreshold
+HAVING (?likeCount > ?likeTreshold)
+ORDER BY DESC(?likeCount) ?messageId
+LIMIT 100
+
