@@ -36,17 +36,24 @@ The following script takes care of those steps:
 
 ### Delete your database and load the SNB CSVs
 
-Be careful -- this deletes all data in your database.
+Be careful -- this deletes all data in your database, imports the SNB data set and restarts the database.
 
 ```bash
 ./delete-neo4j-database.sh
 ./import-to-neo4j.sh
+./restart-neo4j.sh
 ```
 
-Restart Neo4j.
+### All-in-one
+
+If you know what you're doing, you can run all scripts with a single command:
+
+```bash
+./force-load.sh
+```
 
 ## Misc
 
-*Reminder.* Regex for extracting relationship names (Atom):
+*Reminder.* Regex for extracting relationship names (tested in Atom):
 
 `(\w+)_(\w+)_(\w+)` -> `--relationship:$2 $1_$2_$3`
