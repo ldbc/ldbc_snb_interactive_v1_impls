@@ -10,14 +10,13 @@
 
     <properties>
         <blazegraph.version>2.1.4</blazegraph.version>
-        <sesame.version>2.9.0</sesame.version>
     </properties>
 
 	<artifactId>sparql</artifactId>
 	<name>SPARQL DB class</name>
 	<description>SPARQL implementation for LDBC driver</description>
 
-	<dependencies>
+    <dependencies>
         <dependency>
             <groupId>com.ldbc.snb</groupId>
             <artifactId>common</artifactId>
@@ -29,7 +28,8 @@
             <version>${blazegraph.version}</version>
         </dependency>
     </dependencies>
-	  <build>
+
+  <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
