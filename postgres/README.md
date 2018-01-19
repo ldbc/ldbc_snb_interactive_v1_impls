@@ -25,28 +25,19 @@ CREATE USER usr PASSWORD 'foo';
 ALTER ROLE usr WITH login createdb superuser;
 ```
 
-## Generating small test graphs for PostgreSQL
+## Loading the data set
 
-The load script expect models generated with the `CSVMergeForeign` serializers.
+### Generating the data set
 
-An example `params.ini` configuration for testing:
+The data set needs to be generated and preprocessed before loading it to the database. To generate it, use the `CSVMergeForeign` serializer classes of the [DATAGEN](https://github.com/ldbc/ldbc_snb_datagen/) project:
 
 ```
-ldbc.snb.datagen.generator.scaleFactor:snb.interactive.1
-
-ldbc.snb.datagen.generator.numPersons:50
-ldbc.snb.datagen.generator.numYears:1
-ldbc.snb.datagen.generator.startYear:2010
-
 ldbc.snb.datagen.serializer.personSerializer:ldbc.snb.datagen.serializer.snb.interactive.CSVMergeForeignPersonSerializer
 ldbc.snb.datagen.serializer.invariantSerializer:ldbc.snb.datagen.serializer.snb.interactive.CSVMergeForeignInvariantSerializer
 ldbc.snb.datagen.serializer.personActivitySerializer:ldbc.snb.datagen.serializer.snb.interactive.CSVMergeForeignPersonActivitySerializer
-
-ldbc.snb.datagen.generator.numThreads:1
-ldbc.snb.datagen.serializer.outputDir:./test_data/
 ```
 
-## Loading the data set
+### Loading the data set
 
 To run the load script, go the `load-scripts` directory and issue the following command:
 

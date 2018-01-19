@@ -4,9 +4,18 @@
 
 ## Loading the data set
 
-TODO
+### Generating the data set
 
-See the [`load-scripts`](load-scripts/) directory on how to load the data set.
+Use the `Turtle` serializer classes of the [DATAGEN](https://github.com/ldbc/ldbc_snb_datagen/) project:
+
+```
+ldbc.snb.datagen.serializer.personSerializer:ldbc.snb.datagen.serializer.snb.interactive.TurtlePersonSerializer
+ldbc.snb.datagen.serializer.invariantSerializer:ldbc.snb.datagen.serializer.snb.interactive.TurtleInvariantSerializer
+ldbc.snb.datagen.serializer.personActivitySerializer:ldbc.snb.datagen.serializer.snb.interactive.TurtlePersonActivitySerializer
+```
+
+### Loading
+
 
 ## Running the implementation
 
