@@ -15,7 +15,7 @@ ldbc.snb.datagen.serializer.personActivitySerializer:ldbc.snb.datagen.serializer
 Set the `$NEO4J_HOME` and the following environment variables appropriately:
 
 ```bash
-export DATA_DIR=/path/do/the/csv/files
+export NEO4J_DATA_DIR=/path/do/the/csv/files
 export DB_DIR=$NEO4J_HOME/data/databases/graph.db
 export POSTFIX=_0_0.csv
 ```
