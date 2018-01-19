@@ -1,6 +1,6 @@
 #!/bin/bash
 
-$NEO4J_HOME/bin/neo4j-import --into $DB_DIR \
+$NEO4J_HOME/bin/neo4j-import --into $NEO4J_DB_DIR \
   --id-type=INTEGER \
   --nodes:Message:Comment "${NEO4J_DATA_DIR}/comment${POSTFIX}" \
   --nodes:Forum "${NEO4J_DATA_DIR}/forum${POSTFIX}" \

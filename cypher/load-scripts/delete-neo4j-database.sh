@@ -1,3 +1,3 @@
 #!/bin/bash
 
-rm -rf $DB_DIR
+rm -rf $NEO4J_DB_DIR
