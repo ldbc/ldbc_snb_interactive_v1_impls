@@ -7,6 +7,7 @@ install:
   # Cypher
   - cd cypher
   - ./get-neo4j.sh
+  - . environment-variables-neo4j.sh
   - ./configure-neo4j.sh
   - cd ..
   # Blazegraph
