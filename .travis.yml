@@ -30,6 +30,7 @@ script:
   - cd ../..
   # Cypher
   - cd cypher
+  - . environment-variables-neo4j.sh
   - cp test-data/raw/*.csv test-data/converted
   - export NEO4J_DATA_DIR=`pwd`/test-data/converted
   - cd load-scripts
