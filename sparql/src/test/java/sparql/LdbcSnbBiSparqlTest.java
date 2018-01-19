@@ -3,10 +3,12 @@ package sparql;
 import com.ldbc.driver.DbException;
 import com.ldbc.impls.workloads.ldbc.snb.bi.test.LdbcSnbBiQueryTest;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.bi.SparqlBiDb;
+import org.junit.Ignore;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Ignore
 public class LdbcSnbBiSparqlTest extends LdbcSnbBiQueryTest {
 
 	private static String endpoint = "http://localhost:9999/blazegraph";
