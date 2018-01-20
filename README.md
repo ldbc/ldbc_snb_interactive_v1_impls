@@ -56,7 +56,7 @@ mvn clean install -Dmaven.compiler.source=1.7 -Dmaven.compiler.target=1.7 -Dskip
 
 ## Generating the validation data set
 
-1. Grab the driver source code from: https://github.com/ldbc/ldbc_snb_driver
+1. Grab the driver source code from: https://github.com/ldbc/ldbc_snb_driver and switch to the `dev` branch.
 2. Install the driver artifact to the local Maven repository:
 
    ```bash
