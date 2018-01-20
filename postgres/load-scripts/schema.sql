@@ -18,7 +18,7 @@ create table post (
 create table forum (
    f_forumid bigint not null,
    f_title varchar not null,
-   f_creationdate timestamp without time zone not null, 
+   f_creationdate timestamp without time zone not null,
    f_moderatorid bigint
 );
 
@@ -110,12 +110,8 @@ create table post_tag (
 create table tagclass (
    tc_tagclassid bigint not null,
    tc_name varchar not null,
-   tc_url varchar not null
-);
-
-create table subclass (
-   s_subtagclassid bigint not null,
-   s_supertagclassid bigint not null
+   tc_url varchar not null,
+   tc_subclassoftagclassid bigint not null
 );
 
 create table tag (

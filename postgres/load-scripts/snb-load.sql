@@ -46,9 +46,6 @@ COPY post_tag FROM 'PATHVAR/comment_hasTag_tag_0_0.csv' WITH DELIMITER '|' CSV H
 -- Populate tagclass table
 COPY tagclass FROM 'PATHVAR/tagclass_0_0.csv' WITH DELIMITER '|' CSV HEADER;
 
--- Populate subclass table
-COPY subclass FROM 'PATHVAR/tagclass_isSubclassOf_tagclass_0_0.csv' WITH DELIMITER '|' CSV HEADER;
-
 -- Populate tag table
 COPY tag FROM 'PATHVAR/tag_0_0.csv' WITH DELIMITER '|' CSV HEADER;
 
