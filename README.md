@@ -63,7 +63,7 @@ mvn clean install -Dmaven.compiler.source=1.7 -Dmaven.compiler.target=1.7 -Dskip
    mvn clean install -DskipTests
    ```
 
-3. Go to the LDBC implementations directory (e.g. `postgres` or `cypher`) and generate that shaded JAR file:
+3. Navigate to the root of this repository and generate the shaded JAR files for the implementations:
 
    ```bash
    mvn clean package -DskipTests
