@@ -11,29 +11,30 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 SELECT ?forum ?forum2 ?person ?post
 WHERE
 {
-  {
-    SELECT ?forum  (COUNT(?person) as ?memberCount)
-    WHERE {
-      ?forum rdf:type snvoc:Forum .
-      ?forum snvoc:hasMember ?memberSerial .
-      ?memberSerial snvoc:hasPerson ?person .
-      ?person rdf:type snvoc:Person .
-      ?person snvoc:isLocatedIn ?city .
-      ?city rdf:type dbpedia-owl:City .
-      ?city snvoc:isPartOf ?country .
-      ?country rdf:type dbpedia-owl:Country .
-      ?country foaf:name "Brazil"
+    {
+        SELECT ?forum  (COUNT(?person) AS ?memberCount)
+        WHERE
+        {
+            ?forum a snvoc:Forum .
+            ?forum snvoc:hasMember ?memberSerial .
+            ?memberSerial snvoc:hasPerson ?person .
+            ?person a snvoc:Person .
+            ?person snvoc:isLocatedIn ?city .
+            ?city a dbpedia-owl:City .
+            ?city snvoc:isPartOf ?country .
+            ?country a dbpedia-owl:Country .
+            ?country foaf:name "Brazil"
+        }
+        GROUP BY ?forum
+        ORDER BY DESC(?memberCount)
+        LIMIT 100
     }
-    GROUP BY ?forum
-    ORDER BY DESC(?memberCount)
-    LIMIT 100
-  }
-  ?forum snvoc:hasMember ?memberSerial .
-  ?memberSerial snvoc:hasPerson ?person .
-  ?person rdf:type snvoc:Person .
-  ?post rdf:type snvoc:Post .
-  ?post snvoc:hasCreator ?person .
-  ?forum2 snvoc:containerOf ?post .
-  FILTER (?forum = ?forum2)
+    ?forum snvoc:hasMember ?memberSerial .
+    ?memberSerial snvoc:hasPerson ?person .
+    ?person a snvoc:Person .
+    ?post a snvoc:Post .
+    ?post snvoc:hasCreator ?person .
+    ?forum2 snvoc:containerOf ?post .
+    FILTER (?forum = ?forum2)
 }
 ORDER BY ?forum ?forum2

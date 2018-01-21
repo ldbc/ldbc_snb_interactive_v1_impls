@@ -8,10 +8,10 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-SELECT ?relatedTagName (COUNT(?comment) as ?count)
+SELECT ?relatedTagName (COUNT(?comment) AS ?count)
 WHERE
 {
-    BIND ("Carl_Gustaf_Emil_Mannerheim" as ?tagName) 
+    BIND ("Carl_Gustaf_Emil_Mannerheim" AS ?tagName) 
     VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
     ?message a ?type .
     ?message snvoc:hasTag/foaf:name ?tagName .

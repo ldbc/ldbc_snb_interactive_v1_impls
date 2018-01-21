@@ -8,14 +8,14 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-SELECT ?tagName (SUM(?isFirstInt) as ?countMonth1) (SUM(?isSecondInt) as ?countMonth2) (ABS(?countMonth1 - ?countMonth2) as ?diff)
+SELECT ?tagName (SUM(?isFirstInt) AS ?countMonth1) (SUM(?isSecondInt) AS ?countMonth2) (ABS(?countMonth1 - ?countMonth2) AS ?diff)
 WHERE
 {
     VALUES (?year1 ?month1) {(2010 9)}
     VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
-    ?message a ?type ;
-    snvoc:hasTag/foaf:name ?tagName ;
-    snvoc:creationDate ?creationDate .
+    ?message a ?type .
+    ?message snvoc:hasTag/foaf:name ?tagName .
+    ?message snvoc:creationDate ?creationDate .
     BIND (year(?creationDate) AS ?year).
     BIND (month(?creationDate) AS ?month).
     BIND (((?month1 = ?month) && (?year1 = ?year)) AS ?isFirst)

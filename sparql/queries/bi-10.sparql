@@ -8,6 +8,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
+
 SELECT ?person (SUM(?scoreInner) AS ?score) (SUM(?friendScore) AS ?friendsScore)
 WHERE
 {
@@ -22,14 +23,17 @@ WHERE
             ?message a ?type .
             ?message snvoc:hasCreator ?friend .
             BIND( IF(EXISTS { ?friend snvoc:hasInterest ?tag}, 100, 0) AS ?interestScore)
-            
         }
         GROUP BY ?friend ?interestScore
     }
+    # TODO finish
     ?person a snvoc:Person
-    BIND( IF(?person = ?friend, ?individualScore, 0) AS ?scoreInner )
-    BIND( IF( EXISTS {?person snvoc:knows ?friend}, ?individualScore, 0 ) AS ?friendScore)
-    FILTER (?friendScore > 0 || ?scoreInner > 0)
+    FILTER ( ?person = ?friend )
+    BIND( ?individualScore AS ?score )
+    OPTIONAL
+    {
+        ?
+    }
 
 }
 GROUP BY ?person 

@@ -8,37 +8,33 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-SELECT ?person1 (SUM(?popularityScore) as ?authorityScore)
+SELECT ?person1 (SUM(?popularityScore) AS ?authorityScore)
 WHERE
 {
-    BIND ("Carl_Gustaf_Emil_Mannerheim" as ?tagName) 
-    VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
+    BIND ("Carl_Gustaf_Emil_Mannerheim" AS ?tagName) 
     {
-    SELECT ?person2 (COUNT(?like2) as ?popularityScore)
-    WHERE
-    {
-        VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
-        ?person2 snvoc:likes ?like1 .
-        ?message3 a ?type .
-        ?message3 snvoc:hasCreator ?person2 .
-        ?person3 snvoc:likes ?like2 .
-        { 
-            { ?like2 snvoc:hasPost ?message3 } 
-            UNION 
-            { ?like2 snvoc:hasComment ?message3 } 
+        SELECT ?person2 (COUNT(?like2) AS ?popularityScore)
+        WHERE
+        {
+            VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
+            ?person2 snvoc:likes ?like1 .
+            ?message3 a ?type .
+            ?message3 snvoc:hasCreator ?person2 .
+            ?person3 snvoc:likes ?like2 .
+            { 
+                { ?like2 snvoc:hasPost ?message3 } 
+                UNION 
+                { ?like2 snvoc:hasComment ?message3 } 
+            }
         }
-    }
-    GROUP BY ?person2
-    ORDER BY ?person2 ?like2
+        GROUP BY ?person2
+        ORDER BY ?person2 ?like2
     } .
+    VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
     ?message2 a ?type .
     ?message2 snvoc:hasTag/foaf:name ?tagName .
     ?person2 snvoc:likes ?like1 .
-    { 
-        { ?like1 snvoc:hasPost ?message2 } 
-        UNION 
-        { ?like1 snvoc:hasComment ?message2 } 
-    } .
+    ?like1 snvoc:hasPost|snvoc:hasComment ?message2 .
     ?message2 snvoc:hasCreator ?person1 .   
     
 }

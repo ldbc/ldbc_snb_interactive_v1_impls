@@ -8,12 +8,12 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-SELECT ?forum (COUNT(?post1) as ?count1) (COUNT(?post2) as ?count2)
+SELECT ?forum (COUNT(?post1) AS ?count1) (COUNT(?post2) AS ?count2)
 WHERE
 {
     #BIND (500 as ?treshold) 
-    BIND ("TennisPlayer" as ?tagClassName1) 
-    BIND ("President" as ?tagClassName2)
+    BIND ("TennisPlayer" AS ?tagClassName1) 
+    BIND ("President" AS ?tagClassName2)
     ?tag1 a ?tagClass1 .
     ?tagClass1 rdfs:label ?tagClassName1 .
     ?tag2 a ?tagClass2 .

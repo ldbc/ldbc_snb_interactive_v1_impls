@@ -23,12 +23,8 @@ WHERE
     ?person snvoc:firstName ?firstName .
     ?person snvoc:lastName ?lastName .
     ?personWhoLikes a snvoc:Person .
-    ?personWhoLikes snvoc:likes ?like
-    {
-        ?like snvoc:hasComment ?message
-    } UNION {
-        ?like snvoc:hasPost ?message
-    }
+    ?personWhoLikes snvoc:likes ?like .
+    ?like snvoc:hasComment|hasPost ?message
     
 }
 GROUP BY ?messageId ?creationDate ?firstName ?lastName ?likeTreshold
