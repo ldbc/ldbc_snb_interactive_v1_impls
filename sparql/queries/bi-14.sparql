@@ -8,15 +8,22 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-SELECT ?person (COUNT(?post) AS ?threadCount) (COUNT(?reply) AS ?messageCount)
+SELECT ?person (COUNT(?post) AS ?threadCount) (COUNT(?reply) + COUNT(DISTINCT ?post)  AS ?messageCount)
 WHERE
 {
-    
+    BIND( "2010-07-15T12:00:00" AS ?startDate)
+    BIND( "2010-08-15T12:00:00" AS ?endDate)
     VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
     ?person a snvoc:Person .
     ?post snvoc:hasCreator ?person .
+    ?post snvoc:creationDate ?postCreationDate .
     ?reply a ?type .
-    ?reply snvoc:replyOf+ ?post 
+    ?reply snvoc:replyOf+ ?post .
+    ?reply snvoc:creationDate ?replyCreationDate .
+    ?person snvoc:id ?personId .
+    FILTER((?postCreationDate > ?startDate && ?postCreationDate < ?endDate) &&
+           (?replyCreationDate > ?startDate && ?replyCreationDate < ?endDate))
+    
 }
 GROUP BY ?person 
 ORDER BY DESC(?messageCount) ?person
