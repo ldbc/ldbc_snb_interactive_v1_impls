@@ -27,3 +27,4 @@ WHERE
 }
 GROUP BY ?person 
 ORDER BY DESC(?messageCount) ?person
+LIMIT 100

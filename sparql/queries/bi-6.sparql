@@ -35,3 +35,4 @@ WHERE
     BIND( ?messageCount + 2 * ?replyCount + 10 * ?likeCount as ?score)
 }
 ORDER BY DESC(?score) ?personId
+LIMIT 100

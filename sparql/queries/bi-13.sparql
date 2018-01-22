@@ -38,3 +38,4 @@ WHERE
 }
 GROUP BY ?year ?month
 ORDER BY DESC(?year) ?month
+LIMIT 100

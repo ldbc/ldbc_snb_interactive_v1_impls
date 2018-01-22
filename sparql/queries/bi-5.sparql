@@ -8,6 +8,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
+# TODO
 SELECT ?forum ?forum2 ?person ?post
 WHERE
 {

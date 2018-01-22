@@ -34,4 +34,4 @@ WHERE
 GROUP BY ?countryName ?messageMonth ?gender ?ageGroup ?tagName
 HAVING (?messageCount > 100)
 ORDER BY DESC(?messageCount) ?tagName ?ageGroup ?gender ?messageMonth ?countryName
-
+LIMIT 100
