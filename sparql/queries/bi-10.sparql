@@ -8,35 +8,55 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-
-SELECT ?person (SUM(?scoreInner) AS ?score) (SUM(?friendScore) AS ?friendsScore)
+SELECT ?person ?friend # ?score (SUM(?friendInterestScore) AS ?friendScore)
 WHERE
 {
     {
-        SELECT ?friend ((COUNT(?message) + ?interestScore)  AS ?individualScore) 
+        SELECT ?person ((COUNT(?message) + MAX(?interestScore))  AS ?score) 
+        WHERE
+        {
+            BIND ("Chad" as ?tagName)
+            VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
+            ?tag foaf:name ?tagName .
+            ?person a snvoc:Person .
+            BIND( IF(EXISTS { ?person snvoc:hasInterest ?tag}, 100, 0) AS ?interestScore)
+            {
+                ?message a ?type .
+                ?message snvoc:hasCreator ?person .
+                ?message snvoc:hasTag ?tag
+            }
+            UNION
+            {
+                ?person snvoc:hasInterest ?tag
+            }
+        }
+        GROUP BY ?person
+    }
+    {
+        SELECT ?friend ((COUNT(?message) + MAX(?interestScore))  AS ?friendInterestScore) 
         WHERE
         {
             BIND ("Chad" as ?tagName)
             VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
             ?tag foaf:name ?tagName .
             ?friend a snvoc:Person .
-            ?message a ?type .
-            ?message snvoc:hasCreator ?friend .
             BIND( IF(EXISTS { ?friend snvoc:hasInterest ?tag}, 100, 0) AS ?interestScore)
+            {
+                ?message a ?type .
+                ?message snvoc:hasCreator ?friend .
+                ?message snvoc:hasTag ?tag
+            }
+            UNION
+            {
+                ?friend snvoc:hasInterest ?tag
+            }
         }
-        GROUP BY ?friend ?interestScore
+        GROUP BY ?friend
     }
-    # TODO finish
-    ?person a snvoc:Person
-    FILTER ( ?person = ?friend )
-    BIND( ?individualScore AS ?score )
-    OPTIONAL
-    {
-        ?
-    }
-
+    ?friend snvoc:knows/snvoc:hasPerson ?person .
+    ?person snvoc:knows/snvoc:hasPerson ?friend 
 }
-GROUP BY ?person 
-ORDER BY DESC(?score + ?friendScore) ?person
-LIMIT 100
+#GROUP BY ?person ?score
+#ORDER BY DESC(?score + ?friendScore) ?person
+#LIMIT 100
 
