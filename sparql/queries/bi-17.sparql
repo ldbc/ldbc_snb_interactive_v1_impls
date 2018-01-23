@@ -26,6 +26,12 @@ WHERE
     # (a)-[:knows]-(b)
     {
         ?a snvoc:knows/snvoc:hasPerson ?b .
+        ?a snvoc:id ?aId .
+        ?b snvoc:id ?bId 
+        FILTER (?aId < ?bId)
+    }
+    UNION
+    {
         ?b snvoc:knows/snvoc:hasPerson ?a .
         ?a snvoc:id ?aId .
         ?b snvoc:id ?bId 
@@ -35,6 +41,12 @@ WHERE
     # (b)-[:knows]-(c)
     {
         ?b snvoc:knows/snvoc:hasPerson ?c .
+        ?b snvoc:id ?bId .
+        ?c snvoc:id ?cId 
+        FILTER (?bId < ?cId)
+    }
+    UNION
+    {
         ?c snvoc:knows/snvoc:hasPerson ?b .
         ?b snvoc:id ?bId .
         ?c snvoc:id ?cId 
@@ -44,6 +56,12 @@ WHERE
     # (c)-[:knows]-(a)
     {
         ?a snvoc:knows/snvoc:hasPerson ?c .
+        ?a snvoc:id ?aId .
+        ?c snvoc:id ?cId 
+        FILTER (?aId < ?cId)
+    }
+    UNION
+    {
         ?c snvoc:knows/snvoc:hasPerson ?a .
         ?a snvoc:id ?aId .
         ?c snvoc:id ?cId 
