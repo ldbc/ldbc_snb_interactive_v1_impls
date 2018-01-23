@@ -1,6 +1,6 @@
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema>
 PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
 PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
 PREFIX sntag: <http://www.ldbc.eu/ldbc_socialnet/1.0/tag/>
@@ -8,14 +8,15 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-# TODO
-SELECT ?forum ?forum2 ?person ?post
-WHERE
+SELECT ?person ?firstName ?lastName ?creationDate (COUNT(?post) AS ?postCount)
+WHERE 
 {
+    BIND(?countryName1 AS ?countryName2)
     {
-        SELECT ?forum  (COUNT(?person) AS ?memberCount)
+        SELECT ?forum
         WHERE
-        {
+        {    
+            BIND("China" AS ?countryName)
             ?forum a snvoc:Forum .
             ?forum snvoc:hasMember ?memberSerial .
             ?memberSerial snvoc:hasPerson ?person .
@@ -24,18 +25,43 @@ WHERE
             ?city a dbpedia-owl:City .
             ?city snvoc:isPartOf ?country .
             ?country a dbpedia-owl:Country .
-            ?country foaf:name "Brazil"
+            ?country foaf:name ?countryName
         }
         GROUP BY ?forum
-        ORDER BY DESC(?memberCount)
+        ORDER BY DESC(?memberCount) ?forum
         LIMIT 100
     }
-    ?forum snvoc:hasMember ?memberSerial .
-    ?memberSerial snvoc:hasPerson ?person .
+    
+    {
+        SELECT ?forum2
+        WHERE
+        {
+            BIND("China" AS ?countryName)
+            ?forum2 a snvoc:Forum .
+            ?forum2 snvoc:hasMember ?memberSerial .
+            ?memberSerial snvoc:hasPerson ?person .
+            ?person a snvoc:Person .
+            ?person snvoc:isLocatedIn ?city .
+            ?city a dbpedia-owl:City .
+            ?city snvoc:isPartOf ?country .
+            ?country a dbpedia-owl:Country .
+            ?country foaf:name ?countryName
+        }
+        GROUP BY ?forum2
+        ORDER BY DESC(?memberCount) ?forum2
+        LIMIT 100
+    }
     ?person a snvoc:Person .
+    ?forum snvoc:hasMember/snvoc:hasPerson ?person .
     ?post a snvoc:Post .
     ?post snvoc:hasCreator ?person .
     ?forum2 snvoc:containerOf ?post .
-    FILTER (?forum = ?forum2)
+    ?person snvoc:firstName ?firstName . 
+    ?person snvoc:lastName ?lastName .
+    ?person snvoc:creationDate ?creationDate
+    
 }
-ORDER BY ?forum ?forum2
+GROUP BY ?person ?firstName ?lastName ?creationDate
+ORDER BY DESC(?postCount) ?person
+LIMIT 100
+
