@@ -72,3 +72,22 @@ mvn clean install -Dmaven.compiler.source=1.7 -Dmaven.compiler.target=1.7 -Dskip
 4. Set the parameters according to your system configuration and run the driver in validation generation mode. For more details, refer to the README of the implementation-specific subprojects.
 
 For more details, on validating and benchmarking, visit the [driver wiki](https://github.com/ldbc/ldbc_snb_driver/wiki).
+
+## Generating small test data tests
+
+To generate small data sets, use scale factor 1 (SF1) with the persons and years set according to this template:
+
+```
+ldbc.snb.datagen.generator.scaleFactor:snb.interactive.1
+
+ldbc.snb.datagen.generator.numPersons:50
+ldbc.snb.datagen.generator.numYears:1
+ldbc.snb.datagen.generator.startYear:2010
+
+ldbc.snb.datagen.generator.numThreads:1
+ldbc.snb.datagen.serializer.outputDir:./test_data/
+
+ldbc.snb.datagen.serializer.personSerializer:ldbc.snb.datagen.serializer.snb.interactive.<SerializerType>PersonSerializer
+ldbc.snb.datagen.serializer.invariantSerializer:ldbc.snb.datagen.serializer.snb.interactive.<SerializerType>InvariantSerializer
+ldbc.snb.datagen.serializer.personActivitySerializer:ldbc.snb.datagen.serializer.snb.interactive.<SerializerType>PersonActivitySerializer
+```
