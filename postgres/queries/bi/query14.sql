@@ -27,6 +27,8 @@ WITH RECURSIVE post_all(psa_threadid
          , post_all psa
      WHERE 1=1
        AND p.ps_replyof = psa.psa_messageid
+        -- this is a performance optimisation only
+       AND ps_creationdate BETWEEN :startDate AND :endDate
 )
 SELECT p.p_personid AS "person.id"
      , p.p_firstname AS "person.firstName"
