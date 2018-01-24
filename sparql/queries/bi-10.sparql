@@ -8,7 +8,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-SELECT ?person ?friend # ?score (SUM(?friendInterestScore) AS ?friendScore)
+SELECT ?person ?score (SUM(?friendInterestScore) AS ?friendScore)
 WHERE
 {
     {
@@ -53,10 +53,15 @@ WHERE
         }
         GROUP BY ?friend
     }
-    ?friend snvoc:knows/snvoc:hasPerson ?person .
-    ?person snvoc:knows/snvoc:hasPerson ?friend 
+    {
+        ?friend snvoc:knows/snvoc:hasPerson ?person 
+    }
+    UNION
+    {
+        ?person snvoc:knows/snvoc:hasPerson ?friend 
+    }
 }
-#GROUP BY ?person ?score
-#ORDER BY DESC(?score + ?friendScore) ?person
-#LIMIT 100
+GROUP BY ?person ?score
+ORDER BY DESC(?score + ?friendScore) ?person
+LIMIT 100
 
