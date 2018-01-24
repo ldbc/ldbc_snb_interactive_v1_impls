@@ -111,7 +111,7 @@ create table tagclass (
    tc_tagclassid bigint not null,
    tc_name varchar not null,
    tc_url varchar not null,
-   tc_subclassoftagclassid bigint not null
+   tc_subclassoftagclassid bigint
 );
 
 create table tag (
