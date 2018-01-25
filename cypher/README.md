@@ -55,7 +55,7 @@ Be careful -- this deletes all data in your database, imports the SNB data set a
 If you know what you're doing, you can run all scripts with a single command:
 
 ```bash
-./force-load.sh
+./load-in-one-step.sh
 ```
 
 ## Running the implementation
