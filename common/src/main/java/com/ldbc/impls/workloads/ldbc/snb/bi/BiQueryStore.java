@@ -101,8 +101,8 @@ public abstract class BiQueryStore {
 
 	public String getQuery2(LdbcSnbBiQuery2TopTags operation) {
 		return prepare(QueryType.Query2, new ImmutableMap.Builder<String, String>()
-				.put("startDate", getConverter().convertDate(operation.date1()))
-				.put("endDate", getConverter().convertDate(operation.date2()))
+				.put("startDate", getConverter().convertDate(operation.startDate()))
+				.put("endDate", getConverter().convertDate(operation.endDate()))
 				.put("country1", getConverter().convertString(operation.country1()))
 				.put("country2", getConverter().convertString(operation.country2())).build());
 	}
@@ -155,7 +155,7 @@ public abstract class BiQueryStore {
 	public String getQuery11(LdbcSnbBiQuery11UnrelatedReplies operation) {
 		return prepare(QueryType.Query11, new ImmutableMap.Builder<String, String>()
 				.put("country", getConverter().convertString(operation.country()))
-				.put("blacklist", getConverter().convertStringList(operation.blackList())).build());
+				.put("blacklist", getConverter().convertStringList(operation.blacklist())).build());
 	}
 
 	public String getQuery12(LdbcSnbBiQuery12TrendingPosts operation) {
@@ -171,7 +171,7 @@ public abstract class BiQueryStore {
 
 	public String getQuery14(LdbcSnbBiQuery14TopThreadInitiators operation) {
 		return prepare(QueryType.Query14, new ImmutableMap.Builder<String, String>()
-				.put("startDate", getConverter().convertDate(operation.beginDate()))
+				.put("startDate", getConverter().convertDate(operation.startDate()))
 				.put("endDate", getConverter().convertDate(operation.endDate())).build());
 	}
 
