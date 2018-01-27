@@ -8,33 +8,66 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-SELECT DISTINCT (COUNT(*) AS ?count)
-WHERE {
-  ?country rdf:type dbpedia-owl:Country .
-  ?country foaf:name "Spain" .
-  ?a rdf:type snvoc:Person .
-  ?b rdf:type snvoc:Person .
-  ?c rdf:type snvoc:Person .
+SELECT (COUNT(*) AS ?count)
+WHERE 
+{
+    ?country a dbpedia-owl:Country .
+    ?country foaf:name "Brazil" .
+    ?a a snvoc:Person .
+    ?b a snvoc:Person .
+    ?c a snvoc:Person .
+    ?a snvoc:id ?aId .
+    ?b snvoc:id ?bId .
+    ?c snvoc:id ?cId .
+    ?a snvoc:isLocatedIn/snvoc:isPartOf ?country .
+    ?b snvoc:isLocatedIn/snvoc:isPartOf ?country .
+    ?c snvoc:isLocatedIn/snvoc:isPartOf ?country .
 
-  # (a)-[:knows]-(b)
-  {?a snvoc:knows ?ab . ?ab snvoc:hasPerson ?b }
-  UNION
-  {?b snvoc:knows ?ab . ?ab snvoc:hasPerson ?a }
+    # (a)-[:knows]-(b)
+    {
+        ?a snvoc:knows/snvoc:hasPerson ?b .
+        ?a snvoc:id ?aId .
+        ?b snvoc:id ?bId 
+        FILTER (?aId < ?bId)
+    }
+    UNION
+    {
+        ?b snvoc:knows/snvoc:hasPerson ?a .
+        ?a snvoc:id ?aId .
+        ?b snvoc:id ?bId 
+        FILTER (?aId < ?bId)
+    }
 
-  # (b)-[:knows]-(c)
-  {?b snvoc:knows ?bc . ?bc snvoc:hasPerson ?c }
-  UNION
-  {?c snvoc:knows ?bc . ?bc snvoc:hasPerson ?b }
+    # (b)-[:knows]-(c)
+    {
+        ?b snvoc:knows/snvoc:hasPerson ?c .
+        ?b snvoc:id ?bId .
+        ?c snvoc:id ?cId 
+        FILTER (?bId < ?cId)
+    }
+    UNION
+    {
+        ?c snvoc:knows/snvoc:hasPerson ?b .
+        ?b snvoc:id ?bId .
+        ?c snvoc:id ?cId 
+        FILTER (?bId < ?cId)
+    }
 
-  # (c)-[:knows]-(a)
-  {?c snvoc:knows ?ac . ?ac snvoc:hasPerson ?a }
-  UNION
-  {?a snvoc:knows ?ac . ?ac snvoc:hasPerson ?c }
+    # (c)-[:knows]-(a)
+    {
+        ?a snvoc:knows/snvoc:hasPerson ?c .
+        ?a snvoc:id ?aId .
+        ?c snvoc:id ?cId 
+        FILTER (?aId < ?cId)
+    }
+    UNION
+    {
+        ?c snvoc:knows/snvoc:hasPerson ?a .
+        ?a snvoc:id ?aId .
+        ?c snvoc:id ?cId 
+        FILTER (?aId < ?cId)
+    }
 
-  ?a snvoc:id ?aId .
-  ?b snvoc:id ?bId .
-  ?c snvoc:id ?cId .
-
-  FILTER (?aId < ?bId && ?bId < ?cId)
+    FILTER (?aId < ?bId && ?bId < ?cId)
 }
 GROUP BY ?country

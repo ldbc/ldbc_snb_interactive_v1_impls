@@ -10,32 +10,28 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
  
 
 SELECT ?countryName ?messageMonth ?gender ?ageGroup ?tagName (COUNT(?message) AS ?messageCount)
-WHERE {
+WHERE
+{
+    VALUES (?type) {(snvoc:Comment) (snvoc:Post)} .
+    ?message a ?type .
+    ?message snvoc:creationDate ?creationDate .
+    ?message snvoc:hasCreator ?person .
+    ?message snvoc:hasTag ?tag .
+    ?tag foaf:name ?tagName .
 
-  {
-    ?message rdf:type snvoc:Comment 
-  } UNION {
-    ?message rdf:type snvoc:Post 
-  } .  
-  ?message snvoc:creationDate ?creationDate .
-  ?message snvoc:hasCreator ?person .
-  ?message snvoc:hasTag ?tag .
-  ?tag foaf:name ?tagName .
-  
-  ?person snvoc:gender ?gender .
-  ?person snvoc:birthday ?birthday .
-  ?person snvoc:isLocatedIn ?city .
-  ?city snvoc:isPartOf ?country .
-  ?country foaf:name ?countryName .
+    ?person snvoc:gender ?gender .
+    ?person snvoc:birthday ?birthday .
+    ?person snvoc:isLocatedIn ?city .
+    ?city snvoc:isPartOf ?country .
+    ?country foaf:name ?countryName .
 
-  FILTER (?creationDate < "2017-11-15T11:00:00" && ?creationDate > "2009-07-15T11:00:00") .
-  FILTER (?countryName = "India" || ?countryName = "China") .
-  
-  BIND ( FLOOR( (2013 - year(?birthday)) / 5.0) as ?ageGroup) .
-  BIND ( month(?creationDate) as ?messageMonth) .
-  
+    FILTER (?creationDate < "2017-11-15T11:00:00" && ?creationDate > "2009-07-15T11:00:00") .
+    FILTER (?countryName = "India" || ?countryName = "China") .
+
+    BIND ( FLOOR( (2013 - year(?birthday)) / 5.0) AS ?ageGroup) .
+    BIND ( month(?creationDate) AS ?messageMonth) .  
 }
 GROUP BY ?countryName ?messageMonth ?gender ?ageGroup ?tagName
 HAVING (?messageCount > 100)
 ORDER BY DESC(?messageCount) ?tagName ?ageGroup ?gender ?messageMonth ?countryName
-
+LIMIT 100

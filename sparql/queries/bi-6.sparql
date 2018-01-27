@@ -9,36 +9,30 @@ PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 SELECT ?personId  ?likeCount ?messageCount ?replyCount ?score
-WHERE {
-  {
-    SELECT ?personId (COUNT(distinct ?like) as ?likeCount) (COUNT(distinct ?message) as ?messageCount) (COUNT(distinct ?replyComment) as ?replyCount)
-    WHERE {
-      {  
-        ?message rdf:type snvoc:Comment .
-        ?message snvoc:hasTag ?tag .
-        ?tag rdf:type ?tagClass .
-        ?tagClass rdf:type snvoc:TagClass .
-        ?tag foaf:name "Franz_Kafka" .
-        ?like snvoc:hasComment ?message .
-        ?personWhoLiked snvoc:likes ?like .
-        ?personWhoLiked rdf:type snvoc:Person .
-      } UNION {
-        ?message rdf:type snvoc:Post .
-        ?message snvoc:hasTag ?tag .
-        ?tag rdf:type ?tagClass .
-        ?tagClass rdf:type snvoc:TagClass .
-        ?tag foaf:name "Franz_Kafka" .
-        ?like snvoc:hasPost ?message .
-        ?personWhoLiked snvoc:likes ?like .
-        ?personWhoLiked rdf:type snvoc:Person .
-      } .
-      ?person rdf:type snvoc:Person .
-      ?message snvoc:hasCreator ?person . 
-      ?person snvoc:id ?personId .
-      ?replyComment snvoc:replyOf ?message.
+WHERE 
+{
+    {
+        SELECT ?personId (COUNT(distinct ?like) AS ?likeCount) (COUNT(distinct ?message) AS ?messageCount) (COUNT(distinct ?replyComment) AS ?replyCount)
+        WHERE 
+        {
+            VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
+            ?message a ?type .
+            ?message snvoc:hasTag ?tag .
+            ?tag a ?tagClass .
+            ?tagClass a snvoc:TagClass .
+            ?tag foaf:name "Franz_Kafka" .
+            ?like snvoc:hasComment|snvoc:hasPost ?message .
+            ?personWhoLiked snvoc:likes ?like .
+            ?personWhoLiked a snvoc:Person .
+
+            ?person a snvoc:Person .
+            ?message snvoc:hasCreator ?person . 
+            ?person snvoc:id ?personId .
+            ?replyComment snvoc:replyOf ?message.
+        }
+        GROUP BY ?personId
     }
-    GROUP BY ?personId
-  }
-  BIND( ?messageCount + 2 * ?replyCount + 10 * ?likeCount as ?score)
+    BIND( ?messageCount + 2 * ?replyCount + 10 * ?likeCount as ?score)
 }
 ORDER BY DESC(?score) ?personId
+LIMIT 100
