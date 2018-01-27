@@ -1,6 +1,9 @@
 package com.ldbc.impls.workloads.ldbc.snb.util;
 
+import org.openrdf.query.Binding;
+
 import java.sql.Date;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.TimeZone;
@@ -18,6 +21,13 @@ public class SparqlConverter extends Converter {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         return "'"+sdf.format(new Date(timestamp))+"'::timestamp";
+    }
+
+    public long convertTimestampToEpoch(Binding binding) throws ParseException {
+        final String timestamp = binding.getValue().stringValue();
+        final SimpleDateFormat sdf = new SimpleDateFormat(DATAGEN_FORMAT);
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return sdf.parse(timestamp).toInstant().toEpochMilli();
     }
 
     public String convertString(String value) {

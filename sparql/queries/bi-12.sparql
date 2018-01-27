@@ -24,7 +24,7 @@ WHERE
     ?person snvoc:lastName ?lastName .
     ?personWhoLikes a snvoc:Person .
     ?personWhoLikes snvoc:likes ?like .
-    ?like snvoc:hasComment|hasPost ?message
+    ?like snvoc:hasComment|snvoc:hasPost ?message
     
 }
 GROUP BY ?messageId ?creationDate ?firstName ?lastName ?likeTreshold
