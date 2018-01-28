@@ -2,18 +2,26 @@ package com.ldbc.impls.workloads.ldbc.snb.sparql.bi;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.control.LoggingService;
+import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery10TagPerson;
+import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery10TagPersonResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery11UnrelatedReplies;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery11UnrelatedRepliesResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery12TrendingPosts;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery12TrendingPostsResult;
+import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery13PopularMonthlyTags;
+import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery13PopularMonthlyTagsResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery14TopThreadInitiators;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery14TopThreadInitiatorsResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery15SocialNormals;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery15SocialNormalsResult;
+import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery16ExpertsInSocialCircle;
+import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery16ExpertsInSocialCircleResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery17FriendshipTriangles;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery17FriendshipTrianglesResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery18PersonPostCounts;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery18PersonPostCountsResult;
+import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery19StrangerInteraction;
+import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery19StrangerInteractionResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery1PostingSummary;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery1PostingSummaryResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery20HighLevelTopics;
@@ -26,6 +34,10 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery23HolidayDestinations
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery23HolidayDestinationsResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery24MessagesByTopic;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery24MessagesByTopicResult;
+import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery25WeightedPaths;
+import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery25WeightedPathsResult;
+import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery2TopTags;
+import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery2TopTagsResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery3TagEvolution;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery3TagEvolutionResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery4PopularCountryTopics;
@@ -51,7 +63,10 @@ import org.openrdf.model.impl.IntegerLiteralImpl;
 import org.openrdf.query.BindingSet;
 
 import java.text.ParseException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 // https://github.com/ldbc/ldbc_snb_driver/commit/2cb756078fb1da950c6240e9a879dfb6df375dc4
 public class SparqlBiDb extends SparqlDb {
@@ -61,7 +76,7 @@ public class SparqlBiDb extends SparqlDb {
 		dbs = new SparqlPoolingDbConnectionStore(properties, new SparqlBiQueryStore(properties.get("queryDir")));
 
 		registerOperationHandler(LdbcSnbBiQuery1PostingSummary.class, BiQuery1.class);
-//		registerOperationHandler(LdbcSnbBiQuery2TopTags.class, BiQuery2.class);
+		registerOperationHandler(LdbcSnbBiQuery2TopTags.class, BiQuery2.class);
 		registerOperationHandler(LdbcSnbBiQuery3TagEvolution.class, BiQuery3.class);
 		registerOperationHandler(LdbcSnbBiQuery4PopularCountryTopics.class, BiQuery4.class);
 		registerOperationHandler(LdbcSnbBiQuery5TopCountryPosters.class, BiQuery5.class);
@@ -109,25 +124,25 @@ public class SparqlBiDb extends SparqlDb {
 
 	}
 
-//	public static class BiQuery2 extends SparqlListOperationHandler<LdbcSnbBiQuery2TopTags, LdbcSnbBiQuery2TopTagsResult, SparqlBiQueryStore> {
-//
-//		@Override
-//		public String getQueryString(SparqlDriverConnectionStore<SparqlBiQueryStore> state, LdbcSnbBiQuery2TopTags operation) {
-//			return state.getQueryStore().getQuery2(operation);
-//		}
-//
-//		@Override
-//		public LdbcSnbBiQuery2TopTagsResult convertSingleResult(BindingSet bs) {
-//			String countryName = bs.getBinding(0).asString();
-//			int messageMonth = bs.getBinding(1).asInt();
-//			String personGender = bs.getBinding(2).asString();
-//			int ageGroup = bs.getBinding(3).asInt();
-//			String tagName = bs.getBinding(4).asString();
-//			int messageCount = bs.getBinding(5).asInt();
-//			return new LdbcSnbBiQuery2TopTagsResult(countryName, messageMonth, personGender, ageGroup, tagName, messageCount);
-//		}
-//
-//	}
+	public static class BiQuery2 extends SparqlListOperationHandler<LdbcSnbBiQuery2TopTags, LdbcSnbBiQuery2TopTagsResult, SparqlBiQueryStore> {
+
+		@Override
+		public String getQueryString(SparqlDriverConnectionStore<SparqlBiQueryStore> state, LdbcSnbBiQuery2TopTags operation) {
+			return state.getQueryStore().getQuery2(operation);
+		}
+
+		@Override
+		public LdbcSnbBiQuery2TopTagsResult convertSingleResult(BindingSet bs) {
+			String countryName  =                       bs.getBinding("countryName" ).getValue().stringValue();
+			int messageMonth    = ((IntegerLiteralImpl) bs.getBinding("messageMonth")).intValue();
+			String personGender =                       bs.getBinding("personGender").getValue().stringValue();
+			int ageGroup        = ((IntegerLiteralImpl) bs.getBinding("ageGroup"    )).intValue();
+			String tagName      =                       bs.getBinding("tagName"     ).getValue().stringValue();
+			int messageCount    = ((IntegerLiteralImpl) bs.getBinding("messageCount")).intValue();
+			return new LdbcSnbBiQuery2TopTagsResult(countryName, messageMonth, personGender, ageGroup, tagName, messageCount);
+		}
+
+	}
 
 	public static class BiQuery3 extends SparqlListOperationHandler<LdbcSnbBiQuery3TagEvolution, LdbcSnbBiQuery3TagEvolutionResult, SparqlBiQueryStore> {
 
@@ -255,22 +270,22 @@ public class SparqlBiDb extends SparqlDb {
 
 	}
 
-//	public static class BiQuery10 extends SparqlListOperationHandler<LdbcSnbBiQuery10TagPerson, LdbcSnbBiQuery10TagPersonResult, SparqlBiQueryStore> {
-//
-//		@Override
-//		public String getQueryString(SparqlDriverConnectionStore<SparqlBiQueryStore> state, LdbcSnbBiQuery10TagPerson operation) {
-//			return state.getQueryStore().getQuery10(operation);
-//		}
-//
-//		@Override
-//		public LdbcSnbBiQuery10TagPersonResult convertSingleResult(BindingSet bs) {
-//			long personId = bs.getBinding(0).asLong();
-//			int score = bs.getBinding(1).asInt();
-//			int friendsScore = bs.getBinding(2).asInt();
-//			return new LdbcSnbBiQuery10TagPersonResult(personId, score, friendsScore);
-//		}
-//
-//	}
+	public static class BiQuery10 extends SparqlListOperationHandler<LdbcSnbBiQuery10TagPerson, LdbcSnbBiQuery10TagPersonResult, SparqlBiQueryStore> {
+
+		@Override
+		public String getQueryString(SparqlDriverConnectionStore<SparqlBiQueryStore> state, LdbcSnbBiQuery10TagPerson operation) {
+			return state.getQueryStore().getQuery10(operation);
+		}
+
+		@Override
+		public LdbcSnbBiQuery10TagPersonResult convertSingleResult(BindingSet bs) {
+			long personId =    ((IntegerLiteralImpl) bs.getBinding("personId"    )).longValue();
+			int score =        ((IntegerLiteralImpl) bs.getBinding("score"       )).intValue();
+			int friendsScore = ((IntegerLiteralImpl) bs.getBinding("friendsScore")).intValue();
+			return new LdbcSnbBiQuery10TagPersonResult(personId, score, friendsScore);
+		}
+
+	}
 
 	public static class BiQuery11 extends SparqlListOperationHandler<LdbcSnbBiQuery11UnrelatedReplies, LdbcSnbBiQuery11UnrelatedRepliesResult, SparqlBiQueryStore> {
 
@@ -309,29 +324,26 @@ public class SparqlBiDb extends SparqlDb {
 		}
 	}
 
-//	public static class BiQuery13 extends SparqlListOperationHandler<LdbcSnbBiQuery13PopularMonthlyTags, LdbcSnbBiQuery13PopularMonthlyTagsResult, SparqlBiQueryStore> {
-//
-//		@Override
-//		public String getQueryString(SparqlDriverConnectionStore<SparqlBiQueryStore> state, LdbcSnbBiQuery13PopularMonthlyTags operation) {
-//			return state.getQueryStore().getQuery13(operation);
-//		}
-//
-//		@Override
-//		public LdbcSnbBiQuery13PopularMonthlyTagsResult convertSingleResult(BindingSet bs) {
-//			int year = ((IntegerLiteralImpl) bs.getBinding(0).asInt();
-//			int month = ((IntegerLiteralImpl) bs.getBinding(1).asInt();
-//			final List<List<Object>> tagPopularitiesRaw = bs.getBinding(2).asList(Values.ofList());
-//
-//			final List<LdbcSnbBiQuery13PopularMonthlyTagsResult.TagPopularity> tagPopularities = new ArrayList<>();
-//			for (List<Object> tagPopularityRaw : tagPopularitiesRaw) {
-//				final String tag = (String) tagPopularityRaw.getBinding(0);
-//				final int popularity = Ints.saturatedCast((long) tagPopularityRaw.getBinding(1));
-//				tagPopularities.add(new LdbcSnbBiQuery13PopularMonthlyTagsResult.TagPopularity(tag, popularity));
-//			}
-//
-//			return new LdbcSnbBiQuery13PopularMonthlyTagsResult(year, month, tagPopularities);
-//		}
-//	}
+	public static class BiQuery13 extends SparqlListOperationHandler<LdbcSnbBiQuery13PopularMonthlyTags, LdbcSnbBiQuery13PopularMonthlyTagsResult, SparqlBiQueryStore> {
+
+		@Override
+		public String getQueryString(SparqlDriverConnectionStore<SparqlBiQueryStore> state, LdbcSnbBiQuery13PopularMonthlyTags operation) {
+			return state.getQueryStore().getQuery13(operation);
+		}
+
+		@Override
+		public LdbcSnbBiQuery13PopularMonthlyTagsResult convertSingleResult(BindingSet bs) {
+			int year  = ((IntegerLiteralImpl) bs.getBinding("year"  )).intValue();
+			int month = ((IntegerLiteralImpl) bs.getBinding("mongth")).intValue();
+			final String[] popularTagsArray = bs.getBinding("popularTags").getValue().stringValue().split("\\|");
+			final List<LdbcSnbBiQuery13PopularMonthlyTagsResult.TagPopularity> popularTags = Arrays.stream(popularTagsArray).map(popularTag -> {
+				final String[] tag = popularTag.split("#");
+				return new LdbcSnbBiQuery13PopularMonthlyTagsResult.TagPopularity(tag[0], Integer.parseInt(tag[1]));
+			}).collect(Collectors.toList());
+
+			return new LdbcSnbBiQuery13PopularMonthlyTagsResult(year, month, popularTags);
+		}
+	}
 
 	public static class BiQuery14 extends SparqlListOperationHandler<LdbcSnbBiQuery14TopThreadInitiators, LdbcSnbBiQuery14TopThreadInitiatorsResult, SparqlBiQueryStore> {
 
@@ -366,21 +378,21 @@ public class SparqlBiDb extends SparqlDb {
 		}
 	}
 
-//	public static class BiQuery16 extends SparqlListOperationHandler<LdbcSnbBiQuery16ExpertsInSocialCircle, LdbcSnbBiQuery16ExpertsInSocialCircleResult, SparqlBiQueryStore> {
-//
-//		@Override
-//		public String getQueryString(SparqlDriverConnectionStore<SparqlBiQueryStore> state, LdbcSnbBiQuery16ExpertsInSocialCircle operation) {
-//			return state.getQueryStore().getQuery16(operation);
-//		}
-//
-//		@Override
-//		public LdbcSnbBiQuery16ExpertsInSocialCircleResult convertSingleResult(BindingSet bs) {
-//			long personId = bs.getBinding(0).asLong();
-//			String tag = bs.getBinding(1).asString();
-//			int count = bs.getBinding(2).asInt();
-//			return new LdbcSnbBiQuery16ExpertsInSocialCircleResult(personId, tag, count);
-//		}
-//	}
+	public static class BiQuery16 extends SparqlListOperationHandler<LdbcSnbBiQuery16ExpertsInSocialCircle, LdbcSnbBiQuery16ExpertsInSocialCircleResult, SparqlBiQueryStore> {
+
+		@Override
+		public String getQueryString(SparqlDriverConnectionStore<SparqlBiQueryStore> state, LdbcSnbBiQuery16ExpertsInSocialCircle operation) {
+			return state.getQueryStore().getQuery16(operation);
+		}
+
+		@Override
+		public LdbcSnbBiQuery16ExpertsInSocialCircleResult convertSingleResult(BindingSet bs) {
+			long personId    = ((IntegerLiteralImpl) bs.getBinding("personId")).longValue();
+			String tagName   =                       bs.getBinding("tagName" ).getValue().stringValue();
+			int messageCount = ((IntegerLiteralImpl) bs.getBinding("messageCount")).intValue();
+			return new LdbcSnbBiQuery16ExpertsInSocialCircleResult(personId, tagName, messageCount);
+		}
+	}
 
 	public static class BiQuery17 extends SparqlSingletonOperationHandler<LdbcSnbBiQuery17FriendshipTriangles, LdbcSnbBiQuery17FriendshipTrianglesResult, SparqlBiQueryStore> {
 
@@ -411,21 +423,21 @@ public class SparqlBiDb extends SparqlDb {
 		}
 	}
 
-//	public static class BiQuery19 extends SparqlListOperationHandler<LdbcSnbBiQuery19StrangerInteraction, LdbcSnbBiQuery19StrangerInteractionResult, SparqlBiQueryStore> {
-//
-//		@Override
-//		public String getQueryString(SparqlDriverConnectionStore<SparqlBiQueryStore> state, LdbcSnbBiQuery19StrangerInteraction operation) {
-//			return state.getQueryStore().getQuery19(operation);
-//		}
-//
-//		@Override
-//		public LdbcSnbBiQuery19StrangerInteractionResult convertSingleResult(BindingSet bs) {
-//			long personId = bs.getBinding(0).asLong();
-//			int strangerCount = bs.getBinding(1).asInt();
-//			int count = bs.getBinding(2).asInt();
-//			return new LdbcSnbBiQuery19StrangerInteractionResult(personId, strangerCount, count);
-//		}
-//	}
+	public static class BiQuery19 extends SparqlListOperationHandler<LdbcSnbBiQuery19StrangerInteraction, LdbcSnbBiQuery19StrangerInteractionResult, SparqlBiQueryStore> {
+
+		@Override
+		public String getQueryString(SparqlDriverConnectionStore<SparqlBiQueryStore> state, LdbcSnbBiQuery19StrangerInteraction operation) {
+			return state.getQueryStore().getQuery19(operation);
+		}
+
+		@Override
+		public LdbcSnbBiQuery19StrangerInteractionResult convertSingleResult(BindingSet bs) {
+			long personId        = ((IntegerLiteralImpl) bs.getBinding("personId"        )).longValue();
+			int strangerCount    = ((IntegerLiteralImpl) bs.getBinding("strangerCount"   )).intValue();
+			int interactionCount = ((IntegerLiteralImpl) bs.getBinding("interactionCount")).intValue();
+			return new LdbcSnbBiQuery19StrangerInteractionResult(personId, strangerCount, interactionCount);
+		}
+	}
 
 	public static class BiQuery20 extends SparqlListOperationHandler<LdbcSnbBiQuery20HighLevelTopics, LdbcSnbBiQuery20HighLevelTopicsResult, SparqlBiQueryStore> {
 
@@ -511,18 +523,19 @@ public class SparqlBiDb extends SparqlDb {
 		}
 	}
 
-//	public static class BiQuery25 extends SparqlListOperationHandler<LdbcSnbBiQuery25WeightedPaths, LdbcSnbBiQuery25WeightedPathsResult, SparqlBiQueryStore> {
-//
-//		@Override
-//		public String getQueryString(SparqlDriverConnectionStore<SparqlBiQueryStore> state, LdbcSnbBiQuery25WeightedPaths operation) {
-//			return state.getQueryStore().getQuery25(operation);
-//		}
-//
-//		@Override
-//		public LdbcSnbBiQuery25WeightedPathsResult convertSingleResult(BindingSet bs) {
-//			List<Long> personIds = bs.getBinding(0).asList(Values.ofLong());
-//			return new LdbcSnbBiQuery25WeightedPathsResult(personIds);
-//		}
-//	}
+	public static class BiQuery25 extends SparqlListOperationHandler<LdbcSnbBiQuery25WeightedPaths, LdbcSnbBiQuery25WeightedPathsResult, SparqlBiQueryStore> {
+
+		@Override
+		public String getQueryString(SparqlDriverConnectionStore<SparqlBiQueryStore> state, LdbcSnbBiQuery25WeightedPaths operation) {
+			return state.getQueryStore().getQuery25(operation);
+		}
+
+		@Override
+		public LdbcSnbBiQuery25WeightedPathsResult convertSingleResult(BindingSet bs) {
+			String[] personIdStrings = bs.getBinding("personIds").getValue().stringValue().split(",");
+			final List<Long> personIds = Arrays.stream(personIdStrings).map(Long::parseLong).collect(Collectors.toList());
+			return new LdbcSnbBiQuery25WeightedPathsResult(personIds);
+		}
+	}
 
 }

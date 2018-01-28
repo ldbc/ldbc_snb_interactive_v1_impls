@@ -96,7 +96,7 @@ public abstract class BiQueryStore {
 
 	public String getQuery1(LdbcSnbBiQuery1PostingSummary operation) {
 		return prepare(QueryType.Query1, new ImmutableMap.Builder<String, String>()
-					.put("date", getConverter().convertDate(operation.date())).build());
+				.put("date", getConverter().convertDate(operation.date())).build());
 	}
 
 	public String getQuery2(LdbcSnbBiQuery2TopTags operation) {

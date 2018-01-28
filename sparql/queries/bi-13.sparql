@@ -8,7 +8,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-SELECT ?year ?month (GROUP_CONCAT(?strTagAndPopularity) AS ?popularTags)
+SELECT ?year ?month (GROUP_CONCAT(?strTagAndPopularity;separator="|") AS ?popularTags)
 WHERE
 {
     {
@@ -32,7 +32,7 @@ WHERE
                 ORDER BY DESC(?popularity)
             }
             BIND(STR(?popularity) AS ?strPopularity)
-            BIND(CONCAT("(",?tagName,",",?strPopularity,")") AS ?strTagAndPopularity)
+            BIND(CONCAT("(", ?tagName, "#", ?strPopularity, ")") AS ?strTagAndPopularity)
         }        
     }
 }
