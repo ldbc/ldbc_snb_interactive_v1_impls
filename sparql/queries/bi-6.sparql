@@ -20,7 +20,7 @@ WHERE
             ?message snvoc:hasTag ?tag .
             ?tag a ?tagClass .
             ?tagClass a snvoc:TagClass .
-            ?tag foaf:name "Franz_Kafka" .
+            ?tag foaf:name $tag .
             ?like snvoc:hasComment|snvoc:hasPost ?message .
             ?personWhoLiked snvoc:likes ?like .
             ?personWhoLiked a snvoc:Person .

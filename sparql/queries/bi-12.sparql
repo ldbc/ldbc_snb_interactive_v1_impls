@@ -11,12 +11,10 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 SELECT ?messageId ?creationDate ?firstName ?lastName (COUNT(?like) AS ?likeCount) 
 WHERE
 {
-    BIND ("2010-08-15T11:50:56" AS ?date) 
-    BIND ( 800 AS ?likeTreshold )
     VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
     ?message a ?type .
     ?message snvoc:creationDate ?creationDate .
-    FILTER( ?creationDate > ?date ) 
+    FILTER( ?creationDate > $date )
     ?message snvoc:id ?messageId .
     ?message snvoc:hasCreator ?person .
     ?person a snvoc:Person .
@@ -24,11 +22,11 @@ WHERE
     ?person snvoc:lastName ?lastName .
     ?personWhoLikes a snvoc:Person .
     ?personWhoLikes snvoc:likes ?like .
-    ?like snvoc:hasComment|hasPost ?message
+    ?like snvoc:hasComment|snvoc:hasPost ?message
     
 }
-GROUP BY ?messageId ?creationDate ?firstName ?lastName ?likeTreshold
-HAVING (?likeCount > ?likeTreshold)
+GROUP BY ?messageId ?creationDate ?firstName ?lastName
+HAVING (?likeCount > $likeThreshold)
 ORDER BY DESC(?likeCount) ?messageId
 LIMIT 100
 

@@ -12,8 +12,8 @@ SELECT ?forum (COUNT(?post1) AS ?count1) (COUNT(?post2) AS ?count2)
 WHERE
 {
     #BIND (500 as ?treshold) 
-    BIND ("TennisPlayer" AS ?tagClassName1) 
-    BIND ("President" AS ?tagClassName2)
+    BIND ($tagClass1 AS ?tagClassName1)
+    BIND ($tagClass2 AS ?tagClassName2)
     ?tag1 a ?tagClass1 .
     ?tagClass1 rdfs:label ?tagClassName1 .
     ?tag2 a ?tagClass2 .
@@ -28,7 +28,7 @@ WHERE
     
 }
 GROUP BY ?forum
-HAVING (?count1 > 0 && ?count2 > 0 && COUNT(?person) > 200)
+HAVING (?count1 > 0 && ?count2 > 0 && COUNT(?person) > $threshold)
 ORDER BY DESC(ABS(?count2 - ?count1)) ?forum
 LIMIT 100
 

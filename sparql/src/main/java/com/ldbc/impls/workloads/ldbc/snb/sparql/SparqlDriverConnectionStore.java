@@ -1,32 +1,31 @@
 package com.ldbc.impls.workloads.ldbc.snb.sparql;
 
-import com.bigdata.rdf.sail.remote.BigdataSailRemoteRepository;
-import com.bigdata.rdf.sail.remote.BigdataSailRemoteRepositoryConnection;
+import com.bigdata.rdf.sail.webapp.client.RemoteRepository;
 import com.bigdata.rdf.sail.webapp.client.RemoteRepositoryManager;
 import com.ldbc.driver.DbConnectionState;
-import org.openrdf.repository.RepositoryException;
 
 import java.util.Map;
 
 public abstract class SparqlDriverConnectionStore<DbQueryStore> extends DbConnectionState {
 	private DbQueryStore queryStore;
-	private boolean printNames;
-	private boolean printStrings;
-	private boolean printResults;
-
-	private final String serviceURL = "http://localhost:9999/bigdata";
-	private final BigdataSailRemoteRepository repository;
+	private final boolean printNames;
+	private final boolean printStrings;
+	private final boolean printResults;
+	private final String endpoint;
+	private final RemoteRepository repository;
 
 	public SparqlDriverConnectionStore(Map<String, String> properties, DbQueryStore store) {
 		super();
 
-		final RemoteRepositoryManager remoteRepositoryManager = new RemoteRepositoryManager(serviceURL, false );
-		repository = remoteRepositoryManager.getRepositoryForDefaultNamespace().getBigdataSailRemoteRepository();
-
-		queryStore = store;
 		printNames = Boolean.valueOf(properties.get("printQueryNames"));
 		printStrings = Boolean.valueOf(properties.get("printQueryStrings"));
 		printResults = Boolean.valueOf(properties.get("printQueryResults"));
+		endpoint = properties.get("endpoint");
+
+		final RemoteRepositoryManager repo = new RemoteRepositoryManager(endpoint, false /* useLBS */);
+		repository = repo.getRepositoryForDefaultNamespace();
+
+		queryStore = store;
 	}
 
 	public final DbQueryStore getQueryStore() {
@@ -46,7 +45,8 @@ public abstract class SparqlDriverConnectionStore<DbQueryStore> extends DbConnec
 		}
 	}
 
-	public BigdataSailRemoteRepositoryConnection getConnection() throws RepositoryException {
-		return repository.getConnection();
+	public RemoteRepository getRepository() {
+		return repository;
 	}
+
 }

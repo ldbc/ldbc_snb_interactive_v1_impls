@@ -11,8 +11,6 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 SELECT ?person (COUNT(?post) AS ?threadCount) (COUNT(?reply) + COUNT(DISTINCT ?post)  AS ?messageCount)
 WHERE
 {
-    BIND( "2010-07-15T12:00:00" AS ?startDate)
-    BIND( "2010-08-15T12:00:00" AS ?endDate)
     VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
     ?person a snvoc:Person .
     ?post snvoc:hasCreator ?person .
@@ -21,8 +19,8 @@ WHERE
     ?reply snvoc:replyOf+ ?post .
     ?reply snvoc:creationDate ?replyCreationDate .
     ?person snvoc:id ?personId .
-    FILTER((?postCreationDate > ?startDate && ?postCreationDate < ?endDate) &&
-           (?replyCreationDate > ?startDate && ?replyCreationDate < ?endDate))
+    FILTER(($startDate < ?postCreationDate  && ?postCreationDate  < $endDate) &&
+           ($startDate < ?replyCreationDate && ?replyCreationDate < $endDate))
     
 }
 GROUP BY ?person 

@@ -12,7 +12,7 @@ SELECT (COUNT(*) AS ?count)
 WHERE 
 {
     ?country a dbpedia-owl:Country .
-    ?country foaf:name "Brazil" .
+    ?country foaf:name $country .
     ?a a snvoc:Person .
     ?b a snvoc:Person .
     ?c a snvoc:Person .

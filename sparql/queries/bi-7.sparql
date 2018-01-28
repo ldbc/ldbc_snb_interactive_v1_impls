@@ -11,7 +11,7 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 SELECT ?person1 (SUM(?popularityScore) AS ?authorityScore)
 WHERE
 {
-    BIND ("Carl_Gustaf_Emil_Mannerheim" AS ?tagName) 
+    BIND ($tag AS ?tagName)
     {
         SELECT ?person2 (COUNT(?like2) AS ?popularityScore)
         WHERE

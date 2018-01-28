@@ -18,8 +18,8 @@ WHERE
     ?tag a ?tagClass .
     ?tagClass a snvoc:TagClass .
 
-    ?country foaf:name "Burma" .
-    ?tagClass rdfs:label "MusicalArtist" .
+    ?country foaf:name $country .
+    ?tagClass rdfs:label $tagClass .
 
     ?person snvoc:isLocatedIn ?city .
     ?city snvoc:isPartOf ?country .

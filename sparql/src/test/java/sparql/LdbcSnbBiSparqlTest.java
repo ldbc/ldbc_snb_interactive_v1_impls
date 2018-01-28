@@ -3,13 +3,15 @@ package sparql;
 import com.ldbc.driver.DbException;
 import com.ldbc.impls.workloads.ldbc.snb.bi.test.LdbcSnbBiQueryTest;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.bi.SparqlBiDb;
+import org.junit.Ignore;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Ignore
 public class LdbcSnbBiSparqlTest extends LdbcSnbBiQueryTest {
 
-//	private static String endpoint = "http://localhost:9999/bigdata/sparql";
+	private static String endpoint = "http://localhost:9999/blazegraph";
 	private static String queryDir = "queries/";
 
 	public LdbcSnbBiSparqlTest() throws DbException {
@@ -19,11 +21,11 @@ public class LdbcSnbBiSparqlTest extends LdbcSnbBiQueryTest {
 	@Override
 	public Map<String, String> getProperties() {
 		final Map<String, String> properties = new HashMap<>();
-//		properties.put("endpoint", endpoint);
+		properties.put("endpoint", endpoint);
 		properties.put("queryDir", queryDir);
 		properties.put("printQueryNames", "true");
-		properties.put("printQueryStrings", "true");
-		properties.put("printQueryResults", "true");
+		properties.put("printQueryStrings", "false");
+		properties.put("printQueryResults", "false");
 		return properties;
 	}
 

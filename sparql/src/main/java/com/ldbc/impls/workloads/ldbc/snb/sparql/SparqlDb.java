@@ -1,7 +1,6 @@
 package com.ldbc.impls.workloads.ldbc.snb.sparql;
 
 import com.ldbc.driver.DbConnectionState;
-import com.ldbc.driver.DbException;
 import com.ldbc.impls.workloads.ldbc.snb.SnbDb;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.bi.SparqlBiQueryStore;
 
@@ -12,7 +11,7 @@ public abstract class SparqlDb extends SnbDb<SparqlBiQueryStore> {
 	protected SparqlDriverConnectionStore dbs;
 
 	@Override
-	protected void onClose() throws IOException {
+	protected void onClose() {
 		try {
 			dbs.close();
 		} catch (IOException e) {
@@ -21,7 +20,7 @@ public abstract class SparqlDb extends SnbDb<SparqlBiQueryStore> {
 	}
 
 	@Override
-	protected DbConnectionState getConnectionState() throws DbException {
+	protected DbConnectionState getConnectionState()  {
 		return dbs;
 	}
 

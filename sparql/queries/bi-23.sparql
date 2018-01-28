@@ -12,18 +12,17 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 SELECT ?destinationName ?month (COUNT(?message) AS ?messageCount)
 WHERE
 {
-    BIND("Germany" AS ?countryName)
     VALUES (?type) {(snvoc:Comment) (snvoc:Post)} .
     ?message a ?type .
     ?message snvoc:hasCreator ?person .
     ?message snvoc:creationDate ?creationDate .
     ?person snvoc:gender ?gender .
     ?person snvoc:birthday ?birthday .
-    ?person snvoc:isLocatedIn/snvoc:isPartOf/foaf:name ?countryName .
+    ?person snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country .
 
-    FILTER NOT EXISTS { ?message snvoc:isLocatedIn/foaf:name ?countryName } 
+    FILTER NOT EXISTS { ?message snvoc:isLocatedIn/foaf:name $country }
     ?message snvoc:isLocatedIn/foaf:name ?destinationName
-    BIND( MONTH(?creationDate) AS ?month)
+    BIND(MONTH(?creationDate) AS ?month)
 }
 GROUP BY ?destinationName ?month
 ORDER BY DESC(?messageCount) ?destinationName ?month

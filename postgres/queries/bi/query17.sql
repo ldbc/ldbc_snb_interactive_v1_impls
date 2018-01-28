@@ -1,27 +1,31 @@
--- TODO extract subquery to a 'with' clause
-select count(*)
-from knows k1, knows k2, knows k3
-where k1.k_person1id = k3.k_person2id
-  and k1.k_person2id = k2.k_person1id
-  and k2.k_person2id = k3.k_person1id
-  and k1.k_person1id < k1.k_person2id
-  and k2.k_person1id < k2.k_person2id
-  and k1.k_person1id in
-    (select p_personid from person, place city, place ctry
-     where p_placeid = city.pl_placeid
-       and city.pl_containerplaceid = ctry.pl_placeid
-       and ctry.pl_name = '$country'
-       and ctry.pl_type = 'country')
-  and k2.k_person1id in
-    (select p_personid from person, place city, place ctry
-     where p_placeid = city.pl_placeid
-       and city.pl_containerplaceid = ctry.pl_placeid
-       and ctry.pl_name = '$country'
-       and ctry.pl_type = 'country')
-  and k3.k_person1id in
-    (select p_personid from person, place city, place ctry
-     where p_placeid = city.pl_placeid
-       and city.pl_containerplaceid = ctry.pl_placeid
-       and ctry.pl_name = '$country'
-       and ctry.pl_type = 'country')
+/* Q17. Friend triangles
+\set country  '\'Belarus\''
+ */
+WITH persons_of_country_w_friends AS (
+    SELECT p.p_personid AS personid
+         , k.k_person2id as friendid
+      FROM person p
+         , place ci -- city
+         , place co -- country
+         , knows k
+     WHERE 1=1
+        -- join
+       AND p.p_placeid = ci.pl_placeid
+       AND ci.pl_containerplaceid = co.pl_placeid
+       AND p.p_personid = k.k_person1id
+        -- filter
+       AND co.pl_name = :country
+)
+SELECT count(*)
+  FROM persons_of_country_w_friends p1
+     , persons_of_country_w_friends p2
+     , persons_of_country_w_friends p3
+ WHERE 1=1
+    -- join
+   AND p1.friendid = p2.personid
+   AND p2.friendid = p3.personid
+   AND p3.friendid = p1.personid
+    -- filter: unique trinagles only
+   AND p1.personid < p2.personid
+   AND p2.personid < p3.personid
 ;

@@ -16,7 +16,7 @@ WHERE
         SELECT ?forum
         WHERE
         {    
-            BIND("China" AS ?countryName)
+            BIND($country AS ?countryName)
             ?forum a snvoc:Forum .
             ?forum snvoc:hasMember ?memberSerial .
             ?memberSerial snvoc:hasPerson ?person .
@@ -36,7 +36,7 @@ WHERE
         SELECT ?forum2
         WHERE
         {
-            BIND("China" AS ?countryName)
+            BIND($country AS ?countryName)
             ?forum2 a snvoc:Forum .
             ?forum2 snvoc:hasMember ?memberSerial .
             ?memberSerial snvoc:hasPerson ?person .
