@@ -11,7 +11,7 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 SELECT ?tagClassName (COUNT(?message) AS ?messageCount)
 WHERE
 { 
-    VALUES (?tagClassNames) {("Person") ("Country") ("Single")}
+    VALUES (?tagClassNames) {$tagClasses}
     VALUES (?type) {(snvoc:Post) (snvoc:Comment)}
     ?message a ?type
     {   

@@ -16,7 +16,7 @@ WHERE
         WHERE
         {
             BIND (100 AS ?lengthTreshold)
-            VALUES (?language) {("tk") ("uy")}
+            VALUES (?language) {$languages}
             
             {
                 ?message a snvoc:Comment .

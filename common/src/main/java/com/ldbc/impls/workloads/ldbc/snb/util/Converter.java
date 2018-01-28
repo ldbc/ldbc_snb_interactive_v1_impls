@@ -64,4 +64,7 @@ public class Converter {
         return res;
     }
 
+    public String convertBlacklist(List<String> words) {
+        return convertStringList(words);
+    }
 }

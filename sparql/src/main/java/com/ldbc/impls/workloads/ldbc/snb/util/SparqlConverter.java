@@ -34,11 +34,22 @@ public class SparqlConverter extends Converter {
         return "\"" + value + "\"";
     }
 
+    @Override
     public String convertStringList(List<String> values) {
         return values
                 .stream()
-                .map(v -> "'" + v + "'")
-                .collect( Collectors.joining( "," ) );
+                .map(v -> "(\"" + v + "\")")
+                .collect( Collectors.joining( " " ) );
     }
+
+    @Override
+    public String convertBlacklist(List<String> words) {
+        return "\"" +
+            words.stream()
+            .map(v -> "((^|\\\\s)+" + v + "($|\\\\s)+)")
+            .collect( Collectors.joining( "|" ) ) +
+            "\"";
+    }
+
 
 }

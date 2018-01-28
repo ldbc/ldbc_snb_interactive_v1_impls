@@ -155,7 +155,7 @@ public abstract class BiQueryStore {
 	public String getQuery11(LdbcSnbBiQuery11UnrelatedReplies operation) {
 		return prepare(QueryType.Query11, new ImmutableMap.Builder<String, String>()
 				.put("country", getConverter().convertString(operation.country()))
-				.put("blacklist", getConverter().convertStringList(operation.blacklist())).build());
+				.put("blacklist", getConverter().convertBlacklist(operation.blacklist())).build());
 	}
 
 	public String getQuery12(LdbcSnbBiQuery12TrendingPosts operation) {

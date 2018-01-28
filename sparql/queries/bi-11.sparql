@@ -11,11 +11,10 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 SELECT ?person ?tagName (COUNT(?like) AS ?countLikes) (COUNT(?reply) AS ?countReplies)
 WHERE
 {
-    BIND( ("((^|\\s)+one($|\\s)+)|((^|\\s)+has($|\\s)+)|((^|\\s)+about($|\\s)+)|((^|\\s)+yes($|\\s)+)") AS ?blacklist)
     ?reply snvoc:content ?content  .
     ?reply snvoc:hasTag ?tag .
     ?tag foaf:name ?tagName
-    FILTER( !REGEX(?content, ?blacklist, "i") )
+    FILTER( !REGEX(?content, $blacklist, "i") )
     ?reply snvoc:replyOf ?original .
     FILTER NOT EXISTS { ?original snvoc:hasTag ?tag }
     BIND ($country AS ?countryName)
