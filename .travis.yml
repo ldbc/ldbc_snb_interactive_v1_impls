@@ -41,7 +41,7 @@ script:
   - cd ../..
   # SPARQL
   - cd sparql/load-scripts
-  - ./import-to-blazegraph.sh test-data/*.ttl
+  - ./import-to-blazegraph.sh ../test-data/*.ttl
   - cd ../..
   # tests
   - mvn test -B
