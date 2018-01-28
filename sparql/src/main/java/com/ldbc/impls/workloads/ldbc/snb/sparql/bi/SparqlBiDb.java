@@ -111,7 +111,7 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery1PostingSummaryResult convertSingleResult(BindingSet bs) {
-		    int messageYear             = ((IntegerLiteralImpl) bs.getBinding("messageYear"         )).intValue();
+			int messageYear             = ((IntegerLiteralImpl) bs.getBinding("messageYear"         )).intValue();
 			boolean isComment           = ((BooleanLiteralImpl) bs.getBinding("isComment"           )).booleanValue();
 			int lengthCategory          = ((IntegerLiteralImpl) bs.getBinding("lengthCategory"      )).intValue();
 			long messageCount           = ((IntegerLiteralImpl) bs.getBinding("messageCount"        )).longValue();
