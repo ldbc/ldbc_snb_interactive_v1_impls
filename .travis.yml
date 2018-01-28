@@ -40,8 +40,10 @@ script:
   - ./restart-neo4j.sh
   - cd ../..
   # SPARQL
-  - cd sparql/load-scripts
-  - ./import-to-blazegraph.sh ../test-data/*.ttl
+  - cd sparql
+  - export RDF_DATA_DIR=`pwd`/test-data
+  - cd load-scripts
+  - ./import-to-blazegraph.sh
   - cd ../..
   # tests
   - mvn test -B
