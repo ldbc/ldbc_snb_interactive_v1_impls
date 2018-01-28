@@ -19,7 +19,7 @@ WHERE
                 SELECT ?year ?month ?tagName (COUNT(?message) AS ?popularity) 
                 WHERE
                 {
-                    BIND ("China" AS ?countryName) 
+                    BIND ($country AS ?countryName)
                     VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
                     ?message a ?type .
                     ?message snvoc:isLocatedIn/foaf:name ?countryName .

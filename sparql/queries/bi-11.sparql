@@ -18,7 +18,7 @@ WHERE
     FILTER( !REGEX(?content, ?blacklist, "i") )
     ?reply snvoc:replyOf ?original .
     FILTER NOT EXISTS { ?original snvoc:hasTag ?tag }
-    BIND ("China" AS ?countryName)
+    BIND ($country AS ?countryName)
     ?person a snvoc:Person .
     ?person snvoc:isLocatedIn/snvoc:isPartOf/foaf:name ?countryName .
     ?reply snvoc:hasCreator ?person .

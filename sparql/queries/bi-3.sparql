@@ -11,7 +11,7 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 SELECT ?tagName (SUM(?isFirstInt) AS ?countMonth1) (SUM(?isSecondInt) AS ?countMonth2) (ABS(?countMonth1 - ?countMonth2) AS ?diff)
 WHERE
 {
-    VALUES (?year1 ?month1) {(2010 9)}
+    VALUES (?year1 ?month1) {($year $month)}
     VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
     ?message a ?type .
     ?message snvoc:hasTag/foaf:name ?tagName .

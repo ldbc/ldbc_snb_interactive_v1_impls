@@ -18,9 +18,9 @@ public class SparqlConverter extends Converter {
      */
     @Override
     public String convertDate(long timestamp) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return "'"+sdf.format(new Date(timestamp))+"'::timestamp";
+        return "\""+sdf.format(new Date(timestamp))+"\"";
     }
 
     public long convertTimestampToEpoch(Binding binding) throws ParseException {
@@ -31,7 +31,7 @@ public class SparqlConverter extends Converter {
     }
 
     public String convertString(String value) {
-        return "'" + value + "'";
+        return "\"" + value + "\"";
     }
 
     public String convertStringList(List<String> values) {

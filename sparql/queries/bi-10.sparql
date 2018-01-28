@@ -15,7 +15,7 @@ WHERE
         SELECT ?person ((COUNT(?message) + MAX(?interestScore))  AS ?score) 
         WHERE
         {
-            BIND ("Chad" as ?tagName)
+            BIND ($tag as ?tagName)
             VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
             ?tag foaf:name ?tagName .
             ?person a snvoc:Person .
@@ -23,7 +23,9 @@ WHERE
             {
                 ?message a ?type .
                 ?message snvoc:hasCreator ?person .
-                ?message snvoc:hasTag ?tag
+                ?message snvoc:hasTag ?tag .
+                ?message snvoc:creationDate ?creationDate .
+                FILTER (?creationDate < $date) .
             }
             UNION
             {
@@ -33,10 +35,10 @@ WHERE
         GROUP BY ?person
     }
     {
-        SELECT ?friend ((COUNT(?message) + MAX(?interestScore))  AS ?friendInterestScore) 
+        SELECT ?friend ((COUNT(?message) + MAX(?interestScore)) AS ?friendInterestScore)
         WHERE
         {
-            BIND ("Chad" as ?tagName)
+            BIND ($tag as ?tagName)
             VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
             ?tag foaf:name ?tagName .
             ?friend a snvoc:Person .
@@ -44,7 +46,9 @@ WHERE
             {
                 ?message a ?type .
                 ?message snvoc:hasCreator ?friend .
-                ?message snvoc:hasTag ?tag
+                ?message snvoc:hasTag ?tag .
+                ?message snvoc:creationDate ?creationDate .
+                FILTER (?creationDate < $date) .
             }
             UNION
             {

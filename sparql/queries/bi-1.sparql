@@ -25,7 +25,7 @@ WHERE
             ?message snvoc:length ?length .
             ?message snvoc:creationDate ?creationDate .
 
-            FILTER (?creationDate < "2017-07-15T11:50:56") .
+            FILTER (?creationDate < $date) .
 
             BIND( year(?creationDate) AS ?messageYear) .
 

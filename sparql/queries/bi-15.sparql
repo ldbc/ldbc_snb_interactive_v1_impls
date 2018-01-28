@@ -15,20 +15,19 @@ WHERE
         SELECT ?countryName (FLOOR(COUNT(?friend) / COUNT(DISTINCT ?person)) AS ?avgFriendCount)
         WHERE
         {
-            BIND( "Germany" AS ?countryName )  
             ?person a snvoc:Person .
-            ?person snvoc:isLocatedIn/snvoc:isPartOf/foaf:name ?countryName .
+            ?person snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country .
             ?person snvoc:knows/snvoc:hasPerson ?friend .
             ?friend a snvoc:Person .
-            ?friend snvoc:isLocatedIn/snvoc:isPartOf/foaf:name ?countryName    
+            ?friend snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country
         }
         GROUP BY ?countryName
     }
     ?person a snvoc:Person .
-    ?person snvoc:isLocatedIn/snvoc:isPartOf/foaf:name ?countryName .
+    ?person snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country .
     ?person snvoc:knows/snvoc:hasPerson ?friend .
     ?friend a snvoc:Person .
-    ?friend snvoc:isLocatedIn/snvoc:isPartOf/foaf:name ?countryName    
+    ?friend snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country
 }
 GROUP BY ?person ?avgFriendCount
 HAVING(?friendCount = ?avgFriendCount)

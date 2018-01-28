@@ -11,7 +11,7 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 SELECT ?relatedTagName (COUNT(?comment) AS ?count)
 WHERE
 {
-    BIND ("Carl_Gustaf_Emil_Mannerheim" AS ?tagName) 
+    BIND ($tag AS ?tagName)
     VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
     ?message a ?type .
     ?message snvoc:hasTag/foaf:name ?tagName .
