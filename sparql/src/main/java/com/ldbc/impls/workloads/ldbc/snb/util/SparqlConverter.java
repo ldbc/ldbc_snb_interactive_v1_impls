@@ -1,7 +1,5 @@
 package com.ldbc.impls.workloads.ldbc.snb.util;
 
-import org.openrdf.query.Binding;
-
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,6 +9,9 @@ import java.util.stream.Collectors;
 
 public class SparqlConverter extends Converter {
 
+    public static final String SPARQL_QUERY_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+    public static final String SPARQL_RETURN_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+
     /**
      * Converts epoch seconds to SPARQL timestamps.
      * @param timestamp
@@ -18,14 +19,13 @@ public class SparqlConverter extends Converter {
      */
     @Override
     public String convertDateTime(long timestamp) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat(SPARQL_QUERY_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         return "\""+sdf.format(new Date(timestamp))+"\"";
     }
 
-    public long convertTimestampToEpoch(Binding binding) throws ParseException {
-        final String timestamp = binding.getValue().stringValue();
-        final SimpleDateFormat sdf = new SimpleDateFormat(DATAGEN_FORMAT);
+    public long convertTimestampToEpoch(String timestamp) throws ParseException {
+        final SimpleDateFormat sdf = new SimpleDateFormat(SPARQL_RETURN_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         return sdf.parse(timestamp).toInstant().toEpochMilli();
     }
@@ -50,6 +50,5 @@ public class SparqlConverter extends Converter {
             .collect( Collectors.joining( "|" ) ) +
             "\"";
     }
-
 
 }

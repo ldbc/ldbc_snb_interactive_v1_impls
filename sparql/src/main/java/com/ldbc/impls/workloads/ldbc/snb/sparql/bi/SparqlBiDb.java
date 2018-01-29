@@ -57,8 +57,8 @@ import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlDriverConnectionStore;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlListOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlPoolingDbConnectionStore;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlSingletonOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.util.SparqlConverter;
 import org.openrdf.model.impl.BooleanLiteralImpl;
-import org.openrdf.model.impl.IntegerLiteralImpl;
 import org.openrdf.query.BindingSet;
 
 import java.text.ParseException;
@@ -70,6 +70,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class SparqlBiDb extends SparqlDb {
+
+	protected static final SparqlConverter converter = new SparqlConverter();
 
 	@Override
 	protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
@@ -537,12 +539,13 @@ public class SparqlBiDb extends SparqlDb {
 
 	static Pattern ID_PATTERN = Pattern.compile("[0-9]+$");
 
-	public static long convertDate(BindingSet bs, String name) {
-		return 0; //bs.getBinding(name);
+	public static long convertDate(BindingSet bs, String name) throws ParseException {
+		final String timestamp = bs.getBinding(name).getValue().stringValue();
+		return converter.convertTimestampToEpoch(timestamp);
 	}
 
 	public static double convertDouble(BindingSet bs, String name) {
-		return ((IntegerLiteralImpl) bs.getBinding(name)).doubleValue();
+		return Double.parseDouble(bs.getBinding(name).getValue().stringValue());
 	}
 
 	public static int convertInteger(BindingSet bs, String name) {
