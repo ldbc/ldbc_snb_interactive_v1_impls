@@ -8,31 +8,31 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-SELECT ?person ?score (SUM(?friendInterestScore) AS ?friendScore)
+SELECT ?personId ?score (SUM(?friendInterestScore) AS ?friendsScore)
 WHERE
 {
     {
-        SELECT ?person ((COUNT(?message) + MAX(?interestScore))  AS ?score) 
+        SELECT ?personId ((COUNT(?message) + MAX(?interestScore))  AS ?score)
         WHERE
         {
             BIND ($tag as ?tagName)
             VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
             ?tag foaf:name ?tagName .
-            ?person a snvoc:Person .
-            BIND( IF(EXISTS { ?person snvoc:hasInterest ?tag}, 100, 0) AS ?interestScore)
+            ?personId a snvoc:Person .
+            BIND( IF(EXISTS { ?personId snvoc:hasInterest ?tag}, 100, 0) AS ?interestScore)
             {
                 ?message a ?type .
-                ?message snvoc:hasCreator ?person .
+                ?message snvoc:hasCreator ?personId .
                 ?message snvoc:hasTag ?tag .
                 ?message snvoc:creationDate ?creationDate .
                 FILTER (?creationDate < $date) .
             }
             UNION
             {
-                ?person snvoc:hasInterest ?tag
+                ?personId snvoc:hasInterest ?tag
             }
         }
-        GROUP BY ?person
+        GROUP BY ?personId
     }
     {
         SELECT ?friend ((COUNT(?message) + MAX(?interestScore)) AS ?friendInterestScore)
@@ -58,14 +58,13 @@ WHERE
         GROUP BY ?friend
     }
     {
-        ?friend snvoc:knows/snvoc:hasPerson ?person 
+        ?friend snvoc:knows/snvoc:hasPerson ?personId
     }
     UNION
     {
-        ?person snvoc:knows/snvoc:hasPerson ?friend 
+        ?personId snvoc:knows/snvoc:hasPerson ?friend
     }
 }
-GROUP BY ?person ?score
-ORDER BY DESC(?score + ?friendScore) ?person
+GROUP BY ?personId ?score
+ORDER BY DESC(?score + ?friendsScore) ?personId
 LIMIT 100
-

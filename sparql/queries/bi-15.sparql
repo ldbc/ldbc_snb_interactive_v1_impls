@@ -8,7 +8,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-SELECT ?person ?avgFriendCount (COUNT(?friend) AS ?friendCount)
+SELECT ?personId (COUNT(?friend) AS ?count)
 WHERE
 {
     {

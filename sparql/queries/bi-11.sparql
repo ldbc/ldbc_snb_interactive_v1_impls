@@ -8,7 +8,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-SELECT ?person ?tagName (COUNT(?like) AS ?countLikes) (COUNT(?reply) AS ?countReplies)
+SELECT ?personId ?tagName (COUNT(?like) AS ?likeCount) (COUNT(?reply) AS ?replyCount)
 WHERE
 {
     ?reply snvoc:content ?content  .
@@ -18,14 +18,13 @@ WHERE
     ?reply snvoc:replyOf ?original .
     FILTER NOT EXISTS { ?original snvoc:hasTag ?tag }
     BIND ($country AS ?countryName)
-    ?person a snvoc:Person .
-    ?person snvoc:isLocatedIn/snvoc:isPartOf/foaf:name ?countryName .
-    ?reply snvoc:hasCreator ?person .
-    ?personWhoLiked a snvoc:Person .
-    ?personWhoLiked snvoc:likes ?like .
+    ?personId a snvoc:Person .
+    ?personId snvoc:isLocatedIn/snvoc:isPartOf/foaf:name ?countryName .
+    ?reply snvoc:hasCreator ?personId .
+    ?personIdWhoLiked a snvoc:Person .
+    ?personIdWhoLiked snvoc:likes ?like .
     ?like snvoc:hasComment ?reply .
 }
-GROUP BY ?person ?tagName
-ORDER BY DESC(?countLikes) ?person ?tagName
+GROUP BY ?personId ?tagName
+ORDER BY DESC(?likeCount) ?personId ?tagName
 LIMIT 100
-

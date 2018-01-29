@@ -8,21 +8,23 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-SELECT ?person (COUNT(?post) AS ?threadCount) (COUNT(?reply) + COUNT(DISTINCT ?post)  AS ?messageCount)
+SELECT ?personId ?personFirstName ?personLastName (COUNT(?post) AS ?threadCount) (COUNT(?reply) + COUNT(DISTINCT ?post) AS ?messageCount)
 WHERE
 {
     VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
-    ?person a snvoc:Person .
-    ?post snvoc:hasCreator ?person .
+    ?personId a snvoc:Person .
+    ?personId snvoc:firstName ?personFirstName .
+    ?personId snvoc:lastName ?personLastName .
+    ?post snvoc:hasCreator ?personId .
     ?post snvoc:creationDate ?postCreationDate .
     ?reply a ?type .
     ?reply snvoc:replyOf+ ?post .
     ?reply snvoc:creationDate ?replyCreationDate .
-    ?person snvoc:id ?personId .
+    ?personId snvoc:id ?personIdId .
     FILTER(($startDate < ?postCreationDate  && ?postCreationDate  < $endDate) &&
            ($startDate < ?replyCreationDate && ?replyCreationDate < $endDate))
-    
+
 }
-GROUP BY ?person 
-ORDER BY DESC(?messageCount) ?person
+GROUP BY ?personId
+ORDER BY DESC(?messageCount) ?personId
 LIMIT 100

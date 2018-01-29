@@ -8,25 +8,24 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-SELECT ?messageId ?creationDate ?firstName ?lastName (COUNT(?like) AS ?likeCount) 
+SELECT ?messageId ?messageCreationDate ?creatorFirstName ?creatorLastName (COUNT(?like) AS ?likeCount)
 WHERE
 {
     VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
     ?message a ?type .
-    ?message snvoc:creationDate ?creationDate .
-    FILTER( ?creationDate > $date )
+    ?message snvoc:creationDate ?messageCreationDate .
+    FILTER( ?messageCreationDate > $date )
     ?message snvoc:id ?messageId .
     ?message snvoc:hasCreator ?person .
     ?person a snvoc:Person .
-    ?person snvoc:firstName ?firstName .
-    ?person snvoc:lastName ?lastName .
+    ?person snvoc:firstName ?creatorFirstName .
+    ?person snvoc:lastName ?creatorLastName .
     ?personWhoLikes a snvoc:Person .
     ?personWhoLikes snvoc:likes ?like .
     ?like snvoc:hasComment|snvoc:hasPost ?message
-    
+
 }
-GROUP BY ?messageId ?creationDate ?firstName ?lastName
+GROUP BY ?messageId ?messageCreationDate ?creatorFirstName ?creatorLastName
 HAVING (?likeCount > $likeThreshold)
 ORDER BY DESC(?likeCount) ?messageId
 LIMIT 100
-
