@@ -14,8 +14,14 @@ ldbc.snb.datagen.serializer.invariantSerializer:ldbc.snb.datagen.serializer.snb.
 ldbc.snb.datagen.serializer.personActivitySerializer:ldbc.snb.datagen.serializer.snb.interactive.TurtlePersonActivitySerializer
 ```
 
-### Loading
+### Loading the data:
 
+Set the `RDF_DATA_DIR` environment variable and run the load script:
+
+```
+export RDF_DATA_DIR=/path/to/the/ttl/files
+./load-to-blazegraph.sh
+```
 
 ## Running the implementation
 
@@ -25,7 +31,7 @@ To create the validation data set, run:
 
 ```bash
 java -cp target/sparql-0.0.1-SNAPSHOT.jar com.ldbc.driver.Client \
-  -db com.ldbc.impls.workloads.ldbc.snb.cypher.bi.SparqlBiDb \
+  -db com.ldbc.impls.workloads.ldbc.snb.sparql.bi.SparqlBiDb \
   -P sparql-create_validation_parameters.properties
 ```
 
@@ -33,7 +39,7 @@ To validate the database, run:
 
 ```bash
 java -cp target/sparql-0.0.1-SNAPSHOT.jar com.ldbc.driver.Client \
-  -db com.ldbc.impls.workloads.ldbc.snb.cypher.bi.SparqlBiDb \
+  -db com.ldbc.impls.workloads.ldbc.snb.sparql.bi.SparqlBiDb \
   -P sparql-validate_db.properties
 ```
 
@@ -41,6 +47,6 @@ To execute the benchmark, run:
 
 ```bash
 java -cp target/sparql-0.0.1-SNAPSHOT.jar com.ldbc.driver.Client \
-  -db com.ldbc.impls.workloads.ldbc.snb.cypher.bi.SparqlBiDb \
+  -db com.ldbc.impls.workloads.ldbc.snb.sparql.bi.SparqlBiDb \
   -P sparql-benchmark.properties
 ```

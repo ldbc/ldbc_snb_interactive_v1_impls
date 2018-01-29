@@ -42,9 +42,8 @@ script:
   # SPARQL
   - cd sparql
   - export RDF_DATA_DIR=`pwd`/test-data
-  - cd load-scripts
-  - ./import-to-blazegraph.sh
-  - cd ../..
+  - ./load-to-blazegraph.sh
+  - cd ..
   # tests
   - mvn test -B
 notifications:

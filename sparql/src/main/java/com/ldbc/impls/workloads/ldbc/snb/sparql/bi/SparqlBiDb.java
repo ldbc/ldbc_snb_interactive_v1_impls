@@ -68,7 +68,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-// https://github.com/ldbc/ldbc_snb_driver/commit/2cb756078fb1da950c6240e9a879dfb6df375dc4
 public class SparqlBiDb extends SparqlDb {
 
 	@Override
@@ -84,16 +83,16 @@ public class SparqlBiDb extends SparqlDb {
 		registerOperationHandler(LdbcSnbBiQuery7AuthoritativeUsers.class, BiQuery7.class);
 		registerOperationHandler(LdbcSnbBiQuery8RelatedTopics.class, BiQuery8.class);
 		registerOperationHandler(LdbcSnbBiQuery9RelatedForums.class, BiQuery9.class);
-//		registerOperationHandler(LdbcSnbBiQuery10TagPerson.class, BiQuery10.class);
+		registerOperationHandler(LdbcSnbBiQuery10TagPerson.class, BiQuery10.class);
 		registerOperationHandler(LdbcSnbBiQuery11UnrelatedReplies.class, BiQuery11.class);
 		registerOperationHandler(LdbcSnbBiQuery12TrendingPosts.class, BiQuery12.class);
-//		registerOperationHandler(LdbcSnbBiQuery13PopularMonthlyTags.class, BiQuery13.class);
+		registerOperationHandler(LdbcSnbBiQuery13PopularMonthlyTags.class, BiQuery13.class);
 		registerOperationHandler(LdbcSnbBiQuery14TopThreadInitiators.class, BiQuery14.class);
 		registerOperationHandler(LdbcSnbBiQuery15SocialNormals.class, BiQuery15.class);
 //		registerOperationHandler(LdbcSnbBiQuery16ExpertsInSocialCircle.class, BiQuery16.class);
 		registerOperationHandler(LdbcSnbBiQuery17FriendshipTriangles.class, BiQuery17.class);
 		registerOperationHandler(LdbcSnbBiQuery18PersonPostCounts.class, BiQuery18.class);
-//		registerOperationHandler(LdbcSnbBiQuery19StrangerInteraction.class, BiQuery19.class);
+		registerOperationHandler(LdbcSnbBiQuery19StrangerInteraction.class, BiQuery19.class);
 		registerOperationHandler(LdbcSnbBiQuery20HighLevelTopics.class, BiQuery20.class);
 //		registerOperationHandler(LdbcSnbBiQuery21Zombies.class, BiQuery21.class);
 //		registerOperationHandler(LdbcSnbBiQuery22InternationalDialog.class, BiQuery22.class);

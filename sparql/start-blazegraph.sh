@@ -1,3 +1,3 @@
 #!/bin/bash
 
-java -jar blazegraph.jar blazegraph.properties
+java -Xmx4G -Dbigdata.propertyFile=blazegraph.properties -jar blazegraph.jar
