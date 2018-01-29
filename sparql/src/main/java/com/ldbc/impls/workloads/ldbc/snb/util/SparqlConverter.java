@@ -17,7 +17,7 @@ public class SparqlConverter extends Converter {
      * @return
      */
     @Override
-    public String convertDate(long timestamp) {
+    public String convertDateTime(long timestamp) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         return "\""+sdf.format(new Date(timestamp))+"\"";

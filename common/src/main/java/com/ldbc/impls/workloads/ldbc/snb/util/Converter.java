@@ -18,10 +18,14 @@ public class Converter {
      * @param timestamp
      * @return
      */
-    public String convertDate(long timestamp) {
+    public String convertDateTime(long timestamp) {
         final SimpleDateFormat sdf = new SimpleDateFormat(DATAGEN_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         return "'"+sdf.format(new Date(timestamp))+"'";
+    }
+
+    public String convertDate(long timestamp) {
+        return convertDateTime(timestamp);
     }
 
     /**
