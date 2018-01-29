@@ -15,7 +15,6 @@ ALTER TABLE place ADD PRIMARY KEY (pl_placeid);
 ALTER TABLE post_tag ADD PRIMARY KEY (pst_postid, pst_tagid);
 ALTER TABLE tagclass ADD PRIMARY KEY (tc_tagclassid);
 ALTER TABLE tag ADD PRIMARY KEY (t_tagid);
-ALTER TABLE tag_tagclass ADD PRIMARY KEY (ttc_tagid, ttc_tagclassid);
 
 vacuum analyze;
 -- Additional indexes (currently defined w/ Virtuoso syntax)

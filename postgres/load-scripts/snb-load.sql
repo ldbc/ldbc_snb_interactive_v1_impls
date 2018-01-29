@@ -49,9 +49,6 @@ COPY tagclass FROM 'PATHVAR/tagclass_0_0.csv' WITH DELIMITER '|' CSV HEADER;
 -- Populate tag table
 COPY tag FROM 'PATHVAR/tag_0_0.csv' WITH DELIMITER '|' CSV HEADER;
 
--- Populate tag_tagclass table
-COPY tag_tagclass FROM 'PATHVAR/tag_hasType_tagclass_0_0.csv' WITH DELIMITER '|' CSV HEADER;
-
 
 -- PROBLEMATIC
 
