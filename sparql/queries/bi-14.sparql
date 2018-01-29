@@ -25,6 +25,6 @@ WHERE
            ($startDate < ?replyCreationDate && ?replyCreationDate < $endDate))
 
 }
-GROUP BY ?personId
+GROUP BY ?personId ?personFirstName ?personLastName
 ORDER BY DESC(?messageCount) ?personId
 LIMIT 100
