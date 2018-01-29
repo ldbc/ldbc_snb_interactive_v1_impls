@@ -1,41 +1,39 @@
--- Q5. Top posters in a country
--- country: Belarus
-select
-  p_personid,
-  p_firstname,
-  p_lastname,
-  p_creationdate,
-  count(ps_postid)
-from
-  (
-    select f_forumid, count(*) as cnt
-    from forum, forum_person, person, country
-    where f_forumid = fp_forumid
-     and p_personid = fp_personid
-     and p_placeid = ctry_city
-     and ctry_name = '$country'
-    group by f_forumid order by cnt desc, f_forumid asc limit 100
-  ) tf
-  inner join post on ps_forumid = f_forumid
-  right outer join (
-    select distinct person.*
-    from
-    (
-       select f_forumid, f_moderatorid, count(*) as cnt
-       from forum, forum_person, person, country
-       where f_forumid = fp_forumid
-         and p_personid = fp_personid
-         and p_placeid = ctry_city
-         and ctry_name = '$country'
-       group by f_forumid, f_moderatorid
-       order by cnt desc, f_forumid asc limit 100
-    ) tf
-    inner join forum_person on fp_forumid = f_forumid
-    inner join person on fp_personid = p_personid
-                      or p_personid = f_moderatorid
-  ) person on ps_creatorid = p_personid
-group by p_personid, p_firstname, p_lastname, p_creationdate
-order by
-  count(ps_creatorid) desc,
-  p_personid asc
-limit 100;
+/* Q5. Top posters in a country
+\set country '\'Belarus\''
+ */
+WITH top100_popular_forums AS (
+  SELECT fp_forumid AS forumid
+    FROM forum_person fp
+       , person p
+       , place ci -- city
+       , place co -- country
+   WHERE 1=1
+      -- join
+     AND fp.fp_personid = p.p_personid
+     AND p.p_placeid = ci.pl_placeid
+     AND ci.pl_containerplaceid = co.pl_placeid
+      -- filter
+     AND co.pl_name = :country
+   GROUP BY fp_forumid
+   ORDER BY count(*) DESC, fp_forumid
+   LIMIT 100
+)
+SELECT au.p_personid AS "person.id"
+     , au.p_firstname AS "person.firstName"
+     , au.p_lastname AS "person.lastName"
+     , au.p_creationdate
+     -- a single person might be member of more than 1 of the top100 forums, so their posts should be DISTINCT counted
+     , count(DISTINCT p.ps_postid) AS postCount
+  FROM top100_popular_forums t
+       INNER JOIN forum_person fp ON (t.forumid = fp.fp_forumid)
+       -- author of the post
+       INNER JOIN person au ON (fp.fp_personid = au.p_personid)
+       LEFT JOIN post p ON (1=1
+                        AND au.p_personid = p.ps_creatorid
+                        AND p.ps_forumid IN (SELECT forumid from top100_popular_forums)
+                        AND p.ps_replyof IS NULL
+                           )
+ GROUP BY au.p_personid, au.p_firstname, au.p_lastname, au.p_creationdate
+ ORDER BY postCount DESC, au.p_personid
+ LIMIT 100
+;

@@ -15,7 +15,7 @@ public class LdbcSnbBiSparqlTest extends LdbcSnbBiQueryTest {
 	private static String queryDir = "queries/";
 
 	public LdbcSnbBiSparqlTest() throws DbException {
-		super(new SparqlBiDb() {});
+		super(new SparqlBiDb());
 	}
 
 	@Override

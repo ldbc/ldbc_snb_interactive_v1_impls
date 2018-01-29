@@ -1,25 +1,28 @@
-select
-  extract(year from ps_creationdate) as yy,
-  extract(month from ps_creationdate) as mm,
-  continent,
-  count(*) as n_posts,
-  sum((select count(*) from likes where l_postid = ps_postid)) as n_likes
-from
-  post join post_tag on pst_postid = ps_postid
-  left join (
-    select cont.pl_name as continent, ctry.pl_placeid as pl
-    from place cont, place ctry
-    where cont.pl_placeid = ctry.pl_containerplaceid
-  ) ppl on pl = ps_locationid
-where pst_tagid in (
-    select ttc_tagid
-    from tag_tagclass, tagclass
-    where tc_name = '$tagClass'
-      and ttc_tagclassid = tc_tagclassid
-  )
-group by extract(year from ps_creationdate), extract(month from ps_creationdate), continent
-order by
-  extract(year from ps_creationdate) asc,
-  extract(month from ps_creationdate) asc,
-  continent asc
-limit 100;
+/* Q24. Messages by Topic and Continent
+\set tagClass '\'Album\''
+ */
+SELECT count(DISTINCT m.ps_postid) AS messageCount
+     -- joining with post_tag multiplies message records, hence they are DISTINCT'ed when counting likes
+     , count(DISTINCT l.l_postid||','||l.l_personid) AS likeCount
+     , extract(YEAR FROM m.ps_creationdate) AS year
+     , extract(MONTH FROM m.ps_creationdate) AS month
+     , con.pl_name AS "continent.name"
+  FROM tagclass tc
+     , tag t
+     , post_tag mt
+     , post m LEFT JOIN likes l ON (m.ps_postid = l.l_postid)
+     , place cou -- country
+     , place con -- continent
+ WHERE 1=1
+    -- join
+   AND tc.tc_tagclassid = t.t_tagclassid
+   AND t.t_tagid = mt.pst_tagid
+   AND mt.pst_postid = m.ps_postid
+   AND m.ps_locationid = cou.pl_placeid
+   AND cou.pl_containerplaceid = con.pl_placeid
+    -- filter
+   AND tc.tc_name = :tagClass
+ GROUP BY year, month, con.pl_name
+ ORDER BY year, month, con.pl_name DESC
+ LIMIT 100
+;

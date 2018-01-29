@@ -57,7 +57,6 @@ import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlDriverConnectionStore;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlListOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlPoolingDbConnectionStore;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlSingletonOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.util.SparqlConverter;
 import org.openrdf.model.impl.BooleanLiteralImpl;
 import org.openrdf.model.impl.IntegerLiteralImpl;
 import org.openrdf.query.BindingSet;
@@ -66,9 +65,10 @@ import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-// https://github.com/ldbc/ldbc_snb_driver/commit/2cb756078fb1da950c6240e9a879dfb6df375dc4
 public class SparqlBiDb extends SparqlDb {
 
 	@Override
@@ -84,16 +84,16 @@ public class SparqlBiDb extends SparqlDb {
 		registerOperationHandler(LdbcSnbBiQuery7AuthoritativeUsers.class, BiQuery7.class);
 		registerOperationHandler(LdbcSnbBiQuery8RelatedTopics.class, BiQuery8.class);
 		registerOperationHandler(LdbcSnbBiQuery9RelatedForums.class, BiQuery9.class);
-//		registerOperationHandler(LdbcSnbBiQuery10TagPerson.class, BiQuery10.class);
+		registerOperationHandler(LdbcSnbBiQuery10TagPerson.class, BiQuery10.class);
 		registerOperationHandler(LdbcSnbBiQuery11UnrelatedReplies.class, BiQuery11.class);
 		registerOperationHandler(LdbcSnbBiQuery12TrendingPosts.class, BiQuery12.class);
-//		registerOperationHandler(LdbcSnbBiQuery13PopularMonthlyTags.class, BiQuery13.class);
+		registerOperationHandler(LdbcSnbBiQuery13PopularMonthlyTags.class, BiQuery13.class);
 		registerOperationHandler(LdbcSnbBiQuery14TopThreadInitiators.class, BiQuery14.class);
 		registerOperationHandler(LdbcSnbBiQuery15SocialNormals.class, BiQuery15.class);
 //		registerOperationHandler(LdbcSnbBiQuery16ExpertsInSocialCircle.class, BiQuery16.class);
 		registerOperationHandler(LdbcSnbBiQuery17FriendshipTriangles.class, BiQuery17.class);
 		registerOperationHandler(LdbcSnbBiQuery18PersonPostCounts.class, BiQuery18.class);
-//		registerOperationHandler(LdbcSnbBiQuery19StrangerInteraction.class, BiQuery19.class);
+		registerOperationHandler(LdbcSnbBiQuery19StrangerInteraction.class, BiQuery19.class);
 		registerOperationHandler(LdbcSnbBiQuery20HighLevelTopics.class, BiQuery20.class);
 //		registerOperationHandler(LdbcSnbBiQuery21Zombies.class, BiQuery21.class);
 //		registerOperationHandler(LdbcSnbBiQuery22InternationalDialog.class, BiQuery22.class);
@@ -111,13 +111,13 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery1PostingSummaryResult convertSingleResult(BindingSet bs) {
-		    int messageYear             = ((IntegerLiteralImpl) bs.getBinding("messageYear"         )).intValue();
+			int messageYear             = convertInteger(bs, "messageYear"         );
 			boolean isComment           = ((BooleanLiteralImpl) bs.getBinding("isComment"           )).booleanValue();
-			int lengthCategory          = ((IntegerLiteralImpl) bs.getBinding("lengthCategory"      )).intValue();
-			long messageCount           = ((IntegerLiteralImpl) bs.getBinding("messageCount"        )).longValue();
-			int averageMessageLength    = ((IntegerLiteralImpl) bs.getBinding("averageMessageLength")).intValue();
-			int sumMessageLength        = ((IntegerLiteralImpl) bs.getBinding("totalMessageCount"   )).intValue();
-			double percentageOfMessages = ((IntegerLiteralImpl) bs.getBinding("percentageOfMessages")).doubleValue();
+			int lengthCategory          = convertInteger(bs, "lengthCategory"      );
+			long messageCount           = convertLong   (bs, "messageCount"        );
+			int averageMessageLength    = convertInteger(bs, "averageMessageLength");
+			int sumMessageLength        = convertInteger(bs, "totalMessageCount"   );
+			double percentageOfMessages = convertDouble (bs, "percentageOfMessages");
 
 			return new LdbcSnbBiQuery1PostingSummaryResult(messageYear, isComment, lengthCategory, messageCount, averageMessageLength, sumMessageLength, (float) percentageOfMessages);
 		}
@@ -133,12 +133,12 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery2TopTagsResult convertSingleResult(BindingSet bs) {
-			String countryName  =                       bs.getBinding("countryName" ).getValue().stringValue();
-			int messageMonth    = ((IntegerLiteralImpl) bs.getBinding("messageMonth")).intValue();
-			String personGender =                       bs.getBinding("personGender").getValue().stringValue();
-			int ageGroup        = ((IntegerLiteralImpl) bs.getBinding("ageGroup"    )).intValue();
-			String tagName      =                       bs.getBinding("tagName"     ).getValue().stringValue();
-			int messageCount    = ((IntegerLiteralImpl) bs.getBinding("messageCount")).intValue();
+			String countryName  = convertString (bs, "countryName" );
+			int messageMonth    = convertInteger(bs, "messageMonth");
+			String personGender = convertString (bs, "personGender");
+			int ageGroup        = convertInteger(bs, "ageGroup"    );
+			String tagName      = convertString (bs, "tagName"     );
+			int messageCount    = convertInteger(bs, "messageCount");
 			return new LdbcSnbBiQuery2TopTagsResult(countryName, messageMonth, personGender, ageGroup, tagName, messageCount);
 		}
 
@@ -153,10 +153,10 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery3TagEvolutionResult convertSingleResult(BindingSet bs) {
-			String tagName =                       bs.getBinding("tagName").getValue().stringValue();
-			int countA     = ((IntegerLiteralImpl) bs.getBinding("countA")).intValue();
-			int countB     = ((IntegerLiteralImpl) bs.getBinding("countB")).intValue();
-			int diffCount  = ((IntegerLiteralImpl) bs.getBinding("diff"  )).intValue();
+			String tagName = convertString (bs, "tagName");
+			int countA     = convertInteger(bs, "countA");
+			int countB     = convertInteger(bs, "countB");
+			int diffCount  = convertInteger(bs, "diff"  );
 			return new LdbcSnbBiQuery3TagEvolutionResult(tagName, countA, countB, diffCount);
 		}
 
@@ -171,12 +171,11 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery4PopularCountryTopicsResult convertSingleResult(BindingSet bs) throws ParseException {
-			long forumId           = ((IntegerLiteralImpl) bs.getBinding("forumId"   )).longValue();
-			String forumTitle      =                       bs.getBinding("forumTitle").getValue().stringValue();
-			long forumCreationDate = new SparqlConverter().convertTimestampToEpoch(
-					                                       bs.getBinding("forumCreationDate"));
-			long personId          = ((IntegerLiteralImpl) bs.getBinding("personId"  )).longValue();
-			int postCount          = ((IntegerLiteralImpl) bs.getBinding("postCount" )).intValue();
+			long forumId           = convertLong   (bs, "forumId"          );
+			String forumTitle      = convertString (bs, "forumTitle"       );
+			long forumCreationDate = convertDate   (bs, "forumCreationDate");
+			long personId          = convertLong   (bs, "personId"         );
+			int postCount          = convertInteger(bs, "postCount"        );
 			return new LdbcSnbBiQuery4PopularCountryTopicsResult(forumId, forumTitle, forumCreationDate, personId, postCount);
 		}
 
@@ -191,13 +190,12 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery5TopCountryPostersResult convertSingleResult(BindingSet bs) throws ParseException {
-			long personId           = ((IntegerLiteralImpl) bs.getBinding("personId"       )).longValue();
-			String personFirstName  =                       bs.getBinding("personFirstName").getValue().stringValue();
-			String personLastName   =                       bs.getBinding("personLastName" ).getValue().stringValue();
-			long personCreationDate = new SparqlConverter().convertTimestampToEpoch(
-					                                        bs.getBinding("personCreationDate"));
-			int pontCount           = ((IntegerLiteralImpl) bs.getBinding("pontCount"      )).intValue();
-			return new LdbcSnbBiQuery5TopCountryPostersResult(personId, personFirstName, personLastName, personCreationDate, pontCount);
+			long personId           = convertLong   (bs, "personId"          );
+			String personFirstName  = convertString (bs, "personFirstName"   );
+			String personLastName   = convertString (bs, "personLastName"    );
+			long personCreationDate = convertDate   (bs, "personCreationDate");
+			int postCount           = convertInteger(bs, "postCount"         );
+			return new LdbcSnbBiQuery5TopCountryPostersResult(personId, personFirstName, personLastName, personCreationDate, postCount);
 		}
 
 	}
@@ -211,11 +209,11 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery6ActivePostersResult convertSingleResult(BindingSet bs) {
-			long personId    = ((IntegerLiteralImpl) bs.getBinding("personId"    )).longValue();
-			int replyCount   = ((IntegerLiteralImpl) bs.getBinding("replyCount"  )).intValue();
-			int likeCount    = ((IntegerLiteralImpl) bs.getBinding("likeCount"   )).intValue();
-			int messageCount = ((IntegerLiteralImpl) bs.getBinding("messageCount")).intValue();
-			int score        = ((IntegerLiteralImpl) bs.getBinding("score"       )).intValue();
+			long personId    = convertLong   (bs, "personId"    );
+			int replyCount   = convertInteger(bs, "replyCount"  );
+			int likeCount    = convertInteger(bs, "likeCount"   );
+			int messageCount = convertInteger(bs, "messageCount");
+			int score        = convertInteger(bs, "score"       );
 			return new LdbcSnbBiQuery6ActivePostersResult(personId, replyCount, likeCount, messageCount, score);
 		}
 
@@ -230,8 +228,8 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery7AuthoritativeUsersResult convertSingleResult(BindingSet bs) {
-			long personId      = ((IntegerLiteralImpl) bs.getBinding("personId"      )).longValue();
-			int authorityScore = ((IntegerLiteralImpl) bs.getBinding("authorityScore")).intValue();
+			long personId      = convertLong   (bs, "personId"      );
+			int authorityScore = convertInteger(bs, "authorityScore");
 			return new LdbcSnbBiQuery7AuthoritativeUsersResult(personId, authorityScore);
 		}
 
@@ -246,8 +244,8 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery8RelatedTopicsResult convertSingleResult(BindingSet bs) {
-			String relatedTagName =                       bs.getBinding("relatedTagName").getValue().stringValue();
-			int count             = ((IntegerLiteralImpl) bs.getBinding("count")).intValue();
+			String relatedTagName = convertString (bs, "relatedTagName");
+			int count             = convertInteger(bs, "count");
 			return new LdbcSnbBiQuery8RelatedTopicsResult(relatedTagName, count);
 		}
 
@@ -262,9 +260,9 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery9RelatedForumsResult convertSingleResult(BindingSet bs) {
-			long forumId = ((IntegerLiteralImpl) bs.getBinding("forumId")).longValue();
-			int count1   = ((IntegerLiteralImpl) bs.getBinding("count1" )).intValue();
-			int count2   = ((IntegerLiteralImpl) bs.getBinding("count2" )).intValue();
+			long forumId = convertLong   (bs, "forumId");
+			int count1   = convertInteger(bs, "count1" );
+			int count2   = convertInteger(bs, "count2" );
 			return new LdbcSnbBiQuery9RelatedForumsResult(forumId, count1, count2);
 		}
 
@@ -279,9 +277,9 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery10TagPersonResult convertSingleResult(BindingSet bs) {
-			long personId =    ((IntegerLiteralImpl) bs.getBinding("personId"    )).longValue();
-			int score =        ((IntegerLiteralImpl) bs.getBinding("score"       )).intValue();
-			int friendsScore = ((IntegerLiteralImpl) bs.getBinding("friendsScore")).intValue();
+			long personId =    convertLong   (bs, "personId"    );
+			int score =        convertInteger(bs, "score"       );
+			int friendsScore = convertInteger(bs, "friendsScore");
 			return new LdbcSnbBiQuery10TagPersonResult(personId, score, friendsScore);
 		}
 
@@ -296,10 +294,10 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery11UnrelatedRepliesResult convertSingleResult(BindingSet bs) {
-			long personId  = ((IntegerLiteralImpl) bs.getBinding("personId"  )).longValue();
-			String tagName =                       bs.getBinding("tagName"   ).getValue().stringValue();
-			int likeCount  = ((IntegerLiteralImpl) bs.getBinding("likeCount" )).intValue();
-			int replyCount = ((IntegerLiteralImpl) bs.getBinding("replyCount")).intValue();
+			long personId  = convertLong   (bs, "personId"  );
+			String tagName = convertString (bs, "tagName"   );
+			int likeCount  = convertInteger(bs, "likeCount" );
+			int replyCount = convertInteger(bs, "replyCount");
 			return new LdbcSnbBiQuery11UnrelatedRepliesResult(personId, tagName, likeCount, replyCount);
 		}
 
@@ -314,12 +312,11 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery12TrendingPostsResult convertSingleResult(BindingSet bs) throws ParseException {
-			long messageId           = ((IntegerLiteralImpl) bs.getBinding("messageId")).longValue();
-			long messageCreationDate = new SparqlConverter().convertTimestampToEpoch(
-					                                         bs.getBinding("messageCreationDate"));
-			String creatorFirstName  =                       bs.getBinding("creatorFirstName"   ).getValue().stringValue();
-			String creatorLastName   =                       bs.getBinding("creatorLastName"    ).getValue().stringValue();
-			int likeCount            = ((IntegerLiteralImpl) bs.getBinding("likeCount"          )).intValue();
+			long messageId           = convertLong   (bs, "messageId"          );
+			long messageCreationDate = convertDate   (bs, "messageCreationDate");
+			String creatorFirstName  = convertString (bs, "creatorFirstName"   );
+			String creatorLastName   = convertString (bs, "creatorLastName"    );
+			int likeCount            = convertInteger(bs, "likeCount"          );
 			return new LdbcSnbBiQuery12TrendingPostsResult(messageId, messageCreationDate, creatorFirstName, creatorLastName, likeCount);
 		}
 	}
@@ -333,8 +330,8 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery13PopularMonthlyTagsResult convertSingleResult(BindingSet bs) {
-			int year  = ((IntegerLiteralImpl) bs.getBinding("year"  )).intValue();
-			int month = ((IntegerLiteralImpl) bs.getBinding("mongth")).intValue();
+			int year  = convertInteger(bs, "year" );
+			int month = convertInteger(bs, "month");
 			final String[] popularTagsArray = bs.getBinding("popularTags").getValue().stringValue().split("\\|");
 			final List<LdbcSnbBiQuery13PopularMonthlyTagsResult.TagPopularity> popularTags = Arrays.stream(popularTagsArray).map(popularTag -> {
 				final String[] tag = popularTag.split("#");
@@ -354,11 +351,11 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery14TopThreadInitiatorsResult convertSingleResult(BindingSet bs) {
-			long personId          = ((IntegerLiteralImpl) bs.getBinding("personId"       )).longValue();
-			String personFirstName =                       bs.getBinding("personFirstName").getValue().stringValue();
-			String personLastName  =                       bs.getBinding("personLastName" ).getValue().stringValue();
-			int threadCount        = ((IntegerLiteralImpl) bs.getBinding("threadCount"    )).intValue();
-			int messageCount       = ((IntegerLiteralImpl) bs.getBinding("messageCount"   )).intValue();
+			long personId          = convertLong   (bs, "personId"       );
+			String personFirstName = convertString (bs, "personFirstName");
+			String personLastName  = convertString (bs, "personLastName" );
+			int threadCount        = convertInteger(bs, "threadCount"    );
+			int messageCount       = convertInteger(bs, "messageCount"   );
 			return new LdbcSnbBiQuery14TopThreadInitiatorsResult(personId, personFirstName, personLastName, threadCount, messageCount);
 		}
 	}
@@ -372,8 +369,8 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery15SocialNormalsResult convertSingleResult(BindingSet bs) {
-			long personId = ((IntegerLiteralImpl) bs.getBinding("personId")).longValue();
-			int count     = ((IntegerLiteralImpl) bs.getBinding("count"   )).intValue();
+			long personId = convertLong   (bs, "personId");
+			int count     = convertInteger(bs, "count"   );
 			return new LdbcSnbBiQuery15SocialNormalsResult(personId, count);
 		}
 	}
@@ -387,9 +384,9 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery16ExpertsInSocialCircleResult convertSingleResult(BindingSet bs) {
-			long personId    = ((IntegerLiteralImpl) bs.getBinding("personId")).longValue();
-			String tagName   =                       bs.getBinding("tagName" ).getValue().stringValue();
-			int messageCount = ((IntegerLiteralImpl) bs.getBinding("messageCount")).intValue();
+			long personId    = convertLong   (bs, "personId");
+			String tagName   = convertString (bs, "tagName" );
+			int messageCount = convertInteger(bs, "messageCount");
 			return new LdbcSnbBiQuery16ExpertsInSocialCircleResult(personId, tagName, messageCount);
 		}
 	}
@@ -403,7 +400,7 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery17FriendshipTrianglesResult convertSingleResult(BindingSet bs) {
-			int count = ((IntegerLiteralImpl) bs.getBinding("count")).intValue();
+			int count = convertInteger(bs, "count");
 			return new LdbcSnbBiQuery17FriendshipTrianglesResult(count);
 		}
 	}
@@ -417,8 +414,8 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery18PersonPostCountsResult convertSingleResult(BindingSet bs) {
-			int messageCount = ((IntegerLiteralImpl) bs.getBinding("messageCount")).intValue();
-			int personCount  = ((IntegerLiteralImpl) bs.getBinding("personCount" )).intValue();
+			int messageCount = convertInteger(bs, "messageCount");
+			int personCount  = convertInteger(bs, "personCount" );
 			return new LdbcSnbBiQuery18PersonPostCountsResult(messageCount, personCount);
 		}
 	}
@@ -432,9 +429,9 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery19StrangerInteractionResult convertSingleResult(BindingSet bs) {
-			long personId        = ((IntegerLiteralImpl) bs.getBinding("personId"        )).longValue();
-			int strangerCount    = ((IntegerLiteralImpl) bs.getBinding("strangerCount"   )).intValue();
-			int interactionCount = ((IntegerLiteralImpl) bs.getBinding("interactionCount")).intValue();
+			long personId        = convertLong   (bs, "personId"        );
+			int strangerCount    = convertInteger(bs, "strangerCount"   );
+			int interactionCount = convertInteger(bs, "interactionCount");
 			return new LdbcSnbBiQuery19StrangerInteractionResult(personId, strangerCount, interactionCount);
 		}
 	}
@@ -448,8 +445,8 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery20HighLevelTopicsResult convertSingleResult(BindingSet bs) {
-			String tagClassName =                       bs.getBinding("tagClassName").getValue().stringValue();
-			int messageCount    = ((IntegerLiteralImpl) bs.getBinding("messageCount")).intValue();
+			String tagClassName = convertString (bs, "tagClassName");
+			int messageCount    = convertInteger(bs, "messageCount");
 			return new LdbcSnbBiQuery20HighLevelTopicsResult(tagClassName, messageCount);
 		}
 	}
@@ -463,10 +460,10 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery21ZombiesResult convertSingleResult(BindingSet bs) {
-			long zombieId       = ((IntegerLiteralImpl) bs.getBinding("zombieId"       )).longValue();
-			int zombieLikeCount = ((IntegerLiteralImpl) bs.getBinding("zombieLikeCount")).intValue();
-			int totalLikeCount  = ((IntegerLiteralImpl) bs.getBinding("totalLikeCount" )).intValue();
-			double zombieScore  = ((IntegerLiteralImpl) bs.getBinding("zombieScore"    )).doubleValue();
+			long zombieId       = convertLong   (bs, "zombieId"       );
+			int zombieLikeCount = convertInteger(bs, "zombieLikeCount");
+			int totalLikeCount  = convertInteger(bs, "totalLikeCount" );
+			double zombieScore  = convertDouble (bs, "zombieScore"    );
 			return new LdbcSnbBiQuery21ZombiesResult(zombieId, zombieLikeCount, totalLikeCount, zombieScore);
 		}
 	}
@@ -480,10 +477,10 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery22InternationalDialogResult convertSingleResult(BindingSet bs) {
-			long person1Id   = ((IntegerLiteralImpl) bs.getBinding("person1Id")).longValue();
-			long person2Id   = ((IntegerLiteralImpl) bs.getBinding("person2Id")).longValue();
-			String city1Name =                       bs.getBinding("city1Name").getValue().stringValue();
-			int score        = ((IntegerLiteralImpl) bs.getBinding("score"    )).intValue();
+			long person1Id   = convertLong   (bs, "person1Id");
+			long person2Id   = convertLong   (bs, "person2Id");
+			String city1Name = convertString (bs, "city1Name");
+			int score        = convertInteger(bs, "score"    );
 			return new LdbcSnbBiQuery22InternationalDialogResult(person1Id, person2Id, city1Name, score);
 		}
 	}
@@ -497,9 +494,9 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery23HolidayDestinationsResult convertSingleResult(BindingSet bs) {
-			int messageCount       = ((IntegerLiteralImpl) bs.getBinding("messageCount"   )).intValue();
-			String destinationName =                       bs.getBinding("destinationName").getValue().stringValue();
-			int month              = ((IntegerLiteralImpl) bs.getBinding("month"          )).intValue();
+			int messageCount       = convertInteger(bs, "messageCount"   );
+			String destinationName = convertString (bs, "destinationName");
+			int month              = convertInteger(bs, "month"          );
 			return new LdbcSnbBiQuery23HolidayDestinationsResult(messageCount, destinationName, month);
 		}
 	}
@@ -514,11 +511,11 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery24MessagesByTopicResult convertSingleResult(BindingSet bs) {
-			int messageCount     = ((IntegerLiteralImpl) bs.getBinding("messageCount" )).intValue();
-			int likeCount        = ((IntegerLiteralImpl) bs.getBinding("likeCount"    )).intValue();
-			int year             = ((IntegerLiteralImpl) bs.getBinding("year"         )).intValue();
-			int month            = ((IntegerLiteralImpl) bs.getBinding("month"        )).intValue();
-			String continentName =                       bs.getBinding("continentName").getValue().stringValue();
+			int messageCount     = convertInteger(bs, "messageCount" );
+			int likeCount        = convertInteger(bs, "likeCount"    );
+			int year             = convertInteger(bs, "year"         );
+			int month            = convertInteger(bs, "month"        );
+			String continentName = convertString (bs, "continentName");
 			return new LdbcSnbBiQuery24MessagesByTopicResult(messageCount, likeCount, year, month, continentName);
 		}
 	}
@@ -536,6 +533,31 @@ public class SparqlBiDb extends SparqlDb {
 			final List<Long> personIds = Arrays.stream(personIdStrings).map(Long::parseLong).collect(Collectors.toList());
 			return new LdbcSnbBiQuery25WeightedPathsResult(personIds);
 		}
+	}
+
+	static Pattern ID_PATTERN = Pattern.compile("[0-9]+$");
+
+	public static long convertDate(BindingSet bs, String name) {
+		return 0; //bs.getBinding(name);
+	}
+
+	public static double convertDouble(BindingSet bs, String name) {
+		return ((IntegerLiteralImpl) bs.getBinding(name)).doubleValue();
+	}
+
+	public static int convertInteger(BindingSet bs, String name) {
+		return Integer.parseInt(bs.getBinding(name).getValue().stringValue());
+	}
+
+	public static long convertLong(BindingSet bs, String name) {
+		String string = bs.getBinding(name).getValue().stringValue();
+		Matcher matcher = ID_PATTERN.matcher(string);
+		matcher.find();
+		return Long.parseLong(matcher.group(0));
+	}
+
+	public static String convertString(BindingSet bs, String name) {
+		return bs.getBinding(name).getValue().stringValue();
 	}
 
 }

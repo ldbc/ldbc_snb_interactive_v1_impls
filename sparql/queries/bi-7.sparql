@@ -8,7 +8,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-SELECT ?person1 (SUM(?popularityScore) AS ?authorityScore)
+SELECT ?personId (SUM(?popularityScore) AS ?authorityScore)
 WHERE
 {
     BIND ($tag AS ?tagName)
@@ -21,10 +21,10 @@ WHERE
             ?message3 a ?type .
             ?message3 snvoc:hasCreator ?person2 .
             ?person3 snvoc:likes ?like2 .
-            { 
-                { ?like2 snvoc:hasPost ?message3 } 
-                UNION 
-                { ?like2 snvoc:hasComment ?message3 } 
+            {
+                { ?like2 snvoc:hasPost ?message3 }
+                UNION
+                { ?like2 snvoc:hasComment ?message3 }
             }
         }
         GROUP BY ?person2
@@ -35,10 +35,9 @@ WHERE
     ?message2 snvoc:hasTag/foaf:name ?tagName .
     ?person2 snvoc:likes ?like1 .
     ?like1 snvoc:hasPost|snvoc:hasComment ?message2 .
-    ?message2 snvoc:hasCreator ?person1 .   
-    
-}
-GROUP BY ?person1
-ORDER BY DESC(?authorityScore) ?person1
-LIMIT 100
+    ?message2 snvoc:hasCreator ?personId .
 
+}
+GROUP BY ?personId
+ORDER BY DESC(?authorityScore) ?personId
+LIMIT 100

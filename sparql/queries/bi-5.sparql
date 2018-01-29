@@ -8,20 +8,20 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-SELECT ?person ?firstName ?lastName ?creationDate (COUNT(?post) AS ?postCount)
-WHERE 
+SELECT ?personId ?personFirstName ?personLastName ?personCreationDate (COUNT(?post) AS ?postCount)
+WHERE
 {
     BIND(?countryName1 AS ?countryName2)
     {
         SELECT ?forum
         WHERE
-        {    
+        {
             BIND($country AS ?countryName)
             ?forum a snvoc:Forum .
             ?forum snvoc:hasMember ?memberSerial .
-            ?memberSerial snvoc:hasPerson ?person .
-            ?person a snvoc:Person .
-            ?person snvoc:isLocatedIn ?city .
+            ?memberSerial snvoc:hasPerson ?personId .
+            ?personId a snvoc:Person .
+            ?personId snvoc:isLocatedIn ?city .
             ?city a dbpedia-owl:City .
             ?city snvoc:isPartOf ?country .
             ?country a dbpedia-owl:Country .
@@ -31,7 +31,7 @@ WHERE
         ORDER BY DESC(?memberCount) ?forum
         LIMIT 100
     }
-    
+
     {
         SELECT ?forum2
         WHERE
@@ -39,9 +39,9 @@ WHERE
             BIND($country AS ?countryName)
             ?forum2 a snvoc:Forum .
             ?forum2 snvoc:hasMember ?memberSerial .
-            ?memberSerial snvoc:hasPerson ?person .
-            ?person a snvoc:Person .
-            ?person snvoc:isLocatedIn ?city .
+            ?memberSerial snvoc:hasPerson ?personId .
+            ?personId a snvoc:Person .
+            ?personId snvoc:isLocatedIn ?city .
             ?city a dbpedia-owl:City .
             ?city snvoc:isPartOf ?country .
             ?country a dbpedia-owl:Country .
@@ -51,17 +51,16 @@ WHERE
         ORDER BY DESC(?memberCount) ?forum2
         LIMIT 100
     }
-    ?person a snvoc:Person .
-    ?forum snvoc:hasMember/snvoc:hasPerson ?person .
+    ?personId a snvoc:Person .
+    ?forum snvoc:hasMember/snvoc:hasPerson ?personId .
     ?post a snvoc:Post .
-    ?post snvoc:hasCreator ?person .
+    ?post snvoc:hasCreator ?personId .
     ?forum2 snvoc:containerOf ?post .
-    ?person snvoc:firstName ?firstName . 
-    ?person snvoc:lastName ?lastName .
-    ?person snvoc:creationDate ?creationDate
-    
-}
-GROUP BY ?person ?firstName ?lastName ?creationDate
-ORDER BY DESC(?postCount) ?person
-LIMIT 100
+    ?personId snvoc:firstName ?personFirstName .
+    ?personId snvoc:lastName ?personLastName .
+    ?personId snvoc:creationDate ?personCreationDate
 
+}
+GROUP BY ?personId ?personFirstName ?personLastName ?personCreationDate
+ORDER BY DESC(?postCount) ?personId
+LIMIT 100

@@ -96,13 +96,13 @@ public abstract class BiQueryStore {
 
 	public String getQuery1(LdbcSnbBiQuery1PostingSummary operation) {
 		return prepare(QueryType.Query1, new ImmutableMap.Builder<String, String>()
-				.put("date", getConverter().convertDate(operation.date())).build());
+				.put("date", getConverter().convertDateTime(operation.date())).build());
 	}
 
 	public String getQuery2(LdbcSnbBiQuery2TopTags operation) {
 		return prepare(QueryType.Query2, new ImmutableMap.Builder<String, String>()
-				.put("startDate", getConverter().convertDate(operation.startDate()))
-				.put("endDate", getConverter().convertDate(operation.endDate()))
+				.put("startDate", getConverter().convertDateTime(operation.startDate()))
+				.put("endDate", getConverter().convertDateTime(operation.endDate()))
 				.put("country1", getConverter().convertString(operation.country1()))
 				.put("country2", getConverter().convertString(operation.country2())).build());
 	}
@@ -149,7 +149,7 @@ public abstract class BiQueryStore {
 	public String getQuery10(LdbcSnbBiQuery10TagPerson operation) {
 		return prepare(QueryType.Query10, new ImmutableMap.Builder<String, String>()
 				.put("tag", getConverter().convertString(operation.tag()))
-				.put("date", getConverter().convertDate(operation.date())).build());
+				.put("date", getConverter().convertDateTime(operation.date())).build());
 	}
 
 	public String getQuery11(LdbcSnbBiQuery11UnrelatedReplies operation) {
@@ -160,7 +160,7 @@ public abstract class BiQueryStore {
 
 	public String getQuery12(LdbcSnbBiQuery12TrendingPosts operation) {
 		return prepare(QueryType.Query12, new ImmutableMap.Builder<String, String>()
-				.put("date", getConverter().convertDate(operation.date()))
+				.put("date", getConverter().convertDateTime(operation.date()))
 				.put("likeThreshold", Integer.toString(operation.likeThreshold())).build());
 	}
 
@@ -171,8 +171,8 @@ public abstract class BiQueryStore {
 
 	public String getQuery14(LdbcSnbBiQuery14TopThreadInitiators operation) {
 		return prepare(QueryType.Query14, new ImmutableMap.Builder<String, String>()
-				.put("startDate", getConverter().convertDate(operation.startDate()))
-				.put("endDate", getConverter().convertDate(operation.endDate())).build());
+				.put("startDate", getConverter().convertDateTime(operation.startDate()))
+				.put("endDate", getConverter().convertDateTime(operation.endDate())).build());
 	}
 
 	public String getQuery15(LdbcSnbBiQuery15SocialNormals operation) {
@@ -196,7 +196,7 @@ public abstract class BiQueryStore {
 
 	public String getQuery18(LdbcSnbBiQuery18PersonPostCounts operation) {
 		return prepare(QueryType.Query18, new ImmutableMap.Builder<String, String>()
-				.put("date", getConverter().convertDate(operation.date()))
+				.put("date", getConverter().convertDateTime(operation.date()))
 				.put("lengthThreshold", Integer.toString(operation.lengthThreshold()))
 				.put("languages", getConverter().convertStringList(operation.languages())).build());
 	}
@@ -216,7 +216,7 @@ public abstract class BiQueryStore {
 	public String getQuery21(LdbcSnbBiQuery21Zombies operation) {
 		return prepare(QueryType.Query21, new ImmutableMap.Builder<String, String>()
 				.put("country", getConverter().convertString(operation.country()))
-				.put("endDate", getConverter().convertDate(operation.endDate())).build());
+				.put("endDate", getConverter().convertDateTime(operation.endDate())).build());
 	}
 
 	public String getQuery22(LdbcSnbBiQuery22InternationalDialog operation) {
@@ -239,8 +239,8 @@ public abstract class BiQueryStore {
 		return prepare(QueryType.Query25, new ImmutableMap.Builder<String, String>()
 				.put("person1Id", Long.toString(operation.person1Id()))
 				.put("person2Id", Long.toString(operation.person2Id()))
-				.put("startDate", getConverter().convertDate(operation.startDate()))
-				.put("endDate", getConverter().convertDate(operation.endDate())).build());
+				.put("startDate", getConverter().convertDateTime(operation.startDate()))
+				.put("endDate", getConverter().convertDateTime(operation.endDate())).build());
 	}
 
 	private String loadQueryFromFile(String path, String fileName) throws DbException {

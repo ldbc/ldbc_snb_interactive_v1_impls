@@ -20,8 +20,8 @@ WITH RECURSIVE tagclass_tree(root_tagclassid, root_tagclassname, tagclassid) AS 
 )
 SELECT tt.root_tagclassname AS "tagClass.name"
      , count(mt.pst_postid) AS messageCount
-  FROM tagclass_tree tt INNER JOIN tag_tagclass ttc ON (tt.tagclassid = ttc.ttc_tagclassid)
-                        LEFT  JOIN post_tag     mt  ON (ttc.ttc_tagid = mt.pst_tagid)
+  FROM tagclass_tree tt INNER JOIN tag      t  ON (tt.tagclassid = t.t_tagclassid)
+                        LEFT  JOIN post_tag mt ON (t.t_tagid = mt.pst_tagid)
  WHERE 1=1
  GROUP BY tt.root_tagclassname
  ORDER BY messageCount DESC, tt.root_tagclassname

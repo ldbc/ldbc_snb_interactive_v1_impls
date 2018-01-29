@@ -1,3 +1,10 @@
+/* Q16. Experts in social circle
+\set personId 6597069777419
+\set country '\'Pakistan\''
+\set tagClass '\'MusicalArtist\''
+\set minPathDistance 3
+\set maxPathDistance 5
+ */
 -- todo add $minPathDistance and $maxPathDistance
 with recursive friends(k_person1id, k_person2id) as (
     select k_person1id, k_person2id
@@ -6,7 +13,7 @@ with recursive friends(k_person1id, k_person2id) as (
         select p_personid
         from person, country
         where p_placeid = ctry_city
-          and ctry_name = '$country'
+          and ctry_name = :country
       )
     union
     select f.k_person1id, k.k_person2id from friends f, knows k
@@ -15,18 +22,17 @@ with recursive friends(k_person1id, k_person2id) as (
         select p_personid
         from person, country
         where p_placeid = ctry_city
-          and ctry_name = '$country'
+          and ctry_name = :country
       )
   )
 select friends.k_person2id, t_name, count(*)  as cnt
-from friends, post, post_tag, tag, tag_tagclass, tagclass
+from friends, post, post_tag, tag, tagclass
 where ps_postid = pst_postid
   and t_tagid = pst_tagid
-  and ttc_tagid = pst_tagid
-  and ttc_tagclassid = tc_tagclassid
-  and tc_name = '$tagClass'
+  and t_tagclassid = tc_tagclassid
+  and tc_name = :tagClass
   and ps_creatorid = friends.k_person2id
-  and friends.k_person1id = $personId
+  and friends.k_person1id = :personId
 group by t_name, friends.k_person2id
 order by
   cnt desc,

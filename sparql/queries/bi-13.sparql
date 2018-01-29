@@ -16,7 +16,7 @@ WHERE
         WHERE
         {
             {
-                SELECT ?year ?month ?tagName (COUNT(?message) AS ?popularity) 
+                SELECT ?year ?month ?tagName (COUNT(?message) AS ?popularity)
                 WHERE
                 {
                     BIND ($country AS ?countryName)
@@ -25,15 +25,15 @@ WHERE
                     ?message snvoc:isLocatedIn/foaf:name ?countryName .
                     ?message snvoc:creationDate ?creationDate .
                     ?message snvoc:hasTag/foaf:name ?tagName .
-                    BIND( YEAR(?creationDate) AS ?year) 
-                    BIND( MONTH(?creationDate) AS ?month)                    
+                    BIND( YEAR(?creationDate) AS ?year)
+                    BIND( MONTH(?creationDate) AS ?month)
                 }
                 GROUP BY ?year ?month ?tagName
                 ORDER BY DESC(?popularity)
             }
             BIND(STR(?popularity) AS ?strPopularity)
-            BIND(CONCAT("(", ?tagName, "#", ?strPopularity, ")") AS ?strTagAndPopularity)
-        }        
+            BIND(CONCAT(?tagName, "#", ?strPopularity) AS ?strTagAndPopularity)
+        }
     }
 }
 GROUP BY ?year ?month
