@@ -14,7 +14,7 @@ ldbc.snb.datagen.serializer.invariantSerializer:ldbc.snb.datagen.serializer.snb.
 ldbc.snb.datagen.serializer.personActivitySerializer:ldbc.snb.datagen.serializer.snb.interactive.TurtlePersonActivitySerializer
 ```
 
-### Loading the data:
+### Loading the data
 
 Set the `RDF_DATA_DIR` environment variable and run the load script:
 
