@@ -69,6 +69,8 @@ import java.util.Map;
 
 public class CypherBiDb extends CypherDb {
 
+	protected static final CypherConverter converter = new CypherConverter();
+
 	@Override
 	protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
 		dbs = new CypherPoolingDbConnectionStore(properties, new CypherBiQueryStore(properties.get("queryDir")));
@@ -171,7 +173,7 @@ public class CypherBiDb extends CypherDb {
 		public LdbcSnbBiQuery4PopularCountryTopicsResult convertSingleResult(Record record) throws ParseException {
 			long forumId = record.get(0).asLong();
 			String title = record.get(1).asString();
-			long creationDate = new CypherConverter().convertLongTimestampToEpoch(record.get(2).asLong());
+			long creationDate = converter.convertLongTimestampToEpoch(record.get(2).asLong());
 			long moderator = record.get(3).asLong();
 			int count = record.get(4).asInt();
 			return new LdbcSnbBiQuery4PopularCountryTopicsResult(forumId, title, creationDate, moderator, count);
@@ -191,7 +193,7 @@ public class CypherBiDb extends CypherDb {
 			long personId = record.get(0).asLong();
 			String firstName = record.get(1).asString();
 			String lastName = record.get(2).asString();
-			long creationDate = new CypherConverter().convertLongTimestampToEpoch(record.get(3).asLong());
+			long creationDate = converter.convertLongTimestampToEpoch(record.get(3).asLong());
 			int count = record.get(4).asInt();
 			return new LdbcSnbBiQuery5TopCountryPostersResult(personId, firstName, lastName, creationDate, count);
 		}
@@ -311,7 +313,7 @@ public class CypherBiDb extends CypherDb {
 		@Override
 		public LdbcSnbBiQuery12TrendingPostsResult convertSingleResult(Record record) throws ParseException {
 			long personId = record.get(0).asLong();
-			long creationDate = new CypherConverter().convertLongTimestampToEpoch(record.get(1).asLong());
+			long creationDate = converter.convertLongTimestampToEpoch(record.get(1).asLong());
 			String firstName = record.get(2).asString();
 			String lastName = record.get(3).asString();
 			int likeCount = record.get(4).asInt();
