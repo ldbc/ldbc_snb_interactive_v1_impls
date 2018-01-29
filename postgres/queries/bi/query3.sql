@@ -1,27 +1,28 @@
--- Q3. Tag evolution
--- year: 2010,
--- month: 10
-select
-  coalesce(m1.t_name, m2.t_name) tag_name,
-  coalesce(cnt1, 0),
-  coalesce(cnt2, 0),
-  abs(coalesce(cnt2, 0) - coalesce(cnt1, 0)) as diff
-from
-  (select t_name, count(*) as cnt1
-   from post, post_tag, tag
-   where t_tagid = pst_tagid
-         and pst_postid = ps_postid
-         and extract(year  from ps_creationdate) = $year
-         and extract(month from ps_creationdate) = $month
-   group by t_name) m1
-  full outer join (select t_name, count(*) as cnt2
-                   from post, post_tag, tag
-                   where t_tagid = pst_tagid
-                         and pst_postid = ps_postid
-                         and extract(year  from ps_creationdate) = $year + $month / 12
-                         and extract(month from ps_creationdate) = $month % 12 + 1
-                   group by t_name) m2 on m1.t_name = m2.t_name
-order by
-  diff desc,
-  tag_name asc
-limit 100;
+/* Q3. Tag evolution
+\set year 2010
+\set month 11
+ */
+WITH detail AS (
+SELECT t.t_name
+     , count(DISTINCT CASE WHEN extract(MONTH FROM m.ps_creationdate)  = :month THEN m.ps_postid ELSE NULL END) AS countMonth1
+     , count(DISTINCT CASE WHEN extract(MONTH FROM m.ps_creationdate) != :month THEN m.ps_postid ELSE NULL END) AS countMonth2
+  FROM post m
+     , post_tag mt
+     , tag t
+ WHERE 1=1
+    -- join
+   AND m.ps_postid = mt.pst_postid
+   AND mt.pst_tagid = t.t_tagid
+    -- filter
+   AND m.ps_creationdate >= make_date(:year, :month, 1)
+   AND m.ps_creationdate <  make_date(:year, :month, 1) + make_interval(months => 2)
+ GROUP BY t.t_name
+)
+SELECT t_name as "tag.name"
+     , countMonth1
+     , countMonth2
+     , abs(countMonth1-countMonth2) AS diff
+  FROM detail d
+ ORDER BY diff desc, t_name
+ LIMIT 100
+;
