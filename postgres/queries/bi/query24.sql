@@ -8,15 +8,15 @@ SELECT count(DISTINCT m.ps_postid) AS messageCount
      , extract(MONTH FROM m.ps_creationdate) AS month
      , con.pl_name AS "continent.name"
   FROM tagclass tc
-     , tag_tagclass ttc
+     , tag t
      , post_tag mt
      , post m LEFT JOIN likes l ON (m.ps_postid = l.l_postid)
      , place cou -- country
      , place con -- continent
  WHERE 1=1
     -- join
-   AND tc.tc_tagclassid = ttc.ttc_tagclassid
-   AND ttc.ttc_tagid = mt.pst_tagid
+   AND tc.tc_tagclassid = t.t_tagclassid
+   AND t.t_tagid = mt.pst_tagid
    AND mt.pst_postid = m.ps_postid
    AND m.ps_locationid = cou.pl_placeid
    AND cou.pl_containerplaceid = con.pl_placeid

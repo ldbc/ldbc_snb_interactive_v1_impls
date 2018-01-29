@@ -13,14 +13,11 @@ SELECT f.f_forumid AS "forum.id"
      , count(DISTINCT p1.ps_postid) AS count1
      , count(DISTINCT p2.ps_postid) AS count2
   FROM tagclass tc1
-     , tag_tagClass ttc1
-     -- tag skipped because tagid connects tag_tagClass ans post_tag directly
-     --, tag t1
+     , tag t1
      , post_tag pt1
      , post p1
      , tagclass tc2
-     , tag_tagClass ttc2
-     --, tag t2
+     , tag t2
      , post_tag pt2
      , post p2
      , forum f
@@ -28,14 +25,14 @@ SELECT f.f_forumid AS "forum.id"
  WHERE 1=1
     -- join
     -- tagClass1 to forum
-   AND tc1.tc_tagclassid = ttc1.ttc_tagclassid
-   AND ttc1.ttc_tagid = pt1.pst_tagid
+   AND tc1.tc_tagclassid = t1.t_tagclassid
+   AND t1.t_tagid = pt1.pst_tagid
    AND pt1.pst_postid = p1.ps_postid
    AND p1.ps_forumid = f.f_forumid
    AND f.f_forumid = pf.forumid
     -- tagClass2 to forum
-   AND tc2.tc_tagclassid = ttc2.ttc_tagclassid
-   AND ttc2.ttc_tagid = pt2.pst_tagid
+   AND tc2.tc_tagclassid = t2.t_tagclassid
+   AND t2.t_tagid = pt2.pst_tagid
    AND pt2.pst_postid = p2.ps_postid
    AND p2.ps_forumid = f.f_forumid
     -- filter

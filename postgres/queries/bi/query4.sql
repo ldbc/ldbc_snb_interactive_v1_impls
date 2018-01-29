@@ -8,7 +8,6 @@ SELECT f.f_forumid      AS "forum.id"
      , f.f_moderatorid  AS "person.id"
      , count(DISTINCT p.ps_postid) AS postCount
   FROM tagClass tc
-     , tag_tagClass ttc
      , tag t
      , post_tag pt
      , post p
@@ -18,8 +17,7 @@ SELECT f.f_forumid      AS "forum.id"
      , place  co  -- country
  WHERE 1=1
     -- join
-   AND tc.tc_tagclassid = ttc.ttc_tagclassid
-   AND ttc.ttc_tagid = t.t_tagid
+   AND tc.tc_tagclassid = t.t_tagclassid
    AND t.t_tagid = pt.pst_tagid
    AND pt.pst_postid = p.ps_postid
    AND p.ps_forumid = f.f_forumid
