@@ -27,9 +27,9 @@ OPTIONAL MATCH
   (stranger)<-[:HAS_CREATOR]-(comment2:Comment)-[:REPLY_OF]->(:Message)-[:HAS_CREATOR]->(person)
 WITH
   person,
-  count(stranger) AS strangersCount,
-  count(comment1) AS comment1Count,
-  count(comment2) AS comment2Count
+  count(DISTINCT stranger) AS strangersCount,
+  count(DISTINCT comment1) AS comment1Count,
+  count(DISTINCT comment2) AS comment2Count
 RETURN
   person.id,
   strangersCount,
