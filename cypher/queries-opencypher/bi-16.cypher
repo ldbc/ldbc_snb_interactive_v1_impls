@@ -21,11 +21,12 @@ MATCH
   (person)-[:IS_LOCATED_IN]->(:City)-[:IS_PART_OF]->(:Country {name: $country}),
   (person)<-[:HAS_CREATOR]-(message:Message)-[:HAS_TAG]->(:Tag)-[:HAS_TYPE]->
   (:TagClass {name: $tagClass})
-MATCH (message)-[:HAS_TAG]->(tag:Tag)
+MATCH
+  (message)-[:HAS_TAG]->(tag:Tag)
 RETURN
   person.id,
   tag.name,
-  count(message) AS messageCount
+  count(DISTINCT message) AS messageCount
 ORDER BY
   messageCount DESC,
   tag.name ASC,
