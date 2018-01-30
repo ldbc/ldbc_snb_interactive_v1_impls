@@ -155,11 +155,11 @@ public class SparqlBiDb extends SparqlDb {
 
 		@Override
 		public LdbcSnbBiQuery3TagEvolutionResult convertSingleResult(BindingSet bs) {
-			String tagName = convertString (bs, "tagName");
-			int countA     = convertInteger(bs, "countA");
-			int countB     = convertInteger(bs, "countB");
-			int diffCount  = convertInteger(bs, "diff"  );
-			return new LdbcSnbBiQuery3TagEvolutionResult(tagName, countA, countB, diffCount);
+			String tagName  = convertString (bs, "tagName"    );
+			int countMonth1 = convertInteger(bs, "countMonth1");
+			int countMonth2 = convertInteger(bs, "countMonth2");
+			int diff        = convertInteger(bs, "diff"       );
+			return new LdbcSnbBiQuery3TagEvolutionResult(tagName, countMonth1, countMonth2, diff);
 		}
 
 	}
