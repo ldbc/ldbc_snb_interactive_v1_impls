@@ -1,44 +1,54 @@
--- Q10. Central Person for a Tag
--- tag: Che_Guevara
--- date: '2011-07-21T22:00:00.000+00:00'::timestamp
-with person_tag_post_score(ptps_personid, ptps_score) as (
-  select ps_creatorid, count(*)
-  from tag
-  join post_tag on t_tagid = pst_tagid
-  join post on pst_postid = ps_postid
-  where t_name = '$tag'
-  group by ps_creatorid
-),
-person_interest_score(pis_personid, pis_score) as (
-  select pt_personid, 100
-  from person_tag
-  join tag on t_tagid = pt_tagid
-  where t_name = '$tag'
-),
-person_total_score(pts_personid, pts_score) as (
-  select coalesce(ptps_personid, pis_personid), coalesce(pis_score,0)+coalesce(ptps_score,0)
-  from person_tag_post_score full outer
-  join person_interest_score on pis_personid = ptps_personid
-),
-person_friends_score(pfs_personid, pfs_score) as (
-  select a.pts_personid, b.pts_score
-  from person_total_score a
-  join knows on (a.pts_personid = k_person1id)
-  join person_total_score b on k_person2id = b.pts_personid
-  union all
-  select a.pts_personid, b.pts_score
-  from person_total_score a
-  join knows on (a.pts_personid = k_person2id)
-  join person_total_score b on k_person1id = b.pts_personid
+/* Q10. Central Person for a Tag
+\set tag '\'Che_Guevara\''
+\set date '\'2011-07-22T00:00:00.000+00:00\''::timestamp
+ */
+WITH person_tag_interest AS (
+    SELECT p.p_personid AS personid
+      FROM person p
+         , person_tag pt
+         , tag t
+     WHERE 1=1
+        -- join
+       AND p.p_personid = pt.pt_personid
+       AND pt.pt_tagid = t.t_tagid
+        -- filter
+       AND t.t_name = :tag
 )
-select
-  pts_personid,
-  pts_score,
-  sum(coalesce(pfs_score,0))
-from person_total_score
-left join person_friends_score on pts_personid = pfs_personid
-group by pts_personid, pts_score
-order by
-  pts_score + sum(coalesce(pfs_score, 0)) desc,
-  pts_personid asc
-limit 100;
+   , person_message_score AS (
+    SELECT p.p_personid AS personid
+         , count(*) AS message_score
+      FROM post m
+         , person p
+         , post_tag pt
+         , tag t
+     WHERE 1=1
+        -- join
+       AND m.ps_creatorid = p.p_personid
+       AND m.ps_postid = pt.pst_postid
+       AND pt.pst_tagid = t.t_tagid
+        -- filter
+       AND m.ps_creationdate > :date
+       AND t.t_name = :tag
+     GROUP BY p.p_personid
+)
+   , person_score AS (
+    SELECT coalesce(pti.personid, pms.personid) AS personid
+         , CASE WHEN pti.personid IS NULL then 0 ELSE 100 END -- scored from interest in the given tag
+         + coalesce(pms.message_score, 0) AS score
+      FROM person_tag_interest pti
+           FULL OUTER JOIN person_message_score pms ON (pti.personid = pms.personid)
+)
+SELECT p.personid AS "person.id"
+     , p.score AS score
+     , sum(f.score) AS friendsScore
+  FROM person_score p
+     , knows k
+     , person_score f -- the friend
+ WHERE 1=1
+    -- join
+   AND p.personid = k.k_person1id
+   AND k.k_person2id = f.personid
+ GROUP BY p.personid, p.score
+ ORDER BY p.score + sum(f.score) DESC, p.personid
+ LIMIT 100
+;
