@@ -21,7 +21,7 @@ WHERE person.birthday > $date
   AND NOT (person)-[:KNOWS]-(stranger)
 RETURN
   person.id,
-  count(stranger) AS strangersCount,
+  count(DISTINCT stranger) AS strangersCount,
   count(comment) AS interactionCount
 ORDER BY
   interactionCount DESC,
