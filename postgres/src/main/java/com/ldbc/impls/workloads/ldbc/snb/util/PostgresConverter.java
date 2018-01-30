@@ -25,10 +25,12 @@ public class PostgresConverter extends Converter {
     }
 
     public String convertStringList(List<String> values) {
-        return values
+        return "'{" +
+                values
                 .stream()
-                .map(v -> "'" + v + "'")
-                .collect( Collectors.joining( "," ) );
+                .map(v -> "\"" + v + "\"")
+                .collect( Collectors.joining( "," ) ) +
+                "}'";
     }
 
 }
