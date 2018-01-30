@@ -174,7 +174,7 @@ public class PostgresBiDb extends JdbcDb<BiQueryStore> {
 		public LdbcSnbBiQuery4PopularCountryTopicsResult convertSingleResult(ResultSet result) throws SQLException {
 			long forumId = result.getLong(1);
 			String forumTitle = result.getString(2);
-			long forumCreationDate = timestampToTimestamp(result,3);
+			long forumCreationDate = stringTimestampToEpoch(result,3);
 			long personId = result.getLong(4);
 			int postCount = result.getInt(5);
 			return new LdbcSnbBiQuery4PopularCountryTopicsResult(forumId, forumTitle, forumCreationDate, personId, postCount);
@@ -194,7 +194,7 @@ public class PostgresBiDb extends JdbcDb<BiQueryStore> {
 			long personId = result.getLong(1);
 			String personFirstName = result.getString(2);
 			String personLastName = result.getString(3);
-			long personCreationDate = timestampToTimestamp(result, 4);
+			long personCreationDate = stringTimestampToEpoch(result, 4);
 			int postCount = result.getInt(5);
 			return new LdbcSnbBiQuery5TopCountryPostersResult(personId, personFirstName, personLastName, personCreationDate, postCount);
 		}
@@ -314,7 +314,7 @@ public class PostgresBiDb extends JdbcDb<BiQueryStore> {
 		@Override
 		public LdbcSnbBiQuery12TrendingPostsResult convertSingleResult(ResultSet result) throws SQLException {
 			long messageId = result.getLong(1);
-			long messageCreationDate = timestampToTimestamp(result, 2);
+			long messageCreationDate = stringTimestampToEpoch(result, 2);
 			String creatorFirstName = result.getString(3);
 			String creatorLastName = result.getString(4);
 			int likeCount = result.getInt(5);

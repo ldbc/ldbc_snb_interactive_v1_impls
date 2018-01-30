@@ -124,8 +124,8 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 					result.getLong(1),
 					result.getString(2),
 					result.getInt(13),
-					timestampToTimestamp(result, 3),
-					timestampToTimestamp(result, 4),
+					stringTimestampToEpoch(result, 3),
+					stringTimestampToEpoch(result, 4),
 					result.getString(5),
 					result.getString(6),
 					result.getString(7),
@@ -162,7 +162,7 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 					result.getString(3),
 					result.getLong(4),
 					result.getString(5),
-					timestampToTimestamp(result, 6));
+					stringTimestampToEpoch(result, 6));
 		}
 		
 	}
@@ -249,7 +249,7 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 					result.getLong(1),
 					result.getString(2),
 					result.getString(3),
-					timestampToTimestamp(result, 4),
+					stringTimestampToEpoch(result, 4),
 					result.getLong(5),
 					result.getString(6),
 					result.getInt(7),
@@ -272,7 +272,7 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 					result.getLong(1),
 					result.getString(2),
 					result.getString(3),
-					timestampToTimestamp(result, 4),
+					stringTimestampToEpoch(result, 4),
 					result.getLong(5),
 					result.getString(6));
 		}
@@ -294,7 +294,7 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 					result.getString(3),
 					result.getLong(4),
 					result.getString(5),
-					timestampToTimestamp(result,6));
+					stringTimestampToEpoch(result,6));
 		}
 		
 	}
@@ -410,12 +410,12 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 			return new LdbcShortQuery1PersonProfileResult(
 					result.getString(1),
 					result.getString(2),
-					timestampToTimestamp(result, 3),
+					stringTimestampToEpoch(result, 3),
 					result.getString(4),
 					result.getString(5),
 					result.getLong(6),
 					result.getString(7),
-					timestampToTimestamp(result, 8));
+					stringTimestampToEpoch(result, 8));
 		}
 		
 	}
@@ -432,7 +432,7 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 			return new LdbcShortQuery2PersonPostsResult(
 					result.getLong(1),
 					result.getString(2),
-					timestampToTimestamp(result, 3),
+					stringTimestampToEpoch(result, 3),
 					result.getLong(4),
 					result.getLong(5),
 					result.getString(6),
@@ -454,7 +454,7 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 					result.getLong(1),
 					result.getString(2),
 					result.getString(3),
-					timestampToTimestamp(result, 4));
+					stringTimestampToEpoch(result, 4));
 		}
 		
 	}
@@ -470,7 +470,7 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 		public LdbcShortQuery4MessageContentResult convertSingleResult(ResultSet result) throws SQLException {
 			return new LdbcShortQuery4MessageContentResult(
 					result.getString(1),
-					timestampToTimestamp(result, 2));
+					stringTimestampToEpoch(result, 2));
 		}
 		
 	}
@@ -523,7 +523,7 @@ public class InteractiveDb extends JdbcDb<InteractiveQueryStore> {
 			return new LdbcShortQuery7MessageRepliesResult(
 					result.getLong(1),
 					result.getString(2),
-					timestampToTimestamp(result, 3),
+					stringTimestampToEpoch(result, 3),
 					result.getLong(4),
 					result.getString(5),
 					result.getString(6),

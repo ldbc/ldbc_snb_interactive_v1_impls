@@ -32,7 +32,7 @@ public abstract class JdbcDb<DbQueryStore> extends SnbDb {
 		return dbs;
 	}
 	
-	protected static long timestampToTimestamp(ResultSet r, int column) throws SQLException {
+	protected static long stringTimestampToEpoch(ResultSet r, int column) throws SQLException {
 		return r.getTimestamp(column, Calendar.getInstance(TimeZone.getTimeZone("GMT"))).getTime();
 	}
 	
