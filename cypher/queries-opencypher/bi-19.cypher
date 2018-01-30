@@ -15,25 +15,14 @@ MATCH
   (forum2:Forum)-[:HAS_MEMBER]->(stranger)
 WITH DISTINCT stranger
 MATCH
-  (person:Person)<-[:HAS_CREATOR]-(:Message)-[:REPLY_OF]-
-  (:Message)-[:HAS_CREATOR]->(stranger)
+  (person)<-[:HAS_CREATOR]-(comment:Comment)-[:REPLY_OF]->(:Message)-[:HAS_CREATOR]->(stranger)
 WHERE person.birthday > $date
   AND person <> stranger
   AND NOT (person)-[:KNOWS]-(stranger)
-WITH person, stranger
-OPTIONAL MATCH
-  (person)<-[:HAS_CREATOR]-(comment1:Comment)-[:REPLY_OF]->(:Message)-[:HAS_CREATOR]->(stranger)
-OPTIONAL MATCH
-  (stranger)<-[:HAS_CREATOR]-(comment2:Comment)-[:REPLY_OF]->(:Message)-[:HAS_CREATOR]->(person)
-WITH
-  person,
-  count(DISTINCT stranger) AS strangersCount,
-  count(DISTINCT comment1) AS comment1Count,
-  count(DISTINCT comment2) AS comment2Count
 RETURN
   person.id,
-  strangersCount,
-  comment1Count + comment2Count AS interactionCount
+  count(stranger) AS strangersCount,
+  count(comment) AS interactionCount
 ORDER BY
   interactionCount DESC,
   person.id ASC
