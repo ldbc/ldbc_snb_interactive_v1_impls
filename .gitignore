@@ -8,3 +8,5 @@ dependency-reduced-pom.xml
 *.iml
 validation_params.csv
 *.swp
+*-actual.json
+*-expected.json
