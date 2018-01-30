@@ -10,7 +10,6 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery12TrendingPosts;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery12TrendingPostsResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery13PopularMonthlyTags;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery13PopularMonthlyTagsResult;
-import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery13PopularMonthlyTagsResult.TagPopularity;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery14TopThreadInitiators;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery14TopThreadInitiatorsResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery15SocialNormals;
@@ -62,10 +61,10 @@ import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcSingletonOperationHandler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class PostgresBiDb extends JdbcDb<BiQueryStore> {
 
@@ -333,9 +332,12 @@ public class PostgresBiDb extends JdbcDb<BiQueryStore> {
 		public LdbcSnbBiQuery13PopularMonthlyTagsResult convertSingleResult(ResultSet result) throws SQLException {
 			int year = result.getInt(1);
 			int month = result.getInt(2);
-			final Object obj = result.getArray(3).getArray();
-			// TODO: extract tag.name, popularity pairs
-			return new LdbcSnbBiQuery13PopularMonthlyTagsResult(year, month, new ArrayList<TagPopularity>());
+			final String[][] array = (String[][]) result.getArray(3).getArray();
+
+			final List<LdbcSnbBiQuery13PopularMonthlyTagsResult.TagPopularity> popularTags = Arrays.stream(array).map(
+					el -> new LdbcSnbBiQuery13PopularMonthlyTagsResult.TagPopularity(el[0], Integer.parseInt(el[1]))
+			).collect(Collectors.toList());
+			return new LdbcSnbBiQuery13PopularMonthlyTagsResult(year, month, popularTags);
 		}
 	}
 	
