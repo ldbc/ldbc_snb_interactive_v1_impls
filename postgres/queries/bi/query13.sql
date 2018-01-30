@@ -20,9 +20,11 @@ SELECT extract(YEAR FROM m.ps_creationdate) as year
    AND c.pl_name = :country
  GROUP BY year, month, t.t_name
 )
-SELECT year, month, tagName, popularity
+SELECT year, month
+     , array_agg(ARRAY[tagName, cast(popularity AS VARCHAR)] ORDER BY popularity DESC, tagName) AS popularTags
   FROM detail
  WHERE rn <= 5
- ORDER BY year DESC, month, popularity DESC, tagName
+ GROUP BY year, month
+ ORDER BY year DESC, month
  LIMIT 100
 ;
