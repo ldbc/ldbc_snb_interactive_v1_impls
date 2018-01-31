@@ -15,43 +15,44 @@ WITH
   startNode(k) AS pA,
   endNode(k) AS pB,
   0 AS relationshipWeights
-// A to B
+
+// case 1, A to B
 // every reply (by one of the Persons) to a Post (by the other Person): 1.0
 OPTIONAL MATCH
-  (pA)<-[:HAS_CREATOR]-(c:Comment)-[:REPLY_OF]->(m:Post)-[:HAS_CREATOR]->(pB),
-  (m)<-[:CONTAINER_OF]-(forum:Forum)
+  (pA)<-[:HAS_CREATOR]-(c:Comment)-[:REPLY_OF]->(post:Post)-[:HAS_CREATOR]->(pB),
+  (post)<-[:CONTAINER_OF]-(forum:Forum)
 WHERE forum.creationDate >= $startDate AND forum.creationDate <= $endDate
 WITH path, pA, pB, relationshipWeights + count(c)*1.0 AS relationshipWeights
 
-// A to B
+// case 2, A to B
 // every reply (by ones of the Persons) to a Comment (by the other Person): 0.5
 OPTIONAL MATCH
-  (pA)<-[:HAS_CREATOR]-(c:Comment)-[:REPLY_OF]->(m:Comment)-[:HAS_CREATOR]->(pB),
-  (m)<-[:CONTAINER_OF]-(forum:Forum)
+  (pA)<-[:HAS_CREATOR]-(c1:Comment)-[:REPLY_OF]->(c2:Comment)-[:HAS_CREATOR]->(pB),
+  (c2)-[:REPLY_OF*]->(:Post)<-[:CONTAINER_OF]-(forum:Forum)
 WHERE forum.creationDate >= $startDate AND forum.creationDate <= $endDate
-WITH path, pA, pB, relationshipWeights + count(c)*0.5 AS relationshipWeights
+WITH path, pA, pB, relationshipWeights + count(c1)*0.5 AS relationshipWeights
 
-// B to A
+// case 1, B to A
 // every reply (by one of the Persons) to a Post (by the other Person): 1.0
 OPTIONAL MATCH
-  (pB)<-[:HAS_CREATOR]-(c:Comment)-[:REPLY_OF]->(m:Post)-[:HAS_CREATOR]->(pA),
-  (m)<-[:CONTAINER_OF]-(forum:Forum)
+  (pB)<-[:HAS_CREATOR]-(c:Comment)-[:REPLY_OF]->(post:Post)-[:HAS_CREATOR]->(pA),
+  (post)<-[:CONTAINER_OF]-(forum:Forum)
 WHERE forum.creationDate >= $startDate AND forum.creationDate <= $endDate
 WITH path, pA, pB, relationshipWeights + count(c)*1.0 AS relationshipWeights
 
-// B to A
+// case 2, B to A
 // every reply (by ones of the Persons) to a Comment (by the other Person): 0.5
 OPTIONAL MATCH
-  (pB)<-[:HAS_CREATOR]-(c:Comment)-[:REPLY_OF]->(m:Comment)-[:HAS_CREATOR]->(pA),
-  (m)<-[:CONTAINER_OF]-(forum:Forum)
+  (pB)<-[:HAS_CREATOR]-(c1:Comment)-[:REPLY_OF]->(c2:Comment)-[:HAS_CREATOR]->(pA),
+  (c2)-[:REPLY_OF*]->(:Post)<-[:CONTAINER_OF]-(forum:Forum)
 WHERE forum.creationDate >= $startDate AND forum.creationDate <= $endDate
-WITH path, pA, pB, relationshipWeights + count(c)*0.5 AS relationshipWeights
+WITH path, pA, pB, relationshipWeights + count(c1)*0.5 AS relationshipWeights
 
 WITH
   [person IN nodes(path) | person.id] AS personIds,
   sum(relationshipWeights) AS weight
 
 RETURN
-  personIds
+  personIds, weight
 ORDER BY
   weight DESC
