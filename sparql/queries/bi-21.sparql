@@ -8,7 +8,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-SELECT ?zombieId (COUNT(?like) AS ?totalLikeCount) (SUM(?zombieLike) AS ?zombieLikeCount) (SUM(?zombieLike) / COUNT(?like) AS ?zombieScore)
+SELECT ?zombieId (COUNT(?like) AS ?totalLikeCount) (COUNT(?zombieLike) AS ?zombieLikeCount) (COUNT(?zombieLike) / COUNT(?like) AS ?zombieScore)
 WHERE
 {   
     BIND($endDate AS ?endDate)
@@ -69,7 +69,10 @@ WHERE
     ?personId snvoc:creationDate ?personCreationDate .
     ?personId snvoc:likes ?like .
     ?like snvoc:hasPost|snvoc:hasComment ?message .
-    BIND ( IF(EXISTS{?likerZombieId snvoc:likes ?like}, 1 ,0) AS ?zombieLike)
+    OPTIONAL {
+        ?likerZombieId snvoc:likes ?zombieLike .
+        ?zombieLike snvoc:hasPost|snvoc:hasComment ?message .
+    }
 }
 GROUP BY ?zombieId
 ORDER BY DESC(?zombieScore) ?zombieId 
