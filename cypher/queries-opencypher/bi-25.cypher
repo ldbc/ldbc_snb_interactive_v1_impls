@@ -1,16 +1,16 @@
 // Q25. Weighted paths
 /*
   :param {
-    person1Id: 2199023264119,
-    person2Id: 8796093028894,
-    startDate: 20100601040000000,
-    endDate: 20100701040000000
+    person1Id: 19791209303405,
+    person2Id: 19791209308983,
+    startDate: 20101031230000000,
+    endDate: 20101130230000000
   }
 */
-MATCH path = (p1:Person {id: $person1Id})-[:KNOWS*]-(p2:Person {id: $person2Id})
-WITH p1, p2, path
-ORDER BY length(path)
-WITH p1, p2, collect(path)[0] AS path // select the shortest path
+MATCH
+  path=allShortestPaths(
+    (p1:Person {id: $person1Id})-[:KNOWS*]-(p2:Person {id: $person2Id})
+  )
 UNWIND relationships(path) AS k
 WITH
   path,
@@ -50,6 +50,6 @@ WHERE forum.creationDate >= $startDate AND forum.creationDate <= $endDate
 WITH path, pA, pB, weight + count(c)*0.5 AS weight
 
 RETURN
-  [person IN nodes(path) | person.id]
+  [person IN nodes(path) | person.id] AS personIds
 ORDER BY
   weight DESC
