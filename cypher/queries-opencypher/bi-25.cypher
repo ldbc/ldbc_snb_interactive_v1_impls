@@ -53,6 +53,8 @@ WITH
   sum(relationshipWeights) AS weight
 
 RETURN
-  personIds, weight
+  personIds,
+  weight
 ORDER BY
-  weight DESC
+  weight DESC,
+  personIds ASC
