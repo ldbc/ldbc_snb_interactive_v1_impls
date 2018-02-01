@@ -61,31 +61,3 @@ You are now connected to database "ldbcsf1" as user "postgres".
 ldbcsf1=# SELECT count(*) FROM person;
 # ...
 ```
-
-## Running the implementation
-
-First, follow the steps in the parent directory's [README](../README.md) to set up the environment.
-
-To create the validation data set, run:
-
-```bash
-java -cp target/postgres-0.0.1-SNAPSHOT.jar com.ldbc.driver.Client \
-  -db com.ldbc.impls.workloads.ldbc.snb.jdbc.bi.PostgresBiDb \
-  -P postgres-create_validation_parameters.properties
-```
-
-To validate the database, run:
-
-```bash
-java -cp target/postgres-0.0.1-SNAPSHOT.jar com.ldbc.driver.Client \
-  -db com.ldbc.impls.workloads.ldbc.snb.jdbc.bi.PostgresBiDb \
-  -P postgres-validate_db.properties
-```
-
-To execute the benchmark, run:
-
-```bash
-java -cp target/postgres-0.0.1-SNAPSHOT.jar com.ldbc.driver.Client \
-  -db com.ldbc.impls.workloads.ldbc.snb.jdbc.bi.PostgresBiDb \
-  -P postgres-benchmark.properties
-```

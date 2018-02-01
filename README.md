@@ -69,7 +69,13 @@ mvn clean install -Dmaven.compiler.source=1.7 -Dmaven.compiler.target=1.7 -Dskip
    mvn clean package -DskipTests
    ```
 
-4. Set the parameters according to your system configuration and run the driver in validation generation mode. For more details, refer to the README of the implementation-specific subprojects.
+4. For each implementation, it is possible to (1) generate validation parameters, (2) validate against an existing validation parameters, and (3) run the benchmark. Set the parameters according to your system configuration in the appropriate `.properties` file and run the driver with one of the following scripts:
+
+```
+./create-validation-parameters.sh
+./validate.sh
+./benchmark.sh
+```
 
 For more details, on validating and benchmarking, visit the [driver wiki](https://github.com/ldbc/ldbc_snb_driver/wiki).
 

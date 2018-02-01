@@ -57,31 +57,3 @@ If you know what you're doing, you can run all scripts with a single command:
 ```bash
 ./load-in-one-step.sh
 ```
-
-## Running the implementation
-
-First, follow the steps in the parent directory's [README](../README.md) to set up the environment.
-
-To create the validation data set, run:
-
-```bash
-java -cp target/cypher-0.0.1-SNAPSHOT.jar com.ldbc.driver.Client \
-  -db com.ldbc.impls.workloads.ldbc.snb.cypher.bi.CypherBiDb \
-  -P cypher-create_validation_parameters.properties
-```
-
-To validate the database, run:
-
-```bash
-java -cp target/cypher-0.0.1-SNAPSHOT.jar com.ldbc.driver.Client \
-  -db com.ldbc.impls.workloads.ldbc.snb.cypher.bi.CypherBiDb \
-  -P cypher-validate_db.properties
-```
-
-To execute the benchmark, run:
-
-```bash
-java -cp target/cypher-0.0.1-SNAPSHOT.jar com.ldbc.driver.Client \
-  -db com.ldbc.impls.workloads.ldbc.snb.cypher.bi.CypherBiDb \
-  -P cypher-benchmark.properties
-```
