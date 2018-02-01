@@ -534,7 +534,8 @@ public class CypherBiDb extends CypherDb {
 		@Override
 		public LdbcSnbBiQuery25WeightedPathsResult convertSingleResult(Record record) {
 			List<Long> personIds = record.get(0).asList(Values.ofLong());
-			return new LdbcSnbBiQuery25WeightedPathsResult(personIds);
+			double weight = record.get(1).asDouble();
+			return new LdbcSnbBiQuery25WeightedPathsResult(personIds, weight);
 		}
 	}
 }

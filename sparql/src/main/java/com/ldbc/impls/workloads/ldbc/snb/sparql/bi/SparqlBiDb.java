@@ -533,7 +533,8 @@ public class SparqlBiDb extends SparqlDb {
 		public LdbcSnbBiQuery25WeightedPathsResult convertSingleResult(BindingSet bs) {
 			String[] personIdStrings = bs.getBinding("personIds").getValue().stringValue().split(",");
 			final List<Long> personIds = Arrays.stream(personIdStrings).map(Long::parseLong).collect(Collectors.toList());
-			return new LdbcSnbBiQuery25WeightedPathsResult(personIds);
+			double weight = convertDouble (bs, "percentageOfMessages");
+			return new LdbcSnbBiQuery25WeightedPathsResult(personIds, weight);
 		}
 	}
 

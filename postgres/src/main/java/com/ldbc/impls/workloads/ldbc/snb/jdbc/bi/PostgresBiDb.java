@@ -531,7 +531,8 @@ public class PostgresBiDb extends JdbcDb<BiQueryStore> {
 		public LdbcSnbBiQuery25WeightedPathsResult convertSingleResult(ResultSet result) throws SQLException {
 			final Long[] array = (Long[]) result.getArray(1).getArray();
 			final List<Long> personIds = Arrays.asList(array);
-			return new LdbcSnbBiQuery25WeightedPathsResult(personIds);
+			double weight = result.getDouble(2);
+			return new LdbcSnbBiQuery25WeightedPathsResult(personIds, weight);
 		}
 	}
 
