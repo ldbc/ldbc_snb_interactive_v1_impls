@@ -15,7 +15,7 @@ MATCH
   (forum2:Forum)-[:HAS_MEMBER]->(stranger)
 WITH DISTINCT stranger
 MATCH
-  (person)<-[:HAS_CREATOR]-(comment:Comment)-[:REPLY_OF]->(:Message)-[:HAS_CREATOR]->(stranger)
+  (person)<-[:HAS_CREATOR]-(comment:Comment)-[:REPLY_OF*]->(:Message)-[:HAS_CREATOR]->(stranger)
 WHERE person.birthday > $date
   AND person <> stranger
   AND NOT (person)-[:KNOWS]-(stranger)
