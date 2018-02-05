@@ -30,7 +30,7 @@ public class PostgresConverter extends Converter {
                 .stream()
                 .map(v -> "\"" + v + "\"")
                 .collect( Collectors.joining( "," ) ) +
-                "}'";
+                "}'::text[]";
     }
 
 }
