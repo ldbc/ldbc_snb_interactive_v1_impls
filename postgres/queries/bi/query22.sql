@@ -1,40 +1,137 @@
-with related(p1, p2, score) as (
-    select rep.ps_creatorid as p1, org.ps_creatorid as p2, 4 as score
-      from post org, post rep
-      where rep.ps_replyof = org.ps_postid
-    union all
-    select org.ps_creatorid as p1, rep.ps_creatorid as p2, 1 as score
-      from post org, post rep
-      where rep.ps_replyof = org.ps_postid
-    union all
-      select k_person1id, k_person2id, 15 as score
-      from knows
-    union all
-      select l_personid, ps_creatorid, 10 as score
-      from likes, post
-      where l_postid = ps_postid
-    union all
-      select ps_creatorid, l_personid, 1 as score
-      from likes, post
-      where l_postid = ps_postid
-  ),
-  allscores(p_personid, p_firstname, p_lastname, p_city, score) as (
-    select contact.p_personid, contact.p_firstname, contact.p_lastname,  contact.p_placeid, sum(score) as s
-    from person contact, related, person contacted, country target, country source
-    where contact.p_personid = p1
-      and contacted.p_personid = p2
-      and contacted.p_placeid = target.ctry_city
-      and target.ctry_name = '$country1'
-      and contact.p_placeid = source.ctry_city
-      and source.ctry_name = '$country2'
-    group by contact.p_personid, contact.p_firstname, contact.p_lastname,contact.p_placeid
-    order by s desc
-  )
-select
-  p_personid,
-  total.score
-from
-  allscores total,
-  (select p_city, max(score) as score from allscores group by p_city) percity
-where total.p_city = percity.p_city
-  and total.score = percity.score;
+/* Q22. International dialog
+\set country1 '\'Indonesia\''
+\set country2 '\'Brazil\''
+ */
+WITH person1_list AS (
+    SELECT p.p_personid AS personid
+         , ci.pl_placeid AS cityid
+      FROM place co -- country
+         , place ci -- city
+         , person p
+     WHERE 1=1
+        -- join
+       AND co.pl_placeid = ci.pl_containerplaceid
+       AND ci.pl_placeid = p.p_placeid
+        -- filter
+       AND co.pl_name = :country1
+)
+,  person2_list AS (
+    SELECT p.p_personid AS personid
+      FROM place co -- country
+         , place ci -- city
+         , person p
+     WHERE 1=1
+        -- join
+       AND co.pl_placeid = ci.pl_containerplaceid
+       AND ci.pl_placeid = p.p_placeid
+        -- filter
+       AND co.pl_name = :country2
+)
+,  case1 AS (
+    SELECT DISTINCT
+           p1.personid AS person1id
+         , p2.personid AS person2id
+         , 4 AS score
+      FROM person1_list p1
+         , person2_list p2
+         , post m -- message by p2
+         , post r -- reply by p1
+     WHERE 1=1
+        -- join
+       AND m.ps_postid = r.ps_replyof
+       AND p1.personid = r.ps_creatorid
+       AND p2.personid = m.ps_creatorid
+)
+,  case2 AS (
+    SELECT DISTINCT
+           p1.personid AS person1id
+         , p2.personid AS person2id
+         , 1 AS score
+      FROM person1_list p1
+         , person2_list p2
+         , post m -- message by p1
+         , post r -- reply by p2
+     WHERE 1=1
+        -- join
+       AND m.ps_postid = r.ps_replyof
+       AND p2.personid = r.ps_creatorid
+       AND p1.personid = m.ps_creatorid
+)
+,  case3 AS (
+    SELECT -- no need for distinct
+           p1.personid AS person1id
+         , p2.personid AS person2id
+         , 15 AS score
+      FROM person1_list p1
+         , person2_list p2
+         , knows k
+     WHERE 1=1
+        -- join
+       AND p1.personid = k.k_person1id
+       AND p2.personid = k.k_person2id
+)
+,  case4 AS (
+    SELECT DISTINCT
+           p1.personid AS person1id
+         , p2.personid AS person2id
+         , 10 AS score
+      FROM person1_list p1
+         , person2_list p2
+         , post m -- message by p2
+         , likes l
+     WHERE 1=1
+        -- join
+       AND p2.personid = m.ps_creatorid
+       AND m.ps_postid = l.l_postid
+       AND l.l_personid = p1.personid
+)
+,  case5 AS (
+    SELECT DISTINCT
+           p1.personid AS person1id
+         , p2.personid AS person2id
+         , 1 AS score
+      FROM person1_list p1
+         , person2_list p2
+         , post m -- message by p1
+         , likes l
+     WHERE 1=1
+        -- join
+       AND p1.personid = m.ps_creatorid
+       AND m.ps_postid = l.l_postid
+       AND l.l_personid = p2.personid
+)
+,  pair_scores AS (
+    SELECT person1id, person2id, sum(score) AS score
+      FROM (SELECT * FROM case1
+            UNION ALL SELECT * FROM case2
+            UNION ALL SELECT * FROM case3
+            UNION ALL SELECT * FROM case4
+            UNION ALL SELECT * FROM case5
+           ) t
+     GROUP BY person1id, person2id
+)
+,  score_ranks AS (
+    SELECT s.person1id
+         , s.person2id
+         , ci.pl_name AS cityName
+         , s.score
+         , row_number() OVER (PARTITION BY ci.pl_placeid ORDER BY s.score DESC NULLS LAST, s.person1id, s.person2id) AS rn
+      FROM place co -- country
+           INNER JOIN place ci ON (co.pl_placeid = ci.pl_containerplaceid) -- city
+           LEFT  JOIN person1_list p1l ON (ci.pl_placeid = p1l.cityid)
+           LEFT  JOIN pair_scores s ON (p1l.personid = s.person1id)
+     WHERE 1=1
+        -- filter
+       AND co.pl_name = :country1
+)
+SELECT s.person1id AS "person1.id"
+     , s.person2id AS "person2.id"
+     , s.cityName AS "city1.name"
+     , s.score
+  FROM score_ranks s
+ WHERE 1=1
+    -- filter
+   AND s.rn = 1
+ ORDER BY s.score DESC, s.person1id, s.person2id
+ LIMIT 100
+;
