@@ -477,10 +477,10 @@ public class PostgresBiDb extends JdbcDb<BiQueryStore> {
 
 		@Override
 		public LdbcSnbBiQuery22InternationalDialogResult convertSingleResult(ResultSet result) throws SQLException {
-			long person1Id = result.getLong(0);
-			long person2Id = result.getLong(1);
-			String city1Name = result.getString(2);
-			int  score = result.getInt(3);
+			long person1Id = result.getLong(1);
+			long person2Id = result.getLong(2);
+			String city1Name = result.getString(3);
+			int  score = result.getInt(4);
 			return new LdbcSnbBiQuery22InternationalDialogResult(person1Id, person2Id, city1Name, score);
 		}
 	}
