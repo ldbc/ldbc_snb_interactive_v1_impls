@@ -25,6 +25,19 @@ CREATE USER usr PASSWORD 'foo';
 ALTER ROLE usr WITH login createdb superuser;
 ```
 
+## Allow access from all local users
+
+Alternatively, you can allow any local users to access the database.
+
+:warning: Warning: never do this on a production system.
+
+Edit the `pg_hba.conf` file and add the following line:
+
+```
+local all postgres trust
+# local all postgres peer
+```
+
 ## Loading the data set
 
 ### Generating the data set
