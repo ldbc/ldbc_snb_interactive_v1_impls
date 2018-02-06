@@ -24,7 +24,6 @@ vacuum analyze;
 -- create column index pst_tagid on post_tag (pst_tagid) partition (pst_tagid int (0hexffff00));
 
 -- create index on foreign keys
--- TODO: other FK indexes to be added
 CREATE INDEX forum_moderatorid ON forum (f_moderatorid);
 CREATE INDEX forum_person_forumid ON forum_person (fp_forumid);
 CREATE INDEX forum_person_personid ON forum_person (fp_personid);
