@@ -61,6 +61,7 @@ import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcSingletonOperationHandler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -332,11 +333,17 @@ public class PostgresBiDb extends JdbcDb<BiQueryStore> {
 		public LdbcSnbBiQuery13PopularMonthlyTagsResult convertSingleResult(ResultSet result) throws SQLException {
 			int year = result.getInt(1);
 			int month = result.getInt(2);
-			final String[][] array = (String[][]) result.getArray(3).getArray();
+			final Object array = result.getArray(3).getArray();
 
-			final List<LdbcSnbBiQuery13PopularMonthlyTagsResult.TagPopularity> popularTags = Arrays.stream(array).map(
-					el -> new LdbcSnbBiQuery13PopularMonthlyTagsResult.TagPopularity(el[0], Integer.parseInt(el[1]))
-			).collect(Collectors.toList());
+			final List<LdbcSnbBiQuery13PopularMonthlyTagsResult.TagPopularity> popularTags;
+			if (array instanceof String[][]) {
+				final String[][] nestedArray = (String[][]) (Object) array;
+				popularTags = Arrays.stream(nestedArray).map(
+						el -> new LdbcSnbBiQuery13PopularMonthlyTagsResult.TagPopularity(el[0], Integer.parseInt(el[1]))
+				).collect(Collectors.toList());
+			} else {
+				popularTags = new ArrayList<>();
+			}
 			return new LdbcSnbBiQuery13PopularMonthlyTagsResult(year, month, popularTags);
 		}
 	}
