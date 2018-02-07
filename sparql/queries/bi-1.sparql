@@ -12,7 +12,7 @@ SELECT ?messageYear ?isComment ?lengthCategory ?messageCount ?averageMessageLeng
 WHERE 
 {
     {
-        SELECT ?messageYear ?isComment ?lengthCategory (COUNT(?message) AS ?messageCount) (AVG(?length) AS ?averageMessageLength) (SUM(?length) AS ?sumMessageLength) 
+        SELECT ?messageYear ?isComment ?lengthCategory (COUNT(?message) AS ?messageCount) (floor(AVG(?length)) AS ?averageMessageLength) (SUM(?length) AS ?sumMessageLength) 
         WHERE 
         {
             {
