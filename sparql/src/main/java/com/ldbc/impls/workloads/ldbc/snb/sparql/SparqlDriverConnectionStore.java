@@ -24,7 +24,7 @@ public abstract class SparqlDriverConnectionStore<DbQueryStore> extends DbConnec
 		endpoint = properties.get("endpoint");
 
 		repository = new StardogRepository(ConnectionConfiguration
-				.to("testSesame")
+				.from(endpoint + "ldbcsf1")
 				.credentials("admin", "admin"));
 		queryStore = store;
 	}

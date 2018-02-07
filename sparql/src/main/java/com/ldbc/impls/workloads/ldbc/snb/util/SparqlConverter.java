@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public class SparqlConverter extends Converter {
 
     public static final String SPARQL_QUERY_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
-    public static final String SPARQL_RETURN_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    public static final String SPARQL_RETURN_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 
     /**
      * Converts epoch seconds to SPARQL timestamps.

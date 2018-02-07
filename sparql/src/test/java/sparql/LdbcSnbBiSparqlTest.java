@@ -11,7 +11,7 @@ import java.util.Map;
 @Ignore
 public class LdbcSnbBiSparqlTest extends LdbcSnbBiQueryTest {
 
-	private static String endpoint = "http://localhost:9999/blazegraph";
+	private static String endpoint = "http://localhost:5820/";
 	private static String queryDir = "queries/";
 
 	public LdbcSnbBiSparqlTest() throws DbException {
@@ -24,7 +24,7 @@ public class LdbcSnbBiSparqlTest extends LdbcSnbBiQueryTest {
 		properties.put("endpoint", endpoint);
 		properties.put("queryDir", queryDir);
 		properties.put("printQueryNames", "true");
-		properties.put("printQueryStrings", "false");
+		properties.put("printQueryStrings", "true");
 		properties.put("printQueryResults", "false");
 		return properties;
 	}
