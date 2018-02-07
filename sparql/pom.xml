@@ -23,11 +23,30 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.blazegraph</groupId>
-            <artifactId>bigdata-client</artifactId>
-            <version>${blazegraph.version}</version>
+            <groupId>com.complexible.stardog</groupId>
+            <artifactId>client-http</artifactId>
+            <version>5.2.1</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>com.complexible.stardog</groupId>
+            <artifactId>server</artifactId>
+            <version>5.2.1</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.openrdf.sesame</groupId>
+            <artifactId>sesame-model</artifactId>
+            <version>2.8.11</version>
         </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>stardog-public</id>
+            <url>http://maven.stardog.com</url>
+        </repository>
+    </repositories>
 
   <build>
     <plugins>

@@ -1,8 +1,9 @@
 package com.ldbc.impls.workloads.ldbc.snb.sparql;
 
-import com.bigdata.rdf.sail.webapp.client.RemoteRepository;
-import com.bigdata.rdf.sail.webapp.client.RemoteRepositoryManager;
+import com.complexible.stardog.api.ConnectionConfiguration;
+import com.complexible.stardog.sesame.StardogRepository;
 import com.ldbc.driver.DbConnectionState;
+import org.openrdf.repository.Repository;
 
 import java.util.Map;
 
@@ -12,7 +13,7 @@ public abstract class SparqlDriverConnectionStore<DbQueryStore> extends DbConnec
 	private final boolean printStrings;
 	private final boolean printResults;
 	private final String endpoint;
-	private final RemoteRepository repository;
+	private final Repository repository;
 
 	public SparqlDriverConnectionStore(Map<String, String> properties, DbQueryStore store) {
 		super();
@@ -22,9 +23,9 @@ public abstract class SparqlDriverConnectionStore<DbQueryStore> extends DbConnec
 		printResults = Boolean.valueOf(properties.get("printQueryResults"));
 		endpoint = properties.get("endpoint");
 
-		final RemoteRepositoryManager repo = new RemoteRepositoryManager(endpoint, false /* useLBS */);
-		repository = repo.getRepositoryForDefaultNamespace();
-
+		repository = new StardogRepository(ConnectionConfiguration
+				.to("testSesame")
+				.credentials("admin", "admin"));
 		queryStore = store;
 	}
 
@@ -45,7 +46,7 @@ public abstract class SparqlDriverConnectionStore<DbQueryStore> extends DbConnec
 		}
 	}
 
-	public RemoteRepository getRepository() {
+	public Repository getRepository() {
 		return repository;
 	}
 

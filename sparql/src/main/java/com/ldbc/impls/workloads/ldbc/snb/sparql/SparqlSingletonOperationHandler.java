@@ -1,11 +1,11 @@
 package com.ldbc.impls.workloads.ldbc.snb.sparql;
 
-import com.bigdata.rdf.sail.webapp.client.IPreparedTupleQuery;
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
 import org.openrdf.query.BindingSet;
+import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
 
 public abstract class SparqlSingletonOperationHandler<OperationType extends Operation<OperationResult>, OperationResult, QueryStore>
@@ -21,7 +21,7 @@ public abstract class SparqlSingletonOperationHandler<OperationType extends Oper
 			final String queryString = getQueryString(state, operation);
 			state.logQuery(operation.getClass().getSimpleName(), queryString);
 
-			final IPreparedTupleQuery tupleQuery = state.getRepository().prepareTupleQuery(queryString);
+			TupleQuery tupleQuery = state.getRepository().getConnection().prepareTupleQuery(queryString);
 			TupleQueryResult queryResults = tupleQuery.evaluate();
 
 			if (queryResults.hasNext()) {
