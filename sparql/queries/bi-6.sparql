@@ -12,7 +12,7 @@ SELECT ?personId  ?likeCount ?messageCount ?replyCount ?score
 WHERE 
 {
     {
-        SELECT ?personId (COUNT(distinct ?like) AS ?likeCount) (COUNT(distinct ?message) AS ?messageCount) (COUNT(distinct ?replyComment) AS ?replyCount)
+        SELECT ?personId (COUNT(DISTINCT ?like) AS ?likeCount) (COUNT(DISTINCT ?message) AS ?messageCount) (COUNT(DISTINCT ?replyComment) AS ?replyCount)
         WHERE 
         {
             VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
@@ -20,15 +20,18 @@ WHERE
             ?message snvoc:hasTag ?tag .
             ?tag a ?tagClass .
             ?tagClass a snvoc:TagClass .
-            ?tag foaf:name $tag .
-            ?like snvoc:hasComment|snvoc:hasPost ?message .
-            ?personWhoLiked snvoc:likes ?like .
-            ?personWhoLiked a snvoc:Person .
-
+            ?tag foaf:name "Chad" .
+            OPTIONAL {
+                ?personWhoLiked a snvoc:Person .
+                ?personWhoLiked snvoc:likes ?like .
+                ?like snvoc:hasComment|snvoc:hasPost ?message .
+            }
             ?person a snvoc:Person .
             ?message snvoc:hasCreator ?person . 
             ?person snvoc:id ?personId .
-            ?replyComment snvoc:replyOf ?message.
+            OPTIONAL {
+                ?replyComment snvoc:replyOf ?message.
+            }
         }
         GROUP BY ?personId
     }
