@@ -24,7 +24,8 @@
 			<version>9.4-1206-jdbc42</version>
 		</dependency>
 	</dependencies>
-	  <build>
+
+  <build>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
