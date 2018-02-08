@@ -9,7 +9,6 @@
 	</parent>
 
     <properties>
-        <blazegraph.version>2.1.4</blazegraph.version>
     </properties>
 
 	<artifactId>sparql</artifactId>

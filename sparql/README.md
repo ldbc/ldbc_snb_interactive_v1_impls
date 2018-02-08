@@ -16,9 +16,26 @@ ldbc.snb.datagen.serializer.personActivitySerializer:ldbc.snb.datagen.serializer
 
 ### Loading the data
 
-Set the `RDF_DATA_DIR` environment variable and run the load script:
+Set the environment variables and run the load script:
 
 ```
+export RDF_DB=ldbcsf1
 export RDF_DATA_DIR=/path/to/the/ttl/files
-./load-to-blazegraph.sh
+./load-to-stardog.sh
+```
+
+### Troubleshooting
+
+Problem: when running the bundled JAR file, Java throws the following error.
+
+```
+Error: A JNI error has occurred, please check your installation and try again
+Exception in thread "main" java.lang.SecurityException: Invalid signature file digest for Manifest main attributes
+	at sun.security.util.SignatureFileVerifier.processImpl(SignatureFileVerifier.java:330)
+```
+
+Solution: remove the signature files.
+
+```bash
+zip -d target/sparql-0.0.1-SNAPSHOT.jar META-INF/*.RSA META-INF/*.DSA META-INF/*.SF
 ```

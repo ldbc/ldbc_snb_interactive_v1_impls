@@ -10,10 +10,6 @@ install:
   - . environment-variables-neo4j.sh
   - ./configure-neo4j.sh
   - cd ..
-  # Blazegraph
-  - cd sparql
-  - ./get-blazegraph.sh
-  - cd ..
   # driver
   - git clone https://github.com/ldbc/ldbc_snb_driver
   - cd ldbc_snb_driver
@@ -39,11 +35,6 @@ script:
   - ./import-to-neo4j.sh
   - ./restart-neo4j.sh
   - cd ../..
-  # SPARQL
-  - cd sparql
-  - export RDF_DATA_DIR=`pwd`/test-data
-  - ./load-to-blazegraph.sh
-  - cd ..
   # tests
   - mvn test -B
 notifications:

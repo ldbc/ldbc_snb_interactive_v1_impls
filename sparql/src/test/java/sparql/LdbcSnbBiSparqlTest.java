@@ -30,4 +30,3 @@ public class LdbcSnbBiSparqlTest extends LdbcSnbBiQueryTest {
 	}
 
 }
-
