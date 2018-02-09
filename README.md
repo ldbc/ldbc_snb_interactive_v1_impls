@@ -51,7 +51,7 @@ You can find the detailed information about this task here: <https://github.com/
 After that, you can install the JAR file of ldbc_snb_driver to the local Maven repository. Go to the root directory of ldbc_snb_driver, and run:
 
 ```bash
-mvn clean install -Dmaven.compiler.source=1.7 -Dmaven.compiler.target=1.7 -DskipTests
+mvn clean install -DskipTests
 ```
 
 ## Generating the validation data set
