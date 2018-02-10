@@ -46,7 +46,7 @@ public class SparqlConverter extends Converter {
     public String convertBlacklist(List<String> words) {
         return "\"" +
             words.stream()
-            .map(v -> "((^|\\\\s)+" + v + "($|\\\\s)+)")
+            .map(v -> "(" + v + ")")
             .collect( Collectors.joining( "|" ) ) +
             "\"";
     }
