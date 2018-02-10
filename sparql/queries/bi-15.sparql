@@ -12,24 +12,37 @@ SELECT ?personId (COUNT(?friend) AS ?count)
 WHERE
 {
     {
-        SELECT ?countryName (FLOOR(COUNT(?friend) / COUNT(DISTINCT ?personId)) AS ?avgFriendCount)
+        SELECT (FLOOR(COUNT(?friend) / 2.0 / COUNT(DISTINCT ?personId)) AS ?avgFriendCount)
         WHERE
         {
             ?personId a snvoc:Person .
             ?personId snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country .
-            ?personId snvoc:knows/snvoc:hasPerson ?friend .
             ?friend a snvoc:Person .
-            ?friend snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country
+            ?friend snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country .
+            ?personId snvoc:id ?pId .
+            ?friend snvoc:id ?fId .
+            {
+                ?personId snvoc:knows/snvoc:hasPerson ?friend .
+            }
+            UNION
+            {
+                ?friend snvoc:knows/snvoc:hasPerson ?personId .
+            }
         }
-        GROUP BY ?countryName
     }
     ?personId a snvoc:Person .
     ?personId snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country .
-    ?personId snvoc:knows/snvoc:hasPerson ?friend .
     ?friend a snvoc:Person .
-    ?friend snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country
+    ?friend snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country .
+    {
+        ?personId snvoc:knows/snvoc:hasPerson ?friend .
+    }
+    UNION
+    {
+        ?friend snvoc:knows/snvoc:hasPerson ?personId .
+    }
 }
 GROUP BY ?personId ?avgFriendCount
-HAVING(?friendCount = ?avgFriendCount)
+HAVING(?count = ?avgFriendCount)
 ORDER BY ?personId
 LIMIT 100
