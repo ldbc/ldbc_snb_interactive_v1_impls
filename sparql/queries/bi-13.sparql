@@ -29,7 +29,7 @@ WHERE
                     BIND( MONTH(?creationDate) AS ?month)
                 }
                 GROUP BY ?year ?month ?tagName
-                ORDER BY DESC(?popularity)
+                ORDER BY DESC(?popularity) ?tagName
             }
             BIND(STR(?popularity) AS ?strPopularity)
             BIND(CONCAT(?tagName, "#", ?strPopularity) AS ?strTagAndPopularity)
