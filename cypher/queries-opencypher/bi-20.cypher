@@ -8,7 +8,7 @@ MATCH
   (:TagClass)<-[:HAS_TYPE]-(tag:Tag)<-[:HAS_TAG]-(message:Message)
 RETURN
   tagClass.name,
-  count(message) AS messageCount
+  count(DISTINCT message) AS messageCount
 ORDER BY
   messageCount DESC,
   tagClass.name ASC
