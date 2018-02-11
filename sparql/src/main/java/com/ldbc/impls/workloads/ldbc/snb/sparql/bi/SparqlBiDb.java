@@ -118,7 +118,7 @@ public class SparqlBiDb extends SparqlDb {
 			int lengthCategory          = convertInteger(bs, "lengthCategory"      );
 			long messageCount           = convertLong   (bs, "messageCount"        );
 			int averageMessageLength    = convertInteger(bs, "averageMessageLength");
-			int sumMessageLength        = convertInteger(bs, "totalMessageCount"   );
+			int sumMessageLength        = convertInteger(bs, "sumMessageLength"   );
 			double percentageOfMessages = convertDouble (bs, "percentageOfMessages");
 
 			return new LdbcSnbBiQuery1PostingSummaryResult(messageYear, isComment, lengthCategory, messageCount, averageMessageLength, sumMessageLength, (float) percentageOfMessages);

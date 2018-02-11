@@ -8,7 +8,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-SELECT (COUNT(?message) AS ?messageCount) (COUNT(DISTINCT ?like) AS ?likeCount) ?year ?month ?continentName
+SELECT (COUNT(DISTINCT ?message) AS ?messageCount) (COUNT(DISTINCT ?like) AS ?likeCount) ?year ?month ?continentName
 WHERE
 {
     VALUES (?type) {(snvoc:Post) (snvoc:Comment)}

@@ -7,13 +7,13 @@ PREFIX sntag: <http://www.ldbc.eu/ldbc_socialnet/1.0/tag/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
- 
-SELECT ?messageYear ?isComment ?lengthCategory ?messageCount ?averageMessageLength ?sumMessageLength ?totalMessageCount ?percentageOfMessages
-WHERE 
+
+SELECT ?messageYear ?isComment ?lengthCategory ?messageCount ?averageMessageLength ?sumMessageLength ?percentageOfMessages
+WHERE
 {
     {
-        SELECT ?messageYear ?isComment ?lengthCategory (COUNT(?message) AS ?messageCount) (floor(AVG(?length)) AS ?averageMessageLength) (SUM(?length) AS ?sumMessageLength) 
-        WHERE 
+        SELECT ?messageYear ?isComment ?lengthCategory (COUNT(?message) AS ?messageCount) (floor(AVG(?length)) AS ?averageMessageLength) (SUM(?length) AS ?sumMessageLength)
+        WHERE
         {
             {
                 ?message a snvoc:Comment .
@@ -37,14 +37,12 @@ WHERE
 
     {
         SELECT (COUNT(?message) as ?totalMessageCount)
-        WHERE 
+        WHERE
         {
-        
             VALUES (?type) {(snvoc:Comment) (snvoc:Post)} .
             ?message a ?type .
             ?message snvoc:creationDate ?creationDate .
-            FILTER (?creationDate < $date) .
-            ?message snvoc:length ?length
+            FILTER (?creationDate <= $date)
         }
     }
 
