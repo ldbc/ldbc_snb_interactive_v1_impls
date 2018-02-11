@@ -338,7 +338,7 @@ public class SparqlBiDb extends SparqlDb {
 			final List<LdbcSnbBiQuery13PopularMonthlyTagsResult.TagPopularity> popularTags = Arrays.stream(popularTagsArray).map(popularTag -> {
 				final String[] tag = popularTag.split("#");
 				return new LdbcSnbBiQuery13PopularMonthlyTagsResult.TagPopularity(tag[0], Integer.parseInt(tag[1]));
-			}).collect(Collectors.toList());
+			}).limit(5).collect(Collectors.toList());
 
 			return new LdbcSnbBiQuery13PopularMonthlyTagsResult(year, month, popularTags);
 		}
