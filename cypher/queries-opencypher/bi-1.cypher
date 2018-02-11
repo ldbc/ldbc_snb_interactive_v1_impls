@@ -3,10 +3,10 @@
   :param { date: 20110721220000000 }
 */
 MATCH (message:Message)
-WHERE message.creationDate <= $date
+WHERE message.creationDate < $date
 WITH toFloat(count(message)) AS totalMessageCount // this should be a subquery once Cypher supports it
 MATCH (message:Message)
-WHERE message.creationDate <= $date
+WHERE message.creationDate < $date
   AND message.content IS NOT NULL
 WITH
   totalMessageCount,
