@@ -8,24 +8,17 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-SELECT ?tagClassName (COUNT(?message) AS ?messageCount)
+SELECT ?tagClassName (COUNT(DISTINCT ?message) AS ?messageCount)
 WHERE
 { 
-    VALUES (?tagClassNames) {$tagClasses}
+    VALUES (?tagClassName) {$tagClasses}
     VALUES (?type) {(snvoc:Post) (snvoc:Comment)}
-    ?message a ?type
-    {   
-        ?message snvoc:hasTag/a ?tagClass .
-        ?tagClass rdfs:subClassOf* ?parentTagClass .
-        ?tagClass rdfs:label ?tagClassName .
-        ?parentTagClass rdfs:label ?tagClassNames 
-    }
-    UNION
-    {
-        ?message snvoc:hasTag/a ?tagClass .
-        ?tagClass rdfs:label ?tagClassNames .
-        BIND(?tagClassNames AS ?tagClassName)
-    }
+    ?message a ?type .
+    ?message snvoc:hasTag/a ?tagClass .
+    ?tagClass a snvoc:TagClass .    
+    ?tagClass rdfs:subClassOf* ?parentTagClass .
+    ?parentTagClass rdfs:label ?tagClassName 
+    
 }
 GROUP BY ?tagClassName
 ORDER BY DESC(?messageCount) ?tagClassName
