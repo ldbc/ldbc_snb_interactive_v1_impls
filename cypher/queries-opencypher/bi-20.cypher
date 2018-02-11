@@ -8,8 +8,8 @@ MATCH
   (:TagClass)<-[:HAS_TYPE]-(tag:Tag)<-[:HAS_TAG]-(message:Message)
 RETURN
   tagClass.name,
-  count(message) AS postCount
+  count(message) AS messageCount
 ORDER BY
-  postCount DESC,
+  messageCount DESC,
   tagClass.name ASC
 LIMIT 100
