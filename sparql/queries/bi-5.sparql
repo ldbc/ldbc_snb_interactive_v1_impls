@@ -8,10 +8,9 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-SELECT ?personId ?personFirstName ?personLastName ?personCreationDate (COUNT(?post) AS ?postCount)
+SELECT ?personId ?personFirstName ?personLastName ?personCreationDate (COUNT(DISTINCT ?post) AS ?postCount)
 WHERE
 {
-    BIND(?countryName1 AS ?countryName2)
     {
         SELECT ?forum
         WHERE
@@ -28,7 +27,7 @@ WHERE
             ?country foaf:name ?countryName
         }
         GROUP BY ?forum
-        ORDER BY DESC(?memberCount) ?forum
+        ORDER BY DESC(COUNT(DISTINCT ?personId)) ?forum
         LIMIT 100
     }
 
@@ -48,14 +47,16 @@ WHERE
             ?country foaf:name ?countryName
         }
         GROUP BY ?forum2
-        ORDER BY DESC(?memberCount) ?forum2
+        ORDER BY DESC(COUNT(DISTINCT ?personId)) ?forum2
         LIMIT 100
     }
     ?personId a snvoc:Person .
     ?forum snvoc:hasMember/snvoc:hasPerson ?personId .
-    ?post a snvoc:Post .
-    ?post snvoc:hasCreator ?personId .
-    ?forum2 snvoc:containerOf ?post .
+    OPTIONAL {
+        ?post a snvoc:Post .
+        ?post snvoc:hasCreator ?personId .
+        ?forum2 snvoc:containerOf ?post .
+    }
     ?personId snvoc:firstName ?personFirstName .
     ?personId snvoc:lastName ?personLastName .
     ?personId snvoc:creationDate ?personCreationDate
