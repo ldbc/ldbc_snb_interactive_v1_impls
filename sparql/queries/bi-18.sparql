@@ -10,29 +10,25 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 SELECT ?messageCount (COUNT(?person) AS ?personCount)
 WHERE
-{ 
+{
     {
         SELECT ?person (COUNT(?message) AS ?messageCount)
         WHERE
         {
-            BIND (100 AS ?lengthTreshold)
             VALUES (?language) {$languages}
-            
-            {
+            ?person a snvoc:Person
+            OPTIONAL {
                 ?message a snvoc:Comment .
-                ?message snvoc:replyOf+ ?post .
+                ?message snvoc:replyOf* ?post .
                 ?message snvoc:creationDate ?creationDate .
                 FILTER (?creationDate > $date) .
                 ?post a snvoc:Post .
                 ?post snvoc:language ?language .
-            } UNION {
-                ?message a snvoc:Post .
-                ?message snvoc:language ?language .
-            } .
-            ?message snvoc:content ?content .
-            FILTER(STRLEN(?content) > 0 && STRLEN(?content) < ?lengthTreshold)
-            ?message snvoc:hasCreator ?person .
-            ?person a snvoc:Person
+                ?message snvoc:content ?content .
+                ?message snvoc:length ?length .
+                FILTER(STRLEN(?content) > 0 && ?length < $lengthThreshold)
+                ?message snvoc:hasCreator ?person .
+            }
         }
         GROUP BY ?person
     }
