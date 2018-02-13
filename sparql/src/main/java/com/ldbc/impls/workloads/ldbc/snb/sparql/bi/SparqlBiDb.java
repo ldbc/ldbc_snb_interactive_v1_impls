@@ -335,7 +335,9 @@ public class SparqlBiDb extends SparqlDb {
 			int year  = convertInteger(bs, "year" );
 			int month = convertInteger(bs, "month");
 			final String[] popularTagsArray = bs.getBinding("popularTags").getValue().stringValue().split("\\|");
-			final List<LdbcSnbBiQuery13PopularMonthlyTagsResult.TagPopularity> popularTags = Arrays.stream(popularTagsArray).map(popularTag -> {
+			final List<LdbcSnbBiQuery13PopularMonthlyTagsResult.TagPopularity> popularTags = Arrays.stream(popularTagsArray).filter(popularTag -> {
+				return popularTag.length() > 0;
+			}).map(popularTag -> {
 				final String[] tag = popularTag.split("#");
 				return new LdbcSnbBiQuery13PopularMonthlyTagsResult.TagPopularity(tag[0], Integer.parseInt(tag[1]));
 			}).limit(5).collect(Collectors.toList());

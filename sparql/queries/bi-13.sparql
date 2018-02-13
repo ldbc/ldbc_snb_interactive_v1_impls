@@ -24,7 +24,9 @@ WHERE
                     ?message a ?type .
                     ?message snvoc:isLocatedIn/foaf:name ?countryName .
                     ?message snvoc:creationDate ?creationDate .
-                    ?message snvoc:hasTag/foaf:name ?tagName .
+                    OPTIONAL {
+                        ?message snvoc:hasTag/foaf:name ?tagName .
+                    }
                     BIND( YEAR(?creationDate) AS ?year)
                     BIND( MONTH(?creationDate) AS ?month)
                 }
