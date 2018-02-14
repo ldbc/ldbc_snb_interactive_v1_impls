@@ -54,8 +54,8 @@ Exception in thread "main" java.lang.SecurityException: Invalid signature file d
 	at sun.security.util.SignatureFileVerifier.processImpl(SignatureFileVerifier.java:330)
 ```
 
-Solution: remove the signature files.
+Solution: remove the signature files with the following script.
 
 ```bash
-zip -d target/sparql-0.0.1-SNAPSHOT.jar META-INF/*.RSA META-INF/*.DSA META-INF/*.SF
+./delete-signature-files.sh
 ```
