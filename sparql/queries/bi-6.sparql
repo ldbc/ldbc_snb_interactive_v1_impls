@@ -8,27 +8,26 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-SELECT ?personId  ?likeCount ?messageCount ?replyCount ?score
-WHERE 
+SELECT ?personId ?likeCount ?messageCount ?replyCount ?score
+WHERE
 {
     {
         SELECT ?personId (COUNT(DISTINCT ?like) AS ?likeCount) (COUNT(DISTINCT ?message) AS ?messageCount) (COUNT(DISTINCT ?replyComment) AS ?replyCount)
-        WHERE 
+        WHERE
         {
             VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
             ?message a ?type .
             ?message snvoc:hasTag ?tag .
             ?tag a ?tagClass .
             ?tagClass a snvoc:TagClass .
-            ?tag foaf:name "Chad" .
+            ?tag foaf:name $tag .
             OPTIONAL {
                 ?personWhoLiked a snvoc:Person .
                 ?personWhoLiked snvoc:likes ?like .
                 ?like snvoc:hasComment|snvoc:hasPost ?message .
             }
-            ?person a snvoc:Person .
-            ?message snvoc:hasCreator ?person . 
-            ?person snvoc:id ?personId .
+            ?personId a snvoc:Person .
+            ?message snvoc:hasCreator ?personId .
             OPTIONAL {
                 ?replyComment snvoc:replyOf ?message.
             }

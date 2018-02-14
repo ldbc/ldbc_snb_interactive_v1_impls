@@ -8,7 +8,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-SELECT ?forumId (COUNT(?post1) AS ?count1) (COUNT(?post2) AS ?count2)
+SELECT ?forumId (COUNT(DISTINCT ?post1) AS ?count1) (COUNT(DISTINCT ?post2) AS ?count2)
 WHERE
 {
     #BIND (500 as ?treshold)
@@ -28,6 +28,6 @@ WHERE
 
 }
 GROUP BY ?forumId
-HAVING (?count1 > 0 && ?count2 > 0 && COUNT(?person) > $threshold)
+HAVING (?count1 > 0 && ?count2 > 0 && COUNT(DISTINCT ?person) > $threshold)
 ORDER BY DESC(ABS(?count2 - ?count1)) ?forumId
 LIMIT 100
