@@ -4,7 +4,8 @@
 */
 MATCH (message:Message)
 WHERE message.creationDate < $date
-WITH toFloat(count(message)) AS totalMessageCount // this should be a subquery once Cypher supports it
+WITH count(message) AS totalMessageCountInt // this should be a subquery once Cypher supports it
+WITH toFloat(totalMessageCountInt) AS totalMessageCount
 MATCH (message:Message)
 WHERE message.creationDate < $date
   AND message.content IS NOT NULL
