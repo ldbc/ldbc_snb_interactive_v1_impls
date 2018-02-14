@@ -14,14 +14,30 @@ ldbc.snb.datagen.serializer.invariantSerializer:ldbc.snb.datagen.serializer.snb.
 ldbc.snb.datagen.serializer.personActivitySerializer:ldbc.snb.datagen.serializer.snb.interactive.TurtlePersonActivitySerializer
 ```
 
+## Loading and setting up the database
+
+Set up the value of the `$STARDOG_HOME` environment variable.
+
+```bash
+export STARDOG_HOME=/path/to/stardog/dir
+```
+
 ### Loading the data
 
-Set the environment variables and run the load script:
+Set up the environment variables and run the load script:
 
-```
+```bash
 export RDF_DB=ldbcsf1
 export RDF_DATA_DIR=/path/to/the/ttl/files
 ./load-to-stardog.sh
+```
+
+### Setting up the database
+
+Due to the complexity of the queries, it is recommended to increase the timeout. To do so, create/edit the `$STARDOG_HOME/stardog.properties` file and add the following line:
+
+```
+query.timeout=3600s
 ```
 
 ### Troubleshooting
