@@ -7,9 +7,8 @@ PREFIX sntag: <http://www.ldbc.eu/ldbc_socialnet/1.0/tag/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
- 
 
-SELECT ?countryName ?messageMonth ?gender ?ageGroup ?tagName (COUNT(?message) AS ?messageCount)
+SELECT ?countryName ?messageMonth ?personGender ?ageGroup ?tagName (COUNT(?message) AS ?messageCount)
 WHERE
 {
     VALUES (?type) {(snvoc:Comment) (snvoc:Post)} .
@@ -19,7 +18,8 @@ WHERE
     ?message snvoc:hasTag ?tag .
     ?tag foaf:name ?tagName .
 
-    ?person snvoc:gender ?gender .
+    ?person a snvoc:Person .
+    ?person snvoc:gender ?personGender .
     ?person snvoc:birthday ?birthday .
     ?person snvoc:isLocatedIn ?city .
     ?city snvoc:isPartOf ?country .
@@ -28,10 +28,11 @@ WHERE
     FILTER ($startDate <= ?creationDate && ?creationDate <= $endDate) .
     FILTER (?countryName = $country1 || ?countryName = $country2) .
 
-    BIND ( FLOOR( (2013 - year(?birthday)) / 5.0) AS ?ageGroup) .
-    BIND ( month(?creationDate) AS ?messageMonth) .  
+    BIND ( IF(month(?birthday) = 1 && day(?birthday) = 1, 2013, 2012 ) AS ?yearFromSubstract)
+    BIND ( FLOOR( (?yearFromSubstract - year(?birthday)) / 5.0) AS ?ageGroup) .
+    BIND ( month(?creationDate) AS ?messageMonth) .
 }
-GROUP BY ?countryName ?messageMonth ?gender ?ageGroup ?tagName
+GROUP BY ?countryName ?messageMonth ?personGender ?ageGroup ?tagName
 HAVING (?messageCount > 100)
-ORDER BY DESC(?messageCount) ?tagName ?ageGroup ?gender ?messageMonth ?countryName
+ORDER BY DESC(?messageCount) ?tagName ?ageGroup ?personGender ?messageMonth ?countryName
 LIMIT 100
