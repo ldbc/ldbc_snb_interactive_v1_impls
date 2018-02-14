@@ -20,6 +20,7 @@ Set up the value of the `$STARDOG_HOME` environment variable.
 
 ```bash
 export STARDOG_HOME=/path/to/stardog/dir
+export STARDOG_SERVER_JAVA_ARGS="-Xms16G -Xmx16G -XX:MaxDirectMemorySize=128G"
 ```
 
 ### Loading the data
@@ -34,10 +35,13 @@ export RDF_DATA_DIR=/path/to/the/ttl/files
 
 ### Setting up the database
 
-Due to the complexity of the queries, it is recommended to increase the timeout. To do so, create/edit the `$STARDOG_HOME/stardog.properties` file and add the following line:
+Due to the complexity of the queries, it is recommended to increase the timeout.
+Also, the BI workload is currently read-only, so it makes sense to set the memory mode to `read_optimized`.
+To do so, create/edit the `$STARDOG_HOME/stardog.properties` file and add the following lines.
 
 ```
 query.timeout=3600s
+memory.mode=read_optimized
 ```
 
 ### Troubleshooting
