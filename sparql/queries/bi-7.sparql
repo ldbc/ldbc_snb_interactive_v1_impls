@@ -11,33 +11,35 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 SELECT ?personId (SUM(?popularityScore) AS ?authorityScore)
 WHERE
 {
-    BIND ($tag AS ?tagName)
+    SELECT DISTINCT ?personId ?person2 ?popularityScore
+    WHERE
     {
-        SELECT ?person2 (COUNT(?like2) AS ?popularityScore)
-        WHERE
-        {
-            VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
-            ?person2 snvoc:likes ?like1 .
-            ?message3 a ?type .
-            ?message3 snvoc:hasCreator ?person2 .
-            ?person3 snvoc:likes ?like2 .
+        ?personId a snvoc:Person .
+        VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
+        ?message2 a ?type .
+        ?message2 snvoc:hasTag/foaf:name $tag .
+        OPTIONAL {
+            ?person2 snvoc:likes/(snvoc:hasPost|snvoc:hasComment) ?message2 .
+            ?message2 snvoc:hasCreator ?personId .
+            ?person2 a snvoc:Person .
             {
-                { ?like2 snvoc:hasPost ?message3 }
-                UNION
-                { ?like2 snvoc:hasComment ?message3 }
+                SELECT ?person2 (COUNT(DISTINCT ?like2) AS ?popularityScore)
+                WHERE
+                {
+                    VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
+                    ?person2 a snvoc:Person .
+                    ?message3 a ?type .
+                    ?message3 snvoc:hasCreator ?person2 .
+                    ?person3 snvoc:likes ?like2 .
+                    ?person3 a snvoc:Person .
+                    ?like2 snvoc:hasPost|snvoc:hasComment ?message3 .
+                }
+                GROUP BY ?person2
+                ORDER BY ?person2 ?like2
             }
         }
-        GROUP BY ?person2
-        ORDER BY ?person2 ?like2
-    } .
-    VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
-    ?message2 a ?type .
-    ?message2 snvoc:hasTag/foaf:name ?tagName .
-    ?person2 snvoc:likes ?like1 .
-    ?like1 snvoc:hasPost|snvoc:hasComment ?message2 .
-    ?message2 snvoc:hasCreator ?personId .
-
+    }
 }
-GROUP BY ?personId
+GROUP BY ?personId ?message2
 ORDER BY DESC(?authorityScore) ?personId
 LIMIT 100

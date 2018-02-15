@@ -12,31 +12,28 @@ SELECT ?year ?month (GROUP_CONCAT(?strTagAndPopularity;separator="|") AS ?popula
 WHERE
 {
     {
-        SELECT ?year ?month ?tagName ?strPopularity ?strTagAndPopularity
+        SELECT ?year ?month ?tagName (COUNT(?message) AS ?popularity)
         WHERE
         {
+            SELECT ?year ?month ?message ?tagName
+            WHERE
             {
-                SELECT ?year ?month ?tagName (COUNT(?message) AS ?popularity)
-                WHERE
-                {
-                    BIND ($country AS ?countryName)
-                    VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
-                    ?message a ?type .
-                    ?message snvoc:isLocatedIn/foaf:name ?countryName .
-                    ?message snvoc:creationDate ?creationDate .
-                    OPTIONAL {
-                        ?message snvoc:hasTag/foaf:name ?tagName .
-                    }
-                    BIND( YEAR(?creationDate) AS ?year)
-                    BIND( MONTH(?creationDate) AS ?month)
+                VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
+                ?message a ?type .
+                ?message snvoc:isLocatedIn/foaf:name $country .
+                ?message snvoc:creationDate ?creationDate .
+                OPTIONAL {
+                    ?message snvoc:hasTag/foaf:name ?tagName .
                 }
-                GROUP BY ?year ?month ?tagName
-                ORDER BY DESC(?popularity) ?tagName
+                BIND( YEAR(?creationDate) AS ?year)
+                BIND( MONTH(?creationDate) AS ?month)
             }
-            BIND(STR(?popularity) AS ?strPopularity)
-            BIND(CONCAT(?tagName, "#", ?strPopularity) AS ?strTagAndPopularity)
         }
+        GROUP BY ?year ?month ?tagName
+        ORDER BY DESC(?popularity) ?tagName
     }
+    BIND(STR(?popularity) AS ?strPopularity)
+    BIND(CONCAT(?tagName, "#", ?strPopularity) AS ?strTagAndPopularity)
 }
 GROUP BY ?year ?month
 ORDER BY DESC(?year) ?month
