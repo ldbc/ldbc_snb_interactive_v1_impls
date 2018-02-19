@@ -7,74 +7,91 @@ PREFIX sntag: <http://www.ldbc.eu/ldbc_socialnet/1.0/tag/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
-#?message ?personId ?like ?likerZombieId ?zombieLike #
-SELECT ?zombieId (COUNT(DISTINCT ?like) AS ?totalLikeCount) (COUNT(DISTINCT ?zombieLike) AS ?zombieLikeCount) (IF(COUNT(DISTINCT ?like) = 0, 0, COUNT(DISTINCT ?zombieLike) / COUNT(DISTINCT ?like))  AS ?zombieScore)
-WHERE
-{   
-    BIND($endDate^^xsd:dateTime AS ?endDate)
-    {
-        SELECT ?zombieId
-        WHERE
-        { 
-            BIND($country AS ?contryName)
-            BIND($endDate^^xsd:dateTime AS ?endDate)
-            VALUES (?type) {(snvoc:Post) (snvoc:Comment)}
-            ?message a ?type .
-            ?message snvoc:creationDate ?messageCreationDate .
-            FILTER( ?messageCreationDate < ?endDate )
-            ?zombieId a snvoc:Person .
-            ?zombieId snvoc:creationDate ?zombieCreationDate .
-            FILTER( ?zombieCreationDate < ?endDate )
-            ?message snvoc:hasCreator ?zombieId .
-            ?zombieId snvoc:isLocatedIn/snvoc:isPartOf/foaf:name ?countryName 
-            BIND( YEAR(?endDate) AS ?endYear)
-            BIND( MONTH(?endDate) AS ?endMonth)
-            BIND( YEAR(?zombieCreationDate) AS ?zombieCreationYear)
-            BIND( MONTH(?zombieCreationDate) AS ?zombieCreationMonth)
-            BIND( ((?endYear - ?zombieCreationYear) * 12 + ?endMonth - ?zombieCreationMonth) AS ?monthDiff)
 
-        }
-        GROUP BY ?zombieId ?monthDiff
-        HAVING (COUNT(?message)/?monthDiff < 1.0)
-    }
-    VALUES (?type) {(snvoc:Post) (snvoc:Comment)}
-    ?message a ?type .
-    ?message snvoc:hasCreator ?zombieId .
-    OPTIONAL {
-        {        
-            SELECT ?likerZombieId
-            WHERE
-            { 
-                BIND($country AS ?contryName)
-                BIND($endDate^^xsd:dateTime AS ?endDate)
+SELECT ?zombieId ?zombieLikeCount (COUNT(?like) AS ?totalLikeCount) (IF(COUNT(?like) = 0, 0, ?zombieLikeCount / COUNT(?like)) AS ?zombieScore)
+WHERE
+{
+    {
+        SELECT ?zombieId (COUNT(?zombieLike) AS ?zombieLikeCount)
+        WHERE
+        {
+            BIND($endDate^^xsd:dateTime AS ?endDate)
+            {
+                SELECT ?zombieId
+                WHERE
+                {
+                    BIND($endDate^^xsd:dateTime AS ?endDate)
+                    VALUES (?type) {(snvoc:Post) (snvoc:Comment)}
+                    ?zombieId a snvoc:Person .
+                    ?zombieId snvoc:creationDate ?zombieCreationDate .
+                    FILTER( ?zombieCreationDate < ?endDate )
+                    ?zombieId snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country
+                    OPTIONAL {
+                        ?message a ?type .
+                        ?message snvoc:creationDate ?messageCreationDate .
+                        FILTER( ?messageCreationDate < ?endDate )
+                        ?message snvoc:hasCreator ?zombieId .
+                    }
+                    BIND( YEAR(?endDate) AS ?endYear)
+                    BIND( MONTH(?endDate) AS ?endMonth)
+                    BIND( YEAR(?zombieCreationDate) AS ?zombieCreationYear)
+                    BIND( MONTH(?zombieCreationDate) AS ?zombieCreationMonth)
+                    BIND( ((?endYear - ?zombieCreationYear) * 12 + ?endMonth - ?zombieCreationMonth + 1) AS ?monthDiff)
+
+                }
+                GROUP BY ?zombieId ?monthDiff
+                HAVING (COUNT(?message)/?monthDiff < 1.0)
+            }
+            {
+                SELECT ?likerZombieId
+                WHERE
+                {
+                    BIND($endDate^^xsd:dateTime AS ?endDate)
+                    VALUES (?type) {(snvoc:Post) (snvoc:Comment)}
+                    ?likerZombieId a snvoc:Person .
+                    ?likerZombieId snvoc:creationDate ?likerZombieCreationDate .
+                    FILTER( ?likerZombieCreationDate < ?endDate )
+                    ?likerZombieId snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country
+                    OPTIONAL {
+                        ?message a ?type .
+                        ?message snvoc:creationDate ?messageCreationDate .
+                        FILTER( ?messageCreationDate < ?endDate )
+                        ?message snvoc:hasCreator ?likerZombieId .
+                    }
+                    BIND( YEAR(?endDate) AS ?endYear)
+                    BIND( MONTH(?endDate) AS ?endMonth)
+                    BIND( YEAR(?likerZombieCreationDate) AS ?likerZombieCreationYear)
+                    BIND( MONTH(?likerZombieCreationDate) AS ?likerZombieCreationMonth)
+                    BIND( ((?endYear - ?likerZombieCreationYear) * 12 + ?endMonth - ?likerZombieCreationMonth + 1) AS ?monthDiff)
+                }
+                GROUP BY ?likerZombieId ?monthDiff
+                HAVING (COUNT(?message)/?monthDiff < 1.0)
+            }
+            OPTIONAL {
+                ?message snvoc:hasCreator ?zombieId .
                 VALUES (?type) {(snvoc:Post) (snvoc:Comment)}
                 ?message a ?type .
-                ?message snvoc:creationDate ?messageCreationDate .
-                FILTER( ?messageCreationDate < ?endDate )
-                ?likerZombieId a snvoc:Person .
-                ?likerZombieId snvoc:creationDate ?likerZombieCreationDate .
-                FILTER( ?likerZombieCreationDate < ?endDate )
-                ?message snvoc:hasCreator ?likerZombieId .
-                ?likerZombieId snvoc:isLocatedIn/snvoc:isPartOf/foaf:name ?countryName 
-                BIND( YEAR(?endDate) AS ?endYear)
-                BIND( MONTH(?endDate) AS ?endMonth)
-                BIND( YEAR(?likerZombieCreationDate) AS ?likerZombieCreationYear)
-                BIND( MONTH(?likerZombieCreationDate) AS ?likerZombieCreationMonth)
-                BIND( ((?endYear - ?likerZombieCreationYear) * 12 + ?endMonth - ?likerZombieCreationMonth) AS ?monthDiff)
+                ?likerZombieId snvoc:likes ?zombieLike .
+                ?zombieLike snvoc:hasPost|snvoc:hasComment ?message .
             }
-            GROUP BY ?likerZombieId ?monthDiff
-            HAVING (COUNT(?message)/?monthDiff < 1.0)        
         }
-        ?likerZombieId snvoc:likes ?zombieLike .
-        ?zombieLike snvoc:hasPost|snvoc:hasComment ?message .
+        GROUP BY ?zombieId
     }
     OPTIONAL {
-        ?personId a snvoc:Person .
-        ?personId snvoc:creationDate ?personCreationDate .
-        ?personId snvoc:likes ?like .
-        ?like snvoc:hasPost|snvoc:hasComment ?message .
+        BIND($endDate^^xsd:dateTime AS ?endDate)
+        VALUES (?type) {(snvoc:Post) (snvoc:Comment)}
+        ?message a ?type .
+        ?message snvoc:hasCreator ?zombieId .
+        ?message snvoc:creationDate ?messageCreationDate .
+        FILTER( ?messageCreationDate < ?endDate )
+        ?person a snvoc:Person .
+        ?person snvoc:creationDate ?personCreationDate .
+        FILTER( ?personCreationDate < ?endDate )
+        ?person snvoc:likes ?like .
+        ?like snvoc:hasComment|snvoc:hasPost ?message
     }
 }
-GROUP BY ?zombieId
-ORDER BY DESC(?zombieScore) ?zombieId 
+GROUP BY ?zombieId ?zombieLikeCount
+ORDER BY DESC(?zombieScore) ?zombieId
 LIMIT 100
+
