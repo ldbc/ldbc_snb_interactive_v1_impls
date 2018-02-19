@@ -8,11 +8,11 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-SELECT ?zombieId ?zombieLikeCount (COUNT(?like) AS ?totalLikeCount) (IF(COUNT(?like) = 0, 0, ?zombieLikeCount / COUNT(?like)) AS ?zombieScore)
+SELECT ?zombieId ?zombieLikeCount (COUNT(DISTINCT ?like) AS ?totalLikeCount) (IF(COUNT(DISTINCT ?like) = 0, 0, ?zombieLikeCount / COUNT(DISTINCT ?like)) AS ?zombieScore)
 WHERE
 {
     {
-        SELECT ?zombieId (COUNT(?zombieLike) AS ?zombieLikeCount)
+        SELECT ?zombieId (COUNT(DISTINCT ?zombieLike) AS ?zombieLikeCount)
         WHERE
         {
             BIND($endDate^^xsd:dateTime AS ?endDate)
@@ -40,7 +40,7 @@ WHERE
 
                 }
                 GROUP BY ?zombieId ?monthDiff
-                HAVING (COUNT(?message)/?monthDiff < 1.0)
+                HAVING (COUNT(DISTINCT ?message)/?monthDiff < 1.0)
             }
             {
                 SELECT ?likerZombieId
@@ -65,7 +65,7 @@ WHERE
                     BIND( ((?endYear - ?likerZombieCreationYear) * 12 + ?endMonth - ?likerZombieCreationMonth + 1) AS ?monthDiff)
                 }
                 GROUP BY ?likerZombieId ?monthDiff
-                HAVING (COUNT(?message)/?monthDiff < 1.0)
+                HAVING (COUNT(DISTINCT ?message)/?monthDiff < 1.0)
             }
             OPTIONAL {
                 ?message snvoc:hasCreator ?zombieId .
