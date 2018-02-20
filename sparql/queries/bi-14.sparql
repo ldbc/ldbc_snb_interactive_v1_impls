@@ -18,11 +18,11 @@ WHERE
     ?post snvoc:hasCreator ?personId .
     ?post snvoc:creationDate ?postCreationDate .
     ?reply a ?type .
-    ?reply snvoc:replyOf+ ?post .
+    ?reply snvoc:replyOf* ?post .
     ?reply snvoc:creationDate ?replyCreationDate .
     ?personId snvoc:id ?personIdId .
-    FILTER(($startDate < ?postCreationDate  && ?postCreationDate  < $endDate) &&
-           ($startDate < ?replyCreationDate && ?replyCreationDate < $endDate))
+    FILTER (($startDate <= ?postCreationDate  && ?postCreationDate  <= $endDate) &&
+            ($startDate <= ?replyCreationDate && ?replyCreationDate <= $endDate))
 
 }
 GROUP BY ?personId ?personFirstName ?personLastName
