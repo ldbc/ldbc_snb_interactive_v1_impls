@@ -13,6 +13,7 @@ public abstract class SparqlDriverConnectionStore<DbQueryStore> extends DbConnec
 	private final boolean printStrings;
 	private final boolean printResults;
 	private final String endpoint;
+	private final String databaseName;
 	private final Repository repository;
 
 	public SparqlDriverConnectionStore(Map<String, String> properties, DbQueryStore store) {
@@ -22,9 +23,10 @@ public abstract class SparqlDriverConnectionStore<DbQueryStore> extends DbConnec
 		printStrings = Boolean.valueOf(properties.get("printQueryStrings"));
 		printResults = Boolean.valueOf(properties.get("printQueryResults"));
 		endpoint = properties.get("endpoint");
+		databaseName = properties.get("databaseName");
 
 		repository = new StardogRepository(ConnectionConfiguration
-				.from(endpoint + "ldbcsf1")
+				.from(endpoint + databaseName)
 				.credentials("admin", "admin"));
 		queryStore = store;
 	}
