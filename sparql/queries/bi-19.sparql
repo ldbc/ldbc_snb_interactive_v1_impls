@@ -11,9 +11,6 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 SELECT ?personId (COUNT(DISTINCT ?stranger) AS ?strangerCount) (COUNT(?comment) AS ?interactionCount)
 WHERE
 {
-    SELECT ?personId ?stranger ?comment
-    WHERE
-    {
         {
             SELECT DISTINCT ?stranger
             WHERE
@@ -27,19 +24,15 @@ WHERE
             }
         }
         ?personId a snvoc:Person .
-        FILTER( ?personId != ?stranger )
+        FILTER( ?personId != ?stranger ) .
         ?personId snvoc:birthday ?personBirthday .
-        FILTER( ?personBirthday > $date^^xsd:date )
+        FILTER( ?personBirthday > $date^^xsd:date ) .
         FILTER NOT EXISTS{ {?personId snvoc:knows/snvoc:hasPerson ?stranger} UNION {?stranger snvoc:knows/snvoc:hasPerson ?personId} }
-        VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
-        ?message a ?type .
         ?message snvoc:hasCreator ?stranger .
         ?comment a snvoc:Comment .
         ?comment snvoc:hasCreator ?personId .
         ?comment snvoc:replyOf+ ?message .
         FILTER NOT EXISTS { ?message snvoc:replyOf+/snvoc:hasCreator ?stranger }
-    }
-    GROUP BY ?personId ?stranger ?comment
 }
 GROUP BY ?personId
 ORDER BY DESC(?interactionCount) ?personId
