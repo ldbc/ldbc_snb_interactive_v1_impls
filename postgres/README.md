@@ -12,10 +12,10 @@ On a typical Ubuntu install, you might want to run:
 sudo -u postgres psql
 ```
 
-To allow access from JDBC, you have to set a password. For example, to set the default password of `foo`, issue the following command:
+To allow access from JDBC, you have to set a password. For example, to set the default password of user `postgres` to `foo`, issue the following command:
 
 ```sql
-ALTER ROLE usr PASSWORD 'foo';
+ALTER ROLE postgres PASSWORD 'foo';
 ```
 
 If you want to create a separate user `usr` with the password `foo`, use the following commands:
