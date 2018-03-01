@@ -1,0 +1,52 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX sntag: <http://www.ldbc.eu/ldbc_socialnet/1.0/tag/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dbpedia: <http://dbpedia.org/resource/>
+PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
+
+SELECT ?personId ?tagName (COUNT(?message) AS ?messageCount)
+WHERE
+{
+    {
+        SELECT DISTINCT ?personId ?message
+        WHERE
+        {
+            ?rootPerson a snvoc:Person .
+            ?rootPerson snvoc:id "$personId"^^xsd:long .
+            {
+                ?rootPerson snvoc:knows ?know1 .
+                ?know1 snvoc:hasPerson ?personId .
+            } UNION {
+                ?rootPerson snvoc:knows ?know1 .
+                ?know1 snvoc:hasPerson ?person1 .
+                ?person1 snvoc:knows ?know2 .
+                ?know2 snvoc:hasPerson ?personId .
+                FILTER( ?know1 != ?know2 )
+            } UNION {
+                ?rootPerson snvoc:knows ?know1 .
+                ?know1 snvoc:hasPerson ?person1 .
+                ?person1 snvoc:knows ?know2 .
+                ?know2 snvoc:hasPerson ?person2 .
+                ?person2 snvoc:knows ?know3 .
+                ?know2 snvoc:hasPerson ?personId .
+                FILTER( ?know1 != ?know2 )
+                FILTER( ?know2 != ?know3 )
+                FILTER( ?know1 != ?know3 )
+            }
+            ?personId snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country .
+            VALUES (?type) {(snvoc:Comment) (snvoc:Post)} .
+            ?message a ?type .
+            ?message snvoc:hasCreator ?personId .
+            ?message snvoc:hasTag ?tagInClass .
+            ?tagInClass a/rdfs:label $tagClass .
+        }
+    }
+    ?message snvoc:hasTag/foaf:name ?tagName
+}
+GROUP BY ?personId ?tagName
+ORDER BY DESC(?messageCount) ?tagName ?personId
+LIMIT 100
