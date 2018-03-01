@@ -11,30 +11,30 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 SELECT ?personId (COUNT(DISTINCT ?stranger) AS ?strangerCount) (COUNT(?comment) AS ?interactionCount)
 WHERE
 {
+    {
+        SELECT DISTINCT ?stranger
+        WHERE
         {
-            SELECT DISTINCT ?stranger
-            WHERE
-            {
-                ?forum1 a snvoc:Forum .
-                ?forum1 snvoc:hasMember/snvoc:hasPerson ?stranger .
-                ?forum1 snvoc:hasTag/a/rdfs:label $tagClass1 .
-                ?forum2 a snvoc:Forum .
-                ?forum2 snvoc:hasMember/snvoc:hasPerson ?stranger .
-                ?forum2 snvoc:hasTag/a/rdfs:label $tagClass2 .
-            }
+            ?forum1 a snvoc:Forum .
+            ?forum1 snvoc:hasMember/snvoc:hasPerson ?stranger .
+            ?forum1 snvoc:hasTag/a/rdfs:label $tagClass1 .
+            ?forum2 a snvoc:Forum .
+            ?forum2 snvoc:hasMember/snvoc:hasPerson ?stranger .
+            ?forum2 snvoc:hasTag/a/rdfs:label $tagClass2 .
         }
-        ?personId a snvoc:Person .
-        FILTER( ?personId != ?stranger ) .
-        ?personId snvoc:birthday ?personBirthday .
-        FILTER( ?personBirthday > $date^^xsd:date ) .
-        FILTER NOT EXISTS{ {?personId snvoc:knows/snvoc:hasPerson ?stranger} UNION {?stranger snvoc:knows/snvoc:hasPerson ?personId} }
-        VALUES (?type) {(snvoc:Comment) (snvoc:Post)} .
-        ?message a ?type .
-        ?message snvoc:hasCreator ?stranger .
-        ?comment a snvoc:Comment .
-        ?comment snvoc:hasCreator ?personId .
-        ?comment snvoc:replyOf+ ?message .
-        FILTER NOT EXISTS { ?message snvoc:replyOf+/snvoc:hasCreator ?stranger }
+    }
+    ?personId a snvoc:Person .
+    FILTER( ?personId != ?stranger ) .
+    ?personId snvoc:birthday ?personBirthday .
+    FILTER( ?personBirthday > $date^^xsd:date ) .
+    FILTER NOT EXISTS{ {?personId snvoc:knows/snvoc:hasPerson ?stranger} UNION {?stranger snvoc:knows/snvoc:hasPerson ?personId} }
+    VALUES (?type) {(snvoc:Comment) (snvoc:Post)} .
+    ?message a ?type .
+    ?message snvoc:hasCreator ?stranger .
+    ?comment a snvoc:Comment .
+    ?comment snvoc:hasCreator ?personId .
+    ?comment snvoc:replyOf+ ?message .
+    FILTER NOT EXISTS { ?message snvoc:replyOf+/snvoc:hasCreator ?stranger }
 }
 GROUP BY ?personId
 ORDER BY DESC(?interactionCount) ?personId
