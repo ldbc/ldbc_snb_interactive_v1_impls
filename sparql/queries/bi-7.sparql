@@ -17,6 +17,7 @@ WHERE
         ?personId a snvoc:Person .
         VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
         ?message2 a ?type .
+        ?message2 snvoc:hasCreator ?personId .
         ?message2 snvoc:hasTag/foaf:name $tag .
         OPTIONAL {
             ?person2 snvoc:likes/(snvoc:hasPost|snvoc:hasComment) ?message2 .

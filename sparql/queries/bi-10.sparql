@@ -33,35 +33,36 @@ WHERE
         }
         GROUP BY ?personId
     }
-
-    {
-        SELECT ?friend (MAX(COALESCE(?friendInnerInterestScore,0)) AS ?friendInterestScore) (COALESCE(COUNT(?message),0) AS ?friendMessageScore)
-        WHERE
+    OPTIONAL {
         {
-            VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
-            ?friend a snvoc:Person .
+            SELECT ?friend (MAX(COALESCE(?friendInnerInterestScore,0)) AS ?friendInterestScore) (COALESCE(COUNT(?message),0) AS ?friendMessageScore)
+            WHERE
             {
-                ?message a ?type .
-                ?message snvoc:hasCreator ?friend .
-                ?message snvoc:hasTag ?tag .
-                ?tag foaf:name $tag .
-                ?message snvoc:creationDate ?creationDate .
-                FILTER (?creationDate > $date^^xsd:dateTime)
+                VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
+                ?friend a snvoc:Person .
+                {
+                    ?message a ?type .
+                    ?message snvoc:hasCreator ?friend .
+                    ?message snvoc:hasTag ?tag .
+                    ?tag foaf:name $tag .
+                    ?message snvoc:creationDate ?creationDate .
+                    FILTER (?creationDate > $date^^xsd:dateTime)
+                }
+                UNION
+                {
+                    ?friend snvoc:hasInterest/foaf:name $tag
+                    BIND(100 AS ?friendInnerInterestScore)
+                }
             }
-            UNION
-            {
-                ?friend snvoc:hasInterest/foaf:name $tag
-                BIND(100 AS ?friendInnerInterestScore)
-            }
+            GROUP BY ?friend
         }
-        GROUP BY ?friend
-    }
-    {
-        ?friend snvoc:knows/snvoc:hasPerson ?personId
-    }
-    UNION
-    {
-        ?personId snvoc:knows/snvoc:hasPerson ?friend
+        {
+            ?friend snvoc:knows/snvoc:hasPerson ?personId
+        }
+        UNION
+        {
+            ?personId snvoc:knows/snvoc:hasPerson ?friend
+        }
     }
 }
 GROUP BY ?personId ?interestScore ?messageScore
