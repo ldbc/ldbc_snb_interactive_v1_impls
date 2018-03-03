@@ -12,7 +12,7 @@ SELECT ?person1Id ?person2Id ?city1Name ?score
 WHERE
 {
     {
-        SELECT ?person1Id ?person2Id ?city1Name (MAX(?innerScore) AS ?score)
+        SELECT ?person1Id ?person2Id ?city1Name (MAX(COALESCE(?case1InnerScore,0)) + MAX(COALESCE(?case2InnerScore,0)) + MAX(?case3InnerScore)  + MAX(COALESCE(?case4InnerScore,0)) + MAX(COALESCE(?case5InnerScore,0)) AS ?score)
         WHERE
         {
             ?person1Id a snvoc:Person .
@@ -20,25 +20,27 @@ WHERE
             ?city1 foaf:name ?city1Name .
             ?city1 snvoc:isPartOf/foaf:name $country1 .
             ?person2Id a snvoc:Person .
-            ?person2Id snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country2
+            ?person2Id snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country2 .
 
-            BIND( IF( EXISTS {
-                VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
-                ?message a ?type .
-                ?message snvoc:hasCreator ?person2Id .
-                ?comment a snvoc:Comment .
-                ?comment snvoc:hasCreator ?person1Id .
-                ?comment snvoc:replyOf ?message
-            }, 4, 0 ) AS ?case1Score )
+            OPTIONAL {
+                VALUES (?type1) {(snvoc:Comment) (snvoc:Post)}
+                ?message1 a ?type1 .
+                ?message1 snvoc:hasCreator ?person2Id .
+                ?comment1 a snvoc:Comment .
+                ?comment1 snvoc:hasCreator ?person1Id .
+                ?comment1 snvoc:replyOf ?message1 .
+                BIND( 4 AS ?case1InnerScore )
+            }
 
-            BIND( IF( EXISTS {
-                VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
-                ?message a ?type .
-                ?message snvoc:hasCreator ?person1Id .
-                ?comment a snvoc:Comment .
-                ?comment snvoc:hasCreator ?person2Id .
-                ?comment snvoc:replyOf ?message
-            }, 1, 0 ) AS ?case2Score )
+            OPTIONAL {
+                VALUES (?type2) {(snvoc:Comment) (snvoc:Post)}
+                ?message2 a ?type2 .
+                ?message2 snvoc:hasCreator ?person1Id .
+                ?comment2 a snvoc:Comment .
+                ?comment2 snvoc:hasCreator ?person2Id .
+                ?comment2 snvoc:replyOf ?message2 .
+                BIND( 1 AS ?case2InnerScore )
+            }
 
             BIND( IF( EXISTS {
                 {
@@ -46,28 +48,28 @@ WHERE
                 } UNION {
                     ?person2Id snvoc:knows/snvoc:hasPerson ?person1Id
                 }
-            }, 15, 0 ) AS ?case3Score )
+            }, 15, 0 ) AS ?case3InnerScore )
 
-            BIND( IF( EXISTS {
-                VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
-                ?message a ?type .
-                ?message snvoc:hasCreator ?person2Id .
-                ?person1Id snvoc:likes/(snvoc:hasPost|snvoc:hasComment) ?message
-            }, 10, 0 ) AS ?case4Score )
+            OPTIONAL {
+                VALUES (?type4) {(snvoc:Comment) (snvoc:Post)}
+                ?message4 a ?type4 .
+                ?message4 snvoc:hasCreator ?person2Id .
+                ?person1Id snvoc:likes/(snvoc:hasPost|snvoc:hasComment) ?message4
+                BIND( 10 AS ?case4InnerScore )
+            }
 
-            BIND( IF( EXISTS {
-                VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
-                ?message a ?type .
-                ?message snvoc:hasCreator ?person1Id .
-                ?person2Id snvoc:likes/(snvoc:hasPost|snvoc:hasComment) ?message
-            }, 1, 0 ) AS ?case5Score )
-
-            BIND( ?case1Score + ?case2Score + ?case3Score + ?case4Score + ?case5Score AS ?innerScore )
+             OPTIONAL {
+                VALUES (?type5) {(snvoc:Comment) (snvoc:Post)}
+                ?message5 a ?type5 .
+                ?message5 snvoc:hasCreator ?person1Id .
+                ?person2Id snvoc:likes/(snvoc:hasPost|snvoc:hasComment) ?message5
+                BIND( 1 AS ?case5InnerScore )
+            }
         }
         GROUP BY ?person1Id ?person2Id ?city1Name
     }
     {
-        SELECT ?person1IdHelper ?person2IdHelper ?city1NameHelper (MAX(?innerScore) AS ?scoreHelper)
+        SELECT ?person1IdHelper ?person2IdHelper ?city1NameHelper (MAX(COALESCE(?case1InnerScore,0)) + MAX(COALESCE(?case2InnerScore,0)) + MAX(?case3InnerScore)  + MAX(COALESCE(?case4InnerScore,0)) + MAX(COALESCE(?case5InnerScore,0)) AS ?scoreHelper)
         WHERE
         {
             ?person1IdHelper a snvoc:Person .
@@ -75,25 +77,27 @@ WHERE
             ?city1 foaf:name ?city1NameHelper .
             ?city1 snvoc:isPartOf/foaf:name $country1 .
             ?person2IdHelper a snvoc:Person .
-            ?person2IdHelper snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country2
+            ?person2IdHelper snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country2 .
 
-            BIND( IF( EXISTS {
-                VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
-                ?message a ?type .
-                ?message snvoc:hasCreator ?person2IdHelper .
-                ?comment a snvoc:Comment .
-                ?comment snvoc:hasCreator ?person1IdHelper .
-                ?comment snvoc:replyOf ?message
-            }, 4, 0 ) AS ?case1Score )
+            OPTIONAL {
+                VALUES (?type1) {(snvoc:Comment) (snvoc:Post)}
+                ?message1 a ?type1 .
+                ?message1 snvoc:hasCreator ?person2IdHelper .
+                ?comment1 a snvoc:Comment .
+                ?comment1 snvoc:hasCreator ?person1IdHelper .
+                ?comment1 snvoc:replyOf ?message1 .
+                BIND( 4 AS ?case1InnerScore )
+            }
 
-            BIND( IF( EXISTS {
-                VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
-                ?message a ?type .
-                ?message snvoc:hasCreator ?person1IdHelper .
-                ?comment a snvoc:Comment .
-                ?comment snvoc:hasCreator ?person2IdHelper .
-                ?comment snvoc:replyOf ?message
-            }, 1, 0 ) AS ?case2Score )
+            OPTIONAL {
+                VALUES (?type2) {(snvoc:Comment) (snvoc:Post)}
+                ?message2 a ?type2 .
+                ?message2 snvoc:hasCreator ?person1IdHelper .
+                ?comment2 a snvoc:Comment .
+                ?comment2 snvoc:hasCreator ?person2IdHelper .
+                ?comment2 snvoc:replyOf ?message2 .
+                BIND( 1 AS ?case2InnerScore )
+            }
 
             BIND( IF( EXISTS {
                 {
@@ -101,23 +105,23 @@ WHERE
                 } UNION {
                     ?person2IdHelper snvoc:knows/snvoc:hasPerson ?person1IdHelper
                 }
-            }, 15, 0 ) AS ?case3Score )
+            }, 15, 0 ) AS ?case3InnerScore )
 
-            BIND( IF( EXISTS {
-                VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
-                ?message a ?type .
-                ?message snvoc:hasCreator ?person2IdHelper .
-                ?person1IdHelper snvoc:likes/(snvoc:hasPost|snvoc:hasComment) ?message
-            }, 10, 0 ) AS ?case4Score )
+            OPTIONAL {
+                VALUES (?type4) {(snvoc:Comment) (snvoc:Post)}
+                ?message4 a ?type4 .
+                ?message4 snvoc:hasCreator ?person2IdHelper .
+                ?person1IdHelper snvoc:likes/(snvoc:hasPost|snvoc:hasComment) ?message4
+                BIND( 10 AS ?case4InnerScore )
+            }
 
-            BIND( IF( EXISTS {
-                VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
-                ?message a ?type .
-                ?message snvoc:hasCreator ?person1IdHelper .
-                ?person2IdHelper snvoc:likes/(snvoc:hasPost|snvoc:hasComment) ?message
-            }, 1, 0 ) AS ?case5Score )
-
-            BIND( ?case1Score + ?case2Score + ?case3Score + ?case4Score + ?case5Score AS ?innerScore )
+             OPTIONAL {
+                VALUES (?type5) {(snvoc:Comment) (snvoc:Post)}
+                ?message5 a ?type5 .
+                ?message5 snvoc:hasCreator ?person1IdHelper .
+                ?person2IdHelper snvoc:likes/(snvoc:hasPost|snvoc:hasComment) ?message5
+                BIND( 1 AS ?case5InnerScore )
+            }
         }
         GROUP BY ?person1IdHelper ?person2IdHelper ?city1NameHelper
     }
