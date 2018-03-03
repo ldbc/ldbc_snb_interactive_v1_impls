@@ -64,18 +64,18 @@ public class SparqlBiQueryStore extends BiQueryStore {
 
 			List<String> currentNodes = new ArrayList<>();
 			currentNodes.add("rootPerson");
-			for (int i = 1; i < k - 1; i++) {
+			for (int i = 1; i < k; i++) {
 				currentNodes.add(String.format("person%d", i));
 			}
 			currentNodes.add("personId");
 
-			for (int i = 1; i < k; i++) {
+			for (int i = 1; i <= k; i++) {
 				s += String.format("                ?%s snvoc:knows ?know%d .\n", currentNodes.get(i - 1), i);
 				s += String.format("                ?know%d snvoc:hasPerson ?%s .\n", i, currentNodes.get(i));
 			}
 
-			for (int i = 1; i < k; i++) {
-				for (int j = i + 1; j < k; j++) {
+			for (int i = 1; i <= k; i++) {
+				for (int j = i + 1; j <= k; j++) {
 					s += String.format(
 							"                FILTER ( ?know%d != ?know%d )\n",
 							i, j
