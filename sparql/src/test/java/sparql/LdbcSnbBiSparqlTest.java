@@ -12,7 +12,7 @@ import java.util.Map;
 public class LdbcSnbBiSparqlTest extends LdbcSnbBiQueryTest {
 
 	private static String endpoint = "http://localhost:5820/";
-	private static String databaseName = "ldbcsf1";
+	private static String databaseName = "ldbcsf01";
 	private static String queryDir = "queries/";
 
 	public LdbcSnbBiSparqlTest() throws DbException {
@@ -26,7 +26,7 @@ public class LdbcSnbBiSparqlTest extends LdbcSnbBiQueryTest {
 		properties.put("databaseName", databaseName);
 		properties.put("queryDir", queryDir);
 		properties.put("printQueryNames", "true");
-		properties.put("printQueryStrings", "true");
+		properties.put("printQueryStrings", "false");
 		properties.put("printQueryResults", "false");
 		return properties;
 	}

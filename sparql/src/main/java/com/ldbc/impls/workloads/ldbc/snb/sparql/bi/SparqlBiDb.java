@@ -92,7 +92,7 @@ public class SparqlBiDb extends SparqlDb {
 		registerOperationHandler(LdbcSnbBiQuery13PopularMonthlyTags.class, BiQuery13.class);
 		registerOperationHandler(LdbcSnbBiQuery14TopThreadInitiators.class, BiQuery14.class);
 		registerOperationHandler(LdbcSnbBiQuery15SocialNormals.class, BiQuery15.class);
-//		registerOperationHandler(LdbcSnbBiQuery16ExpertsInSocialCircle.class, BiQuery16.class);
+		registerOperationHandler(LdbcSnbBiQuery16ExpertsInSocialCircle.class, BiQuery16.class);
 		registerOperationHandler(LdbcSnbBiQuery17FriendshipTriangles.class, BiQuery17.class);
 		registerOperationHandler(LdbcSnbBiQuery18PersonPostCounts.class, BiQuery18.class);
 		registerOperationHandler(LdbcSnbBiQuery19StrangerInteraction.class, BiQuery19.class);

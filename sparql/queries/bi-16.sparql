@@ -17,26 +17,11 @@ WHERE
         {
             ?rootPerson a snvoc:Person .
             ?rootPerson snvoc:id "$personId"^^xsd:long .
-            {
-                ?rootPerson snvoc:knows ?know1 .
-                ?know1 snvoc:hasPerson ?personId .
-            } UNION {
-                ?rootPerson snvoc:knows ?know1 .
-                ?know1 snvoc:hasPerson ?person1 .
-                ?person1 snvoc:knows ?know2 .
-                ?know2 snvoc:hasPerson ?personId .
-                FILTER( ?know1 != ?know2 )
-            } UNION {
-                ?rootPerson snvoc:knows ?know1 .
-                ?know1 snvoc:hasPerson ?person1 .
-                ?person1 snvoc:knows ?know2 .
-                ?know2 snvoc:hasPerson ?person2 .
-                ?person2 snvoc:knows ?know3 .
-                ?know2 snvoc:hasPerson ?personId .
-                FILTER( ?know1 != ?know2 )
-                FILTER( ?know2 != ?know3 )
-                FILTER( ?know1 != ?know3 )
-            }
+
+            # the next two lines are changed by the driver to UNION of 1-2-... knows "edges"
+            # with the no-repeated-edge (a.k.a. edge isomorphic) matching semantics enforced
+            $minPathDistance
+            $maxPathDistance
             ?personId snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country .
             VALUES (?type) {(snvoc:Comment) (snvoc:Post)} .
             ?message a ?type .
