@@ -16,9 +16,8 @@ WITH country, avg(friend1Count) AS socialNormalFloat
 WITH country, floor(socialNormalFloat) AS socialNormal
 MATCH
   (country)<-[:IS_PART_OF]-(:City)<-[:IS_LOCATED_IN]-(person2:Person)
-MATCH
-  (country)<-[:IS_PART_OF]-(:City)<-[:IS_LOCATED_IN]-(friend2:Person)
 OPTIONAL MATCH
+  (country)<-[:IS_PART_OF]-(:City)<-[:IS_LOCATED_IN]-(friend2:Person),
   (person2)-[:KNOWS]-(friend2)
 WITH country, person2, count(friend2) AS friend2Count, socialNormal
 WHERE friend2Count = socialNormal
