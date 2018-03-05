@@ -8,30 +8,39 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-SELECT ?personId ?tagName (COUNT(?message) AS ?messageCount)
+SELECT ?personId ?tagName ?messageCount
 WHERE
 {
     {
-        SELECT DISTINCT ?personId ?message
+        SELECT ?personId ?tagName (COUNT(?message) AS ?messageCount)
         WHERE
         {
-            ?rootPerson a snvoc:Person .
-            ?rootPerson snvoc:id "$personId"^^xsd:long .
+            {
+                SELECT DISTINCT ?personId ?message
+                WHERE
+                {
+                    ?rootPerson a snvoc:Person .
+                    ?rootPerson snvoc:id "$personId"^^xsd:long .
 
-            # the next two lines are changed by the driver to UNION of 1-2-... knows "edges"
-            # with the no-repeated-edge (a.k.a. edge isomorphic) matching semantics enforced
-            $minPathDistance
-            $maxPathDistance
-            ?personId snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country .
-            VALUES (?type) {(snvoc:Comment) (snvoc:Post)} .
-            ?message a ?type .
-            ?message snvoc:hasCreator ?personId .
-            ?message snvoc:hasTag ?tagInClass .
-            ?tagInClass a/rdfs:label $tagClass .
+                    # the next two lines are changed by the driver to UNION of 1-2-... knows "edges"
+                    # with the no-repeated-edge (a.k.a. edge isomorphic) matching semantics enforced
+                    $minPathDistance
+                    $maxPathDistance
+                    ?personId snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country .
+                    VALUES (?type) {(snvoc:Comment) (snvoc:Post)} .
+                    ?message a ?type .
+                    ?message snvoc:hasCreator ?personId .
+                    ?message snvoc:hasTag ?tagInClass .
+                    ?tagInClass a/rdfs:label $tagClass .
+                }
+            }
+            ?message snvoc:hasTag/foaf:name ?tagName
+
         }
+        GROUP BY ?personId ?tagName
+        ORDER BY DESC(?messageCount) ?tagName ?personId
     }
-    ?message snvoc:hasTag/foaf:name ?tagName
+    ?personId a snvoc:Person
 }
-GROUP BY ?personId ?tagName
 ORDER BY DESC(?messageCount) ?tagName ?personId
 LIMIT 100
