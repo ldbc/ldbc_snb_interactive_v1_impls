@@ -36,24 +36,54 @@ public class SparqlBiQueryStore extends BiQueryStore {
 		for example, with a minPathDistance of 1 and a maxPathDistance of 3, we get the following snippet:
 
 		{
-                ?rootPerson snvoc:knows ?know1 .
-                ?know1 snvoc:hasPerson ?personId .
+			{
+				?rootPerson snvoc:knows ?know1 .
+				?know1 snvoc:hasPerson ?personId .
+			} UNION {
+				?personId snvoc:knows ?know1 .
+				?know1 snvoc:hasPerson ?rootPerson .
+			}
 		} UNION {
-                ?rootPerson snvoc:knows ?know1 .
+			{
+				?rootPerson snvoc:knows ?know1 .
 				?know1 snvoc:hasPerson ?person1 .
+			} UNION {
+				?person1 snvoc:knows ?know1 .
+				?know1 snvoc:hasPerson ?rootPerson .
+			}
+			{
 				?person1 snvoc:knows ?know2 .
 				?know2 snvoc:hasPerson ?personId .
-				FILTER( ?know1 != ?know2 )
+			} UNION {
+				?personId snvoc:knows ?know2 .
+				?know2 snvoc:hasPerson ?person1 .
+			}
+			FILTER ( ?know1 != ?know2 )
 		} UNION {
-                ?rootPerson snvoc:knows ?know1 .
+			{
+				?rootPerson snvoc:knows ?know1 .
 				?know1 snvoc:hasPerson ?person1 .
+			} UNION {
+				?person1 snvoc:knows ?know1 .
+				?know1 snvoc:hasPerson ?rootPerson .
+			}
+			{
 				?person1 snvoc:knows ?know2 .
 				?know2 snvoc:hasPerson ?person2 .
+			} UNION {
+				?person2 snvoc:knows ?know2 .
+				?know2 snvoc:hasPerson ?person1 .
+			}
+			{
 				?person2 snvoc:knows ?know3 .
-				?know2 snvoc:hasPerson ?personId .
-				FILTER( ?know1 != ?know2 )
-				FILTER( ?know2 != ?know3 )
-				FILTER( ?know1 != ?know3 )
+				?know3 snvoc:hasPerson ?personId .
+			} UNION {
+				?personId snvoc:knows ?know3 .
+				?know3 snvoc:hasPerson ?person2 .
+			}
+			FILTER ( ?know1 != ?know2 )
+			FILTER ( ?know1 != ?know3 )
+			FILTER ( ?know2 != ?know3 )
 		}
 	 */
 	public String getQuery16(LdbcSnbBiQuery16ExpertsInSocialCircle operation) {
@@ -70,8 +100,13 @@ public class SparqlBiQueryStore extends BiQueryStore {
 			currentNodes.add("personId");
 
 			for (int i = 1; i <= k; i++) {
-				s += String.format("                ?%s snvoc:knows ?know%d .\n", currentNodes.get(i - 1), i);
-				s += String.format("                ?know%d snvoc:hasPerson ?%s .\n", i, currentNodes.get(i));
+				s += "                {\n";
+				s += String.format("                    ?%s snvoc:knows ?know%d .\n", currentNodes.get(i - 1), i);
+				s += String.format("                    ?know%d snvoc:hasPerson ?%s .\n", i, currentNodes.get(i));
+				s += "                } UNION {\n";
+				s += String.format("                    ?%s snvoc:knows ?know%d .\n", currentNodes.get(i), i);
+				s += String.format("                    ?know%d snvoc:hasPerson ?%s .\n", i, currentNodes.get(i-1));
+				s += "                }\n";
 			}
 
 			for (int i = 1; i <= k; i++) {
