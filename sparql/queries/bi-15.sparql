@@ -12,7 +12,7 @@ SELECT ?personId (COUNT(?friend) AS ?count)
 WHERE
 {
     {
-        SELECT (FLOOR(COUNT(?friend) / 2.0 / COUNT(DISTINCT ?personId)) AS ?avgFriendCount)
+        SELECT (FLOOR(COUNT(?friend) / COUNT(DISTINCT ?personId)) AS ?avgFriendCount)
         WHERE
         {
             ?personId a snvoc:Person .
