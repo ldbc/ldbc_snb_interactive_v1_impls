@@ -25,6 +25,7 @@ SELECT extract(YEAR FROM m.ps_creationdate) as year
 SELECT year, month
      , CASE
        WHEN count(tagName)=0 THEN ARRAY[]::varchar[][] -- for the given month, no messages have any tags, so we return an empty array
+            -- we have non-missing tags, and also the missing tag might show up, so we filter it out
        ELSE array_agg(ARRAY[tagName, cast(popularity AS VARCHAR)] ORDER BY popularity DESC, tagName) FILTER (WHERE tagName IS NOT NULL)
        END AS popularTags
   FROM detail
