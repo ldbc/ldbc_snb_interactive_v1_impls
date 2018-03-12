@@ -22,8 +22,7 @@ WITH
 RETURN
   year,
   month,
-  [i IN range(0, (CASE size(popularTags) < 5 WHEN true THEN size(popularTags) ELSE 5 END)-1)
-  | popularTags[i]] AS topPopularTags
+  popularTags[0..5]] AS topPopularTags
 ORDER BY
   year DESC,
   month ASC
