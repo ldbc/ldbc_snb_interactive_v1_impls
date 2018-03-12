@@ -63,7 +63,7 @@ print >> f1, '#threadcount=1'
 print >> f1, 'timeunit=MILLISECONDS'
 print >> f1
 print >> f1, '# *** workload-related driver properties ***'
-print >> f1, 'operationcount=' + sys.argv[2]
+print >> f1, 'operation_count=' + sys.argv[2]
 print >> f1, 'workload=com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcSnbInteractiveWorkload'
 print >> f1, 'resultfile=test_ldbc_socnet_interactive_results.json'
 print >> f1
