@@ -13,7 +13,6 @@ install:
   # driver
   - git clone https://github.com/ldbc/ldbc_snb_driver
   - cd ldbc_snb_driver
-  - git checkout dev
   - mvn install -DskipTests
   - cd ..
   # environment vars
