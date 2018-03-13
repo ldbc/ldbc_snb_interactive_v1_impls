@@ -44,17 +44,11 @@ The queries in this repository are work-in-progress.
 
 ## User's guide
 
-Download and install the LDBC SNB driver:
-
-You can find the detailed information about this task here: <https://github.com/ldbc/ldbc_snb_driver>
-
-After that, you can install the JAR file of ldbc_snb_driver to the local Maven repository. Go to the root directory of ldbc_snb_driver, and run:
-
 ```bash
 mvn clean install -DskipTests
 ```
 
-## Generating the validation data set
+### Generating the validation data set
 
 1. Grab the driver source code from: https://github.com/ldbc/ldbc_snb_driver and switch to the `dev` branch.
 2. Install the driver artifact to the local Maven repository:
@@ -79,7 +73,7 @@ mvn clean install -DskipTests
 
 For more details, on validating and benchmarking, visit the [driver wiki](https://github.com/ldbc/ldbc_snb_driver/wiki).
 
-## Generating small test data tests
+### Generating small test data tests
 
 To generate small data sets, use scale factor 1 (SF1) with the persons and years set according to this template:
 
