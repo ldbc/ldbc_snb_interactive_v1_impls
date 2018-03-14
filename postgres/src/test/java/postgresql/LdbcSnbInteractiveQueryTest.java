@@ -25,7 +25,7 @@ public class LdbcSnbInteractiveQueryTest {
     private static String endpoint = "localhost:5432";
     private static String user = "postgres";
     private static String password = "foo";
-    private static String databaseName = "ldbcsf01";
+    private static String databaseName = "ldbcsf1";
     private static String jdbcDriver = "org.postgresql.ds.PGPoolingDataSource";
     private static String queryDir = "queries/interactive";
 
