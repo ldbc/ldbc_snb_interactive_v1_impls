@@ -22,10 +22,9 @@ WHERE
                     ?rootPerson a snvoc:Person .
                     ?rootPerson snvoc:id "$personId"^^xsd:long .
 
-                    # the next two lines are changed by the driver to UNION of 1-2-... knows "edges"
-                    # with the no-repeated-edge (a.k.a. edge isomorphic) matching semantics enforced
                     $minPathDistance
                     $maxPathDistance
+
                     ?personId snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country .
                     VALUES (?type) {(snvoc:Comment) (snvoc:Post)} .
                     ?message a ?type .
