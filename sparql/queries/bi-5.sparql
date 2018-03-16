@@ -15,7 +15,6 @@ WHERE
         SELECT ?forum
         WHERE
         {
-            BIND($country AS ?countryName)
             ?forum a snvoc:Forum .
             ?forum snvoc:hasMember ?memberSerial .
             ?memberSerial snvoc:hasPerson ?personId .
@@ -24,7 +23,7 @@ WHERE
             ?city a dbpedia-owl:City .
             ?city snvoc:isPartOf ?country .
             ?country a dbpedia-owl:Country .
-            ?country foaf:name ?countryName
+            ?country foaf:name $country
         }
         GROUP BY ?forum
         ORDER BY DESC(COUNT(DISTINCT ?personId)) ?forum
@@ -35,7 +34,6 @@ WHERE
         SELECT ?forum2
         WHERE
         {
-            BIND($country AS ?countryName)
             ?forum2 a snvoc:Forum .
             ?forum2 snvoc:hasMember ?memberSerial .
             ?memberSerial snvoc:hasPerson ?personId .
@@ -44,7 +42,7 @@ WHERE
             ?city a dbpedia-owl:City .
             ?city snvoc:isPartOf ?country .
             ?country a dbpedia-owl:Country .
-            ?country foaf:name ?countryName
+            ?country foaf:name $country
         }
         GROUP BY ?forum2
         ORDER BY DESC(COUNT(DISTINCT ?personId)) ?forum2
