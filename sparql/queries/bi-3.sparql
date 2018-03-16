@@ -23,12 +23,12 @@ WHERE
          (
            ((?month1 != 12) && (?month = ?month1 + 1) && (?year = ?year1    )) ||
            ((?month1  = 12) && (?month =           1) && (?year = ?year1 + 1))
-         )  AS ?isSecond 
+         )  AS ?isSecond
        )
     FILTER (?isFirst || ?isSecond) .
     BIND (xsd:integer(?isFirst) AS ?isFirstInt) .
     BIND (xsd:integer(?isSecond) AS ?isSecondInt)
 }
-GROUP BY ?tagName
+GROUP BY ?tagName ?countMonth1 ?countMonth2
 ORDER BY DESC(?diff) ?tagName
 LIMIT 100

@@ -35,12 +35,12 @@ WHERE
                     ?person3 a snvoc:Person .
                     ?like2 snvoc:hasPost|snvoc:hasComment ?message3 .
                 }
-                GROUP BY ?person2
+                GROUP BY ?person2 ?like2
                 ORDER BY ?person2 ?like2
             }
         }
     }
 }
-GROUP BY ?personId ?message2
+GROUP BY ?personId ?message2 ?authorityScore
 ORDER BY DESC(?authorityScore) ?personId
 LIMIT 100

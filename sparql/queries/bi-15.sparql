@@ -46,7 +46,7 @@ WHERE
         }
     }
 }
-GROUP BY ?personId ?avgFriendCount
+GROUP BY ?personId ?avgFriendCount ?count
 HAVING(?count = ?avgFriendCount)
 ORDER BY ?personId
 LIMIT 100

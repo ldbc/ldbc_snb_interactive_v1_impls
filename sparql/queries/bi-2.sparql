@@ -32,7 +32,7 @@ WHERE
     BIND ( FLOOR( (?yearFromSubstract - year(?birthday)) / 5.0) AS ?ageGroup) .
     BIND ( month(?creationDate) AS ?messageMonth) .
 }
-GROUP BY ?countryName ?messageMonth ?personGender ?ageGroup ?tagName
+GROUP BY ?countryName ?messageMonth ?personGender ?ageGroup ?tagName ?messageCount
 HAVING (?messageCount > 100)
 ORDER BY DESC(?messageCount) ?tagName ?ageGroup ?personGender ?messageMonth ?countryName
 LIMIT 100

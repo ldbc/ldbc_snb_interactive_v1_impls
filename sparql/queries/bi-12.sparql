@@ -25,7 +25,7 @@ WHERE
     ?like snvoc:hasComment|snvoc:hasPost ?message
 
 }
-GROUP BY ?messageId ?messageCreationDate ?creatorFirstName ?creatorLastName
+GROUP BY ?messageId ?messageCreationDate ?creatorFirstName ?creatorLastName ?likeCount
 HAVING (?likeCount > $likeThreshold)
 ORDER BY DESC(?likeCount) ?messageId
 LIMIT 100

@@ -65,6 +65,6 @@ WHERE
         }
     }
 }
-GROUP BY ?personId ?interestScore ?messageScore
+GROUP BY ?personId ?interestScore ?messageScore ?friendsScore
 ORDER BY DESC(?score + ?friendsScore) ?personId
 LIMIT 100
