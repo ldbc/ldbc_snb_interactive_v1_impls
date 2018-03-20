@@ -47,13 +47,22 @@ public class VertexLoadingTask extends LoadingTask {
                 throw new SchemaViolationException("Unknown property for vertex Type " + vertexLabel
                         + ", found " + col + " expected " + props);
             }
-            if (schema.getVPropertyClass(vertexLabel, col) == null)
+
+            String colName = col;
+            if(col.compareTo("id") == 0) {
+                colName = vertexLabel + "." + col;
+            }
+            if (schema.getPropertyClass(colName) == null)
                 throw new SchemaViolationException("Class definition missing for " + vertexLabel + "." + col);
         }
 
         Class[] classes = new Class[header.length];
         for (int i = 0; i < header.length; i++) {
-            classes[i] = schema.getVPropertyClass(vertexLabel, header[i]);
+            if(header[i].compareTo("id") == 0) {
+                classes[i] = schema.getPropertyClass(vertexLabel+"."+header[i]);
+            } else {
+                classes[i] = schema.getPropertyClass(header[i]);
+            }
         }
 
         // Obtaining parsers for the fields and property names
@@ -61,7 +70,12 @@ public class VertexLoadingTask extends LoadingTask {
         propertyNames = new String[header.length];
         for (int i = 0; i < header.length; ++i) {
             parsers[i] = Parsers.getParser(classes[i]);
-            propertyNames[i] = vertexLabel + "." + header[i];
+            propertyNames[i] = "";
+            if(header[i].compareTo("id") == 0) {
+                propertyNames[i] = vertexLabel + "." + header[i];
+            } else {
+                propertyNames[i] = header[i];
+            }
         }
 
         transaction = graph.newThreadBoundTransaction()  ;

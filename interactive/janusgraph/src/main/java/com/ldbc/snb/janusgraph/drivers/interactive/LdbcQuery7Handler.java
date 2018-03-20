@@ -20,11 +20,12 @@ import java.util.*;
  * Person Liked multiple Posts/Comments at the same time, return the Post/Comment with lowest identifier.
  * Sort results descending by creation time of Like, then ascending by Person identifier of liker.
  */
-public class LdbcQuery7Handler implements OperationHandler<LdbcQuery7,JanusGraphDb.BasicDbConnectionState> {
+public class LdbcQuery7Handler implements OperationHandler<LdbcQuery7,JanusGraphDb.RemoteDBConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQuery7Handler.class);
 
     @Override
-    public void executeOperation(final LdbcQuery7 operation, JanusGraphDb.BasicDbConnectionState dbConnectionState, ResultReporter resultReporter) throws DbException {
+    public void executeOperation(final LdbcQuery7 operation, JanusGraphDb.RemoteDBConnectionState dbConnectionState, ResultReporter
+            resultReporter) throws DbException {
         /*long person_id = operation.personId();
         final int limit = operation.limit();
 

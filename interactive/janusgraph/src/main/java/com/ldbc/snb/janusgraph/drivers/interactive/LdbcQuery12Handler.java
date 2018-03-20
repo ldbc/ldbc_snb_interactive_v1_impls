@@ -20,11 +20,12 @@ import java.util.*;
  top 20 Persons, the reply count, and the collection of Tags. Sort results descending by Comment count, and
  then ascending by Person identifier
  */
-public class LdbcQuery12Handler implements OperationHandler<LdbcQuery12,JanusGraphDb.BasicDbConnectionState> {
+public class LdbcQuery12Handler implements OperationHandler<LdbcQuery12,JanusGraphDb.RemoteDBConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQuery12Handler.class);
 
     @Override
-    public void executeOperation(final LdbcQuery12 operation, JanusGraphDb.BasicDbConnectionState dbConnectionState, ResultReporter resultReporter) throws DbException {
+    public void executeOperation(final LdbcQuery12 operation, JanusGraphDb.RemoteDBConnectionState dbConnectionState, ResultReporter
+            resultReporter) throws DbException {
         /*long person_id = operation.personId();
         final String tagClassName = operation.tagClassName();
         final int limit = operation.limit();

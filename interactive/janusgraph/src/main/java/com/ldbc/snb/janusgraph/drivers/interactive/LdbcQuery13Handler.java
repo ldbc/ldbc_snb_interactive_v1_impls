@@ -21,11 +21,12 @@ import java.util.*;
  * SPT Code by Daniel Kuppitz: https://groups.google.com/forum/#!msg/aureliusgraphs/d3jvgJeArOU/lMoObkk-If0J
  * //TODO since we don't need the paths themselves, consider using this instead: https://groups.google.com/forum/#!searchin/gremlin-users/shortest$20path/gremlin-users/GMIUZ7eFF7Y/yZy4yWN3Vg8J
  */
-public class LdbcQuery13Handler implements OperationHandler<LdbcQuery13,JanusGraphDb.BasicDbConnectionState> {
+public class LdbcQuery13Handler implements OperationHandler<LdbcQuery13,JanusGraphDb.RemoteDBConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQuery13Handler.class);
 
     @Override
-    public void executeOperation(final LdbcQuery13 operation, JanusGraphDb.BasicDbConnectionState dbConnectionState, ResultReporter resultReporter) throws DbException {
+    public void executeOperation(final LdbcQuery13 operation, JanusGraphDb.RemoteDBConnectionState dbConnectionState, ResultReporter
+            resultReporter) throws DbException {
     /*    final long person1id = operation.person1Id();
         final long person2id = operation.person2Id();
 

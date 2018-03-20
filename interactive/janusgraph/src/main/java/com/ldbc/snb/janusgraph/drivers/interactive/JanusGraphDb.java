@@ -1,20 +1,22 @@
 package com.ldbc.snb.janusgraph.drivers.interactive;
 
-import com.ldbc.driver.Db;
-import com.ldbc.driver.DbConnectionState;
-import com.ldbc.driver.DbException;
+import com.ldbc.driver.*;
 import com.ldbc.driver.control.LoggingService;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.tinkerpop.gremlin.driver.Client;
+import org.apache.tinkerpop.gremlin.structure.io.gryo.GryoMapper;
 import org.janusgraph.core.JanusGraphFactory;
-import org.janusgraph.core.JanusGraph;
-import com.ldbc.snb.janusgraph.importer.InteractiveWorkloadSchema;
+import org.janusgraph.graphdb.database.StandardJanusGraph;
+import org.janusgraph.graphdb.tinkerpop.JanusGraphIoRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
+import java.io.*;
 import java.util.Map;
+
+import org.apache.tinkerpop.gremlin.driver.*;
+import org.apache.tinkerpop.gremlin.driver.ser.GryoMessageSerializerV1d0;
 
 /**
  * @author Tomer Sagi
@@ -22,25 +24,53 @@ import java.util.Map;
  */
 public class JanusGraphDb extends Db {
 
+    public class RemoteDBConnectionState extends DbConnectionState {
+
+        private Cluster cluster = null;
+        private Client client = null;
+        private StandardJanusGraph graph;
+
+        private RemoteDBConnectionState(String configFile) {
+            GryoMapper kryo = GryoMapper.build().addRegistry(JanusGraphIoRegistry.getInstance()).create();
+            MessageSerializer serializer = new GryoMessageSerializerV1d0(kryo);
+            cluster = Cluster.build()
+                    .serializer(serializer)
+                    .create();
+            client = cluster.connect().init();
+
+            graph = (StandardJanusGraph) JanusGraphFactory.open(configFile);
+
+        }
+
+        @Override
+        public void close() {
+        }
+
+        public ResultSet runQuery(String query) throws Exception {
+            return client.submit(query);
+        }
+
+        public ResultSet runQuery(String query, Map<String,Object> parameters) throws Exception {
+            return client.submit(query, parameters);
+        }
+
+        public StandardJanusGraph getGraph() {
+            return graph;
+        }
+    }
+
     final static Logger logger = LoggerFactory.getLogger(JanusGraphDb.class);
-    private BasicDbConnectionState connectionState = null;
+    private RemoteDBConnectionState connectionState = null;
 
     /* (non-Javadoc)
      * @see com.ldbc.driver.Db#onInit(java.util.Map)
      */
     @Override
     protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
-        String configFile = properties.get("confFile");
-        if (configFile==null)
-            throw new DbException("JanusGraph LDBC implementation is missing a configuration parameter named confFile pointing to the titan config file");
-        URL u = this.getClass().getClassLoader().getResource(configFile);
-        String confFilePath = u != null ? u.getPath() : configFile;
-        File confFile = new File(configFile);
-        if (confFile.exists())
-            confFilePath = configFile;
-        if (confFilePath == null)
-            throw new DbException("No db configuration file found for " + configFile);
-        connectionState = new BasicDbConnectionState(confFilePath);
+        if(properties.get("janusgraph.configFile") == null) {
+            throw new DbException("option janusgraph.configFile option not specified");
+        }
+        connectionState = new RemoteDBConnectionState(properties.get("janusgraph.configFile"));
         registerOperationHandler(LdbcQuery1.class, LdbcQuery1Handler.class);
         registerOperationHandler(LdbcQuery2.class, LdbcQuery2Handler.class);
         registerOperationHandler(LdbcQuery3.class, LdbcQuery3Handler.class);
@@ -84,44 +114,7 @@ public class JanusGraphDb extends Db {
     protected DbConnectionState getConnectionState() throws DbException {
         if (connectionState == null)
             throw new DbException("Db not initialized");
-        if (!connectionState.isReady())
-            throw new DbException("JanusGraph not ready");
         return connectionState;
-    }
-
-    static class BasicClient {
-
-        public InteractiveWorkloadSchema s = new InteractiveWorkloadSchema();
-        public JanusGraph graph = null;
-
-        BasicClient(String pathToConfFile) {
-            //Using IDgraph to wrap titan graph which doesn't allow user vertex defined vertex IDs
-            logger.debug("pathtoConfFile: {}",pathToConfFile);
-            graph = JanusGraphFactory.open(pathToConfFile);
-        }
-    }
-
-    static class BasicDbConnectionState extends DbConnectionState {
-
-        private final BasicClient basicClient;
-
-        private BasicDbConnectionState(String pathToConfFile) {
-            basicClient = new BasicClient(pathToConfFile);
-        }
-
-        BasicClient client() {
-            return basicClient;
-        }
-
-        boolean isReady() {
-            //TODO implement ping
-            return true;
-        }
-
-        @Override
-        public void close() throws IOException {
-            this.basicClient.graph.close();
-        }
     }
 
 }

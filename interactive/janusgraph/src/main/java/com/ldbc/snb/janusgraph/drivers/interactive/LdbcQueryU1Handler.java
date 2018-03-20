@@ -5,82 +5,86 @@ import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcNoResult;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate1AddPerson;
+import org.apache.tinkerpop.gremlin.driver.Result;
+import org.apache.tinkerpop.gremlin.driver.ResultSet;
+import org.apache.tinkerpop.gremlin.structure.Edge;
+import org.apache.tinkerpop.gremlin.structure.Vertex;
+import org.janusgraph.core.JanusGraphTransaction;
+import org.janusgraph.core.JanusGraphVertex;
+import org.janusgraph.core.Transaction;
+import org.janusgraph.graphdb.database.StandardJanusGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static com.ldbc.snb.janusgraph.drivers.interactive.QueryUtils.CODE_OK;
 
 /**
  * Created by Tomer Sagi on 14-Nov-14.
  * Add a person. Currently assuming all edge end point vertices exist
  */
-public class LdbcQueryU1Handler implements OperationHandler<LdbcUpdate1AddPerson,JanusGraphDb.BasicDbConnectionState> {
+public class LdbcQueryU1Handler implements OperationHandler<LdbcUpdate1AddPerson,JanusGraphDb.RemoteDBConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQueryU1Handler.class);
 
     @Override
-    public void executeOperation(LdbcUpdate1AddPerson operation, JanusGraphDb.BasicDbConnectionState dbConnectionState, ResultReporter reporter) throws DbException {
-/*        JanusGraphDb.BasicClient client = dbConnectionState.client();
-        Map<String, Object> props = new HashMap<>(9);
-        props.put("firstName", operation.personFirstName());
-        props.put("lastName", operation.personLastName());
-        props.put("gender", operation.gender());
-        props.put("birthday", operation.birthday().getTime());
-        props.put("creationDate", operation.creationDate().getTime());
-        props.put("locationIP", operation.locationIp());
-        props.put("browserUsed", operation.browserUsed());
-        logger.debug("U1 Adding person {} , {}" ,operation.personId(), props.toString());
-        Vertex person = client.addVertex(operation.personId(), "Person", props);
-        TitanVertex v = ((TitanVertex)(((IdVertex) person).getBaseVertex()));
-        for (String l : operation.languages())
-            v.addProperty("language",l);
+    public void executeOperation(LdbcUpdate1AddPerson operation, JanusGraphDb.RemoteDBConnectionState dbConnectionState, ResultReporter
+            reporter) throws DbException {
 
-        for (String em : operation.emails())
-            v.addProperty("email",em);
+        StandardJanusGraph graph = dbConnectionState.getGraph();
+        JanusGraphTransaction transaction = graph.newThreadBoundTransaction();
 
-        try {
-            for (LdbcUpdate1AddPerson.Organization org : operation.studyAt()) {
+        JanusGraphVertex vertex = transaction.addVertex("Person");
+        vertex.property("Person.id", operation.personId());
+        vertex.property("firstName", operation.personFirstName());
+        vertex.property("lastName", operation.personLastName());
+        vertex.property("gender", operation.gender());
+        vertex.property("birthday", operation.birthday().getTime());
+        vertex.property("creationDate", operation.creationDate().getTime());
+        vertex.property("browserUsed", operation.browserUsed());
+        vertex.property("locationIP", operation.locationIp());
 
-                Vertex orgV = client.getVertex(org.organizationId(), "Organisation");
-                Map<String, Object> eProps = new HashMap<>();
-                eProps.put("classYear", org.year());
-                client.addEdge(person, orgV, "studyAt", eProps);
 
-            }
+        Vertex cityVertex = transaction.traversal().V().has("Place.id", operation.cityId()).next();
+        vertex.addEdge("isLocatedIn",cityVertex);
 
-        } catch (Exception e) {
-            logger.error("add university failed");
-            e.printStackTrace();
+        Object languages[] = new Object[operation.languages().size()];
+        int i = 0;
+        for( String language : operation.languages()) {
+            languages[i] = language;
+            ++i;
         }
-        try {
-        for (LdbcUpdate1AddPerson.Organization org : operation.workAt()) {
-                Vertex orgV = client.getVertex(org.organizationId(), "Organisation");
-                Map<String, Object> eProps = new HashMap<>();
-                eProps.put("workFrom", org.year());
-                client.addEdge(person, orgV, "workAt", eProps);
-            }
-        } catch (Exception e) {
-            logger.error("add company failed");
-            e.printStackTrace();
-        }
-        try {
-            Vertex cityV = client.getVertex(operation.cityId(), "Place");
-            client.addEdge(person, cityV, "isLocatedIn", new HashMap<String, Object>());
+        vertex.property("language", languages);
 
-        } catch (Exception e) {
-            logger.error("add city failed");
-            e.printStackTrace();
+        Object emails[] = new Object[operation.emails().size()];
+        i = 0;
+        for( String email : operation.emails()) {
+            emails[i] = email;
+            ++i;
+        }
+        vertex.property("email", emails);
+
+        for(Long tagId : operation.tagIds()) {
+            Vertex tagVertex = transaction.traversal().V().has("Tag.id", tagId).next();
+            vertex.addEdge("hasInterest",tagVertex);
         }
 
-        try {
-            client.commit();
-        } catch (TitanException e) {
-            logger.error("Couldn't complete U1 handler, db didn't commit");
-            e.printStackTrace();
+        for(LdbcUpdate1AddPerson.Organization organization : operation.studyAt()) {
+            Vertex organisationVertex = transaction.traversal().V().has("Organisation.id", organization.organizationId()).next();
+            Edge edge = vertex.addEdge("studyAt",organisationVertex);
+            edge.property("classYear",organization.year());
         }
 
-        logger.debug("U1 complete for person {}" ,operation.personId());
+        for(LdbcUpdate1AddPerson.Organization organization : operation.workAt()) {
+            Vertex organisationVertex = transaction.traversal().V().has("Organisation.id", organization.organizationId()).next();
+            Edge edge = vertex.addEdge("workAt",organisationVertex);
+            edge.property("workFrom",organization.year());
+        }
+
+        transaction.commit();
+
         reporter.report(0, LdbcNoResult.INSTANCE,operation);
-        */
     }
 }

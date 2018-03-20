@@ -20,11 +20,12 @@ import java.util.*;
  other Person) contributes 0.5. Return all the paths with shortest length, and their weights. Sort results
  descending by path weight. The order of paths with the same weight is unspecified.
  */
-public class LdbcQuery14Handler implements OperationHandler<LdbcQuery14,JanusGraphDb.BasicDbConnectionState> {
+public class LdbcQuery14Handler implements OperationHandler<LdbcQuery14,JanusGraphDb.RemoteDBConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQuery14Handler.class);
 
     @Override
-    public void executeOperation(final LdbcQuery14 operation, JanusGraphDb.BasicDbConnectionState dbConnectionState, ResultReporter resultReporter) throws DbException {
+    public void executeOperation(final LdbcQuery14 operation, JanusGraphDb.RemoteDBConnectionState dbConnectionState, ResultReporter
+            resultReporter) throws DbException {
 
         final long person1id = operation.person1Id();
         final long person2id = operation.person2Id();

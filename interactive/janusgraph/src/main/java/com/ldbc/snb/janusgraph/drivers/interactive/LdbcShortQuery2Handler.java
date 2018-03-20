@@ -5,12 +5,14 @@ import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery2PersonPosts;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery2PersonPostsResult;
+import org.apache.tinkerpop.gremlin.driver.Result;
+import org.apache.tinkerpop.gremlin.driver.ResultSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+
+import static com.ldbc.snb.janusgraph.drivers.interactive.QueryUtils.CODE_OK;
 
 /**
  * Implementation of LDBC Interactive workload short query 2
@@ -19,73 +21,54 @@ import java.util.List;
  * Order results descending by message creation date, then descending by message identifier
  * Created by Tomer Sagi on 10-Mar-15.
  */
-public class LdbcShortQuery2Handler implements OperationHandler<LdbcShortQuery2PersonPosts,JanusGraphDb.BasicDbConnectionState> {
+public class LdbcShortQuery2Handler implements OperationHandler<LdbcShortQuery2PersonPosts,JanusGraphDb.RemoteDBConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcShortQuery2Handler.class);
 
     @Override
-    public void executeOperation(final LdbcShortQuery2PersonPosts operation, JanusGraphDb.BasicDbConnectionState dbConnectionState, ResultReporter resultReporter) throws DbException {
-        /*List<LdbcShortQuery2PersonPostsResult> result = new ArrayList<>();
-        long person_id = operation.personId();
-        JanusGraphDb.BasicClient client = dbConnectionState.client();
-        final Vertex root;
+    public void executeOperation(final LdbcShortQuery2PersonPosts operation, JanusGraphDb.RemoteDBConnectionState dbConnectionState,
+                                 ResultReporter resultReporter) throws DbException {
+
+        Map<String,Object> parameters = new HashMap<String,Object>();
+        parameters.put("$id",operation.personId());
+
+        String query = "g.V().has('Person.id',$id)" +
+                ".in('hasCreator')" +
+                ".order()" +
+                ".by('creationDate',decr)" +
+                ".limit(10)" +
+                ".match(__.as('x').valueMap().as('message'), " +
+                       "__.as('x').optional(until(hasLabel('Post')).repeat(out('replyOf'))).valueMap().as('replied')," +
+                       "__.as('x').out('hasCreator').valueMap('Person.id','firstName','lastName').as('creator'))"+
+                ".select('message','replied','creator')\n";
+
         try {
-            root = client.getVertex(person_id, "Person");
-            logger.debug("Short Query 2 called on person id: {}", person_id);
-            GremlinPipeline<Vertex, Vertex> gp = new GremlinPipeline<>(root);
-            Iterable<Row> qResult = gp.in("hasCreator").as("post").select()
-                    .order(QueryUtils.COMP_CDate_Postid).range(0, operation.limit() - 1);
-
-            for (Row r : qResult) {
-                Vertex message = (Vertex)r.getColumn("post");
-                Vertex originalM;
-                Vertex author;
-
-                if (((String)message.getProperty("label")).equalsIgnoreCase("Post"))
-                {
-                    originalM = message;
-                    author = originalM.query().labels("hasCreator").vertices().iterator().next();
+            ResultSet resultSet = dbConnectionState.runQuery(query, parameters);
+            ArrayList<LdbcShortQuery2PersonPostsResult> results = new ArrayList<LdbcShortQuery2PersonPostsResult>();
+            for (Result r : resultSet) {
+                Map<String,List<Object>> map = (Map<String,List<Object>>)r.getObject();
+                Map<String,List<Object>> message = (Map<String,List<Object>>)map.get("message");
+                Map<String,List<Object>> replied = (Map<String,List<Object>>)map.get("replied");
+                Map<String,List<Object>> creator = (Map<String,List<Object>>)map.get("creator");
+                Long messageId = 0L;
+                if(message.get("Comment.id") != null) {
+                    messageId = (Long)message.get("Comment.id").get(0);
+                } else {
+                    messageId = (Long)message.get("Post.id").get(0);
                 }
-                else {
-                    GremlinPipeline<Vertex, Vertex> gpt = (new GremlinPipeline<>(message));
-                    Iterator<Row> it =gpt.as("start").out("replyOf").loop("start", QueryUtils.LOOPTRUEFUNC,QueryUtils.LOOPTRUEFUNC)
-                            .as("originalM").out("hasCreator").as("author").select();
-                    if (it.hasNext())
-                    {
-                        Row r1 = it.next();
-                        if (it.hasNext()) //ensures I only record the last one
-                            continue;
-
-                        originalM = (Vertex) r1.getColumn("originalM");
-                        author = (Vertex) r1.getColumn("author");
-
-                    }
-                    else
-                    {
-                        originalM = message;
-                        author = originalM.query().labels("hasCreator").vertices().iterator().next();
-                    }
-
-
-                }
-
-                Long mid = client.getVLocalId((Long) message.getId());
-                String content = message.getProperty("content");
-                if (content.length() == 0)
-                    content = message.getProperty("imageFile");
-
-                LdbcShortQuery2PersonPostsResult res = new LdbcShortQuery2PersonPostsResult(
-                        mid,content, (Long) message.getProperty("creationDate"),
-                        client.getVLocalId((Long) originalM.getId()),
-                        client.getVLocalId((Long) author.getId()),
-                        (String) author.getProperty("firstName"), (String) author.getProperty("lastName"));
-                result.add(res);
+                LdbcShortQuery2PersonPostsResult ldbcResult = new LdbcShortQuery2PersonPostsResult(
+                        messageId,
+                        (String)message.get("content").get(0),
+                        (Long)message.get("creationDate").get(0),
+                        (Long)replied.get("Post.id").get(0),
+                        (Long)creator.get("Person.id").get(0),
+                        (String)creator.get("firstName").get(0),
+                        (String)creator.get("lastName").get(0));
+                results.add(ldbcResult);
             }
-            resultReporter.report(result.size(), result, operation);
+            resultReporter.report(CODE_OK, results, operation);
         } catch (Exception e) {
-        e.printStackTrace();
-        resultReporter.report(-1, null, operation);
-    }
-    */
-
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 }

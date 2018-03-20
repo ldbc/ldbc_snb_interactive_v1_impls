@@ -16,11 +16,12 @@ import java.util.*;
  * Handles Q3 by running a groupBy pipe and then sorting using
  * a sortable map.
  */
-public class LdbcQuery3Handler implements OperationHandler<LdbcQuery3,JanusGraphDb.BasicDbConnectionState> {
+public class LdbcQuery3Handler implements OperationHandler<LdbcQuery3,JanusGraphDb.RemoteDBConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQuery3Handler.class);
 
     @Override
-    public void executeOperation(final LdbcQuery3 operation, JanusGraphDb.BasicDbConnectionState dbConnectionState, ResultReporter resultReporter) throws DbException {
+    public void executeOperation(final LdbcQuery3 operation, JanusGraphDb.RemoteDBConnectionState dbConnectionState, ResultReporter
+            resultReporter) throws DbException {
 
 /*        long person_id = operation.personId();
         final String country_x = operation.countryXName();

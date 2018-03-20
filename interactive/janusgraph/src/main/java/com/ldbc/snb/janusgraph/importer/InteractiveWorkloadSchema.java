@@ -8,8 +8,7 @@ import java.util.*;
  * according to snb docs ver. 0.1.3
  */
 public class InteractiveWorkloadSchema implements WorkLoadSchema {
-    Map<String, Class<?>> vPClassMap = new HashMap<>();
-    Map<String, Class<?>> ePClassMap = new HashMap<>();
+    Map<String, Class<?>> pClassMap = new HashMap<>();
     HashMap<String, Integer> vTypes = new HashMap<>();
     HashMap<Integer, String> vTypeReverse = new HashMap<>();
     Set<String> eTypes = new HashSet<>(Arrays.asList(new String[]{"knows", "isLocatedIn", "studyAt", "workAt", "isPartOf", "hasCreator", "likes"
@@ -18,6 +17,7 @@ public class InteractiveWorkloadSchema implements WorkLoadSchema {
     Map<String, Set<String>> ePMap = new HashMap<>();
     Map<String, String> eFileMap = new HashMap<>();
     Map<String, String> vpFileMap = new HashMap<>();
+    Set<String> undirectedEdges = new HashSet<String>();
 
     public InteractiveWorkloadSchema() {
         super();
@@ -31,53 +31,35 @@ public class InteractiveWorkloadSchema implements WorkLoadSchema {
         vTypes.put("Tag", 6);
         vTypes.put("TagClass", 7);
 
-        vPClassMap.put("Person.id", Long.class);
-        vPClassMap.put("Person.creationDate", Long.class);
-        vPClassMap.put("Person.firstName", String.class);
-        vPClassMap.put("Person.lastName", String.class);
-        vPClassMap.put("Person.gender", String.class);
-        vPClassMap.put("Person.email", Arrays.class);
-        vPClassMap.put("Person.birthday", Long.class);
-        vPClassMap.put("Person.language", Arrays.class);
-        vPClassMap.put("Person.browserUsed", String.class);
-        vPClassMap.put("Person.locationIP", String.class);
-        vPClassMap.put("Place.id", Long.class);
-        vPClassMap.put("Place.name", String.class);
-        vPClassMap.put("Place.type", String.class);
-        vPClassMap.put("Place.url", String.class);
-        vPClassMap.put("Organisation.id", Long.class);
-        vPClassMap.put("Organisation.name", String.class);
-        vPClassMap.put("Organisation.type", String.class);
-        vPClassMap.put("Organisation.url", String.class);
-        vPClassMap.put("Forum.id", Long.class);
-        vPClassMap.put("Forum.title", String.class);
-        vPClassMap.put("Forum.creationDate", Long.class);
-        vPClassMap.put("Post.id", Long.class);
-        vPClassMap.put("Post.creationDate", Long.class);
-        vPClassMap.put("Post.browserUsed", String.class);
-        vPClassMap.put("Post.locationIP", String.class);
-        vPClassMap.put("Post.content", String.class);
-        vPClassMap.put("Post.length", Integer.class);
-        vPClassMap.put("Post.language", String.class);
-        vPClassMap.put("Post.imageFile", String.class);
-        vPClassMap.put("Comment.id", Long.class);
-        vPClassMap.put("Comment.creationDate", Long.class);
-        vPClassMap.put("Comment.browserUsed", String.class);
-        vPClassMap.put("Comment.locationIP", String.class);
-        vPClassMap.put("Comment.content", String.class);
-        vPClassMap.put("Comment.length", Integer.class);
-        vPClassMap.put("Tag.id", Long.class);
-        vPClassMap.put("Tag.name", String.class);
-        vPClassMap.put("Tag.url", String.class);
-        vPClassMap.put("TagClass.id", Long.class);
-        vPClassMap.put("TagClass.name", String.class);
-        vPClassMap.put("TagClass.url", String.class);
+        pClassMap.put("Person.id", Long.class);
+        pClassMap.put("Place.id", Long.class);
+        pClassMap.put("Forum.id", Long.class);
+        pClassMap.put("Post.id", Long.class);
+        pClassMap.put("Tag.id", Long.class);
+        pClassMap.put("TagClass.id", Long.class);
+        pClassMap.put("Comment.id", Long.class);
+        pClassMap.put("Organisation.id", Long.class);
 
-        ePClassMap.put("knows.creationDate", Long.class);
-        ePClassMap.put("studyAt.classYear", Integer.class);
-        ePClassMap.put("workAt.workFrom", Integer.class);
-        ePClassMap.put("likes.creationDate", Long.class);
-        ePClassMap.put("hasMember.joinDate", Long.class);
+        pClassMap.put("creationDate", Long.class);
+        pClassMap.put("firstName", String.class);
+        pClassMap.put("lastName", String.class);
+        pClassMap.put("gender", String.class);
+        pClassMap.put("email", Arrays.class);
+        pClassMap.put("birthday", Long.class);
+        pClassMap.put("language", Arrays.class);
+        pClassMap.put("browserUsed", String.class);
+        pClassMap.put("locationIP", String.class);
+        pClassMap.put("name", String.class);
+        pClassMap.put("type", String.class);
+        pClassMap.put("url", String.class);
+        pClassMap.put("title", String.class);
+        pClassMap.put("content", String.class);
+        pClassMap.put("length", Integer.class);
+        pClassMap.put("imageFile", String.class);
+
+        pClassMap.put("classYear", Integer.class);
+        pClassMap.put("workFrom", Integer.class);
+        pClassMap.put("joinDate", Long.class);
 
         vpMap.put("Person", new HashSet<>(Arrays.asList(new String[]{"id","creationDate", "firstName", "lastName"
                 , "gender", "birthday", "email", "language", "browserUsed", "locationIP"})));
@@ -95,6 +77,8 @@ public class InteractiveWorkloadSchema implements WorkLoadSchema {
         ePMap.put("workAt", new HashSet<>(Arrays.asList(new String[]{"workFrom"})));
         ePMap.put("likes", new HashSet<>(Arrays.asList(new String[]{"creationDate"})));
         ePMap.put("hasMember", new HashSet<>(Arrays.asList(new String[]{"joinDate"})));
+
+        undirectedEdges.add("knows");
 
         eFileMap.put("Comment.hasCreator.Person", "comment_hasCreator_person");
         eFileMap.put("Comment.hasTag.Tag", "comment_hasTag_tag");
@@ -147,14 +131,10 @@ public class InteractiveWorkloadSchema implements WorkLoadSchema {
     }
 
     @Override
-    public Class<?> getVPropertyClass(String vertexType, String propertyName) {
-        return vPClassMap.get(vertexType + "." + propertyName);
+    public Class<?> getPropertyClass(String propertyName) {
+        return pClassMap.get(propertyName);
     }
 
-    @Override
-    public Class<?> getEPropertyClass(String edgeType, String propertyName) {
-        return ePClassMap.get(edgeType + "." + propertyName);
-    }
 
     @Override
     public Map<String, String> getEFileMap() {
@@ -171,4 +151,8 @@ public class InteractiveWorkloadSchema implements WorkLoadSchema {
         return vpFileMap;
     }
 
+    @Override
+    public Set<String> getUndirectedEdges() {
+        return undirectedEdges;
+    }
 }

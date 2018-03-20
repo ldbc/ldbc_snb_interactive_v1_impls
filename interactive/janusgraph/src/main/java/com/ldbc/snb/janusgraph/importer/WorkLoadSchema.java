@@ -34,20 +34,12 @@ public interface WorkLoadSchema {
     public Map<String,Set<String>> getEdgeProperties();
 
     /**
-     * Given a vertex property returns the property class
-     * @param vertexType Vertex label
+     * Given a property returns the property class
      * @param propertyName Property name
      * @return java class of this property
      */
-    public Class<?> getVPropertyClass(String vertexType, String propertyName);
+    public Class<?> getPropertyClass(String propertyName);
 
-    /**
-     * Given an edge property, returns the property class
-     * @param edgeType Edge label
-     * @param propertyName Property name
-     * @return java class of this property
-     */
-    public Class<?> getEPropertyClass(String edgeType, String propertyName);
 
     /**
      * Returns a map between edge types and their files.
@@ -62,4 +54,6 @@ public interface WorkLoadSchema {
      * @return Map between Vertex Properties and the file containing them
      */
     public Map<String,String> getVPFileMap();
+
+    public Set<String> getUndirectedEdges();
 }

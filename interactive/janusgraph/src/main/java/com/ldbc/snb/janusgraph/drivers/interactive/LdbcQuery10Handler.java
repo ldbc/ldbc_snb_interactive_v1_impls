@@ -24,11 +24,12 @@ import java.util.*;
  * Return top 10 Persons, their Place, and their similarity score. Sort results descending by similarity score,
  * and then ascending by Person identifier
  */
-public class LdbcQuery10Handler implements OperationHandler<LdbcQuery10,JanusGraphDb.BasicDbConnectionState> {
+public class LdbcQuery10Handler implements OperationHandler<LdbcQuery10,JanusGraphDb.RemoteDBConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQuery10Handler.class);
 
     @Override
-    public void executeOperation(final LdbcQuery10 operation, JanusGraphDb.BasicDbConnectionState dbConnectionState, ResultReporter resultReporter) throws DbException {
+    public void executeOperation(final LdbcQuery10 operation, JanusGraphDb.RemoteDBConnectionState dbConnectionState, ResultReporter
+            resultReporter) throws DbException {
 /*        long person_id = operation.personId();
         final int monthNum = operation.month();
         final int limit = operation.limit();

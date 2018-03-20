@@ -5,6 +5,10 @@ import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcNoResult;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate6AddPost;
+import org.apache.tinkerpop.gremlin.structure.Edge;
+import org.apache.tinkerpop.gremlin.structure.Vertex;
+import org.janusgraph.core.JanusGraphTransaction;
+import org.janusgraph.graphdb.database.StandardJanusGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,47 +21,46 @@ import java.util.Map;
  * All other vertices are assumed to exist
  * Created by Tomer Sagi on 14-Nov-14.
  */
-public class LdbcQueryU6Handler implements OperationHandler<LdbcUpdate6AddPost,JanusGraphDb.BasicDbConnectionState> {
+public class LdbcQueryU6Handler implements OperationHandler<LdbcUpdate6AddPost,JanusGraphDb.RemoteDBConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQueryU6Handler.class);
 
     @Override
-    public void executeOperation(LdbcUpdate6AddPost operation, JanusGraphDb.BasicDbConnectionState dbConnectionState, ResultReporter reporter) throws DbException {
-        JanusGraphDb.BasicClient client = dbConnectionState.client();
+    public void executeOperation(LdbcUpdate6AddPost operation, JanusGraphDb.RemoteDBConnectionState dbConnectionState, ResultReporter
+            reporter) throws DbException {
 
-       /* try {
-            Map<String, Object> props = new HashMap<>(7);
-            props.put("imageFile", operation.imageFile());
-            props.put("creationDate", operation.creationDate().getTime());
-            props.put("locationIP", operation.locationIp());
-            props.put("browserUsed", operation.browserUsed());
-            props.put("lang", operation.language());
-            props.put("content", operation.content());
-            props.put("length", operation.length());
-            Vertex post = client.addVertex(operation.postId(), "Post", props);
-            Map<String, Object> eProps = new HashMap<>(0);
-            Vertex person = client.getVertex(operation.authorPersonId(), "Person");
-            client.addEdge(post, person, "hasCreator", eProps);
-            Vertex forum = client.getVertex(operation.forumId(), "Forum");
-            client.addEdge(forum, post, "containerOf", eProps);
-            Vertex country = client.getVertex(operation.countryId(), "Place");
-            client.addEdge(post, country, "isLocatedIn", eProps);
-            for (Long tagID : operation.tagIds()) {
-                Vertex tagV = client.getVertex(tagID, "Tag");
-                client.addEdge(post, tagV, "hasTag", eProps);
-            }
-
-        } catch (SchemaViolationException e) {
-            logger.error("invalid vertex label requested by query update");
-            e.printStackTrace();
-        }
+        StandardJanusGraph graph = dbConnectionState.getGraph();
+        JanusGraphTransaction transaction = graph.newThreadBoundTransaction();
 
         try {
-            client.commit();
-        } catch (TitanException e) {
-            logger.error("Couldn't complete U6 handler, db didn't commit");
+            Vertex postVertex = transaction.addVertex("Post");
+
+            postVertex.property("Post.id", operation.postId());
+            postVertex.property("imageFile", operation.imageFile());
+            postVertex.property("creationDate", operation.creationDate().getTime());
+            postVertex.property("locationIP", operation.locationIp());
+            postVertex.property("browserUsed", operation.browserUsed());
+            postVertex.property("language", operation.language());
+            postVertex.property("content", operation.content());
+            postVertex.property("length", operation.length());
+
+            Vertex creatorVertex = transaction.traversal().V().has("Person.id", operation.authorPersonId()).next();
+            postVertex.addEdge("hasCreator", creatorVertex);
+            Vertex forumVertex = transaction.traversal().V().has("Forum.id", operation.forumId()).next();
+            forumVertex.addEdge("containerOf", postVertex);
+            Vertex countryVertex = transaction.traversal().V().has("Place.id", operation.countryId()).next();
+            postVertex.addEdge("isLocatedIn", countryVertex);
+
+            for (Long tagId : operation.tagIds()) {
+                Vertex tagVertex = transaction.traversal().V().has("Tag.id", tagId).next();
+                postVertex.addEdge("hasTag", tagVertex);
+            }
+
+            reporter.report(0, LdbcNoResult.INSTANCE, operation);
+        } catch (Exception e) {
             e.printStackTrace();
+            throw e;
+        } finally {
+            transaction.commit();
         }
-        reporter.report(0, LdbcNoResult.INSTANCE,operation);
-        */
     }
 }

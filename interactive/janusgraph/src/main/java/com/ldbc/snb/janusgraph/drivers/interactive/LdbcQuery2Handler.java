@@ -16,11 +16,12 @@ import java.util.List;
  * Created by Tomer Sagi on 06-Oct-14.
  * Strategy: Double expansion root->friend->post
  */
-public class LdbcQuery2Handler implements OperationHandler<LdbcQuery2,JanusGraphDb.BasicDbConnectionState> {
+public class LdbcQuery2Handler implements OperationHandler<LdbcQuery2,JanusGraphDb.RemoteDBConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQuery2Handler.class);
 
     @Override
-    public void executeOperation(final LdbcQuery2 operation, JanusGraphDb.BasicDbConnectionState dbConnectionState, ResultReporter resultReporter) throws DbException {
+    public void executeOperation(final LdbcQuery2 operation, JanusGraphDb.RemoteDBConnectionState dbConnectionState, ResultReporter
+            resultReporter) throws DbException {
 /*        long person_id = operation.personId();
         final long maxDate = operation.maxDate().getTime();//QueryUtils.addDays(operation.maxDate(),1);
         logger.debug("Query 2 called on Person id: {} with max date {}", person_id, maxDate);

@@ -60,6 +60,7 @@ public class JanusGraphImporter {
         logger.info("Building Schema");
         JanusGraphManagement management;
         //Create Vertex Labels and assign id suffix
+        logger.info("Creating Vertex Labels");
         Set<String> vTypes = s.getVertexTypes().keySet();
         for (String v : vTypes) {
             management = graph.openManagement();
@@ -69,25 +70,32 @@ public class JanusGraphImporter {
             }
         }
 
-        logger.info("Creating Vertex Labels");
+        logger.info("Creating edge labels");
         for (String e : s.getEdgeTypes()) {
             management = graph.openManagement();
             if (!graph.containsRelationType(e)) {
-                management.makeEdgeLabel(e).multiplicity(Multiplicity.SIMPLE).make();
+                if(s.getUndirectedEdges().contains(e)) {
+                    management.makeEdgeLabel(e).unidirected().multiplicity(Multiplicity.SIMPLE).make();
+                } else {
+                    management.makeEdgeLabel(e).multiplicity(Multiplicity.SIMPLE).make();
+                }
                 management.commit();
             }
         }
 
-        logger.info("Creating edge labels");
         //Create Vertex Property Labels
         Set<Class<?>> allowed = new HashSet<>(Arrays.asList(VALID_CLASSES));
         for (String v : s.getVertexProperties().keySet()) {
             for (String p : s.getVertexProperties().get(v)) {
-                String janusPropertyKey = v+"."+p;
-                logger.info("Created Property Key "+janusPropertyKey);
+                String janusPropertyKey = "";
+                if(p.compareTo("id") == 0) {
+                    janusPropertyKey = v + "." + p;
+                } else {
+                    janusPropertyKey = p;
+                }
                 if (!graph.containsRelationType(p)) {
                     management = graph.openManagement();
-                    Class<?> clazz = s.getVPropertyClass(v, p);
+                    Class<?> clazz = s.getPropertyClass(janusPropertyKey);
                     Cardinality c = (clazz.getSimpleName().equals("Arrays") ? Cardinality.LIST : Cardinality.SINGLE);
                     if (clazz.equals(Arrays.class))
                         clazz = String.class;
@@ -109,6 +117,7 @@ public class JanusGraphImporter {
                         //vertexIndexes.add(janusPropertyKey);
                     }
                     management.commit();
+                    logger.info("Created Property Key "+janusPropertyKey);
                 }
             }
         }
@@ -117,10 +126,16 @@ public class JanusGraphImporter {
         for (String e : s.getEdgeProperties().keySet()) {
             for (String p : s.getEdgeProperties().get(e)) {
 
-                String janusPropertyKey = e+"."+p;
+                String janusPropertyKey = "";
+                if(p.compareTo("id") == 0) {
+                    janusPropertyKey = e + "." + p;
+                } else {
+                    janusPropertyKey = p;
+                }
+
                 if (!graph.containsRelationType(p)) {
                     management = graph.openManagement();
-                    Class<?> clazz = s.getEPropertyClass(e, p);
+                    Class<?> clazz = s.getPropertyClass(janusPropertyKey);
                     if (clazz.equals(Arrays.class))
                         clazz = String.class;
                     Cardinality c = (clazz.isArray() ? Cardinality.LIST : Cardinality.SINGLE);
@@ -140,6 +155,7 @@ public class JanusGraphImporter {
                         management.buildIndex("by" + janusPropertyKey, Vertex.class).addKey(pk).buildCompositeIndex();
                     }
                     management.commit();
+                    logger.info("Created Property Key "+janusPropertyKey);
                 }
             }
         }
@@ -172,7 +188,8 @@ public class JanusGraphImporter {
         try {
             statsThread.interrupt();
         } catch(Exception e) {
-
+            e.printStackTrace();
+            System.exit(1);
         }
         statsThread.interrupt();
         logger.info("Number of vertices loaded: {}. Number of edges loaded {}", stats.getNumVertices(), stats.getNumEdges());
@@ -233,7 +250,7 @@ public class JanusGraphImporter {
         List<EdgeFileReadingTask> tasks = new ArrayList<EdgeFileReadingTask>();
         WorkLoadSchema schema = this.workload.getSchema();
 
-        ThreadPool edgeLoadingThreadPool = new ThreadPool(config.getNumThreads(),config.getNumThreads());
+        ThreadPool edgeLoadingThreadPool = new ThreadPool(config.getNumThreads(),2*config.getNumThreads());
         for (Map.Entry<String,String> ent : eMap.entrySet()) {
             HashSet<String> fileSet = new HashSet<>();
             final String fNamePrefix = ent.getValue();

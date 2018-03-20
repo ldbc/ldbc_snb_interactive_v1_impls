@@ -17,12 +17,13 @@ import java.util.*;
  Posts/Comments. Sort results descending by creation date of Post/Comment, and then ascending by
  Post/Comment identifier.
  */
-public class LdbcQuery9Handler implements OperationHandler<LdbcQuery9,JanusGraphDb.BasicDbConnectionState> {
+public class LdbcQuery9Handler implements OperationHandler<LdbcQuery9,JanusGraphDb.RemoteDBConnectionState> {
 
     final static Logger logger = LoggerFactory.getLogger(LdbcQuery9Handler.class);
 
     @Override
-    public void executeOperation(final LdbcQuery9 operation, JanusGraphDb.BasicDbConnectionState dbConnectionState, ResultReporter resultReporter) throws DbException {
+    public void executeOperation(final LdbcQuery9 operation, JanusGraphDb.RemoteDBConnectionState dbConnectionState, ResultReporter
+            resultReporter) throws DbException {
        /* long person_id = operation.personId();
         long max_date = operation.maxDate().getTime();
         final int limit = operation.limit();

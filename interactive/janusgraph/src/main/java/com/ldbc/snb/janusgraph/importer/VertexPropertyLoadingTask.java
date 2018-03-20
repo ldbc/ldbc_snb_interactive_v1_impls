@@ -49,7 +49,11 @@ public class VertexPropertyLoadingTask extends LoadingTask {
 
         Class[] classes = new Class[header.length];
         for (int i = 0; i < header.length; i++) {
-            classes[i] = schema.getVPropertyClass(vertexLabel, header[i]);
+            if(header[i].compareTo("id") == 0) {
+                classes[i] = schema.getPropertyClass(vertexLabel+"."+header[i]);
+            } else {
+                classes[i] = schema.getPropertyClass(header[i]);
+            }
         }
 
         // Obtaining parsers for the fields and property names
@@ -57,7 +61,11 @@ public class VertexPropertyLoadingTask extends LoadingTask {
         propertyNames = new String[header.length];
         for (int i = 1; i < header.length; ++i) {
             parsers[i] = Parsers.getParser(classes[i]);
-            propertyNames[i] = vertexLabel + "." + header[i];
+            if(header[i].compareTo("id") == 0) {
+                propertyNames[i] = vertexLabel + "." + header[i];
+            } else {
+                propertyNames[i] = header[i];
+            }
         }
         parsers[0] = Parsers.getParser(Long.class);
         propertyNames[0] = vertexLabel+".id";

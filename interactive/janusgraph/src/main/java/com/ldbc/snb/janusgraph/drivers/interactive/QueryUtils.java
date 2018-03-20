@@ -9,4 +9,8 @@ import java.util.*;
  * Singleton design pattern
  */
 public class QueryUtils {
+    public static final String ALL_MATCH  = "\"([^\"]+)\""; //Match all except "
+    public static final String LIST_MATCH = "(\\[[^\\]]+\\]|\"\")"; //Match all except ] or an empty list
+    public static final Integer CODE_OK    =  0;
+    public static final Integer CODE_ERROR = -1;
 }

@@ -18,11 +18,12 @@ import java.util.*;
  * created within the given time interval, that this Tag was attached to. Sort results descending by Post count,
  * and then ascending by Tag name.
  */
-public class LdbcQuery4Handler implements OperationHandler<LdbcQuery4,JanusGraphDb.BasicDbConnectionState> {
+public class LdbcQuery4Handler implements OperationHandler<LdbcQuery4,JanusGraphDb.RemoteDBConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQuery4Handler.class);
 
     @Override
-    public void executeOperation(final LdbcQuery4 operation, JanusGraphDb.BasicDbConnectionState dbConnectionState, ResultReporter resultReporter) throws DbException {
+    public void executeOperation(final LdbcQuery4 operation, JanusGraphDb.RemoteDBConnectionState dbConnectionState, ResultReporter
+            resultReporter) throws DbException {
         /*long person_id = operation.personId();
         final long min_date = operation.startDate().getTime();
         final long max_date = QueryUtils.addDays(min_date, operation.durationDays());

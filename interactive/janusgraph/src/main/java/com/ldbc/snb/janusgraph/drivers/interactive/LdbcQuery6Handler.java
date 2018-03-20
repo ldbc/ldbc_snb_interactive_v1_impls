@@ -19,11 +19,12 @@ import java.util.*;
  * which contain both this Tag and the given Tag.
  * Sort results descending by count, and then ascending by Tag name.
  */
-public class LdbcQuery6Handler implements OperationHandler<LdbcQuery6,JanusGraphDb.BasicDbConnectionState> {
+public class LdbcQuery6Handler implements OperationHandler<LdbcQuery6,JanusGraphDb.RemoteDBConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQuery6Handler.class);
 
     @Override
-    public void executeOperation(final LdbcQuery6 operation, JanusGraphDb.BasicDbConnectionState dbConnectionState, ResultReporter resultReporter) throws DbException {
+    public void executeOperation(final LdbcQuery6 operation, JanusGraphDb.RemoteDBConnectionState dbConnectionState, ResultReporter
+            resultReporter) throws DbException {
 /*        long person_id = operation.personId();
         final String tagName = operation.tagName();
         final int limit = operation.limit();

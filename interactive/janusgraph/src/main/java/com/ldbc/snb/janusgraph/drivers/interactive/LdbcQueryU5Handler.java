@@ -5,6 +5,10 @@ import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcNoResult;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate5AddForumMembership;
+import org.apache.tinkerpop.gremlin.structure.Edge;
+import org.apache.tinkerpop.gremlin.structure.Vertex;
+import org.janusgraph.core.JanusGraphTransaction;
+import org.janusgraph.graphdb.database.StandardJanusGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,32 +20,25 @@ import java.util.Map;
  * Adds membership edge between forum and person. Assumes both exist.
  * Created by Tomer Sagi on 14-Nov-14.
  */
-public class LdbcQueryU5Handler implements OperationHandler<LdbcUpdate5AddForumMembership,JanusGraphDb.BasicDbConnectionState> {
+public class LdbcQueryU5Handler implements OperationHandler<LdbcUpdate5AddForumMembership,JanusGraphDb.RemoteDBConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQueryU5Handler.class);
 
     @Override
-    public void executeOperation(LdbcUpdate5AddForumMembership operation, JanusGraphDb.BasicDbConnectionState dbConnectionState, ResultReporter reporter) throws DbException {
+    public void executeOperation(LdbcUpdate5AddForumMembership operation, JanusGraphDb.RemoteDBConnectionState dbConnectionState,
+                                 ResultReporter reporter) throws DbException {
 
-        /*JanusGraphDb.BasicClient client = dbConnectionState.client();
+        StandardJanusGraph graph = dbConnectionState.getGraph();
+        JanusGraphTransaction transaction = graph.newThreadBoundTransaction();
 
-        try {
-            Vertex forum = client.getVertex(operation.forumId(), "Forum");
-            Vertex person = client.getVertex(operation.personId(), "Person");
-            if (forum==null)
-                logger.error("Forum membership requested for nonexistent forum id {}", operation.forumId());
-            if (person==null)
-                logger.error("Forum membership requested for nonexistent person {}", operation.personId());
+        Vertex forumVertex = transaction.traversal().V().has("Forum.id", operation.forumId()).next();
+        Vertex personVertex = transaction.traversal().V().has("Person.id", operation.personId()).next();
+        Edge edge = forumVertex.addEdge("hasMember",personVertex);
+        edge.property("joinDate", operation.joinDate().getTime());
 
-            Map<String, Object> props = new HashMap<>(1);
-            props.put("joinDate", operation.joinDate().getTime());
-            client.addEdge(forum, person, "hasMember", props);
 
-        } catch (SchemaViolationException e) {
-            logger.error("invalid vertex label requested by query update");
-            e.printStackTrace();
-        }
+        transaction.commit();
 
         reporter.report(0, LdbcNoResult.INSTANCE,operation);
-        */
+
     }
 }

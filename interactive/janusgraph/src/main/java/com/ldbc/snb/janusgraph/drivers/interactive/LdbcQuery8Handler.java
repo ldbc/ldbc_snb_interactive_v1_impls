@@ -20,10 +20,11 @@ import java.util.List;
  reply Comments, and the Person that created each reply Comment. Sort results descending by creation date
  of reply Comment, and then ascending by identifier of reply Comment.
  */
-public class LdbcQuery8Handler implements OperationHandler<LdbcQuery8,JanusGraphDb.BasicDbConnectionState> {
+public class LdbcQuery8Handler implements OperationHandler<LdbcQuery8,JanusGraphDb.RemoteDBConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQuery8Handler.class);
     @Override
-    public void executeOperation(final LdbcQuery8 operation, JanusGraphDb.BasicDbConnectionState dbConnectionState, ResultReporter resultReporter) throws DbException {
+    public void executeOperation(final LdbcQuery8 operation, JanusGraphDb.RemoteDBConnectionState dbConnectionState, ResultReporter
+            resultReporter) throws DbException {
        /* long person_id = operation.personId();
         final int limit = operation.limit();
 

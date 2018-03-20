@@ -5,6 +5,9 @@ import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcNoResult;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate7AddComment;
+import org.apache.tinkerpop.gremlin.structure.Vertex;
+import org.janusgraph.core.JanusGraphTransaction;
+import org.janusgraph.graphdb.database.StandardJanusGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,56 +19,47 @@ import java.util.Map;
  * Update Query 7: add comment
  * Created by Tomer Sagi on 14-Nov-14.
  */
-public class LdbcQueryU7Handler implements OperationHandler<LdbcUpdate7AddComment,JanusGraphDb.BasicDbConnectionState> {
+public class LdbcQueryU7Handler implements OperationHandler<LdbcUpdate7AddComment,JanusGraphDb.RemoteDBConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQueryU7Handler.class);
 
     @Override
-    public void executeOperation(LdbcUpdate7AddComment operation, JanusGraphDb.BasicDbConnectionState dbConnectionState, ResultReporter reporter) throws DbException {
-      /*  JanusGraphDb.BasicClient client = dbConnectionState.client();
-        try {
+    public void executeOperation(LdbcUpdate7AddComment operation, JanusGraphDb.RemoteDBConnectionState dbConnectionState, ResultReporter
+            reporter) throws DbException {
 
-            Map<String, Object> props = new HashMap<>(5);
-            props.put("creationDate", operation.creationDate().getTime());
-            props.put("locationIP", operation.locationIp());
-            props.put("browserUsed", operation.browserUsed());
-            props.put("content", operation.content());
-            props.put("length", operation.length());
-            Vertex comment = client.addVertex(operation.commentId(), "Comment", props);
-            Map<String, Object> eProps = new HashMap<>(0);
-            Vertex person = client.getVertex(operation.authorPersonId(), "Person");
-            client.addEdge(comment, person, "hasCreator", eProps);
-            Vertex country = client.getVertex(operation.countryId(), "Place");
-            client.addEdge(comment, country, "isLocatedIn", eProps);
+        StandardJanusGraph graph = dbConnectionState.getGraph();
+        JanusGraphTransaction transaction = graph.newThreadBoundTransaction();
 
-            if (operation.replyToCommentId() != -1) {
-                Vertex replyTo = client.getVertex(operation.replyToCommentId(), "Comment");
-                client.addEdge(comment, replyTo, "replyOf", eProps);
-            }
+        Vertex commentVertex = transaction.addVertex("Comment");
 
-            if (operation.replyToPostId() != -1) {
-                Vertex replyTo = client.getVertex(operation.replyToPostId(), "Post");
-                client.addEdge(comment, replyTo, "replyOf", eProps);
-            }
+        commentVertex.property("Comment.id",operation.commentId());
+        commentVertex.property("creationDate",operation.creationDate().getTime());
+        commentVertex.property("locationIP", operation.locationIp());
+        commentVertex.property("browserUsed",operation.browserUsed());
+        commentVertex.property("content",operation.content());
+        commentVertex.property("length", operation.length());
 
-            for (Long tagID : operation.tagIds()) {
-                Vertex tagV = client.getVertex(tagID, "Tag");
-                client.addEdge(comment, tagV, "hasTag", eProps);
-            }
+        Vertex creatorVertex = transaction.traversal().V().has("Person.id", operation.authorPersonId()).next();
+        commentVertex.addEdge("hasCreator",creatorVertex);
 
-        } catch (SchemaViolationException e) {
-            logger.error("invalid vertex label requested by query update");
-            e.printStackTrace();
+        Vertex countryVertex = transaction.traversal().V().has("Place.id", operation.countryId()).next();
+        commentVertex.addEdge("isLocatedIn",countryVertex);
+
+        Vertex repliedVertex = null;
+        if(operation.replyToPostId() != -1) {
+            repliedVertex = transaction.traversal().V().has("Post.id", operation.replyToPostId()).next();
+        } else {
+            repliedVertex = transaction.traversal().V().has("Comment.id", operation.replyToCommentId()).next();
         }
 
-        try {
-            client.commit();
-        } catch (TitanException e) {
-            logger.error("Couldn't complete U7 handler, db didn't commit");
-            reporter.report(-1, LdbcNoResult.INSTANCE,operation);
-            e.printStackTrace();
-            return;
+        commentVertex.addEdge("replyOf", repliedVertex);
+
+        for(Long tagId : operation.tagIds()) {
+            Vertex tagVertex = transaction.traversal().V().has("Tag.id", tagId).next();
+            commentVertex.addEdge("hasTag",tagVertex);
         }
+
+        transaction.commit();
+
         reporter.report(0, LdbcNoResult.INSTANCE,operation);
-        */
     }
 }

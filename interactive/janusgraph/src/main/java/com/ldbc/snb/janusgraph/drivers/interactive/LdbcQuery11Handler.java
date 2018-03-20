@@ -16,11 +16,12 @@ import java.util.*;
  * Persons, the Company they worked at, and the year they started working at that Company. Sort results
  * ascending by the start date, then ascending by Person identifier, and lastly by Organization name descending.
  */
-public class LdbcQuery11Handler implements OperationHandler<LdbcQuery11,JanusGraphDb.BasicDbConnectionState> {
+public class LdbcQuery11Handler implements OperationHandler<LdbcQuery11,JanusGraphDb.RemoteDBConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQuery11Handler.class);
 
     @Override
-    public void executeOperation(final LdbcQuery11 operation, JanusGraphDb.BasicDbConnectionState dbConnectionState, ResultReporter resultReporter) throws DbException {
+    public void executeOperation(final LdbcQuery11 operation, JanusGraphDb.RemoteDBConnectionState dbConnectionState, ResultReporter
+            resultReporter) throws DbException {
        /* long person_id = operation.personId();
         String countryName = operation.countryName();
         int year = operation.workFromYear();

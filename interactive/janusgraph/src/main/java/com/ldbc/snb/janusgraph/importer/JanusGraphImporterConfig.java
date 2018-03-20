@@ -16,7 +16,7 @@ public class JanusGraphImporterConfig {
     @Parameter(names = {"--dataset", "-d"}, description = "The path of to the dataset to load")
     private String dataset;
 
-    @Parameter(names = {"--backend-config", "-c"}, description = "The path of to the backend config file")
+    @Parameter(names = {"--backend-config", "-c"}, description = "The path to the backend config file")
     private String backendConfigFile;
 
     public int getNumThreads() {

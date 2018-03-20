@@ -78,7 +78,7 @@ public class EdgeLoadingTask extends LoadingTask {
 
         Class[] classes = new Class[header.length];
         for (int i = 0; i < header.length; i++) {
-            classes[i] = schema.getEPropertyClass(edgeLabel, header[i]);
+            classes[i] = schema.getPropertyClass(header[i]);
         }
 
         // Obtaining parsers for the fields and property names
@@ -91,7 +91,11 @@ public class EdgeLoadingTask extends LoadingTask {
         propertyNames[1] = header[1];
         for (int i = 2; i < header.length; ++i) {
             parsers[i] = Parsers.getParser(classes[i]);
-            propertyNames[i] = edgeLabel + "." + header[i];
+            if(header[i].compareTo("id") == 0) {
+                propertyNames[i] = edgeLabel + "." + header[i];
+            } else {
+                propertyNames[i] = header[i];
+            }
         }
         transaction = graph.newThreadBoundTransaction();
     }
@@ -101,10 +105,10 @@ public class EdgeLoadingTask extends LoadingTask {
         Object idTail = parsers[0].apply(row[0]);
         Object idHead = parsers[1].apply(row[1]);
 
-        Vertex tail = lastVertexTailId == (Long)(idTail) ? lastVertexTail : transaction.traversal().V().hasLabel(edgeTail).has(propertyNames[0],idTail).next();
+        Vertex tail = lastVertexTailId == (Long)(idTail) ? lastVertexTail : transaction.traversal().V().has(propertyNames[0],idTail).next();
         lastVertexTail = tail;
         lastVertexTailId = (Long)idTail;
-        Vertex head = lastVertexHeadId == (Long)(idHead) ? lastVertexHead : transaction.traversal().V().hasLabel(edgeHead).has(propertyNames[1],idHead).next();
+        Vertex head = lastVertexHeadId == (Long)(idHead) ? lastVertexHead : transaction.traversal().V().has(propertyNames[1],idHead).next();
         lastVertexHead = head;
         lastVertexHeadId = (Long)idHead;
         Edge edge = tail.addEdge(edgeLabel,head);

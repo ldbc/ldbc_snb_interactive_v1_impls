@@ -18,11 +18,12 @@ import java.util.*;
  * which joined that particular Forum after the given date. Sort results descending by the count of Posts, and
  * then ascending by Forum identifier
  */
-public class LdbcQuery5Handler implements OperationHandler<LdbcQuery5,JanusGraphDb.BasicDbConnectionState> {
+public class LdbcQuery5Handler implements OperationHandler<LdbcQuery5,JanusGraphDb.RemoteDBConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcQuery5Handler.class);
 
     @Override
-    public void executeOperation(final LdbcQuery5 operation, JanusGraphDb.BasicDbConnectionState dbConnectionState, ResultReporter resultReporter) throws DbException {
+    public void executeOperation(final LdbcQuery5 operation, JanusGraphDb.RemoteDBConnectionState dbConnectionState, ResultReporter
+            resultReporter) throws DbException {
       /*  long person_id = operation.personId();
         final long join_date = operation.minDate().getTime();
         final int limit = operation.limit();

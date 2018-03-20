@@ -5,12 +5,18 @@ import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery3PersonFriends;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery3PersonFriendsResult;
+import org.apache.tinkerpop.gremlin.driver.Result;
+import org.apache.tinkerpop.gremlin.driver.ResultSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.naming.directory.SchemaViolationException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.ldbc.snb.janusgraph.drivers.interactive.QueryUtils.CODE_OK;
 
 /**
  * Implementation of LDBC Interactive workload short query 3
@@ -18,49 +24,42 @@ import java.util.List;
  Order results descending by friendship creation date, then ascending by friend identifier
  * Created by Tomer Sagi on 10-Mar-15.
  */
-public class LdbcShortQuery3Handler implements OperationHandler<LdbcShortQuery3PersonFriends,JanusGraphDb.BasicDbConnectionState> {
+public class LdbcShortQuery3Handler implements OperationHandler<LdbcShortQuery3PersonFriends,JanusGraphDb.RemoteDBConnectionState> {
     final static Logger logger = LoggerFactory.getLogger(LdbcShortQuery3Handler.class);
 
     @Override
-    public void executeOperation(final LdbcShortQuery3PersonFriends operation, JanusGraphDb.BasicDbConnectionState dbConnectionState, ResultReporter resultReporter) throws DbException {
-     /*   List<LdbcShortQuery3PersonFriendsResult> result = new ArrayList<>();
-        long person_id = operation.personId();
-        JanusGraphDb.BasicClient client = dbConnectionState.client();
-        final Vertex root;
+    public void executeOperation(final LdbcShortQuery3PersonFriends operation, JanusGraphDb.RemoteDBConnectionState dbConnectionState,
+                                 ResultReporter resultReporter) throws DbException {
+
+        Map<String,Object> parameters = new HashMap<String,Object>();
+        parameters.put("$id",operation.personId());
+
+        String query = "g.V().has('Person.id',$id)" +
+                ".match(__.as('x').out('knows').valueMap('firstName', 'lastName','Person.id').as('friend'), " +
+                       "__.as('x').outE('knows').valueMap('creationDate').as('friendship'))" +
+                ".select('friend','friendship')\n";
+
         try {
-            root = client.getVertex(person_id, "Person");
-            logger.debug("Short Query 3 called on person id: {}", person_id);
-            GremlinPipeline<Vertex, Vertex> gp = new GremlinPipeline<>(root);
-            Iterable<Row> qResult = gp.outE("knows").as("knowEdge").inV().as("friend").select()
-                    .order(new PipeFunction<Pair<Row, Row>, Integer>() {
-                        @Override
-                        public Integer compute(Pair<Row, Row> argument) {
-                            long d1 = ((Edge) argument.getA().getColumn("knowEdge")).getProperty("creationDate");
-                            long d2 = ((Edge) argument.getB().getColumn("knowEdge")).getProperty("creationDate");
-                            if (d1 == d2)
-                                return Long.compare((Long) ((Vertex) argument.getA().getColumn("friend")).getId(), (Long) ((Vertex) argument.getB().getColumn("friend")).getId());
-                            else
-                                return Long.compare(d2, d1);
-                        }
-                    });
+            ResultSet resultSet = dbConnectionState.runQuery(query, parameters);
+            ArrayList<LdbcShortQuery3PersonFriendsResult> results = new ArrayList<LdbcShortQuery3PersonFriendsResult>();
+            for (Result r : resultSet) {
+                Map<String,List<Object>> map = (Map<String,List<Object>>)r.getObject();
+                Map<String,List<Object>> friend = (Map<String,List<Object>>)map.get("friend");
+                Map<String,Object> friendship = (Map<String,Object>)map.get("friendship");
+                Long messageId = 0L;
+                LdbcShortQuery3PersonFriendsResult ldbcResult = new LdbcShortQuery3PersonFriendsResult(
+                        (Long)friend.get("Person.id").get(0),
+                        (String)friend.get("firstName").get(0),
+                        (String)friend.get("lastName").get(0),
+                        (Long)(friendship.get("creationDate")));
 
-            for (Row r : qResult) {
-                Vertex friend = (Vertex) r.getColumn("friend");
-                Edge knowsE = (Edge) r.getColumn("knowEdge");
-
-                LdbcShortQuery3PersonFriendsResult res = new LdbcShortQuery3PersonFriendsResult(
-                        client.getVLocalId((Long) friend.getId()),
-                        (String) friend.getProperty("firstName"), (String) friend.getProperty("lastName"),
-                        (Long) knowsE.getProperty("creationDate"));
-
-                result.add(res);
+                results.add(ldbcResult);
             }
-            resultReporter.report(result.size(), result, operation);
-        } catch (SchemaViolationException e) {
-        e.printStackTrace();
-        resultReporter.report(-1, null, operation);
-    }
-    */
+            resultReporter.report(CODE_OK, results, operation);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
 
     }
 

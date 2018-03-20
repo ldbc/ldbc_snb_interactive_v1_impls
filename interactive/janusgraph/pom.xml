@@ -39,9 +39,14 @@
             <version>1.48</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.tinkerpop</groupId>
+            <artifactId>gremlin-driver</artifactId>
+            <version>3.2.6</version>
+        </dependency>
+        <dependency>
             <groupId>org.janusgraph</groupId>
             <artifactId>janusgraph-core</artifactId>
-            <version>0.1.1</version>
+            <version>0.2.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -56,7 +61,7 @@
         <dependency>
             <groupId>org.janusgraph</groupId>
             <artifactId>janusgraph-lucene</artifactId>
-            <version>0.1.1</version>
+            <version>0.2.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -71,7 +76,7 @@
         <dependency>
             <groupId>org.janusgraph</groupId>
             <artifactId>janusgraph-es</artifactId>
-            <version>0.1.1</version>
+            <version>0.2.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -86,7 +91,7 @@
         <dependency>
             <groupId>org.janusgraph</groupId>
             <artifactId>janusgraph-berkeleyje</artifactId>
-            <version>0.1.1</version>
+            <version>0.2.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
@@ -101,7 +106,7 @@
         <dependency>
             <groupId>org.janusgraph</groupId>
             <artifactId>janusgraph-cassandra</artifactId>
-            <version>0.1.1</version>
+            <version>0.2.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
