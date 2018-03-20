@@ -38,6 +38,5 @@ public class LdbcQueryU3Handler implements OperationHandler<LdbcUpdate3AddCommen
         transaction.commit();
 
         reporter.report(0, LdbcNoResult.INSTANCE,operation);
-
     }
 }

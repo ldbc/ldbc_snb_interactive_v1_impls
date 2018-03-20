@@ -83,6 +83,7 @@ public class JanusGraphImporter {
             }
         }
 
+        logger.info("Creating edge labels");
         //Create Vertex Property Labels
         Set<Class<?>> allowed = new HashSet<>(Arrays.asList(VALID_CLASSES));
         for (String v : s.getVertexProperties().keySet()) {

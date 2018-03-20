@@ -3,24 +3,16 @@ package com.ldbc.snb.janusgraph.drivers.interactive;
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
-import com.ldbc.driver.sparksee.workloads.ldbc.snb.interactive.db.LDBCppQueryTranslator;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1Result;
 import org.apache.tinkerpop.gremlin.driver.Result;
 import org.apache.tinkerpop.gremlin.driver.ResultSet;
-import org.apache.tinkerpop.gremlin.structure.Vertex;
-import org.janusgraph.core.JanusGraphTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.naming.directory.SchemaViolationException;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import static com.ldbc.snb.janusgraph.drivers.interactive.QueryUtils.ALL_MATCH;
 import static com.ldbc.snb.janusgraph.drivers.interactive.QueryUtils.CODE_OK;
-import static com.ldbc.snb.janusgraph.drivers.interactive.QueryUtils.LIST_MATCH;
 
 /**
  * Implementation of LDBC Interactive workload query 1

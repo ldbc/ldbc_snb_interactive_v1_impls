@@ -10,7 +10,6 @@ import org.apache.tinkerpop.gremlin.driver.ResultSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.naming.directory.SchemaViolationException;
 import java.util.*;
 
 import static com.ldbc.snb.janusgraph.drivers.interactive.QueryUtils.CODE_OK;

@@ -1,9 +1,7 @@
 package com.ldbc.snb.janusgraph.drivers.interactive;
 
-import com.ldbc.driver.*;
 import com.ldbc.driver.control.LoggingService;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.tinkerpop.gremlin.driver.Client;
 import org.apache.tinkerpop.gremlin.structure.io.gryo.GryoMapper;
 import org.janusgraph.core.JanusGraphFactory;
@@ -12,11 +10,16 @@ import org.janusgraph.graphdb.tinkerpop.JanusGraphIoRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
 import java.util.Map;
 
 import org.apache.tinkerpop.gremlin.driver.*;
 import org.apache.tinkerpop.gremlin.driver.ser.GryoMessageSerializerV1d0;
+
+import com.ldbc.driver.Db;
+import com.ldbc.driver.DbConnectionState;
+import com.ldbc.driver.DbException;
+
+import java.io.IOException;
 
 /**
  * @author Tomer Sagi

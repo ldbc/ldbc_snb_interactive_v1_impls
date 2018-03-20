@@ -68,7 +68,5 @@ public class LdbcShortQuery6Handler implements OperationHandler<LdbcShortQuery6M
             e.printStackTrace();
             System.exit(1);
         }
-
     }
-
 }

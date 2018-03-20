@@ -135,16 +135,11 @@ public class InteractiveWorkloadSchema implements WorkLoadSchema {
         return pClassMap.get(propertyName);
     }
 
-
     @Override
     public Map<String, String> getEFileMap() {
         return eFileMap;
     }
 
-//    @Override
-//    public Map<String, String> getVFileMap() {
-//        return vFileMap;
-//    }
 
     @Override
     public Map<String, String> getVPFileMap() {

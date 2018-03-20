@@ -10,8 +10,6 @@ import org.apache.tinkerpop.gremlin.driver.ResultSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.naming.directory.SchemaViolationException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +55,6 @@ public class LdbcShortQuery4Handler implements OperationHandler<LdbcShortQuery4M
             e.printStackTrace();
             System.exit(1);
         }
-
     }
 
 }
