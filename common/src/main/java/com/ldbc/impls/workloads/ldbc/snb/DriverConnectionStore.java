@@ -5,8 +5,8 @@ import com.ldbc.impls.workloads.ldbc.snb.bi.BiQueryStore;
 
 import java.util.Map;
 
-public abstract class DriverConnectionStore<TBiQueryStore extends BiQueryStore>
-		extends DbConnectionState {
+public abstract class DriverConnectionStore<TBiQueryStore extends BiQueryStore> extends DbConnectionState {
+
 	private TBiQueryStore queryStore;
 	private boolean printNames;
 	private boolean printStrings;

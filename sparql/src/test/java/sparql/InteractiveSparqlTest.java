@@ -1,22 +1,22 @@
 package sparql;
 
 import com.ldbc.driver.DbException;
-import com.ldbc.impls.workloads.ldbc.snb.bi.test.LdbcSnbBiQueryTest;
-import com.ldbc.impls.workloads.ldbc.snb.sparql.bi.SparqlBiDb;
+import com.ldbc.impls.workloads.ldbc.snb.interactive.InteractiveTest;
+import com.ldbc.impls.workloads.ldbc.snb.sparql.interactive.SparqlInteractiveDb;
 import org.junit.Ignore;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Ignore
-public class LdbcSnbBiSparqlTest extends LdbcSnbBiQueryTest {
+public class InteractiveSparqlTest extends InteractiveTest {
 
 	private static String endpoint = "http://localhost:5820/";
-	private static String databaseName = "ldbcsf01";
+	private static String databaseName = "ldbcsf1";
 	private static String queryDir = "queries/";
 
-	public LdbcSnbBiSparqlTest() throws DbException {
-		super(new SparqlBiDb());
+	public InteractiveSparqlTest() throws DbException {
+		super(new SparqlInteractiveDb());
 	}
 
 	@Override
@@ -25,8 +25,8 @@ public class LdbcSnbBiSparqlTest extends LdbcSnbBiQueryTest {
 		properties.put("endpoint", endpoint);
 		properties.put("databaseName", databaseName);
 		properties.put("queryDir", queryDir);
-		properties.put("printQueryNames", "true");
-		properties.put("printQueryStrings", "false");
+		properties.put("printQueryNames", "false");
+		properties.put("printQueryStrings", "true");
 		properties.put("printQueryResults", "false");
 		return properties;
 	}

@@ -1,20 +1,20 @@
 package cypher;
 
 import com.ldbc.driver.DbException;
-import com.ldbc.impls.workloads.ldbc.snb.bi.test.LdbcSnbBiQueryTest;
+import com.ldbc.impls.workloads.ldbc.snb.bi.BiTest;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.bi.CypherBiDb;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class LdbcSnbBiCypherTest extends LdbcSnbBiQueryTest {
+public class BiCypherTest extends BiTest {
 
 	private final String endpoint = "bolt://localhost:7687";
 	private final String user = "neo4j";
 	private final String password = "admin";
 	private final String queryDir = "queries-opencypher/";
 
-	public LdbcSnbBiCypherTest() throws DbException {
+	public BiCypherTest() throws DbException {
 		super(new CypherBiDb());
 	}
 

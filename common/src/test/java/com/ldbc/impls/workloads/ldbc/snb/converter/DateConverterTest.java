@@ -1,4 +1,4 @@
-package com.ldbc.impls.workloads.ldbc.snb.util;
+package com.ldbc.impls.workloads.ldbc.snb.converter;
 
 import org.junit.Assert;
 import org.junit.Test;

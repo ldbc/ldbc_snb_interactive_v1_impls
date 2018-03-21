@@ -1,4 +1,4 @@
-package com.ldbc.impls.workloads.ldbc.snb.util;
+package com.ldbc.impls.workloads.ldbc.snb.converter;
 
 import java.sql.Date;
 import java.text.ParseException;
@@ -24,6 +24,7 @@ public class SparqlConverter extends Converter {
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         return "\""+sdf.format(new Date(timestamp))+"\"";
     }
+
     @Override
     public String convertDate(long timestamp) {
         SimpleDateFormat sdf = new SimpleDateFormat(SPARQL_DATE_QUERY_FORMAT);

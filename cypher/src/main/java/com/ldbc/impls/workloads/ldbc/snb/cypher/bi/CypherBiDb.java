@@ -58,7 +58,7 @@ import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherDriverConnectionStore;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherListOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherPoolingDbConnectionStore;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherSingletonOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.util.CypherConverter;
+import com.ldbc.impls.workloads.ldbc.snb.converter.CypherConverter;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Values;
 

@@ -5,8 +5,8 @@ import com.google.common.collect.ImmutableMap;
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery16ExpertsInSocialCircle;
 import com.ldbc.impls.workloads.ldbc.snb.bi.BiQueryStore;
-import com.ldbc.impls.workloads.ldbc.snb.util.Converter;
-import com.ldbc.impls.workloads.ldbc.snb.util.SparqlConverter;
+import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
+import com.ldbc.impls.workloads.ldbc.snb.converter.SparqlConverter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +24,10 @@ public class SparqlBiQueryStore extends BiQueryStore {
 	}
 
 	@Override
-	protected String prepare(QueryType queryType, Map<String, String> paramaterSubstitutions) {
-		String query = queries.get(queryType);
-		for (String parameter : queryType.parameters) {
-			query = query.replace("$" + parameter, paramaterSubstitutions.get(parameter));
+	protected String prepare(BiQuery biQuery, Map<String, String> parameterSubstitutions) {
+		String query = queries.get(biQuery);
+		for (String parameter : biQuery.getParameters()) {
+			query = query.replace("$" + parameter, parameterSubstitutions.get(parameter));
 		}
 		return query;
 	}
@@ -125,7 +125,7 @@ public class SparqlBiQueryStore extends BiQueryStore {
 		Joiner joiner = Joiner.on(" UNION ");
 		String knowsTrails = joiner.join(knowsTrailFragments);
 
-		return prepare(QueryType.Query16, new ImmutableMap.Builder<String, String>()
+		return prepare(BiQuery.Query16, new ImmutableMap.Builder<String, String>()
 				.put("personId", Long.toString(operation.personId()))
 				.put("country", getConverter().convertString(operation.country()))
 				.put("tagClass", getConverter().convertString(operation.tagClass()))

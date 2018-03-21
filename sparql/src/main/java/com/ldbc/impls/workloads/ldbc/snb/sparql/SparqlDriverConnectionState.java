@@ -7,7 +7,7 @@ import org.openrdf.repository.Repository;
 
 import java.util.Map;
 
-public abstract class SparqlDriverConnectionStore<DbQueryStore> extends DbConnectionState {
+public abstract class SparqlDriverConnectionState<DbQueryStore> extends DbConnectionState {
 	private DbQueryStore queryStore;
 	private final boolean printNames;
 	private final boolean printStrings;
@@ -16,7 +16,7 @@ public abstract class SparqlDriverConnectionStore<DbQueryStore> extends DbConnec
 	private final String databaseName;
 	private final Repository repository;
 
-	public SparqlDriverConnectionStore(Map<String, String> properties, DbQueryStore store) {
+	public SparqlDriverConnectionState(Map<String, String> properties, DbQueryStore store) {
 		super();
 
 		printNames = Boolean.valueOf(properties.get("printQueryNames"));
@@ -41,10 +41,11 @@ public abstract class SparqlDriverConnectionStore<DbQueryStore> extends DbConnec
 
 	public final void logQuery(String queryType, String query) {
 		if (printNames) {
-			System.out.println("########### " + queryType);
+			System.out.println("#" + queryType);
 		}
 		if (printStrings) {
-			System.out.println(query);
+			System.out.print(query.replaceAll("\\n", " "));
+			System.out.println("#" + queryType);
 		}
 	}
 
