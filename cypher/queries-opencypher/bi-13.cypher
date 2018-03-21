@@ -22,7 +22,7 @@ WITH
 RETURN
   year,
   month,
-  popularTags[0..5]] AS topPopularTags
+  popularTags[0..5] AS topPopularTags
 ORDER BY
   year DESC,
   month ASC
