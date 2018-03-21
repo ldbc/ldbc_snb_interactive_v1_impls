@@ -41,7 +41,7 @@ public abstract class JdbcListOperationHandler<OperationType extends Operation<L
 			stmt.close();
 			conn.close();
 		} catch (SQLException e) {
-			throw new DbException(queryString+e);
+			throw new DbException(queryString + " " + e);
 		} catch (Exception e) {
 			throw new DbException(e);
 		}

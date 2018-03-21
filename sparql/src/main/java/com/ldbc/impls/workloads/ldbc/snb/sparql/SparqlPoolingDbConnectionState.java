@@ -5,9 +5,9 @@ import com.ldbc.impls.workloads.ldbc.snb.sparql.bi.SparqlBiQueryStore;
 import java.io.IOException;
 import java.util.Map;
 
-public class SparqlPoolingDbConnectionStore extends SparqlDriverConnectionStore {
+public class SparqlPoolingDbConnectionState extends SparqlDriverConnectionState {
 
-	public SparqlPoolingDbConnectionStore(Map<String, String> properties, SparqlBiQueryStore store) {
+	public SparqlPoolingDbConnectionState(Map<String, String> properties, SparqlBiQueryStore store) {
 		super(properties, store);
 
 		String endPoint = properties.get("endpoint");

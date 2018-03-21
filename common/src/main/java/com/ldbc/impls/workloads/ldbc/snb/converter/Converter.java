@@ -1,4 +1,4 @@
-package com.ldbc.impls.workloads.ldbc.snb.util;
+package com.ldbc.impls.workloads.ldbc.snb.converter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,16 +12,19 @@ public class Converter {
     final static String DATAGEN_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'+0000'";
 
     /**
-     * Converts epoch seconds to a date to the same format as produced by DATAGEN
-     * {@value #DATAGEN_FORMAT} and surrounds it in single quotes.
+     * Converts epoch seconds to a date to the format of the converter (e.g. PostgreSQL-style timestamps).
      *
      * @param timestamp
      * @return
      */
     public String convertDateTime(long timestamp) {
+        return convertDateTime(new Date(timestamp));
+    }
+
+    public String convertDateTime(Date date) {
         final SimpleDateFormat sdf = new SimpleDateFormat(DATAGEN_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return "'"+sdf.format(new Date(timestamp))+"'";
+        return "'"+sdf.format(date)+"'";
     }
 
     public String convertDate(long timestamp) {

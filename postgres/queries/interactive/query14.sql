@@ -1,19 +1,19 @@
 WITH start_node(v) AS (
-	SELECT	--1--	::bigint
+	SELECT :Person1
 )
 select * from (
-	WITH RECURSIVE 
+	WITH RECURSIVE
 	search_graph(link, depth, path) AS (
 	        (SELECT v::bigint, 0, ARRAY[]::bigint[][] from start_node)
 	      UNION ALL
 	        (WITH sg(link,depth) as (select * from search_graph)
 	        SELECT distinct k_person2id, x.depth + 1,path || ARRAY[[x.link, k_person2id]]
 	        FROM knows, sg x
-	        WHERE x.link = k_person1id and not exists(select * from sg y where y.link=--2--	::bigint) and not exists( select * from sg y where y.link=k_person2id)
+	        WHERE x.link = k_person1id and not exists(select * from sg y where y.link = :Person2) and not exists( select * from sg y where y.link=k_person2id)
 	        )
 	),
 	paths(pid,path) AS (
-		SELECT row_number() OVER (), path FROM search_graph where link=--2--	::bigint
+		SELECT row_number() OVER (), path FROM search_graph where link = :Person2 
 	),
 	edges(id,e) AS (
 		SELECT pid, array_agg(path[d1][d2])
@@ -40,5 +40,5 @@ select * from (
 	weightedpaths(path,score) as (
 		select path, coalesce(sum(score),0) from paths, edges left outer join weights on we=e where pid=id group by id,path
 	)
-	select path,score from weightedpaths order by score desc) 
+	select path,score from weightedpaths order by score desc)
 x  order by score desc;

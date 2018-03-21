@@ -1,23 +1,18 @@
-package com.ldbc.impls.workloads.ldbc.snb.util;
+package com.ldbc.impls.workloads.ldbc.snb.converter;
 
-import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 public class PostgresConverter extends Converter {
 
-    /**
-     * Converts epoch seconds to PostgreSQL timestamps.
-     * @param timestamp
-     * @return
-     */
     @Override
-    public String convertDateTime(long timestamp) {
+    public String convertDateTime(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return "'"+sdf.format(new Date(timestamp))+"'::timestamp";
+        return "'"+sdf.format(date)+"'::timestamp";
     }
 
     public String convertString(String value) {

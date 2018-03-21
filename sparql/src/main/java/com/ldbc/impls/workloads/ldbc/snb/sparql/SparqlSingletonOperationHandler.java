@@ -9,10 +9,10 @@ import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
 
 public abstract class SparqlSingletonOperationHandler<OperationType extends Operation<OperationResult>, OperationResult, QueryStore>
-	implements OperationHandler<OperationType, SparqlDriverConnectionStore<QueryStore>> {
+	implements OperationHandler<OperationType, SparqlDriverConnectionState<QueryStore>> {
 
 	@Override
-	public void executeOperation(OperationType operation, SparqlDriverConnectionStore<QueryStore> state,
+	public void executeOperation(OperationType operation, SparqlDriverConnectionState<QueryStore> state,
 		ResultReporter resultReporter) throws DbException {
 		try {
 			OperationResult tuple = null;
@@ -29,10 +29,8 @@ public abstract class SparqlSingletonOperationHandler<OperationType extends Oper
 				resultCount++;
 
 				tuple = convertSingleResult(bs);
-				if (state.isPrintResults()) {
-					System.out.println(tuple.toString());
-				}
 			}
+			queryResults.close();
 
 			resultReporter.report(resultCount, tuple, operation);
 		} catch (Exception e) {
@@ -40,6 +38,6 @@ public abstract class SparqlSingletonOperationHandler<OperationType extends Oper
 		}
 	}
 
-	public abstract String getQueryString(SparqlDriverConnectionStore<QueryStore> state, OperationType operation);
+	public abstract String getQueryString(SparqlDriverConnectionState<QueryStore> state, OperationType operation);
 	public abstract OperationResult convertSingleResult(BindingSet bs);
 }

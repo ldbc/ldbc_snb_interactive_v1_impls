@@ -1,8 +1,9 @@
-package com.ldbc.impls.workloads.ldbc.snb;
+package com.ldbc.impls.workloads.ldbc.snb.db;
 
 import com.ldbc.driver.Db;
 import com.ldbc.driver.DbConnectionState;
 import com.ldbc.driver.DbException;
+import com.ldbc.impls.workloads.ldbc.snb.DriverConnectionStore;
 import com.ldbc.impls.workloads.ldbc.snb.bi.BiQueryStore;
 
 import java.io.IOException;

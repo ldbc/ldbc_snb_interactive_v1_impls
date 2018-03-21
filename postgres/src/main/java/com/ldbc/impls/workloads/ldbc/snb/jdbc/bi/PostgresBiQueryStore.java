@@ -2,8 +2,8 @@ package com.ldbc.impls.workloads.ldbc.snb.jdbc.bi;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.impls.workloads.ldbc.snb.bi.BiQueryStore;
-import com.ldbc.impls.workloads.ldbc.snb.util.Converter;
-import com.ldbc.impls.workloads.ldbc.snb.util.PostgresConverter;
+import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
+import com.ldbc.impls.workloads.ldbc.snb.converter.PostgresConverter;
 
 import java.util.Map;
 
@@ -19,10 +19,10 @@ public class PostgresBiQueryStore extends BiQueryStore {
 	}
 
 	@Override
-	protected String prepare(QueryType queryType, Map<String, String> paramaterSubstitutions) {
-		String query = queries.get(queryType);
-		for (String parameter : queryType.parameters) {
-			query = query.replace(":" + parameter, paramaterSubstitutions.get(parameter));
+	protected String prepare(BiQuery biQuery, Map<String, String> parameterSubstitutions) {
+		String query = queries.get(biQuery);
+		for (String parameter : biQuery.getParameters()) {
+			query = query.replace(":" + parameter, parameterSubstitutions.get(parameter));
 		}
 		return query;
 	}

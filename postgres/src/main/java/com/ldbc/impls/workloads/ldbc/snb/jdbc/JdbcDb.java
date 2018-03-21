@@ -2,7 +2,7 @@ package com.ldbc.impls.workloads.ldbc.snb.jdbc;
 
 import com.ldbc.driver.DbConnectionState;
 import com.ldbc.driver.DbException;
-import com.ldbc.impls.workloads.ldbc.snb.SnbDb;
+import com.ldbc.impls.workloads.ldbc.snb.db.SnbDb;
 
 import java.io.IOException;
 import java.sql.Array;

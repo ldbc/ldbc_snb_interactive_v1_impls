@@ -2,7 +2,7 @@ package com.ldbc.impls.workloads.ldbc.snb.cypher;
 
 import com.ldbc.driver.DbConnectionState;
 import com.ldbc.driver.DbException;
-import com.ldbc.impls.workloads.ldbc.snb.SnbDb;
+import com.ldbc.impls.workloads.ldbc.snb.db.SnbDb;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.bi.CypherBiQueryStore;
 
 import java.io.IOException;
