@@ -1,0 +1,15 @@
+sparql select ?tagname count (*) as ?cnt #Q4
+where {
+    ?post a snvoc:Post . ?post snvoc:hasCreator ?fr .
+    ?post snvoc:hasTag ?tag . ?tag foaf:name ?tagname .
+    ?post snvoc:creationDate ?date . sn:pers%Person% snvoc:knows ?fr .
+    filter (?date >= "%Date0%"^^xsd:dateTime && ?date <= "%Date0%"^^xsd:dateTime + xsd:duration("P%Duration%D")) .
+    filter (!exists {
+        sn:pers%Person% snvoc:knows ?fr2 . ?post2 snvoc:hasCreator ?fr2 .
+	?post2 a snvoc:Post . ?post2 snvoc:hasTag ?tag .
+        ?post2 snvoc:creationDate ?date2 .
+	filter (?date2 < "%Date0%"^^xsd:dateTime)}) 
+    }
+group by ?tagname
+order by desc(?cnt) ?tagname
+limit 10

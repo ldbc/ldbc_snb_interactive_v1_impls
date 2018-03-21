@@ -1,22 +1,22 @@
 package sparql;
 
 import com.ldbc.driver.DbException;
-import com.ldbc.impls.workloads.ldbc.snb.bi.BiTest;
-import com.ldbc.impls.workloads.ldbc.snb.sparql.bi.SparqlBiDb;
+import com.ldbc.impls.workloads.ldbc.snb.interactive.InteractiveTest;
+import com.ldbc.impls.workloads.ldbc.snb.sparql.interactive.SparqlInteractiveDb;
 import org.junit.Ignore;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Ignore
-public class BiSparqlTest extends BiTest {
+public class SparqlInteractiveTest extends InteractiveTest {
 
 	private static String endpoint = "http://localhost:5820/";
 	private static String databaseName = "ldbcsf1";
 	private static String queryDir = "queries/";
 
-	public BiSparqlTest() throws DbException {
-		super(new SparqlBiDb());
+	public SparqlInteractiveTest() throws DbException {
+		super(new SparqlInteractiveDb());
 	}
 
 	@Override

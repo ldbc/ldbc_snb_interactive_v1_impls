@@ -1,9 +1,10 @@
 package com.ldbc.impls.workloads.ldbc.snb.sparql;
 
+import com.google.common.collect.ImmutableList;
 import com.ldbc.driver.DbConnectionState;
+import com.ldbc.impls.workloads.ldbc.snb.converter.SparqlConverter;
 import com.ldbc.impls.workloads.ldbc.snb.db.SnbDb;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.bi.SparqlBiQueryStore;
-import com.ldbc.impls.workloads.ldbc.snb.converter.SparqlConverter;
 import org.openrdf.model.Literal;
 import org.openrdf.query.BindingSet;
 
@@ -64,5 +65,22 @@ public abstract class SparqlDb extends SnbDb<SparqlBiQueryStore> {
 		}
 		return bs.getBinding(name).getValue().stringValue();
 	}
+
+	public static Iterable<String> convertStringList(BindingSet bs, String name) {
+//		if (bs.getBinding(name) == null) {
+//			return "";
+//		}
+//		return bs.getBinding(name).getValue().stringValue();
+		return ImmutableList.of();
+	}
+
+	public static Iterable<Long> convertLongList(BindingSet bs, String name) {
+//		if (bs.getBinding(name) == null) {
+//			return "";
+//		}
+//		return bs.getBinding(name).getValue().stringValue();
+		return ImmutableList.of();
+	}
+
 
 }

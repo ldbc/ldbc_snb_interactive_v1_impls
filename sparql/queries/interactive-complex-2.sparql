@@ -1,0 +1,12 @@
+sparql select ?fr ?first ?last ?post ?content #Q2
+              (?date - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?creationDate
+where {
+  sn:pers%Person% snvoc:knows ?fr.
+  ?fr snvoc:firstName ?first. ?fr snvoc:lastName ?last .
+  ?post snvoc:hasCreator ?fr.
+  { {?post snvoc:content ?content } union { ?post snvoc:imageFile ?content }} .
+  ?post snvoc:creationDate ?date.
+  filter (?date <= "%Date0%"^^xsd:dateTime).
+}
+order by desc(?creationDate) ?post
+limit 20

@@ -10,7 +10,7 @@ import java.util.Map;
 public class SparqlInteractiveQueryStore extends InteractiveQueryStore {
 
 	public SparqlInteractiveQueryStore(String path) throws DbException {
-		super(path, "interactive-", ".sparql");
+		super(path, "interactive-complex-", ".sparql");
 	}
 
 	@Override

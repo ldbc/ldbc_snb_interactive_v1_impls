@@ -1,0 +1,21 @@
+sparql select (count(*) - 1) as ?distance #Q13
+where
+  {
+    {
+      select ?s ?o
+      where
+        {
+          ?s snvoc:knows ?o.
+        }
+    }
+    option ( transitive,
+             t_distinct,
+             t_in(?s),
+             t_out(?o),
+             t_shortest_only,
+             t_direction 3,
+             t_step ('path_id') as ?path_no) .
+    filter ( ?s = sn:pers%Person1% ).
+    filter ( ?o = sn:pers%Person2% ).
+    filter (?path_no = 0).
+  }

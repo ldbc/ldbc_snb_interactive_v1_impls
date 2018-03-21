@@ -1,0 +1,15 @@
+sparql select ?tagname count(*) as ?cnt #Q6
+where {  
+    {  select distinct ?fr
+       where {
+           {sn:pers%Person% snvoc:knows ?fr.} union {sn:pers%Person% snvoc:knows ?fr2. ?fr2 snvoc:knows ?fr. filter (?fr != sn:pers%Person%)}
+       }
+    } .
+    ?post a snvoc:Post . ?post snvoc:hasCreator ?fr .
+    ?post snvoc:hasTag ?tag1 . ?tag1 foaf:name '%Tag%' .
+    ?post snvoc:hasTag ?tag  . ?tag foaf:name ?tagname .
+    filter (?tagname != '%Tag%') .
+}
+group by ?tagname
+order by desc(?cnt) ?tagname
+limit 10

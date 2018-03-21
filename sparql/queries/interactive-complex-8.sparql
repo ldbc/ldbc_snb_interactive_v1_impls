@@ -1,0 +1,17 @@
+sparql select ?from ?first ?last  #Q8
+              (?dt - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?creationDate
+	      ?rep ?content
+where {
+  { select ?rep ?dt
+    where {
+        ?post snvoc:hasCreator sn:pers%Person% .
+        ?rep snvoc:replyOf ?post . ?rep snvoc:creationDate ?dt .
+    }
+    order by desc (?dt)
+    limit 20
+  } .
+  ?rep snvoc:hasCreator ?from .
+  ?from snvoc:firstName ?first . ?from snvoc:lastName ?last .
+  ?rep snvoc:content ?content.
+}
+order by desc(?creationDate) ?rep
