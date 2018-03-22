@@ -30,11 +30,11 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery9;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery9Result;
-import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcDb;
-import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcDbConnectionStore;
-import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcListOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcPoolingDbConnectionStore;
-import com.ldbc.impls.workloads.ldbc.snb.jdbc.JdbcSingletonOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.jdbc.PostgresDb;
+import com.ldbc.impls.workloads.ldbc.snb.jdbc.PostgresDbConnectionState;
+import com.ldbc.impls.workloads.ldbc.snb.jdbc.PostgresListOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.jdbc.PostgresPoolingDbConnectionState;
+import com.ldbc.impls.workloads.ldbc.snb.jdbc.PostgresSingletonOperationHandler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -42,12 +42,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore> {
+public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQueryStore> {
 	
 	@Override
 	protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
 		try {
-			dbs = new JdbcPoolingDbConnectionStore<>(properties, new PostgresInteractiveQueryStore(properties.get("queryDir")));
+			dbs = new PostgresPoolingDbConnectionState<>(properties, new PostgresInteractiveQueryStore(properties.get("queryDir")));
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new DbException(e);
 		}
@@ -83,10 +83,10 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 //		registerOperationHandler(LdbcUpdate8AddFriendship.class, Update8AddFriendship.class);
 	}
 
-	public static class Query1 extends JdbcListOperationHandler<LdbcQuery1, LdbcQuery1Result, PostgresInteractiveQueryStore> {
+	public static class Query1 extends PostgresListOperationHandler<LdbcQuery1, LdbcQuery1Result, PostgresInteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcQuery1 operation) {
+		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery1 operation) {
 			return state.getQueryStore().getQuery1(operation);
 		}
 
@@ -95,34 +95,33 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 			LdbcQuery1Result qr = new LdbcQuery1Result(
 					result.getLong(1),
 					result.getString(2),
-					result.getInt(13),
-					stringTimestampToEpoch(result, 3),
+					result.getInt(3),
 					stringTimestampToEpoch(result, 4),
-					result.getString(5),
+					stringTimestampToEpoch(result, 5),
 					result.getString(6),
 					result.getString(7),
-					arrayToStringArray(result, 8),
+					result.getString(8),
 					arrayToStringArray(result, 9),
-					result.getString(10),
-					convertLists(arrayToObjectArray(result, 11)),
-					convertLists(arrayToObjectArray(result, 12)));
+					arrayToStringArray(result, 10),
+					result.getString(11),
+					convertLists(arrayToObjectArray(result, 12)),
+					convertLists(arrayToObjectArray(result, 13)));
 			return qr;
 		}
 
 		@SuppressWarnings("unchecked")
 		public Iterable<List<Object>> convertLists(Iterable<List<Object>> arr) {
-			Iterable<List<Object>> better_arr = (Iterable<List<Object>>)(Object)arr;
-			for (List<Object> entry : better_arr) {
-				entry.set(1, Integer.parseInt((String)entry.get(1)));
+			for (List<Object> entry : arr) {
+				entry.set(1, Integer.parseInt((String) entry.get(1)));
 			}
-			return (Iterable<List<Object>>) (Object)better_arr;
+			return arr;
 		}
 	}
 
-	public static class Query2 extends JdbcListOperationHandler<LdbcQuery2, LdbcQuery2Result, PostgresInteractiveQueryStore> {
+	public static class Query2 extends PostgresListOperationHandler<LdbcQuery2, LdbcQuery2Result, PostgresInteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcQuery2 operation) {
+		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery2 operation) {
 			return state.getQueryStore().getQuery2(operation);
 		}
 
@@ -139,10 +138,10 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 
 	}
 
-	public static class Query3 extends JdbcListOperationHandler<LdbcQuery3, LdbcQuery3Result, PostgresInteractiveQueryStore> {
+	public static class Query3 extends PostgresListOperationHandler<LdbcQuery3, LdbcQuery3Result, PostgresInteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcQuery3 operation) {
+		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery3 operation) {
 			return state.getQueryStore().getQuery3(operation);
 		}
 
@@ -159,10 +158,10 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 
 	}
 
-	public static class Query4 extends JdbcListOperationHandler<LdbcQuery4, LdbcQuery4Result, PostgresInteractiveQueryStore> {
+	public static class Query4 extends PostgresListOperationHandler<LdbcQuery4, LdbcQuery4Result, PostgresInteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcQuery4 operation) {
+		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery4 operation) {
 			return state.getQueryStore().getQuery4(operation);
 		}
 
@@ -175,10 +174,10 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 
 	}
 
-	public static class Query5 extends JdbcListOperationHandler<LdbcQuery5, LdbcQuery5Result, PostgresInteractiveQueryStore> {
+	public static class Query5 extends PostgresListOperationHandler<LdbcQuery5, LdbcQuery5Result, PostgresInteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcQuery5 operation) {
+		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery5 operation) {
 			return state.getQueryStore().getQuery5(operation);
 		}
 
@@ -191,10 +190,10 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 
 	}
 
-	public static class Query6 extends JdbcListOperationHandler<LdbcQuery6, LdbcQuery6Result, PostgresInteractiveQueryStore> {
+	public static class Query6 extends PostgresListOperationHandler<LdbcQuery6, LdbcQuery6Result, PostgresInteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcQuery6 operation) {
+		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery6 operation) {
 			return state.getQueryStore().getQuery6(operation);
 		}
 
@@ -207,16 +206,15 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 
 	}
 
-	public static class Query7 extends JdbcListOperationHandler<LdbcQuery7, LdbcQuery7Result, PostgresInteractiveQueryStore> {
+	public static class Query7 extends PostgresListOperationHandler<LdbcQuery7, LdbcQuery7Result, PostgresInteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcQuery7 operation) {
+		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery7 operation) {
 			return state.getQueryStore().getQuery7(operation);
 		}
 
 		@Override
 		public LdbcQuery7Result convertSingleResult(ResultSet result) throws SQLException {
-			// STUB
 			return new LdbcQuery7Result(
 					result.getLong(1),
 					result.getString(2),
@@ -225,16 +223,15 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 					result.getLong(5),
 					result.getString(6),
 					result.getInt(7),
-					result.getBoolean(8)
-					);
+					result.getBoolean(8));
 		}
 
 	}
 
-	public static class Query8 extends JdbcListOperationHandler<LdbcQuery8, LdbcQuery8Result, PostgresInteractiveQueryStore> {
+	public static class Query8 extends PostgresListOperationHandler<LdbcQuery8, LdbcQuery8Result, PostgresInteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcQuery8 operation) {
+		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery8 operation) {
 			return state.getQueryStore().getQuery8(operation);
 		}
 
@@ -251,10 +248,10 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 
 	}
 
-	public static class Query9 extends JdbcListOperationHandler<LdbcQuery9, LdbcQuery9Result, PostgresInteractiveQueryStore> {
+	public static class Query9 extends PostgresListOperationHandler<LdbcQuery9, LdbcQuery9Result, PostgresInteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcQuery9 operation) {
+		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery9 operation) {
 			return state.getQueryStore().getQuery9(operation);
 		}
 
@@ -271,10 +268,10 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 
 	}
 
-	public static class Query10 extends JdbcListOperationHandler<LdbcQuery10, LdbcQuery10Result, PostgresInteractiveQueryStore> {
+	public static class Query10 extends PostgresListOperationHandler<LdbcQuery10, LdbcQuery10Result, PostgresInteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcQuery10 operation) {
+		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery10 operation) {
 			return state.getQueryStore().getQuery10(operation);
 		}
 
@@ -291,10 +288,10 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 
 	}
 
-	public static class Query11 extends JdbcListOperationHandler<LdbcQuery11, LdbcQuery11Result, PostgresInteractiveQueryStore> {
+	public static class Query11 extends PostgresListOperationHandler<LdbcQuery11, LdbcQuery11Result, PostgresInteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcQuery11 operation) {
+		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery11 operation) {
 			return state.getQueryStore().getQuery11(operation);
 		}
 
@@ -310,10 +307,10 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 
 	}
 
-	public static class Query12 extends JdbcListOperationHandler<LdbcQuery12, LdbcQuery12Result, PostgresInteractiveQueryStore> {
+	public static class Query12 extends PostgresListOperationHandler<LdbcQuery12, LdbcQuery12Result, PostgresInteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcQuery12 operation) {
+		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery12 operation) {
 			return state.getQueryStore().getQuery12(operation);
 		}
 
@@ -329,10 +326,10 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 
 	}
 
-	public static class Query13 extends JdbcSingletonOperationHandler<LdbcQuery13, LdbcQuery13Result, PostgresInteractiveQueryStore> {
+	public static class Query13 extends PostgresSingletonOperationHandler<LdbcQuery13, LdbcQuery13Result, PostgresInteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcQuery13 operation) {
+		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery13 operation) {
 			return state.getQueryStore().getQuery13(operation);
 		}
 
@@ -343,10 +340,10 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 
 	}
 
-	public static class Query14 extends JdbcListOperationHandler<LdbcQuery14, LdbcQuery14Result, PostgresInteractiveQueryStore> {
+	public static class Query14 extends PostgresListOperationHandler<LdbcQuery14, LdbcQuery14Result, PostgresInteractiveQueryStore> {
 
 		@Override
-		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcQuery14 operation) {
+		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery14 operation) {
 			return state.getQueryStore().getQuery14(operation);
 		}
 
@@ -359,11 +356,11 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 
 		public Iterable<Long> convertLists(Iterable<List<Object>> arr) {
 			List<Long> new_arr = new ArrayList<>();
-			List<ArrayList<Object>> better_arr = (ArrayList<ArrayList<Object>>)(Object)arr;
-			for (ArrayList<Object> entry : better_arr) {
+			List<List<Object>> better_arr = (List<List<Object>>) arr;
+			for (List<Object> entry : better_arr) {
 				new_arr.add((Long)entry.get(0));
 			}
-			new_arr.add((Long)better_arr.get(better_arr.size()-1).get(1));
+			new_arr.add((Long)better_arr.get(better_arr.size() - 1).get(1));
 			return new_arr;
 		}
 
@@ -372,7 +369,7 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 //	public static class ShortQuery1PersonProfile extends JdbcPreparedSingletonOperationHandler<LdbcShortQuery1PersonProfile, LdbcShortQuery1PersonProfileResult, PostgresInteractiveQueryStore> {
 //
 //		@Override
-//		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcShortQuery1PersonProfile operation) {
+//		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery1PersonProfile operation) {
 //			return state.getQueryStore().getShortQuery1PersonProfile(operation);
 //		}
 //
@@ -391,10 +388,10 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 //
 //	}
 //
-//	public static class ShortQuery2PersonPosts extends JdbcListOperationHandler<LdbcShortQuery2PersonPosts, LdbcShortQuery2PersonPostsResult, PostgresInteractiveQueryStore> {
+//	public static class ShortQuery2PersonPosts extends PostgresListOperationHandler<LdbcShortQuery2PersonPosts, LdbcShortQuery2PersonPostsResult, PostgresInteractiveQueryStore> {
 //
 //		@Override
-//		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcShortQuery2PersonPosts operation) {
+//		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery2PersonPosts operation) {
 //			return state.getQueryStore().getShortQuery2PersonPosts(operation);
 //		}
 //
@@ -412,10 +409,10 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 //
 //	}
 //
-//	public static class ShortQuery3PersonFriends extends JdbcListOperationHandler<LdbcShortQuery3PersonFriends, LdbcShortQuery3PersonFriendsResult, PostgresInteractiveQueryStore> {
+//	public static class ShortQuery3PersonFriends extends PostgresListOperationHandler<LdbcShortQuery3PersonFriends, LdbcShortQuery3PersonFriendsResult, PostgresInteractiveQueryStore> {
 //
 //		@Override
-//		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcShortQuery3PersonFriends operation) {
+//		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery3PersonFriends operation) {
 //			return state.getQueryStore().getShortQuery3PersonFriends(operation);
 //		}
 //
@@ -433,7 +430,7 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 //	public static class ShortQuery4MessageContent extends JdbcPreparedSingletonOperationHandler<LdbcShortQuery4MessageContent, LdbcShortQuery4MessageContentResult, PostgresInteractiveQueryStore> {
 //
 //		@Override
-//		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcShortQuery4MessageContent operation) {
+//		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery4MessageContent operation) {
 //			return state.getQueryStore().getShortQuery4MessageContent(operation);
 //		}
 //
@@ -449,7 +446,7 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 //	public static class ShortQuery5MessageCreator extends JdbcPreparedSingletonOperationHandler<LdbcShortQuery5MessageCreator, LdbcShortQuery5MessageCreatorResult, PostgresInteractiveQueryStore> {
 //
 //		@Override
-//		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcShortQuery5MessageCreator operation) {
+//		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery5MessageCreator operation) {
 //			return state.getQueryStore().getShortQuery5MessageCreator(operation);
 //		}
 //
@@ -466,7 +463,7 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 //	public static class ShortQuery6MessageForum extends JdbcPreparedSingletonOperationHandler<LdbcShortQuery6MessageForum, LdbcShortQuery6MessageForumResult, PostgresInteractiveQueryStore> {
 //
 //		@Override
-//		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcShortQuery6MessageForum operation) {
+//		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery6MessageForum operation) {
 //			return state.getQueryStore().getShortQuery6MessageForum(operation);
 //		}
 //
@@ -482,10 +479,10 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 //
 //	}
 //
-//	public static class ShortQuery7MessageReplies extends JdbcListOperationHandler<LdbcShortQuery7MessageReplies, LdbcShortQuery7MessageRepliesResult, PostgresInteractiveQueryStore> {
+//	public static class ShortQuery7MessageReplies extends PostgresListOperationHandler<LdbcShortQuery7MessageReplies, LdbcShortQuery7MessageRepliesResult, PostgresInteractiveQueryStore> {
 //
 //		@Override
-//		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcShortQuery7MessageReplies operation) {
+//		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery7MessageReplies operation) {
 //			return state.getQueryStore().getShortQuery7MessageReplies(operation);
 //		}
 //
@@ -506,7 +503,7 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 //	public static class Update1AddPerson extends JdbcPreparedMultipleUpdateOperationHandler<LdbcUpdate1AddPerson, LdbcNoResult, PostgresInteractiveQueryStore> {
 //
 //		@Override
-//		public List<PreparedStatement> getStatements(Connection con, JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcUpdate1AddPerson operation) throws SQLException {
+//		public List<PreparedStatement> getStatements(Connection con, PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate1AddPerson operation) throws SQLException {
 //			return state.getQueryStore().getUpdate1AddPerson(operation);
 //		}
 //	}
@@ -514,7 +511,7 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 //	public static class Update2AddPostLike extends JdbcPreparedUpdateOperationHandler<LdbcUpdate2AddPostLike, LdbcNoResult, PostgresInteractiveQueryStore> {
 //
 //		@Override
-//		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcUpdate2AddPostLike operation) {
+//		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate2AddPostLike operation) {
 //			return state.getQueryStore().getUpdate2AddPostLike(operation);
 //		}
 //
@@ -523,7 +520,7 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 //	public static class Update3AddCommentLike extends JdbcPreparedUpdateOperationHandler<LdbcUpdate3AddCommentLike, LdbcNoResult, PostgresInteractiveQueryStore> {
 //
 //		@Override
-//		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcUpdate3AddCommentLike operation) {
+//		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate3AddCommentLike operation) {
 //			return state.getQueryStore().getUpdate3AddCommentLike(operation);
 //		}
 //	}
@@ -531,7 +528,7 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 //	public static class Update4AddForum extends JdbcPreparedMultipleUpdateOperationHandler<LdbcUpdate4AddForum, LdbcNoResult, PostgresInteractiveQueryStore> {
 //
 //		@Override
-//		public List<PreparedStatement> getStatements(Connection con, JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcUpdate4AddForum operation) throws SQLException {
+//		public List<PreparedStatement> getStatements(Connection con, PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate4AddForum operation) throws SQLException {
 //			return state.getQueryStore().getUpdate4AddForum(operation);
 //		}
 //	}
@@ -539,7 +536,7 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 //	public static class Update5AddForumMembership extends JdbcPreparedUpdateOperationHandler<LdbcUpdate5AddForumMembership, LdbcNoResult, PostgresInteractiveQueryStore> {
 //
 //		@Override
-//		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcUpdate5AddForumMembership operation) {
+//		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate5AddForumMembership operation) {
 //			return state.getQueryStore().getUpdate5AddForumMembership(operation);
 //		}
 //	}
@@ -547,7 +544,7 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 //	public static class Update6AddPost extends JdbcPreparedMultipleUpdateOperationHandler<LdbcUpdate6AddPost, LdbcNoResult, PostgresInteractiveQueryStore> {
 //
 //		@Override
-//		public List<PreparedStatement> getStatements(Connection con, JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcUpdate6AddPost operation) throws SQLException {
+//		public List<PreparedStatement> getStatements(Connection con, PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate6AddPost operation) throws SQLException {
 //			return state.getQueryStore().getUpdate6AddPost(operation, con);
 //		}
 //	}
@@ -555,7 +552,7 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 //	public static class Update7AddComment extends JdbcPreparedMultipleUpdateOperationHandler<LdbcUpdate7AddComment, LdbcNoResult, PostgresInteractiveQueryStore> {
 //
 //		@Override
-//		public List<PreparedStatement> getStatements(Connection con, JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcUpdate7AddComment operation) throws SQLException {
+//		public List<PreparedStatement> getStatements(Connection con, PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate7AddComment operation) throws SQLException {
 //			return state.getQueryStore().getUpdate7AddComment(operation, con);
 //		}
 //
@@ -564,7 +561,7 @@ public class PostgresInteractiveDb extends JdbcDb<PostgresInteractiveQueryStore>
 //	public static class Update8AddFriendship extends JdbcPreparedUpdateOperationHandler<LdbcUpdate8AddFriendship, LdbcNoResult, PostgresInteractiveQueryStore> {
 //
 //		@Override
-//		public String getQueryString(JdbcDbConnectionStore<PostgresInteractiveQueryStore> state, LdbcUpdate8AddFriendship operation) {
+//		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate8AddFriendship operation) {
 //			return state.getQueryStore().getUpdate8AddFriendship(operation);
 //		}
 //

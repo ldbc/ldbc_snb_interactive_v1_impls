@@ -10,6 +10,7 @@ import org.openrdf.query.BindingSet;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -82,5 +83,8 @@ public abstract class SparqlDb extends SnbDb<SparqlBiQueryStore> {
 		return ImmutableList.of();
 	}
 
+	public static Iterable<List<Object>> convertSisList(BindingSet bs, String name) {
+		return ImmutableList.of();
+	}
 
 }

@@ -44,8 +44,9 @@ public abstract class SparqlDriverConnectionState<DbQueryStore> extends DbConnec
 			System.out.println("#" + queryType);
 		}
 		if (printStrings) {
-			System.out.print(query.replaceAll("\\n", " "));
-			System.out.println("#" + queryType);
+			System.out.print(query);
+			//System.out.print(query.replaceAll("\\n", " "));
+			//System.out.println("#" + queryType);
 		}
 	}
 

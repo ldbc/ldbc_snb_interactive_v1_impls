@@ -3,14 +3,14 @@ package com.ldbc.impls.workloads.ldbc.snb.db;
 import com.ldbc.driver.Db;
 import com.ldbc.driver.DbConnectionState;
 import com.ldbc.driver.DbException;
-import com.ldbc.impls.workloads.ldbc.snb.DriverConnectionStore;
-import com.ldbc.impls.workloads.ldbc.snb.bi.BiQueryStore;
+import com.ldbc.impls.workloads.ldbc.snb.DriverConnectionState;
+import com.ldbc.impls.workloads.ldbc.snb.SnbQueryStore;
 
 import java.io.IOException;
 
-public abstract class SnbDb<TBiQueryStore extends BiQueryStore> extends Db {
+public abstract class SnbDb<TSnbQueryStore extends SnbQueryStore> extends Db {
 	
-	protected DriverConnectionStore<TBiQueryStore> dbs;
+	protected DriverConnectionState<TSnbQueryStore> dbs;
 
 	@Override
 	protected void onClose() throws IOException {

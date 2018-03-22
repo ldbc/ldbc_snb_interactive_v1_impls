@@ -27,8 +27,10 @@ public abstract class SparqlSingletonOperationHandler<OperationType extends Oper
 			if (queryResults.hasNext()) {
 				final BindingSet bs = queryResults.next();
 				resultCount++;
-
 				tuple = convertSingleResult(bs);
+				if (state.isPrintResults()) {
+					System.out.println(tuple);
+				}
 			}
 			queryResults.close();
 

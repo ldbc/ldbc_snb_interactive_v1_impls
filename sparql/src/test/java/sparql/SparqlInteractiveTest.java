@@ -25,9 +25,9 @@ public class SparqlInteractiveTest extends InteractiveTest {
 		properties.put("endpoint", endpoint);
 		properties.put("databaseName", databaseName);
 		properties.put("queryDir", queryDir);
-		properties.put("printQueryNames", "false");
+		properties.put("printQueryNames", "true");
 		properties.put("printQueryStrings", "true");
-		properties.put("printQueryResults", "false");
+		properties.put("printQueryResults", "true");
 		return properties;
 	}
 

@@ -1,18 +1,17 @@
 package com.ldbc.impls.workloads.ldbc.snb;
 
 import com.ldbc.driver.DbConnectionState;
-import com.ldbc.impls.workloads.ldbc.snb.bi.BiQueryStore;
 
 import java.util.Map;
 
-public abstract class DriverConnectionStore<TBiQueryStore extends BiQueryStore> extends DbConnectionState {
+public abstract class DriverConnectionState<TSnbQueryStore extends SnbQueryStore> extends DbConnectionState {
 
-	private TBiQueryStore queryStore;
+	private TSnbQueryStore queryStore;
 	private boolean printNames;
 	private boolean printStrings;
 	private boolean printResults;
 
-	public DriverConnectionStore(Map<String, String> properties, TBiQueryStore store) {
+	public DriverConnectionState(Map<String, String> properties, TSnbQueryStore store) {
 		super();
 		
 		queryStore = store;
@@ -21,7 +20,7 @@ public abstract class DriverConnectionStore<TBiQueryStore extends BiQueryStore> 
 		printResults = Boolean.valueOf(properties.get("printQueryResults"));
 	}
 
-	public final TBiQueryStore getQueryStore() {
+	public final TSnbQueryStore getQueryStore() {
 		return queryStore;
 	}
 

@@ -1,5 +1,5 @@
-sparql select ?fr ?first ?last ?ct1 ?ct2 (?ct1 + ?ct2) as ?sum #Q3
-where { 
+select ?fr ?first ?last ?ct1 ?ct2 (?ct1 + ?ct2) as ?sum #Q3
+where {
     {select distinct ?fr ?first ?last
         (((select count (*)
         where {

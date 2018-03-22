@@ -2,6 +2,7 @@ package com.ldbc.impls.workloads.ldbc.snb.jdbc;
 
 import com.ldbc.driver.DbConnectionState;
 import com.ldbc.driver.DbException;
+import com.ldbc.impls.workloads.ldbc.snb.SnbQueryStore;
 import com.ldbc.impls.workloads.ldbc.snb.db.SnbDb;
 
 import java.io.IOException;
@@ -14,9 +15,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
-public abstract class JdbcDb<DbQueryStore> extends SnbDb {
+public abstract class PostgresDb<DbQueryStore extends SnbQueryStore> extends SnbDb {
 	
-	protected JdbcDbConnectionStore<DbQueryStore> dbs;
+	protected PostgresDbConnectionState<DbQueryStore> dbs;
 
 	@Override
 	protected final void onClose() throws IOException {

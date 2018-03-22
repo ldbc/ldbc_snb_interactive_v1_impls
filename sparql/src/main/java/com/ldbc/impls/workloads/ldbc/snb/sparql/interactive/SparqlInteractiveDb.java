@@ -91,6 +91,7 @@ public class SparqlInteractiveDb extends SparqlDb {
 		public LdbcQuery1Result convertSingleResult(BindingSet bs) throws ParseException {
 			long friendId                    = convertLong      (bs, "personId");
 			String friendLastName            = convertString    (bs, "friendLastName");
+			int distanceFromPerson           = convertInteger   (bs, "distanceFromPerson");
 			long friendBirthday              = convertDate      (bs, "friendBirthDay");
 			long friendCreationDate          = convertDate      (bs, "friendCreationDate");
 			String friendGender              = convertString    (bs, "friendGender");
@@ -99,13 +100,13 @@ public class SparqlInteractiveDb extends SparqlDb {
 			Iterable<String> friendEmails    = convertStringList(bs, "friendEmails");
 			Iterable<String> friendLanguages = convertStringList(bs, "friendLanguages");
 			String friendCityName            = convertString    (bs, "friendCityName");
-			Iterable<List<Object>> friendUniversities = null;
-			Iterable<List<Object>> friendCompanies    = null;
+			Iterable<List<Object>> friendUniversities = convertSisList(bs, "friendUniversities");
+			Iterable<List<Object>> friendCompanies    = convertSisList(bs, "friendCompanies");
 
 			return new LdbcQuery1Result(
 					friendId,
 					friendLastName,
-					0,
+					distanceFromPerson,
 					friendBirthday,
 					friendCreationDate,
 					friendGender,
@@ -117,6 +118,7 @@ public class SparqlInteractiveDb extends SparqlDb {
 					friendUniversities,
 					friendCompanies);
 		}
+
 
 	}
 
