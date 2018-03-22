@@ -53,7 +53,7 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopics;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopicsResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForums;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForumsResult;
-import com.ldbc.impls.workloads.ldbc.snb.converter.CypherConverter;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.converter.CypherConverter;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherDb;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherDriverConnectionState;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherListOperationHandler;

@@ -66,9 +66,14 @@ mvn clean install -DskipTests
 4. For each implementation, it is possible to (1) generate validation parameters, (2) validate against an existing validation parameters, and (3) run the benchmark. Set the parameters according to your system configuration in the appropriate `.properties` file and run the driver with one of the following scripts:
 
    ```bash
-   ./create-validation-parameters.sh
-   ./validate.sh
-   ./benchmark.sh
+   # BI workload
+   ./bi-create-validation-parameters.sh
+   ./bi-validate.sh
+   ./bi-benchmark.sh
+   # Interactive workload
+   ./interactive-create-validation-parameters.sh
+   ./interactive-validate.sh
+   ./interactive-benchmark.sh
    ```
 
 For more details, on validating and benchmarking, visit the [driver wiki](https://github.com/ldbc/ldbc_snb_driver/wiki).

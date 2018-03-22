@@ -2,8 +2,8 @@ package com.ldbc.impls.workloads.ldbc.snb.cypher.bi;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.impls.workloads.ldbc.snb.bi.BiQueryStore;
-import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
-import com.ldbc.impls.workloads.ldbc.snb.converter.CypherConverter;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.converter.Converter;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.converter.CypherConverter;
 
 import java.util.Map;
 

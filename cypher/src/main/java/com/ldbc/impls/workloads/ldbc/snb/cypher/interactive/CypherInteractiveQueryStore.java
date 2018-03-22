@@ -1,8 +1,8 @@
 package com.ldbc.impls.workloads.ldbc.snb.cypher.interactive;
 
 import com.ldbc.driver.DbException;
-import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
-import com.ldbc.impls.workloads.ldbc.snb.converter.CypherConverter;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.converter.Converter;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.converter.CypherConverter;
 import com.ldbc.impls.workloads.ldbc.snb.interactive.InteractiveQueryStore;
 
 import java.util.Map;
