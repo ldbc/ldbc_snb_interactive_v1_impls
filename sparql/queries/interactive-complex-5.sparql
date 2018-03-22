@@ -1,7 +1,6 @@
 select
-    ?title
-    ?group
-    count(?post) as ?cnt
+    (?title AS ?forumTitle)
+    (count(?post) as ?postCount)
 where { 
     {select distinct ?fr
      where {

@@ -1,9 +1,10 @@
 select
-    ?from
-    ?first
-    ?last
-    (?dt - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?creationDate
-	?rep ?content
+    (?from AS ?personId)
+    (?first AS ?personFirstName)
+    (?last AS ?personLastName)
+    ((?dt - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?commentCreationDate)
+	(?rep AS ?commentId)
+	(?content AS ?commentContent)
 where {
   { select ?rep ?dt
     where {

@@ -1,12 +1,12 @@
 select
-    ?liker
-    ?first
-    ?last
-   (?max_ldt - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?max_ldate
-   (not exists { sn:pers%Person% snvoc:knows ?liker} as ?is_new)
-   ?post
-   ?content
-   (?max_ldt - ?dt)/60 AS ?lag
+    (?liker AS ?personId)
+    (?first AS ?personFirstName)
+    (?last AS ?personLastName)
+    (?max_ldt AS ?likeCreationDate)
+    (?post AS ?commentOrPostId)
+    (?content AS ?commentOrPostContent)
+    ((?max_ldt - ?dt)/60 AS ?minutesLatency)
+    (not exists { sn:pers%Person% snvoc:knows ?liker} as ?isNew)
 where {
   {{
     select ?liker, (max(?ldt) as ?max_ldt)

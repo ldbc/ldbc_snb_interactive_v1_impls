@@ -1,26 +1,27 @@
 select
-    ?fr
-    ?last
-    min(?dist) as ?mindist
-    (?bday - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?birthday
-    (?since - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?creationDate
-    ?gen
-    ?browser
-    ?locationIP
-    ((select group_concat (?email, ", ")
+    (?fr AS ?friendId)
+    (?last AS ?friendLastName)
+    (min(?dist) AS ?distanceFromPerson)
+    (?bday AS ?friendBirthday)
+    (?since AS ?friendCreationDate)
+    (?gen AS ?friendGender)
+    (?browser AS ?friendBrowserUsed)
+    (?locationIP AS ?friendLocationIp)
+    (((select group_concat (?email, ", ")
       where {
             ?frr snvoc:email ?email .
             filter (?frr = ?fr) .
       }
-      group by ?frr)) as ?email
-    ((select group_concat (?lng, ", ")
+      group by ?frr)) AS ?friendEmails)
+    (((select group_concat (?lng, ", ")
       where {
             ?frr snvoc:speaks ?lng .
             filter (?frr = ?fr) .
       }
-      group by ?frr)) as ?lng
-    ?based
-    ((select group_concat ( bif:concat (?o_name, " ", ?year, " ", ?o_country), ", ")
+      group by ?frr)) AS ?friendLanguages)
+    (?based AS ?friendCityName)
+    (
+      ((select group_concat ( bif:concat (?o_name, " ", ?year, " ", ?o_country), ", ")
       where {
             ?frr snvoc:studyAt ?w .
             ?w snvoc:classYear ?year .
@@ -30,8 +31,9 @@ select
             ?org foaf:name ?o_name .
             filter (?frr = ?fr) .
       }
-      group by ?frr)) as ?studyAt
-    ((select group_concat ( bif:concat (?o_name, " ", ?year, " ", ?o_country), ", ")
+      group by ?frr)) AS ?friendUniversities)
+    (
+      ((select group_concat ( bif:concat (?o_name, " ", ?year, " ", ?o_country), ", ")
       where {
             ?frr snvoc:workAt ?w .
             ?w snvoc:workFrom ?year .
@@ -41,7 +43,7 @@ select
             ?org foaf:name ?o_name .
             filter (?frr = ?fr) .
       }
-      group by ?frr)) as ?workAt
+      group by ?frr)) AS ?friendCompanies)
 {
     ?fr a snvoc:Person . ?fr snvoc:firstName "%Name%" . ?fr snvoc:lastName ?last .
     ?fr snvoc:birthday ?bday . ?fr snvoc:isLocatedIn ?basedURI . ?basedURI foaf:name ?based .

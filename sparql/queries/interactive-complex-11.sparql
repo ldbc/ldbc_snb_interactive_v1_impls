@@ -1,4 +1,9 @@
-select ?first ?last ?startdate ?orgname ?fr
+select
+    (?fr AS ?personId)
+    (?first AS ?personFirstName)
+    (?last AS ?personLastName)
+    (?orgname AS ?organizationWorkFromYear)
+    (?startdate AS ?organizationName)
 where {
     ?w snvoc:hasOrganisation ?org . ?org foaf:name ?orgname .
     ?org snvoc:isLocatedIn ?country.

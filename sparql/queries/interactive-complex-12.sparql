@@ -1,9 +1,9 @@
 select
-  ?exp
-  ?first
-  ?last
-  group_concat(distinct ?tagname, ', ') as ?tags
-  count (distinct ?reply) as ?cnt
+  (?exp AS ?personId)
+  (?first AS ?personFirstName)
+  (?last AS ?personLastName)
+  (group_concat(distinct ?tagname, ', ') AS ?tagNames)
+  (count(distinct ?reply) AS ?replyCount)
 where {
     sn:pers%Person% snvoc:knows ?exp .
     ?exp snvoc:firstName ?first . ?exp snvoc:lastName ?last .

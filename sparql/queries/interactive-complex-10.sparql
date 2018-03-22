@@ -1,21 +1,27 @@
-select ?first ?last
-    ((( select  count (distinct ?post)
+select
+    (?fof AS ?personId)
+    (?first AS ?personFirstName)
+    (?last AS ?personLastName)
+    (?gender AS ?personGender)
+    (?locationname AS ?personCityName)
+    (
+     (( select count(distinct ?post)
         where {
 	    ?post a snvoc:Post .
             ?post snvoc:hasCreator ?fof .
             ?post snvoc:hasTag ?tag .
             sn:pers%Person% snvoc:hasInterest ?tag
         }
-    ))
-    -
-    ((  select  count (distinct ?post)
+     ))
+     -
+     (( select  count (distinct ?post)
         where {
 	    ?post a snvoc:Post .
             ?post snvoc:hasCreator ?fof .
             filter (!exists {sn:pers%Person% snvoc:hasInterest ?tag. ?post snvoc:hasTag ?tag .})
         }
-    )) as ?score)
-    ?fof  ?gender ?locationname
+     )) AS ?commonInterestScore
+    )
 where {
    {select distinct ?fof
     where {

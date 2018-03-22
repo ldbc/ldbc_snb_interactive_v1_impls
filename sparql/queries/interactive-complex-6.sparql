@@ -1,6 +1,6 @@
 select
-    ?tagname
-    count(*) as ?cnt
+    (?tagname AS ?tagName)
+    (count(*) AS ?postCount)
 where {  
     {  select distinct ?fr
        where {

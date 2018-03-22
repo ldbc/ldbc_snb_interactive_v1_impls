@@ -1,10 +1,10 @@
 select
-    ?fr
-    ?first
-    ?last
-    ?ct1
-    ?ct2
-    (?ct1 + ?ct2) as ?sum
+    (?fr AS ?personId)
+    (?first AS ?personFirstName)
+    (?last AS ?personLastName)
+    (?ct1 AS ?xCount)
+    (?ct2 AS ?yCount)
+    ((?ct1 + ?ct2) AS ?count)
 where {
     {select distinct ?fr ?first ?last
         (((select count (*)

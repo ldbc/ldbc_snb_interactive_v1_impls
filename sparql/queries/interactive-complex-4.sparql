@@ -1,4 +1,6 @@
-select ?tagname count (*) as ?cnt
+select
+    (?tagname AS ?tagName)
+    (count(*) AS ?postCount)
 where {
     ?post a snvoc:Post . ?post snvoc:hasCreator ?fr .
     ?post snvoc:hasTag ?tag . ?tag foaf:name ?tagname .
