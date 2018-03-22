@@ -9,10 +9,14 @@ PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 SELECT
-  ?fr ?first ?last ?post ?content ?date
+  (?fr AS ?personId)
+  (?first AS ?personFirstName)
+  (?last AS ?personLastName)
+  (?post AS ?postOrCommentId)
+  (?content AS ?postOrCommentContent)
+  (?date AS ?postOrCommentCreationDate)
 WHERE {
   sn:pers$Person snvoc:knows/snvoc:hasPerson ?fr .
-  ?person snvoc:knows ?fr .
   ?fr snvoc:firstName ?first .
   ?fr snvoc:lastName ?last .
   ?post snvoc:hasCreator ?fr .

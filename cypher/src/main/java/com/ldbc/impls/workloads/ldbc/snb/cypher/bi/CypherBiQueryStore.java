@@ -20,11 +20,11 @@ public class CypherBiQueryStore extends BiQueryStore {
 
 	@Override
 	protected String prepare(BiQuery biQuery, Map<String, String> parameterSubstitutions) {
-		String query = queries.get(biQuery);
+		String querySpecification = queries.get(biQuery);
 		for (String parameter : biQuery.getParameters()) {
-			query = query.replace("$" + parameter, parameterSubstitutions.get(parameter));
+			querySpecification = querySpecification.replace("$" + parameter, parameterSubstitutions.get(parameter));
 		}
-		return query;
+		return querySpecification;
 	}
 
 }

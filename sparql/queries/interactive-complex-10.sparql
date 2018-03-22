@@ -1,4 +1,4 @@
-sparql select ?first ?last #Q10
+select ?first ?last
     ((( select  count (distinct ?post)
         where {
 	    ?post a snvoc:Post .

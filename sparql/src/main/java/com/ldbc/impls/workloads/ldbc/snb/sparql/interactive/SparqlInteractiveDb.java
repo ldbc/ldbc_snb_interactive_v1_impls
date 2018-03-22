@@ -89,19 +89,19 @@ public class SparqlInteractiveDb extends SparqlDb {
 
 		@Override
 		public LdbcQuery1Result convertSingleResult(BindingSet bs) throws ParseException {
-			long friendId                    = convertLong      (bs, "personId");
-			String friendLastName            = convertString    (bs, "friendLastName");
-			int distanceFromPerson           = convertInteger   (bs, "distanceFromPerson");
-			long friendBirthday              = convertDate      (bs, "friendBirthDay");
-			long friendCreationDate          = convertDate      (bs, "friendCreationDate");
-			String friendGender              = convertString    (bs, "friendGender");
-			String friendBrowserUsed         = convertString    (bs, "friendBrowserUsed");
-			String friendLocationIp          = convertString    (bs, "friendLocationIp");
-			Iterable<String> friendEmails    = convertStringList(bs, "friendEmails");
-			Iterable<String> friendLanguages = convertStringList(bs, "friendLanguages");
-			String friendCityName            = convertString    (bs, "friendCityName");
-			Iterable<List<Object>> friendUniversities = convertSisList(bs, "friendUniversities");
-			Iterable<List<Object>> friendCompanies    = convertSisList(bs, "friendCompanies");
+			long friendId                             = convertLong      (bs, "friendId");
+			String friendLastName                     = convertString    (bs, "friendLastName");
+			int distanceFromPerson                    = convertInteger   (bs, "distanceFromPerson");
+			long friendBirthday                       = convertDate      (bs, "friendBirthDay");
+			long friendCreationDate                   = convertDate      (bs, "friendCreationDate");
+			String friendGender                       = convertString    (bs, "friendGender");
+			String friendBrowserUsed                  = convertString    (bs, "friendBrowserUsed");
+			String friendLocationIp                   = convertString    (bs, "friendLocationIp");
+			Iterable<String> friendEmails             = convertStringList(bs, "friendEmails");
+			Iterable<String> friendLanguages          = convertStringList(bs, "friendLanguages");
+			String friendCityName                     = convertString    (bs, "friendCityName");
+			Iterable<List<Object>> friendUniversities = convertSisList   (bs, "friendUniversities");
+			Iterable<List<Object>> friendCompanies    = convertSisList   (bs, "friendCompanies");
 
 			return new LdbcQuery1Result(
 					friendId,
@@ -131,13 +131,13 @@ public class SparqlInteractiveDb extends SparqlDb {
 
 		@Override
 		public LdbcQuery2Result convertSingleResult(BindingSet bs) throws ParseException {
-			long personId            = convertLong   (bs, "personId"           );
-			String personFirstName   = convertString (bs, "personFirstName"    );
-			String personLastName    = convertString (bs, "personLastName"     );
-			long messageId           = convertLong   (bs, "messageId"          );
-			String messageContent    = convertString (bs, "messageContent"     );
-			long messageCreationDate = convertDate   (bs, "messageCreationDate");
-			return new LdbcQuery2Result(personId, personFirstName, personLastName, messageId, messageContent, messageCreationDate);
+			long personId                  = convertLong   (bs, "personId"                 );
+			String personFirstName         = convertString (bs, "personFirstName"          );
+			String personLastName          = convertString (bs, "personLastName"           );
+			long postOrCommentId           = convertLong   (bs, "postOrCommentId"          );
+			String postOrCommentContent    = convertString (bs, "postOrCommentContent"     );
+			long postOrCommentCreationDate = convertDate   (bs, "postOrCommentCreationDate");
+			return new LdbcQuery2Result(personId, personFirstName, personLastName, postOrCommentId, postOrCommentContent, postOrCommentCreationDate);
 		}
 
 	}
@@ -154,10 +154,10 @@ public class SparqlInteractiveDb extends SparqlDb {
 			long personId          = convertLong   (bs, "personId"       );
 			String personFirstName = convertString (bs, "personFirstName");
 			String personLastName  = convertString (bs, "personLastName" );
-			int countX             = convertInteger(bs, "countX"         );
-			int countY             = convertInteger(bs, "countY"         );
+			int xCount             = convertInteger(bs, "xCount"         );
+			int yCount             = convertInteger(bs, "yCount"         );
 			int count              = convertInteger(bs, "count"          );
-			return new LdbcQuery3Result(personId, personFirstName, personLastName, countX, countY, count);
+			return new LdbcQuery3Result(personId, personFirstName, personLastName, xCount, yCount, count);
 		}
 
 	}
@@ -174,8 +174,8 @@ public class SparqlInteractiveDb extends SparqlDb {
 		@Override
 		public LdbcQuery4Result convertSingleResult(BindingSet bs) {
 			String tagName = convertString (bs, "tagName");
-			int count      = convertInteger(bs, "count"  );
-			return new LdbcQuery4Result(tagName, count);
+			int postCount  = convertInteger(bs, "postCount"  );
+			return new LdbcQuery4Result(tagName, postCount);
 		}
 
 	}
@@ -191,8 +191,8 @@ public class SparqlInteractiveDb extends SparqlDb {
 		@Override
 		public LdbcQuery5Result convertSingleResult(BindingSet bs) {
 			String forumTitle = convertString (bs, "forumTitle");
-			int count         = convertInteger(bs, "count");
-			return new LdbcQuery5Result(forumTitle, count);
+			int postCount     = convertInteger(bs, "postCount");
+			return new LdbcQuery5Result(forumTitle, postCount);
 		}
 
 	}
@@ -207,9 +207,9 @@ public class SparqlInteractiveDb extends SparqlDb {
 
 		@Override
 		public LdbcQuery6Result convertSingleResult(BindingSet bs) {
-			String tagName = convertString (bs, "tagName");
-			int count      = convertInteger(bs, "count"  );
-			return new LdbcQuery6Result(tagName, count);
+			String tagName = convertString (bs, "tagName"  );
+			int postCount  = convertInteger(bs, "postCount");
+			return new LdbcQuery6Result(tagName, postCount);
 		}
 
 	}
@@ -223,15 +223,15 @@ public class SparqlInteractiveDb extends SparqlDb {
 
 		@Override
 		public LdbcQuery7Result convertSingleResult(BindingSet bs) throws ParseException {
-			long personId          = convertLong   (bs, "personId"        );
-			String personFirstName = convertString (bs, "personFirstName" );
-			String personLastName  = convertString (bs, "personLastName"  );
-			long likeCreationDate  = convertDate   (bs, "likeCreationDate");
-			long messageId         = convertLong   (bs, "messageId"       );
-			String messageContent  = convertString (bs, "messageContent"  );
-			int latency            = convertInteger(bs, "latency"         );
-			boolean isNew          = convertBoolean(bs, "isNew"           );
-			return new LdbcQuery7Result(personId, personFirstName, personLastName, likeCreationDate, messageId, messageContent, latency, isNew);
+			long personId               = convertLong   (bs, "personId"            );
+			String personFirstName      = convertString (bs, "personFirstName"     );
+			String personLastName       = convertString (bs, "personLastName"      );
+			long likeCreationDate       = convertDate   (bs, "likeCreationDate"    );
+			long commentOrPostId        = convertLong   (bs, "commentOrPostId"     );
+			String commentOrPostContent = convertString (bs, "commentOrPostContent");
+			int minutesLatency          = convertInteger(bs, "minutesLatency"      );
+			boolean isNew               = convertBoolean(bs, "isNew"               );
+			return new LdbcQuery7Result(personId, personFirstName, personLastName, likeCreationDate, commentOrPostId, commentOrPostContent, minutesLatency, isNew);
 		}
 
 	}
@@ -265,13 +265,13 @@ public class SparqlInteractiveDb extends SparqlDb {
 
 		@Override
 		public LdbcQuery9Result convertSingleResult(BindingSet bs) throws ParseException {
-			long personId            = convertLong   (bs, "personId"           );
-			String personFirstName   = convertString (bs, "personFirstName"    );
-			String personLastName    = convertString (bs, "personLastName"     );
-			long commentId           = convertDate   (bs, "commentId"          );
-			String commentContent    = convertString (bs, "commentContent"     );
-			long commentCreationDate = convertDate   (bs, "commentCreationDate");
-			return new LdbcQuery9Result(personId, personFirstName, personLastName, commentId, commentContent, commentCreationDate);
+			long personId                  = convertLong   (bs, "personId"                 );
+			String personFirstName         = convertString (bs, "personFirstName"          );
+			String personLastName          = convertString (bs, "personLastName"           );
+			long commentOrPostId           = convertDate   (bs, "commentOrPostId"          );
+			String commentOrPostContent    = convertString (bs, "commentOrPostContent"     );
+			long commentOrPostCreationDate = convertDate   (bs, "commentOrPostCreationDate");
+			return new LdbcQuery9Result(personId, personFirstName, personLastName, commentOrPostId, commentOrPostContent, commentOrPostCreationDate);
 		}
 
 	}
@@ -286,13 +286,13 @@ public class SparqlInteractiveDb extends SparqlDb {
 
 		@Override
 		public LdbcQuery10Result convertSingleResult(BindingSet bs) {
-			long personId            = convertLong   (bs, "personId"       );
-			String personFirstName   = convertString (bs, "personFirstName");
-			String personLastName    = convertString (bs, "personLastName" );
-			int similarity           = convertInteger(bs, "similarity"     );
-			String personGender      = convertString (bs, "personGender"   );
-			String placeName         = convertString (bs, "placeName"      );
-			return new LdbcQuery10Result(personId, personFirstName, personLastName, similarity, personGender, placeName);
+			long personId            = convertLong   (bs, "personId"           );
+			String personFirstName   = convertString (bs, "personFirstName"    );
+			String personLastName    = convertString (bs, "personLastName"     );
+			int commonInterestScore  = convertInteger(bs, "commonInterestScore");
+			String personGender      = convertString (bs, "personGender"       );
+			String personCityName    = convertString (bs, "personCityName"     );
+			return new LdbcQuery10Result(personId, personFirstName, personLastName, commonInterestScore, personGender, personCityName);
 		}
 
 	}
@@ -306,12 +306,12 @@ public class SparqlInteractiveDb extends SparqlDb {
 
 		@Override
 		public LdbcQuery11Result convertSingleResult(BindingSet bs) {
-			long personId           = convertLong   (bs, "personId"        );
-			String personFirstName  = convertString (bs, "personFirstName" );
-			String personLastName   = convertString (bs, "personLastName"  );
-			String organisationName = convertString (bs, "organisationName");
-			int worksFrom           = convertInteger(bs, "worksFrom"       );
-			return new LdbcQuery11Result(personId, personFirstName, personLastName, organisationName, worksFrom);
+			long personId                = convertLong   (bs, "personId"                );
+			String personFirstName       = convertString (bs, "personFirstName"         );
+			String personLastName        = convertString (bs, "personLastName"          );
+			String organisationName      = convertString (bs, "organisationName"        );
+			int organizationWorkFromYear = convertInteger(bs, "organizationWorkFromYear");
+			return new LdbcQuery11Result(personId, personFirstName, personLastName, organisationName, organizationWorkFromYear);
 		}
 
 	}
@@ -328,10 +328,10 @@ public class SparqlInteractiveDb extends SparqlDb {
 			long personId             = convertLong      (bs, "personId"       );
 			String personFirstName    = convertString    (bs, "personFirstName");
 			String personLastName     = convertString    (bs, "personLastName" );
-			Iterable<String> tagNames = convertStringList(bs, "tagNames"        );
-			int count                 = convertInteger   (bs, "count"          );
+			Iterable<String> tagNames = convertStringList(bs, "tagNames"       );
+			int replyCount            = convertInteger   (bs, "replyCount"     );
 
-			return new LdbcQuery12Result(personId, personFirstName, personLastName, tagNames, count);
+			return new LdbcQuery12Result(personId, personFirstName, personLastName, tagNames, replyCount);
 		}
 
 	}
@@ -345,8 +345,8 @@ public class SparqlInteractiveDb extends SparqlDb {
 
 		@Override
 		public LdbcQuery13Result convertSingleResult(BindingSet bs) {
-			int length = convertInteger(bs, "length");
-			return new LdbcQuery13Result(length);
+			int shortestPathLength = convertInteger(bs, "shortestPathLength");
+			return new LdbcQuery13Result(shortestPathLength);
 		}
 
 	}
@@ -360,9 +360,9 @@ public class SparqlInteractiveDb extends SparqlDb {
 
 		@Override
 		public LdbcQuery14Result convertSingleResult(BindingSet bs) {
-			Iterable<Long> personIds = convertLongList(bs, "personIds");
-			double weight            = convertDouble(bs, "weight");
-			return new LdbcQuery14Result(personIds, weight);
+			Iterable<Long> personIdsInPath = convertLongList(bs, "personIdsInPath");
+			double pathWeight              = convertDouble  (bs, "pathWeight"     );
+			return new LdbcQuery14Result(personIdsInPath, pathWeight);
 		}
 
 	}

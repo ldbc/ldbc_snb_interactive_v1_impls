@@ -54,6 +54,9 @@ public class Converter {
         return "'" + value + "'";
     }
 
+    public String convertInteger(int value) {
+        return Integer.toString(value);
+    }
 
     /**
      * Convert strings to a comma-separated list between square brackets.
@@ -74,4 +77,9 @@ public class Converter {
     public String convertBlacklist(List<String> words) {
         return convertStringList(words);
     }
+
+    public String convertId(long value) {
+        return Long.toString(value);
+    }
+
 }

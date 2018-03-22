@@ -1,13 +1,13 @@
 package com.ldbc.impls.workloads.ldbc.snb.cypher.interactive;
 
 import com.ldbc.driver.DbException;
-import com.ldbc.impls.workloads.ldbc.snb.bi.BiQueryStore;
 import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
 import com.ldbc.impls.workloads.ldbc.snb.converter.CypherConverter;
+import com.ldbc.impls.workloads.ldbc.snb.interactive.InteractiveQueryStore;
 
 import java.util.Map;
 
-public class CypherInteractiveQueryStore extends BiQueryStore {
+public class CypherInteractiveQueryStore extends InteractiveQueryStore {
 
 	public CypherInteractiveQueryStore(String path) throws DbException {
 		super(path, "interactive-", ".cypher");
@@ -19,12 +19,12 @@ public class CypherInteractiveQueryStore extends BiQueryStore {
 	}
 
 	@Override
-	protected String prepare(BiQuery biQuery, Map<String, String> parameterSubstitutions) {
-		String query = queries.get(biQuery);
-		for (String parameter : biQuery.getParameters()) {
-			query = query.replace("$" + parameter, parameterSubstitutions.get(parameter));
+	protected String prepare(InteractiveQuery interactiveQuery, Map<String, String> parameterSubstitutions) {
+		String querySpecification = queries.get(interactiveQuery);
+		for (String parameter : interactiveQuery.getParameters()) {
+			querySpecification = querySpecification.replace("$" + parameter, parameterSubstitutions.get(parameter));
 		}
-		return query;
+		return querySpecification;
 	}
 
 }

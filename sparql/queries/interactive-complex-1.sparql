@@ -1,7 +1,12 @@
-sparql select ?fr ?last min(?dist) as ?mindist
-              (?bday - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?birthday
-              (?since - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?creationDate
-	      ?gen ?browser ?locationIP #Q1
+select
+    ?fr
+    ?last
+    min(?dist) as ?mindist
+    (?bday - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?birthday
+    (?since - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?creationDate
+    ?gen
+    ?browser
+    ?locationIP
     ((select group_concat (?email, ", ")
       where {
             ?frr snvoc:email ?email .

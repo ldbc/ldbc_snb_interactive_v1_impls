@@ -1,4 +1,4 @@
-sparql select ?first ?last ?startdate ?orgname ?fr #Q11
+select ?first ?last ?startdate ?orgname ?fr
 where {
     ?w snvoc:hasOrganisation ?org . ?org foaf:name ?orgname .
     ?org snvoc:isLocatedIn ?country.
