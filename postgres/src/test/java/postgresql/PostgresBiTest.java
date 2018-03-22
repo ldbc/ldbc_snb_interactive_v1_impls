@@ -2,7 +2,7 @@ package postgresql;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.impls.workloads.ldbc.snb.bi.BiTest;
-import com.ldbc.impls.workloads.ldbc.snb.jdbc.bi.PostgresBiDb;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.bi.PostgresBiDb;
 
 import java.util.Map;
 

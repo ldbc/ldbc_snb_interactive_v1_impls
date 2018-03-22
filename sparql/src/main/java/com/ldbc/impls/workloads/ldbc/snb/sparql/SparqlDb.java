@@ -2,7 +2,7 @@ package com.ldbc.impls.workloads.ldbc.snb.sparql;
 
 import com.google.common.collect.ImmutableList;
 import com.ldbc.driver.DbConnectionState;
-import com.ldbc.impls.workloads.ldbc.snb.converter.SparqlConverter;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.converter.SparqlConverter;
 import com.ldbc.impls.workloads.ldbc.snb.db.SnbDb;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.bi.SparqlBiQueryStore;
 import org.openrdf.model.Literal;

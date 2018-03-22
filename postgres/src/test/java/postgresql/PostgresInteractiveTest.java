@@ -2,7 +2,7 @@ package postgresql;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.impls.workloads.ldbc.snb.interactive.InteractiveTest;
-import com.ldbc.impls.workloads.ldbc.snb.jdbc.interactive.PostgresInteractiveDb;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.interactive.PostgresInteractiveDb;
 
 import java.util.Map;
 

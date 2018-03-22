@@ -1,7 +1,7 @@
 package com.ldbc.impls.workloads.ldbc.snb;
 
 import com.ldbc.driver.DbException;
-import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.converter.Converter;
 
 import java.io.File;
 import java.io.IOException;
