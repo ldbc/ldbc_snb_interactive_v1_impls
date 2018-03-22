@@ -1,20 +1,21 @@
 package com.ldbc.impls.workloads.ldbc.snb.jdbc;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcNoResult;
+import com.ldbc.impls.workloads.ldbc.snb.SnbQueryStore;
 
-public abstract class JdbcUpdateOperationHandler<OperationType extends Operation<LdbcNoResult>, OperationResult, QueryStore> 
-implements OperationHandler<OperationType, JdbcDbConnectionStore<QueryStore>> {
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public abstract class PostgresUpdateOperationHandler<OperationType extends Operation<LdbcNoResult>, OperationResult, QueryStore extends SnbQueryStore>
+implements OperationHandler<OperationType, PostgresDbConnectionState<QueryStore>> {
 
 @Override
-public void executeOperation(OperationType operation, JdbcDbConnectionStore<QueryStore> state,
+public void executeOperation(OperationType operation, PostgresDbConnectionState<QueryStore> state,
 		ResultReporter resultReporter) throws DbException {
 	Connection conn = state.getConnection();
 	String queryString = getQueryString(state, operation);
@@ -39,5 +40,5 @@ public void executeOperation(OperationType operation, JdbcDbConnectionStore<Quer
 	}
 }
 
-public abstract String getQueryString(JdbcDbConnectionStore<QueryStore> state, OperationType operation);
+public abstract String getQueryString(PostgresDbConnectionState<QueryStore> state, OperationType operation);
 }

@@ -59,4 +59,9 @@ public class SparqlConverter extends Converter {
             "\"";
     }
 
+    @Override
+    public String convertId(long value) {
+        return String.format("%020d", value);
+    }
+
 }

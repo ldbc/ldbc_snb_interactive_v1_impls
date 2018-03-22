@@ -9,13 +9,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Ignore
-public class BiSparqlTest extends BiTest {
+public class SparqlBiTest extends BiTest {
 
 	private static String endpoint = "http://localhost:5820/";
 	private static String databaseName = "ldbcsf1";
 	private static String queryDir = "queries/";
 
-	public BiSparqlTest() throws DbException {
+	public SparqlBiTest() throws DbException {
 		super(new SparqlBiDb());
 	}
 

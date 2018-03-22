@@ -4,6 +4,7 @@ import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
+import com.ldbc.impls.workloads.ldbc.snb.SnbQueryStore;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -12,11 +13,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class JdbcListOperationHandler<OperationType extends Operation<List<OperationResult>>, OperationResult, QueryStore> 
-	implements OperationHandler<OperationType, JdbcDbConnectionStore<QueryStore>> {
+public abstract class PostgresListOperationHandler<OperationType extends Operation<List<OperationResult>>, OperationResult, QueryStore extends SnbQueryStore>
+	implements OperationHandler<OperationType, PostgresDbConnectionState<QueryStore>> {
 
 	@Override
-	public void executeOperation(OperationType operation, JdbcDbConnectionStore<QueryStore> state,
+	public void executeOperation(OperationType operation, PostgresDbConnectionState<QueryStore> state,
 			ResultReporter resultReporter) throws DbException {
 		Connection conn = state.getConnection();
 		List<OperationResult> results = new ArrayList<OperationResult>();
@@ -48,6 +49,6 @@ public abstract class JdbcListOperationHandler<OperationType extends Operation<L
 		resultReporter.report(resultCount, results, operation);			
 	}
 	
-	public abstract String getQueryString(JdbcDbConnectionStore<QueryStore> state, OperationType operation);
+	public abstract String getQueryString(PostgresDbConnectionState<QueryStore> state, OperationType operation);
 	public abstract OperationResult convertSingleResult(ResultSet result) throws SQLException;
 }

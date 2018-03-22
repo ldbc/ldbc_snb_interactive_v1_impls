@@ -1,7 +1,6 @@
 package com.ldbc.impls.workloads.ldbc.snb.interactive;
 
 import com.ldbc.driver.DbException;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcSnbInteractiveWorkload;
 import com.ldbc.impls.workloads.ldbc.snb.SnbTest;
@@ -23,7 +22,7 @@ public abstract class InteractiveTest extends SnbTest {
         run(db, new LdbcQuery2(19791209300143L, new Date(1354060800000L), LIMIT));
         run(db, new LdbcQuery3(15393162790207L, "Puerto_Rico", "Republic_of_Macedonia", new Date(1291161600000L), 30, LIMIT));
         run(db, new LdbcQuery4(10995116278874L, new Date(1338508800000L), 28, LIMIT));
-        run(db, new LdbcQuery5(15393162790207L , new Date(1344643200000L), LIMIT));
+        run(db, new LdbcQuery5(15393162790207L, new Date(1344643200000L), LIMIT));
         run(db, new LdbcQuery6(30786325579101L, "Shakira", LIMIT));
         run(db, new LdbcQuery7(26388279067534L, LIMIT));
         run(db, new LdbcQuery8(2199023256816L, LIMIT));
@@ -33,7 +32,6 @@ public abstract class InteractiveTest extends SnbTest {
         run(db, new LdbcQuery12(19791209300143L, "BasketballPlayer", LIMIT));
         run(db, new LdbcQuery13(32985348833679L, 26388279067108L));
         run(db, new LdbcQuery14(32985348833679L, 2199023256862L));
-
         db.close();
         workload.close();
     }

@@ -4,15 +4,16 @@ import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
+import com.ldbc.impls.workloads.ldbc.snb.SnbQueryStore;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Session;
 import org.neo4j.driver.v1.StatementResult;
 
-public abstract class CypherSingletonOperationHandler<OperationType extends Operation<OperationResult>, OperationResult, QueryStore>
-implements OperationHandler<OperationType, CypherDriverConnectionStore<QueryStore>> {
+public abstract class CypherSingletonOperationHandler<OperationType extends Operation<OperationResult>, OperationResult, QueryStore extends SnbQueryStore>
+implements OperationHandler<OperationType, CypherDriverConnectionState<QueryStore>> {
 
 @Override
-public void executeOperation(OperationType operation, CypherDriverConnectionStore<QueryStore> state,
+public void executeOperation(OperationType operation, CypherDriverConnectionState<QueryStore> state,
 		ResultReporter resultReporter) throws DbException {
 	Session session = state.getSession();
 	OperationResult tuple = null;
@@ -35,6 +36,6 @@ public void executeOperation(OperationType operation, CypherDriverConnectionStor
 	resultReporter.report(resultCount, tuple, operation);			
 }
 
-public abstract String getQueryString(CypherDriverConnectionStore<QueryStore> state, OperationType operation);
+public abstract String getQueryString(CypherDriverConnectionState<QueryStore> state, OperationType operation);
 public abstract OperationResult convertSingleResult(Record record);
 }

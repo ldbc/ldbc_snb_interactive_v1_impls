@@ -100,8 +100,8 @@ public abstract class BiQueryStore extends SnbQueryStore<BiQueryStore.BiQuery> {
 
 	public String getQuery3(LdbcSnbBiQuery3TagEvolution operation) {
 		return prepare(BiQuery.Query3, new ImmutableMap.Builder<String, String>()
-				.put("year",  Integer.toString(operation.year()))
-				.put("month", Integer.toString(operation.month())).build());
+				.put("year",  getConverter().convertInteger(operation.year()))
+				.put("month", getConverter().convertInteger(operation.month())).build());
 	}
 
 	public String getQuery4(LdbcSnbBiQuery4PopularCountryTopics operation) {
@@ -134,7 +134,7 @@ public abstract class BiQueryStore extends SnbQueryStore<BiQueryStore.BiQuery> {
 		return prepare(BiQuery.Query9, new ImmutableMap.Builder<String, String>()
 				.put("tagClass1", getConverter().convertString(operation.tagClass1()))
 				.put("tagClass2", getConverter().convertString(operation.tagClass2()))
-				.put("threshold", Integer.toString(operation.threshold())).build());
+				.put("threshold", getConverter().convertInteger(operation.threshold())).build());
 	}
 
 	public String getQuery10(LdbcSnbBiQuery10TagPerson operation) {
@@ -151,8 +151,8 @@ public abstract class BiQueryStore extends SnbQueryStore<BiQueryStore.BiQuery> {
 
 	public String getQuery12(LdbcSnbBiQuery12TrendingPosts operation) {
 		return prepare(BiQuery.Query12, new ImmutableMap.Builder<String, String>()
-				.put("date", getConverter().convertDateTime(operation.date()))
-				.put("likeThreshold", Integer.toString(operation.likeThreshold())).build());
+				.put("date",          getConverter().convertDateTime(operation.date()))
+				.put("likeThreshold", getConverter().convertInteger(operation.likeThreshold())).build());
 	}
 
 	public String getQuery13(LdbcSnbBiQuery13PopularMonthlyTags operation) {
@@ -173,11 +173,11 @@ public abstract class BiQueryStore extends SnbQueryStore<BiQueryStore.BiQuery> {
 
 	public String getQuery16(LdbcSnbBiQuery16ExpertsInSocialCircle operation) {
 		return prepare(BiQuery.Query16, new ImmutableMap.Builder<String, String>()
-				.put("personId",        Long.toString(operation.personId()))
+				.put("personId",        getConverter().convertId(operation.personId()))
 				.put("country",         getConverter().convertString(operation.country()))
 				.put("tagClass",        getConverter().convertString(operation.tagClass()))
-				.put("minPathDistance", Integer.toString(operation.minPathDistance()))
-				.put("maxPathDistance", Integer.toString(operation.maxPathDistance())).build());
+				.put("minPathDistance", getConverter().convertInteger(operation.minPathDistance()))
+				.put("maxPathDistance", getConverter().convertInteger(operation.maxPathDistance())).build());
 	}
 
 	public String getQuery17(LdbcSnbBiQuery17FriendshipTriangles operation) {
@@ -188,7 +188,7 @@ public abstract class BiQueryStore extends SnbQueryStore<BiQueryStore.BiQuery> {
 	public String getQuery18(LdbcSnbBiQuery18PersonPostCounts operation) {
 		return prepare(BiQuery.Query18, new ImmutableMap.Builder<String, String>()
 				.put("date",            getConverter().convertDateTime(operation.date()))
-				.put("lengthThreshold", Integer.toString(operation.lengthThreshold()))
+				.put("lengthThreshold", getConverter().convertInteger(operation.lengthThreshold()))
 				.put("languages",       getConverter().convertStringList(operation.languages())).build());
 	}
 
@@ -228,8 +228,8 @@ public abstract class BiQueryStore extends SnbQueryStore<BiQueryStore.BiQuery> {
 
 	public String getQuery25(LdbcSnbBiQuery25WeightedPaths operation) {
 		return prepare(BiQuery.Query25, new ImmutableMap.Builder<String, String>()
-				.put("person1Id", Long.toString(operation.person1Id()))
-				.put("person2Id", Long.toString(operation.person2Id()))
+				.put("person1Id", getConverter().convertId(operation.person1Id()))
+				.put("person2Id", getConverter().convertId(operation.person2Id()))
 				.put("startDate", getConverter().convertDateTime(operation.startDate()))
 				.put("endDate",   getConverter().convertDateTime(operation.endDate())).build());
 	}

@@ -12,12 +12,12 @@ import java.util.Map;
 
 public abstract class SnbQueryStore<T> {
 
-    protected String loadQueryFromFile(String path, String filenameonly) throws DbException {
-        final String fullpath = path + File.separator + filenameonly;
+    protected String loadQueryFromFile(String path, String filename) throws DbException {
+        final String filePath = path + File.separator + filename;
         try {
-            return new String(Files.readAllBytes(Paths.get(fullpath)));
+            return new String(Files.readAllBytes(Paths.get(filePath)));
         } catch (IOException e) {
-            throw new DbException("Could not load query: " + fullpath);
+            throw new DbException("Could not load query: " + filePath);
         }
     }
 

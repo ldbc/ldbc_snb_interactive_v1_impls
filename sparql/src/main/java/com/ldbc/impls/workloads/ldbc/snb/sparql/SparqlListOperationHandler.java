@@ -19,7 +19,7 @@ public abstract class SparqlListOperationHandler<OperationType extends Operation
 	public void executeOperation(OperationType operation, SparqlDriverConnectionState<QueryStore> state,
 			ResultReporter resultReporter) throws DbException {
 		try {
-            final List<OperationResult> results = new ArrayList<OperationResult>();
+            final List<OperationResult> results = new ArrayList<>();
             int resultCount = 0;
             results.clear();
 
@@ -31,11 +31,13 @@ public abstract class SparqlListOperationHandler<OperationType extends Operation
 
 			while (queryResults.hasNext()) {
 				final BindingSet bs = queryResults.next();
-
 				resultCount++;
 				OperationResult tuple;
 				tuple = convertSingleResult(bs);
 				results.add(tuple);
+				if (state.isPrintResults()) {
+					System.out.println(tuple);
+				}
 			}
 			queryResults.close();
 

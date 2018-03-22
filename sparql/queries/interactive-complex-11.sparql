@@ -1,0 +1,39 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX sntag: <http://www.ldbc.eu/ldbc_socialnet/1.0/tag/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dbpedia: <http://dbpedia.org/resource/>
+PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
+
+select
+    (?fr AS ?personId)
+    (?first AS ?personFirstName)
+    (?last AS ?personLastName)
+    (?orgname AS ?organizationWorkFromYear)
+    (?startdate AS ?organizationName)
+where {
+    ?w snvoc:hasOrganisation ?org . ?org foaf:name ?orgname .
+    ?org snvoc:isLocatedIn ?country.
+    ?country foaf:name $Country .
+    ?fr snvoc:workAt ?w . ?w snvoc:workFrom ?startdate .
+    filter (?startdate < $Date0) .
+    {
+       select distinct ?fr
+       where {
+           {sn:pers$Person snvoc:knows ?fr.}
+           union
+           {
+             sn:pers$Person snvoc:knows ?fr2 .
+             ?fr2 snvoc:knows ?fr .
+             filter (?fr != sn:pers$Person)
+           }
+       }
+    } .
+    ?fr snvoc:firstName ?first .
+    ?fr snvoc:lastName ?last .
+}
+order by ?startdate ?fr desc(?orgname)
+limit 10

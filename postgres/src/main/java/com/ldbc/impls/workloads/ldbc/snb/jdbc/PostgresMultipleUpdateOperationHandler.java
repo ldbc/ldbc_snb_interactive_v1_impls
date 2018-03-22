@@ -1,22 +1,23 @@
 package com.ldbc.impls.workloads.ldbc.snb.jdbc;
 
+import com.ldbc.driver.DbException;
+import com.ldbc.driver.Operation;
+import com.ldbc.driver.OperationHandler;
+import com.ldbc.driver.ResultReporter;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcNoResult;
+import com.ldbc.impls.workloads.ldbc.snb.SnbQueryStore;
+
 import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-import com.ldbc.driver.DbException;
-import com.ldbc.driver.Operation;
-import com.ldbc.driver.OperationHandler;
-import com.ldbc.driver.ResultReporter;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcNoResult;
-
-public abstract class JdbcMultipleUpdateOperationHandler<OperationType extends Operation<LdbcNoResult>, OperationResult, QueryStore> 
-implements OperationHandler<OperationType, JdbcDbConnectionStore<QueryStore>> {
+public abstract class PostgresMultipleUpdateOperationHandler<OperationType extends Operation<LdbcNoResult>, OperationResult, QueryStore extends SnbQueryStore>
+implements OperationHandler<OperationType, PostgresDbConnectionState<QueryStore>> {
 
 @Override
-public void executeOperation(OperationType operation, JdbcDbConnectionStore<QueryStore> state,
+public void executeOperation(OperationType operation, PostgresDbConnectionState<QueryStore> state,
 		ResultReporter resultReporter) throws DbException {
 	Connection conn = state.getConnection();
 	String query="";
@@ -47,5 +48,5 @@ public void executeOperation(OperationType operation, JdbcDbConnectionStore<Quer
 	}
 }
 
-public abstract List<String> getQueryString(JdbcDbConnectionStore<QueryStore> state, OperationType operation);
+public abstract List<String> getQueryString(PostgresDbConnectionState<QueryStore> state, OperationType operation);
 }

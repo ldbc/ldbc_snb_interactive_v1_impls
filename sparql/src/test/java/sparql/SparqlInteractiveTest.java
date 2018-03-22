@@ -9,13 +9,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Ignore
-public class InteractiveSparqlTest extends InteractiveTest {
+public class SparqlInteractiveTest extends InteractiveTest {
 
 	private static String endpoint = "http://localhost:5820/";
 	private static String databaseName = "ldbcsf1";
 	private static String queryDir = "queries/";
 
-	public InteractiveSparqlTest() throws DbException {
+	public SparqlInteractiveTest() throws DbException {
 		super(new SparqlInteractiveDb());
 	}
 
@@ -25,9 +25,9 @@ public class InteractiveSparqlTest extends InteractiveTest {
 		properties.put("endpoint", endpoint);
 		properties.put("databaseName", databaseName);
 		properties.put("queryDir", queryDir);
-		properties.put("printQueryNames", "false");
+		properties.put("printQueryNames", "true");
 		properties.put("printQueryStrings", "true");
-		properties.put("printQueryResults", "false");
+		properties.put("printQueryResults", "true");
 		return properties;
 	}
 

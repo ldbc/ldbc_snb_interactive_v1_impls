@@ -1,14 +1,16 @@
 package com.ldbc.impls.workloads.ldbc.snb.sparql;
 
+import com.google.common.collect.ImmutableList;
 import com.ldbc.driver.DbConnectionState;
+import com.ldbc.impls.workloads.ldbc.snb.converter.SparqlConverter;
 import com.ldbc.impls.workloads.ldbc.snb.db.SnbDb;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.bi.SparqlBiQueryStore;
-import com.ldbc.impls.workloads.ldbc.snb.converter.SparqlConverter;
 import org.openrdf.model.Literal;
 import org.openrdf.query.BindingSet;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -63,6 +65,26 @@ public abstract class SparqlDb extends SnbDb<SparqlBiQueryStore> {
 			return "";
 		}
 		return bs.getBinding(name).getValue().stringValue();
+	}
+
+	public static Iterable<String> convertStringList(BindingSet bs, String name) {
+//		if (bs.getBinding(name) == null) {
+//			return "";
+//		}
+//		return bs.getBinding(name).getValue().stringValue();
+		return ImmutableList.of();
+	}
+
+	public static Iterable<Long> convertLongList(BindingSet bs, String name) {
+//		if (bs.getBinding(name) == null) {
+//			return "";
+//		}
+//		return bs.getBinding(name).getValue().stringValue();
+		return ImmutableList.of();
+	}
+
+	public static Iterable<List<Object>> convertSisList(BindingSet bs, String name) {
+		return ImmutableList.of();
 	}
 
 }

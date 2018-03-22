@@ -1,6 +1,7 @@
 package com.ldbc.impls.workloads.ldbc.snb.jdbc;
 
 import com.ldbc.driver.DbException;
+import com.ldbc.impls.workloads.ldbc.snb.SnbQueryStore;
 import org.postgresql.ds.jdbc4.AbstractJdbc4PoolingDataSource;
 
 import java.io.IOException;
@@ -8,11 +9,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
 
-public class JdbcPoolingDbConnectionStore<DbQueryStore> extends JdbcDbConnectionStore<DbQueryStore> {
+public class PostgresPoolingDbConnectionState<DbQueryStore extends SnbQueryStore> extends PostgresDbConnectionState<DbQueryStore> {
 	AbstractJdbc4PoolingDataSource ds;
 	private String endPoint;
 
-	public JdbcPoolingDbConnectionStore(Map<String, String> properties, DbQueryStore store) throws ClassNotFoundException, SQLException, DbException {
+	public PostgresPoolingDbConnectionState(Map<String, String> properties, DbQueryStore store) throws ClassNotFoundException, SQLException, DbException {
 		super(properties, store);
 
 		endPoint = properties.get("endpoint");
