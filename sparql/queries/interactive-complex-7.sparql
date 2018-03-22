@@ -1,3 +1,13 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX sntag: <http://www.ldbc.eu/ldbc_socialnet/1.0/tag/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dbpedia: <http://dbpedia.org/resource/>
+PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
+
 select
     (?liker AS ?personId)
     (?first AS ?personFirstName)
@@ -6,23 +16,26 @@ select
     (?post AS ?commentOrPostId)
     (?content AS ?commentOrPostContent)
     ((?max_ldt - ?dt)/60 AS ?minutesLatency)
-    (not exists { sn:pers%Person% snvoc:knows ?liker} as ?isNew)
+    (not exists { sn:pers$Person snvoc:knows ?liker} as ?isNew)
 where {
-  {{
-    select ?liker, (max(?ldt) as ?max_ldt)
-    where {
-  	?post snvoc:hasCreator sn:pers%Person% .
-  	{{ ?lk snvoc:hasPost ?post } union { ?lk snvoc:hasComment ?post }} .
-  	?liker snvoc:likes ?lk . ?lk snvoc:creationDate ?ldt .
-    }
-    group by ?liker
-    order by desc(?max_ldt)
-    limit 20
-  }} .
-  {{ ?lk1 snvoc:hasPost ?post } union { ?lk1 snvoc:hasComment ?post }} .
-  ?liker snvoc:likes ?lk1 . ?lk1 snvoc:creationDate ?max_ldt .
-  {{ ?post snvoc:content ?content } union {?post snvoc:imageFile ?content}} .
-  ?liker  snvoc:firstName ?first . ?liker snvoc:lastName ?last .
-  ?post snvoc:creationDate ?dt .   
+    {{
+        select ?liker (max(?ldt) as ?max_ldt)
+        where {
+            ?post snvoc:hasCreator sn:pers$Person .
+            {{ ?lk snvoc:hasPost ?post } union { ?lk snvoc:hasComment ?post }} .
+            ?liker snvoc:likes ?lk .
+            ?lk snvoc:creationDate ?ldt .
+        }
+        group by ?liker
+        order by desc(?max_ldt)
+        limit 20
+    }} .
+    {{ ?lk1 snvoc:hasPost ?post } union { ?lk1 snvoc:hasComment ?post }} .
+    ?liker snvoc:likes ?lk1 .
+    ?lk1 snvoc:creationDate ?max_ldt .
+    {{ ?post snvoc:content ?content } union {?post snvoc:imageFile ?content}} .
+    ?liker snvoc:firstName ?first .
+    ?liker snvoc:lastName ?last .
+    ?post snvoc:creationDate ?dt .
 }
 order by desc(?max_ldate) ?liker
