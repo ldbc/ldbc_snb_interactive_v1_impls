@@ -1,5 +1,5 @@
 WITH start_node(v) AS (
-	SELECT :Person1
+	SELECT :Person1::bigint
 )
 select * from (
 	WITH RECURSIVE
@@ -9,11 +9,11 @@ select * from (
 	        (WITH sg(link,depth) as (select * from search_graph)
 	        SELECT distinct k_person2id, x.depth + 1,path || ARRAY[[x.link, k_person2id]]
 	        FROM knows, sg x
-	        WHERE x.link = k_person1id and not exists(select * from sg y where y.link = :Person2) and not exists( select * from sg y where y.link=k_person2id)
+	        WHERE x.link = k_person1id and not exists(select * from sg y where y.link = :Person2::bigint) and not exists( select * from sg y where y.link=k_person2id)
 	        )
 	),
 	paths(pid,path) AS (
-		SELECT row_number() OVER (), path FROM search_graph where link = :Person2 
+		SELECT row_number() OVER (), path FROM search_graph where link = :Person2::bigint
 	),
 	edges(id,e) AS (
 		SELECT pid, array_agg(path[d1][d2])
