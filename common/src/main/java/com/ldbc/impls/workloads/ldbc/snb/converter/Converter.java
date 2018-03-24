@@ -1,4 +1,4 @@
-package com.ldbc.impls.workloads.ldbc.snb.postgres.converter;
+package com.ldbc.impls.workloads.ldbc.snb.converter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,7 +24,7 @@ public class Converter {
     public String convertDateTime(Date date) {
         final SimpleDateFormat sdf = new SimpleDateFormat(DATAGEN_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return "'"+sdf.format(date)+"'";
+        return "'" + sdf.format(date) + "'";
     }
 
     public String convertDate(long timestamp) {
@@ -69,7 +69,7 @@ public class Converter {
         res += values
                 .stream()
                 .map(v -> "'" + v + "'")
-                .collect( Collectors.joining( "," ) );
+                .collect(Collectors.joining(","));
         res += "]";
         return res;
     }

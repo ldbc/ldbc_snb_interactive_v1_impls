@@ -17,27 +17,137 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery6;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery7;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery9;
-import com.ldbc.impls.workloads.ldbc.snb.SnbQueryStore;
+import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
 
 import java.util.List;
 
-public abstract class InteractiveQueryStore extends SnbQueryStore<InteractiveQueryStore.InteractiveQuery> {
+public abstract class InteractiveQueryStore extends QueryStore<InteractiveQueryStore.InteractiveQuery> {
 
-	public enum InteractiveQuery {
-		Query1 ( 1, ImmutableList.of("Person", "Name")),
-		Query2 ( 2, ImmutableList.of("Person", "Date0")),
-		Query3 ( 3, ImmutableList.of("Person", "Country1", "Country2", "Date0", "Duration")),
-		Query4 ( 4, ImmutableList.of("Person", "Date0", "Duration")),
-		Query5 ( 5, ImmutableList.of("Person", "Date0")),
-		Query6 ( 6, ImmutableList.of("Person", "Tag")),
-		Query7 ( 7, ImmutableList.of("Person")),
-		Query8 ( 8, ImmutableList.of("Person")),
-		Query9 ( 9, ImmutableList.of("Person", "Date0")),
-		Query10(10, ImmutableList.of("Person", "HS0", "HS1")),
-		Query11(11, ImmutableList.of("Person", "Date0", "Country")),
-		Query12(12, ImmutableList.of("Person", "TagType")),
-		Query13(13, ImmutableList.of("Person1", "Person2")),
-		Query14(14, ImmutableList.of("Person1", "Person2")),
+    public InteractiveQueryStore(String path, String prefix, String postfix) throws DbException {
+        for (InteractiveQuery interactiveQuery : InteractiveQuery.values()) {
+            queries.put(interactiveQuery, loadQueryFromFile(path, prefix + interactiveQuery.number + postfix));
+        }
+    }
+
+    ;
+
+    public String getQuery1(LdbcQuery1 operation) {
+        return prepare(InteractiveQuery.Query1, new ImmutableMap.Builder<String, String>()
+                .put("Person", getConverter().convertId(operation.personId()))
+                .put("Name", getConverter().convertString(operation.firstName()))
+                .build());
+    }
+
+    public String getQuery2(LdbcQuery2 operation) {
+        return prepare(InteractiveQuery.Query2, new ImmutableMap.Builder<String, String>()
+                .put("Person", getConverter().convertId(operation.personId()))
+                .put("Date0", getConverter().convertDateTime(operation.maxDate()))
+                .build());
+    }
+
+    public String getQuery3(LdbcQuery3 operation) {
+        return prepare(InteractiveQuery.Query3, new ImmutableMap.Builder<String, String>()
+                .put("Person", getConverter().convertId(operation.personId()))
+                .put("Country1", getConverter().convertString(operation.countryXName()))
+                .put("Country2", getConverter().convertString(operation.countryYName()))
+                .put("Date0", getConverter().convertDateTime(operation.startDate()))
+                .put("Duration", getConverter().convertInteger(operation.durationDays()))
+                .build());
+    }
+
+    public String getQuery4(LdbcQuery4 operation) {
+        return prepare(InteractiveQuery.Query4, new ImmutableMap.Builder<String, String>()
+                .put("Person", getConverter().convertId(operation.personId()))
+                .put("Date0", getConverter().convertDateTime(operation.startDate()))
+                .put("Duration", getConverter().convertInteger(operation.durationDays()))
+                .build());
+    }
+
+    public String getQuery5(LdbcQuery5 operation) {
+        return prepare(InteractiveQuery.Query5, new ImmutableMap.Builder<String, String>()
+                .put("Person", getConverter().convertId(operation.personId()))
+                .put("Date0", getConverter().convertDateTime(operation.minDate()))
+                .build());
+    }
+
+    public String getQuery6(LdbcQuery6 operation) {
+        return prepare(InteractiveQuery.Query6, new ImmutableMap.Builder<String, String>()
+                .put("Person", getConverter().convertId(operation.personId()))
+                .put("Tag", getConverter().convertString(operation.tagName()))
+                .build());
+    }
+
+    public String getQuery7(LdbcQuery7 operation) {
+        return prepare(InteractiveQuery.Query7, new ImmutableMap.Builder<String, String>()
+                .put("Person", getConverter().convertId(operation.personId()))
+                .build());
+    }
+
+    public String getQuery8(LdbcQuery8 operation) {
+        return prepare(InteractiveQuery.Query8, new ImmutableMap.Builder<String, String>()
+                .put("Person", getConverter().convertId(operation.personId()))
+                .build());
+    }
+
+    public String getQuery9(LdbcQuery9 operation) {
+        return prepare(InteractiveQuery.Query9, new ImmutableMap.Builder<String, String>()
+                .put("Person", getConverter().convertId(operation.personId()))
+                .put("Date0", getConverter().convertDateTime(operation.maxDate()))
+                .build());
+    }
+
+    public String getQuery10(LdbcQuery10 operation) {
+        return prepare(InteractiveQuery.Query10, new ImmutableMap.Builder<String, String>()
+                .put("Person", getConverter().convertId(operation.personId()))
+                .put("HS0", getConverter().convertInteger(operation.month()))
+                .put("HS1", getConverter().convertInteger(operation.month() % 12 + 1))
+                .build());
+    }
+
+    public String getQuery11(LdbcQuery11 operation) {
+        return prepare(InteractiveQuery.Query11, new ImmutableMap.Builder<String, String>()
+                .put("Person", getConverter().convertId(operation.personId()))
+                .put("Date0", getConverter().convertInteger(operation.workFromYear()))
+                .put("Country", getConverter().convertString(operation.countryName()))
+                .build());
+    }
+
+    public String getQuery12(LdbcQuery12 operation) {
+        return prepare(InteractiveQuery.Query12, new ImmutableMap.Builder<String, String>()
+                .put("Person", getConverter().convertId(operation.personId()))
+                .put("TagType", getConverter().convertString(operation.tagClassName()))
+                .build());
+    }
+
+    public String getQuery13(LdbcQuery13 operation) {
+        return prepare(InteractiveQuery.Query13, new ImmutableMap.Builder<String, String>()
+                .put("Person1", getConverter().convertId(operation.person1Id()))
+                .put("Person2", getConverter().convertId(operation.person2Id()))
+                .build());
+    }
+
+    public String getQuery14(LdbcQuery14 operation) {
+        return prepare(InteractiveQuery.Query14, new ImmutableMap.Builder<String, String>()
+                .put("Person1", getConverter().convertId(operation.person1Id()))
+                .put("Person2", getConverter().convertId(operation.person2Id()))
+                .build());
+    }
+
+    public enum InteractiveQuery {
+        Query1(1, ImmutableList.of("Person", "Name")),
+        Query2(2, ImmutableList.of("Person", "Date0")),
+        Query3(3, ImmutableList.of("Person", "Country1", "Country2", "Date0", "Duration")),
+        Query4(4, ImmutableList.of("Person", "Date0", "Duration")),
+        Query5(5, ImmutableList.of("Person", "Date0")),
+        Query6(6, ImmutableList.of("Person", "Tag")),
+        Query7(7, ImmutableList.of("Person")),
+        Query8(8, ImmutableList.of("Person")),
+        Query9(9, ImmutableList.of("Person", "Date0")),
+        Query10(10, ImmutableList.of("Person", "HS0", "HS1")),
+        Query11(11, ImmutableList.of("Person", "Date0", "Country")),
+        Query12(12, ImmutableList.of("Person", "TagType")),
+        Query13(13, ImmutableList.of("Person1", "Person2")),
+        Query14(14, ImmutableList.of("Person1", "Person2")),
 //		ShortQuery1PersonProfile("shortquery1personprofile.sql", ImmutableList.of()),
 //		ShortQuery2PersonPosts("shortquery2personposts.sql", ImmutableList.of()),
 //		ShortQuery3PersonFriends("shortquery3personfriends.sql", ImmutableList.of()),
@@ -61,133 +171,23 @@ public abstract class InteractiveQueryStore extends SnbQueryStore<InteractiveQue
 //		Update7AddComment("update7addcomment.sql", ImmutableList.of()),
 //		Update7AddCommentTags("update7addcommenttags.sql", ImmutableList.of()),
 //		Update8AddFriendship("update8addfriendship.sql", ImmutableList.of()),
-		;
+        ;
 
-		InteractiveQuery(int number, List<String> parameters) {
-			this.number = number;
-			this.parameters = parameters;
-		}
+        private int number;
+        private List<String> parameters;
+        InteractiveQuery(int number, List<String> parameters) {
+            this.number = number;
+            this.parameters = parameters;
+        }
 
-		private int number;
-		private List<String> parameters;
+        public int getNumber() {
+            return number;
+        }
 
-		public int getNumber() {
-			return number;
-		}
-
-		public List<String> getParameters() {
-			return parameters;
-		}
-	};
-
-
-	public InteractiveQueryStore(String path, String prefix, String postfix) throws DbException {
-		for (InteractiveQuery interactiveQuery : InteractiveQuery.values()) {
-			queries.put(interactiveQuery, loadQueryFromFile(path, prefix + interactiveQuery.number + postfix));
-		}
-	}
-
-	public String getQuery1(LdbcQuery1 operation) {
-		return prepare(InteractiveQuery.Query1, new ImmutableMap.Builder<String, String>()
-				.put("Person", getConverter().convertId(operation.personId()))
-				.put("Name",   getConverter().convertString(operation.firstName()))
-				.build());
-	}
-
-	public String getQuery2(LdbcQuery2 operation) {
-		return prepare(InteractiveQuery.Query2, new ImmutableMap.Builder<String, String>()
-				.put("Person", getConverter().convertId(operation.personId()))
-				.put("Date0",  getConverter().convertDateTime(operation.maxDate()))
-				.build());
-	}
-
-	public String getQuery3(LdbcQuery3 operation) {
-		return prepare(InteractiveQuery.Query3, new ImmutableMap.Builder<String, String>()
-						.put("Person",   getConverter().convertId(operation.personId()))
-						.put("Country1", getConverter().convertString(operation.countryXName()))
-						.put("Country2", getConverter().convertString(operation.countryYName()))
-						.put("Date0",    getConverter().convertDateTime(operation.startDate()))
-						.put("Duration", getConverter().convertInteger(operation.durationDays()))
-						.build());
-	}
-
-	public String getQuery4(LdbcQuery4 operation) {
-		return prepare(InteractiveQuery.Query4, new ImmutableMap.Builder<String, String>()
-						.put("Person",   getConverter().convertId(operation.personId()))
-						.put("Date0",    getConverter().convertDateTime(operation.startDate()))
-						.put("Duration", getConverter().convertInteger(operation.durationDays()))
-						.build());
-	}
-
-	public String getQuery5(LdbcQuery5 operation) {
-		return prepare(InteractiveQuery.Query5, new ImmutableMap.Builder<String, String>()
-						.put("Person", getConverter().convertId(operation.personId()))
-						.put("Date0",  getConverter().convertDateTime(operation.minDate()))
-						.build());
-	}
-
-	public String getQuery6(LdbcQuery6 operation) {
-		return prepare(InteractiveQuery.Query6, new ImmutableMap.Builder<String, String>()
-						.put("Person", getConverter().convertId(operation.personId()))
-						.put("Tag",    getConverter().convertString(operation.tagName()))
-						.build());
-	}
-
-	public String getQuery7(LdbcQuery7 operation) {
-		return prepare(InteractiveQuery.Query7, new ImmutableMap.Builder<String, String>()
-						.put("Person", getConverter().convertId(operation.personId()))
-						.build());
-	}
-
-	public String getQuery8(LdbcQuery8 operation) {
-		return prepare(InteractiveQuery.Query8, new ImmutableMap.Builder<String, String>()
-						.put("Person", getConverter().convertId(operation.personId()))
-						.build());
-	}
-
-	public String getQuery9(LdbcQuery9 operation) {
-		return prepare(InteractiveQuery.Query9, new ImmutableMap.Builder<String, String>()
-						.put("Person", getConverter().convertId(operation.personId()))
-						.put("Date0",  getConverter().convertDateTime(operation.maxDate()))
-						.build());
-	}
-
-	public String getQuery10(LdbcQuery10 operation) {
-		return prepare(InteractiveQuery.Query10, new ImmutableMap.Builder<String, String>()
-						.put("Person", getConverter().convertId(operation.personId()))
-						.put("HS0",    getConverter().convertInteger(operation.month()))
-						.put("HS1",    getConverter().convertInteger(operation.month() % 12 + 1))
-						.build());
-	}
-
-	public String getQuery11(LdbcQuery11 operation) {
-		return prepare(InteractiveQuery.Query11, new ImmutableMap.Builder<String, String>()
-						.put("Person",  getConverter().convertId(operation.personId()))
-						.put("Date0",   getConverter().convertInteger(operation.workFromYear()))
-						.put("Country", getConverter().convertString(operation.countryName()))
-						.build());
-	}
-
-	public String getQuery12(LdbcQuery12 operation) {
-		return prepare(InteractiveQuery.Query12, new ImmutableMap.Builder<String, String>()
-						.put("Person",  getConverter().convertId(operation.personId()))
-						.put("TagType", getConverter().convertString(operation.tagClassName()))
-						.build());
-	}
-
-	public String getQuery13(LdbcQuery13 operation) {
-		return prepare(InteractiveQuery.Query13, new ImmutableMap.Builder<String, String>()
-						.put("Person1", getConverter().convertId(operation.person1Id()))
-						.put("Person2", getConverter().convertId(operation.person2Id()))
-						.build());
-	}
-
-	public String getQuery14(LdbcQuery14 operation) {
-		return prepare(InteractiveQuery.Query14, new ImmutableMap.Builder<String, String>()
-						.put("Person1", getConverter().convertId(operation.person1Id()))
-						.put("Person2", getConverter().convertId(operation.person2Id()))
-						.build());
-	}
+        public List<String> getParameters() {
+            return parameters;
+        }
+    }
 
 //	public String getShortQuery1PersonProfile(LdbcShortQuery1PersonProfile operation) {
 //		return getSql(InteractiveQuery.ShortQuery1PersonProfile,

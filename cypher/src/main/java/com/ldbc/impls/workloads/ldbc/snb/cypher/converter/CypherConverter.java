@@ -1,4 +1,6 @@
-package com.ldbc.impls.workloads.ldbc.snb.postgres.converter;
+package com.ldbc.impls.workloads.ldbc.snb.cypher.converter;
+
+import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

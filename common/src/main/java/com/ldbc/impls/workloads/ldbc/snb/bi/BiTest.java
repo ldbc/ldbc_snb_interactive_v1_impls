@@ -28,7 +28,7 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopics;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForums;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiWorkload;
 import com.ldbc.impls.workloads.ldbc.snb.SnbTest;
-import com.ldbc.impls.workloads.ldbc.snb.db.SnbDb;
+import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -36,7 +36,7 @@ import java.util.Arrays;
 
 public abstract class BiTest extends SnbTest {
 
-    public BiTest(SnbDb db) throws DbException {
+    public BiTest(BaseDb db) throws DbException {
         super(db, new LdbcSnbBiWorkload());
     }
 
@@ -44,7 +44,7 @@ public abstract class BiTest extends SnbTest {
     public void testQueries() throws DbException, IOException {
         run(db, new LdbcSnbBiQuery1PostingSummary(1311307200000L));
         run(db, new LdbcSnbBiQuery2TopTags(1265583600000L, 1290380400000L, "Germany", "United_States", LIMIT));
-        run(db, new LdbcSnbBiQuery3TagEvolution(2015, 12, 100 ));
+        run(db, new LdbcSnbBiQuery3TagEvolution(2015, 12, 100));
         run(db, new LdbcSnbBiQuery4PopularCountryTopics("MusicalArtist", "Netherlands", LIMIT));
         run(db, new LdbcSnbBiQuery5TopCountryPosters("Ethiopia", LIMIT));
         run(db, new LdbcSnbBiQuery6ActivePosters("Ehud_Olmert", LIMIT));

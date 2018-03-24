@@ -1,5 +1,6 @@
 package com.ldbc.impls.workloads.ldbc.snb.postgres.converter;
 
+import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,7 +13,7 @@ public class DateConverterTest {
         String timestamp = new Converter().convertDateTime(1262300400000L);
         Assert.assertEquals("'2009-12-31T23:00:00.000+0000'", timestamp);
     }
-    
+
     @Test
     public void timestampToEpochTest() throws ParseException {
         long epoch = new Converter().convertTimestampToEpoch("2009-12-31T23:00:00.000+0000");

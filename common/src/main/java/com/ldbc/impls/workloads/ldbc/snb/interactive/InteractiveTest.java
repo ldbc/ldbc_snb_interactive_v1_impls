@@ -1,10 +1,23 @@
 package com.ldbc.impls.workloads.ldbc.snb.interactive;
 
 import com.ldbc.driver.DbException;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery11;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery12;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery13;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery14;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery2;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery3;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery4;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery5;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery6;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery7;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery9;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcSnbInteractiveWorkload;
 import com.ldbc.impls.workloads.ldbc.snb.SnbTest;
-import com.ldbc.impls.workloads.ldbc.snb.db.SnbDb;
+import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -12,7 +25,7 @@ import java.util.Date;
 
 public abstract class InteractiveTest extends SnbTest {
 
-    public InteractiveTest(SnbDb db) throws DbException {
+    public InteractiveTest(BaseDb db) throws DbException {
         super(db, new LdbcSnbInteractiveWorkload());
     }
 

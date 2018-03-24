@@ -1,5 +1,7 @@
 package com.ldbc.impls.workloads.ldbc.snb.postgres.converter;
 
+import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
+
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,6 +17,7 @@ public class SparqlConverter extends Converter {
 
     /**
      * Converts epoch seconds to SPARQL timestamps.
+     *
      * @param timestamp
      * @return
      */
@@ -22,14 +25,14 @@ public class SparqlConverter extends Converter {
     public String convertDateTime(long timestamp) {
         SimpleDateFormat sdf = new SimpleDateFormat(SPARQL_DATETIME_QUERY_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return "\""+sdf.format(new Date(timestamp))+"\"";
+        return "\"" + sdf.format(new Date(timestamp)) + "\"";
     }
 
     @Override
     public String convertDate(long timestamp) {
         SimpleDateFormat sdf = new SimpleDateFormat(SPARQL_DATE_QUERY_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return "\""+sdf.format(new Date(timestamp))+"\"";
+        return "\"" + sdf.format(new Date(timestamp)) + "\"";
     }
 
     public long convertTimestampToEpoch(String timestamp) throws ParseException {
@@ -47,16 +50,16 @@ public class SparqlConverter extends Converter {
         return values
                 .stream()
                 .map(v -> "(\"" + v + "\")")
-                .collect( Collectors.joining( " " ) );
+                .collect(Collectors.joining(" "));
     }
 
     @Override
     public String convertBlacklist(List<String> words) {
         return "\"" +
-            words.stream()
-            .map(v -> "(" + v + ")")
-            .collect( Collectors.joining( "|" ) ) +
-            "\"";
+                words.stream()
+                        .map(v -> "(" + v + ")")
+                        .collect(Collectors.joining("|")) +
+                "\"";
     }
 
     @Override

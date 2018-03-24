@@ -1,5 +1,7 @@
 package com.ldbc.impls.workloads.ldbc.snb.postgres.converter;
 
+import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -12,7 +14,7 @@ public class PostgresConverter extends Converter {
     public String convertDateTime(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return "'"+sdf.format(date)+"'::timestamp";
+        return "'" + sdf.format(date) + "'::timestamp";
     }
 
     public String convertString(String value) {
@@ -22,9 +24,9 @@ public class PostgresConverter extends Converter {
     public String convertStringList(List<String> values) {
         return "'{" +
                 values
-                .stream()
-                .map(v -> "\"" + v + "\"")
-                .collect( Collectors.joining( "," ) ) +
+                        .stream()
+                        .map(v -> "\"" + v + "\"")
+                        .collect(Collectors.joining(",")) +
                 "}'::text[]";
     }
 
