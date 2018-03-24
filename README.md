@@ -44,12 +44,6 @@ The queries in this repository are work-in-progress.
 
 ## User's guide
 
-```bash
-mvn clean install -DskipTests
-```
-
-### Generating the validation data set
-
 1. Grab the driver source code from: https://github.com/ldbc/ldbc_snb_driver.
 2. Install the driver artifact to the local Maven repository:
 
@@ -57,13 +51,13 @@ mvn clean install -DskipTests
    mvn clean install -DskipTests
    ```
 
-3. Navigate to the root of this repository and generate the shaded JAR files for the implementations:
+3. Navigate to the root of this repository and generate the JAR files for the implementations:
 
    ```bash
    mvn clean package -DskipTests
    ```
 
-4. For each implementation, it is possible to (1) generate validation parameters, (2) validate against an existing validation parameters, and (3) run the benchmark. Set the parameters according to your system configuration in the appropriate `.properties` file and run the driver with one of the following scripts:
+4. For each implementation, it is possible to (1) create validation parameters, (2) validate against an existing validation parameters, and (3) run the benchmark. Set the parameters according to your system configuration in the appropriate `.properties` file and run the driver with one of the following scripts:
 
    ```bash
    # BI workload
