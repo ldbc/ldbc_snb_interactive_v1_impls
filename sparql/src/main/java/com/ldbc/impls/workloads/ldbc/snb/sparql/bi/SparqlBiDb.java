@@ -57,7 +57,6 @@ import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlDb;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlDbConnectionState;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlListOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlSingletonOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.sparql.interactive.SparqlInteractiveQueryStore;
 import org.openrdf.query.BindingSet;
 
 import java.text.ParseException;
