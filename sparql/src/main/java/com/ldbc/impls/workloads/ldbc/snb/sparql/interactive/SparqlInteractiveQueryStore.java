@@ -3,7 +3,7 @@ package com.ldbc.impls.workloads.ldbc.snb.sparql.interactive;
 import com.ldbc.driver.DbException;
 import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
 import com.ldbc.impls.workloads.ldbc.snb.interactive.InteractiveQueryStore;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.converter.SparqlConverter;
+import com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlConverter;
 
 import java.util.Map;
 

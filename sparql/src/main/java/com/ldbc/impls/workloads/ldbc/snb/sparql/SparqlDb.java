@@ -3,7 +3,7 @@ package com.ldbc.impls.workloads.ldbc.snb.sparql;
 import com.google.common.collect.ImmutableList;
 import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
 import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.converter.SparqlConverter;
+import com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlConverter;
 import org.openrdf.model.Literal;
 import org.openrdf.query.BindingSet;
 

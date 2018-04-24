@@ -6,7 +6,7 @@ import com.ldbc.driver.DbException;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery16ExpertsInSocialCircle;
 import com.ldbc.impls.workloads.ldbc.snb.bi.BiQueryStore;
 import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.converter.SparqlConverter;
+import com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlConverter;
 
 import java.util.ArrayList;
 import java.util.List;

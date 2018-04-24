@@ -1,4 +1,4 @@
-package com.ldbc.impls.workloads.ldbc.snb.postgres.converter;
+package com.ldbc.impls.workloads.ldbc.snb.sparql.converter;
 
 import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
 
