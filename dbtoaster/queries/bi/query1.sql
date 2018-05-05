@@ -5,7 +5,7 @@ SELECT messageYear, message_order, lengthCategory
      , count(*) AS messageCount
      , avg(post_prep.ps_length) AS averageMessageLength
      , sum(post_prep.ps_length) AS sumMessageLength
-     --, count(*) / pc.cnt AS percentageOfMessages
+     , count(*) / pc.cnt AS percentageOfMessages
   FROM (
     SELECT extract(year from p1.ps_creationdate) AS messageYear
          , CASE WHEN p1.ps_replyof = -1 THEN 0 ELSE 1 END AS message_order -- was: IS NOT NULL AS isComment
@@ -23,7 +23,7 @@ SELECT messageYear, message_order, lengthCategory
        AND p1.ps_imagefile = '-1' -- was: IS NULL
      ) post_prep
      , (
-    SELECT 0.0 + count(*) AS cnt
+    SELECT count(*) AS cnt
       FROM post p2
      WHERE 1=1
        AND p2.ps_creationdate < DATE('2011-07-22') -- FIXME:param
