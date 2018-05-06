@@ -43,19 +43,3 @@ To do so, create/edit the `$STARDOG_HOME/stardog.properties` file and add the fo
 query.timeout=3600s
 memory.mode=read_optimized
 ```
-
-### Troubleshooting
-
-Problem: when running the bundled JAR file, Java throws the following error.
-
-```
-Error: A JNI error has occurred, please check your installation and try again
-Exception in thread "main" java.lang.SecurityException: Invalid signature file digest for Manifest main attributes
-	at sun.security.util.SignatureFileVerifier.processImpl(SignatureFileVerifier.java:330)
-```
-
-Solution: remove the signature files with the following script.
-
-```bash
-./delete-signature-files.sh
-```
