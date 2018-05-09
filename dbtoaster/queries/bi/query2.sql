@@ -52,7 +52,7 @@ java.lang.StackOverflowError
       AND cr.p_placeid = ci.pl_placeid
       AND ci.pl_containerplaceid = co.pl_placeid
         -- filter
-      AND (1=1 OR co.pl_name = 'Ethiopia' OR co.pl_name = 'Belarus') -- FIXME:param country1, country2
+      AND (co.pl_name = 'Ethiopia' OR co.pl_name = 'Belarus') -- FIXME:param country1, country2
       AND p.ps_creationdate BETWEEN DATE('2010-01-01') AND DATE('2010-11-08') -- FIXME:param startDate, endDate
     GROUP BY co.pl_name, messageMonth, cr.p_gender, t.t_name, ageGroup
      ) res
