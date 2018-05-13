@@ -2,8 +2,8 @@
 
 set -e
 
-DATA_DIR='data'
-RAW_DIR='data/raw'
+RAW_DIR=${1:-'data/raw'}
+DATA_DIR=${2:-'data'}
 
 FILE_NAME_SUFFIX='_0_0.csv'
 #SED_SKIP_HEADER=(-e '2,$ p')
