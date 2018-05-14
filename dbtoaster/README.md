@@ -16,7 +16,7 @@ Note: `prepare-data.sh` accepts directory names as parameters to read and write 
 
 ## Running BI queries
 
-The `run-bi-query.sh` is provided for convenience to run a single BI query through DBToaster after loading the schema and data.
+The `bi-query-util.sh` is provided for convenience to run a single BI query through DBToaster after loading the schema and data.
 
 This by default assumes that DBToaster binary if located at `$HOME/bin/dbtoaster/bin/dbtoaster`.
 To override DBToaster path, set the `DBTOASTER_BIN` environment variable pointing to the DBToaster binary.
@@ -24,7 +24,24 @@ To override DBToaster path, set the `DBTOASTER_BIN` environment variable pointin
 Example:
 
 ```shell
-user@machine:~/git/ldbc_snb_implementations/dbtoaster$ ./run-bi-query.sh 1
+user@machine:~/git/ldbc_snb_implementations/dbtoaster$ ./bi-query-util.sh 1
 ```
+
+## Generate Scala JAR
+
+Again, the `bi-query-util.sh` can be used to generate Scala JAR for the given BI query.
+
+Simply provide the generator script with `jar` in the 2nd parameter to generate `ldbc-bi-q$n.jar` under the `target/` directory, where `$n` is the number of the BI query.
+
+Example:
+
+```shell
+user@machine:~/git/ldbc_snb_implementations/dbtoaster$ ./bi-query-util.sh 1 jar
+```
+
+A few things to know about the generated query class:
+
+ - the query name is `biQ$n`, again, `$n` stands for the query number
+ - the query looks for the input CSV files in the `data/` subdirectory of the current working dir
 
 [DBToaster]: https://dbtoaster.github.io/
