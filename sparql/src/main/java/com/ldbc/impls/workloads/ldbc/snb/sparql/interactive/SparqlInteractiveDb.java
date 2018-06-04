@@ -247,7 +247,7 @@ public class SparqlInteractiveDb extends SparqlDb<SparqlInteractiveQueryStore> {
             String personFirstName = convertString(bs, "personFirstName");
             String personLastName = convertString(bs, "personLastName");
             long commentCreationDate = convertDate(bs, "commentCreationDate");
-            long commentId = convertDate(bs, "commentId");
+            long commentId = convertLong(bs, "commentId");
             String commentContent = convertString(bs, "commentContent");
             return new LdbcQuery8Result(personId, personFirstName, personLastName, commentCreationDate, commentId, commentContent);
         }
