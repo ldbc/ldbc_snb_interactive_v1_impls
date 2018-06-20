@@ -12,11 +12,6 @@ install:
   - . environment-variables-neo4j.sh
   - ./configure-neo4j.sh
   - cd ..
-  # driver
-  - git clone https://github.com/ldbc/ldbc_snb_driver
-  - cd ldbc_snb_driver
-  - mvn install -DskipTests
-  - cd ..
   # environment vars
   - export POSTFIX=_0_0.csv
 script:
