@@ -1,1 +1,7 @@
-insert into forum values(--1--, '--2--', --3--::timestamp, --4--)
+insert into forum values
+(
+    :forumId,
+    :forumTitle,
+    :creationDate,
+    :moderatorPersonId
+);

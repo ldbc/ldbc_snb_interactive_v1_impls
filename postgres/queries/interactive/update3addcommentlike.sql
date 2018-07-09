@@ -1,1 +1,6 @@
-insert into likes values(--1--, --2--, --3--::timestamp);
+insert into likes values
+(
+    :personId,
+    :commentId,
+    :creationDate
+);

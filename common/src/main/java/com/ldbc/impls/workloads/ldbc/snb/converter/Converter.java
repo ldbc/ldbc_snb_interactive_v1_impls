@@ -78,6 +78,13 @@ public class Converter {
         return convertStringList(words);
     }
 
+    /**
+     * Some implementations, e.g. the SPARQL one, will not work with a simple toString and require some tinkering,
+     * e.g. padding the id with '0' characters.
+     *
+     * @param value
+     * @return
+     */
     public String convertId(long value) {
         return Long.toString(value);
     }

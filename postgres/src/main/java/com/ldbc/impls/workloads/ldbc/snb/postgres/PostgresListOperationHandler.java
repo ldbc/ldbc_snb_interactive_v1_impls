@@ -13,14 +13,17 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class PostgresListOperationHandler<OperationType extends Operation<List<OperationResult>>, OperationResult, TQueryStore extends QueryStore>
-        implements OperationHandler<OperationType, PostgresDbConnectionState<TQueryStore>> {
+public abstract class PostgresListOperationHandler<
+            OperationType extends Operation<List<OperationResult>>,
+            OperationResult,
+            TQueryStore extends QueryStore
+        > implements OperationHandler<OperationType, PostgresDbConnectionState<TQueryStore>> {
 
     @Override
     public void executeOperation(OperationType operation, PostgresDbConnectionState<TQueryStore> state,
                                  ResultReporter resultReporter) throws DbException {
         Connection conn = state.getConnection();
-        List<OperationResult> results = new ArrayList<OperationResult>();
+        List<OperationResult> results = new ArrayList<>();
         int resultCount = 0;
         results.clear();
 
@@ -51,5 +54,7 @@ public abstract class PostgresListOperationHandler<OperationType extends Operati
 
     public abstract String getQueryString(PostgresDbConnectionState<TQueryStore> state, OperationType operation);
 
-    public abstract OperationResult convertSingleResult(ResultSet result) throws SQLException;
+    public OperationResult convertSingleResult(ResultSet result) throws SQLException {
+        throw new UnsupportedOperationException();
+    }
 }

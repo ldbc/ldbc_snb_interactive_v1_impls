@@ -1,1 +1,5 @@
-insert into person_language values (--1--, '--2--')
+insert into person_language values
+(
+    :personId,
+    :language
+);

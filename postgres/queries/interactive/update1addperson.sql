@@ -1,1 +1,12 @@
-insert into person values(--1--, '--2--', '--3--', '--4--', --5--::timestamp, --6--::timestamp, '--7--', '--8--', --9--);
+insert into person values
+(
+    :personId,
+    :personFirstName,
+    :personLastName,
+    :gender,
+    :birthday,
+    :creationDate,
+    :locationIp,
+    :browserUsed,
+    :cityId
+);

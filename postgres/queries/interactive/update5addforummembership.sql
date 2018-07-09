@@ -1,1 +1,6 @@
-insert into forum_person values(--1--, --2--, --3--::timestamp);
+insert into forum_person values
+(
+    :forumId,
+    :personId,
+    :joinDate
+);

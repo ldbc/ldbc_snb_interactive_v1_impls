@@ -1,1 +1,6 @@
-insert into person_company values (--1--, --2--, --3--)
+insert into person_company values
+(
+    :personId,
+    :workAtOrganizationId,
+    :workAtFromYear
+);

@@ -2,6 +2,7 @@ package com.ldbc.impls.workloads.ldbc.snb.postgres.interactive;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.control.LoggingService;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcNoResult;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10Result;
@@ -30,11 +31,35 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery9;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery9Result;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery1PersonProfile;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery1PersonProfileResult;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery2PersonPosts;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery2PersonPostsResult;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery3PersonFriends;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery3PersonFriendsResult;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery4MessageContent;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery4MessageContentResult;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery5MessageCreator;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery5MessageCreatorResult;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery6MessageForum;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery6MessageForumResult;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery7MessageReplies;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery7MessageRepliesResult;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate1AddPerson;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate2AddPostLike;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate3AddCommentLike;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate4AddForum;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate5AddForumMembership;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate6AddPost;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate7AddComment;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate8AddFriendship;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDb;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDbConnectionState;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresListOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresMultipleUpdateOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresPoolingDbConnectionState;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresSingletonOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresUpdateOperationHandler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -52,7 +77,7 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
             throw new DbException(e);
         }
 
-        registerOperationHandler(LdbcQuery1.class, Query1.class); //ARRAY RESULT
+        registerOperationHandler(LdbcQuery1.class, Query1.class);
         registerOperationHandler(LdbcQuery2.class, Query2.class);
         registerOperationHandler(LdbcQuery3.class, Query3.class);
         registerOperationHandler(LdbcQuery4.class, Query4.class);
@@ -63,24 +88,26 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
         registerOperationHandler(LdbcQuery9.class, Query9.class);
         registerOperationHandler(LdbcQuery10.class, Query10.class);
         registerOperationHandler(LdbcQuery11.class, Query11.class);
-        registerOperationHandler(LdbcQuery12.class, Query12.class); //ARRAY RESULT
-        registerOperationHandler(LdbcQuery13.class, Query13.class); //NESTED WITH
-        registerOperationHandler(LdbcQuery14.class, Query14.class); //NESTED WITH
-//		registerOperationHandler(LdbcShortQuery1PersonProfile.class, ShortQuery1PersonProfile.class);
-//		registerOperationHandler(LdbcShortQuery2PersonPosts.class, ShortQuery2PersonPosts.class); //BUG
-//		registerOperationHandler(LdbcShortQuery3PersonFriends.class, ShortQuery3PersonFriends.class);
-//		registerOperationHandler(LdbcShortQuery4MessageContent.class, ShortQuery4MessageContent.class);
-//		registerOperationHandler(LdbcShortQuery5MessageCreator.class, ShortQuery5MessageCreator.class);
-//		registerOperationHandler(LdbcShortQuery6MessageForum.class, ShortQuery6MessageForum.class);
-//		registerOperationHandler(LdbcShortQuery7MessageReplies.class, ShortQuery7MessageReplies.class);
-//		registerOperationHandler(LdbcUpdate1AddPerson.class, Update1AddPerson.class);
-//		registerOperationHandler(LdbcUpdate2AddPostLike.class, Update2AddPostLike.class);
-//		registerOperationHandler(LdbcUpdate3AddCommentLike.class, Update3AddCommentLike.class);
-//		registerOperationHandler(LdbcUpdate4AddForum.class, Update4AddForum.class);
-//		registerOperationHandler(LdbcUpdate5AddForumMembership.class, Update5AddForumMembership.class);
-//		registerOperationHandler(LdbcUpdate6AddPost.class, Update6AddPost.class);
-//		registerOperationHandler(LdbcUpdate7AddComment.class, Update7AddComment.class);
-//		registerOperationHandler(LdbcUpdate8AddFriendship.class, Update8AddFriendship.class);
+        registerOperationHandler(LdbcQuery12.class, Query12.class);
+        registerOperationHandler(LdbcQuery13.class, Query13.class);
+        registerOperationHandler(LdbcQuery14.class, Query14.class);
+
+        registerOperationHandler(LdbcShortQuery1PersonProfile.class, ShortQuery1PersonProfile.class);
+        registerOperationHandler(LdbcShortQuery2PersonPosts.class, ShortQuery2PersonPosts.class); //BUG
+        registerOperationHandler(LdbcShortQuery3PersonFriends.class, ShortQuery3PersonFriends.class);
+        registerOperationHandler(LdbcShortQuery4MessageContent.class, ShortQuery4MessageContent.class);
+        registerOperationHandler(LdbcShortQuery5MessageCreator.class, ShortQuery5MessageCreator.class);
+        registerOperationHandler(LdbcShortQuery6MessageForum.class, ShortQuery6MessageForum.class);
+        registerOperationHandler(LdbcShortQuery7MessageReplies.class, ShortQuery7MessageReplies.class);
+
+        registerOperationHandler(LdbcUpdate1AddPerson.class, Update1AddPerson.class);
+        registerOperationHandler(LdbcUpdate2AddPostLike.class, Update2AddPostLike.class);
+        registerOperationHandler(LdbcUpdate3AddCommentLike.class, Update3AddCommentLike.class);
+        registerOperationHandler(LdbcUpdate4AddForum.class, Update4AddForum.class);
+        registerOperationHandler(LdbcUpdate5AddForumMembership.class, Update5AddForumMembership.class);
+        registerOperationHandler(LdbcUpdate6AddPost.class, Update6AddPost.class);
+        registerOperationHandler(LdbcUpdate7AddComment.class, Update7AddComment.class);
+        registerOperationHandler(LdbcUpdate8AddFriendship.class, Update8AddFriendship.class);
     }
 
     public static class Query1 extends PostgresListOperationHandler<LdbcQuery1, LdbcQuery1Result, PostgresInteractiveQueryStore> {
@@ -366,204 +393,205 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-//	public static class ShortQuery1PersonProfile extends JdbcPreparedSingletonOperationHandler<LdbcShortQuery1PersonProfile, LdbcShortQuery1PersonProfileResult, PostgresInteractiveQueryStore> {
-//
-//		@Override
-//		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery1PersonProfile operation) {
-//			return state.getQueryStore().getShortQuery1PersonProfile(operation);
-//		}
-//
-//		@Override
-//		public LdbcShortQuery1PersonProfileResult convertSingleResult(ResultSet result) throws SQLException {
-//			return new LdbcShortQuery1PersonProfileResult(
-//					result.getString(1),
-//					result.getString(2),
-//					stringTimestampToEpoch(result, 3),
-//					result.getString(4),
-//					result.getString(5),
-//					result.getLong(6),
-//					result.getString(7),
-//					stringTimestampToEpoch(result, 8));
-//		}
-//
-//	}
-//
-//	public static class ShortQuery2PersonPosts extends PostgresListOperationHandler<LdbcShortQuery2PersonPosts, LdbcShortQuery2PersonPostsResult, PostgresInteractiveQueryStore> {
-//
-//		@Override
-//		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery2PersonPosts operation) {
-//			return state.getQueryStore().getShortQuery2PersonPosts(operation);
-//		}
-//
-//		@Override
-//		public LdbcShortQuery2PersonPostsResult convertSingleResult(ResultSet result) throws SQLException {
-//			return new LdbcShortQuery2PersonPostsResult(
-//					result.getLong(1),
-//					result.getString(2),
-//					stringTimestampToEpoch(result, 3),
-//					result.getLong(4),
-//					result.getLong(5),
-//					result.getString(6),
-//					result.getString(7));
-//		}
-//
-//	}
-//
-//	public static class ShortQuery3PersonFriends extends PostgresListOperationHandler<LdbcShortQuery3PersonFriends, LdbcShortQuery3PersonFriendsResult, PostgresInteractiveQueryStore> {
-//
-//		@Override
-//		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery3PersonFriends operation) {
-//			return state.getQueryStore().getShortQuery3PersonFriends(operation);
-//		}
-//
-//		@Override
-//		public LdbcShortQuery3PersonFriendsResult convertSingleResult(ResultSet result) throws SQLException {
-//			return new LdbcShortQuery3PersonFriendsResult(
-//					result.getLong(1),
-//					result.getString(2),
-//					result.getString(3),
-//					stringTimestampToEpoch(result, 4));
-//		}
-//
-//	}
-//
-//	public static class ShortQuery4MessageContent extends JdbcPreparedSingletonOperationHandler<LdbcShortQuery4MessageContent, LdbcShortQuery4MessageContentResult, PostgresInteractiveQueryStore> {
-//
-//		@Override
-//		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery4MessageContent operation) {
-//			return state.getQueryStore().getShortQuery4MessageContent(operation);
-//		}
-//
-//		@Override
-//		public LdbcShortQuery4MessageContentResult convertSingleResult(ResultSet result) throws SQLException {
-//			return new LdbcShortQuery4MessageContentResult(
-//					result.getString(1),
-//					stringTimestampToEpoch(result, 2));
-//		}
-//
-//	}
-//
-//	public static class ShortQuery5MessageCreator extends JdbcPreparedSingletonOperationHandler<LdbcShortQuery5MessageCreator, LdbcShortQuery5MessageCreatorResult, PostgresInteractiveQueryStore> {
-//
-//		@Override
-//		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery5MessageCreator operation) {
-//			return state.getQueryStore().getShortQuery5MessageCreator(operation);
-//		}
-//
-//		@Override
-//		public LdbcShortQuery5MessageCreatorResult convertSingleResult(ResultSet result) throws SQLException {
-//			return new LdbcShortQuery5MessageCreatorResult(
-//					result.getLong(1),
-//					result.getString(2),
-//					result.getString(3));
-//		}
-//
-//	}
-//
-//	public static class ShortQuery6MessageForum extends JdbcPreparedSingletonOperationHandler<LdbcShortQuery6MessageForum, LdbcShortQuery6MessageForumResult, PostgresInteractiveQueryStore> {
-//
-//		@Override
-//		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery6MessageForum operation) {
-//			return state.getQueryStore().getShortQuery6MessageForum(operation);
-//		}
-//
-//		@Override
-//		public LdbcShortQuery6MessageForumResult convertSingleResult(ResultSet result) throws SQLException {
-//			return new LdbcShortQuery6MessageForumResult(
-//					result.getLong(1),
-//					result.getString(2),
-//					result.getLong(3),
-//					result.getString(4),
-//					result.getString(5));
-//		}
-//
-//	}
-//
-//	public static class ShortQuery7MessageReplies extends PostgresListOperationHandler<LdbcShortQuery7MessageReplies, LdbcShortQuery7MessageRepliesResult, PostgresInteractiveQueryStore> {
-//
-//		@Override
-//		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery7MessageReplies operation) {
-//			return state.getQueryStore().getShortQuery7MessageReplies(operation);
-//		}
-//
-//		@Override
-//		public LdbcShortQuery7MessageRepliesResult convertSingleResult(ResultSet result) throws SQLException {
-//			return new LdbcShortQuery7MessageRepliesResult(
-//					result.getLong(1),
-//					result.getString(2),
-//					stringTimestampToEpoch(result, 3),
-//					result.getLong(4),
-//					result.getString(5),
-//					result.getString(6),
-//					result.getBoolean(7));
-//		}
-//
-//	}
-//
-//	public static class Update1AddPerson extends JdbcPreparedMultipleUpdateOperationHandler<LdbcUpdate1AddPerson, LdbcNoResult, PostgresInteractiveQueryStore> {
-//
-//		@Override
-//		public List<PreparedStatement> getStatements(Connection con, PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate1AddPerson operation) throws SQLException {
-//			return state.getQueryStore().getUpdate1AddPerson(operation);
-//		}
-//	}
-//
-//	public static class Update2AddPostLike extends JdbcPreparedUpdateOperationHandler<LdbcUpdate2AddPostLike, LdbcNoResult, PostgresInteractiveQueryStore> {
-//
-//		@Override
-//		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate2AddPostLike operation) {
-//			return state.getQueryStore().getUpdate2AddPostLike(operation);
-//		}
-//
-//	}
-//
-//	public static class Update3AddCommentLike extends JdbcPreparedUpdateOperationHandler<LdbcUpdate3AddCommentLike, LdbcNoResult, PostgresInteractiveQueryStore> {
-//
-//		@Override
-//		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate3AddCommentLike operation) {
-//			return state.getQueryStore().getUpdate3AddCommentLike(operation);
-//		}
-//	}
-//
-//	public static class Update4AddForum extends JdbcPreparedMultipleUpdateOperationHandler<LdbcUpdate4AddForum, LdbcNoResult, PostgresInteractiveQueryStore> {
-//
-//		@Override
-//		public List<PreparedStatement> getStatements(Connection con, PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate4AddForum operation) throws SQLException {
-//			return state.getQueryStore().getUpdate4AddForum(operation);
-//		}
-//	}
-//
-//	public static class Update5AddForumMembership extends JdbcPreparedUpdateOperationHandler<LdbcUpdate5AddForumMembership, LdbcNoResult, PostgresInteractiveQueryStore> {
-//
-//		@Override
-//		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate5AddForumMembership operation) {
-//			return state.getQueryStore().getUpdate5AddForumMembership(operation);
-//		}
-//	}
-//
-//	public static class Update6AddPost extends JdbcPreparedMultipleUpdateOperationHandler<LdbcUpdate6AddPost, LdbcNoResult, PostgresInteractiveQueryStore> {
-//
-//		@Override
-//		public List<PreparedStatement> getStatements(Connection con, PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate6AddPost operation) throws SQLException {
-//			return state.getQueryStore().getUpdate6AddPost(operation, con);
-//		}
-//	}
-//
-//	public static class Update7AddComment extends JdbcPreparedMultipleUpdateOperationHandler<LdbcUpdate7AddComment, LdbcNoResult, PostgresInteractiveQueryStore> {
-//
-//		@Override
-//		public List<PreparedStatement> getStatements(Connection con, PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate7AddComment operation) throws SQLException {
-//			return state.getQueryStore().getUpdate7AddComment(operation, con);
-//		}
-//
-//	}
-//
-//	public static class Update8AddFriendship extends JdbcPreparedUpdateOperationHandler<LdbcUpdate8AddFriendship, LdbcNoResult, PostgresInteractiveQueryStore> {
-//
-//		@Override
-//		public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate8AddFriendship operation) {
-//			return state.getQueryStore().getUpdate8AddFriendship(operation);
-//		}
-//
-//	}
+    public static class ShortQuery1PersonProfile extends PostgresSingletonOperationHandler<LdbcShortQuery1PersonProfile, LdbcShortQuery1PersonProfileResult, PostgresInteractiveQueryStore> {
+
+        @Override
+        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery1PersonProfile operation) {
+            return state.getQueryStore().getShortQuery1PersonProfile(operation);
+        }
+
+        @Override
+        public LdbcShortQuery1PersonProfileResult convertSingleResult(ResultSet result) throws SQLException {
+            return new LdbcShortQuery1PersonProfileResult(
+                    result.getString(1),
+                    result.getString(2),
+                    stringTimestampToEpoch(result, 3),
+                    result.getString(4),
+                    result.getString(5),
+                    result.getLong(6),
+                    result.getString(7),
+                    stringTimestampToEpoch(result, 8));
+        }
+
+    }
+
+    public static class ShortQuery2PersonPosts extends PostgresListOperationHandler<LdbcShortQuery2PersonPosts, LdbcShortQuery2PersonPostsResult, PostgresInteractiveQueryStore> {
+
+        @Override
+        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery2PersonPosts operation) {
+            return state.getQueryStore().getShortQuery2PersonPosts(operation);
+        }
+
+        @Override
+        public LdbcShortQuery2PersonPostsResult convertSingleResult(ResultSet result) throws SQLException {
+            return new LdbcShortQuery2PersonPostsResult(
+                    result.getLong(1),
+                    result.getString(2),
+                    stringTimestampToEpoch(result, 3),
+                    result.getLong(4),
+                    result.getLong(5),
+                    result.getString(6),
+                    result.getString(7));
+        }
+
+    }
+
+    public static class ShortQuery3PersonFriends extends PostgresListOperationHandler<LdbcShortQuery3PersonFriends, LdbcShortQuery3PersonFriendsResult, PostgresInteractiveQueryStore> {
+
+        @Override
+        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery3PersonFriends operation) {
+            return state.getQueryStore().getShortQuery3PersonFriends(operation);
+        }
+
+        @Override
+        public LdbcShortQuery3PersonFriendsResult convertSingleResult(ResultSet result) throws SQLException {
+            return new LdbcShortQuery3PersonFriendsResult(
+                    result.getLong(1),
+                    result.getString(2),
+                    result.getString(3),
+                    stringTimestampToEpoch(result, 4));
+        }
+
+    }
+
+    public static class ShortQuery4MessageContent extends PostgresSingletonOperationHandler<LdbcShortQuery4MessageContent, LdbcShortQuery4MessageContentResult, PostgresInteractiveQueryStore> {
+
+        @Override
+        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery4MessageContent operation) {
+            return state.getQueryStore().getShortQuery4MessageContent(operation);
+        }
+
+        @Override
+        public LdbcShortQuery4MessageContentResult convertSingleResult(ResultSet result) throws SQLException {
+            return new LdbcShortQuery4MessageContentResult(
+                    result.getString(1),
+                    stringTimestampToEpoch(result, 2));
+        }
+
+    }
+
+    public static class ShortQuery5MessageCreator extends PostgresSingletonOperationHandler<LdbcShortQuery5MessageCreator, LdbcShortQuery5MessageCreatorResult, PostgresInteractiveQueryStore> {
+
+        @Override
+        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery5MessageCreator operation) {
+            return state.getQueryStore().getShortQuery5MessageCreator(operation);
+        }
+
+        @Override
+        public LdbcShortQuery5MessageCreatorResult convertSingleResult(ResultSet result) throws SQLException {
+            return new LdbcShortQuery5MessageCreatorResult(
+                    result.getLong(1),
+                    result.getString(2),
+                    result.getString(3));
+        }
+
+    }
+
+    public static class ShortQuery6MessageForum extends PostgresSingletonOperationHandler<LdbcShortQuery6MessageForum, LdbcShortQuery6MessageForumResult, PostgresInteractiveQueryStore> {
+
+        @Override
+        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery6MessageForum operation) {
+            return state.getQueryStore().getShortQuery6MessageForum(operation);
+        }
+
+        @Override
+        public LdbcShortQuery6MessageForumResult convertSingleResult(ResultSet result) throws SQLException {
+            return new LdbcShortQuery6MessageForumResult(
+                    result.getLong(1),
+                    result.getString(2),
+                    result.getLong(3),
+                    result.getString(4),
+                    result.getString(5));
+        }
+
+    }
+
+    public static class ShortQuery7MessageReplies extends PostgresListOperationHandler<LdbcShortQuery7MessageReplies, LdbcShortQuery7MessageRepliesResult, PostgresInteractiveQueryStore> {
+
+        @Override
+        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery7MessageReplies operation) {
+            return state.getQueryStore().getShortQuery7MessageReplies(operation);
+        }
+
+        @Override
+        public LdbcShortQuery7MessageRepliesResult convertSingleResult(ResultSet result) throws SQLException {
+            return new LdbcShortQuery7MessageRepliesResult(
+                    result.getLong(1),
+                    result.getString(2),
+                    stringTimestampToEpoch(result, 3),
+                    result.getLong(4),
+                    result.getString(5),
+                    result.getString(6),
+                    result.getBoolean(7));
+        }
+
+    }
+
+    public static class Update1AddPerson extends PostgresMultipleUpdateOperationHandler<LdbcUpdate1AddPerson, LdbcNoResult, PostgresInteractiveQueryStore> {
+
+        @Override
+        public List<String> getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate1AddPerson operation) {
+            return state.getQueryStore().getUpdate1AddPerson(operation);
+        }
+
+    }
+
+    public static class Update2AddPostLike extends PostgresUpdateOperationHandler<LdbcUpdate2AddPostLike, LdbcNoResult, PostgresInteractiveQueryStore> {
+
+        @Override
+        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate2AddPostLike operation) {
+            return state.getQueryStore().getUpdate2AddPostLike(operation);
+        }
+
+    }
+
+    public static class Update3AddCommentLike extends PostgresUpdateOperationHandler<LdbcUpdate3AddCommentLike, LdbcNoResult, PostgresInteractiveQueryStore> {
+
+        @Override
+        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate3AddCommentLike operation) {
+            return state.getQueryStore().getUpdate3AddCommentLike(operation);
+        }
+    }
+
+    public static class Update4AddForum extends PostgresMultipleUpdateOperationHandler<LdbcUpdate4AddForum, LdbcNoResult, PostgresInteractiveQueryStore> {
+
+        @Override
+        public List<String> getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate4AddForum operation) {
+            return state.getQueryStore().getUpdate4AddForum(operation);
+        }
+    }
+
+    public static class Update5AddForumMembership extends PostgresUpdateOperationHandler<LdbcUpdate5AddForumMembership, LdbcNoResult, PostgresInteractiveQueryStore> {
+
+        @Override
+        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate5AddForumMembership operation) {
+            return state.getQueryStore().getUpdate5AddForumMembership(operation);
+        }
+    }
+
+    public static class Update6AddPost extends PostgresMultipleUpdateOperationHandler<LdbcUpdate6AddPost, LdbcNoResult, PostgresInteractiveQueryStore> {
+
+        @Override
+        public List<String> getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate6AddPost operation) {
+            return state.getQueryStore().getUpdate6AddPost(operation);
+        }
+    }
+
+    public static class Update7AddComment extends PostgresMultipleUpdateOperationHandler<LdbcUpdate7AddComment, LdbcNoResult, PostgresInteractiveQueryStore> {
+
+        @Override
+        public List<String> getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate7AddComment operation) {
+            return state.getQueryStore().getUpdate7AddComment(operation);
+        }
+
+    }
+
+    public static class Update8AddFriendship extends PostgresUpdateOperationHandler<LdbcUpdate8AddFriendship, LdbcNoResult, PostgresInteractiveQueryStore> {
+
+        @Override
+        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate8AddFriendship operation) {
+            return state.getQueryStore().getUpdate8AddFriendship(operation);
+        }
+
+    }
 }

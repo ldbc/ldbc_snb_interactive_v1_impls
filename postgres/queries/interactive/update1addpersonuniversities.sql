@@ -1,1 +1,6 @@
-insert into person_university values (--1--, --2--, --3--)
+insert into person_university values
+(
+    :personId,
+    :studyAtOrganisationId,
+    :studyAtClassYear
+);

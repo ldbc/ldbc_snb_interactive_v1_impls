@@ -15,6 +15,13 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery6;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery7;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery9;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery1PersonProfile;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery2PersonPosts;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery3PersonFriends;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery4MessageContent;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery5MessageCreator;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery6MessageForum;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery7MessageReplies;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcSnbInteractiveWorkload;
 import com.ldbc.impls.workloads.ldbc.snb.SnbTest;
 import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
@@ -45,6 +52,24 @@ public abstract class InteractiveTest extends SnbTest {
         run(db, new LdbcQuery12(19791209300143L, "BasketballPlayer", LIMIT));
         run(db, new LdbcQuery13(32985348833679L, 26388279067108L));
         run(db, new LdbcQuery14(32985348833679L, 2199023256862L));
+
+        run(db, new LdbcShortQuery1PersonProfile(32985348833679L));
+        run(db, new LdbcShortQuery2PersonPosts(32985348833679L, LIMIT));
+        run(db, new LdbcShortQuery3PersonFriends(32985348833679L));
+        run(db, new LdbcShortQuery4MessageContent(2061584476422L));
+        run(db, new LdbcShortQuery5MessageCreator(2061584476422L));
+        run(db, new LdbcShortQuery6MessageForum(2061584476422L));
+        run(db, new LdbcShortQuery7MessageReplies(2061584476422L));
+
+//        run(db, new LdbcUpdate1AddPerson());
+//        run(db, new LdbcUpdate2AddPostLike());
+//        run(db, new LdbcUpdate3AddCommentLike());
+//        run(db, new LdbcUpdate4AddForum());
+//        run(db, new LdbcUpdate5AddForumMembership());
+//        run(db, new LdbcUpdate6AddPost());
+//        run(db, new LdbcUpdate7AddComment());
+//        run(db, new LdbcUpdate8AddFriendship());
+
         db.close();
         workload.close();
     }

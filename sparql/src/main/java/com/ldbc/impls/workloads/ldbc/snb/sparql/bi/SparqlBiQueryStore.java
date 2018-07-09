@@ -5,31 +5,14 @@ import com.google.common.collect.ImmutableMap;
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery16ExpertsInSocialCircle;
 import com.ldbc.impls.workloads.ldbc.snb.bi.BiQueryStore;
-import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
-import com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlConverter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public class SparqlBiQueryStore extends BiQueryStore {
+public class SparqlBiQueryStore extends BiQueryStore implements SparqlQueryStore {
 
     public SparqlBiQueryStore(String path) throws DbException {
         super(path, "bi-", ".sparql");
-    }
-
-    @Override
-    protected Converter getConverter() {
-        return new SparqlConverter();
-    }
-
-    @Override
-    protected String prepare(BiQuery biQuery, Map<String, String> parameterSubstitutions) {
-        String query = queries.get(biQuery);
-        for (String parameter : biQuery.getParameters()) {
-            query = query.replace("$" + parameter, parameterSubstitutions.get(parameter));
-        }
-        return query;
     }
 
     /*

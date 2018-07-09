@@ -5,6 +5,7 @@ import com.ldbc.driver.Operation;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcNoResult;
+import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
 
 import java.sql.BatchUpdateException;
 import java.sql.Connection;
@@ -12,11 +13,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-public abstract class PostgresMultipleUpdateOperationHandler<OperationType extends Operation<LdbcNoResult>, OperationResult, QueryStore extends com.ldbc.impls.workloads.ldbc.snb.QueryStore>
-        implements OperationHandler<OperationType, PostgresDbConnectionState<com.ldbc.impls.workloads.ldbc.snb.QueryStore>> {
+public abstract class PostgresMultipleUpdateOperationHandler<
+            OperationType extends Operation<LdbcNoResult>,
+            TResult extends LdbcNoResult,
+            TQueryStore extends QueryStore
+        > implements OperationHandler<OperationType, PostgresDbConnectionState<TQueryStore>> {
 
     @Override
-    public void executeOperation(OperationType operation, PostgresDbConnectionState<com.ldbc.impls.workloads.ldbc.snb.QueryStore> state,
+    public void executeOperation(OperationType operation, PostgresDbConnectionState<TQueryStore> state,
                                  ResultReporter resultReporter) throws DbException {
         Connection conn = state.getConnection();
         String query = "";
@@ -47,5 +51,5 @@ public abstract class PostgresMultipleUpdateOperationHandler<OperationType exten
         }
     }
 
-    public abstract List<String> getQueryString(PostgresDbConnectionState<com.ldbc.impls.workloads.ldbc.snb.QueryStore> state, OperationType operation);
+    public abstract List<String> getQueryString(PostgresDbConnectionState<TQueryStore> state, OperationType operation);
 }
