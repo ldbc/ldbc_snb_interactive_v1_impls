@@ -1,1 +1,5 @@
-insert into post_tag values (--1--, '--2--')
+insert into post_tag values
+(
+    :postId,
+    :tagId
+);

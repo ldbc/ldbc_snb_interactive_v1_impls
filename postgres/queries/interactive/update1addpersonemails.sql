@@ -1,1 +1,5 @@
-insert into person_email values (--1--, '--2--')
+insert into person_email values
+(
+    :personId,
+    :emails
+);

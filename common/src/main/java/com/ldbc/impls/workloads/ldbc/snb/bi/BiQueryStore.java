@@ -1,6 +1,5 @@
 package com.ldbc.impls.workloads.ldbc.snb.bi;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery10TagPerson;
@@ -30,9 +29,45 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopics;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForums;
 import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
 
-import java.util.List;
-
 public abstract class BiQueryStore extends QueryStore<BiQueryStore.BiQuery> {
+
+    public enum BiQuery {
+        Query1(1),
+        Query2(2),
+        Query3(3),
+        Query4(4),
+        Query5(5),
+        Query6(6),
+        Query7(7),
+        Query8(8),
+        Query9(9),
+        Query10(10),
+        Query11(11),
+        Query12(12),
+        Query13(13),
+        Query14(14),
+        Query15(15),
+        Query16(16),
+        Query17(17),
+        Query18(18),
+        Query19(19),
+        Query20(20),
+        Query21(21),
+        Query22(22),
+        Query23(23),
+        Query24(24),
+        Query25(25),
+        ;
+
+        private int number;
+        BiQuery(int number) {
+            this.number = number;
+        }
+
+        public int getNumber() {
+            return number;
+        }
+    }
 
     public BiQueryStore(String path, String prefix, String postfix) throws DbException {
         for (BiQuery biQuery : BiQuery.values()) {
@@ -40,8 +75,7 @@ public abstract class BiQueryStore extends QueryStore<BiQueryStore.BiQuery> {
         }
     }
 
-    ;
-
+    // query getters
     public String getQuery1(LdbcSnbBiQuery1PostingSummary operation) {
         return prepare(BiQuery.Query1, new ImmutableMap.Builder<String, String>()
                 .put("date", getConverter().convertDateTime(operation.date())).build());
@@ -189,49 +223,6 @@ public abstract class BiQueryStore extends QueryStore<BiQueryStore.BiQuery> {
                 .put("person2Id", getConverter().convertId(operation.person2Id()))
                 .put("startDate", getConverter().convertDateTime(operation.startDate()))
                 .put("endDate", getConverter().convertDateTime(operation.endDate())).build());
-    }
-
-    public enum BiQuery {
-        Query1(1, ImmutableList.of("date")),
-        Query2(2, ImmutableList.of("startDate", "endDate", "country1", "country2")),
-        Query3(3, ImmutableList.of("year", "month")),
-        Query4(4, ImmutableList.of("tagClass", "country")),
-        Query5(5, ImmutableList.of("country")),
-        Query6(6, ImmutableList.of("tag")),
-        Query7(7, ImmutableList.of("tag")),
-        Query8(8, ImmutableList.of("tag")),
-        Query9(9, ImmutableList.of("tagClass1", "tagClass2", "threshold")),
-        Query10(10, ImmutableList.of("tag", "date")),
-        Query11(11, ImmutableList.of("country", "blacklist")),
-        Query12(12, ImmutableList.of("date", "likeThreshold")),
-        Query13(13, ImmutableList.of("country")),
-        Query14(14, ImmutableList.of("startDate", "endDate")),
-        Query15(15, ImmutableList.of("country")),
-        Query16(16, ImmutableList.of("personId", "country", "tagClass", "minPathDistance", "maxPathDistance")),
-        Query17(17, ImmutableList.of("country")),
-        Query18(18, ImmutableList.of("date", "lengthThreshold", "languages")),
-        Query19(19, ImmutableList.of("date", "tagClass1", "tagClass2")),
-        Query20(20, ImmutableList.of("tagClasses")),
-        Query21(21, ImmutableList.of("country", "endDate")),
-        Query22(22, ImmutableList.of("country1", "country2")),
-        Query23(23, ImmutableList.of("country")),
-        Query24(24, ImmutableList.of("tagClass")),
-        Query25(25, ImmutableList.of("person1Id", "person2Id", "startDate", "endDate")),;
-
-        private int number;
-        private List<String> parameters;
-        BiQuery(int number, List<String> parameters) {
-            this.number = number;
-            this.parameters = parameters;
-        }
-
-        public int getNumber() {
-            return number;
-        }
-
-        public List<String> getParameters() {
-            return parameters;
-        }
     }
 
 }

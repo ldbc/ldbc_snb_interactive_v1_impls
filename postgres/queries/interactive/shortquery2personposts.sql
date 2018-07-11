@@ -1,7 +1,7 @@
 with recursive cposts(ps_postid, ps_content, ps_imagefile, ps_creationdate, ps_replyof, ps_creatorid) AS (
 	  select ps_postid, ps_content, ps_imagefile, ps_creationdate, ps_replyof, ps_creatorid
 	  from post
-	  where ps_creatorid = --1--
+	  where ps_creatorid = :personId
 	  order by ps_creationdate desc
 	  limit 10
 ), parent(postid,replyof,orig_postid,creator) AS (

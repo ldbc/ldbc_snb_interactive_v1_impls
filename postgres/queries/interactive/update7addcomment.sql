@@ -1,1 +1,16 @@
-insert into post values(--1--, NULL, --2--::timestamp, '--3--', '--4--', NULL, '--5--', --6--, --7--, NULL, --8--, NULL, --10-- + --9-- + 1, NULL);
+insert into post values
+(
+    :commentId,
+    NULL,
+    :creationDate,
+    :locationIp,
+    :browserUsed,
+    NULL,
+    :content,
+    :length,
+    :authorPersonId,
+    NULL,
+    :countryId,
+    NULL,
+    :replyToCommentId + :replyToPostId + 1 -- replyToCommentId is -1 if the message is a reply to a post and vica versa (see spec)
+);

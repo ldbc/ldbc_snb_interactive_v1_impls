@@ -1,2 +1,11 @@
-insert into knows values(--1--, --2--, --3--::timestamp), (--2--, --1--, --3--::timestamp);
-	
+insert into knows values
+(
+    :person1Id,
+    :person2Id,
+    :creationDate
+),
+(
+    :person2Id,
+    :person1Id,
+    :creationDate
+);

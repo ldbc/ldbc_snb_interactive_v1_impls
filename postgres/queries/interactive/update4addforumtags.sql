@@ -1,1 +1,5 @@
-insert into forum_tag values (--1--, --2--)
+insert into forum_tag values
+(
+    :forumId,
+    :tagId
+);
