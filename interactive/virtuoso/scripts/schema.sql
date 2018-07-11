@@ -32,8 +32,7 @@ create table post (
     ps_p_creatorid bigint,
     ps_locationid bigint,
     ps_forumid bigint,
-    ps_replyof bigint,
-    ps_country int
+    ps_replyof bigint
 );
 
 alter index post on post partition (ps_postid int (0hexffff00));
