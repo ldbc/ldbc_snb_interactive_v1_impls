@@ -11,8 +11,7 @@ CREATE STREAM post (
     ps_p_creatorid int,
     ps_locationid int,
     ps_forumid int,
-    ps_replyof int,
-    ps_country int
+    ps_replyof int
 )
 FROM FILE 'data/post_0_0.csv'
 LINE DELIMITED CSV (delimiter := '|')

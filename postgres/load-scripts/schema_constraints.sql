@@ -48,7 +48,6 @@ CREATE INDEX post_creatorid ON post (ps_creatorid);
 CREATE INDEX post_locationid ON post (ps_locationid);
 CREATE INDEX post_forumid ON post (ps_forumid);
 CREATE INDEX post_replyof ON post (ps_replyof);
-CREATE INDEX post_country ON post (ps_country);
 CREATE INDEX post_tag_postid ON post_tag (pst_postid);
 CREATE INDEX post_tag_tagid ON post_tag (pst_tagid);
 CREATE INDEX tag_tagclassid ON tag (t_tagclassid);

@@ -5,10 +5,10 @@ PG_DB_NAME=${2:-ldbcsf1}
 PG_USER=${3:-$USER}
 
 cat $PG_CSV_DIR/post_0_0.csv | \
-  awk -F '|' '{ print $1"|"$2"|"$3"|"$4"|"$5"|"$6"|"$7"|"$8"|"$9"|"$9"|"$11"|"$10"||"}' > \
+  awk -F '|' '{ print $1"|"$2"|"$3"|"$4"|"$5"|"$6"|"$7"|"$8"|"$9"|"$9"|"$11"|"$10"|"}' > \
   $PG_CSV_DIR/post_0_0-postgres.csv
 cat $PG_CSV_DIR/comment_0_0.csv | \
-  awk -F '|' '{print $1"||"$2"|"$3"|"$4"||"$5"|"$6"|"$7"||"$8"||"$9 $10"|"}' > \
+  awk -F '|' '{print $1"||"$2"|"$3"|"$4"||"$5"|"$6"|"$7"||"$8"||"$9 $10}' > \
   $PG_CSV_DIR/comment_0_0-postgres.csv
 
 /usr/bin/dropdb $PG_DB_NAME -U $PG_USER
