@@ -1,9 +1,10 @@
-package com.ldbc.impls.workloads.ldbc.snb.cypher;
+package com.ldbc.impls.workloads.ldbc.snb.cypher.operationhandlers;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
+import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherDbConnectionState;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Session;
 import org.neo4j.driver.v1.StatementResult;

@@ -1,4 +1,4 @@
-package com.ldbc.impls.workloads.ldbc.snb.sparql.bi;
+package com.ldbc.impls.workloads.ldbc.snb.sparql;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;

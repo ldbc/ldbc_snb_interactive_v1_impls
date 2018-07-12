@@ -54,12 +54,12 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate7AddComment;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate8AddFriendship;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDb;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDbConnectionState;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.bi.PostgresQueryStore;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresQueryStore;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.converter.PostgresConverter;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.handlers.PostgresListOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.handlers.PostgresMultipleUpdateOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.handlers.PostgresSingletonOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.handlers.PostgresUpdateOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.operationhandlers.PostgresListOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.operationhandlers.PostgresMultipleUpdateOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.operationhandlers.PostgresSingletonOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.operationhandlers.PostgresUpdateOperationHandler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

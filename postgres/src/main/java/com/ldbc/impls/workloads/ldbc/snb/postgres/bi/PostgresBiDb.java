@@ -54,9 +54,10 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForums;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForumsResult;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDb;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDbConnectionState;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresQueryStore;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.converter.PostgresConverter;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.handlers.PostgresListOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.handlers.PostgresSingletonOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.operationhandlers.PostgresListOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.operationhandlers.PostgresSingletonOperationHandler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

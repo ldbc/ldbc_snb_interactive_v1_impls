@@ -6,7 +6,8 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery3;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery3Result;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherDb;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherDbConnectionState;
-import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherListOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.cypher.operationhandlers.CypherListOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherQueryStore;
 import org.neo4j.driver.v1.Record;
 
 import java.util.Map;

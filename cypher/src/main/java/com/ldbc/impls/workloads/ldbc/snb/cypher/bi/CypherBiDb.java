@@ -55,10 +55,10 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForums;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForumsResult;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherDb;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherDbConnectionState;
-import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherListOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherSingletonOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.cypher.operationhandlers.CypherListOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.cypher.operationhandlers.CypherSingletonOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.converter.CypherConverter;
-import com.ldbc.impls.workloads.ldbc.snb.cypher.interactive.CypherQueryStore;
+import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherQueryStore;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Values;
 

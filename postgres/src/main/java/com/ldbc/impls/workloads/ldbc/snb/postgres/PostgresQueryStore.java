@@ -1,4 +1,4 @@
-package com.ldbc.impls.workloads.ldbc.snb.postgres.bi;
+package com.ldbc.impls.workloads.ldbc.snb.postgres;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.impls.workloads.ldbc.snb.QueryStore;

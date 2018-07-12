@@ -1,4 +1,4 @@
-package com.ldbc.impls.workloads.ldbc.snb.cypher.interactive;
+package com.ldbc.impls.workloads.ldbc.snb.cypher;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.impls.workloads.ldbc.snb.QueryStore;

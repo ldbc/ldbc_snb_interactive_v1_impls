@@ -32,9 +32,9 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery9;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery9Result;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlDb;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlDbConnectionState;
-import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlListOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlSingletonOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.sparql.bi.SparqlQueryStore;
+import com.ldbc.impls.workloads.ldbc.snb.sparql.operationhandlers.SparqlListOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.sparql.operationhandlers.SparqlSingletonOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlQueryStore;
 import org.openrdf.query.BindingSet;
 
 import java.text.ParseException;
