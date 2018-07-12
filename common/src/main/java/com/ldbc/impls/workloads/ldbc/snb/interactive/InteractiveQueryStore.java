@@ -207,49 +207,49 @@ public abstract class InteractiveQueryStore extends QueryStore<InteractiveQueryS
     public String getShortQuery1PersonProfile(LdbcShortQuery1PersonProfile operation) {
         return prepare(
                 InteractiveQuery.ShortQuery1PersonProfile,
-                ImmutableMap.of("personId", getConverter().convertId(operation.personId()))
+                ImmutableMap.of(LdbcShortQuery1PersonProfile.PERSON_ID, getConverter().convertId(operation.personId()))
         );
     }
 
     public String getShortQuery2PersonPosts(LdbcShortQuery2PersonPosts operation) {
         return prepare(
                 InteractiveQuery.ShortQuery2PersonPosts,
-                ImmutableMap.of("personId", getConverter().convertId(operation.personId()))
+                ImmutableMap.of(LdbcShortQuery2PersonPosts.PERSON_ID, getConverter().convertId(operation.personId()))
         );
     }
 
     public String getShortQuery3PersonFriends(LdbcShortQuery3PersonFriends operation) {
         return prepare(
                 InteractiveQuery.ShortQuery3PersonFriends,
-                ImmutableMap.of("personId", getConverter().convertId(operation.personId()))
+                ImmutableMap.of(LdbcShortQuery3PersonFriends.PERSON_ID, getConverter().convertId(operation.personId()))
         );
     }
 
     public String getShortQuery4MessageContent(LdbcShortQuery4MessageContent operation) {
         return prepare(
                 InteractiveQuery.ShortQuery4MessageContent,
-                ImmutableMap.of("messageId", getConverter().convertId(operation.messageId()))
+                ImmutableMap.of(LdbcShortQuery4MessageContent.MESSAGE_ID, getConverter().convertId(operation.messageId()))
         );
     }
 
     public String getShortQuery5MessageCreator(LdbcShortQuery5MessageCreator operation) {
         return prepare(
                 InteractiveQuery.ShortQuery5MessageCreator,
-                ImmutableMap.of("messageId", getConverter().convertId(operation.messageId()))
+                ImmutableMap.of(LdbcShortQuery5MessageCreator.MESSAGE_ID, getConverter().convertId(operation.messageId()))
         );
     }
 
     public String getShortQuery6MessageForum(LdbcShortQuery6MessageForum operation) {
         return prepare(
                 InteractiveQuery.ShortQuery6MessageForum,
-                ImmutableMap.of("messageId", getConverter().convertId(operation.messageId()))
+                ImmutableMap.of(LdbcShortQuery6MessageForum.MESSAGE_ID, getConverter().convertId(operation.messageId()))
         );
     }
 
     public String getShortQuery7MessageReplies(LdbcShortQuery7MessageReplies operation) {
         return prepare(
                 InteractiveQuery.ShortQuery7MessageReplies,
-                ImmutableMap.of("messageId", getConverter().convertId(operation.messageId()))
+                ImmutableMap.of(LdbcShortQuery7MessageReplies.MESSAGE_ID, getConverter().convertId(operation.messageId()))
         );
     }
 
