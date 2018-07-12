@@ -55,9 +55,9 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForumsResult;
 import com.ldbc.impls.workloads.ldbc.snb.bi.BiQueryStore;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDb;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDbConnectionState;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresListOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresPoolingDbConnectionState;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresSingletonOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.converter.PostgresConverter;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.handlers.PostgresListOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.handlers.PostgresSingletonOperationHandler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -67,13 +67,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class PostgresBiDb extends PostgresDb<BiQueryStore> {
+public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
 
     @Override
     protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
         try {
-            dcs = new PostgresPoolingDbConnectionState(properties, new PostgresBiQueryStore(properties.get("queryDir")));
-        } catch (ClassNotFoundException | SQLException e) {
+            dcs = new PostgresDbConnectionState<>(properties, new PostgresBiQueryStore(properties.get("queryDir")));
+        } catch (ClassNotFoundException e) {
             throw new DbException(e);
         }
 
@@ -174,7 +174,7 @@ public class PostgresBiDb extends PostgresDb<BiQueryStore> {
         public LdbcSnbBiQuery4PopularCountryTopicsResult convertSingleResult(ResultSet result) throws SQLException {
             long forumId = result.getLong(1);
             String forumTitle = result.getString(2);
-            long forumCreationDate = stringTimestampToEpoch(result, 3);
+            long forumCreationDate = PostgresConverter.stringTimestampToEpoch(result, 3);
             long personId = result.getLong(4);
             int postCount = result.getInt(5);
             return new LdbcSnbBiQuery4PopularCountryTopicsResult(forumId, forumTitle, forumCreationDate, personId, postCount);
@@ -194,7 +194,7 @@ public class PostgresBiDb extends PostgresDb<BiQueryStore> {
             long personId = result.getLong(1);
             String personFirstName = result.getString(2);
             String personLastName = result.getString(3);
-            long personCreationDate = stringTimestampToEpoch(result, 4);
+            long personCreationDate = PostgresConverter.stringTimestampToEpoch(result, 4);
             int postCount = result.getInt(5);
             return new LdbcSnbBiQuery5TopCountryPostersResult(personId, personFirstName, personLastName, personCreationDate, postCount);
         }
@@ -314,7 +314,7 @@ public class PostgresBiDb extends PostgresDb<BiQueryStore> {
         @Override
         public LdbcSnbBiQuery12TrendingPostsResult convertSingleResult(ResultSet result) throws SQLException {
             long messageId = result.getLong(1);
-            long messageCreationDate = stringTimestampToEpoch(result, 2);
+            long messageCreationDate = PostgresConverter.stringTimestampToEpoch(result, 2);
             String creatorFirstName = result.getString(3);
             String creatorLastName = result.getString(4);
             int likeCount = result.getInt(5);

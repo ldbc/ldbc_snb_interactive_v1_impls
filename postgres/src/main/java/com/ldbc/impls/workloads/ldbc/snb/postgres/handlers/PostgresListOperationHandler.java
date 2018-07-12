@@ -1,50 +1,55 @@
-package com.ldbc.impls.workloads.ldbc.snb.postgres;
+package com.ldbc.impls.workloads.ldbc.snb.postgres.handlers;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
 import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDbConnectionState;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
-public abstract class PostgresSingletonOperationHandler<OperationType extends Operation<OperationResult>, OperationResult, TQueryStore extends QueryStore>
-        implements OperationHandler<OperationType, PostgresDbConnectionState<TQueryStore>> {
+public abstract class PostgresListOperationHandler<
+            OperationType extends Operation<List<OperationResult>>,
+            OperationResult,
+            TQueryStore extends QueryStore
+        > implements OperationHandler<OperationType, PostgresDbConnectionState<TQueryStore>> {
 
     @Override
     public void executeOperation(OperationType operation, PostgresDbConnectionState<TQueryStore> state,
                                  ResultReporter resultReporter) throws DbException {
         Connection conn = state.getConnection();
-        OperationResult tuple = null;
+        List<OperationResult> results = new ArrayList<>();
         int resultCount = 0;
-        String queryString = getQueryString(state, operation);
-        try {
-            Statement stmt = conn.createStatement();
+        results.clear();
 
+        String queryString = getQueryString(state, operation);
+        try (final Statement stmt = conn.createStatement()) {
             state.logQuery(operation.getClass().getSimpleName(), queryString);
 
             ResultSet result = stmt.executeQuery(queryString);
-            if (result.next()) {
+            while (result.next()) {
                 resultCount++;
 
-                tuple = convertSingleResult(result);
+                OperationResult tuple = convertSingleResult(result);
                 if (state.isPrintResults())
                     System.out.println(tuple.toString());
+                results.add(tuple);
             }
-            stmt.close();
-            conn.close();
-        } catch (SQLException e) {
-            throw new DbException(queryString + e);
         } catch (Exception e) {
             throw new DbException(e);
         }
-        resultReporter.report(resultCount, tuple, operation);
+        resultReporter.report(resultCount, results, operation);
     }
 
     public abstract String getQueryString(PostgresDbConnectionState<TQueryStore> state, OperationType operation);
 
-    public abstract OperationResult convertSingleResult(ResultSet result) throws SQLException;
+    public OperationResult convertSingleResult(ResultSet result) throws SQLException {
+        throw new UnsupportedOperationException();
+    }
 }

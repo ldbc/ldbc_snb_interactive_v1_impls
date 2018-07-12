@@ -26,7 +26,7 @@ public class CypherConverter extends Converter {
      * @param timestamp
      * @return
      */
-    public long convertLongTimestampToEpoch(long timestamp) throws ParseException {
+    public static long convertLongTimestampToEpoch(long timestamp) throws ParseException {
         final SimpleDateFormat sdf = new SimpleDateFormat(DATETIME_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         return sdf.parse(Long.toString(timestamp)).toInstant().toEpochMilli();

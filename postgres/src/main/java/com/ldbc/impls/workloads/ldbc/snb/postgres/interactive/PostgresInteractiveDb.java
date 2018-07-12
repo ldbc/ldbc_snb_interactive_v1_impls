@@ -2,7 +2,6 @@ package com.ldbc.impls.workloads.ldbc.snb.postgres.interactive;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.control.LoggingService;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcNoResult;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10Result;
@@ -55,15 +54,14 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate7AddComment;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate8AddFriendship;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDb;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDbConnectionState;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresListOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresMultipleUpdateOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresPoolingDbConnectionState;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresSingletonOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresUpdateOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.converter.PostgresConverter;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.handlers.PostgresListOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.handlers.PostgresMultipleUpdateOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.handlers.PostgresSingletonOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.handlers.PostgresUpdateOperationHandler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -72,8 +70,8 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
     @Override
     protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
         try {
-            dcs = new PostgresPoolingDbConnectionState(properties, new PostgresInteractiveQueryStore(properties.get("queryDir")));
-        } catch (ClassNotFoundException | SQLException e) {
+            dcs = new PostgresDbConnectionState<>(properties, new PostgresInteractiveQueryStore(properties.get("queryDir")));
+        } catch (ClassNotFoundException e) {
             throw new DbException(e);
         }
 
@@ -123,16 +121,16 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
                     result.getLong(1),
                     result.getString(2),
                     result.getInt(3),
-                    stringTimestampToEpoch(result, 4),
-                    stringTimestampToEpoch(result, 5),
+                    PostgresConverter.stringTimestampToEpoch(result, 4),
+                    PostgresConverter.stringTimestampToEpoch(result, 5),
                     result.getString(6),
                     result.getString(7),
                     result.getString(8),
-                    arrayToStringArray(result, 9),
-                    arrayToStringArray(result, 10),
+                    PostgresConverter.arrayToStringArray(result, 9),
+                    PostgresConverter.arrayToStringArray(result, 10),
                     result.getString(11),
-                    convertLists(arrayToObjectArray(result, 12)),
-                    convertLists(arrayToObjectArray(result, 13)));
+                    convertLists(PostgresConverter.arrayToObjectArray(result, 12)),
+                    convertLists(PostgresConverter.arrayToObjectArray(result, 13)));
             return qr;
         }
 
@@ -160,7 +158,7 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
                     result.getString(3),
                     result.getLong(4),
                     result.getString(5),
-                    stringTimestampToEpoch(result, 6));
+                    PostgresConverter.stringTimestampToEpoch(result, 6));
         }
 
     }
@@ -246,7 +244,7 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
                     result.getLong(1),
                     result.getString(2),
                     result.getString(3),
-                    stringTimestampToEpoch(result, 4),
+                    PostgresConverter.stringTimestampToEpoch(result, 4),
                     result.getLong(5),
                     result.getString(6),
                     result.getInt(7),
@@ -268,7 +266,7 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
                     result.getLong(1),
                     result.getString(2),
                     result.getString(3),
-                    stringTimestampToEpoch(result, 4),
+                    PostgresConverter.stringTimestampToEpoch(result, 4),
                     result.getLong(5),
                     result.getString(6));
         }
@@ -290,7 +288,7 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
                     result.getString(3),
                     result.getLong(4),
                     result.getString(5),
-                    stringTimestampToEpoch(result, 6));
+                    PostgresConverter.stringTimestampToEpoch(result, 6));
         }
 
     }
@@ -347,7 +345,7 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
                     result.getLong(1),
                     result.getString(2),
                     result.getString(3),
-                    arrayToStringArray(result, 4),
+                    PostgresConverter.arrayToStringArray(result, 4),
                     result.getInt(5));
         }
 
@@ -377,18 +375,8 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
         @Override
         public LdbcQuery14Result convertSingleResult(ResultSet result) throws SQLException {
             return new LdbcQuery14Result(
-                    convertLists(arrayToObjectArray(result, 1)),
+                    PostgresConverter.convertLists(PostgresConverter.arrayToObjectArray(result, 1)),
                     result.getDouble(2));
-        }
-
-        public Iterable<Long> convertLists(Iterable<List<Object>> arr) {
-            List<Long> new_arr = new ArrayList<>();
-            List<List<Object>> better_arr = (List<List<Object>>) arr;
-            for (List<Object> entry : better_arr) {
-                new_arr.add((Long) entry.get(0));
-            }
-            new_arr.add((Long) better_arr.get(better_arr.size() - 1).get(1));
-            return new_arr;
         }
 
     }
@@ -405,12 +393,12 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
             return new LdbcShortQuery1PersonProfileResult(
                     result.getString(1),
                     result.getString(2),
-                    stringTimestampToEpoch(result, 3),
+                    PostgresConverter.stringTimestampToEpoch(result, 3),
                     result.getString(4),
                     result.getString(5),
                     result.getLong(6),
                     result.getString(7),
-                    stringTimestampToEpoch(result, 8));
+                    PostgresConverter.stringTimestampToEpoch(result, 8));
         }
 
     }
@@ -427,7 +415,7 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
             return new LdbcShortQuery2PersonPostsResult(
                     result.getLong(1),
                     result.getString(2),
-                    stringTimestampToEpoch(result, 3),
+                    PostgresConverter.stringTimestampToEpoch(result, 3),
                     result.getLong(4),
                     result.getLong(5),
                     result.getString(6),
@@ -449,7 +437,7 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
                     result.getLong(1),
                     result.getString(2),
                     result.getString(3),
-                    stringTimestampToEpoch(result, 4));
+                    PostgresConverter.stringTimestampToEpoch(result, 4));
         }
 
     }
@@ -465,7 +453,7 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
         public LdbcShortQuery4MessageContentResult convertSingleResult(ResultSet result) throws SQLException {
             return new LdbcShortQuery4MessageContentResult(
                     result.getString(1),
-                    stringTimestampToEpoch(result, 2));
+                    PostgresConverter.stringTimestampToEpoch(result, 2));
         }
 
     }
@@ -518,7 +506,7 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
             return new LdbcShortQuery7MessageRepliesResult(
                     result.getLong(1),
                     result.getString(2),
-                    stringTimestampToEpoch(result, 3),
+                    PostgresConverter.stringTimestampToEpoch(result, 3),
                     result.getLong(4),
                     result.getString(5),
                     result.getString(6),
@@ -527,7 +515,7 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class Update1AddPerson extends PostgresMultipleUpdateOperationHandler<LdbcUpdate1AddPerson, LdbcNoResult, PostgresInteractiveQueryStore> {
+    public static class Update1AddPerson extends PostgresMultipleUpdateOperationHandler<LdbcUpdate1AddPerson, PostgresInteractiveQueryStore> {
 
         @Override
         public List<String> getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate1AddPerson operation) {
@@ -536,7 +524,7 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class Update2AddPostLike extends PostgresUpdateOperationHandler<LdbcUpdate2AddPostLike, LdbcNoResult, PostgresInteractiveQueryStore> {
+    public static class Update2AddPostLike extends PostgresUpdateOperationHandler<LdbcUpdate2AddPostLike, PostgresInteractiveQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate2AddPostLike operation) {
@@ -545,7 +533,7 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class Update3AddCommentLike extends PostgresUpdateOperationHandler<LdbcUpdate3AddCommentLike, LdbcNoResult, PostgresInteractiveQueryStore> {
+    public static class Update3AddCommentLike extends PostgresUpdateOperationHandler<LdbcUpdate3AddCommentLike, PostgresInteractiveQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate3AddCommentLike operation) {
@@ -553,7 +541,7 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
         }
     }
 
-    public static class Update4AddForum extends PostgresMultipleUpdateOperationHandler<LdbcUpdate4AddForum, LdbcNoResult, PostgresInteractiveQueryStore> {
+    public static class Update4AddForum extends PostgresMultipleUpdateOperationHandler<LdbcUpdate4AddForum, PostgresInteractiveQueryStore> {
 
         @Override
         public List<String> getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate4AddForum operation) {
@@ -561,7 +549,7 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
         }
     }
 
-    public static class Update5AddForumMembership extends PostgresUpdateOperationHandler<LdbcUpdate5AddForumMembership, LdbcNoResult, PostgresInteractiveQueryStore> {
+    public static class Update5AddForumMembership extends PostgresUpdateOperationHandler<LdbcUpdate5AddForumMembership, PostgresInteractiveQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate5AddForumMembership operation) {
@@ -569,7 +557,7 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
         }
     }
 
-    public static class Update6AddPost extends PostgresMultipleUpdateOperationHandler<LdbcUpdate6AddPost, LdbcNoResult, PostgresInteractiveQueryStore> {
+    public static class Update6AddPost extends PostgresMultipleUpdateOperationHandler<LdbcUpdate6AddPost, PostgresInteractiveQueryStore> {
 
         @Override
         public List<String> getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate6AddPost operation) {
@@ -577,7 +565,7 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
         }
     }
 
-    public static class Update7AddComment extends PostgresMultipleUpdateOperationHandler<LdbcUpdate7AddComment, LdbcNoResult, PostgresInteractiveQueryStore> {
+    public static class Update7AddComment extends PostgresMultipleUpdateOperationHandler<LdbcUpdate7AddComment, PostgresInteractiveQueryStore> {
 
         @Override
         public List<String> getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate7AddComment operation) {
@@ -586,7 +574,7 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class Update8AddFriendship extends PostgresUpdateOperationHandler<LdbcUpdate8AddFriendship, LdbcNoResult, PostgresInteractiveQueryStore> {
+    public static class Update8AddFriendship extends PostgresUpdateOperationHandler<LdbcUpdate8AddFriendship, PostgresInteractiveQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate8AddFriendship operation) {
@@ -594,4 +582,5 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
         }
 
     }
+
 }

@@ -7,15 +7,11 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery3Result;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherDb;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherDbConnectionState;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherListOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.cypher.converter.CypherConverter;
-import com.ldbc.impls.workloads.ldbc.snb.interactive.InteractiveQueryStore;
 import org.neo4j.driver.v1.Record;
 
 import java.util.Map;
 
-public class CypherInteractiveDb extends CypherDb<InteractiveQueryStore> {
-
-    protected static final CypherConverter converter = new CypherConverter();
+public class CypherInteractiveDb extends CypherDb<CypherInteractiveQueryStore> {
 
     @Override
     protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
