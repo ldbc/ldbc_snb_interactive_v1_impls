@@ -7,7 +7,7 @@ import com.ldbc.impls.workloads.ldbc.snb.sparql.bi.SparqlQueryStore;
 public class SparqlInteractiveQueryStore extends InteractiveQueryStore implements SparqlQueryStore  {
 
     public SparqlInteractiveQueryStore(String path) throws DbException {
-        super(path, "interactive-complex-", ".sparql");
+        super(path, ".sparql");
     }
 
 }

@@ -12,7 +12,7 @@ import java.util.List;
 public class SparqlBiQueryStore extends BiQueryStore implements SparqlQueryStore {
 
     public SparqlBiQueryStore(String path) throws DbException {
-        super(path, "bi-", ".sparql");
+        super(path, ".sparql");
     }
 
     /*

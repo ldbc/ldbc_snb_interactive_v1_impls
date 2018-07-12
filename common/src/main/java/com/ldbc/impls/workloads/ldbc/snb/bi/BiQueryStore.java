@@ -32,46 +32,46 @@ import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
 public abstract class BiQueryStore extends QueryStore<BiQueryStore.BiQuery> {
 
     public enum BiQuery {
-        Query1(1),
-        Query2(2),
-        Query3(3),
-        Query4(4),
-        Query5(5),
-        Query6(6),
-        Query7(7),
-        Query8(8),
-        Query9(9),
-        Query10(10),
-        Query11(11),
-        Query12(12),
-        Query13(13),
-        Query14(14),
-        Query15(15),
-        Query16(16),
-        Query17(17),
-        Query18(18),
-        Query19(19),
-        Query20(20),
-        Query21(21),
-        Query22(22),
-        Query23(23),
-        Query24(24),
-        Query25(25),
+        Query1("bi-1"),
+        Query2("bi-2"),
+        Query3("bi-3"),
+        Query4("bi-4"),
+        Query5("bi-5"),
+        Query6("bi-6"),
+        Query7("bi-7"),
+        Query8("bi-8"),
+        Query9("bi-9"),
+        Query10("bi-10"),
+        Query11("bi-11"),
+        Query12("bi-12"),
+        Query13("bi-13"),
+        Query14("bi-14"),
+        Query15("bi-15"),
+        Query16("bi-16"),
+        Query17("bi-17"),
+        Query18("bi-18"),
+        Query19("bi-19"),
+        Query20("bi-20"),
+        Query21("bi-21"),
+        Query22("bi-22"),
+        Query23("bi-23"),
+        Query24("bi-24"),
+        Query25("bi-25"),
         ;
 
-        private int number;
-        BiQuery(int number) {
-            this.number = number;
+        private String name;
+        BiQuery(String name) {
+            this.name = name;
         }
 
-        public int getNumber() {
-            return number;
+        public String getName() {
+            return name;
         }
     }
 
-    public BiQueryStore(String path, String prefix, String postfix) throws DbException {
+    public BiQueryStore(String path, String postfix) throws DbException {
         for (BiQuery biQuery : BiQuery.values()) {
-            queries.put(biQuery, loadQueryFromFile(path, prefix + biQuery.number + postfix));
+            queries.put(biQuery, loadQueryFromFile(path, biQuery.getName() + postfix));
         }
     }
 

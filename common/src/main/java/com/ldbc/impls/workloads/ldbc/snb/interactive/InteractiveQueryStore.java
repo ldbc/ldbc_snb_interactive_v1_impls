@@ -95,9 +95,9 @@ public abstract class InteractiveQueryStore extends QueryStore<InteractiveQueryS
 
     }
 
-    public InteractiveQueryStore(String path, String prefix, String postfix) throws DbException {
+    public InteractiveQueryStore(String path, String postfix) throws DbException {
         for (InteractiveQuery interactiveQuery : InteractiveQuery.values()) {
-            queries.put(interactiveQuery, loadQueryFromFile(path, prefix + interactiveQuery.name + postfix));
+            queries.put(interactiveQuery, loadQueryFromFile(path, interactiveQuery.name + postfix));
         }
     }
 
