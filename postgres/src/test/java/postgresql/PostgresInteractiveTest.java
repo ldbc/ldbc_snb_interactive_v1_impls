@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class PostgresInteractiveTest extends InteractiveTest implements PostgresSnbTest {
 
-    static String queryDir = "queries/interactive";
+    static String queryDir = "queries/";
 
     public PostgresInteractiveTest() throws DbException {
         super(new PostgresInteractiveDb());
