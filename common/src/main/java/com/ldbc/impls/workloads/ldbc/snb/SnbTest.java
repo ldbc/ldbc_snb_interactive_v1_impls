@@ -27,13 +27,17 @@ public abstract class SnbTest {
 
     protected abstract Map<String, String> getProperties();
 
-    @SuppressWarnings("unchecked")
     public Object runOperation(BaseDb<BiQueryStore> db, Operation<?> op) throws DbException {
-        OperationHandlerRunnableContext handler = db.getOperationHandlerRunnableContext(op);
-        ResultReporter reporter = new ResultReporter.SimpleResultReporter(null);
-        handler.operationHandler().executeOperation(op, handler.dbConnectionState(), reporter);
-        handler.cleanup();
-        return reporter.result();
+        try {
+            OperationHandlerRunnableContext handler = db.getOperationHandlerRunnableContext(op);
+            ResultReporter reporter = new ResultReporter.SimpleResultReporter(null);
+            handler.operationHandler().executeOperation(op, handler.dbConnectionState(), reporter);
+            handler.cleanup();
+            return reporter.result();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     protected void run(BaseDb<BiQueryStore> db, Operation op) throws DbException {

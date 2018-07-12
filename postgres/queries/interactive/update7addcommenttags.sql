@@ -1,5 +1,5 @@
 insert into post_tag values
 (
-    :postId,
+    :commentId,
     :tagId
 );

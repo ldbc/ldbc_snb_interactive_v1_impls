@@ -12,6 +12,5 @@ insert into post values
     :authorPersonId,
     :countryId,
     :forumId,
-    NULL,
     NULL
 );

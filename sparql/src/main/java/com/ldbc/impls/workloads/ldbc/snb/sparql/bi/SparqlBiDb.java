@@ -65,7 +65,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class SparqlBiDb extends SparqlDb<BiQueryStore> {
+import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertBoolean;
+import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertDate;
+import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertDouble;
+import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertInteger;
+import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertLong;
+import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertString;
+
+public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
 
     @Override
     protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {

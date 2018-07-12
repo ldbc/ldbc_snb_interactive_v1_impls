@@ -53,11 +53,11 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopics;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopicsResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForums;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForumsResult;
-import com.ldbc.impls.workloads.ldbc.snb.bi.BiQueryStore;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherDb;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherDbConnectionState;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherListOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherSingletonOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.cypher.converter.CypherConverter;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Values;
 
@@ -66,7 +66,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class CypherBiDb extends CypherDb<BiQueryStore> {
+public class CypherBiDb extends CypherDb<CypherBiQueryStore> {
 
     @Override
     protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
@@ -170,7 +170,7 @@ public class CypherBiDb extends CypherDb<BiQueryStore> {
         public LdbcSnbBiQuery4PopularCountryTopicsResult convertSingleResult(Record record) throws ParseException {
             long forumId = record.get(0).asLong();
             String title = record.get(1).asString();
-            long creationDate = converter.convertLongTimestampToEpoch(record.get(2).asLong());
+            long creationDate = CypherConverter.convertLongTimestampToEpoch(record.get(2).asLong());
             long moderator = record.get(3).asLong();
             int count = record.get(4).asInt();
             return new LdbcSnbBiQuery4PopularCountryTopicsResult(forumId, title, creationDate, moderator, count);
@@ -190,7 +190,7 @@ public class CypherBiDb extends CypherDb<BiQueryStore> {
             long personId = record.get(0).asLong();
             String firstName = record.get(1).asString();
             String lastName = record.get(2).asString();
-            long creationDate = converter.convertLongTimestampToEpoch(record.get(3).asLong());
+            long creationDate = CypherConverter.convertLongTimestampToEpoch(record.get(3).asLong());
             int count = record.get(4).asInt();
             return new LdbcSnbBiQuery5TopCountryPostersResult(personId, firstName, lastName, creationDate, count);
         }
@@ -310,7 +310,7 @@ public class CypherBiDb extends CypherDb<BiQueryStore> {
         @Override
         public LdbcSnbBiQuery12TrendingPostsResult convertSingleResult(Record record) throws ParseException {
             long personId = record.get(0).asLong();
-            long creationDate = converter.convertLongTimestampToEpoch(record.get(1).asLong());
+            long creationDate = CypherConverter.convertLongTimestampToEpoch(record.get(1).asLong());
             String firstName = record.get(2).asString();
             String lastName = record.get(3).asString();
             int likeCount = record.get(4).asInt();

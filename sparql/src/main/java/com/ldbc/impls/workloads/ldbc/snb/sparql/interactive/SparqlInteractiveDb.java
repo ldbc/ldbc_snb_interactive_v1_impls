@@ -40,6 +40,16 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
+import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertBoolean;
+import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertDate;
+import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertDouble;
+import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertInteger;
+import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertLong;
+import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertLongList;
+import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertSisList;
+import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertString;
+import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertStringList;
+
 public class SparqlInteractiveDb extends SparqlDb<SparqlInteractiveQueryStore> {
 
     @Override

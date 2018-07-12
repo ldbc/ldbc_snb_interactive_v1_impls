@@ -2,7 +2,6 @@ package com.ldbc.impls.workloads.ldbc.snb;
 
 import com.ldbc.driver.DbConnectionState;
 
-import java.io.IOException;
 import java.util.Map;
 
 public abstract class BaseDbConnectionState<TQueryStore extends QueryStore> extends DbConnectionState {
@@ -38,8 +37,10 @@ public abstract class BaseDbConnectionState<TQueryStore extends QueryStore> exte
         }
     }
 
-    @Override
-    public void close() throws IOException {
-    }
+    public abstract void beginTransaction() throws Exception;
+
+    public abstract void endTransaction() throws Exception;
+
+    public abstract void rollbackTransaction() throws Exception;
 
 }

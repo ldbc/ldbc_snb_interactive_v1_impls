@@ -1,4 +1,4 @@
-package com.ldbc.impls.workloads.ldbc.snb.postgres;
+package com.ldbc.impls.workloads.ldbc.snb.postgres.handlers;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;
@@ -6,15 +6,14 @@ import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcNoResult;
 import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDbConnectionState;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.sql.Statement;
 
 public abstract class PostgresUpdateOperationHandler<
-        OperationType extends Operation<LdbcNoResult>,
-        TResult extends LdbcNoResult,
-        TQueryStore extends QueryStore
+            OperationType extends Operation<LdbcNoResult>,
+            TQueryStore extends QueryStore
         > implements OperationHandler<OperationType, PostgresDbConnectionState<TQueryStore>> {
 
     @Override
@@ -22,25 +21,13 @@ public abstract class PostgresUpdateOperationHandler<
                                  ResultReporter resultReporter) throws DbException {
         Connection conn = state.getConnection();
         String queryString = getQueryString(state, operation);
-        try {
-            Statement stmt = conn.createStatement();
-
+        try (final Statement stmt = conn.createStatement()) {
             state.logQuery(operation.getClass().getSimpleName(), queryString);
-
             stmt.execute(queryString);
-            stmt.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(queryString + e);
         } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-            resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
+            throw new DbException(e);
         }
+        resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
     }
 
     public abstract String getQueryString(PostgresDbConnectionState<TQueryStore> state, OperationType operation);
