@@ -4,16 +4,15 @@ import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
-import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
 
-public abstract class SparqlSingletonOperationHandler<OperationType extends Operation<OperationResult>, OperationResult, TQueryStore extends QueryStore>
-        implements OperationHandler<OperationType, SparqlDbConnectionState<TQueryStore>> {
+public abstract class SparqlSingletonOperationHandler<OperationType extends Operation<OperationResult>, OperationResult>
+        implements OperationHandler<OperationType, SparqlDbConnectionState> {
 
     @Override
-    public void executeOperation(OperationType operation, SparqlDbConnectionState<TQueryStore> state,
+    public void executeOperation(OperationType operation, SparqlDbConnectionState state,
                                  ResultReporter resultReporter) throws DbException {
         try {
             OperationResult tuple = null;
@@ -41,7 +40,7 @@ public abstract class SparqlSingletonOperationHandler<OperationType extends Oper
         }
     }
 
-    public abstract String getQueryString(SparqlDbConnectionState<TQueryStore> state, OperationType operation);
+    public abstract String getQueryString(SparqlDbConnectionState state, OperationType operation);
 
     public abstract OperationResult convertSingleResult(BindingSet bs);
 }

@@ -1,18 +1,23 @@
 package com.ldbc.impls.workloads.ldbc.snb.postgres.bi;
 
-import com.ldbc.impls.workloads.ldbc.snb.IQueryStore;
+import com.ldbc.driver.DbException;
+import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
 import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.converter.PostgresConverter;
 
-public interface PostgresQueryStore extends IQueryStore {
+public class PostgresQueryStore extends QueryStore {
 
-    default Converter getConverter() {
+    protected Converter getConverter() {
         return new PostgresConverter();
     }
 
     @Override
-    default String getParameterPrefix() {
+    protected String getParameterPrefix() {
         return ":";
+    }
+
+    public PostgresQueryStore(String path) throws DbException {
+        super(path, ".sql");
     }
 
 }

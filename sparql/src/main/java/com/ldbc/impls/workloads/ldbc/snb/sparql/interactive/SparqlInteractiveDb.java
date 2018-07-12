@@ -34,6 +34,7 @@ import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlDb;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlDbConnectionState;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlListOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlSingletonOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.sparql.bi.SparqlQueryStore;
 import org.openrdf.query.BindingSet;
 
 import java.text.ParseException;
@@ -50,11 +51,11 @@ import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConv
 import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertString;
 import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertStringList;
 
-public class SparqlInteractiveDb extends SparqlDb<SparqlInteractiveQueryStore> {
+public class SparqlInteractiveDb extends SparqlDb<SparqlQueryStore> {
 
     @Override
     protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
-        dcs = new SparqlDbConnectionState(properties, new SparqlInteractiveQueryStore(properties.get("queryDir")));
+        dcs = new SparqlDbConnectionState(properties, new SparqlQueryStore(properties.get("queryDir")));
 
         registerOperationHandler(LdbcQuery1.class, Query1.class);
         registerOperationHandler(LdbcQuery2.class, Query2.class);
@@ -89,10 +90,10 @@ public class SparqlInteractiveDb extends SparqlDb<SparqlInteractiveQueryStore> {
 //		registerOperationHandler(LdbcUpdate8AddFriendship.class, LdbcUpdate8AddFriendshipSparql.class);
     }
 
-    public static class Query1 extends SparqlListOperationHandler<LdbcQuery1, LdbcQuery1Result, SparqlInteractiveQueryStore> {
+    public static class Query1 extends SparqlListOperationHandler<LdbcQuery1, LdbcQuery1Result> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlInteractiveQueryStore> state, LdbcQuery1 operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcQuery1 operation) {
             return state.getQueryStore().getQuery1(operation);
         }
 
@@ -131,10 +132,10 @@ public class SparqlInteractiveDb extends SparqlDb<SparqlInteractiveQueryStore> {
 
     }
 
-    public static class Query2 extends SparqlListOperationHandler<LdbcQuery2, LdbcQuery2Result, SparqlInteractiveQueryStore> {
+    public static class Query2 extends SparqlListOperationHandler<LdbcQuery2, LdbcQuery2Result> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlInteractiveQueryStore> state, LdbcQuery2 operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcQuery2 operation) {
             return state.getQueryStore().getQuery2(operation);
         }
 
@@ -151,10 +152,10 @@ public class SparqlInteractiveDb extends SparqlDb<SparqlInteractiveQueryStore> {
 
     }
 
-    public static class Query3 extends SparqlListOperationHandler<LdbcQuery3, LdbcQuery3Result, SparqlInteractiveQueryStore> {
+    public static class Query3 extends SparqlListOperationHandler<LdbcQuery3, LdbcQuery3Result> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlInteractiveQueryStore> state, LdbcQuery3 operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcQuery3 operation) {
             return state.getQueryStore().getQuery3(operation);
         }
 
@@ -172,10 +173,10 @@ public class SparqlInteractiveDb extends SparqlDb<SparqlInteractiveQueryStore> {
     }
 
 
-    public static class Query4 extends SparqlListOperationHandler<LdbcQuery4, LdbcQuery4Result, SparqlInteractiveQueryStore> {
+    public static class Query4 extends SparqlListOperationHandler<LdbcQuery4, LdbcQuery4Result> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlInteractiveQueryStore> state, LdbcQuery4 operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcQuery4 operation) {
             return state.getQueryStore().getQuery4(operation);
         }
 
@@ -189,10 +190,10 @@ public class SparqlInteractiveDb extends SparqlDb<SparqlInteractiveQueryStore> {
     }
 
 
-    public static class Query5 extends SparqlListOperationHandler<LdbcQuery5, LdbcQuery5Result, SparqlInteractiveQueryStore> {
+    public static class Query5 extends SparqlListOperationHandler<LdbcQuery5, LdbcQuery5Result> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlInteractiveQueryStore> state, LdbcQuery5 operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcQuery5 operation) {
             return state.getQueryStore().getQuery5(operation);
         }
 
@@ -206,10 +207,10 @@ public class SparqlInteractiveDb extends SparqlDb<SparqlInteractiveQueryStore> {
     }
 
 
-    public static class Query6 extends SparqlListOperationHandler<LdbcQuery6, LdbcQuery6Result, SparqlInteractiveQueryStore> {
+    public static class Query6 extends SparqlListOperationHandler<LdbcQuery6, LdbcQuery6Result> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlInteractiveQueryStore> state, LdbcQuery6 operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcQuery6 operation) {
             return state.getQueryStore().getQuery6(operation);
         }
 
@@ -222,10 +223,10 @@ public class SparqlInteractiveDb extends SparqlDb<SparqlInteractiveQueryStore> {
 
     }
 
-    public static class Query7 extends SparqlListOperationHandler<LdbcQuery7, LdbcQuery7Result, SparqlInteractiveQueryStore> {
+    public static class Query7 extends SparqlListOperationHandler<LdbcQuery7, LdbcQuery7Result> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlInteractiveQueryStore> state, LdbcQuery7 operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcQuery7 operation) {
             return state.getQueryStore().getQuery7(operation);
         }
 
@@ -244,10 +245,10 @@ public class SparqlInteractiveDb extends SparqlDb<SparqlInteractiveQueryStore> {
 
     }
 
-    public static class Query8 extends SparqlListOperationHandler<LdbcQuery8, LdbcQuery8Result, SparqlInteractiveQueryStore> {
+    public static class Query8 extends SparqlListOperationHandler<LdbcQuery8, LdbcQuery8Result> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlInteractiveQueryStore> state, LdbcQuery8 operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcQuery8 operation) {
             return state.getQueryStore().getQuery8(operation);
         }
 
@@ -264,10 +265,10 @@ public class SparqlInteractiveDb extends SparqlDb<SparqlInteractiveQueryStore> {
 
     }
 
-    public static class Query9 extends SparqlListOperationHandler<LdbcQuery9, LdbcQuery9Result, SparqlInteractiveQueryStore> {
+    public static class Query9 extends SparqlListOperationHandler<LdbcQuery9, LdbcQuery9Result> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlInteractiveQueryStore> state, LdbcQuery9 operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcQuery9 operation) {
             return state.getQueryStore().getQuery9(operation);
         }
 
@@ -285,10 +286,10 @@ public class SparqlInteractiveDb extends SparqlDb<SparqlInteractiveQueryStore> {
     }
 
 
-    public static class Query10 extends SparqlListOperationHandler<LdbcQuery10, LdbcQuery10Result, SparqlInteractiveQueryStore> {
+    public static class Query10 extends SparqlListOperationHandler<LdbcQuery10, LdbcQuery10Result> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlInteractiveQueryStore> state, LdbcQuery10 operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcQuery10 operation) {
             return state.getQueryStore().getQuery10(operation);
         }
 
@@ -305,10 +306,10 @@ public class SparqlInteractiveDb extends SparqlDb<SparqlInteractiveQueryStore> {
 
     }
 
-    public static class Query11 extends SparqlListOperationHandler<LdbcQuery11, LdbcQuery11Result, SparqlInteractiveQueryStore> {
+    public static class Query11 extends SparqlListOperationHandler<LdbcQuery11, LdbcQuery11Result> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlInteractiveQueryStore> state, LdbcQuery11 operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcQuery11 operation) {
             return state.getQueryStore().getQuery11(operation);
         }
 
@@ -324,10 +325,10 @@ public class SparqlInteractiveDb extends SparqlDb<SparqlInteractiveQueryStore> {
 
     }
 
-    public static class Query12 extends SparqlListOperationHandler<LdbcQuery12, LdbcQuery12Result, SparqlInteractiveQueryStore> {
+    public static class Query12 extends SparqlListOperationHandler<LdbcQuery12, LdbcQuery12Result> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlInteractiveQueryStore> state, LdbcQuery12 operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcQuery12 operation) {
             return state.getQueryStore().getQuery12(operation);
         }
 
@@ -344,10 +345,10 @@ public class SparqlInteractiveDb extends SparqlDb<SparqlInteractiveQueryStore> {
 
     }
 
-    public static class Query13 extends SparqlSingletonOperationHandler<LdbcQuery13, LdbcQuery13Result, SparqlInteractiveQueryStore> {
+    public static class Query13 extends SparqlSingletonOperationHandler<LdbcQuery13, LdbcQuery13Result> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlInteractiveQueryStore> state, LdbcQuery13 operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcQuery13 operation) {
             return state.getQueryStore().getQuery13(operation);
         }
 
@@ -359,10 +360,10 @@ public class SparqlInteractiveDb extends SparqlDb<SparqlInteractiveQueryStore> {
 
     }
 
-    public static class Query14 extends SparqlListOperationHandler<LdbcQuery14, LdbcQuery14Result, SparqlInteractiveQueryStore> {
+    public static class Query14 extends SparqlListOperationHandler<LdbcQuery14, LdbcQuery14Result> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlInteractiveQueryStore> state, LdbcQuery14 operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcQuery14 operation) {
             return state.getQueryStore().getQuery14(operation);
         }
 

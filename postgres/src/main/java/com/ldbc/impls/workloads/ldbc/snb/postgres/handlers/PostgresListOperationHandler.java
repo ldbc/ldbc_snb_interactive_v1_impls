@@ -4,7 +4,6 @@ import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
-import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDbConnectionState;
 
 import java.sql.Connection;
@@ -16,12 +15,11 @@ import java.util.List;
 
 public abstract class PostgresListOperationHandler<
             OperationType extends Operation<List<OperationResult>>,
-            OperationResult,
-            TQueryStore extends QueryStore
-        > implements OperationHandler<OperationType, PostgresDbConnectionState<TQueryStore>> {
+            OperationResult
+        > implements OperationHandler<OperationType, PostgresDbConnectionState> {
 
     @Override
-    public void executeOperation(OperationType operation, PostgresDbConnectionState<TQueryStore> state,
+    public void executeOperation(OperationType operation, PostgresDbConnectionState state,
                                  ResultReporter resultReporter) throws DbException {
         Connection conn = state.getConnection();
         List<OperationResult> results = new ArrayList<>();
@@ -47,7 +45,7 @@ public abstract class PostgresListOperationHandler<
         resultReporter.report(resultCount, results, operation);
     }
 
-    public abstract String getQueryString(PostgresDbConnectionState<TQueryStore> state, OperationType operation);
+    public abstract String getQueryString(PostgresDbConnectionState state, OperationType operation);
 
     public OperationResult convertSingleResult(ResultSet result) throws SQLException {
         throw new UnsupportedOperationException();

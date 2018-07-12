@@ -1,13 +1,19 @@
 package com.ldbc.impls.workloads.ldbc.snb.cypher.interactive;
 
-import com.ldbc.impls.workloads.ldbc.snb.IQueryStore;
+import com.ldbc.driver.DbException;
+import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
 import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.converter.CypherConverter;
 
-public interface CypherQueryStore extends IQueryStore {
+public class CypherQueryStore extends QueryStore {
 
-    default Converter getConverter() {
+    public Converter getConverter() {
         return new CypherConverter();
     }
+
+    public CypherQueryStore(String path) throws DbException {
+        super(path, ".cypher");
+    }
+
 
 }

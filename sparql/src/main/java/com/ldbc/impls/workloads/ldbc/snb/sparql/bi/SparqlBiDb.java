@@ -52,7 +52,6 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopics;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopicsResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForums;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForumsResult;
-import com.ldbc.impls.workloads.ldbc.snb.bi.BiQueryStore;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlDb;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlDbConnectionState;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlListOperationHandler;
@@ -72,11 +71,11 @@ import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConv
 import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertLong;
 import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertString;
 
-public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
+public class SparqlBiDb extends SparqlDb {
 
     @Override
     protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
-        dcs = new SparqlDbConnectionState(properties, new SparqlBiQueryStore(properties.get("queryDir")));
+        dcs = new SparqlDbConnectionState(properties, new SparqlQueryStore(properties.get("queryDir")));
 
         registerOperationHandler(LdbcSnbBiQuery1PostingSummary.class, BiQuery1.class);
         registerOperationHandler(LdbcSnbBiQuery2TopTags.class, BiQuery2.class);
@@ -105,10 +104,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
 //		registerOperationHandler(LdbcSnbBiQuery25WeightedPaths.class, BiQuery25.class);
     }
 
-    public static class BiQuery1 extends SparqlListOperationHandler<LdbcSnbBiQuery1PostingSummary, LdbcSnbBiQuery1PostingSummaryResult, BiQueryStore> {
+    public static class BiQuery1 extends SparqlListOperationHandler<LdbcSnbBiQuery1PostingSummary, LdbcSnbBiQuery1PostingSummaryResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery1PostingSummary operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery1PostingSummary operation) {
             return state.getQueryStore().getQuery1(operation);
         }
 
@@ -126,10 +125,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
 
     }
 
-    public static class BiQuery2 extends SparqlListOperationHandler<LdbcSnbBiQuery2TopTags, LdbcSnbBiQuery2TopTagsResult, SparqlBiQueryStore> {
+    public static class BiQuery2 extends SparqlListOperationHandler<LdbcSnbBiQuery2TopTags, LdbcSnbBiQuery2TopTagsResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery2TopTags operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery2TopTags operation) {
             return state.getQueryStore().getQuery2(operation);
         }
 
@@ -146,10 +145,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
 
     }
 
-    public static class BiQuery3 extends SparqlListOperationHandler<LdbcSnbBiQuery3TagEvolution, LdbcSnbBiQuery3TagEvolutionResult, SparqlBiQueryStore> {
+    public static class BiQuery3 extends SparqlListOperationHandler<LdbcSnbBiQuery3TagEvolution, LdbcSnbBiQuery3TagEvolutionResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery3TagEvolution operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery3TagEvolution operation) {
             return state.getQueryStore().getQuery3(operation);
         }
 
@@ -164,10 +163,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
 
     }
 
-    public static class BiQuery4 extends SparqlListOperationHandler<LdbcSnbBiQuery4PopularCountryTopics, LdbcSnbBiQuery4PopularCountryTopicsResult, SparqlBiQueryStore> {
+    public static class BiQuery4 extends SparqlListOperationHandler<LdbcSnbBiQuery4PopularCountryTopics, LdbcSnbBiQuery4PopularCountryTopicsResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery4PopularCountryTopics operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery4PopularCountryTopics operation) {
             return state.getQueryStore().getQuery4(operation);
         }
 
@@ -183,10 +182,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
 
     }
 
-    public static class BiQuery5 extends SparqlListOperationHandler<LdbcSnbBiQuery5TopCountryPosters, LdbcSnbBiQuery5TopCountryPostersResult, SparqlBiQueryStore> {
+    public static class BiQuery5 extends SparqlListOperationHandler<LdbcSnbBiQuery5TopCountryPosters, LdbcSnbBiQuery5TopCountryPostersResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery5TopCountryPosters operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery5TopCountryPosters operation) {
             return state.getQueryStore().getQuery5(operation);
         }
 
@@ -202,10 +201,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
 
     }
 
-    public static class BiQuery6 extends SparqlListOperationHandler<LdbcSnbBiQuery6ActivePosters, LdbcSnbBiQuery6ActivePostersResult, SparqlBiQueryStore> {
+    public static class BiQuery6 extends SparqlListOperationHandler<LdbcSnbBiQuery6ActivePosters, LdbcSnbBiQuery6ActivePostersResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery6ActivePosters operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery6ActivePosters operation) {
             return state.getQueryStore().getQuery6(operation);
         }
 
@@ -221,10 +220,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
 
     }
 
-    public static class BiQuery7 extends SparqlListOperationHandler<LdbcSnbBiQuery7AuthoritativeUsers, LdbcSnbBiQuery7AuthoritativeUsersResult, SparqlBiQueryStore> {
+    public static class BiQuery7 extends SparqlListOperationHandler<LdbcSnbBiQuery7AuthoritativeUsers, LdbcSnbBiQuery7AuthoritativeUsersResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery7AuthoritativeUsers operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery7AuthoritativeUsers operation) {
             return state.getQueryStore().getQuery7(operation);
         }
 
@@ -237,10 +236,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
 
     }
 
-    public static class BiQuery8 extends SparqlListOperationHandler<LdbcSnbBiQuery8RelatedTopics, LdbcSnbBiQuery8RelatedTopicsResult, SparqlBiQueryStore> {
+    public static class BiQuery8 extends SparqlListOperationHandler<LdbcSnbBiQuery8RelatedTopics, LdbcSnbBiQuery8RelatedTopicsResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery8RelatedTopics operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery8RelatedTopics operation) {
             return state.getQueryStore().getQuery8(operation);
         }
 
@@ -253,10 +252,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
 
     }
 
-    public static class BiQuery9 extends SparqlListOperationHandler<LdbcSnbBiQuery9RelatedForums, LdbcSnbBiQuery9RelatedForumsResult, SparqlBiQueryStore> {
+    public static class BiQuery9 extends SparqlListOperationHandler<LdbcSnbBiQuery9RelatedForums, LdbcSnbBiQuery9RelatedForumsResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery9RelatedForums operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery9RelatedForums operation) {
             return state.getQueryStore().getQuery9(operation);
         }
 
@@ -270,10 +269,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
 
     }
 
-    public static class BiQuery10 extends SparqlListOperationHandler<LdbcSnbBiQuery10TagPerson, LdbcSnbBiQuery10TagPersonResult, SparqlBiQueryStore> {
+    public static class BiQuery10 extends SparqlListOperationHandler<LdbcSnbBiQuery10TagPerson, LdbcSnbBiQuery10TagPersonResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery10TagPerson operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery10TagPerson operation) {
             return state.getQueryStore().getQuery10(operation);
         }
 
@@ -287,10 +286,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
 
     }
 
-    public static class BiQuery11 extends SparqlListOperationHandler<LdbcSnbBiQuery11UnrelatedReplies, LdbcSnbBiQuery11UnrelatedRepliesResult, SparqlBiQueryStore> {
+    public static class BiQuery11 extends SparqlListOperationHandler<LdbcSnbBiQuery11UnrelatedReplies, LdbcSnbBiQuery11UnrelatedRepliesResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery11UnrelatedReplies operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery11UnrelatedReplies operation) {
             return state.getQueryStore().getQuery11(operation);
         }
 
@@ -305,10 +304,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
 
     }
 
-    public static class BiQuery12 extends SparqlListOperationHandler<LdbcSnbBiQuery12TrendingPosts, LdbcSnbBiQuery12TrendingPostsResult, SparqlBiQueryStore> {
+    public static class BiQuery12 extends SparqlListOperationHandler<LdbcSnbBiQuery12TrendingPosts, LdbcSnbBiQuery12TrendingPostsResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery12TrendingPosts operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery12TrendingPosts operation) {
             return state.getQueryStore().getQuery12(operation);
         }
 
@@ -323,10 +322,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
         }
     }
 
-    public static class BiQuery13 extends SparqlListOperationHandler<LdbcSnbBiQuery13PopularMonthlyTags, LdbcSnbBiQuery13PopularMonthlyTagsResult, SparqlBiQueryStore> {
+    public static class BiQuery13 extends SparqlListOperationHandler<LdbcSnbBiQuery13PopularMonthlyTags, LdbcSnbBiQuery13PopularMonthlyTagsResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery13PopularMonthlyTags operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery13PopularMonthlyTags operation) {
             return state.getQueryStore().getQuery13(operation);
         }
 
@@ -346,10 +345,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
         }
     }
 
-    public static class BiQuery14 extends SparqlListOperationHandler<LdbcSnbBiQuery14TopThreadInitiators, LdbcSnbBiQuery14TopThreadInitiatorsResult, SparqlBiQueryStore> {
+    public static class BiQuery14 extends SparqlListOperationHandler<LdbcSnbBiQuery14TopThreadInitiators, LdbcSnbBiQuery14TopThreadInitiatorsResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery14TopThreadInitiators operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery14TopThreadInitiators operation) {
             return state.getQueryStore().getQuery14(operation);
         }
 
@@ -364,10 +363,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
         }
     }
 
-    public static class BiQuery15 extends SparqlListOperationHandler<LdbcSnbBiQuery15SocialNormals, LdbcSnbBiQuery15SocialNormalsResult, SparqlBiQueryStore> {
+    public static class BiQuery15 extends SparqlListOperationHandler<LdbcSnbBiQuery15SocialNormals, LdbcSnbBiQuery15SocialNormalsResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery15SocialNormals operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery15SocialNormals operation) {
             return state.getQueryStore().getQuery15(operation);
         }
 
@@ -379,10 +378,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
         }
     }
 
-    public static class BiQuery16 extends SparqlListOperationHandler<LdbcSnbBiQuery16ExpertsInSocialCircle, LdbcSnbBiQuery16ExpertsInSocialCircleResult, SparqlBiQueryStore> {
+    public static class BiQuery16 extends SparqlListOperationHandler<LdbcSnbBiQuery16ExpertsInSocialCircle, LdbcSnbBiQuery16ExpertsInSocialCircleResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery16ExpertsInSocialCircle operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery16ExpertsInSocialCircle operation) {
             return state.getQueryStore().getQuery16(operation);
         }
 
@@ -395,10 +394,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
         }
     }
 
-    public static class BiQuery17 extends SparqlSingletonOperationHandler<LdbcSnbBiQuery17FriendshipTriangles, LdbcSnbBiQuery17FriendshipTrianglesResult, SparqlBiQueryStore> {
+    public static class BiQuery17 extends SparqlSingletonOperationHandler<LdbcSnbBiQuery17FriendshipTriangles, LdbcSnbBiQuery17FriendshipTrianglesResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery17FriendshipTriangles operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery17FriendshipTriangles operation) {
             return state.getQueryStore().getQuery17(operation);
         }
 
@@ -409,10 +408,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
         }
     }
 
-    public static class BiQuery18 extends SparqlListOperationHandler<LdbcSnbBiQuery18PersonPostCounts, LdbcSnbBiQuery18PersonPostCountsResult, SparqlBiQueryStore> {
+    public static class BiQuery18 extends SparqlListOperationHandler<LdbcSnbBiQuery18PersonPostCounts, LdbcSnbBiQuery18PersonPostCountsResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery18PersonPostCounts operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery18PersonPostCounts operation) {
             return state.getQueryStore().getQuery18(operation);
         }
 
@@ -424,10 +423,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
         }
     }
 
-    public static class BiQuery19 extends SparqlListOperationHandler<LdbcSnbBiQuery19StrangerInteraction, LdbcSnbBiQuery19StrangerInteractionResult, SparqlBiQueryStore> {
+    public static class BiQuery19 extends SparqlListOperationHandler<LdbcSnbBiQuery19StrangerInteraction, LdbcSnbBiQuery19StrangerInteractionResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery19StrangerInteraction operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery19StrangerInteraction operation) {
             return state.getQueryStore().getQuery19(operation);
         }
 
@@ -440,10 +439,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
         }
     }
 
-    public static class BiQuery20 extends SparqlListOperationHandler<LdbcSnbBiQuery20HighLevelTopics, LdbcSnbBiQuery20HighLevelTopicsResult, SparqlBiQueryStore> {
+    public static class BiQuery20 extends SparqlListOperationHandler<LdbcSnbBiQuery20HighLevelTopics, LdbcSnbBiQuery20HighLevelTopicsResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery20HighLevelTopics operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery20HighLevelTopics operation) {
             return state.getQueryStore().getQuery20(operation);
         }
 
@@ -455,10 +454,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
         }
     }
 
-    public static class BiQuery21 extends SparqlListOperationHandler<LdbcSnbBiQuery21Zombies, LdbcSnbBiQuery21ZombiesResult, SparqlBiQueryStore> {
+    public static class BiQuery21 extends SparqlListOperationHandler<LdbcSnbBiQuery21Zombies, LdbcSnbBiQuery21ZombiesResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery21Zombies operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery21Zombies operation) {
             return state.getQueryStore().getQuery21(operation);
         }
 
@@ -472,10 +471,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
         }
     }
 
-    public static class BiQuery22 extends SparqlListOperationHandler<LdbcSnbBiQuery22InternationalDialog, LdbcSnbBiQuery22InternationalDialogResult, SparqlBiQueryStore> {
+    public static class BiQuery22 extends SparqlListOperationHandler<LdbcSnbBiQuery22InternationalDialog, LdbcSnbBiQuery22InternationalDialogResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery22InternationalDialog operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery22InternationalDialog operation) {
             return state.getQueryStore().getQuery22(operation);
         }
 
@@ -489,10 +488,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
         }
     }
 
-    public static class BiQuery23 extends SparqlListOperationHandler<LdbcSnbBiQuery23HolidayDestinations, LdbcSnbBiQuery23HolidayDestinationsResult, SparqlBiQueryStore> {
+    public static class BiQuery23 extends SparqlListOperationHandler<LdbcSnbBiQuery23HolidayDestinations, LdbcSnbBiQuery23HolidayDestinationsResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery23HolidayDestinations operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery23HolidayDestinations operation) {
             return state.getQueryStore().getQuery23(operation);
         }
 
@@ -506,10 +505,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
     }
 
 
-    public static class BiQuery24 extends SparqlListOperationHandler<LdbcSnbBiQuery24MessagesByTopic, LdbcSnbBiQuery24MessagesByTopicResult, SparqlBiQueryStore> {
+    public static class BiQuery24 extends SparqlListOperationHandler<LdbcSnbBiQuery24MessagesByTopic, LdbcSnbBiQuery24MessagesByTopicResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery24MessagesByTopic operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery24MessagesByTopic operation) {
             return state.getQueryStore().getQuery24(operation);
         }
 
@@ -524,10 +523,10 @@ public class SparqlBiDb extends SparqlDb<SparqlBiQueryStore> {
         }
     }
 
-    public static class BiQuery25 extends SparqlListOperationHandler<LdbcSnbBiQuery25WeightedPaths, LdbcSnbBiQuery25WeightedPathsResult, SparqlBiQueryStore> {
+    public static class BiQuery25 extends SparqlListOperationHandler<LdbcSnbBiQuery25WeightedPaths, LdbcSnbBiQuery25WeightedPathsResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState<SparqlBiQueryStore> state, LdbcSnbBiQuery25WeightedPaths operation) {
+        public String getQueryString(SparqlDbConnectionState state, LdbcSnbBiQuery25WeightedPaths operation) {
             return state.getQueryStore().getQuery25(operation);
         }
 

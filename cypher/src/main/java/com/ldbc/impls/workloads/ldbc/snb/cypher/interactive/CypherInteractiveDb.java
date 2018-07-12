@@ -11,19 +11,19 @@ import org.neo4j.driver.v1.Record;
 
 import java.util.Map;
 
-public class CypherInteractiveDb extends CypherDb<CypherInteractiveQueryStore> {
+public class CypherInteractiveDb extends CypherDb {
 
     @Override
     protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
-        dcs = new CypherDbConnectionState(properties, new CypherInteractiveQueryStore(properties.get("queryDir")));
+        dcs = new CypherDbConnectionState(properties, new CypherQueryStore(properties.get("queryDir")));
 
         registerOperationHandler(LdbcQuery3.class, InteractiveQuery3.class);
     }
 
-    public static class InteractiveQuery3 extends CypherListOperationHandler<LdbcQuery3, LdbcQuery3Result, CypherInteractiveQueryStore> {
+    public static class InteractiveQuery3 extends CypherListOperationHandler<LdbcQuery3, LdbcQuery3Result> {
 
         @Override
-        public String getQueryString(CypherDbConnectionState<CypherInteractiveQueryStore> state, LdbcQuery3 operation) {
+        public String getQueryString(CypherDbConnectionState state, LdbcQuery3 operation) {
             return state.getQueryStore().getQuery3(operation);
         }
 

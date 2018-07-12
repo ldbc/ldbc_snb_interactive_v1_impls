@@ -4,7 +4,6 @@ import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
-import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDbConnectionState;
 
 import java.sql.Connection;
@@ -14,13 +13,12 @@ import java.sql.Statement;
 
 public abstract class PostgresSingletonOperationHandler<
             OperationType extends Operation<OperationResult>,
-            OperationResult,
-            TQueryStore extends QueryStore
+            OperationResult
         >
-        implements OperationHandler<OperationType, PostgresDbConnectionState<TQueryStore>> {
+        implements OperationHandler<OperationType, PostgresDbConnectionState> {
 
     @Override
-    public void executeOperation(OperationType operation, PostgresDbConnectionState<TQueryStore> state,
+    public void executeOperation(OperationType operation, PostgresDbConnectionState state,
                                  ResultReporter resultReporter) throws DbException {
         Connection conn = state.getConnection();
         OperationResult tuple = null;
@@ -44,7 +42,7 @@ public abstract class PostgresSingletonOperationHandler<
         resultReporter.report(resultCount, tuple, operation);
     }
 
-    public abstract String getQueryString(PostgresDbConnectionState<TQueryStore> state, OperationType operation);
+    public abstract String getQueryString(PostgresDbConnectionState state, OperationType operation);
 
     public abstract OperationResult convertSingleResult(ResultSet result) throws SQLException;
 }

@@ -4,7 +4,6 @@ import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
-import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
@@ -13,11 +12,11 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class SparqlListOperationHandler<OperationType extends Operation<List<OperationResult>>, OperationResult, TQueryStore extends QueryStore>
-        implements OperationHandler<OperationType, SparqlDbConnectionState<TQueryStore>> {
+public abstract class SparqlListOperationHandler<OperationType extends Operation<List<OperationResult>>, OperationResult>
+        implements OperationHandler<OperationType, SparqlDbConnectionState> {
 
     @Override
-    public void executeOperation(OperationType operation, SparqlDbConnectionState<TQueryStore> state,
+    public void executeOperation(OperationType operation, SparqlDbConnectionState state,
                                  ResultReporter resultReporter) throws DbException {
         try {
             final List<OperationResult> results = new ArrayList<>();
@@ -48,7 +47,7 @@ public abstract class SparqlListOperationHandler<OperationType extends Operation
         }
     }
 
-    public abstract String getQueryString(SparqlDbConnectionState<TQueryStore> state, OperationType operation);
+    public abstract String getQueryString(SparqlDbConnectionState state, OperationType operation);
 
     public abstract OperationResult convertSingleResult(BindingSet record) throws ParseException;
 }
