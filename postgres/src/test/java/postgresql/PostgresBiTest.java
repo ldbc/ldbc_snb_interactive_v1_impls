@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class PostgresBiTest extends BiTest implements PostgresSnbTest {
 
-    static String queryDir = "queries/bi";
+    static String queryDir = "queries/";
 
     public PostgresBiTest() throws DbException {
         super(new PostgresBiDb());

@@ -54,23 +54,24 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate7AddComment;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate8AddFriendship;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDb;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDbConnectionState;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresQueryStore;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.converter.PostgresConverter;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.handlers.PostgresListOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.handlers.PostgresMultipleUpdateOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.handlers.PostgresSingletonOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.handlers.PostgresUpdateOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.operationhandlers.PostgresListOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.operationhandlers.PostgresMultipleUpdateOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.operationhandlers.PostgresSingletonOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.operationhandlers.PostgresUpdateOperationHandler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQueryStore> {
+public class PostgresInteractiveDb extends PostgresDb {
 
     @Override
     protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
         try {
-            dcs = new PostgresDbConnectionState<>(properties, new PostgresInteractiveQueryStore(properties.get("queryDir")));
+            dcs = new PostgresDbConnectionState<>(properties, new PostgresQueryStore(properties.get("queryDir")));
         } catch (ClassNotFoundException e) {
             throw new DbException(e);
         }
@@ -108,10 +109,10 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
         registerOperationHandler(LdbcUpdate8AddFriendship.class, Update8AddFriendship.class);
     }
 
-    public static class Query1 extends PostgresListOperationHandler<LdbcQuery1, LdbcQuery1Result, PostgresInteractiveQueryStore> {
+    public static class Query1 extends PostgresListOperationHandler<LdbcQuery1, LdbcQuery1Result> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery1 operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcQuery1 operation) {
             return state.getQueryStore().getQuery1(operation);
         }
 
@@ -143,10 +144,10 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
         }
     }
 
-    public static class Query2 extends PostgresListOperationHandler<LdbcQuery2, LdbcQuery2Result, PostgresInteractiveQueryStore> {
+    public static class Query2 extends PostgresListOperationHandler<LdbcQuery2, LdbcQuery2Result> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery2 operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcQuery2 operation) {
             return state.getQueryStore().getQuery2(operation);
         }
 
@@ -163,10 +164,10 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class Query3 extends PostgresListOperationHandler<LdbcQuery3, LdbcQuery3Result, PostgresInteractiveQueryStore> {
+    public static class Query3 extends PostgresListOperationHandler<LdbcQuery3, LdbcQuery3Result> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery3 operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcQuery3 operation) {
             return state.getQueryStore().getQuery3(operation);
         }
 
@@ -183,10 +184,10 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class Query4 extends PostgresListOperationHandler<LdbcQuery4, LdbcQuery4Result, PostgresInteractiveQueryStore> {
+    public static class Query4 extends PostgresListOperationHandler<LdbcQuery4, LdbcQuery4Result> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery4 operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcQuery4 operation) {
             return state.getQueryStore().getQuery4(operation);
         }
 
@@ -199,10 +200,10 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class Query5 extends PostgresListOperationHandler<LdbcQuery5, LdbcQuery5Result, PostgresInteractiveQueryStore> {
+    public static class Query5 extends PostgresListOperationHandler<LdbcQuery5, LdbcQuery5Result> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery5 operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcQuery5 operation) {
             return state.getQueryStore().getQuery5(operation);
         }
 
@@ -215,10 +216,10 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class Query6 extends PostgresListOperationHandler<LdbcQuery6, LdbcQuery6Result, PostgresInteractiveQueryStore> {
+    public static class Query6 extends PostgresListOperationHandler<LdbcQuery6, LdbcQuery6Result> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery6 operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcQuery6 operation) {
             return state.getQueryStore().getQuery6(operation);
         }
 
@@ -231,10 +232,10 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class Query7 extends PostgresListOperationHandler<LdbcQuery7, LdbcQuery7Result, PostgresInteractiveQueryStore> {
+    public static class Query7 extends PostgresListOperationHandler<LdbcQuery7, LdbcQuery7Result> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery7 operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcQuery7 operation) {
             return state.getQueryStore().getQuery7(operation);
         }
 
@@ -253,10 +254,10 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class Query8 extends PostgresListOperationHandler<LdbcQuery8, LdbcQuery8Result, PostgresInteractiveQueryStore> {
+    public static class Query8 extends PostgresListOperationHandler<LdbcQuery8, LdbcQuery8Result> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery8 operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcQuery8 operation) {
             return state.getQueryStore().getQuery8(operation);
         }
 
@@ -273,10 +274,10 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class Query9 extends PostgresListOperationHandler<LdbcQuery9, LdbcQuery9Result, PostgresInteractiveQueryStore> {
+    public static class Query9 extends PostgresListOperationHandler<LdbcQuery9, LdbcQuery9Result> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery9 operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcQuery9 operation) {
             return state.getQueryStore().getQuery9(operation);
         }
 
@@ -293,10 +294,10 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class Query10 extends PostgresListOperationHandler<LdbcQuery10, LdbcQuery10Result, PostgresInteractiveQueryStore> {
+    public static class Query10 extends PostgresListOperationHandler<LdbcQuery10, LdbcQuery10Result> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery10 operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcQuery10 operation) {
             return state.getQueryStore().getQuery10(operation);
         }
 
@@ -313,10 +314,10 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class Query11 extends PostgresListOperationHandler<LdbcQuery11, LdbcQuery11Result, PostgresInteractiveQueryStore> {
+    public static class Query11 extends PostgresListOperationHandler<LdbcQuery11, LdbcQuery11Result> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery11 operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcQuery11 operation) {
             return state.getQueryStore().getQuery11(operation);
         }
 
@@ -332,10 +333,10 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class Query12 extends PostgresListOperationHandler<LdbcQuery12, LdbcQuery12Result, PostgresInteractiveQueryStore> {
+    public static class Query12 extends PostgresListOperationHandler<LdbcQuery12, LdbcQuery12Result> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery12 operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcQuery12 operation) {
             return state.getQueryStore().getQuery12(operation);
         }
 
@@ -351,10 +352,10 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class Query13 extends PostgresSingletonOperationHandler<LdbcQuery13, LdbcQuery13Result, PostgresInteractiveQueryStore> {
+    public static class Query13 extends PostgresSingletonOperationHandler<LdbcQuery13, LdbcQuery13Result> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery13 operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcQuery13 operation) {
             return state.getQueryStore().getQuery13(operation);
         }
 
@@ -365,10 +366,10 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class Query14 extends PostgresListOperationHandler<LdbcQuery14, LdbcQuery14Result, PostgresInteractiveQueryStore> {
+    public static class Query14 extends PostgresListOperationHandler<LdbcQuery14, LdbcQuery14Result> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcQuery14 operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcQuery14 operation) {
             return state.getQueryStore().getQuery14(operation);
         }
 
@@ -381,10 +382,10 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class ShortQuery1PersonProfile extends PostgresSingletonOperationHandler<LdbcShortQuery1PersonProfile, LdbcShortQuery1PersonProfileResult, PostgresInteractiveQueryStore> {
+    public static class ShortQuery1PersonProfile extends PostgresSingletonOperationHandler<LdbcShortQuery1PersonProfile, LdbcShortQuery1PersonProfileResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery1PersonProfile operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcShortQuery1PersonProfile operation) {
             return state.getQueryStore().getShortQuery1PersonProfile(operation);
         }
 
@@ -403,10 +404,10 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class ShortQuery2PersonPosts extends PostgresListOperationHandler<LdbcShortQuery2PersonPosts, LdbcShortQuery2PersonPostsResult, PostgresInteractiveQueryStore> {
+    public static class ShortQuery2PersonPosts extends PostgresListOperationHandler<LdbcShortQuery2PersonPosts, LdbcShortQuery2PersonPostsResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery2PersonPosts operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcShortQuery2PersonPosts operation) {
             return state.getQueryStore().getShortQuery2PersonPosts(operation);
         }
 
@@ -424,10 +425,10 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class ShortQuery3PersonFriends extends PostgresListOperationHandler<LdbcShortQuery3PersonFriends, LdbcShortQuery3PersonFriendsResult, PostgresInteractiveQueryStore> {
+    public static class ShortQuery3PersonFriends extends PostgresListOperationHandler<LdbcShortQuery3PersonFriends, LdbcShortQuery3PersonFriendsResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery3PersonFriends operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcShortQuery3PersonFriends operation) {
             return state.getQueryStore().getShortQuery3PersonFriends(operation);
         }
 
@@ -442,10 +443,10 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class ShortQuery4MessageContent extends PostgresSingletonOperationHandler<LdbcShortQuery4MessageContent, LdbcShortQuery4MessageContentResult, PostgresInteractiveQueryStore> {
+    public static class ShortQuery4MessageContent extends PostgresSingletonOperationHandler<LdbcShortQuery4MessageContent, LdbcShortQuery4MessageContentResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery4MessageContent operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcShortQuery4MessageContent operation) {
             return state.getQueryStore().getShortQuery4MessageContent(operation);
         }
 
@@ -458,10 +459,10 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class ShortQuery5MessageCreator extends PostgresSingletonOperationHandler<LdbcShortQuery5MessageCreator, LdbcShortQuery5MessageCreatorResult, PostgresInteractiveQueryStore> {
+    public static class ShortQuery5MessageCreator extends PostgresSingletonOperationHandler<LdbcShortQuery5MessageCreator, LdbcShortQuery5MessageCreatorResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery5MessageCreator operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcShortQuery5MessageCreator operation) {
             return state.getQueryStore().getShortQuery5MessageCreator(operation);
         }
 
@@ -475,10 +476,10 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class ShortQuery6MessageForum extends PostgresSingletonOperationHandler<LdbcShortQuery6MessageForum, LdbcShortQuery6MessageForumResult, PostgresInteractiveQueryStore> {
+    public static class ShortQuery6MessageForum extends PostgresSingletonOperationHandler<LdbcShortQuery6MessageForum, LdbcShortQuery6MessageForumResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery6MessageForum operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcShortQuery6MessageForum operation) {
             return state.getQueryStore().getShortQuery6MessageForum(operation);
         }
 
@@ -494,10 +495,10 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class ShortQuery7MessageReplies extends PostgresListOperationHandler<LdbcShortQuery7MessageReplies, LdbcShortQuery7MessageRepliesResult, PostgresInteractiveQueryStore> {
+    public static class ShortQuery7MessageReplies extends PostgresListOperationHandler<LdbcShortQuery7MessageReplies, LdbcShortQuery7MessageRepliesResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcShortQuery7MessageReplies operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcShortQuery7MessageReplies operation) {
             return state.getQueryStore().getShortQuery7MessageReplies(operation);
         }
 
@@ -515,69 +516,69 @@ public class PostgresInteractiveDb extends PostgresDb<PostgresInteractiveQuerySt
 
     }
 
-    public static class Update1AddPerson extends PostgresMultipleUpdateOperationHandler<LdbcUpdate1AddPerson, PostgresInteractiveQueryStore> {
+    public static class Update1AddPerson extends PostgresMultipleUpdateOperationHandler<LdbcUpdate1AddPerson> {
 
         @Override
-        public List<String> getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate1AddPerson operation) {
+        public List<String> getQueryString(PostgresDbConnectionState state, LdbcUpdate1AddPerson operation) {
             return state.getQueryStore().getUpdate1AddPerson(operation);
         }
 
     }
 
-    public static class Update2AddPostLike extends PostgresUpdateOperationHandler<LdbcUpdate2AddPostLike, PostgresInteractiveQueryStore> {
+    public static class Update2AddPostLike extends PostgresUpdateOperationHandler<LdbcUpdate2AddPostLike> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate2AddPostLike operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcUpdate2AddPostLike operation) {
             return state.getQueryStore().getUpdate2AddPostLike(operation);
         }
 
     }
 
-    public static class Update3AddCommentLike extends PostgresUpdateOperationHandler<LdbcUpdate3AddCommentLike, PostgresInteractiveQueryStore> {
+    public static class Update3AddCommentLike extends PostgresUpdateOperationHandler<LdbcUpdate3AddCommentLike> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate3AddCommentLike operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcUpdate3AddCommentLike operation) {
             return state.getQueryStore().getUpdate3AddCommentLike(operation);
         }
     }
 
-    public static class Update4AddForum extends PostgresMultipleUpdateOperationHandler<LdbcUpdate4AddForum, PostgresInteractiveQueryStore> {
+    public static class Update4AddForum extends PostgresMultipleUpdateOperationHandler<LdbcUpdate4AddForum> {
 
         @Override
-        public List<String> getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate4AddForum operation) {
+        public List<String> getQueryString(PostgresDbConnectionState state, LdbcUpdate4AddForum operation) {
             return state.getQueryStore().getUpdate4AddForum(operation);
         }
     }
 
-    public static class Update5AddForumMembership extends PostgresUpdateOperationHandler<LdbcUpdate5AddForumMembership, PostgresInteractiveQueryStore> {
+    public static class Update5AddForumMembership extends PostgresUpdateOperationHandler<LdbcUpdate5AddForumMembership> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate5AddForumMembership operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcUpdate5AddForumMembership operation) {
             return state.getQueryStore().getUpdate5AddForumMembership(operation);
         }
     }
 
-    public static class Update6AddPost extends PostgresMultipleUpdateOperationHandler<LdbcUpdate6AddPost, PostgresInteractiveQueryStore> {
+    public static class Update6AddPost extends PostgresMultipleUpdateOperationHandler<LdbcUpdate6AddPost> {
 
         @Override
-        public List<String> getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate6AddPost operation) {
+        public List<String> getQueryString(PostgresDbConnectionState state, LdbcUpdate6AddPost operation) {
             return state.getQueryStore().getUpdate6AddPost(operation);
         }
     }
 
-    public static class Update7AddComment extends PostgresMultipleUpdateOperationHandler<LdbcUpdate7AddComment, PostgresInteractiveQueryStore> {
+    public static class Update7AddComment extends PostgresMultipleUpdateOperationHandler<LdbcUpdate7AddComment> {
 
         @Override
-        public List<String> getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate7AddComment operation) {
+        public List<String> getQueryString(PostgresDbConnectionState state, LdbcUpdate7AddComment operation) {
             return state.getQueryStore().getUpdate7AddComment(operation);
         }
 
     }
 
-    public static class Update8AddFriendship extends PostgresUpdateOperationHandler<LdbcUpdate8AddFriendship, PostgresInteractiveQueryStore> {
+    public static class Update8AddFriendship extends PostgresUpdateOperationHandler<LdbcUpdate8AddFriendship> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<PostgresInteractiveQueryStore> state, LdbcUpdate8AddFriendship operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcUpdate8AddFriendship operation) {
             return state.getQueryStore().getUpdate8AddFriendship(operation);
         }
 

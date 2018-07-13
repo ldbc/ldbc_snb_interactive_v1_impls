@@ -1,3 +1,3 @@
-# Interactive implementations
+# Legacy implementations for the Interactive workload
 
-These implementations are currently not maintained and not part of the CI build. Feel free to pick up their development and open a PR.
+These implementations are currently not maintained and are not built as part of the main project. Please feel free to contribute, but we highly recommend to contact the LDBC maintainers first.

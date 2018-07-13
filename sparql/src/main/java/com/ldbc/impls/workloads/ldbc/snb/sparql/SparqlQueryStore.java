@@ -1,18 +1,24 @@
-package com.ldbc.impls.workloads.ldbc.snb.sparql.bi;
+package com.ldbc.impls.workloads.ldbc.snb.sparql;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery16ExpertsInSocialCircle;
-import com.ldbc.impls.workloads.ldbc.snb.bi.BiQueryStore;
+import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
+import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
+import com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlConverter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SparqlBiQueryStore extends BiQueryStore implements SparqlQueryStore {
+public class SparqlQueryStore extends QueryStore {
 
-    public SparqlBiQueryStore(String path) throws DbException {
-        super(path, "bi-", ".sparql");
+    protected Converter getConverter() {
+        return new SparqlConverter();
+    }
+
+    public SparqlQueryStore(String path) throws DbException {
+        super(path, ".sparql");
     }
 
     /*
@@ -108,12 +114,14 @@ public class SparqlBiQueryStore extends BiQueryStore implements SparqlQueryStore
         Joiner joiner = Joiner.on(" UNION ");
         String knowsTrails = joiner.join(knowsTrailFragments);
 
-        return prepare(BiQuery.Query16, new ImmutableMap.Builder<String, String>()
+        return prepare(QueryType.BiQuery16, new ImmutableMap.Builder<String, String>()
                 .put("personId", Long.toString(operation.personId()))
                 .put("country", getConverter().convertString(operation.country()))
                 .put("tagClass", getConverter().convertString(operation.tagClass()))
                 .put("minPathDistance", knowsTrails)
                 .put("maxPathDistance", "").build());
     }
+
+
 
 }

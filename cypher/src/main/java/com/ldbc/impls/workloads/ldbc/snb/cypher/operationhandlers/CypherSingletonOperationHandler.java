@@ -1,19 +1,19 @@
-package com.ldbc.impls.workloads.ldbc.snb.cypher;
+package com.ldbc.impls.workloads.ldbc.snb.cypher.operationhandlers;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;
 import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
-import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
+import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherDbConnectionState;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Session;
 import org.neo4j.driver.v1.StatementResult;
 
-public abstract class CypherSingletonOperationHandler<OperationType extends Operation<OperationResult>, OperationResult, TQueryStore extends QueryStore>
-        implements OperationHandler<OperationType, CypherDbConnectionState<TQueryStore>> {
+public abstract class CypherSingletonOperationHandler<OperationType extends Operation<OperationResult>, OperationResult>
+        implements OperationHandler<OperationType, CypherDbConnectionState> {
 
     @Override
-    public void executeOperation(OperationType operation, CypherDbConnectionState<TQueryStore> state,
+    public void executeOperation(OperationType operation, CypherDbConnectionState state,
                                  ResultReporter resultReporter) throws DbException {
         Session session = state.getSession();
         OperationResult tuple = null;
@@ -36,7 +36,7 @@ public abstract class CypherSingletonOperationHandler<OperationType extends Oper
         resultReporter.report(resultCount, tuple, operation);
     }
 
-    public abstract String getQueryString(CypherDbConnectionState<TQueryStore> state, OperationType operation);
+    public abstract String getQueryString(CypherDbConnectionState state, OperationType operation);
 
     public abstract OperationResult convertSingleResult(Record record);
 }

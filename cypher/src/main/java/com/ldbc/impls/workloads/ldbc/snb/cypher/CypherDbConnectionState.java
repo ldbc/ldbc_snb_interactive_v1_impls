@@ -2,7 +2,6 @@ package com.ldbc.impls.workloads.ldbc.snb.cypher;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.impls.workloads.ldbc.snb.BaseDbConnectionState;
-import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
 import org.neo4j.driver.v1.AuthTokens;
 import org.neo4j.driver.v1.Driver;
 import org.neo4j.driver.v1.GraphDatabase;
@@ -11,11 +10,11 @@ import org.neo4j.driver.v1.Session;
 import java.io.IOException;
 import java.util.Map;
 
-public class CypherDbConnectionState<TQueryStore extends QueryStore> extends BaseDbConnectionState<TQueryStore> {
+public class CypherDbConnectionState extends BaseDbConnectionState<CypherQueryStore> {
 
     protected final Driver driver;
 
-    public CypherDbConnectionState(Map<String, String> properties, TQueryStore store) {
+    public CypherDbConnectionState(Map<String, String> properties, CypherQueryStore store) {
         super(properties, store);
         String endPoint = properties.get("endpoint");
         String user = properties.get("user");

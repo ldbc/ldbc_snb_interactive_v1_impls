@@ -52,12 +52,12 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopics;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopicsResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForums;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForumsResult;
-import com.ldbc.impls.workloads.ldbc.snb.bi.BiQueryStore;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDb;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDbConnectionState;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresQueryStore;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.converter.PostgresConverter;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.handlers.PostgresListOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.handlers.PostgresSingletonOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.operationhandlers.PostgresListOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.operationhandlers.PostgresSingletonOperationHandler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -67,12 +67,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
+public class PostgresBiDb extends PostgresDb<PostgresQueryStore> {
 
     @Override
     protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
         try {
-            dcs = new PostgresDbConnectionState<>(properties, new PostgresBiQueryStore(properties.get("queryDir")));
+            dcs = new PostgresDbConnectionState<>(properties, new PostgresQueryStore(properties.get("queryDir")));
         } catch (ClassNotFoundException e) {
             throw new DbException(e);
         }
@@ -104,10 +104,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
         registerOperationHandler(LdbcSnbBiQuery25WeightedPaths.class, BiQuery25.class);
     }
 
-    public static class BiQuery1 extends PostgresListOperationHandler<LdbcSnbBiQuery1PostingSummary, LdbcSnbBiQuery1PostingSummaryResult, BiQueryStore> {
+    public static class BiQuery1 extends PostgresListOperationHandler<LdbcSnbBiQuery1PostingSummary, LdbcSnbBiQuery1PostingSummaryResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery1PostingSummary operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery1PostingSummary operation) {
             return state.getQueryStore().getQuery1(operation);
         }
 
@@ -125,10 +125,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
 
     }
 
-    public static class BiQuery2 extends PostgresListOperationHandler<LdbcSnbBiQuery2TopTags, LdbcSnbBiQuery2TopTagsResult, BiQueryStore> {
+    public static class BiQuery2 extends PostgresListOperationHandler<LdbcSnbBiQuery2TopTags, LdbcSnbBiQuery2TopTagsResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery2TopTags operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery2TopTags operation) {
             return state.getQueryStore().getQuery2(operation);
         }
 
@@ -145,10 +145,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
 
     }
 
-    public static class BiQuery3 extends PostgresListOperationHandler<LdbcSnbBiQuery3TagEvolution, LdbcSnbBiQuery3TagEvolutionResult, BiQueryStore> {
+    public static class BiQuery3 extends PostgresListOperationHandler<LdbcSnbBiQuery3TagEvolution, LdbcSnbBiQuery3TagEvolutionResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery3TagEvolution operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery3TagEvolution operation) {
             return state.getQueryStore().getQuery3(operation);
         }
 
@@ -163,10 +163,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
 
     }
 
-    public static class BiQuery4 extends PostgresListOperationHandler<LdbcSnbBiQuery4PopularCountryTopics, LdbcSnbBiQuery4PopularCountryTopicsResult, BiQueryStore> {
+    public static class BiQuery4 extends PostgresListOperationHandler<LdbcSnbBiQuery4PopularCountryTopics, LdbcSnbBiQuery4PopularCountryTopicsResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery4PopularCountryTopics operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery4PopularCountryTopics operation) {
             return state.getQueryStore().getQuery4(operation);
         }
 
@@ -182,10 +182,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
 
     }
 
-    public static class BiQuery5 extends PostgresListOperationHandler<LdbcSnbBiQuery5TopCountryPosters, LdbcSnbBiQuery5TopCountryPostersResult, BiQueryStore> {
+    public static class BiQuery5 extends PostgresListOperationHandler<LdbcSnbBiQuery5TopCountryPosters, LdbcSnbBiQuery5TopCountryPostersResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery5TopCountryPosters operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery5TopCountryPosters operation) {
             return state.getQueryStore().getQuery5(operation);
         }
 
@@ -201,10 +201,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
 
     }
 
-    public static class BiQuery6 extends PostgresListOperationHandler<LdbcSnbBiQuery6ActivePosters, LdbcSnbBiQuery6ActivePostersResult, BiQueryStore> {
+    public static class BiQuery6 extends PostgresListOperationHandler<LdbcSnbBiQuery6ActivePosters, LdbcSnbBiQuery6ActivePostersResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery6ActivePosters operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery6ActivePosters operation) {
             return state.getQueryStore().getQuery6(operation);
         }
 
@@ -220,10 +220,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
 
     }
 
-    public static class BiQuery7 extends PostgresListOperationHandler<LdbcSnbBiQuery7AuthoritativeUsers, LdbcSnbBiQuery7AuthoritativeUsersResult, BiQueryStore> {
+    public static class BiQuery7 extends PostgresListOperationHandler<LdbcSnbBiQuery7AuthoritativeUsers, LdbcSnbBiQuery7AuthoritativeUsersResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery7AuthoritativeUsers operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery7AuthoritativeUsers operation) {
             return state.getQueryStore().getQuery7(operation);
         }
 
@@ -236,10 +236,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
 
     }
 
-    public static class BiQuery8 extends PostgresListOperationHandler<LdbcSnbBiQuery8RelatedTopics, LdbcSnbBiQuery8RelatedTopicsResult, BiQueryStore> {
+    public static class BiQuery8 extends PostgresListOperationHandler<LdbcSnbBiQuery8RelatedTopics, LdbcSnbBiQuery8RelatedTopicsResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery8RelatedTopics operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery8RelatedTopics operation) {
             return state.getQueryStore().getQuery8(operation);
         }
 
@@ -252,10 +252,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
 
     }
 
-    public static class BiQuery9 extends PostgresListOperationHandler<LdbcSnbBiQuery9RelatedForums, LdbcSnbBiQuery9RelatedForumsResult, BiQueryStore> {
+    public static class BiQuery9 extends PostgresListOperationHandler<LdbcSnbBiQuery9RelatedForums, LdbcSnbBiQuery9RelatedForumsResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery9RelatedForums operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery9RelatedForums operation) {
             return state.getQueryStore().getQuery9(operation);
         }
 
@@ -269,10 +269,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
 
     }
 
-    public static class BiQuery10 extends PostgresListOperationHandler<LdbcSnbBiQuery10TagPerson, LdbcSnbBiQuery10TagPersonResult, BiQueryStore> {
+    public static class BiQuery10 extends PostgresListOperationHandler<LdbcSnbBiQuery10TagPerson, LdbcSnbBiQuery10TagPersonResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery10TagPerson operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery10TagPerson operation) {
             return state.getQueryStore().getQuery10(operation);
         }
 
@@ -286,10 +286,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
 
     }
 
-    public static class BiQuery11 extends PostgresListOperationHandler<LdbcSnbBiQuery11UnrelatedReplies, LdbcSnbBiQuery11UnrelatedRepliesResult, BiQueryStore> {
+    public static class BiQuery11 extends PostgresListOperationHandler<LdbcSnbBiQuery11UnrelatedReplies, LdbcSnbBiQuery11UnrelatedRepliesResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery11UnrelatedReplies operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery11UnrelatedReplies operation) {
             return state.getQueryStore().getQuery11(operation);
         }
 
@@ -304,10 +304,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
 
     }
 
-    public static class BiQuery12 extends PostgresListOperationHandler<LdbcSnbBiQuery12TrendingPosts, LdbcSnbBiQuery12TrendingPostsResult, BiQueryStore> {
+    public static class BiQuery12 extends PostgresListOperationHandler<LdbcSnbBiQuery12TrendingPosts, LdbcSnbBiQuery12TrendingPostsResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery12TrendingPosts operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery12TrendingPosts operation) {
             return state.getQueryStore().getQuery12(operation);
         }
 
@@ -322,10 +322,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
         }
     }
 
-    public static class BiQuery13 extends PostgresListOperationHandler<LdbcSnbBiQuery13PopularMonthlyTags, LdbcSnbBiQuery13PopularMonthlyTagsResult, BiQueryStore> {
+    public static class BiQuery13 extends PostgresListOperationHandler<LdbcSnbBiQuery13PopularMonthlyTags, LdbcSnbBiQuery13PopularMonthlyTagsResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery13PopularMonthlyTags operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery13PopularMonthlyTags operation) {
             return state.getQueryStore().getQuery13(operation);
         }
 
@@ -348,10 +348,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
         }
     }
 
-    public static class BiQuery14 extends PostgresListOperationHandler<LdbcSnbBiQuery14TopThreadInitiators, LdbcSnbBiQuery14TopThreadInitiatorsResult, BiQueryStore> {
+    public static class BiQuery14 extends PostgresListOperationHandler<LdbcSnbBiQuery14TopThreadInitiators, LdbcSnbBiQuery14TopThreadInitiatorsResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery14TopThreadInitiators operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery14TopThreadInitiators operation) {
             return state.getQueryStore().getQuery14(operation);
         }
 
@@ -366,10 +366,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
         }
     }
 
-    public static class BiQuery15 extends PostgresListOperationHandler<LdbcSnbBiQuery15SocialNormals, LdbcSnbBiQuery15SocialNormalsResult, BiQueryStore> {
+    public static class BiQuery15 extends PostgresListOperationHandler<LdbcSnbBiQuery15SocialNormals, LdbcSnbBiQuery15SocialNormalsResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery15SocialNormals operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery15SocialNormals operation) {
             return state.getQueryStore().getQuery15(operation);
         }
 
@@ -381,10 +381,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
         }
     }
 
-    public static class BiQuery16 extends PostgresListOperationHandler<LdbcSnbBiQuery16ExpertsInSocialCircle, LdbcSnbBiQuery16ExpertsInSocialCircleResult, BiQueryStore> {
+    public static class BiQuery16 extends PostgresListOperationHandler<LdbcSnbBiQuery16ExpertsInSocialCircle, LdbcSnbBiQuery16ExpertsInSocialCircleResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery16ExpertsInSocialCircle operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery16ExpertsInSocialCircle operation) {
             return state.getQueryStore().getQuery16(operation);
         }
 
@@ -397,10 +397,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
         }
     }
 
-    public static class BiQuery17 extends PostgresSingletonOperationHandler<LdbcSnbBiQuery17FriendshipTriangles, LdbcSnbBiQuery17FriendshipTrianglesResult, BiQueryStore> {
+    public static class BiQuery17 extends PostgresSingletonOperationHandler<LdbcSnbBiQuery17FriendshipTriangles, LdbcSnbBiQuery17FriendshipTrianglesResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery17FriendshipTriangles operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery17FriendshipTriangles operation) {
             return state.getQueryStore().getQuery17(operation);
         }
 
@@ -411,10 +411,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
         }
     }
 
-    public static class BiQuery18 extends PostgresListOperationHandler<LdbcSnbBiQuery18PersonPostCounts, LdbcSnbBiQuery18PersonPostCountsResult, BiQueryStore> {
+    public static class BiQuery18 extends PostgresListOperationHandler<LdbcSnbBiQuery18PersonPostCounts, LdbcSnbBiQuery18PersonPostCountsResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery18PersonPostCounts operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery18PersonPostCounts operation) {
             return state.getQueryStore().getQuery18(operation);
         }
 
@@ -427,10 +427,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
     }
 
 
-    public static class BiQuery19 extends PostgresListOperationHandler<LdbcSnbBiQuery19StrangerInteraction, LdbcSnbBiQuery19StrangerInteractionResult, BiQueryStore> {
+    public static class BiQuery19 extends PostgresListOperationHandler<LdbcSnbBiQuery19StrangerInteraction, LdbcSnbBiQuery19StrangerInteractionResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery19StrangerInteraction operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery19StrangerInteraction operation) {
             return state.getQueryStore().getQuery19(operation);
         }
 
@@ -443,10 +443,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
         }
     }
 
-    public static class BiQuery20 extends PostgresListOperationHandler<LdbcSnbBiQuery20HighLevelTopics, LdbcSnbBiQuery20HighLevelTopicsResult, BiQueryStore> {
+    public static class BiQuery20 extends PostgresListOperationHandler<LdbcSnbBiQuery20HighLevelTopics, LdbcSnbBiQuery20HighLevelTopicsResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery20HighLevelTopics operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery20HighLevelTopics operation) {
             return state.getQueryStore().getQuery20(operation);
         }
 
@@ -458,10 +458,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
         }
     }
 
-    public static class BiQuery21 extends PostgresListOperationHandler<LdbcSnbBiQuery21Zombies, LdbcSnbBiQuery21ZombiesResult, BiQueryStore> {
+    public static class BiQuery21 extends PostgresListOperationHandler<LdbcSnbBiQuery21Zombies, LdbcSnbBiQuery21ZombiesResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery21Zombies operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery21Zombies operation) {
             return state.getQueryStore().getQuery21(operation);
         }
 
@@ -475,10 +475,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
         }
     }
 
-    public static class BiQuery22 extends PostgresListOperationHandler<LdbcSnbBiQuery22InternationalDialog, LdbcSnbBiQuery22InternationalDialogResult, BiQueryStore> {
+    public static class BiQuery22 extends PostgresListOperationHandler<LdbcSnbBiQuery22InternationalDialog, LdbcSnbBiQuery22InternationalDialogResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery22InternationalDialog operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery22InternationalDialog operation) {
             return state.getQueryStore().getQuery22(operation);
         }
 
@@ -492,10 +492,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
         }
     }
 
-    public static class BiQuery23 extends PostgresListOperationHandler<LdbcSnbBiQuery23HolidayDestinations, LdbcSnbBiQuery23HolidayDestinationsResult, BiQueryStore> {
+    public static class BiQuery23 extends PostgresListOperationHandler<LdbcSnbBiQuery23HolidayDestinations, LdbcSnbBiQuery23HolidayDestinationsResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery23HolidayDestinations operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery23HolidayDestinations operation) {
             return state.getQueryStore().getQuery23(operation);
         }
 
@@ -509,10 +509,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
     }
 
 
-    public static class BiQuery24 extends PostgresListOperationHandler<LdbcSnbBiQuery24MessagesByTopic, LdbcSnbBiQuery24MessagesByTopicResult, BiQueryStore> {
+    public static class BiQuery24 extends PostgresListOperationHandler<LdbcSnbBiQuery24MessagesByTopic, LdbcSnbBiQuery24MessagesByTopicResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery24MessagesByTopic operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery24MessagesByTopic operation) {
             return state.getQueryStore().getQuery24(operation);
         }
 
@@ -527,10 +527,10 @@ public class PostgresBiDb extends PostgresDb<PostgresBiQueryStore> {
         }
     }
 
-    public static class BiQuery25 extends PostgresListOperationHandler<LdbcSnbBiQuery25WeightedPaths, LdbcSnbBiQuery25WeightedPathsResult, BiQueryStore> {
+    public static class BiQuery25 extends PostgresListOperationHandler<LdbcSnbBiQuery25WeightedPaths, LdbcSnbBiQuery25WeightedPathsResult> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState<BiQueryStore> state, LdbcSnbBiQuery25WeightedPaths operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcSnbBiQuery25WeightedPaths operation) {
             return state.getQueryStore().getQuery25(operation);
         }
 

@@ -7,14 +7,14 @@ import com.ldbc.impls.workloads.ldbc.snb.cypher.bi.CypherBiDb;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BiCypherTest extends BiTest {
+public class CypherBiTest extends BiTest {
 
     private final String endpoint = "bolt://localhost:7687";
     private final String user = "neo4j";
     private final String password = "admin";
-    private final String queryDir = "queries-opencypher/";
+    private final String queryDir = "queries/";
 
-    public BiCypherTest() throws DbException {
+    public CypherBiTest() throws DbException {
         super(new CypherBiDb());
     }
 
