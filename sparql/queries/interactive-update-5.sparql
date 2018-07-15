@@ -8,9 +8,9 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-select ?con ?image (?dt - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?date
-where {
-  ?post snvoc:id %Id% .
-  { {?post snvoc:content ?con } union { ?post snvoc:imageFile ?image }} .
-  ?post snvoc:creationDate ?dt .
+INSERT {
+    ?person foaf:givenName 'William'
+}
+WHERE {
+    ?person foaf:givenName 'Bill'
 }
