@@ -10,10 +10,10 @@ FILE_NAME_SUFFIX='_0_0.csv'
 
 # post and comment transformations, copied from postgres/load-scripts/load.sh
 cat $RAW_DIR/post_0_0.csv | \
-  awk -F '|' '{ print $1"|"$2"|"$3"|"$4"|"$5"|"$6"|"$7"|"$8"|"$9"|"$9"|"$11"|"$10"||"}' > \
+  awk -F '|' '{ print $1"|"$2"|"$3"|"$4"|"$5"|"$6"|"$7"|"$8"|"$9"|"$9"|"$11"|"$10"|"}' > \
   $DATA_DIR/post_0_0.csv
 cat $RAW_DIR/comment_0_0.csv | \
-  awk -F '|' '{print $1"||"$2"|"$3"|"$4"||"$5"|"$6"|"$7"||"$8"||"$9 $10"|"}' | \
+  awk -F '|' '{print $1"||"$2"|"$3"|"$4"||"$5"|"$6"|"$7"||"$8"||"$9 $10}' | \
   sed -n -e '2,$ p' >> \
   $DATA_DIR/post_0_0.csv
 
