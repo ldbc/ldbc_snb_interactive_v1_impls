@@ -1,17 +1,22 @@
-CREATE STREAM post (
-    ps_postid int,
-    ps_imagefile varchar,
-    ps_creationdate date,
-    ps_locationip varchar,
-    ps_browserused varchar,
-    ps_language varchar,
-    ps_content varchar,
-    ps_length int,
-    ps_creatorid int,
-    ps_p_creatorid int,
-    ps_locationid int,
-    ps_forumid int,
-    ps_replyof int
+CREATE STREAM message (
+    /*
+     * m_ps_ denotes field specific to posts
+     * m_c_  denotes field specific to comments
+     * other m_ fields are common to posts and messages
+     */
+    m_messageid int,
+    m_ps_imagefile varchar,
+    m_creationdate date,
+    m_locationip varchar,
+    m_browserused varchar,
+    m_ps_language varchar,
+    m_content varchar,
+    m_length int,
+    m_creatorid int,
+    m_ps_creatorid int,
+    m_locationid int,
+    m_ps_forumid int,
+    m_c_replyof int
 )
 FROM FILE 'data/post_0_0.csv'
 LINE DELIMITED CSV (delimiter := '|')
@@ -99,7 +104,7 @@ LINE DELIMITED CSV (delimiter := '|')
 
 CREATE STREAM likes (
    l_personid int,
-   l_postid int,
+   l_messageid int,
    l_creationdate  date
 )
 FROM FILE 'data/person_likes_post_0_0.csv'
@@ -143,9 +148,9 @@ FROM FILE 'data/place_0_0.csv'
 LINE DELIMITED CSV (delimiter := '|')
 ;
 
-CREATE STREAM post_tag (
-   pst_postid int,
-   pst_tagid int
+CREATE STREAM message_tag (
+   mt_messageid int,
+   mt_tagid int
 )
 FROM FILE 'data/post_hasTag_tag_0_0.csv'
 LINE DELIMITED CSV (delimiter := '|')

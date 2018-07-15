@@ -3,8 +3,9 @@ INCLUDE 'schema.sql';
 
 /*
 */
-SELECT count(*) AS post_cnt
-  FROM post
+
+SELECT count(*) AS message_cnt
+  FROM message
 ;
 
 SELECT COUNT(*) AS forum_cnt
@@ -59,8 +60,8 @@ SELECT COUNT(*) AS place_cnt
    FROM place
 ;
 
-SELECT COUNT(*) AS post_tag_cnt
-   FROM post_tag
+SELECT COUNT(*) AS message_tag_cnt
+   FROM message_tag
 ;
 
 SELECT COUNT(*) AS tag_cnt
