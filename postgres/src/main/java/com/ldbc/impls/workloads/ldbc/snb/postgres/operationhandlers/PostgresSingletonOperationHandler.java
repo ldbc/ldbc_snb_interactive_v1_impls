@@ -2,8 +2,8 @@ package com.ldbc.impls.workloads.ldbc.snb.postgres.operationhandlers;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;
-import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
+import com.ldbc.impls.workloads.ldbc.snb.operationhandlers.SingletonOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDbConnectionState;
 
 import java.sql.Connection;
@@ -11,17 +11,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public abstract class PostgresSingletonOperationHandler<
-            OperationType extends Operation<OperationResult>,
-            OperationResult
-        >
-        implements OperationHandler<OperationType, PostgresDbConnectionState> {
+public abstract class PostgresSingletonOperationHandler<TOperation extends Operation<TOperationResult>, TOperationResult>
+        implements SingletonOperationHandler<TOperationResult, TOperation, PostgresDbConnectionState> {
 
     @Override
-    public void executeOperation(OperationType operation, PostgresDbConnectionState state,
+    public void executeOperation(TOperation operation, PostgresDbConnectionState state,
                                  ResultReporter resultReporter) throws DbException {
         Connection conn = state.getConnection();
-        OperationResult tuple = null;
+        TOperationResult tuple = null;
         int resultCount = 0;
         String queryString = getQueryString(state, operation);
         try (final Statement stmt = conn.createStatement()) {
@@ -35,14 +32,11 @@ public abstract class PostgresSingletonOperationHandler<
                 if (state.isPrintResults())
                     System.out.println(tuple.toString());
             }
-            stmt.close();
         } catch (Exception e) {
             throw new DbException(e);
         }
         resultReporter.report(resultCount, tuple, operation);
     }
 
-    public abstract String getQueryString(PostgresDbConnectionState state, OperationType operation);
-
-    public abstract OperationResult convertSingleResult(ResultSet result) throws SQLException;
+    public abstract TOperationResult convertSingleResult(ResultSet result) throws SQLException;
 }

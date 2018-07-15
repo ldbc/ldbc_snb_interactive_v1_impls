@@ -2,21 +2,20 @@ package com.ldbc.impls.workloads.ldbc.snb.postgres.operationhandlers;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;
-import com.ldbc.driver.OperationHandler;
 import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcNoResult;
+import com.ldbc.impls.workloads.ldbc.snb.operationhandlers.MultipleUpdateOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDbConnectionState;
 
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.List;
 
-public abstract class PostgresMultipleUpdateOperationHandler<
-            OperationType extends Operation<LdbcNoResult>
-        > implements OperationHandler<OperationType, PostgresDbConnectionState> {
+public abstract class PostgresMultipleUpdateOperationHandler<TOperation extends Operation<LdbcNoResult>>
+        implements MultipleUpdateOperationHandler<TOperation, PostgresDbConnectionState> {
 
     @Override
-    public void executeOperation(OperationType operation, PostgresDbConnectionState state,
+    public void executeOperation(TOperation operation, PostgresDbConnectionState state,
                                  ResultReporter resultReporter) throws DbException {
         Connection conn = state.getConnection();
         try {
@@ -33,5 +32,4 @@ public abstract class PostgresMultipleUpdateOperationHandler<
         resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
     }
 
-    public abstract List<String> getQueryString(PostgresDbConnectionState state, OperationType operation);
 }
