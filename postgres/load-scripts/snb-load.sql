@@ -39,9 +39,9 @@ COPY person_company FROM 'PATHVAR/person_workAt_organisation_0_0.csv' WITH DELIM
 -- Populate place table
 COPY place FROM 'PATHVAR/place_0_0.csv' WITH DELIMITER '|' CSV HEADER;
 
--- Populate post_tag table
-COPY post_tag FROM 'PATHVAR/post_hasTag_tag_0_0.csv' WITH DELIMITER '|' CSV HEADER;
-COPY post_tag FROM 'PATHVAR/comment_hasTag_tag_0_0.csv' WITH DELIMITER '|' CSV HEADER;
+-- Populate message_tag table
+COPY message_tag FROM 'PATHVAR/post_hasTag_tag_0_0.csv' WITH DELIMITER '|' CSV HEADER;
+COPY message_tag FROM 'PATHVAR/comment_hasTag_tag_0_0.csv' WITH DELIMITER '|' CSV HEADER;
 
 -- Populate tagclass table
 COPY tagclass FROM 'PATHVAR/tagclass_0_0.csv' WITH DELIMITER '|' CSV HEADER;
@@ -52,9 +52,9 @@ COPY tag FROM 'PATHVAR/tag_0_0.csv' WITH DELIMITER '|' CSV HEADER;
 
 -- PROBLEMATIC
 
--- Populate post table
-COPY post FROM 'PATHVAR/post_0_0-postgres.csv'    WITH (FORCE_NOT_NULL ("ps_content"),  DELIMITER '|', HEADER, FORMAT csv);
-COPY post FROM 'PATHVAR/comment_0_0-postgres.csv' WITH (FORCE_NOT_NULL ("ps_content"),  DELIMITER '|', HEADER, FORMAT csv);
+-- Populate message table
+COPY message FROM 'PATHVAR/post_0_0-postgres.csv'    WITH (FORCE_NOT_NULL ("m_content"),  DELIMITER '|', HEADER, FORMAT csv);
+COPY message FROM 'PATHVAR/comment_0_0-postgres.csv' WITH (FORCE_NOT_NULL ("m_content"),  DELIMITER '|', HEADER, FORMAT csv);
 
 create view country as select city.pl_placeid as ctry_city, ctry.pl_name as ctry_name from place city, place ctry where city.pl_containerplaceid = ctry.pl_placeid and ctry.pl_type = 'country';
 
