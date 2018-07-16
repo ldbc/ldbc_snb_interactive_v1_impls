@@ -1,5 +1,5 @@
 select t_name, count(*)
-from tag, post_tag, post,
+from tag, message_tag, post,
  ( select k_person2id
    from knows
    where
@@ -11,11 +11,11 @@ from tag, post_tag, post,
    k1.k_person1id = :Person and k1.k_person2id = k2.k_person1id and k2.k_person2id <> :Person
  ) f
 where
-ps_p_creatorid = f.k_person2id and
-ps_postid = pst_postid and
-pst_tagid = t_tagid and
+m_ps_creatorid = f.k_person2id and
+ps_postid = mt_messageid and
+mt_tagid = t_tagid and
 t_name <> :Tag and
-exists (select * from tag, post_tag where pst_postid = ps_postid and pst_tagid = t_tagid and t_name = :Tag)
+exists (select * from tag, message_tag where mt_messageid = ps_postid and mt_tagid = t_tagid and t_name = :Tag)
 group by t_name
 order by 2 desc, t_name
 limit 10

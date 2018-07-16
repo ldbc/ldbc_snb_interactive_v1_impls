@@ -13,8 +13,8 @@ SELECT extract(YEAR FROM m.ps_creationdate) as year
                          ) as rn
   FROM place c -- country
      , post m
-       LEFT JOIN post_tag pt ON (m.ps_postid = pt.pst_postid)
-       LEFT JOIN tag t ON (pt.pst_tagid = t.t_tagid)
+       LEFT JOIN message_tag pt ON (m.ps_postid = pt.mt_messageid)
+       LEFT JOIN tag t ON (pt.mt_tagid = t.t_tagid)
  WHERE 1=1
     -- join
    AND c.pl_placeid = m.ps_locationid

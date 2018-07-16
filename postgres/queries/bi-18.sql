@@ -5,13 +5,13 @@
  */
 WITH RECURSIVE post_all(psa_postid, psa_language, psa_creatorid, psa_posttype
                       , psa_content_isempty, psa_length, psa_creationday) AS (
-    SELECT ps_postid, ps_language, ps_creatorid, 'Post'
+    SELECT ps_postid, m_ps_language, ps_creatorid, 'Post'
          , ps_content IS NULL AS psa_content_isempty
          , ps_length
          , ps_creationdate --date_trunc('day', ps_creationdate) AS psa_creationday
       FROM post
      WHERE 1=1
-       AND ps_replyof IS NULL -- post, not comment
+       AND m_c_replyof IS NULL -- post, not comment
   UNION ALL
     SELECT ps_postid, psa.psa_language, ps_creatorid, 'Comment'
          , ps_content IS NULL AS psa_content_isempty
@@ -19,7 +19,7 @@ WITH RECURSIVE post_all(psa_postid, psa_language, psa_creatorid, psa_posttype
          , ps_creationdate --date_trunc('day', ps_creationdate) AS psa_creationday
       FROM post p, post_all psa
      WHERE 1=1
-       AND p.ps_replyof = psa.psa_postid
+       AND p.m_c_replyof = psa.psa_postid
 )
 , person_w_posts AS (
     SELECT p.p_personid, count(psa_postid) as messageCount

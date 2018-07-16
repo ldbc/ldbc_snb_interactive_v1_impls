@@ -39,7 +39,7 @@ WITH RECURSIVE -- note: RECURSIVE denotes that some CTE (subquery) will be recur
      WHERE 1=1
         -- join
        AND s.personid = m.ps_creatorid
-       AND m.ps_postid = r.ps_replyof
+       AND m.ps_postid = r.m_c_replyof
   UNION ALL
     SELECT i.strangerid
          , i.messageid
@@ -49,7 +49,7 @@ WITH RECURSIVE -- note: RECURSIVE denotes that some CTE (subquery) will be recur
          , post r
      WHERE 1=1
         -- join
-       AND i.replyid = r.ps_replyof
+       AND i.replyid = r.m_c_replyof
 )
    , interactions_longest AS (
      -- interaction i2 does not extend towards the original post by an interaction when the stranger transitively replied to himself

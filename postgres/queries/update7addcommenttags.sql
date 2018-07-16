@@ -1,4 +1,4 @@
-insert into post_tag values
+insert into message_tag values
 (
     :commentId,
     :tagId

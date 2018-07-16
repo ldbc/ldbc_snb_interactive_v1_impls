@@ -38,7 +38,7 @@ WITH person1_list AS (
          , post r -- reply by p1
      WHERE 1=1
         -- join
-       AND m.ps_postid = r.ps_replyof
+       AND m.ps_postid = r.m_c_replyof
        AND p1.personid = r.ps_creatorid
        AND p2.personid = m.ps_creatorid
 )
@@ -53,7 +53,7 @@ WITH person1_list AS (
          , post r -- reply by p2
      WHERE 1=1
         -- join
-       AND m.ps_postid = r.ps_replyof
+       AND m.ps_postid = r.m_c_replyof
        AND p2.personid = r.ps_creatorid
        AND p1.personid = m.ps_creatorid
 )
@@ -82,7 +82,7 @@ WITH person1_list AS (
      WHERE 1=1
         -- join
        AND p2.personid = m.ps_creatorid
-       AND m.ps_postid = l.l_postid
+       AND m.ps_postid = l.l_messageid
        AND l.l_personid = p1.personid
 )
 ,  case5 AS (
@@ -97,7 +97,7 @@ WITH person1_list AS (
      WHERE 1=1
         -- join
        AND p1.personid = m.ps_creatorid
-       AND m.ps_postid = l.l_postid
+       AND m.ps_postid = l.l_messageid
        AND l.l_personid = p2.personid
 )
 ,  pair_scores AS (

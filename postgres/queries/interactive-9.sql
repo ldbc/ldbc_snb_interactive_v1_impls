@@ -1,5 +1,5 @@
 select p_personid, p_firstname, p_lastname,
-       ps_postid, COALESCE(ps_imagefile,'')||COALESCE(ps_content,''), ps_creationdate
+       ps_postid, COALESCE(m_ps_imagefile,'')||COALESCE(ps_content,''), ps_creationdate
 from
   ( select k_person2id
     from knows

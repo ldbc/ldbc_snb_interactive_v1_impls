@@ -4,18 +4,18 @@
 WITH detail AS (
 SELECT cr.p_personid AS person_id
      , count(DISTINCT r.ps_postid)  AS replyCount
-     , count(DISTINCT l.l_postid||' '||l.l_personid) AS likeCount
+     , count(DISTINCT l.l_messageid||' '||l.l_personid) AS likeCount
      , count(DISTINCT m.ps_postid)  AS messageCount
      , null as score
   FROM tag t
-     , post_tag pt
-     , post m LEFT JOIN post  r ON (m.ps_postid = r.ps_replyof) -- m: all messages, not just posts; r: direct reply to m
-              LEFT JOIN likes l ON (m.ps_postid = l.l_postid)  -- l: likes to m
+     , message_tag pt
+     , post m LEFT JOIN post  r ON (m.ps_postid = r.m_c_replyof) -- m: all messages, not just posts; r: direct reply to m
+              LEFT JOIN likes l ON (m.ps_postid = l.l_messageid)  -- l: likes to m
      , person cr -- creator
  WHERE 1=1
     -- join
-   AND t.t_tagid = pt.pst_tagid
-   AND pt.pst_postid = m.ps_postid
+   AND t.t_tagid = pt.mt_tagid
+   AND pt.mt_messageid = m.ps_postid
    AND m.ps_creatorid = cr.p_personid
     -- filter
    AND t.t_name = :tag

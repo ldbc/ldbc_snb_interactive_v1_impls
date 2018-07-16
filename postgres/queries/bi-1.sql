@@ -10,7 +10,7 @@ WITH
 )
 , post_prep AS (
     SELECT extract(year from ps_creationdate) AS messageYear
-         , ps_replyof IS NOT NULL AS isComment
+         , m_c_replyof IS NOT NULL AS isComment
          , CASE
              WHEN ps_length <  40 THEN 0 -- short
              WHEN ps_length <  80 THEN 1 -- one liner
@@ -22,7 +22,7 @@ WITH
      WHERE 1=1
        AND ps_creationdate < :date
        --AND ps_content IS NOT NULL
-       AND ps_imagefile IS NULL -- FIXME CHECKME: posts w/ ps_imagefile IS NOT NULL should have ps_content IS NULL
+       AND m_ps_imagefile IS NULL -- FIXME CHECKME: posts w/ m_ps_imagefile IS NOT NULL should have ps_content IS NULL
 )
 SELECT messageYear, isComment, lengthCategory
      , count(*) AS messageCount

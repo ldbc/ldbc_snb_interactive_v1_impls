@@ -11,15 +11,15 @@ SELECT co.pl_name AS "country.name"
      , t.t_name AS "tag.name"
      , count(*) AS messageCount
   FROM post p
-     , post_tag pt
+     , message_tag pt
      , tag t
      , person cr -- creator
      , place  ci  -- city
      , place  co  -- country
  WHERE 1=1
     -- join
-   AND p.ps_postid = pt.pst_postid
-   AND pt.pst_tagid = t.t_tagid
+   AND p.ps_postid = pt.mt_messageid
+   AND pt.mt_tagid = t.t_tagid
    AND p.ps_creatorid = cr.p_personid
    AND cr.p_placeid = ci.pl_placeid
    AND ci.pl_containerplaceid = co.pl_placeid

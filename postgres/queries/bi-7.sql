@@ -6,14 +6,14 @@ WITH poster_w_liker AS (
          m1.ps_creatorid posterPersonid
        , l2.l_personid as likerPersonid
     FROM tag t
-       , post_tag pt
+       , message_tag pt
        -- as an optimization, we use that the set of message1 is the same as message2
-       , post m1 LEFT JOIN likes l2 ON (m1.ps_postid = l2.l_postid)
+       , post m1 LEFT JOIN likes l2 ON (m1.ps_postid = l2.l_messageid)
        --, person p2 -- we don't need the person itself as its ID is in the like l2
    WHERE 1=1
       -- join
-     AND t.t_tagid = pt.pst_tagid
-     AND pt.pst_postid = m1.ps_postid
+     AND t.t_tagid = pt.mt_tagid
+     AND pt.mt_messageid = m1.ps_postid
       -- filter
      AND t.t_name = :tag
 )
@@ -23,7 +23,7 @@ WITH poster_w_liker AS (
        , likes l3
    WHERE 1=1
       -- join
-     AND m3.ps_postid = l3.l_postid
+     AND m3.ps_postid = l3.l_messageid
    GROUP BY personId
 )
 SELECT pl.posterPersonid as "person1.id"

@@ -13,7 +13,7 @@ SELECT m.ps_postid AS "message.id"
  WHERE 1=1
     -- join
    AND m.ps_creatorid = c.p_personid
-   AND m.ps_postid = l.l_postid
+   AND m.ps_postid = l.l_messageid
     -- filter
    AND m.ps_creationdate > :date
  GROUP BY m.ps_postid

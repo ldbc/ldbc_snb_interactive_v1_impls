@@ -21,11 +21,11 @@ WITH RECURSIVE reply_scores(r_threadid
          , post c -- comment
      WHERE 1=1
         -- join
-       AND f.f_forumid = p.ps_forumid
-       AND p.ps_postid = c.ps_replyof
+       AND f.f_forumid = p.m_ps_forumid
+       AND p.ps_postid = c.m_c_replyof
         -- filter
        AND f.f_creationdate BETWEEN :startDate AND :endDate
-       AND p.ps_replyof IS NULL -- post, not comment
+       AND p.m_c_replyof IS NULL -- post, not comment
   UNION ALL
     SELECT r.r_threadid AS r_threadid
          , r.r_reply_personid AS r_orig_personid
@@ -36,7 +36,7 @@ WITH RECURSIVE reply_scores(r_threadid
          , post c
      WHERE 1=1
         -- join
-       AND r.r_reply_messageid = c.ps_replyof
+       AND r.r_reply_messageid = c.m_c_replyof
 )
    , person_pair_scores_directed AS (
     SELECT r_orig_personid AS orig_personid

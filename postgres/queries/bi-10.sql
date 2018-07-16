@@ -19,13 +19,13 @@ WITH person_tag_interest AS (
          , count(*) AS message_score
       FROM post m
          , person p
-         , post_tag pt
+         , message_tag pt
          , tag t
      WHERE 1=1
         -- join
        AND m.ps_creatorid = p.p_personid
-       AND m.ps_postid = pt.pst_postid
-       AND pt.pst_tagid = t.t_tagid
+       AND m.ps_postid = pt.mt_messageid
+       AND pt.mt_tagid = t.t_tagid
         -- filter
        AND m.ps_creationdate > :date
        AND t.t_name = :tag

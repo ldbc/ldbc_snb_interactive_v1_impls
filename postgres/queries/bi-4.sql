@@ -9,7 +9,7 @@ SELECT f.f_forumid      AS "forum.id"
      , count(DISTINCT p.ps_postid) AS postCount
   FROM tagClass tc
      , tag t
-     , post_tag pt
+     , message_tag pt
      , post p
      , forum f
      , person m   -- moderator
@@ -18,9 +18,9 @@ SELECT f.f_forumid      AS "forum.id"
  WHERE 1=1
     -- join
    AND tc.tc_tagclassid = t.t_tagclassid
-   AND t.t_tagid = pt.pst_tagid
-   AND pt.pst_postid = p.ps_postid
-   AND p.ps_forumid = f.f_forumid
+   AND t.t_tagid = pt.mt_tagid
+   AND pt.mt_messageid = p.ps_postid
+   AND p.m_ps_forumid = f.f_forumid
    AND f.f_moderatorid = m.p_personid
    AND m.p_placeid = ci.pl_placeid
    AND ci.pl_containerplaceid = co.pl_placeid

@@ -30,8 +30,8 @@ SELECT au.p_personid AS "person.id"
        INNER JOIN person au ON (fp.fp_personid = au.p_personid)
        LEFT JOIN post p ON (1=1
                         AND au.p_personid = p.ps_creatorid
-                        AND p.ps_forumid IN (SELECT forumid from top100_popular_forums)
-                        AND p.ps_replyof IS NULL
+                        AND p.m_ps_forumid IN (SELECT forumid from top100_popular_forums)
+                        AND p.m_c_replyof IS NULL
                            )
  GROUP BY au.p_personid, au.p_firstname, au.p_lastname, au.p_creationdate
  ORDER BY postCount DESC, au.p_personid

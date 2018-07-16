@@ -15,7 +15,7 @@ from forum, forum_person,
 where f_forumid = fp_forumid and fp_personid = f.k_person2id and
       fp_creationdate >= :Date0
 ) tmp left outer join post
-on tmp.f_forumid = ps_forumid and ps_creatorid = tmp.k_person2id
+on tmp.f_forumid = m_ps_forumid and ps_creatorid = tmp.k_person2id
 group by f_forumid, f_title
 order by 2 desc, f_forumid
 limit 20

@@ -3,18 +3,18 @@
  */
 SELECT t2.t_name AS "relatedTag.name"
      , count(*) AS count
-  FROM tag t INNER JOIN post_tag pt ON (t.t_tagid = pt.pst_tagid)
-             -- as an optimization, we don't need message here as it's ID is in post_tag pt
+  FROM tag t INNER JOIN message_tag pt ON (t.t_tagid = pt.mt_tagid)
+             -- as an optimization, we don't need message here as it's ID is in message_tag pt
              -- so proceed to the comment directly
-             INNER JOIN post c      ON (pt.pst_postid = c.ps_replyof)
+             INNER JOIN post c      ON (pt.mt_messageid = c.m_c_replyof)
              -- comment's tag
-             INNER JOIN post_tag ct ON (c.ps_postid = ct.pst_postid)
-             INNER JOIN tag t2      ON (ct.pst_tagid = t2.t_tagid)
+             INNER JOIN message_tag ct ON (c.ps_postid = ct.mt_messageid)
+             INNER JOIN tag t2      ON (ct.mt_tagid = t2.t_tagid)
              -- comment doesn't have the given tag: antijoin in the where clause
-             LEFT  JOIN post_tag nt ON (c.ps_postid = nt.pst_postid AND nt.pst_tagid = pt.pst_tagid)
+             LEFT  JOIN message_tag nt ON (c.ps_postid = nt.mt_messageid AND nt.mt_tagid = pt.mt_tagid)
  WHERE 1=1
     -- join
-   AND nt.pst_postid IS NULL -- antijoin: comment (c) does not have the given tag
+   AND nt.mt_messageid IS NULL -- antijoin: comment (c) does not have the given tag
     -- filter
    AND t.t_name = :tag
  GROUP BY t2.t_name

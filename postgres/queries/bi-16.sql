@@ -49,14 +49,14 @@ WITH RECURSIVE friends(startPerson, path, friend) AS (
          , m.ps_postid AS messageid
       FROM friend_list f
          , post m
-         , post_tag pt
+         , message_tag pt
          , tag t
          , tagclass tc
      WHERE 1=1
         -- join
        AND f.friendid = m.ps_creatorid
-       AND m.ps_postid = pt.pst_postid
-       AND pt.pst_tagid = t.t_tagid
+       AND m.ps_postid = pt.mt_messageid
+       AND pt.mt_tagid = t.t_tagid
        AND t.t_tagclassid = tc.tc_tagclassid
         -- filter
        AND tc.tc_name = :tagClass
@@ -65,12 +65,12 @@ SELECT m.friendid AS "person.id"
      , t.t_name AS "tag.name"
      , count(*) AS messageCount
   FROM messages_of_tagclass_by_friends m
-     , post_tag pt
+     , message_tag pt
      , tag t
  WHERE 1=1
     -- join
-   AND m.messageid = pt.pst_postid
-   AND pt.pst_tagid = t.t_tagid
+   AND m.messageid = pt.mt_messageid
+   AND pt.mt_tagid = t.t_tagid
  GROUP BY m.friendid, t.t_name
  ORDER BY messageCount DESC, t.t_name, m.friendid
  LIMIT 100
