@@ -8,27 +8,27 @@ WITH RECURSIVE post_all(psa_threadid
                       , psa_creationdate
                       , psa_messagetype
                        ) AS (
-    SELECT ps_postid AS psa_threadid
-         , ps_creatorid AS psa_thread_creatorid
-         , ps_postid AS psa_messageid
-         , ps_creationdate
+    SELECT m_messageid AS psa_threadid
+         , m_creatorid AS psa_thread_creatorid
+         , m_messageid AS psa_messageid
+         , m_creationdate
          , 'Post'
-      FROM post
+      FROM message
      WHERE 1=1
-       AND m_c_replyof IS NULL -- post, not comment
-       AND ps_creationdate BETWEEN :startDate AND :endDate
+       AND m_c_replyof IS NULL -- message, not comment
+       AND m_creationdate BETWEEN :startDate AND :endDate
   UNION ALL
     SELECT psa.psa_threadid AS psa_threadid
          , psa.psa_thread_creatorid AS psa_thread_creatorid
-         , ps_postid
-         , ps_creationdate
+         , m_messageid
+         , m_creationdate
          , 'Comment'
-      FROM post p
+      FROM message p
          , post_all psa
      WHERE 1=1
        AND p.m_c_replyof = psa.psa_messageid
         -- this is a performance optimisation only
-       AND ps_creationdate BETWEEN :startDate AND :endDate
+       AND m_creationdate BETWEEN :startDate AND :endDate
 )
 SELECT p.p_personid AS "person.id"
      , p.p_firstname AS "person.firstName"

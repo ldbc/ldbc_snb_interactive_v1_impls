@@ -3,33 +3,33 @@
 \set lengthThreshold '20'
 \set languages '\'{"ar", "hu"}\''::varchar[]
  */
-WITH RECURSIVE post_all(psa_postid, psa_language, psa_creatorid, psa_posttype
-                      , psa_content_isempty, psa_length, psa_creationday) AS (
-    SELECT ps_postid, m_ps_language, ps_creatorid, 'Post'
-         , ps_content IS NULL AS psa_content_isempty
-         , ps_length
-         , ps_creationdate --date_trunc('day', ps_creationdate) AS psa_creationday
-      FROM post
+WITH RECURSIVE message_all(ma_postid, ma_language, ma_creatorid, ma_posttype
+                      , ma_content_isempty, ma_length, ma_creationday) AS (
+    SELECT m_messageid, m_ps_language, m_creatorid, 'Post'
+         , m_content IS NULL AS ma_content_isempty
+         , m_length
+         , m_creationdate --date_trunc('day', m_creationdate) AS ma_creationday
+      FROM message
      WHERE 1=1
-       AND m_c_replyof IS NULL -- post, not comment
+       AND m_c_replyof IS NULL -- message, not comment
   UNION ALL
-    SELECT ps_postid, psa.psa_language, ps_creatorid, 'Comment'
-         , ps_content IS NULL AS psa_content_isempty
-         , ps_length
-         , ps_creationdate --date_trunc('day', ps_creationdate) AS psa_creationday
-      FROM post p, post_all psa
+    SELECT m_messageid, ma.ma_language, m_creatorid, 'Comment'
+         , m_content IS NULL AS ma_content_isempty
+         , m_length
+         , m_creationdate --date_trunc('day', m_creationdate) AS ma_creationday
+      FROM message p, message_all ma
      WHERE 1=1
-       AND p.m_c_replyof = psa.psa_postid
+       AND p.m_c_replyof = ma.ma_postid
 )
 , person_w_posts AS (
-    SELECT p.p_personid, count(psa_postid) as messageCount
-      FROM person p left join post_all psa on (
+    SELECT p.p_personid, count(ma_postid) as messageCount
+      FROM person p left join message_all ma on (
      1=1
-       AND p.p_personid = psa.psa_creatorid
-       AND NOT psa.psa_content_isempty
-       AND psa_length < :lengthThreshold
-       AND psa_creationday > :date
-       AND psa_language = ANY(:languages)
+       AND p.p_personid = ma.ma_creatorid
+       AND NOT ma.ma_content_isempty
+       AND ma_length < :lengthThreshold
+       AND ma_creationday > :date
+       AND ma_language = ANY(:languages)
        )
      GROUP BY p.p_personid
 )

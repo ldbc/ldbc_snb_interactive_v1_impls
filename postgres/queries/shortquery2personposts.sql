@@ -1,25 +1,25 @@
-with recursive cposts(ps_postid, ps_content, m_ps_imagefile, ps_creationdate, m_c_replyof, ps_creatorid) AS (
-	  select ps_postid, ps_content, m_ps_imagefile, ps_creationdate, m_c_replyof, ps_creatorid
-	  from post
-	  where ps_creatorid = :personId
-	  order by ps_creationdate desc
+with recursive cposts(m_messageid, m_content, m_ps_imagefile, m_creationdate, m_c_replyof, m_creatorid) AS (
+	  select m_messageid, m_content, m_ps_imagefile, m_creationdate, m_c_replyof, m_creatorid
+	  from message
+	  where m_creatorid = :personId
+	  order by m_creationdate desc
 	  limit 10
 ), parent(postid,replyof,orig_postid,creator) AS (
-	  select ps_postid, m_c_replyof, ps_postid, ps_creatorid from cposts
+	  select m_messageid, m_c_replyof, m_messageid, m_creatorid from cposts
 	UNION ALL
-	  select ps_postid, m_c_replyof, orig_postid, ps_creatorid
-      from post,parent
-      where ps_postid=replyof
+	  select m_messageid, m_c_replyof, orig_postid, m_creatorid
+      from message,parent
+      where m_messageid=replyof
 )
-select p1.ps_postid, COALESCE(m_ps_imagefile,'')||COALESCE(ps_content,''), p1.ps_creationdate,
-       p2.ps_postid, p2.p_personid, p2.p_firstname, p2.p_lastname
+select p1.m_messageid, COALESCE(m_ps_imagefile,'')||COALESCE(m_content,''), p1.m_creationdate,
+       p2.m_messageid, p2.p_personid, p2.p_firstname, p2.p_lastname
 from 
-     (select ps_postid, ps_content, m_ps_imagefile, ps_creationdate, m_c_replyof from cposts
+     (select m_messageid, m_content, m_ps_imagefile, m_creationdate, m_c_replyof from cposts
      ) p1
      left outer join
-     (select orig_postid, postid as ps_postid, p_personid, p_firstname, p_lastname
+     (select orig_postid, postid as m_messageid, p_personid, p_firstname, p_lastname
       from parent, person
       where replyof is null and creator = p_personid
      )p2  
-     on p2.orig_postid = p1.ps_postid
-      order by ps_creationdate desc, p2.ps_postid desc;
+     on p2.orig_postid = p1.m_messageid
+      order by m_creationdate desc, p2.m_messageid desc;

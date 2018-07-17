@@ -4,9 +4,9 @@
  */
 WITH replies_w_tags AS (
     SELECT p.p_personid AS creatorid
-         , r.ps_postid AS replyid
+         , r.m_messageid AS replyid
          , r.m_c_replyof AS replyof
-         , r.ps_content AS content
+         , r.m_content AS content
          , CASE
              WHEN count(pt.mt_tagid)=0 THEN ARRAY[]::bigint[] -- no tags for the message, so we return an empty array
              ELSE array_agg(pt.mt_tagid)
@@ -14,21 +14,21 @@ WITH replies_w_tags AS (
       FROM place co -- country
          , place ci -- city
          , person p
-         , post r -- reply
-           LEFT JOIN message_tag pt ON (r.ps_postid = pt.mt_messageid)
+         , message r -- reply
+           LEFT JOIN message_tag pt ON (r.m_messageid = pt.mt_messageid)
      WHERE 1=1
         -- join
        AND co.pl_placeid = ci.pl_containerplaceid
        AND ci.pl_placeid = p.p_placeid
-       AND p.p_personid = r.ps_creatorid
+       AND p.p_personid = r.m_creatorid
         -- filter
        AND co.pl_name = :country
        AND r.m_c_replyof IS NOT NULL
        -- exclude messages by the blacklist.
        -- Note: we use string_to_array(trim(regexp_replace(...))) instead regexp_split_to_array to avoid translating "Foo." into {Foo,""},
        -- i.e. remove possible empty firts/last elements
-       --AND NOT string_to_array(trim(regexp_replace(r.ps_content, E'[[:space:],.?!()\r\n]+', ' ', 'g')), ' ') && :blacklist
-     GROUP BY p.p_personid, r.ps_postid, r.m_c_replyof, r.ps_content
+       --AND NOT string_to_array(trim(regexp_replace(r.m_content, E'[[:space:],.?!()\r\n]+', ' ', 'g')), ' ') && :blacklist
+     GROUP BY p.p_personid, r.m_messageid, r.m_c_replyof, r.m_content
 )
 -- blacklisting is done after the joins and country filter above as it tured out to be an expensive operation (in 1st option)
  -- first blacklisting option is to tokenize message as words and use word-based search
@@ -55,11 +55,11 @@ WITH replies_w_tags AS (
     SELECT r.replyid
          , r.creatorid
       FROM replies_blacklist_excluded_2 r
-         , post b -- base message of the reply
-           LEFT JOIN message_tag pt ON (b.ps_postid = pt.mt_messageid)
+         , message b -- base message of the reply
+           LEFT JOIN message_tag pt ON (b.m_messageid = pt.mt_messageid)
      WHERE 1=1
         -- join
-       AND r.replyof = b.ps_postid
+       AND r.replyof = b.m_messageid
         -- filter
      GROUP BY r.replyid, r.creatorid, r.replyTags
     HAVING NOT r.replyTags &&

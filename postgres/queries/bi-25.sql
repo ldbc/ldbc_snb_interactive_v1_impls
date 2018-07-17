@@ -11,29 +11,29 @@ WITH RECURSIVE reply_scores(r_threadid
                           , r_reply_messageid
                           , r_score
                            ) AS (
-    SELECT p.ps_postid AS r_threadid
-         , p.ps_creatorid AS r_orig_personid
-         , c.ps_creatorid AS r_reply_personid
-         , c.ps_postid AS r_reply_messageid
+    SELECT p.m_messageid AS r_threadid
+         , p.m_creatorid AS r_orig_personid
+         , c.m_creatorid AS r_reply_personid
+         , c.m_messageid AS r_reply_messageid
          , 1.0 AS r_score
       FROM forum f
-         , post p
-         , post c -- comment
+         , message p
+         , message c -- comment
      WHERE 1=1
         -- join
        AND f.f_forumid = p.m_ps_forumid
-       AND p.ps_postid = c.m_c_replyof
+       AND p.m_messageid = c.m_c_replyof
         -- filter
        AND f.f_creationdate BETWEEN :startDate AND :endDate
-       AND p.m_c_replyof IS NULL -- post, not comment
+       AND p.m_c_replyof IS NULL -- message, not comment
   UNION ALL
     SELECT r.r_threadid AS r_threadid
          , r.r_reply_personid AS r_orig_personid
-         , c.ps_creatorid AS r_reply_personid
-         , c.ps_postid AS r_reply_messageid
+         , c.m_creatorid AS r_reply_personid
+         , c.m_messageid AS r_reply_messageid
          , 0.5 AS r_score
       FROM reply_scores r
-         , post c
+         , message c
      WHERE 1=1
         -- join
        AND r.r_reply_messageid = c.m_c_replyof

@@ -1,4 +1,4 @@
-insert into post values
+insert into message values
 (
     :commentId,
     NULL,

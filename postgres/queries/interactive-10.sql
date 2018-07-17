@@ -1,15 +1,15 @@
 select p_personid, p_firstname, p_lastname,
-       ( select count(distinct ps_postid)
-         from post, message_tag pt1
+       ( select count(distinct m_messageid)
+         from message, message_tag pt1
          where
-         m_ps_creatorid = p_personid and ps_postid = mt_messageid and
+         m_ps_creatorid = p_personid and m_messageid = mt_messageid and
          exists (select * from person_tag where pt_personid = :Person and pt_tagid = pt1.mt_tagid)
        ) -
        ( select count(*)
-         from post
+         from message
          where
          m_ps_creatorid = p_personid and
-         not exists (select * from person_tag, message_tag where pt_personid = :Person and pt_tagid = mt_tagid and mt_messageid = ps_postid)
+         not exists (select * from person_tag, message_tag where pt_personid = :Person and pt_tagid = mt_tagid and mt_messageid = m_messageid)
        ) as score,
        p_gender, pl_name
 from person, place,

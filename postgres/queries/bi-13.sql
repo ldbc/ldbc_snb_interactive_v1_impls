@@ -2,22 +2,22 @@
 \set country  '\'Belarus\''
  */
 WITH detail AS (
-SELECT extract(YEAR FROM m.ps_creationdate) as year
-     , extract(MONTH FROM m.ps_creationdate) as month
+SELECT extract(YEAR FROM m.m_creationdate) as year
+     , extract(MONTH FROM m.m_creationdate) as month
      , t.t_name as tagName
-     , count(DISTINCT m.ps_postid) as popularity
-     , row_number() OVER (PARTITION BY extract(YEAR FROM m.ps_creationdate), extract(MONTH FROM m.ps_creationdate)
+     , count(DISTINCT m.m_messageid) as popularity
+     , row_number() OVER (PARTITION BY extract(YEAR FROM m.m_creationdate), extract(MONTH FROM m.m_creationdate)
                           ORDER BY t.t_name IS NULL -- sort order is: false, true i.e. first the given, then missing tags
-                                 , count(DISTINCT m.ps_postid) DESC
+                                 , count(DISTINCT m.m_messageid) DESC
                                  , t.t_name
                          ) as rn
   FROM place c -- country
-     , post m
-       LEFT JOIN message_tag pt ON (m.ps_postid = pt.mt_messageid)
+     , message m
+       LEFT JOIN message_tag pt ON (m.m_messageid = pt.mt_messageid)
        LEFT JOIN tag t ON (pt.mt_tagid = t.t_tagid)
  WHERE 1=1
     -- join
-   AND c.pl_placeid = m.ps_locationid
+   AND c.pl_placeid = m.m_locationid
     -- filter
    AND c.pl_name = :country
  GROUP BY year, month, t.t_name
