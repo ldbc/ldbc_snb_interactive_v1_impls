@@ -12,7 +12,7 @@ SELECT countryName
      , messageCount
   FROM (
     SELECT co.pl_name AS countryName
-        , extract(MONTH FROM p.ps_creationdate) as messageMonth
+        , extract(MONTH FROM p.m_creationdate) as messageMonth
         , cr.p_gender AS personGender
         , CASE -- ugly hack because I was unable to figure out how to cast_int/floor an expression
             /*
@@ -38,22 +38,22 @@ java.lang.StackOverflowError
           END AS ageGroup
         , t.t_name AS tagName
         , count(*) AS messageCount
-      FROM post p
-        , post_tag pt
+      FROM message p
+        , message_tag pt
         , tag t
         , person cr -- creator
         , place  ci  -- city
         , place  co  -- country
     WHERE 1=1
         -- join
-      AND p.ps_postid = pt.pst_postid
-      AND pt.pst_tagid = t.t_tagid
-      AND p.ps_creatorid = cr.p_personid
+      AND p.m_messageid = pt.mt_messageid
+      AND pt.mt_tagid = t.t_tagid
+      AND p.m_creatorid = cr.p_personid
       AND cr.p_placeid = ci.pl_placeid
       AND ci.pl_containerplaceid = co.pl_placeid
         -- filter
       AND (co.pl_name = 'Ethiopia' OR co.pl_name = 'Belarus') -- FIXME:param country1, country2
-      AND p.ps_creationdate BETWEEN DATE('2010-01-01') AND DATE('2010-11-08') -- FIXME:param startDate, endDate
+      AND p.m_creationdate BETWEEN DATE('2010-01-01') AND DATE('2010-11-08') -- FIXME:param startDate, endDate
     GROUP BY co.pl_name, messageMonth, cr.p_gender, t.t_name, ageGroup
      ) res
  WHERE res.messageCount > 100

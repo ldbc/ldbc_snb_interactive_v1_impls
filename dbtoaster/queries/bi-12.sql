@@ -8,22 +8,22 @@ SELECT result.messageId
      , result.creatorLastName
      , result.likeCount
   FROM (
-    SELECT m.ps_postid AS messageId
-        , m.ps_creationdate AS messageCreationDate
+    SELECT m.m_messageid AS messageId
+        , m.m_creationdate AS messageCreationDate
         , c.p_firstname AS creatorFirstName
         , c.p_lastname AS creatorLastName
         , count(*) as likeCount
-    FROM post m
+    FROM message m
         , person c -- creator
         , likes l
     WHERE 1=1
         -- join
-    AND m.ps_creatorid = c.p_personid
-    AND m.ps_postid = l.l_postid
+    AND m.m_creatorid = c.p_personid
+    AND m.m_messageid = l.l_messageid
         -- filter
-    AND m.ps_creationdate > DATE('2011-07-22') -- FIXME:param :date
-    GROUP BY m.ps_postid
-            , m.ps_creationdate
+    AND m.m_creationdate > DATE('2011-07-22') -- FIXME:param :date
+    GROUP BY m.m_messageid
+            , m.m_creationdate
             , c.p_firstname
             , c.p_lastname
   ) result
