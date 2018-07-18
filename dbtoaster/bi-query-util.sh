@@ -17,7 +17,7 @@ TMP_SQL_SCRIPT=$(mktemp)
 cat >$TMP_SQL_SCRIPT <<HERE
 INCLUDE 'schema.sql';
 
-INCLUDE 'queries/bi/query${QUERY_NUMBER}.sql';
+INCLUDE 'queries/bi-${QUERY_NUMBER}.sql';
 HERE
 
 if   [ "${ACTION}x" == "runx" ]; then
