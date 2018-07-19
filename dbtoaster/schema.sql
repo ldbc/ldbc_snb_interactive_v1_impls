@@ -3,6 +3,10 @@ CREATE STREAM message (
      * m_ps_ denotes field specific to posts
      * m_c_  denotes field specific to comments
      * other m_ fields are common to posts and messages
+     *
+     * Note: to distinguish between "post" and "comment" records:
+     *   - m_c_replyof IS NULL for all "post" records
+     *   - m_c_replyof IS NOT NULL for all "comment" records
      */
     m_messageid int,
     m_ps_imagefile varchar,
@@ -13,7 +17,6 @@ CREATE STREAM message (
     m_content varchar,
     m_length int,
     m_creatorid int,
-    m_ps_creatorid int,
     m_locationid int,
     m_ps_forumid int,
     m_c_replyof int

@@ -9,7 +9,6 @@ insert into message (
     m_content,
     m_length,
     m_creatorid,
-    m_ps_creatorid,
     m_locationid,
     m_ps_forumid
 )
@@ -23,7 +22,6 @@ values
     :language,
     :content,
     :length,
-    :authorPersonId,
     :authorPersonId,
     :countryId,
     :forumId,

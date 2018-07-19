@@ -11,7 +11,8 @@ from tag, message_tag, message,
    k1.k_person1id = :Person and k1.k_person2id = k2.k_person1id and k2.k_person2id <> :Person
  ) f
 where
-m_ps_creatorid = f.k_person2id and
+m_creatorid = f.k_person2id and
+m_c_replyof IS NULL and -- post, not comment
 m_messageid = mt_messageid and
 mt_tagid = t_tagid and
 t_name <> :Tag and
