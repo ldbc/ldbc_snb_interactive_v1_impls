@@ -24,5 +24,5 @@ values
     :length,
     :authorPersonId,
     :countryId,
-    :forumId,
+    :forumId
 );
