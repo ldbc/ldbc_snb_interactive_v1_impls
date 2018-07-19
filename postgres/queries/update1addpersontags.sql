@@ -1,5 +1,9 @@
-insert into person_tag values
+insert into person_tag (
+    pt_personid
+  , pt_tagid
+)
+values
 (
-    :personId,
-    :tagId
+    :personId
+  , :tagId
 );

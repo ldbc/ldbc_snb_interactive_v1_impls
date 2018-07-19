@@ -34,13 +34,13 @@ WITH person1_list AS (
          , 4 AS score
       FROM person1_list p1
          , person2_list p2
-         , post m -- message by p2
-         , post r -- reply by p1
+         , message m -- message by p2
+         , message r -- reply by p1
      WHERE 1=1
         -- join
-       AND m.ps_postid = r.ps_replyof
-       AND p1.personid = r.ps_creatorid
-       AND p2.personid = m.ps_creatorid
+       AND m.m_messageid = r.m_c_replyof
+       AND p1.personid = r.m_creatorid
+       AND p2.personid = m.m_creatorid
 )
 ,  case2 AS (
     SELECT DISTINCT
@@ -49,13 +49,13 @@ WITH person1_list AS (
          , 1 AS score
       FROM person1_list p1
          , person2_list p2
-         , post m -- message by p1
-         , post r -- reply by p2
+         , message m -- message by p1
+         , message r -- reply by p2
      WHERE 1=1
         -- join
-       AND m.ps_postid = r.ps_replyof
-       AND p2.personid = r.ps_creatorid
-       AND p1.personid = m.ps_creatorid
+       AND m.m_messageid = r.m_c_replyof
+       AND p2.personid = r.m_creatorid
+       AND p1.personid = m.m_creatorid
 )
 ,  case3 AS (
     SELECT -- no need for distinct
@@ -77,12 +77,12 @@ WITH person1_list AS (
          , 10 AS score
       FROM person1_list p1
          , person2_list p2
-         , post m -- message by p2
+         , message m -- message by p2
          , likes l
      WHERE 1=1
         -- join
-       AND p2.personid = m.ps_creatorid
-       AND m.ps_postid = l.l_postid
+       AND p2.personid = m.m_creatorid
+       AND m.m_messageid = l.l_messageid
        AND l.l_personid = p1.personid
 )
 ,  case5 AS (
@@ -92,12 +92,12 @@ WITH person1_list AS (
          , 1 AS score
       FROM person1_list p1
          , person2_list p2
-         , post m -- message by p1
+         , message m -- message by p1
          , likes l
      WHERE 1=1
         -- join
-       AND p1.personid = m.ps_creatorid
-       AND m.ps_postid = l.l_postid
+       AND p1.personid = m.m_creatorid
+       AND m.m_messageid = l.l_messageid
        AND l.l_personid = p2.personid
 )
 ,  pair_scores AS (

@@ -4,18 +4,18 @@
  */
 WITH detail AS (
 SELECT t.t_name
-     , count(DISTINCT CASE WHEN extract(MONTH FROM m.ps_creationdate)  = :month THEN m.ps_postid ELSE NULL END) AS countMonth1
-     , count(DISTINCT CASE WHEN extract(MONTH FROM m.ps_creationdate) != :month THEN m.ps_postid ELSE NULL END) AS countMonth2
-  FROM post m
-     , post_tag mt
+     , count(DISTINCT CASE WHEN extract(MONTH FROM m.m_creationdate)  = :month THEN m.m_messageid ELSE NULL END) AS countMonth1
+     , count(DISTINCT CASE WHEN extract(MONTH FROM m.m_creationdate) != :month THEN m.m_messageid ELSE NULL END) AS countMonth2
+  FROM message m
+     , message_tag mt
      , tag t
  WHERE 1=1
     -- join
-   AND m.ps_postid = mt.pst_postid
-   AND mt.pst_tagid = t.t_tagid
+   AND m.m_messageid = mt.mt_messageid
+   AND mt.mt_tagid = t.t_tagid
     -- filter
-   AND m.ps_creationdate >= make_date(:year, :month, 1)
-   AND m.ps_creationdate <  make_date(:year, :month, 1) + make_interval(months => 2)
+   AND m.m_creationdate >= make_date(:year, :month, 1)
+   AND m.m_creationdate <  make_date(:year, :month, 1) + make_interval(months => 2)
  GROUP BY t.t_name
 )
 SELECT t_name as "tag.name"

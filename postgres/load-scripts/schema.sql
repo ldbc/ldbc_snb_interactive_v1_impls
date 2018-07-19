@@ -1,17 +1,24 @@
-create table post (
-    ps_postid bigint not null,
-    ps_imagefile varchar,
-    ps_creationdate timestamp without time zone not null,
-    ps_locationip varchar not null,
-    ps_browserused varchar not null,
-    ps_language varchar,
-    ps_content text not null,
-    ps_length int not null,
-    ps_creatorid bigint,
-    ps_p_creatorid bigint,
-    ps_locationid bigint,
-    ps_forumid bigint,
-    ps_replyof bigint
+create table message (
+    /*
+     * m_ps_ denotes field specific to posts
+     * m_c_  denotes field specific to comments
+     * other m_ fields are common to posts and messages
+     * Note: to distinguish between "post" and "comment" records:
+     *   - m_c_replyof IS NULL for all "post" records
+     *   - m_c_replyof IS NOT NULL for all "comment" records
+     */
+    m_messageid bigint not null,
+    m_ps_imagefile varchar,
+    m_creationdate timestamp without time zone not null,
+    m_locationip varchar not null,
+    m_browserused varchar not null,
+    m_ps_language varchar,
+    m_content text not null,
+    m_length int not null,
+    m_creatorid bigint,
+    m_locationid bigint,
+    m_ps_forumid bigint,
+    m_c_replyof bigint
 );
 
 create table forum (
@@ -72,7 +79,7 @@ create table knows (
 
 create table likes (
    l_personid bigint not null,
-   l_postid bigint not null,
+   l_messageid bigint not null,
    l_creationdate  timestamp without time zone not null
 );
 
@@ -101,9 +108,9 @@ create table place (
    pl_containerplaceid bigint
 );
 
-create table post_tag (
-   pst_postid bigint not null,
-   pst_tagid bigint not null
+create table message_tag (
+   mt_messageid bigint not null,
+   mt_tagid bigint not null
 );
 
 create table tagclass (

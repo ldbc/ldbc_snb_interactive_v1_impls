@@ -15,10 +15,10 @@ SELECT d.t_name as tagName
         , sum(tab1.belongsToMonth2) AS countMonth2
       FROM (
     SELECT t.t_name
-        , CASE WHEN extract(MONTH FROM m.ps_creationdate) = param.month1 THEN 1 ELSE 0 END AS belongsToMonth1
-        , CASE WHEN extract(MONTH FROM m.ps_creationdate) = param.month2 THEN 1 ELSE 0 END AS belongsToMonth2
-    FROM post m
-        , post_tag mt
+        , CASE WHEN extract(MONTH FROM m.m_creationdate) = param.month1 THEN 1 ELSE 0 END AS belongsToMonth1
+        , CASE WHEN extract(MONTH FROM m.m_creationdate) = param.month2 THEN 1 ELSE 0 END AS belongsToMonth2
+    FROM message m
+        , message_tag mt
         , tag t
         , (
             SELECT param_inner.year AS year1
@@ -31,12 +31,12 @@ SELECT d.t_name as tagName
         ) param
     WHERE 1=1
         -- join
-    AND m.ps_postid = mt.pst_postid
-    AND mt.pst_tagid = t.t_tagid
+    AND m.m_messageid = mt.mt_messageid
+    AND mt.mt_tagid = t.t_tagid
         -- filter
     AND ( 0=1
-        OR extract(YEAR FROM m.ps_creationdate) = param.year1 AND  extract(MONTH FROM m.ps_creationdate) = param.month1
-        OR extract(YEAR FROM m.ps_creationdate) = param.year2 AND  extract(MONTH FROM m.ps_creationdate) = param.month2
+        OR extract(YEAR FROM m.m_creationdate) = param.year1 AND  extract(MONTH FROM m.m_creationdate) = param.month1
+        OR extract(YEAR FROM m.m_creationdate) = param.year2 AND  extract(MONTH FROM m.m_creationdate) = param.month2
         )
       ) tab1
     GROUP BY tab1.t_name

@@ -30,26 +30,26 @@ WITH RECURSIVE -- note: RECURSIVE denotes that some CTE (subquery) will be recur
    , interactions(strangerid, messageid, replyid, replyAuthorId) AS (
      -- this is the actual recursive CTE
     SELECT s.personid
-         , m.ps_postid
-         , r.ps_postid
-         , r.ps_creatorid
+         , m.m_messageid
+         , r.m_messageid
+         , r.m_creatorid
       FROM strangers s
-         , post m
-         , post r
+         , message m
+         , message r
      WHERE 1=1
         -- join
-       AND s.personid = m.ps_creatorid
-       AND m.ps_postid = r.ps_replyof
+       AND s.personid = m.m_creatorid
+       AND m.m_messageid = r.m_c_replyof
   UNION ALL
     SELECT i.strangerid
          , i.messageid
-         , r.ps_postid
-         , r.ps_creatorid
+         , r.m_messageid
+         , r.m_creatorid
       FROM interactions i
-         , post r
+         , message r
      WHERE 1=1
         -- join
-       AND i.replyid = r.ps_replyof
+       AND i.replyid = r.m_c_replyof
 )
    , interactions_longest AS (
      -- interaction i2 does not extend towards the original post by an interaction when the stranger transitively replied to himself

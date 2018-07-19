@@ -1,11 +1,11 @@
-select p2.ps_postid, p2.ps_content, p2.ps_creationdate, p_personid, p_firstname, p_lastname,
+select p2.m_messageid, p2.m_content, p2.m_creationdate, p_personid, p_firstname, p_lastname,
     (case when exists (
      	   	       select 1 from knows
-		       where p1.ps_creatorid = k_person1id and p2.ps_creatorid = k_person2id)
+		       where p1.m_creatorid = k_person1id and p2.m_creatorid = k_person2id)
       then TRUE
       else FALSE
       end)
-from post p1, post p2, person
+from message p1, message p2, person
 where
-  p1.ps_postid = :messageId and p2.ps_replyof = p1.ps_postid and p2.ps_creatorid = p_personid
-order by p2.ps_creationdate desc, p2.ps_creatorid asc;
+  p1.m_messageid = :messageId and p2.m_c_replyof = p1.m_messageid and p2.m_creatorid = p_personid
+order by p2.m_creationdate desc, p2.m_creatorid asc;

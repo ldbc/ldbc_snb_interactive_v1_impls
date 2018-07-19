@@ -17,17 +17,17 @@ WITH person_tag_interest AS (
    , person_message_score AS (
     SELECT p.p_personid AS personid
          , count(*) AS message_score
-      FROM post m
+      FROM message m
          , person p
-         , post_tag pt
+         , message_tag pt
          , tag t
      WHERE 1=1
         -- join
-       AND m.ps_creatorid = p.p_personid
-       AND m.ps_postid = pt.pst_postid
-       AND pt.pst_tagid = t.t_tagid
+       AND m.m_creatorid = p.p_personid
+       AND m.m_messageid = pt.mt_messageid
+       AND pt.mt_tagid = t.t_tagid
         -- filter
-       AND m.ps_creationdate > :date
+       AND m.m_creationdate > :date
        AND t.t_name = :tag
      GROUP BY p.p_personid
 )

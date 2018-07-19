@@ -23,15 +23,15 @@ SELECT au.p_personid AS "person.id"
      , au.p_lastname AS "person.lastName"
      , au.p_creationdate
      -- a single person might be member of more than 1 of the top100 forums, so their posts should be DISTINCT counted
-     , count(DISTINCT p.ps_postid) AS postCount
+     , count(DISTINCT p.m_messageid) AS postCount
   FROM top100_popular_forums t
        INNER JOIN forum_person fp ON (t.forumid = fp.fp_forumid)
        -- author of the post
        INNER JOIN person au ON (fp.fp_personid = au.p_personid)
-       LEFT JOIN post p ON (1=1
-                        AND au.p_personid = p.ps_creatorid
-                        AND p.ps_forumid IN (SELECT forumid from top100_popular_forums)
-                        AND p.ps_replyof IS NULL
+       LEFT JOIN message p ON (1=1
+                        AND au.p_personid = p.m_creatorid
+                        AND p.m_ps_forumid IN (SELECT forumid from top100_popular_forums)
+                        AND p.m_c_replyof IS NULL
                            )
  GROUP BY au.p_personid, au.p_firstname, au.p_lastname, au.p_creationdate
  ORDER BY postCount DESC, au.p_personid
