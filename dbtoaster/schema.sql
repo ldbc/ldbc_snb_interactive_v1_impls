@@ -21,7 +21,7 @@ CREATE STREAM message (
     m_ps_forumid int,
     m_c_replyof int
 )
-FROM FILE 'data/post_0_0.csv'
+FROM FILE 'data/message_0_0.csv'
 LINE DELIMITED CSV (delimiter := '|')
 ;
 
