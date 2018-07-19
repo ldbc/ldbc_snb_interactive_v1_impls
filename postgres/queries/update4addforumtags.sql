@@ -1,9 +1,9 @@
 insert into forum_tag (
-    ft_forumid,
-    ft_tagid
+    ft_forumid
+  , ft_tagid
 )
 values
 (
-    :forumId,
-    :tagId
+    :forumId
+  , :tagId
 );
