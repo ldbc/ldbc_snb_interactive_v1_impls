@@ -15,7 +15,7 @@ WITH RECURSIVE post_all(psa_threadid
          , 'Post'
       FROM message
      WHERE 1=1
-       AND m_c_replyof IS NULL -- message, not comment
+       AND m_c_replyof IS NULL -- post, not comment
        AND m_creationdate BETWEEN :startDate AND :endDate
   UNION ALL
     SELECT psa.psa_threadid AS psa_threadid

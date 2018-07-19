@@ -11,7 +11,7 @@ WITH RECURSIVE message_all(ma_postid, ma_language, ma_creatorid, ma_posttype
          , m_creationdate --date_trunc('day', m_creationdate) AS ma_creationday
       FROM message
      WHERE 1=1
-       AND m_c_replyof IS NULL -- message, not comment
+       AND m_c_replyof IS NULL -- post, not comment
   UNION ALL
     SELECT m_messageid, ma.ma_language, m_creatorid, 'Comment'
          , m_content IS NULL AS ma_content_isempty

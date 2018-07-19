@@ -25,7 +25,7 @@ WITH RECURSIVE reply_scores(r_threadid
        AND p.m_messageid = c.m_c_replyof
         -- filter
        AND f.f_creationdate BETWEEN :startDate AND :endDate
-       AND p.m_c_replyof IS NULL -- message, not comment
+       AND p.m_c_replyof IS NULL -- post, not comment
   UNION ALL
     SELECT r.r_threadid AS r_threadid
          , r.r_reply_personid AS r_orig_personid
