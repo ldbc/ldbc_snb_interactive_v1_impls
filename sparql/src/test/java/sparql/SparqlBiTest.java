@@ -1,6 +1,5 @@
 package sparql;
 
-import com.ldbc.driver.DbException;
 import com.ldbc.impls.workloads.ldbc.snb.bi.BiTest;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.bi.SparqlBiDb;
 import org.junit.Ignore;
@@ -15,7 +14,7 @@ public class SparqlBiTest extends BiTest {
     private static String databaseName = "ldbcsf1";
     private static String queryDir = "queries/";
 
-    public SparqlBiTest() throws DbException {
+    public SparqlBiTest() {
         super(new SparqlBiDb());
     }
 

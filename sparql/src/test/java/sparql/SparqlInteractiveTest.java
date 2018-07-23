@@ -1,6 +1,5 @@
 package sparql;
 
-import com.ldbc.driver.DbException;
 import com.ldbc.impls.workloads.ldbc.snb.interactive.InteractiveTest;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.interactive.SparqlInteractiveDb;
 import org.junit.Ignore;
@@ -15,7 +14,7 @@ public class SparqlInteractiveTest extends InteractiveTest {
     private static String databaseName = "ldbcsf1";
     private static String queryDir = "queries/";
 
-    public SparqlInteractiveTest() throws DbException {
+    public SparqlInteractiveTest() {
         super(new SparqlInteractiveDb());
     }
 

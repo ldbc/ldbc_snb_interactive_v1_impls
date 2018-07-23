@@ -10,6 +10,7 @@ public interface PostgresSnbTest {
     String password = "foo";
     String databaseName = "ldbcsf1";
     String jdbcDriver = "org.postgresql.ds.PGPoolingDataSource";
+    String queryDir = "queries/";
 
     default Map<String, String> getProperties() {
         Map<String, String> properties = new HashMap<>();
@@ -21,6 +22,7 @@ public interface PostgresSnbTest {
         properties.put("printQueryNames", "true");
         properties.put("printQueryStrings", "false");
         properties.put("printQueryResults", "false");
+        properties.put("queryDir", queryDir);
         return properties;
     }
 

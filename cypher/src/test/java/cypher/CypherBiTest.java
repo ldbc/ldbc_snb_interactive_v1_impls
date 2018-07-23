@@ -1,6 +1,5 @@
 package cypher;
 
-import com.ldbc.driver.DbException;
 import com.ldbc.impls.workloads.ldbc.snb.bi.BiTest;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.bi.CypherBiDb;
 
@@ -14,7 +13,7 @@ public class CypherBiTest extends BiTest {
     private final String password = "admin";
     private final String queryDir = "queries/";
 
-    public CypherBiTest() throws DbException {
+    public CypherBiTest() {
         super(new CypherBiDb());
     }
 
