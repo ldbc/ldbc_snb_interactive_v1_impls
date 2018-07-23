@@ -12,7 +12,7 @@ public class SparqlBiTest extends BiTest {
 
     private static String endpoint = "http://localhost:5820/";
     private static String databaseName = "ldbcsf1";
-    private static String queryDir = "queries/";
+    private static String queryDir = "queries";
 
     public SparqlBiTest() {
         super(new SparqlBiDb());

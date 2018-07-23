@@ -12,7 +12,7 @@ public class SparqlInteractiveTest extends InteractiveTest {
 
     private static String endpoint = "http://localhost:5820/";
     private static String databaseName = "ldbcsf1";
-    private static String queryDir = "queries/";
+    private static String queryDir = "queries";
 
     public SparqlInteractiveTest() {
         super(new SparqlInteractiveDb());
