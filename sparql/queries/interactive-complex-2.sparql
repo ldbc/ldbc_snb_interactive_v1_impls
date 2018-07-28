@@ -12,17 +12,28 @@ SELECT
   (?fr AS ?personId)
   (?first AS ?personFirstName)
   (?last AS ?personLastName)
-  (?post AS ?postOrCommentId)
+  (?message AS ?postOrCommentId)
   (?content AS ?postOrCommentContent)
   (?date AS ?postOrCommentCreationDate)
-WHERE {
-  sn:pers$Person snvoc:knows/snvoc:hasPerson ?fr .
-  ?fr snvoc:firstName ?first .
-  ?fr snvoc:lastName ?last .
-  ?post snvoc:hasCreator ?fr .
-  {{?post snvoc:content ?content } UNION { ?post snvoc:imageFile ?content }} .
-  ?post snvoc:creationDate ?date .
-  FILTER (?date <= $Date0) .
+WHERE 
+{   
+    ?rootPerson a snvoc:Person .
+    ?rootPerson snvoc:id "$personId"^^xsd:long .
+    ?rootPerson (snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson) ?fr .
+    ?message snvoc:hasCreator ?fr .
+    VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
+    ?message a ?type
+    {
+        {
+            ?message snvoc:content ?content
+        } UNION {
+            ?message snvoc:imageFile ?content
+        }
+    } .
+    ?message snvoc:creationDate ?date .
+    FILTER (?date <= $date^^xsd:dateTime) .
+    ?fr snvoc:firstName ?first .
+    ?fr snvoc:lastName ?last .
 }
-ORDER BY desc(?creationDate) ?post
+ORDER BY desc(?creationDate) ?message
 LIMIT 20
