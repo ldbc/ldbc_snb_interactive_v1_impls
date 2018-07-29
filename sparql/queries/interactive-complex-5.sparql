@@ -8,24 +8,38 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-select
+SELECT
     (?title AS ?forumTitle)
-    (count(?post) as ?postCount)
-where { 
-    {select distinct ?fr
-     where {
-       {sn:pers$Person snvoc:knows ?fr.} union {sn:pers$Person snvoc:knows ?fr2. ?fr2 snvoc:knows ?fr .
-       filter (?fr != sn:pers$Person)}
-     }
+    (SUM(?hasPost) AS ?postCount)
+WHERE
+{ 
+    {
+        SELECT DISTINCT
+            ?fr
+            ?frId
+        WHERE
+        {       
+            BIND( "$personId"^^xsd:long AS ?rootId )
+            ?rootPerson a snvoc:Person .
+            ?rootPerson snvoc:id ?rootId .
+            ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
+            ?fr snvoc:id ?frId .
+        }    
     } .
-    ?group snvoc:title ?title. ?group snvoc:hasMember ?mem .
-    ?mem snvoc:hasPerson ?fr . ?mem snvoc:joinDate ?date .
-    filter (?date >= $Date0) .
-    optional {
-      ?post snvoc:hasCreator ?fr .
-      ?group snvoc:containerOf ?post .
+    ?forum a snvoc:Forum .
+    ?mem snvoc:hasPerson ?fr . 
+    ?forum snvoc:hasMember ?mem .
+    ?forum snvoc:id ?forumId .
+    ?mem snvoc:joinDate ?date .
+    FILTER( ?date >= xsd:dateTime("$date") ) .
+    OPTIONAL {
+        ?post snvoc:hasCreator ?fr .
+        ?group snvoc:containerOf ?post .
+        BIND( 1 AS ?hasPostInner )      
     } .
+    BIND( COALESCE(?hasPostInner,0) AS ?hasPost )
+    ?forum snvoc:title ?title . 
 }
-group by ?title ?group
-order by desc(?cnt) ?group
-limit 20
+GROUP BY ?title ?forumId
+ORDER BY DESC(?postCount) ?forum
+LIMIT 20
