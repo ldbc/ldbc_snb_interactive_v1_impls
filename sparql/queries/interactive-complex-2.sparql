@@ -14,14 +14,21 @@ SELECT
   (?last AS ?personLastName)
   (?message AS ?postOrCommentId)
   (?content AS ?postOrCommentContent)
-  (?date AS ?postOrCommentCreationDate)
+  (?creationDate AS ?postOrCommentCreationDate)
 WHERE 
 {   
-    ?rootPerson a snvoc:Person .
-    ?rootPerson snvoc:id "$personId"^^xsd:long .
-    ?rootPerson (snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson) ?fr .
-    ?message snvoc:hasCreator ?fr .
     VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
+    {
+        SELECT DISTINCT
+            ?fr
+        WHERE {
+            ?rootPerson a snvoc:Person .
+            ?fr a snvoc:Person .
+            ?rootPerson snvoc:id "$personId"^^xsd:long .
+            ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr
+        }
+    }
+    ?message snvoc:hasCreator ?fr .
     ?message a ?type
     {
         {
@@ -30,8 +37,8 @@ WHERE
             ?message snvoc:imageFile ?content
         }
     } .
-    ?message snvoc:creationDate ?date .
-    FILTER (?date <= $date^^xsd:dateTime) .
+    ?message snvoc:creationDate ?creationDate .
+    FILTER (?creationDate <= $date^^xsd:dateTime) .
     ?fr snvoc:firstName ?first .
     ?fr snvoc:lastName ?last .
 }
