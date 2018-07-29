@@ -8,77 +8,111 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-select
+SELECT
     (?fr AS ?friendId)
     (?last AS ?friendLastName)
-    (min(?dist) AS ?distanceFromPerson)
+    (MIN(?dist) AS ?distanceFromPerson)
     (?bday AS ?friendBirthday)
     (?since AS ?friendCreationDate)
     (?gen AS ?friendGender)
     (?browser AS ?friendBrowserUsed)
     (?locationIP AS ?friendLocationIp)
-    (((select group_concat (?email, ", ")
-      where {
-            ?frr snvoc:email ?email .
-            filter (?frr = ?fr) .
-      }
-      group by ?frr)) AS ?friendEmails)
-    (((select group_concat (?lng, ", ")
-      where {
-            ?frr snvoc:speaks ?lng .
-            filter (?frr = ?fr) .
-      }
-      group by ?frr)) AS ?friendLanguages)
+    (GROUP_CONCAT(?email;separator=", ") AS ?friendEmails)
+    (GROUP_CONCAT(?lng;separator=", ") AS ?friendLanguages)
     (?based AS ?friendCityName)
-    (
-      ((select group_concat ( bif:concat (?o_name, " ", ?year, " ", ?o_country), ", ")
-      where {
-            ?frr snvoc:studyAt ?w .
-            ?w snvoc:classYear ?year .
-            ?w snvoc:hasOrganisation ?org .
-            ?org snvoc:isLocatedIn ?o_countryURI .
-            ?o_countryURI foaf:name ?o_country .
-            ?org foaf:name ?o_name .
-            filter (?frr = ?fr) .
-      }
-      group by ?frr)) AS ?friendUniversities)
-    (
-      ((select group_concat ( bif:concat (?o_name, " ", ?year, " ", ?o_country), ", ")
-      where {
-            ?frr snvoc:workAt ?w .
-            ?w snvoc:workFrom ?year .
-            ?w snvoc:hasOrganisation ?org .
-            ?org snvoc:isLocatedIn ?o_countryURI .
-            ?o_countryURI foaf:name ?o_country .
-            ?org foaf:name ?o_name .
-            filter (?frr = ?fr) .
-      }
-      group by ?frr)) AS ?friendCompanies)
+    ?studies
+    ?jobs
 {
-    ?fr a snvoc:Person . ?fr snvoc:firstName $Name . ?fr snvoc:lastName ?last .
-    ?fr snvoc:birthday ?bday . ?fr snvoc:isLocatedIn ?basedURI . ?basedURI foaf:name ?based .
-    ?fr snvoc:creationDate ?since . ?fr snvoc:gender ?gen . ?fr snvoc:locationIP ?locationIP .
-    ?fr snvoc:browserUsed ?browser .
     {
-      { select distinct ?fr (1 as ?dist)
-        where {
-          sn:pers$Person snvoc:knows ?fr.
+        SELECT DISTINCT
+            ?fr
+        WHERE
+        {
+            ?fr a snvoc:Person . 
+            ?fr snvoc:firstName "John" . 
+            ?fr snvoc:id ?frId .
+            sn:pers00000000000000000933 snvoc:id ?rootId .
+            sn:pers00000000000000000933 ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
+            FILTER(?frId != ?rootId)
         }
-      }
-      union
-      { select distinct ?fr (2 as ?dist)
-        where {
-          sn:pers$Person snvoc:knows ?fr2. ?fr2 snvoc:knows ?fr. filter (?fr != sn:pers$Person).
+    }    
+    ?fr snvoc:id ?frId .
+    ?fr snvoc:lastName ?last .
+    ?fr snvoc:birthday ?bday . 
+    ?fr snvoc:isLocatedIn ?basedURI . 
+    ?basedURI foaf:name ?based .
+    ?fr snvoc:creationDate ?since . 
+    ?fr snvoc:gender ?gen . 
+    ?fr snvoc:locationIP ?locationIP .
+    ?fr snvoc:browserUsed ?browser .
+    {   
+        SELECT
+            (?frInner AS ?frInnerEmail)
+            (GROUP_CONCAT(?email;separator=", ") AS ?emails)
+        {
+            SELECT DISTINCT 
+                ?frInner
+                ?email
+            {   
+                ?frInner a snvoc:Person . 
+                ?frInner snvoc:email ?email
+            }
         }
-      }
-      union
-      { select distinct ?fr (3 as ?dist)
-        where {
-          sn:pers$Person snvoc:knows ?fr2. ?fr2 snvoc:knows ?fr3. ?fr3 snvoc:knows ?fr. filter (?fr != sn:pers$Person).
+        GROUP BY ?frInner
+    }
+    
+    OPTIONAL {
+        {
+            SELECT
+                (?frInner AS ?frInnerUni)
+                (GROUP_CONCAT(CONCAT(?uniName, " ", xsd:string(?classYear), " ", ?uniCountry);separator=", ") AS ?studies)
+            {
+                SELECT DISTINCT 
+                    ?frInner
+                    ?uniName
+                    ?classYear
+                    ?uniCountry
+                {   
+                    ?frInner a snvoc:Person . 
+                    ?frInner snvoc:studyAt ?study .
+                    ?study snvoc:hasOrganisation ?uni .
+                    ?uni foaf:name ?uniName .
+                    ?study snvoc:classYear ?classYear .
+                    ?uni snvoc:isLocatedIn/foaf:name ?uniCountry .
+                }
+            }
+            GROUP BY ?frInner
         }
-      } .
+        ?frInnerUni snvoc:id ?frInnerUniId .
+        FILTER( ?frId = ?frInnerUniId)
+    }
+    OPTIONAL {
+        {
+            SELECT
+                (?frInner AS ?frInnerComp)
+                (GROUP_CONCAT(CONCAT(?companyName, " ", xsd:string(?workFrom), " ", ?companyCountry);separator=", ") AS ?jobs)
+            {
+                SELECT DISTINCT 
+                    ?frInner
+                    ?companyName
+                    ?workFrom
+                    ?companyCountry
+                {   
+                    ?frInner a snvoc:Person .
+                    ?frInner snvoc:workAt ?work .
+                    ?work snvoc:hasOrganisation ?company .
+                    ?work snvoc:workFrom ?workFrom .
+                    ?company snvoc:isLocatedIn/foaf:name ?companyCountry .
+                    ?company foaf:name ?companyName
+                }
+            }
+            GROUP BY ?frInner
+        } .
+        ?fr snvoc:id ?frId .
+        ?frInnerComp snvoc:id ?frInnerCompId .
+        FILTER( ?frId = ?frInnerCompId)
     }
 }
-group by ?fr ?last ?bday ?since ?gen ?browser ?locationIP ?based
-order by ?mindist ?last ?fr
-limit 20
+GROUP BY ?fr ?last ?bday ?since ?gen ?browser ?locationIP ?based ?studies ?jobs
+ORDER BY ?distanceFromPerson ?last ?fr
+LIMIT 20
