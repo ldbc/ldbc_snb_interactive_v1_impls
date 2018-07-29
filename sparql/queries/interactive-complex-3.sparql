@@ -23,7 +23,7 @@ WHERE
             ?frId
         WHERE
         {       
-            BIND( "4398046511592"^^xsd:long AS ?rootId )
+            BIND( "$personId"^^xsd:long AS ?rootId )
             ?rootPerson a snvoc:Person .
             ?rootPerson snvoc:id ?rootId .
             ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
@@ -47,7 +47,7 @@ WHERE
             ?fr snvoc:id ?frId .
             ?message snvoc:isLocatedIn ?country .
             ?country a dbpedia-owl:Country .
-            ?country foaf:name "$country1" .
+            ?country foaf:name "$countryXName" .
         }
         GROUP BY ?frId
     } .
@@ -69,7 +69,7 @@ WHERE
             ?fr snvoc:id ?frId .
             ?message snvoc:isLocatedIn ?country .
             ?country a dbpedia-owl:Country .
-            ?country foaf:name "$country2" .
+            ?country foaf:name "$countryYName" .
         }
         GROUP BY ?frId
     } .
@@ -77,6 +77,6 @@ WHERE
     ?fr snvoc:firstName ?firstName .
     ?fr snvoc:lastName ?lastName
 }
-ORDER BY desc(?sum) ?fr
+ORDER BY DESC(?sum) ?fr
 LIMIT 20
 

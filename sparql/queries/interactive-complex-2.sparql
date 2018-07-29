@@ -42,5 +42,5 @@ WHERE
     ?fr snvoc:firstName ?first .
     ?fr snvoc:lastName ?last .
 }
-ORDER BY desc(?creationDate) ?message
+ORDER BY DESC(?creationDate) ?message
 LIMIT 20
