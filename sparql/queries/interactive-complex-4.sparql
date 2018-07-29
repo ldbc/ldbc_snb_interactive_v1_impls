@@ -8,23 +8,23 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-select
+SELECT
     (?tagname AS ?tagName)
     (count(*) AS ?postCount)
-where {
+WHERE {
     ?post a snvoc:Post . ?post snvoc:hasCreator ?fr .
     ?post snvoc:hasTag ?tag . ?tag foaf:name ?tagname .
     ?post snvoc:creationDate ?date . sn:pers$Person snvoc:knows ?fr .
-    filter (?date >= $Date0 && ?date <= $Date0 + "P$DurationD"^^xsd:duration) .
-    filter (!exists {
+    FILTER (?date >= $Date0 && ?date <= $Date0 + "P$DurationD"^^xsd:duration) .
+    FILTER ( NOT EXISTS {
         sn:pers$Person snvoc:knows ?fr2 .
         ?post2 snvoc:hasCreator ?fr2 .
 	    ?post2 a snvoc:Post .
 	    ?post2 snvoc:hasTag ?tag .
         ?post2 snvoc:creationDate ?date2 .
-	    filter (?date2 < $Date0)
+	    FILTER (?date2 < $Date0)
     })
 }
-group by ?tagname
-order by desc(?cnt) ?tagname
+GROUP BY ?tagname
+ORDER BY desc(?cnt) ?tagname
 limit 10
