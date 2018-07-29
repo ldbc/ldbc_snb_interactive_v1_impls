@@ -5,5 +5,5 @@ where
     m_creationdate <= :Date0 and
     k_person1id = :Person and
     k_person2id = p_personid
-order by m_creationdate desc, p_personid asc
+order by m_creationdate desc, m_messageid asc
 limit 20
