@@ -15,5 +15,4 @@ public class CypherQueryStore extends QueryStore {
         super(path, ".cypher");
     }
 
-
 }

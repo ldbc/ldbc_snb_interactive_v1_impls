@@ -92,7 +92,8 @@ public abstract class QueryStore {
         try {
             return new String(Files.readAllBytes(Paths.get(filePath)));
         } catch (IOException e) {
-            throw new DbException("Could not load query: " + filePath);
+            //throw new DbException("Could not load query: " + filePath);
+            return "";
         }
     }
 
@@ -109,21 +110,23 @@ public abstract class QueryStore {
 
     public enum QueryType {
 
-        InteractiveComplexQuery1("interactive-complex-1"),
-        InteractiveComplexQuery2("interactive-complex-2"),
-        InteractiveComplexQuery3("interactive-complex-3"),
-        InteractiveComplexQuery4("interactive-complex-4"),
-        InteractiveComplexQuery5("interactive-complex-5"),
-        InteractiveComplexQuery6("interactive-complex-6"),
-        InteractiveComplexQuery7("interactive-complex-7"),
-        InteractiveComplexQuery8("interactive-complex-8"),
-        InteractiveComplexQuery9("interactive-complex-9"),
+        // interactive complex queries
+        InteractiveComplexQuery1 ("interactive-complex-1" ),
+        InteractiveComplexQuery2 ("interactive-complex-2" ),
+        InteractiveComplexQuery3 ("interactive-complex-3" ),
+        InteractiveComplexQuery4 ("interactive-complex-4" ),
+        InteractiveComplexQuery5 ("interactive-complex-5" ),
+        InteractiveComplexQuery6 ("interactive-complex-6" ),
+        InteractiveComplexQuery7 ("interactive-complex-7" ),
+        InteractiveComplexQuery8 ("interactive-complex-8" ),
+        InteractiveComplexQuery9 ("interactive-complex-9" ),
         InteractiveComplexQuery10("interactive-complex-10"),
         InteractiveComplexQuery11("interactive-complex-11"),
         InteractiveComplexQuery12("interactive-complex-12"),
         InteractiveComplexQuery13("interactive-complex-13"),
         InteractiveComplexQuery14("interactive-complex-14"),
 
+        // interactive short queries
         InteractiveShortQuery1("interactive-short-1"),
         InteractiveShortQuery2("interactive-short-2"),
         InteractiveShortQuery3("interactive-short-3"),
@@ -132,39 +135,45 @@ public abstract class QueryStore {
         InteractiveShortQuery6("interactive-short-6"),
         InteractiveShortQuery7("interactive-short-7"),
 
-        Update1AddPerson("update1addperson"),
-        Update1AddPersonCompanies("update1addpersoncompanies"),
-        Update1AddPersonEmails("update1addpersonemails"),
-        Update1AddPersonLanguages("update1addpersonlanguages"),
-        Update1AddPersonTags("update1addpersontags"),
-        Update1AddPersonUniversities("update1addpersonuniversities"),
+        // interactive updates
+        InteractiveUpdate1("interactive-update-1"),
+        InteractiveUpdate2("interactive-update-2"),
+        InteractiveUpdate3("interactive-update-3"),
+        InteractiveUpdate4("interactive-update-4"),
+        InteractiveUpdate5("interactive-update-5"),
+        InteractiveUpdate6("interactive-update-6"),
+        InteractiveUpdate7("interactive-update-7"),
+        InteractiveUpdate8("interactive-update-8"),
 
-        Update2AddPostLike("update2addpostlike"),
+        // interactive updates
+        InteractiveUpdate1AddPerson            ("interactive-update-1-add-person"),
+        InteractiveUpdate1AddPersonCompanies   ("interactive-update-1-add-person-companies"),
+        InteractiveUpdate1AddPersonEmails      ("interactive-update-1-add-person-emails"),
+        InteractiveUpdate1AddPersonLanguages   ("interactive-update-1-add-person-languages"),
+        InteractiveUpdate1AddPersonTags        ("interactive-update-1-add-person-tags"),
+        InteractiveUpdate1AddPersonUniversities("interactive-update-1-add-person-universities"),
+        InteractiveUpdate4AddForum             ("interactive-update-4-add-forum"),
+        InteractiveUpdate4AddForumTags         ("interactive-update-4-add-forum-tags"),
+        InteractiveUpdate6AddPost              ("interactive-update-6-add-post"),
+        InteractiveUpdate6AddPostTags          ("interactive-update-6-add-post-tags"),
+        InteractiveUpdate7AddComment           ("interactive-update-7-add-comment"),
+        InteractiveUpdate7AddCommentTags       ("interactive-update-7-add-comment-tags"),
 
-        Update3AddCommentLike("update3addcommentlike"),
+//        InteractiveUpdate2AddPostLike          ("interactive-update-2-add-post-like"),
+//        InteractiveUpdate3AddCommentLike       ("interactive-update-3-add-comment-like"),
+//        InteractiveUpdate5AddForumMembership   ("interactive-update-5-add-forum-membership"),
+//        InteractiveUpdate8AddFriendship        ("interactive-update-8-add-friendship"),
 
-        Update4AddForum("update4addforum"),
-        Update4AddForumTags("update4addforumtags"),
-
-        Update5AddForumMembership("update5addforummembership"),
-
-        Update6AddPost("update6addpost"),
-        Update6AddPostTags("update6addposttags"),
-
-        Update7AddComment("update7addcomment"),
-        Update7AddCommentTags("update7addcommenttags"),
-
-        Update8AddFriendship("update8addfriendship"),
-
-        BiQuery1("bi-1"),
-        BiQuery2("bi-2"),
-        BiQuery3("bi-3"),
-        BiQuery4("bi-4"),
-        BiQuery5("bi-5"),
-        BiQuery6("bi-6"),
-        BiQuery7("bi-7"),
-        BiQuery8("bi-8"),
-        BiQuery9("bi-9"),
+        // BI
+        BiQuery1 ("bi-1" ),
+        BiQuery2 ("bi-2" ),
+        BiQuery3 ("bi-3" ),
+        BiQuery4 ("bi-4" ),
+        BiQuery5 ("bi-5" ),
+        BiQuery6 ("bi-6" ),
+        BiQuery7 ("bi-7" ),
+        BiQuery8 ("bi-8" ),
+        BiQuery9 ("bi-9" ),
         BiQuery10("bi-10"),
         BiQuery11("bi-11"),
         BiQuery12("bi-12"),
@@ -200,7 +209,8 @@ public abstract class QueryStore {
         }
     }
 
-    // query getters
+    // Interactive complex reads
+
     public String getQuery1(LdbcQuery1 operation) {
         return prepare(QueryType.InteractiveComplexQuery1, new ImmutableMap.Builder<String, String>()
                 .put("Person", getConverter().convertId(operation.personId()))
@@ -303,6 +313,8 @@ public abstract class QueryStore {
                 .build());
     }
 
+    // Interactive short reads
+
     public String getShortQuery1PersonProfile(LdbcShortQuery1PersonProfile operation) {
         return prepare(
                 QueryType.InteractiveShortQuery1,
@@ -352,10 +364,135 @@ public abstract class QueryStore {
         );
     }
 
-    public List<String> getUpdate1AddPerson(LdbcUpdate1AddPerson operation) {
+    // Interactive updates
+
+    // Interactive updates, formulated as a single query each
+
+    public String getUpdate1Single(LdbcUpdate1AddPerson operation) {
+        return prepare(
+                QueryType.InteractiveUpdate1,
+                new ImmutableMap.Builder<String, String>()
+                        .put(LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()))
+                        .put(LdbcUpdate1AddPerson.PERSON_FIRST_NAME, getConverter().convertString(operation.personFirstName()))
+                        .put(LdbcUpdate1AddPerson.PERSON_LAST_NAME, getConverter().convertString(operation.personLastName()))
+                        .put(LdbcUpdate1AddPerson.GENDER, getConverter().convertString(operation.gender()))
+                        .put(LdbcUpdate1AddPerson.BIRTHDAY, getConverter().convertDateTime(operation.birthday()))
+                        .put(LdbcUpdate1AddPerson.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()))
+                        .put(LdbcUpdate1AddPerson.LOCATION_IP, getConverter().convertString(operation.locationIp()))
+                        .put(LdbcUpdate1AddPerson.BROWSER_USED, getConverter().convertString(operation.browserUsed()))
+                        .put(LdbcUpdate1AddPerson.CITY_ID, getConverter().convertId(operation.cityId()))
+                        .put(LdbcUpdate1AddPerson.WORK_AT, getConverter().convertOrganisations(operation.workAt()))
+                        .put(LdbcUpdate1AddPerson.STUDY_AT, getConverter().convertOrganisations(operation.studyAt()))
+                        .put(LdbcUpdate1AddPerson.EMAILS, getConverter().convertStringList(operation.emails()))
+                        .put(LdbcUpdate1AddPerson.LANGUAGES, getConverter().convertStringList(operation.languages()))
+                        .put(LdbcUpdate1AddPerson.TAG_IDS, getConverter().convertLongList(operation.tagIds()))
+                        .build()
+        );
+    }
+
+    public String getUpdate2(LdbcUpdate2AddPostLike operation) {
+        return prepare(
+                QueryType.InteractiveUpdate2,
+                ImmutableMap.of(
+                        LdbcUpdate2AddPostLike.PERSON_ID, getConverter().convertId(operation.personId()),
+                        LdbcUpdate2AddPostLike.POST_ID, getConverter().convertId(operation.postId()),
+                        LdbcUpdate2AddPostLike.CREATION_DATE, getConverter().convertDateTime(operation.creationDate())
+                )
+        );
+    }
+
+    public String getUpdate3(LdbcUpdate3AddCommentLike operation) {
+        return prepare(
+                QueryType.InteractiveUpdate3,
+                ImmutableMap.of(
+                        LdbcUpdate3AddCommentLike.PERSON_ID, getConverter().convertId(operation.personId()),
+                        LdbcUpdate3AddCommentLike.COMMENT_ID, getConverter().convertId(operation.commentId()),
+                        LdbcUpdate3AddCommentLike.CREATION_DATE, getConverter().convertDateTime(operation.creationDate())
+                )
+        );
+    }
+
+    public String getUpdate4Single(LdbcUpdate4AddForum operation) {
+        return prepare(
+                QueryType.InteractiveUpdate4,
+                ImmutableMap.of(
+                        LdbcUpdate4AddForum.FORUM_ID, getConverter().convertId(operation.forumId()),
+                        LdbcUpdate4AddForum.FORUM_TITLE, getConverter().convertString(operation.forumTitle()),
+                        LdbcUpdate4AddForum.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()),
+                        LdbcUpdate4AddForum.MODERATOR_PERSON_ID, getConverter().convertId(operation.moderatorPersonId()),
+                        LdbcUpdate4AddForum.TAG_IDS, getConverter().convertLongList(operation.tagIds())
+                )
+        );
+    }
+
+
+    public String getUpdate5(LdbcUpdate5AddForumMembership operation) {
+        return prepare(
+                QueryType.InteractiveUpdate5,
+                ImmutableMap.of(
+                        LdbcUpdate5AddForumMembership.FORUM_ID, getConverter().convertId(operation.forumId()),
+                        LdbcUpdate5AddForumMembership.PERSON_ID, getConverter().convertId(operation.personId()),
+                        LdbcUpdate5AddForumMembership.JOIN_DATE, getConverter().convertDateTime(operation.joinDate())
+                )
+        );
+    }
+
+    public String getUpdate6Single(LdbcUpdate6AddPost operation) {
+        return prepare(
+                QueryType.InteractiveUpdate6,
+                new ImmutableMap.Builder<String, String>()
+                        .put(LdbcUpdate6AddPost.POST_ID, getConverter().convertId(operation.postId()))
+                        .put(LdbcUpdate6AddPost.IMAGE_FILE, getConverter().convertString(operation.imageFile()))
+                        .put(LdbcUpdate6AddPost.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()))
+                        .put(LdbcUpdate6AddPost.LOCATION_IP, getConverter().convertString(operation.locationIp()))
+                        .put(LdbcUpdate6AddPost.BROWSER_USED, getConverter().convertString(operation.browserUsed()))
+                        .put(LdbcUpdate6AddPost.LANGUAGE, getConverter().convertString(operation.language()))
+                        .put(LdbcUpdate6AddPost.CONTENT, getConverter().convertString(operation.content()))
+                        .put(LdbcUpdate6AddPost.LENGTH, getConverter().convertInteger(operation.length()))
+                        .put(LdbcUpdate6AddPost.AUTHOR_PERSON_ID, getConverter().convertId(operation.authorPersonId()))
+                        .put(LdbcUpdate6AddPost.FORUM_ID, getConverter().convertId(operation.forumId()))
+                        .put(LdbcUpdate6AddPost.COUNTRY_ID, getConverter().convertId(operation.countryId()))
+                        .put(LdbcUpdate6AddPost.TAG_IDS, getConverter().convertLongList(operation.tagIds()))
+                        .build()
+        );
+    }
+
+    public String getUpdate7Single(LdbcUpdate7AddComment operation) {
+        return prepare(
+                QueryType.InteractiveUpdate7,
+                new ImmutableMap.Builder<String, String>()
+                        .put(LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertId(operation.commentId()))
+                        .put(LdbcUpdate7AddComment.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()))
+                        .put(LdbcUpdate7AddComment.LOCATION_IP, getConverter().convertString(operation.locationIp()))
+                        .put(LdbcUpdate7AddComment.BROWSER_USED, getConverter().convertString(operation.browserUsed()))
+                        .put(LdbcUpdate7AddComment.CONTENT, getConverter().convertString(operation.content()))
+                        .put(LdbcUpdate7AddComment.LENGTH, getConverter().convertInteger(operation.length()))
+                        .put(LdbcUpdate7AddComment.AUTHOR_PERSON_ID, getConverter().convertId(operation.authorPersonId()))
+                        .put(LdbcUpdate7AddComment.COUNTRY_ID, getConverter().convertId(operation.countryId()))
+                        .put(LdbcUpdate7AddComment.REPLY_TO_POST_ID, getConverter().convertId(operation.replyToPostId()))
+                        .put(LdbcUpdate7AddComment.REPLY_TO_COMMENT_ID, getConverter().convertId(operation.replyToCommentId()))
+                        .put(LdbcUpdate7AddComment.TAG_IDS, getConverter().convertLongList(operation.tagIds()))
+                        .build()
+        );
+    }
+
+    public String getUpdate8(LdbcUpdate8AddFriendship operation) {
+        return prepare(
+                QueryType.InteractiveUpdate8,
+                ImmutableMap.of(
+                        LdbcUpdate8AddFriendship.PERSON1_ID, getConverter().convertId(operation.person1Id()),
+                        LdbcUpdate8AddFriendship.PERSON2_ID, getConverter().convertId(operation.person2Id()),
+                        LdbcUpdate8AddFriendship.CREATION_DATE, getConverter().convertDateTime(operation.creationDate())
+                )
+        );
+    }
+
+    // Interactive updates requiring multiple queries (for some systems)
+
+    public List<String> getUpdate1Multiple(LdbcUpdate1AddPerson operation) {
         List<String> list = new ArrayList<>();
         list.add(prepare(
-                QueryType.Update1AddPerson,
+                QueryType.InteractiveUpdate1,
                 new ImmutableMap.Builder<String, String>()
                         .put(LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()))
                         .put(LdbcUpdate1AddPerson.PERSON_FIRST_NAME, getConverter().convertString(operation.personFirstName()))
@@ -371,7 +508,7 @@ public abstract class QueryStore {
 
         for (LdbcUpdate1AddPerson.Organization organization : operation.workAt()) {
             list.add(prepare(
-                    QueryType.Update1AddPersonCompanies,
+                    QueryType.InteractiveUpdate1AddPersonCompanies,
                     ImmutableMap.of(
                             LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()),
                             "organizationId", getConverter().convertId(organization.organizationId()),
@@ -381,7 +518,7 @@ public abstract class QueryStore {
         }
         for (String email : operation.emails()) {
             list.add(prepare(
-                    QueryType.Update1AddPersonEmails,
+                    QueryType.InteractiveUpdate1AddPersonEmails,
                     ImmutableMap.of(
                             LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()),
                             "email", getConverter().convertString(email)
@@ -390,7 +527,7 @@ public abstract class QueryStore {
         }
         for (String language : operation.languages()) {
             list.add(prepare(
-                    QueryType.Update1AddPersonLanguages,
+                    QueryType.InteractiveUpdate1AddPersonLanguages,
                     ImmutableMap.of(
                             LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()),
                             "language", getConverter().convertString(language)
@@ -400,7 +537,7 @@ public abstract class QueryStore {
 
         for (long tagId : operation.tagIds()) {
             list.add(prepare(
-                    QueryType.Update1AddPersonTags,
+                    QueryType.InteractiveUpdate1AddPersonTags,
                     ImmutableMap.of(
                             LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()),
                             "tagId", getConverter().convertId(tagId))
@@ -409,7 +546,7 @@ public abstract class QueryStore {
         }
         for (LdbcUpdate1AddPerson.Organization organization : operation.studyAt()) {
             list.add(prepare(
-                    QueryType.Update1AddPersonUniversities,
+                    QueryType.InteractiveUpdate1AddPersonUniversities,
                     ImmutableMap.of(
                             LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()),
                             "organizationId", getConverter().convertId(organization.organizationId()),
@@ -420,32 +557,10 @@ public abstract class QueryStore {
         return list;
     }
 
-    public String getUpdate2AddPostLike(LdbcUpdate2AddPostLike operation) {
-        return prepare(
-                QueryType.Update2AddPostLike,
-                ImmutableMap.of(
-                        LdbcUpdate2AddPostLike.PERSON_ID, getConverter().convertId(operation.personId()),
-                        LdbcUpdate2AddPostLike.POST_ID, getConverter().convertId(operation.postId()),
-                        LdbcUpdate2AddPostLike.CREATION_DATE, getConverter().convertDateTime(operation.creationDate())
-                )
-        );
-    }
-
-    public String getUpdate3AddCommentLike(LdbcUpdate3AddCommentLike operation) {
-        return prepare(
-                QueryType.Update3AddCommentLike,
-                ImmutableMap.of(
-                        LdbcUpdate3AddCommentLike.PERSON_ID, getConverter().convertId(operation.personId()),
-                        LdbcUpdate3AddCommentLike.COMMENT_ID, getConverter().convertId(operation.commentId()),
-                        LdbcUpdate3AddCommentLike.CREATION_DATE, getConverter().convertDateTime(operation.creationDate())
-                )
-        );
-    }
-
-    public List<String> getUpdate4AddForum(LdbcUpdate4AddForum operation) {
+    public List<String> getUpdate4Multiple(LdbcUpdate4AddForum operation) {
         List<String> list = new ArrayList<>();
         list.add(prepare(
-                QueryType.Update4AddForum,
+                QueryType.InteractiveUpdate4AddForum,
                 ImmutableMap.of(
                         LdbcUpdate4AddForum.FORUM_ID, getConverter().convertId(operation.forumId()),
                         LdbcUpdate4AddForum.FORUM_TITLE, getConverter().convertString(operation.forumTitle()),
@@ -456,7 +571,7 @@ public abstract class QueryStore {
 
         for (long tagId : operation.tagIds()) {
             list.add(prepare(
-                    QueryType.Update4AddForumTags,
+                    QueryType.InteractiveUpdate4AddForumTags,
                     ImmutableMap.of(
                             LdbcUpdate4AddForum.FORUM_ID, getConverter().convertId(operation.forumId()),
                             "tagId", getConverter().convertId(tagId))
@@ -466,21 +581,10 @@ public abstract class QueryStore {
         return list;
     }
 
-
-    public String getUpdate5AddForumMembership(LdbcUpdate5AddForumMembership operation) {
-        return prepare(
-                QueryType.Update5AddForumMembership,
-                ImmutableMap.of(
-                        LdbcUpdate5AddForumMembership.FORUM_ID, getConverter().convertId(operation.forumId()),
-                        LdbcUpdate5AddForumMembership.PERSON_ID, getConverter().convertId(operation.personId()),
-                        LdbcUpdate5AddForumMembership.JOIN_DATE, getConverter().convertDateTime(operation.joinDate())
-                )
-        );
-    }
-
-    public List<String> getUpdate6AddPost(LdbcUpdate6AddPost operation) {
+    public List<String> getUpdate6Multiple(LdbcUpdate6AddPost operation) {
         List<String> list = new ArrayList<>();
-        list.add(prepare(QueryType.Update6AddPost,
+        list.add(prepare(
+                QueryType.InteractiveUpdate6,
                 new ImmutableMap.Builder<String, String>()
                         .put(LdbcUpdate6AddPost.POST_ID, getConverter().convertId(operation.postId()))
                         .put(LdbcUpdate6AddPost.IMAGE_FILE, getConverter().convertString(operation.imageFile()))
@@ -498,7 +602,7 @@ public abstract class QueryStore {
         );
         for (long tagId : operation.tagIds()) {
             list.add(prepare(
-                    QueryType.Update6AddPostTags,
+                    QueryType.InteractiveUpdate6AddPostTags,
                     ImmutableMap.of(
                             LdbcUpdate6AddPost.POST_ID, getConverter().convertId(operation.postId()),
                             "tagId", getConverter().convertId(tagId))
@@ -508,9 +612,10 @@ public abstract class QueryStore {
         return list;
     }
 
-    public List<String> getUpdate7AddComment(LdbcUpdate7AddComment operation) {
+    public List<String> getUpdate7Multiple(LdbcUpdate7AddComment operation) {
         List<String> list = new ArrayList<>();
-        list.add(prepare(QueryType.Update7AddComment,
+        list.add(prepare(
+                QueryType.InteractiveUpdate7,
                 new ImmutableMap.Builder<String, String>()
                         .put(LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertId(operation.commentId()))
                         .put(LdbcUpdate7AddComment.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()))
@@ -526,7 +631,7 @@ public abstract class QueryStore {
         ));
         for (long tagId : operation.tagIds()) {
             list.add(prepare(
-                    QueryType.Update7AddCommentTags,
+                    QueryType.InteractiveUpdate7AddCommentTags,
                     ImmutableMap.of(
                             LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertId(operation.commentId()),
                             "tagId", getConverter().convertId(tagId))
@@ -536,17 +641,7 @@ public abstract class QueryStore {
         return list;
     }
 
-    public String getUpdate8AddFriendship(LdbcUpdate8AddFriendship operation) {
-        return prepare(
-                QueryType.Update8AddFriendship,
-                ImmutableMap.of(
-                        LdbcUpdate8AddFriendship.PERSON1_ID, getConverter().convertId(operation.person1Id()),
-                        LdbcUpdate8AddFriendship.PERSON2_ID, getConverter().convertId(operation.person2Id()),
-                        LdbcUpdate8AddFriendship.CREATION_DATE, getConverter().convertDateTime(operation.creationDate())
-                )
-        );
-    }
-
+    // BI queries
 
     public String getQuery1(LdbcSnbBiQuery1PostingSummary operation) {
         return prepare(QueryType.BiQuery1, new ImmutableMap.Builder<String, String>()
