@@ -8,34 +8,82 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-select
-    (?liker AS ?personId)
-    (?first AS ?personFirstName)
-    (?last AS ?personLastName)
-    (?max_ldt AS ?likeCreationDate)
-    (?post AS ?commentOrPostId)
-    (?content AS ?commentOrPostContent)
-    ((?max_ldt - ?dt)/60 AS ?minutesLatency)
-    (not exists { sn:pers$Person snvoc:knows ?liker} as ?isNew)
-where {
-    {{
-        select ?liker (max(?ldt) as ?max_ldt)
-        where {
-            ?post snvoc:hasCreator sn:pers$Person .
-            {{ ?lk snvoc:hasPost ?post } union { ?lk snvoc:hasComment ?post }} .
-            ?liker snvoc:likes ?lk .
-            ?lk snvoc:creationDate ?ldt .
+SELECT
+    ?personId
+    (?firstName AS ?personFirstName)
+    (?lastName AS ?personLastName)
+    ?likeCreationDate
+    ?messageId
+    ?content
+    ?latency
+    ?isNew
+WHERE 
+{
+    {
+        SELECT
+            ?person
+            (MIN(?messageId) AS ?messageId)
+        WHERE
+        {
+            {
+                SELECT
+                    ?personId
+                    (MAX(?likeDate) AS ?mostRecentLikeDate)
+                WHERE
+                {
+                    {
+                        SELECT DISTINCT
+                            ?message
+                        WHERE
+                        {       
+                            VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
+                            BIND( "$personId"^^xsd:long AS ?rootId )
+                            ?rootPerson a snvoc:Person .
+                            ?rootPerson snvoc:id ?rootId .
+                            ?message snvoc:hasCreator ?rootPerson .
+                            ?message a ?type
+                        }    
+                    } .
+                    ?person a snvoc:Person .
+                    ?person snvoc:likes ?like .
+                    ?person snvoc:id ?personId .
+                    ?like snvoc:hasPost|snvoc:hasComment ?message .
+                    ?like snvoc:creationDate ?likeDate .
+                }
+                GROUP BY ?personId
+                ORDER BY DESC(?mostRecentLikeDate) ?personId
+                LIMIT 20
+            }
+            VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
+            BIND( "$personId"^^xsd:long AS ?rootId )
+            ?rootPerson a snvoc:Person .
+            ?rootPerson snvoc:id ?rootId .
+            ?message snvoc:hasCreator ?rootPerson .
+            ?message a ?type .
+            ?message snvoc:id ?messageId .
+            ?person a snvoc:Person .
+            ?person snvoc:id ?personId .
+            ?person snvoc:likes ?like .
+            ?like snvoc:hasPost|snvoc:hasComment ?message .
+            ?like snvoc:creationDate ?mostRecentLikeDate .
         }
-        group by ?liker
-        order by desc(?max_ldt)
-        limit 20
-    }} .
-    {{ ?lk1 snvoc:hasPost ?post } union { ?lk1 snvoc:hasComment ?post }} .
-    ?liker snvoc:likes ?lk1 .
-    ?lk1 snvoc:creationDate ?max_ldt .
-    {{ ?post snvoc:content ?content } union {?post snvoc:imageFile ?content}} .
-    ?liker snvoc:firstName ?first .
-    ?liker snvoc:lastName ?last .
-    ?post snvoc:creationDate ?dt .
+        GROUP BY ?person
+    } .
+    ?person snvoc:id ?personId .
+    ?person snvoc:firstName ?firstName .
+    ?person snvoc:lastName ?lastName .
+    ?person snvoc:likes ?like .
+    ?like snvoc:hasPost|snvoc:hasComment ?message .
+    ?message snvoc:id ?messageId .
+    ?like snvoc:creationDate ?likeCreationDate .
+    ?message snvoc:creationDate ?messageCreationDate . 
+    ?message snvoc:content|snvoc:imageFile ?content . 
+    BIND( ?likeCreationDate - ?messageCreationDate AS ?latencyInDuration )
+    BIND( (DAY(?latencyInDuration) * 24 + HOURS(?latencyInDuration)) * 60 + MINUTES(?latencyInDuration) AS ?latency )
+    BIND( "$personId"^^xsd:long AS ?rootId )
+    ?rootPerson a snvoc:Person .
+    ?rootPerson snvoc:id ?rootId .
+    BIND( NOT EXISTS { ?rootPerson (snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson) ?person } AS ?isNew )
 }
-order by desc(?max_ldate) ?liker
+ORDER BY DESC(?likeCreationDate) ?personId
+
