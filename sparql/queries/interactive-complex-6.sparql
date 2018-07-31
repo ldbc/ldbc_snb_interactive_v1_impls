@@ -34,5 +34,5 @@ WHERE {
     FILTER (?tag2Name != "$tagName") .
 }
 GROUP BY ?tag2Name
-ORDER BY DESC(?postCount) ?tagName
+ORDER BY DESC(?postCount) ?tag2Name
 LIMIT 10
