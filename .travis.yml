@@ -18,12 +18,12 @@ script:
   # Postgres
   - chmod 755 ~
   - cd postgres/load-scripts
+  - export PG_CSV_DIR=$(pwd)/../test-data
   - ./load.sh
   - cd ../..
   # Cypher
   - cd cypher
   - . environment-variables-neo4j.sh
-  - echo $NEO4J_HOME
   - cp test-data/raw/*.csv test-data/converted
   - export NEO4J_DATA_DIR=`pwd`/test-data/converted
   - cd load-scripts

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-PG_CSV_DIR=${1:-$(pwd)/../test-data}
-PG_DB_NAME=${2:-ldbcsf1}
-PG_USER=${3:-$USER}
+PG_CSV_DIR=${PG_CSV_DIR:-$(pwd)/../../../ldbc_snb_datagen/social_network/}
+PG_DB_NAME=${PG_DB_NAME:-ldbcsf1}
+PG_USER=${PG_USER:-$USER}
 
 cat $PG_CSV_DIR/post_0_0.csv | \
   awk -F '|' '{ print $1"|"$2"|"$3"|"$4"|"$5"|"$6"|"$7"|"$8"|"$9"|"$11"|"$10"|"}' > \

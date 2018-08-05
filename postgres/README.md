@@ -52,13 +52,16 @@ ldbc.snb.datagen.serializer.personActivitySerializer:ldbc.snb.datagen.serializer
 
 ### Loading the data set
 
-To run the load script, go the `load-scripts` directory and issue the following command:
+To run the load script, go the `load-scripts` directory, set the `PG_` environment variables (optional) and issue the following command:
 
 ```bash
-./load.sh <absolute_path_of_data_dir> <database> <your_pg_user>
+export PG_CSV_DIR=
+export PG_DB_NAME=
+export PG_USER=
+./load.sh
 ```
 
-The `load.sh` has default options that will load a small dataset to the `ldbcsf1` database with your current user. If these fit your installation, just run the script as `./load.sh`.
+The `load.sh` has default options that loads the dataset in the generator's directory to the `ldbcsf1` database with your current user. If these fit your needs, just run the script as `./load.sh`.
 
 If you get _Permission denied_ errors, change the permissions of your home directory to 755 - but please make sure you understand its implications first:
 
