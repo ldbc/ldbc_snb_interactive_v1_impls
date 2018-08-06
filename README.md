@@ -10,7 +10,7 @@ Implementations for the Workload components of the LDBC Social Network Benchmark
 
 ## Directory layout
 
-Multiple configuration files and scripts use [relative paths to address the data generator's directory](https://github.com/ldbc/ldbc_snb_implementations/search?q=ldbc_snb_datagen). Hence, it is recommended to clone the directory of the data generator and the implementations directories next to each other with their names intact. For example:
+Multiple configuration files and scripts use [relative paths to address the data generator's directory](https://github.com/ldbc/ldbc_snb_implementations/search?q=ldbc_snb_datagen). Hence, it is recommended to clone the LDBC data generator and the LDBC implementations repositories next to each other with their directory names intact. For example:
 
 * `ldbc`
   * [`ldbc_snb_datagen`](https://github.com/ldbc/ldbc_snb_datagen)
