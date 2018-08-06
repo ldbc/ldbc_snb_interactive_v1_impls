@@ -6,11 +6,20 @@ LDBC SNB implementations
 
 Implementations for the Workload components of the LDBC Social Network Benchmark ([specification](https://ldbc.github.io/ldbc_snb_docs/)).
 
-:warning: Implementations in this repository are not audited.
+:warning: Implementations in this repository are preliminary, i.e. they are not audited and - in rare cases - not even validated. For details, feel free to contact us through an issue or email.
+
+## Directory layout
+
+Multiple configuration files and scripts use [relative paths to address the data generator's directory](https://github.com/ldbc/ldbc_snb_implementations/search?q=ldbc_snb_datagen). Hence, it is recommended to clone the directory of the data generator and the implementations directories next to each other with their names intact. For example:
+
+* `ldbc`
+  * [`ldbc_snb_datagen`](https://github.com/ldbc/ldbc_snb_datagen)
+  * [`ldbc_snb_driver`](https://github.com/ldbc/ldbc_snb_driver) _(optional)_
+  * [`ldbc_snb_implementations`](https://github.com/ldbc/ldbc_snb_implementations/)
 
 ## Implementations
 
-Each project has its own README.
+Each project has its own README:
 
 * [Cypher (Neo4j driver) implementation](cypher/)
 * [PostgreSQL implementation](postgres/)
