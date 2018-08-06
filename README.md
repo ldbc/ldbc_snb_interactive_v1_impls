@@ -83,7 +83,7 @@ Cypher queries are currently not available. Links for short reads/updates may be
 
 ## User's guide
 
-1. Build the driver binaries from source. This step is optional as the latest stable version of the driver is [release on Bintray](https://github.com/ldbc/ldbc_snb_driver/commit/de2738a1dda69366a2fe1038a071c5a12bf618e9).
+1. Build the driver binaries from source. This step is optional as the latest stable version of the driver is [released on Bintray](https://github.com/ldbc/ldbc_snb_driver/commit/de2738a1dda69366a2fe1038a071c5a12bf618e9).
 
     1. Grab the driver source code from: https://github.com/ldbc/ldbc_snb_driver.
     2. Install the driver artifact to the local Maven repository:
