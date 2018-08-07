@@ -135,7 +135,7 @@ public abstract class QueryStore {
         InteractiveShortQuery6("interactive-short-6"),
         InteractiveShortQuery7("interactive-short-7"),
 
-        // interactive updates
+        // interactive updates (single queries)
         InteractiveUpdate1("interactive-update-1"),
         InteractiveUpdate2("interactive-update-2"),
         InteractiveUpdate3("interactive-update-3"),
@@ -145,24 +145,15 @@ public abstract class QueryStore {
         InteractiveUpdate7("interactive-update-7"),
         InteractiveUpdate8("interactive-update-8"),
 
-        // interactive updates
-        InteractiveUpdate1AddPerson            ("interactive-update-1-add-person"),
+        // interactive updates (additional queries for systems that perform them as multiple queries)
         InteractiveUpdate1AddPersonCompanies   ("interactive-update-1-add-person-companies"),
         InteractiveUpdate1AddPersonEmails      ("interactive-update-1-add-person-emails"),
         InteractiveUpdate1AddPersonLanguages   ("interactive-update-1-add-person-languages"),
         InteractiveUpdate1AddPersonTags        ("interactive-update-1-add-person-tags"),
         InteractiveUpdate1AddPersonUniversities("interactive-update-1-add-person-universities"),
-        InteractiveUpdate4AddForum             ("interactive-update-4-add-forum"),
         InteractiveUpdate4AddForumTags         ("interactive-update-4-add-forum-tags"),
-        InteractiveUpdate6AddPost              ("interactive-update-6-add-post"),
         InteractiveUpdate6AddPostTags          ("interactive-update-6-add-post-tags"),
-        InteractiveUpdate7AddComment           ("interactive-update-7-add-comment"),
         InteractiveUpdate7AddCommentTags       ("interactive-update-7-add-comment-tags"),
-
-//        InteractiveUpdate2AddPostLike          ("interactive-update-2-add-post-like"),
-//        InteractiveUpdate3AddCommentLike       ("interactive-update-3-add-comment-like"),
-//        InteractiveUpdate5AddForumMembership   ("interactive-update-5-add-forum-membership"),
-//        InteractiveUpdate8AddFriendship        ("interactive-update-8-add-friendship"),
 
         // BI
         BiQuery1 ("bi-1" ),
@@ -560,7 +551,7 @@ public abstract class QueryStore {
     public List<String> getUpdate4Multiple(LdbcUpdate4AddForum operation) {
         List<String> list = new ArrayList<>();
         list.add(prepare(
-                QueryType.InteractiveUpdate4AddForum,
+                QueryType.InteractiveUpdate4,
                 ImmutableMap.of(
                         LdbcUpdate4AddForum.FORUM_ID, getConverter().convertId(operation.forumId()),
                         LdbcUpdate4AddForum.FORUM_TITLE, getConverter().convertString(operation.forumTitle()),
