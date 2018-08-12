@@ -8,14 +8,25 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-select ?forum ?title ?moderator ?first ?last
-where {
-  ?post snvoc:id %Id% .
-  ?post snvoc:replyOf* ?orig.
-  ?orig a snvoc:Post .
-  ?forum snvoc:containerOf ?orig .
-  ?forum snvoc:title ?title .
-  ?forum snvoc:hasModerator ?moderator .
-  ?moderator snvoc:firstName ?first .
-  ?moderator snvoc:lastName ?last .
+SELECT
+    ?forumId
+    ?title
+    ?moderatorId
+    ?firstName
+    ?lastName
+WHERE {
+    BIND( "$messageId"^^xsd:long AS ?messageId )
+    ?message snvoc:id ?messageId .
+    OPTIONAL {
+        ?message snvoc:replyOf* ?originalPostInner .
+        ?originalPostInner a snvoc:Post .
+    } .
+    BIND( COALESCE(?originalPostInner, ?message) AS ?originalPost ) .
+    ?forum snvoc:containerOf ?originalPost .
+    ?forum snvoc:id ?forumId .
+    ?forum snvoc:title ?title .
+    ?forum snvoc:hasModerator ?moderator .
+    ?moderator snvoc:id ?moderatorId .
+    ?moderator snvoc:firstName ?firstName .
+    ?moderator snvoc:lastName ?lastName .
 }
