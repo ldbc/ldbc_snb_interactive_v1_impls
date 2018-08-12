@@ -8,19 +8,32 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-select ?post ?con ?image
-              (?cd - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?cdate
-      	      ?orig ?person1 ?firstn ?lastn
-where {
-  ?pers snvoc:id %Id% .
-  ?post snvoc:hasCreator ?pers .
-  { {?post snvoc:content ?con } union { ?post snvoc:imageFile ?image }} .
-  ?post snvoc:creationDate ?cd .
-  ?post snvoc:replyOf* ?orig .
-  ?orig a snvoc:Post .
-  ?orig snvoc:hasCreator ?person1 .
-  ?person1 snvoc:firstName ?firstn .
-  ?person1 snvoc:lastName ?lastn .
+SELECT 
+    ?message 
+    ?content
+    ?creationDate
+    ?originalPostId 
+    ?creatorId 
+    ?firstName 
+    ?lastName
+WHERE {
+    BIND( "$personId"^^xsd:long AS ?personId )
+    ?person a snvoc:Person .
+    ?person snvoc:id ?personId .
+    ?message snvoc:hasCreator ?person .
+    ?message snvoc:content|snvoc:imageFile ?content . 
+    ?message snvoc:creationDate ?creationDate .
+    OPTIONAL {
+        ?message snvoc:replyOf* ?originalPostInner .
+        ?originalPostInner a snvoc:Post .
+    } .
+    BIND( COALESCE(?originalPostInner, ?message) AS ?originalPost ) .
+    ?originalPost snvoc:id ?originalPostId .
+    ?originalPost snvoc:hasCreator ?creator .
+    ?creator snvoc:firstName ?firstName .
+    ?creator snvoc:lastName ?lastName .
+    ?creator snvoc:id ?creatorId .
 }
-order by desc(?cd)
-limit 10
+ORDER BY desc(?creationDate)
+LIMIT 10
+
