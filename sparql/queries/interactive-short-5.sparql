@@ -12,7 +12,8 @@ SELECT
     ?creatorId
     ?firstName
     ?lastName
-WHERE {
+WHERE
+{
     BIND( "$messageId"^^xsd:long AS ?messageId )
     ?message snvoc:id ?messageId .
     ?message snvoc:hasCreator ?creator .
