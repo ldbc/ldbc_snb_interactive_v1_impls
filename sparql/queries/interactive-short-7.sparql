@@ -8,18 +8,31 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-select ?comment ?content
-                      (?dt - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?date
-      	       	      ?creator ?creatorfirstname ?creatorlastname
-                      (exists {  ?creator snvoc:knows ?author} as ?knows)
-where {
-  ?post snvoc:id %Id% .
-  ?post snvoc:hasCreator ?author .
-  ?comment snvoc:replyOf ?post .
-  ?comment snvoc:content ?content .
-  ?comment snvoc:creationDate ?dt .
-  ?comment snvoc:hasCreator ?creator .
-  ?creator snvoc:firstName ?creatorfirstname .
-  ?creator snvoc:lastName ?creatorlastname .
+SELECT
+    ?comment
+    ?content
+    ?creationDate
+    ?creator
+    ?firstName
+    ?lastName
+    ?knowsFlag
+WHERE
+{
+    BIND( "$messageId"^^xsd:long AS ?messageId )
+    ?message snvoc:id ?messageId .
+    ?message snvoc:hasCreator ?messageCreator .
+    ?messageCreator snvoc:id ?messageCreatorId .
+    ?comment snvoc:replyOf ?message .
+    ?comment a snvoc:Comment .
+    ?comment snvoc:content ?content .
+    ?comment snvoc:creationDate ?creationDate .
+    ?comment snvoc:hasCreator ?creator .
+    ?creator snvoc:firstName ?firstName .
+    ?creator snvoc:lastName ?lastName .
+    OPTIONAL {
+        ?messageCreator ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?creator .
+        BIND( "true"^^xsd:boolean AS ?knowsFlagInner ) .
+    }
+    BIND( COALESCE(?knowsFlagInner, "false"^^xsd:boolean) AS ?knowsFlag ) .
 }
-order by desc(3) 4
+ORDER BY DESC(?creationDate) ?messageCreatorId
