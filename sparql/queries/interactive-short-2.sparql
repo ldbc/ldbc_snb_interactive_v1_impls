@@ -9,7 +9,7 @@ PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 SELECT 
-    ?message 
+    ?messageId 
     ?content
     ?creationDate
     ?originalPostId 
@@ -23,6 +23,7 @@ WHERE {
     ?message snvoc:hasCreator ?person .
     ?message snvoc:content|snvoc:imageFile ?content . 
     ?message snvoc:creationDate ?creationDate .
+    ?message snvoc:id ?messageId .
     OPTIONAL {
         ?message snvoc:replyOf* ?originalPostInner .
         ?originalPostInner a snvoc:Post .
@@ -34,6 +35,5 @@ WHERE {
     ?creator snvoc:lastName ?lastName .
     ?creator snvoc:id ?creatorId .
 }
-ORDER BY desc(?creationDate)
-LIMIT 10
+ORDER BY DESC(?creationDate) DESC(?messageId)
 
