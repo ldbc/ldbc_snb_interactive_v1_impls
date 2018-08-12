@@ -8,18 +8,27 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-select ?p_firstname ?p_lastname ?p_gender
-              (?p_birthday - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?p_bd
-              (?p_creationdate - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?p_cd
-              ?p_locationip ?p_browserused ?p_placeid
-where {
-  ?person snvoc:id %Id% .
-  ?person snvoc:firstName ?p_firstname .
-  ?person snvoc:lastName ?p_lastname .
-  ?person snvoc:gender ?p_gender .
-  ?person snvoc:birthday ?p_birthday .
-  ?person snvoc:creationDate ?p_creationdate .
-  ?person snvoc:locationIP ?p_locationip .
-  ?person snvoc:isLocatedIn ?p_place .
-  ?person snvoc:browserUsed ?p_browserused .
+SELECT 
+    ?firstName
+    ?lastName
+    ?gender
+    ?birthday
+    ?creationDate
+    ?locationIp 
+    ?browser 
+    ?placeId
+WHERE 
+{
+    BIND( "$personId"^^xsd:long AS ?personId )
+    ?person a snvoc:Person .
+    ?person snvoc:id ?personId .
+    ?person snvoc:firstName ?firstName .
+    ?person snvoc:lastName ?lastName .
+    ?person snvoc:gender ?gender .
+    ?person snvoc:birthday ?birthday .
+    ?person snvoc:creationDate ?creationDate .
+    ?person snvoc:locationIP ?locationIp .
+    ?person snvoc:isLocatedIn ?place .
+    ?place snvoc:id ?placeId .
+    ?person snvoc:browserUsed ?browser .
 }
