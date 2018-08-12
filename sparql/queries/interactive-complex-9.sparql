@@ -12,7 +12,7 @@ SELECT
     (?fr AS ?personId)
     (?first AS ?personFirstName)
     (?last AS ?personLastName)
-    (?post AS ?commentOrPostId)
+    (?message AS ?commentOrPostId)
     (?content AS ?commentOrPostContent)
     (?creationDate AS ?commentOrPostCreationDate)
 WHERE {
