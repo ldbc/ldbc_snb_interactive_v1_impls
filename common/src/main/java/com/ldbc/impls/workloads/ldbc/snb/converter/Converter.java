@@ -47,13 +47,13 @@ public class Converter {
     }
 
     /**
-     * Surrounds Strings in single quotes.
+     * Surrounds a string in single quotes and escape single quotes in the string itself.
      *
      * @param value
      * @return
      */
     public String convertString(String value) {
-        return "'" + value + "'";
+        return "'" + value.replace("'", "\\'") + "'";
     }
 
     public String convertInteger(int value) {

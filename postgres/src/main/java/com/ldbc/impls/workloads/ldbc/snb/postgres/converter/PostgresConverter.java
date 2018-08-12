@@ -23,8 +23,9 @@ public class PostgresConverter extends Converter {
         return "'" + sdf.format(date) + "'::timestamp";
     }
 
+    @Override
     public String convertString(String value) {
-        return "'" + value + "'";
+        return "'" + value.replace("'", "''") + "'";
     }
 
     public String convertStringList(List<String> values) {
