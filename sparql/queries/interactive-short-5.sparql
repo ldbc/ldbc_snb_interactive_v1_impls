@@ -8,10 +8,15 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-select ?creator ?p_firstname ?p_lastname
-where {
-  ?post snvoc:id %Id% .
-  ?post snvoc:hasCreator ?creator .
-  ?creator snvoc:firstName ?p_firstname .
-  ?creator snvoc:lastName ?p_lastname .
+SELECT
+    ?creatorId
+    ?firstName
+    ?lastName
+WHERE {
+    BIND( "$messageId"^^xsd:long AS ?messageId )
+    ?message snvoc:id ?messageId .
+    ?message snvoc:hasCreator ?creator .
+    ?creator snvoc:id ?creatorId .
+    ?creator snvoc:firstName ?firstName .
+    ?creator snvoc:lastName ?lastName .
 }
