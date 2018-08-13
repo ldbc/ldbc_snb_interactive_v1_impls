@@ -8,9 +8,16 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-INSERT {
-    ?person foaf:givenName 'William'
+INSERT 
+{
+    ?person1 snvoc:knows _:knows .
+    _:knows snvoc:creationDate "$creationDate"^^xsd:dateTime .
+    _:knows snvoc:hasPerson ?person2 .
 }
-WHERE {
-    ?person foaf:givenName 'Bill'
+WHERE 
+{
+    ?person1 snvoc:id "$personId1"^^xsd:long .
+    ?person1 a snvoc:Person .
+    ?person2 snvoc:id "$personId2"^^xsd:long .
+    ?person2 a snvoc:Person .
 }
