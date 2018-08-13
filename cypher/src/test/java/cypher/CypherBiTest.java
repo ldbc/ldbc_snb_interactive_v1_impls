@@ -25,7 +25,7 @@ public class CypherBiTest extends BiTest {
         properties.put("password", password);
         properties.put("queryDir", queryDir);
         properties.put("printQueryNames", "true");
-        properties.put("printQueryStrings", "true");
+        properties.put("printQueryStrings", "false");
         properties.put("printQueryResults", "false");
         return properties;
     }
