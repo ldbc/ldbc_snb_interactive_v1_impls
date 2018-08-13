@@ -8,9 +8,16 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-INSERT {
-    ?person foaf:givenName 'William'
+INSERT 
+{
+    ?person snvoc:likes _:like .
+    _:like snvoc:creationDate "$creationDate"^^xsd:dateTime .
+    _:like snvoc:hasPost ?post .
 }
-WHERE {
-    ?person foaf:givenName 'Bill'
+WHERE 
+{
+    ?person snvoc:id "$personId"^^xsd:long .
+    ?person a snvoc:Person .    
+    ?post snvoc:id "$postId"^^xsd:long .
+    ?post a snvoc:Post .
 }
