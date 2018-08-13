@@ -8,9 +8,17 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-INSERT {
-    ?person foaf:givenName 'William'
+INSERT 
+{
+    _:forum a snvoc:Forum .
+    _:forum snvoc:id "$forumId"^^xsd:long .
+    _:forum snvoc:title "$title"^^xsd:string .
+    _:forum snvoc:hasTag ?tag .
+    _:forum snvoc:hasModerator ?moderator .
 }
-WHERE {
-    ?person foaf:givenName 'Bill'
+WHERE 
+{
+    ?moderator a snvoc:Person .
+    ?moderator snvoc:id "$personId"^^xsd:long .
+    ?tag snvoc:id "$tagId"^^xsd:long
 }
