@@ -8,9 +8,13 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-INSERT {
-    ?person foaf:givenName 'William'
+INSERT 
+{
+    sn:comm$commentId snvoc:hasTag ?tag .
 }
-WHERE {
-    ?person foaf:givenName 'Bill'
+WHERE 
+{
+    ?tag a ?tagClass .
+    ?tagClass a snvoc:TagClass .
+    ?tag snvoc:id "$tagId"^^xsd:long
 }
