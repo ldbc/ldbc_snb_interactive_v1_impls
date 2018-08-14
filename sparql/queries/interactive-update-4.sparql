@@ -20,5 +20,7 @@ WHERE
 {
     ?moderator a snvoc:Person .
     ?moderator snvoc:id "$personId"^^xsd:long .
+    ?tag a ?tagClass .
+    ?tagClass a snvoc:TagClass .
     ?tag snvoc:id "$tagId"^^xsd:long
 }
