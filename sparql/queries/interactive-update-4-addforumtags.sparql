@@ -10,16 +10,10 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 INSERT 
 {
-    sn:forum$forumId a snvoc:Forum .
-    sn:forum$forumId snvoc:id "$forumId"^^xsd:long .
-    sn:forum$forumId snvoc:title "$title"^^xsd:string .
     sn:forum$forumId snvoc:hasTag ?tag .
-    sn:forum$forumId snvoc:hasModerator ?moderator .
 }
 WHERE 
 {
-    ?moderator a snvoc:Person .
-    ?moderator snvoc:id "$personId"^^xsd:long .
     ?tag a ?tagClass .
     ?tagClass a snvoc:TagClass .
     ?tag snvoc:id "$tagId"^^xsd:long
