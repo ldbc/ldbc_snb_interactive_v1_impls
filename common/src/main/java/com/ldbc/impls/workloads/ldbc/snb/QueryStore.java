@@ -270,8 +270,8 @@ public abstract class QueryStore {
     public String getQuery10(LdbcQuery10 operation) {
         return prepare(QueryType.InteractiveComplexQuery10, new ImmutableMap.Builder<String, String>()
                 .put("Person", getConverter().convertId(operation.personId()))
-                .put("HS0", getConverter().convertInteger(operation.month()))
-                .put("HS1", getConverter().convertInteger(operation.month() % 12 + 1))
+                .put("month", getConverter().convertInteger(operation.month()))
+                .put("nextMonth", getConverter().convertInteger(operation.month() % 12 + 1))
                 .build());
     }
 

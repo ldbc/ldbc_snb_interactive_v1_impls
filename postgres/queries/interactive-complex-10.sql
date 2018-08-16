@@ -26,9 +26,9 @@ where
 p_placeid = pl_placeid and
 p_personid = f.k_person2id and
 (
-	(extract(month from p_birthday) = :HS0 and (case when extract(day from p_birthday) >= 21 then true else false end))
+	(extract(month from p_birthday) = :month and (case when extract(day from p_birthday) >= 21 then true else false end))
 	or
-	(extract(month from p_birthday) = :HS1 and (case when extract(day from p_birthday) <  22 then true else false end))
+	(extract(month from p_birthday) = :nextMonth and (case when extract(day from p_birthday) <  22 then true else false end))
 )
 order by score desc, p_personid
 limit 10
