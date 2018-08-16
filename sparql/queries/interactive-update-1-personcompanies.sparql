@@ -12,10 +12,10 @@ INSERT
 {
     sn:pers$personId snvoc:workAt _:work .
     _:work snvoc:hasOrganization ?company .
-    _:work snvoc:workFrom "$workFrom"^^xsd:integer
+    _:work snvoc:workFrom "$worksFromYear"^^xsd:integer
 }
 WHERE
 {
     ?company a dbpedia-owl:City .
-    ?company snvoc:id "$companyId"^^xsd:long
+    ?company snvoc:id "$organizationId"^^xsd:long
 }
