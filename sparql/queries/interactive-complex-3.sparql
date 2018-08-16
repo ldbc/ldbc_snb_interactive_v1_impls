@@ -23,9 +23,8 @@ WHERE
             ?frId
         WHERE
         {       
-            BIND( "$personId"^^xsd:long AS ?rootId )
             ?rootPerson a snvoc:Person .
-            ?rootPerson snvoc:id ?rootId .
+            ?rootPerson snvoc:id "$personId"^^xsd:long .
             ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
             ?fr snvoc:id ?frId .
         }    
@@ -37,7 +36,7 @@ WHERE
         WHERE 
         {
             BIND( "$startDate"^^xsd:date AS ?date1 ) .
-            BIND( ?date1 + "P$durationD"^^xsd:duration AS ?date2 ) .
+            BIND( ?date1 + "P$durationDays"^^xsd:duration AS ?date2 ) .
             VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
             ?message a ?type .
             ?message snvoc:creationDate ?creationDate .
@@ -59,7 +58,7 @@ WHERE
         WHERE 
         {
             BIND( "$startDate"^^xsd:date AS ?date1 ) .
-            BIND( ?date1 + "P$durationD"^^xsd:duration AS ?date2 ) .
+            BIND( ?date1 + "P$durationDays"^^xsd:duration AS ?date2 ) .
             VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
             ?message a ?type .
             ?message snvoc:creationDate ?creationDate .

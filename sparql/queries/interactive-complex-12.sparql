@@ -16,9 +16,8 @@ SELECT
     (COUNT(DISTINCT ?reply) AS ?replyCount)
 WHERE 
 {
-    BIND( "$personId"^^xsd:long AS ?rootId )
     ?rootPerson a snvoc:Person .
-    ?rootPerson snvoc:id ?rootId .
+    ?rootPerson snvoc:id "$personId"^^xsd:long .
     ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
     ?fr snvoc:id ?frId .
     ?fr snvoc:firstName ?first .
@@ -30,7 +29,7 @@ WHERE
     ?tag foaf:name ?tagName .
     ?tag a ?tagType.
     ?tagType rdfs:subClassOf* ?tagSuperType .
-    ?tagSuperType rdfs:label $tagType .
+    ?tagSuperType rdfs:label $tagClassName .
 }
 GROUP BY ?frId ?first ?last
 ORDER BY DESC(?cnt) ?frId

@@ -38,7 +38,7 @@ WHERE
         }
     } .
     ?message snvoc:creationDate ?creationDate .
-    FILTER (?creationDate <= $date^^xsd:dateTime) .
+    FILTER (?creationDate <= $maxDate) .
     ?fr snvoc:firstName ?first .
     ?fr snvoc:lastName ?last .
 }

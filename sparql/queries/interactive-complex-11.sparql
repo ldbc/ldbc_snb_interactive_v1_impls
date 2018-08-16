@@ -31,7 +31,7 @@ WHERE {
     } .
     ?fr snvoc:workAt ?work . 
     ?work snvoc:workFrom ?startYear .
-    FILTER (?startYear < $year) .
+    FILTER (?startYear < $workFromYear) .
     ?work snvoc:hasOrganisation ?org . 
     ?org foaf:name ?orgName .
     ?org snvoc:isLocatedIn ?country.

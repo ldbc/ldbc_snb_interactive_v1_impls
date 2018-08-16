@@ -13,8 +13,9 @@ SELECT
     (COUNT(*) AS ?postCount)
 WHERE {
     BIND( xsd:dateTime("$startDate+00:00") AS ?startDate ) .
-    BIND( ?startDate + "P$durationD"^^xsd:duration AS ?endDate ) .
-    ?rootPerson snvoc:id "26388279068083"^^xsd:long .
+    BIND( ?startDate + "P$durationDays"^^xsd:duration AS ?endDate ) .
+    ?rootPerson a snvoc:Person .
+    ?rootPerson snvoc:id "$personId"^^xsd:long .
     ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
     ?post a snvoc:Post . 
     ?post snvoc:hasCreator ?fr .

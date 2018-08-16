@@ -37,7 +37,7 @@ WHERE
     ?fr snvoc:birthday ?bday .
     ?fr snvoc:isLocatedIn ?based .
     ?based foaf:name ?locationName .
-    FILTER ( (MONTH(?bday) = $month && DAY(?bday) >= 21) || (MONTH(?bday) = ($month + 1) && DAY(?bday) < 22) ) .
+    FILTER ( (MONTH(?bday) = $month && DAY(?bday) >= 21) || (MONTH(?bday) = $nextMonth && DAY(?bday) < 22) ) .
     OPTIONAL {
         {
             SELECT
@@ -45,9 +45,8 @@ WHERE
                 ?frCommonInnerId
                 (COUNT(DISTINCT ?post) AS ?commonScoreInner)
             WHERE {
-                BIND( "$personId"^^xsd:long AS ?rootId )
                 ?rootPerson a snvoc:Person .
-                ?rootPerson snvoc:id ?rootId .
+                ?rootPerson snvoc:id "$personId"^^xsd:long .
 	            ?post a snvoc:Post .
                 ?post snvoc:hasCreator ?frCommonInner .
                 ?frCommonInner snvoc:id ?frCommonInnerId .
@@ -65,9 +64,8 @@ WHERE
                 ?frUncommonInnerId
                 (COUNT(DISTINCT ?post) AS ?uncommonScore)
             WHERE {
-                BIND( "$personId"^^xsd:long AS ?rootId )
                 ?rootPerson a snvoc:Person .
-                ?rootPerson snvoc:id ?rootId .
+                ?rootPerson snvoc:id "$personId"^^xsd:long .
 	            ?post a snvoc:Post .
                 ?post snvoc:hasCreator ?frUncommonInner .
                 ?frUncommonInner snvoc:id ?frUncommonInnerId .
