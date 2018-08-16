@@ -3,12 +3,12 @@ from
  ( select k_person2id
    from knows
    where
-   k_person1id = :Person
+   k_person1id = :personId
    union
    select k2.k_person2id
    from knows k1, knows k2
    where
-   k1.k_person1id = :Person and k1.k_person2id = k2.k_person1id and k2.k_person2id <> :Person
+   k1.k_person1id = :personId and k1.k_person2id = k2.k_person1id and k2.k_person2id <> :personId
  ) f,  person, place p1, place p2,
  (
   select chn.m_c_creatorid, ct1, ct2, ct1 + ct2 as total
@@ -16,22 +16,22 @@ from
    (
       select m_creatorid as m_c_creatorid, count(*) as ct1 from message, place
       where
-        m_locationid = pl_placeid and pl_name = :Country1 and
-        m_creationdate >= :Date0 and  m_creationdate < (:Date0 + INTERVAL '1 days' * :Duration)
+        m_locationid = pl_placeid and pl_name = :countryXName and
+        m_creationdate >= :startDate and  m_creationdate < (:startDate + INTERVAL '1 days' * :durationDays)
       group by m_c_creatorid
    ) chn,
    (
       select m_creatorid as m_c_creatorid, count(*) as ct2 from message, place
       where
-        m_locationid = pl_placeid and pl_name = :Country2 and
-        m_creationdate >= :Date0 and  m_creationdate < (:Date0 + INTERVAL '1 days' * :Duration)
+        m_locationid = pl_placeid and pl_name = :countryYName and
+        m_creationdate >= :startDate and  m_creationdate < (:startDate + INTERVAL '1 days' * :durationDays)
       group by m_creatorid --m_c_creatorid
    ) ind
   where CHN.m_c_creatorid = IND.m_c_creatorid
  ) cpc
 where
 f.k_person2id = p_personid and p_placeid = p1.pl_placeid and
-p1.pl_containerplaceid = p2.pl_placeid and p2.pl_name <> :Country1 and p2.pl_name <> :Country2 and
+p1.pl_containerplaceid = p2.pl_placeid and p2.pl_name <> :countryXName and p2.pl_name <> :countryYName and
 f.k_person2id = cpc.m_c_creatorid
 order by 6 desc, 1
 limit 20

@@ -8,10 +8,10 @@ select p_personid, p_firstname, p_lastname, array_agg(distinct t_name), count(*)
 from person, message p1, knows, message p2, message_tag, 
 	(select distinct t_tagid, t_name from tag where (t_tagclassid in (
   		select distinct s_subtagclassid from extended_tags k, tagclass
-		where tc_tagclassid = k.s_supertagclassid and tc_name = :TagType) 
+		where tc_tagclassid = k.s_supertagclassid and tc_name = :tagClassName) 
    )) selected_tags
 where
-  k_person1id = :Person and 
+  k_person1id = :personId and 
   k_person2id = p_personid and 
   p_personid = p1.m_creatorid and 
   p1.m_c_replyof = p2.m_messageid and 
