@@ -17,27 +17,48 @@ SELECT
     (?gen AS ?friendGender)
     (?browser AS ?friendBrowserUsed)
     (?locationIP AS ?friendLocationIp)
-    (GROUP_CONCAT(?email;separator=", ") AS ?friendEmails)
-    (GROUP_CONCAT(?lng;separator=", ") AS ?friendLanguages)
+    (?emails AS ?friendEmails)
+    (?languages AS ?friendLanguages)
     (?based AS ?friendCityName)
     ?studies
     ?jobs
 {
     {
-        SELECT DISTINCT
+        SELECT
             ?fr
+            ?emails
+            (GROUP_CONCAT(?language;separator=", ") AS ?languages)
         WHERE
         {
-            ?fr a snvoc:Person . 
-            ?fr snvoc:firstName "$firstName" .
-            ?fr snvoc:id ?frId .
-            BIND( "$personId"^^xsd:long AS ?rootId )
-            ?rootPerson a snvoc:Person .
-            ?rootPerson snvoc:id ?rootId .
-            ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
-            FILTER(?frId != ?rootId)
+            {
+                SELECT
+                    ?fr
+                    (GROUP_CONCAT(?email;separator=", ") AS ?emails)
+                WHERE
+                {
+                    {
+                        SELECT DISTINCT
+                            ?fr
+                        WHERE
+                        {
+                            BIND( "$personId"^^xsd:long AS ?rootId )
+                            ?rootPerson a snvoc:Person .
+                            ?rootPerson snvoc:id ?rootId .
+                            ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
+                            FILTER(?frId != ?rootId)
+                            ?fr a snvoc:Person . 
+                            ?fr snvoc:firstName "$firstName" .
+                            ?fr snvoc:id ?frId .
+                        }
+                    }
+                    ?fr snvoc:email ?email .
+                }
+                GROUP BY ?fr
+            }
+            ?fr snvoc:speaks ?language
         }
-    }    
+        GROUP BY ?fr ?emails
+    }
     ?fr snvoc:id ?frId .
     ?fr snvoc:lastName ?last .
     ?fr snvoc:birthday ?bday . 
@@ -47,22 +68,6 @@ SELECT
     ?fr snvoc:gender ?gen . 
     ?fr snvoc:locationIP ?locationIP .
     ?fr snvoc:browserUsed ?browser .
-    {   
-        SELECT
-            (?frInner AS ?frInnerEmail)
-            (GROUP_CONCAT(?email;separator=", ") AS ?emails)
-        {
-            SELECT DISTINCT 
-                ?frInner
-                ?email
-            {   
-                ?frInner a snvoc:Person . 
-                ?frInner snvoc:email ?email
-            }
-        }
-        GROUP BY ?frInner
-    }
-    
     OPTIONAL {
         {
             SELECT
@@ -84,10 +89,10 @@ SELECT
                 }
             }
             GROUP BY ?frInner
-        }
+        } .
         ?frInnerUni snvoc:id ?frInnerUniId .
         FILTER( ?frId = ?frInnerUniId)
-    }
+    } .
     OPTIONAL {
         {
             SELECT
@@ -110,11 +115,10 @@ SELECT
             }
             GROUP BY ?frInner
         } .
-        ?fr snvoc:id ?frId .
         ?frInnerComp snvoc:id ?frInnerCompId .
         FILTER( ?frId = ?frInnerCompId)
     }
 }
-GROUP BY ?fr ?last ?bday ?since ?gen ?browser ?locationIP ?based ?studies ?jobs
+GROUP BY ?fr ?last ?bday ?since ?gen ?browser ?locationIP ?based ?studies ?jobs ?emails ?languages
 ORDER BY ?distanceFromPerson ?last ?fr
 LIMIT 20
