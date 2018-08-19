@@ -9,6 +9,7 @@ PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 SELECT
+#    *
     (?fr AS ?friendId)
     (?last AS ?friendLastName)
     (MIN(?dist) AS ?distanceFromPerson)
@@ -27,37 +28,51 @@ SELECT
         SELECT
             ?fr
             ?emails
+            ?dist
             (GROUP_CONCAT(?language;separator=", ") AS ?languages)
         WHERE
         {
             {
                 SELECT
                     ?fr
+                    ?dist
                     (GROUP_CONCAT(?email;separator=", ") AS ?emails)
                 WHERE
                 {
                     {
-                        SELECT DISTINCT
+                        SELECT
                             ?fr
+                            (MIN(?distInner) AS ?dist)
                         WHERE
                         {
                             BIND( "$personId"^^xsd:long AS ?rootId )
                             ?rootPerson a snvoc:Person .
                             ?rootPerson snvoc:id ?rootId .
-                            ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
-                            FILTER(?frId != ?rootId)
                             ?fr a snvoc:Person . 
-                            ?fr snvoc:firstName "$firstName" .
+                            {
+                                ?rootPerson (snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson) ?fr .
+                                BIND( 1 AS ?distOneInner )
+                            } UNION {
+                                ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
+                                BIND( 2 AS ?distTwoInner )
+                            } UNION {
+                                ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
+                                #BIND( 3 AS ?distThreeInner )
+                            }
                             ?fr snvoc:id ?frId .
+                            FILTER(?frId != ?rootId) .
+                            ?fr snvoc:firstName "$firstName" .
+                            BIND( IF(COALESCE(?distOneInner, 4) < 4, 1, IF(COALESCE(?distTwoInner, 4) < 4, 2, 3)) AS ?distInner)
                         }
+                        GROUP BY ?fr
                     }
                     ?fr snvoc:email ?email .
                 }
-                GROUP BY ?fr
+                GROUP BY ?fr ?dist
             }
             ?fr snvoc:speaks ?language
         }
-        GROUP BY ?fr ?emails
+        GROUP BY ?fr ?emails ?dist
     }
     ?fr snvoc:id ?frId .
     ?fr snvoc:lastName ?last .
