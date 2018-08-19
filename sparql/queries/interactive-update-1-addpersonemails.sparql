@@ -10,7 +10,7 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 INSERT
 {
-    sn:pers$personId snvoc:email "$personEmail"^^xsd:string
+    sn:pers$personId snvoc:email "$email"^^xsd:string
 }
 WHERE
 {

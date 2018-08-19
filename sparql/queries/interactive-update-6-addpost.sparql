@@ -12,21 +12,21 @@ INSERT
 {
     sn:post$postId a snvoc:Post .
     sn:post$postId snvoc:id "$postId"^^xsd:long .
-    sn:post$postId snvoc:imageFile "$postImageFile"^^xsd:string .
-    sn:post$postId snvoc:creationDate "$postCreationDate"^^xsd:dateTime .
-    sn:post$postId snvoc:locationIP "$postLocationIP"^^xsd:string .
-    sn:post$postId snvoc:browserUsed "$postBrowserUsed"^^xsd:string .
-    sn:post$postId snvoc:language "$postLanguage"^^xsd:string .
-    sn:post$postId snvoc:content "$postContent"^^xsd:string .
-    sn:post$postId snvoc:length "$postLength"^^xsd:int .
+    sn:post$postId snvoc:imageFile "$imageFile"^^xsd:string .
+    sn:post$postId snvoc:creationDate "$creationDate"^^xsd:dateTime .
+    sn:post$postId snvoc:locationIP "$locationIP"^^xsd:string .
+    sn:post$postId snvoc:browserUsed "$browserUsed"^^xsd:string .
+    sn:post$postId snvoc:language "$language"^^xsd:string .
+    sn:post$postId snvoc:content "$content"^^xsd:string .
+    sn:post$postId snvoc:length "$length"^^xsd:int .
     sn:post$postId snvoc:hasCreator ?creator .
     sn:post$postId snvoc:isLocatedIn ?country .
-    ?forum snvoc:containerOf sn:post$postId    
+    ?forum snvoc:containerOf sn:post$postId
 }
 WHERE
 {
     ?creator a snvoc:Person .
-    ?creator snvoc:id "$creatorId"^^xsd:long .
+    ?creator snvoc:id "$authorPersonId"^^xsd:long .
     ?forum a snvoc:Forum .    
     ?forum snvoc:id "$forumId"^^xsd:long .
     ?counrty a dbpedia-owl:Country .

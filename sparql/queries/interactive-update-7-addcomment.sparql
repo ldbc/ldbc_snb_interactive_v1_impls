@@ -12,11 +12,11 @@ INSERT
 {
     sn:comm$commentId a snvoc:Post .
     sn:comm$commentId snvoc:id "$commentId"^^xsd:long .
-    sn:comm$commentId snvoc:creationDate "$commentCreationDate"^^xsd:dateTime .
-    sn:comm$commentId snvoc:locationIP "$commentLocationIP"^^xsd:string .
-    sn:comm$commentId snvoc:browserUsed "$commentBrowserUsed"^^xsd:string .
-    sn:comm$commentId snvoc:content "$commentContent"^^xsd:string .
-    sn:comm$commentId snvoc:length "$commentLength"^^xsd:int .
+    sn:comm$commentId snvoc:creationDate "$creationDate"^^xsd:dateTime .
+    sn:comm$commentId snvoc:locationIP "$locationIP"^^xsd:string .
+    sn:comm$commentId snvoc:browserUsed "$browserUsed"^^xsd:string .
+    sn:comm$commentId snvoc:content "$content"^^xsd:string .
+    sn:comm$commentId snvoc:length "$length"^^xsd:int .
     sn:comm$commentId snvoc:hasCreator ?creator .
     sn:comm$commentId snvoc:isLocatedIn ?country .
     sn:comm$commentId snvoc:replyOf ?originalMessage
@@ -24,16 +24,14 @@ INSERT
 WHERE
 {
     ?creator a snvoc:Person .
-    ?creator snvoc:id "$creatorId"^^xsd:long .
-    ?forum a snvoc:Forum .    
-    ?forum snvoc:id "$forumId"^^xsd:long .
+    ?creator snvoc:id "$authorPersonId"^^xsd:long .
     ?counrty a dbpedia-owl:Country .
     ?country snvoc:id "$countryId"^^xsd:long .
     {
         ?originalMessage a snvoc:Post .
-        ?originalMessage snvoc:id "$postId"^^xsd:long
+        ?originalMessage snvoc:id "$replyToPostId"^^xsd:long
     } UNION {
         ?originalMessage a snvoc:Comment .
-        ?originalMessage snvoc:id "$commentId"^^xsd:long        
+        ?originalMessage snvoc:id "$replyToCommentId"^^xsd:long        
     }
 }

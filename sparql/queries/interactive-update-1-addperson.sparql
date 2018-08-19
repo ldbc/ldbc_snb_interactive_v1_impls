@@ -14,11 +14,11 @@ INSERT
     sn:pers$personId snvoc:id "$personId"^^xsd:long .
     sn:pers$personId snvoc:firstName "$personFirstName"^^xsd:string .
     sn:pers$personId snvoc:lastName "$personLastName"^^xsd:string .
-    sn:pers$personId snvoc:gender "$personGender"^^xsd:string . 
-    sn:pers$personId snvoc:birthday "$personBirthday"^^xsd:date . 
-    sn:pers$personId snvoc:creationDate "$personCreationDate"^^xsd:date . 
-    sn:pers$personId snvoc:locationIP "$personLocationIP"^^xsd:string . 
-    sn:pers$personId snvoc:browserUsed "$personBrowserUsed"^^xsd:string . 
+    sn:pers$personId snvoc:gender "$gender"^^xsd:string . 
+    sn:pers$personId snvoc:birthday "$birthday"^^xsd:date . 
+    sn:pers$personId snvoc:creationDate "$creationDate"^^xsd:date . 
+    sn:pers$personId snvoc:locationIP "$locationIP"^^xsd:string . 
+    sn:pers$personId snvoc:browserUsed "$browserUsed"^^xsd:string . 
     sn:pers$personId snvoc:isLocatedIn ?city .
 }
 WHERE 

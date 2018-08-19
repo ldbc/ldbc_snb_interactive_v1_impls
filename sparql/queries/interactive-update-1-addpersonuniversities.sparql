@@ -12,10 +12,10 @@ INSERT
 {
     sn:pers$personId snvoc:studyAt _:study .
     _:study snvoc:hasOrganization ?university .
-    _:study snvoc:classYear "$classYear"^^xsd:integer
+    _:study snvoc:classYear "$studiesFromYear"^^xsd:integer
 }
 WHERE
 {
     ?university a dbpedia-owl:University .
-    ?university snvoc:id "$universityId"^^xsd:long
+    ?university snvoc:id "$organizationId"^^xsd:long
 }
