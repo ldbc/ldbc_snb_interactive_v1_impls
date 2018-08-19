@@ -10,7 +10,7 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 INSERT
 {
-    sn:comm$commentId a snvoc:Post .
+    sn:comm$commentId a snvoc:Comment .
     sn:comm$commentId snvoc:id "$commentId"^^xsd:long .
     sn:comm$commentId snvoc:creationDate "$creationDate"^^xsd:dateTime .
     sn:comm$commentId snvoc:locationIP "$locationIP"^^xsd:string .

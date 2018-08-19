@@ -27,7 +27,7 @@ WHERE
 {
     ?creator a snvoc:Person .
     ?creator snvoc:id "$authorPersonId"^^xsd:long .
-    ?forum a snvoc:Forum .    
+    ?forum a snvoc:Forum .
     ?forum snvoc:id "$forumId"^^xsd:long .
     ?counrty a dbpedia-owl:Country .
     ?country snvoc:id "$countryId"^^xsd:long

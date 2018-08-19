@@ -48,7 +48,6 @@ WHERE
             WHERE {
                 ?rootPerson a snvoc:Person .
                 ?rootPerson snvoc:id "$personId"^^xsd:long .
-                ?rootPerson snvoc:id ?rootId .
                 ?post a snvoc:Post .
                 ?post snvoc:hasCreator ?frCommonInner .
                 ?frCommonInner snvoc:id ?frCommonInnerId .

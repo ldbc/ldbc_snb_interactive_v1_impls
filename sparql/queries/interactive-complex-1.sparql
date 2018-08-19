@@ -29,10 +29,12 @@ SELECT
         WHERE
         {
             ?fr a snvoc:Person . 
-            ?fr snvoc:firstName "John" . 
-            sn:pers00000000000000000933 snvoc:id ?rootId .
-            sn:pers00000000000000000933 ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
+            ?fr snvoc:firstName "$firstName" .
             ?fr snvoc:id ?frId .
+            BIND( "$personId"^^xsd:long AS ?rootId )
+            ?rootPerson a snvoc:Person .
+            ?rootPerson snvoc:id ?rootId .
+            ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
             FILTER(?frId != ?rootId)
         }
     }    
@@ -97,7 +99,7 @@ SELECT
                     ?companyName
                     ?workFrom
                     ?companyCountry
-                {   
+                {
                     ?frInner a snvoc:Person .
                     ?frInner snvoc:workAt ?work .
                     ?work snvoc:hasOrganisation ?company .

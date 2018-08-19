@@ -36,7 +36,7 @@ WHERE
                             ?message
                         WHERE
                         {
-                            BIND( "$personId"^^xsd:long AS ?rootId )
+                            VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
                             ?rootPerson a snvoc:Person .
                             ?rootPerson snvoc:id "$personId"^^xsd:long .
                             ?message snvoc:hasCreator ?rootPerson .
