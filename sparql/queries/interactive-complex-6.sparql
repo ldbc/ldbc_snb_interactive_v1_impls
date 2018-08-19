@@ -11,7 +11,9 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 SELECT
     (?tag2Name AS ?tagName)
     (COUNT(?post) AS ?postCount)
-WHERE {  
+WHERE 
+{
+    BIND("$tagName" AS ?tagName)
     {
         SELECT DISTINCT
             ?fr
@@ -23,15 +25,16 @@ WHERE {
             ?rootPerson snvoc:id ?rootId .
             ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
             ?fr snvoc:id ?frId .
+            FILTER(?frId != ?rootId)
         }    
     } .
     ?post a snvoc:Post .
     ?post snvoc:hasCreator ?fr .
     ?post snvoc:hasTag ?tag1 .
-    ?tag1 foaf:name "$tagName" .
+    ?tag1 foaf:name ?tagName .
     ?post snvoc:hasTag ?tag2 .
     ?tag2 foaf:name ?tag2Name .
-    FILTER (?tag2Name != "$tagName") .
+    FILTER (?tag2Name != ?tagName) .
 }
 GROUP BY ?tag2Name
 ORDER BY DESC(?postCount) ?tag2Name

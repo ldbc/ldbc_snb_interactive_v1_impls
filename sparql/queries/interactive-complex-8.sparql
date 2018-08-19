@@ -12,13 +12,13 @@ SELECT
     ?personId
     ?personFirstName
     ?personLastName
-    ?commentId
     ?commentCreationDate
+    ?commentId
     ?commentContent
 WHERE
 {       
     VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
-    BIND( "6597069767242"^^xsd:long AS ?rootId )
+    BIND( "$personId"^^xsd:long AS ?rootId )
     ?rootPerson a snvoc:Person .
     ?rootPerson snvoc:id ?rootId .
     ?message snvoc:hasCreator ?rootPerson .

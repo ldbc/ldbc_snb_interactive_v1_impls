@@ -24,6 +24,7 @@ WHERE
             ?rootPerson snvoc:id ?rootId .
             ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
             ?fr snvoc:id ?frId .
+            FILTER(?frId != ?rootId)
         }    
     } .
     ?forum a snvoc:Forum .
@@ -31,13 +32,13 @@ WHERE
     ?forum snvoc:hasMember ?mem .
     ?forum snvoc:id ?forumId .
     ?mem snvoc:joinDate ?date .
-    FILTER( ?date >= xsd:dateTime("$date") ) .
+    FILTER( ?date >= xsd:dateTime("$minDate") ) .
     OPTIONAL {
         ?post snvoc:hasCreator ?fr .
         ?group snvoc:containerOf ?post .
         BIND( 1 AS ?hasPostInner )      
     } .
-    BIND( COALESCE(?hasPostInner,0) AS ?hasPost )
+    BIND( COALESCE(?hasPostInner, 0) AS ?hasPost )
     ?forum snvoc:title ?title . 
 }
 GROUP BY ?title ?forumId

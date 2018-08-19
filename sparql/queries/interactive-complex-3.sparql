@@ -14,7 +14,7 @@ SELECT
     (?lastName AS ?personLastName)
     ?xCount
     ?yCount
-    (?xCount + ?yCount AS ?sum)
+    (?xCount + ?yCount AS ?count)
 WHERE 
 {
     {
@@ -28,6 +28,7 @@ WHERE
             ?rootPerson snvoc:id ?rootId .
             ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
             ?fr snvoc:id ?frId .
+            FILTER(?frId != ?rootId)
         }    
     }
     {
@@ -37,7 +38,7 @@ WHERE
         WHERE 
         {
             BIND( "$startDate"^^xsd:date AS ?date1 ) .
-            BIND( ?date1 + "P$durationD"^^xsd:duration AS ?date2 ) .
+            BIND( ?date1 + "P$durationDaysD"^^xsd:duration AS ?date2 ) .
             VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
             ?message a ?type .
             ?message snvoc:creationDate ?creationDate .
@@ -59,7 +60,7 @@ WHERE
         WHERE 
         {
             BIND( "$startDate"^^xsd:date AS ?date1 ) .
-            BIND( ?date1 + "P$durationD"^^xsd:duration AS ?date2 ) .
+            BIND( ?date1 + "P$durationDaysD"^^xsd:duration AS ?date2 ) .
             VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
             ?message a ?type .
             ?message snvoc:creationDate ?creationDate .

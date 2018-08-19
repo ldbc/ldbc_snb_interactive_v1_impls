@@ -30,9 +30,9 @@ SELECT
         {
             ?fr a snvoc:Person . 
             ?fr snvoc:firstName "John" . 
-            ?fr snvoc:id ?frId .
             sn:pers00000000000000000933 snvoc:id ?rootId .
             sn:pers00000000000000000933 ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
+            ?fr snvoc:id ?frId .
             FILTER(?frId != ?rootId)
         }
     }    

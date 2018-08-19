@@ -13,9 +13,9 @@ SELECT
     (?firstName AS ?personFirstName)
     (?lastName AS ?personLastName)
     ?likeCreationDate
-    ?messageId
-    ?content
-    ?latency
+    (?messageId AS ?commentOrPostId)
+    (?content AS ?commentOrPostContent)
+    (?latency AS ?minutesLatency)
     ?isNew
 WHERE 
 {
@@ -79,7 +79,7 @@ WHERE
     ?message snvoc:creationDate ?messageCreationDate . 
     ?message snvoc:content|snvoc:imageFile ?content . 
     BIND( ?likeCreationDate - ?messageCreationDate AS ?latencyInDuration )
-    BIND( (DAY(?latencyInDuration) * 24 + HOURS(?latencyInDuration)) * 60 + MINUTES(?latencyInDuration) AS ?latency )
+    BIND( (DAY(?latencyInDuration) * 24 * 60 + HOURS(?latencyInDuration)) * 60 + MINUTES(?latencyInDuration) AS ?latency )
     BIND( "$personId"^^xsd:long AS ?rootId )
     ?rootPerson a snvoc:Person .
     ?rootPerson snvoc:id ?rootId .

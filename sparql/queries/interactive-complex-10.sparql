@@ -12,11 +12,13 @@ SELECT
     (?fr AS ?personId)
     (?first AS ?personFirstName)
     (?last AS ?personLastName)
+    (?commonScore AS ?commonInterestScore)
     (?gender AS ?personGender)
     (?locationName AS ?personCityName)
-    (?commonScore - ?uncommonScore AS ?similarity)
-WHERE 
+WHERE
 {
+    BIND($month AS ?month)
+    BIND(IF(?month = 12, 1, ?month + 1) AS ?nextMonth)
     {
         SELECT DISTINCT
             ?fr
@@ -37,7 +39,7 @@ WHERE
     ?fr snvoc:birthday ?bday .
     ?fr snvoc:isLocatedIn ?based .
     ?based foaf:name ?locationName .
-    FILTER ( (MONTH(?bday) = $month && DAY(?bday) >= 21) || (MONTH(?bday) = ($month + 1) && DAY(?bday) < 22) ) .
+    FILTER ( (MONTH(?bday) = ?month && DAY(?bday) >= 21) || (MONTH(?bday) = (?nextMonth) && DAY(?bday) < 22) ) .
     OPTIONAL {
         {
             SELECT
@@ -58,31 +60,7 @@ WHERE
         }
         FILTER(?frCommonInnerId = ?frId)
     } .
-    OPTIONAL {
-        {
-            SELECT
-                ?frUncommonInner
-                ?frUncommonInnerId
-                (COUNT(DISTINCT ?post) AS ?uncommonScore)
-            WHERE {
-                BIND( "$personId"^^xsd:long AS ?rootId )
-                ?rootPerson a snvoc:Person .
-                ?rootPerson snvoc:id ?rootId .
-	            ?post a snvoc:Post .
-                ?post snvoc:hasCreator ?frUncommonInner .
-                ?frUncommonInner snvoc:id ?frUncommonInnerId .
-                FILTER NOT EXISTS 
-                {
-                    ?post snvoc:hasTag ?tag .
-                    ?rootPerson snvoc:hasInterest ?tag
-                }
-            }
-            GROUP BY ?frUncommonInner ?frUncommonInnerId
-        }
-        FILTER(?frUncommonInnerId = ?frId)
-    }
     BIND( COALESCE(?commonScoreInner, 0) AS ?commonScore )
-    BIND( COALESCE(?uncommonScoreInner, 0) AS ?uncommonScore )
 }
 ORDER BY DESC(?similarity) ?frId
 LIMIT 10
