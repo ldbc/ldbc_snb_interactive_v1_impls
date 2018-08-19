@@ -9,6 +9,8 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
 
+import java.text.ParseException;
+
 public abstract class SparqlSingletonOperationHandler<TOperation extends Operation<TOperationResult>, TOperationResult>
         implements SingletonOperationHandler<TOperationResult, TOperation, SparqlDbConnectionState> {
 
@@ -41,6 +43,6 @@ public abstract class SparqlSingletonOperationHandler<TOperation extends Operati
         }
     }
 
-    public abstract TOperationResult convertSingleResult(BindingSet bs);
+    public abstract TOperationResult convertSingleResult(BindingSet bs) throws ParseException;
 
 }

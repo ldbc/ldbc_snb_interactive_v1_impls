@@ -14,6 +14,21 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery6;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery7;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery9;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery1PersonProfile;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery2PersonPosts;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery3PersonFriends;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery4MessageContent;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery5MessageCreator;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery6MessageForum;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery7MessageReplies;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate1AddPerson;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate2AddPostLike;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate3AddCommentLike;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate4AddForum;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate5AddForumMembership;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate6AddPost;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate7AddComment;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate8AddFriendship;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlDb;
 
 import java.util.Map;
@@ -39,22 +54,22 @@ public class SparqlInteractiveDb extends SparqlDb {
 //        registerOperationHandler(LdbcQuery13.class, Query13.class); // cannot be implemented in standard SPARQL
 //        registerOperationHandler(LdbcQuery14.class, Query14.class); // cannot be implemented in standard SPARQL
 
-//		registerOperationHandler(LdbcShortQuery1PersonProfile.class, LdbcShortQuery1.class);
-//		registerOperationHandler(LdbcShortQuery2PersonPosts.class, LdbcShortQuery2.class);
-//		registerOperationHandler(LdbcShortQuery3PersonFriends.class, LdbcShortQuery3.class);
-//		registerOperationHandler(LdbcShortQuery4MessageContent.class, LdbcShortQuery4.class);
-//		registerOperationHandler(LdbcShortQuery5MessageCreator.class, LdbcShortQuery5.class);
-//		registerOperationHandler(LdbcShortQuery6MessageForum.class, LdbcShortQuery6.class);
-//		registerOperationHandler(LdbcShortQuery7MessageReplies.class, LdbcShortQuery7.class);
+        registerOperationHandler(LdbcShortQuery1PersonProfile.class, ShortQuery1PersonProfile.class);
+        registerOperationHandler(LdbcShortQuery2PersonPosts.class, ShortQuery2PersonPosts.class);
+        registerOperationHandler(LdbcShortQuery3PersonFriends.class, ShortQuery3PersonFriends.class);
+        registerOperationHandler(LdbcShortQuery4MessageContent.class, ShortQuery4MessageContent.class);
+        registerOperationHandler(LdbcShortQuery5MessageCreator.class, ShortQuery5MessageCreator.class);
+        registerOperationHandler(LdbcShortQuery6MessageForum.class, ShortQuery6MessageForum.class);
+        registerOperationHandler(LdbcShortQuery7MessageReplies.class, ShortQuery7MessageReplies.class);
 
-//		registerOperationHandler(LdbcUpdate1AddPerson.class, LdbcUpdate1AddPersonSparql.class);
-//		registerOperationHandler(LdbcUpdate2AddPostLike.class, LdbcUpdate2AddPostLikeSparql.class);
-//		registerOperationHandler(LdbcUpdate3AddCommentLike.class, LdbcUpdate3AddCommentLikeSparql.class);
-//		registerOperationHandler(LdbcUpdate4AddForum.class, LdbcUpdate4AddForumSparql.class);
-//		registerOperationHandler(LdbcUpdate5AddForumMembership.class, LdbcUpdate5AddForumMembershipSparql.class);
-//		registerOperationHandler(LdbcUpdate6AddPost.class, LdbcUpdate6AddPostSparql.class);
-//		registerOperationHandler(LdbcUpdate7AddComment.class, LdbcUpdate7AddCommentSparql.class);
-//		registerOperationHandler(LdbcUpdate8AddFriendship.class, LdbcUpdate8AddFriendshipSparql.class);
+        registerOperationHandler(LdbcUpdate1AddPerson.class, Update1AddPerson.class);
+        registerOperationHandler(LdbcUpdate2AddPostLike.class, Update2AddPostLike.class);
+        registerOperationHandler(LdbcUpdate3AddCommentLike.class, Update3AddCommentLike.class);
+        registerOperationHandler(LdbcUpdate4AddForum.class, Update4AddForum.class);
+        registerOperationHandler(LdbcUpdate5AddForumMembership.class, Update5AddForumMembership.class);
+        registerOperationHandler(LdbcUpdate6AddPost.class, Update6AddPost.class);
+        registerOperationHandler(LdbcUpdate7AddComment.class, Update7AddComment.class);
+        registerOperationHandler(LdbcUpdate8AddFriendship.class, Update8AddFriendship.class);
     }
 
 }
