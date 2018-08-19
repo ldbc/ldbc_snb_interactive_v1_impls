@@ -1,28 +1,24 @@
 insert into message (
-    -- only post-related fields are present
+    -- only comment-related fields are filled explicitly
     m_messageid
-  , m_ps_imagefile
   , m_creationdate
   , m_locationip
   , m_browserused
-  , m_ps_language
   , m_content
   , m_length
   , m_creatorid
   , m_locationid
-  , m_ps_forumid
+  , m_c_replyof
 )
 values
 (
-    :postId
-  , :imageFile
+    :commentId
   , :creationDate
   , :locationIp
   , :browserUsed
-  , :language
   , :content
   , :length
   , :authorPersonId
   , :countryId
-  , :forumId
+  , :replyToCommentId + :replyToPostId + 1 -- replyToCommentId is -1 if the message is a reply to a post and vica versa (see spec)
 );

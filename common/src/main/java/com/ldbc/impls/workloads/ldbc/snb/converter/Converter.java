@@ -1,5 +1,7 @@
 package com.ldbc.impls.workloads.ldbc.snb.converter;
 
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate1AddPerson;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,13 +47,13 @@ public class Converter {
     }
 
     /**
-     * Surrounds Strings in single quotes.
+     * Surrounds a string in single quotes and escape single quotes in the string itself.
      *
      * @param value
      * @return
      */
     public String convertString(String value) {
-        return "'" + value + "'";
+        return "'" + value.replace("'", "\\'") + "'";
     }
 
     public String convertInteger(int value) {
@@ -69,6 +71,38 @@ public class Converter {
         res += values
                 .stream()
                 .map(v -> "'" + v + "'")
+                .collect(Collectors.joining(","));
+        res += "]";
+        return res;
+    }
+
+    /**
+     * Convert a list of longs to a comma-separated list between square brackets.
+     *
+     * @param values
+     * @return
+     */
+    public String convertLongList(List<Long> values) {
+        String res = "[";
+        res += values
+                .stream()
+                .map(v -> v.toString())
+                .collect(Collectors.joining(","));
+        res += "]";
+        return res;
+    }
+
+    /**
+     * Convert a list of longs to a comma-separated list between square brackets.
+     *
+     * @param values
+     * @return
+     */
+    public String convertOrganisations(List<LdbcUpdate1AddPerson.Organization> values) {
+        String res = "[";
+        res += values
+                .stream()
+                .map(v -> v.toString())
                 .collect(Collectors.joining(","));
         res += "]";
         return res;
