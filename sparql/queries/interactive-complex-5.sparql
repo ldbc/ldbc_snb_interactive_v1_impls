@@ -18,10 +18,9 @@ WHERE
             ?fr
             ?frId
         WHERE
-        {       
-            BIND( "$personId"^^xsd:long AS ?rootId )
+        {
             ?rootPerson a snvoc:Person .
-            ?rootPerson snvoc:id ?rootId .
+            ?rootPerson snvoc:id "$personId"^^xsd:long .
             ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
             ?fr snvoc:id ?frId .
             FILTER(?frId != ?rootId)
@@ -32,7 +31,7 @@ WHERE
     ?forum snvoc:hasMember ?mem .
     ?forum snvoc:id ?forumId .
     ?mem snvoc:joinDate ?date .
-    FILTER( ?date >= xsd:dateTime("$minDate") ) .
+    FILTER( ?date >= "$minDate"^^xsd:dateTime ) .
     OPTIONAL {
         ?post snvoc:hasCreator ?fr .
         ?group snvoc:containerOf ?post .

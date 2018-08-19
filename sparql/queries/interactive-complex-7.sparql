@@ -35,11 +35,10 @@ WHERE
                         SELECT DISTINCT
                             ?message
                         WHERE
-                        {       
-                            VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
+                        {
                             BIND( "$personId"^^xsd:long AS ?rootId )
                             ?rootPerson a snvoc:Person .
-                            ?rootPerson snvoc:id ?rootId .
+                            ?rootPerson snvoc:id "$personId"^^xsd:long .
                             ?message snvoc:hasCreator ?rootPerson .
                             ?message a ?type
                         }    
@@ -55,9 +54,8 @@ WHERE
                 LIMIT 20
             }
             VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
-            BIND( "$personId"^^xsd:long AS ?rootId )
             ?rootPerson a snvoc:Person .
-            ?rootPerson snvoc:id ?rootId .
+            ?rootPerson snvoc:id "$personId"^^xsd:long .
             ?message snvoc:hasCreator ?rootPerson .
             ?message a ?type .
             ?message snvoc:id ?messageId .
@@ -80,9 +78,8 @@ WHERE
     ?message snvoc:content|snvoc:imageFile ?content . 
     BIND( ?likeCreationDate - ?messageCreationDate AS ?latencyInDuration )
     BIND( (DAY(?latencyInDuration) * 24 * 60 + HOURS(?latencyInDuration)) * 60 + MINUTES(?latencyInDuration) AS ?latency )
-    BIND( "$personId"^^xsd:long AS ?rootId )
     ?rootPerson a snvoc:Person .
-    ?rootPerson snvoc:id ?rootId .
+    ?rootPerson snvoc:id "$personId"^^xsd:long .
     BIND( NOT EXISTS { ?rootPerson (snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson) ?person } AS ?isNew )
 }
 ORDER BY DESC(?likeCreationDate) ?personId

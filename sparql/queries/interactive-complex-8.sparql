@@ -18,9 +18,8 @@ SELECT
 WHERE
 {       
     VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
-    BIND( "$personId"^^xsd:long AS ?rootId )
     ?rootPerson a snvoc:Person .
-    ?rootPerson snvoc:id ?rootId .
+    ?rootPerson snvoc:id "$personId"^^xsd:long .
     ?message snvoc:hasCreator ?rootPerson .
     ?message a ?type .
     ?comment a snvoc:Comment .
