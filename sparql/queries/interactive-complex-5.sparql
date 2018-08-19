@@ -12,34 +12,44 @@ SELECT
     (?title AS ?forumTitle)
     (SUM(?hasPost) AS ?postCount)
 WHERE
-{ 
+{
     {
         SELECT DISTINCT
             ?fr
-            ?frId
+            ?forum
         WHERE
         {
-            ?rootPerson a snvoc:Person .
-            ?rootPerson snvoc:id "$personId"^^xsd:long .
-            ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
-            ?fr snvoc:id ?frId .
-            FILTER(?frId != ?rootId)
-        }    
-    } .
-    ?forum a snvoc:Forum .
-    ?mem snvoc:hasPerson ?fr . 
-    ?forum snvoc:hasMember ?mem .
-    ?forum snvoc:id ?forumId .
-    ?mem snvoc:joinDate ?date .
-    FILTER( ?date >= "$minDate"^^xsd:dateTime ) .
+            {
+                SELECT DISTINCT
+                    ?fr
+                    ?frId
+                WHERE
+                {
+                    BIND( "$personId"^^xsd:long AS ?rootId )
+                    ?rootPerson a snvoc:Person .
+                    ?rootPerson snvoc:id ?rootId .
+                    ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
+                    ?fr snvoc:id ?frId .
+                    FILTER(?frId != ?rootId)
+                }
+            } .
+            ?forum a snvoc:Forum .
+            ?forum snvoc:hasMember ?mem .
+            ?mem snvoc:hasPerson ?fr .
+            ?mem snvoc:joinDate ?date .
+            FILTER( ?date >= "$minDate"^^xsd:dateTime ) .
+        }
+    }
     OPTIONAL {
+        ?post a snvoc:Post .
         ?post snvoc:hasCreator ?fr .
-        ?group snvoc:containerOf ?post .
+        ?forum snvoc:containerOf ?post .
         BIND( 1 AS ?hasPostInner )      
     } .
+    ?forum snvoc:title ?title .
+    ?forum snvoc:id ?forumId .
     BIND( COALESCE(?hasPostInner, 0) AS ?hasPost )
-    ?forum snvoc:title ?title . 
 }
 GROUP BY ?title ?forumId
-ORDER BY DESC(?postCount) ?forum
+ORDER BY DESC(?postCount) ?forumId
 LIMIT 20

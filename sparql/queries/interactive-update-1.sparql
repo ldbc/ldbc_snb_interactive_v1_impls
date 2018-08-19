@@ -16,7 +16,7 @@ INSERT
     sn:pers$personId snvoc:lastName "$personLastName"^^xsd:string .
     sn:pers$personId snvoc:gender "$gender"^^xsd:string . 
     sn:pers$personId snvoc:birthday "$birthday"^^xsd:date . 
-    sn:pers$personId snvoc:creationDate "$creationDate"^^xsd:date . 
+    sn:pers$personId snvoc:creationDate "$creationDate"^^xsd:dateTime .
     sn:pers$personId snvoc:locationIP "$locationIP"^^xsd:string . 
     sn:pers$personId snvoc:browserUsed "$browserUsed"^^xsd:string . 
     sn:pers$personId snvoc:isLocatedIn ?city .
