@@ -11,12 +11,12 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 SELECT 
     ?firstName
     ?lastName
-    ?gender
     ?birthday
-    ?creationDate
     ?locationIp 
-    ?browser 
-    ?placeId
+    ?browserUsed
+    ?cityId
+    ?gender
+    ?creationDate
 WHERE 
 {
     BIND( "$personId"^^xsd:long AS ?personId )

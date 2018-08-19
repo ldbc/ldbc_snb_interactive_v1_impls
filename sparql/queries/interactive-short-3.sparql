@@ -9,10 +9,10 @@ PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 SELECT
-    ?frId
-    ?friendFirstName
-    ?friendLastName
-    ?creationDate
+    ?personId
+    ?firstName
+    ?friendshipCreationDate
+    ?friendshipCreationDate
 WHERE 
 {
     BIND( "$personId"^^xsd:long AS ?personId )
@@ -25,9 +25,9 @@ WHERE
         ?fr snvoc:knows ?knows .
         ?knows snvoc:hasPerson ?person .    
     }
-    ?knows snvoc:creationDate ?creationDate .
-    ?fr snvoc:firstName ?friendFirstName .
-    ?fr snvoc:lastName ?friendLastName .
-    ?fr snvoc:id ?frId .
+    ?knows snvoc:creationDate ?friendshipCreationDate .
+    ?fr snvoc:firstName ?firstName .
+    ?fr snvoc:lastName ?friendshipCreationDate .
+    ?fr snvoc:id ?personId .
 }
-ORDER BY DESC(?creationDate) ?frId
+ORDER BY DESC(?friendshipCreationDate) ?personId

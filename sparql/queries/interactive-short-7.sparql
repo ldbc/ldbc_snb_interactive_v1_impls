@@ -9,13 +9,13 @@ PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 SELECT
-    ?comment
-    ?content
-    ?creationDate
-    ?creator
-    ?firstName
-    ?lastName
-    ?knowsFlag
+    ?commentId
+    ?commentContent
+    ?commentCreationDate
+    ?replyAuthor
+    ?replyAuthorFirstName
+    ?replyAuthorLastName
+    ?replyAuthorKnowsOriginalMessageAuthor
 WHERE
 {
     BIND( "$messageId"^^xsd:long AS ?messageId )
@@ -24,15 +24,17 @@ WHERE
     ?messageCreator snvoc:id ?messageCreatorId .
     ?comment snvoc:replyOf ?message .
     ?comment a snvoc:Comment .
-    ?comment snvoc:content ?content .
-    ?comment snvoc:creationDate ?creationDate .
-    ?comment snvoc:hasCreator ?creator .
-    ?creator snvoc:firstName ?firstName .
-    ?creator snvoc:lastName ?lastName .
+    ?comment snvoc:id ?commentId
+    ?comment snvoc:content ?commentContent .
+    ?comment snvoc:creationDate ?commentCreationDate .
+    ?comment snvoc:hasCreator ?replyAuthor .
+    ?replyAuthor snvoc:id ?replyAuthorId .
+    ?replyAuthor snvoc:firstName ?replyAuthorFirstName .
+    ?replyAuthor snvoc:lastName ?replyAuthorLastName .
     OPTIONAL {
-        ?messageCreator ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?creator .
-        BIND( "true"^^xsd:boolean AS ?knowsFlagInner ) .
+        ?messageCreator ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?replyAuthor .
+        BIND( "true"^^xsd:boolean AS ?replyAuthorKnowsOriginalMessageAuthorInner ) .
     }
-    BIND( COALESCE(?knowsFlagInner, "false"^^xsd:boolean) AS ?knowsFlag ) .
+    BIND( COALESCE(?replyAuthorKnowsOriginalMessageAuthorInner, "false"^^xsd:boolean) AS ?replyAuthorKnowsOriginalMessageAuthor ) .
 }
-ORDER BY DESC(?creationDate) ?messageCreatorId
+ORDER BY DESC(?commentCreationDate) ?messageCreatorId

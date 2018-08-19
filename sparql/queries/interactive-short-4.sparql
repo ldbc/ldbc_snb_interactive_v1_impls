@@ -9,12 +9,12 @@ PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 SELECT
-    ?content
-    ?creationDate
+    ?messageCreationDate
+    ?messageContent
 WHERE
 {
     BIND( "$messageId"^^xsd:long AS ?messageId )
     ?message snvoc:id ?messageId .
-    ?message snvoc:creationDate ?creationDate .
-    ?message snvoc:content|snvoc:imageFile ?content . 
+    ?message snvoc:creationDate ?messageCreationDate .
+    ?message snvoc:content|snvoc:imageFile ?messageContent . 
 }

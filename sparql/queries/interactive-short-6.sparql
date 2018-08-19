@@ -10,10 +10,10 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 SELECT
     ?forumId
-    ?title
+    ?forumTitle
     ?moderatorId
-    ?firstName
-    ?lastName
+    ?moderatorFirstName
+    ?moderatorLastName
 WHERE {
     BIND( "$messageId"^^xsd:long AS ?messageId )
     ?message snvoc:id ?messageId .
@@ -24,9 +24,9 @@ WHERE {
     BIND( COALESCE(?originalPostInner, ?message) AS ?originalPost ) .
     ?forum snvoc:containerOf ?originalPost .
     ?forum snvoc:id ?forumId .
-    ?forum snvoc:title ?title .
+    ?forum snvoc:title ?forumTitle .
     ?forum snvoc:hasModerator ?moderator .
     ?moderator snvoc:id ?moderatorId .
-    ?moderator snvoc:firstName ?firstName .
-    ?moderator snvoc:lastName ?lastName .
+    ?moderator snvoc:firstName ?moderatorFirstName .
+    ?moderator snvoc:lastName ?moderatorLastName .
 }
