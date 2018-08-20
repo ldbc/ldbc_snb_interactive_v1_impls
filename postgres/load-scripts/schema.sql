@@ -58,7 +58,6 @@ create table person (
    p_browserused varchar not null,
    p_placeid bigint
 );
---TODO: Add p_country int
 
 create table person_email (
    pe_personid bigint not null,
