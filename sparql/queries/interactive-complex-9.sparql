@@ -9,10 +9,10 @@ PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 SELECT
-    (?fr AS ?personId)
+    (?frId AS ?personId)
     (?first AS ?personFirstName)
     (?last AS ?personLastName)
-    (?message AS ?commentOrPostId)
+    (?messageId AS ?commentOrPostId)
     (?content AS ?commentOrPostContent)
     (?creationDate AS ?commentOrPostCreationDate)
 WHERE {
@@ -31,13 +31,15 @@ WHERE {
             FILTER(?frId != ?rootId)
         }
     } .
-    ?message a ?type .
     ?message snvoc:hasCreator ?fr .
+    ?message a ?type .
     ?message snvoc:creationDate ?creationDate .
     FILTER(?creationDate < "$maxDate"^^xsd:dateTime) .
     ?message snvoc:content|snvoc:imageFile ?content .
+    ?message snvoc:id ?messageId .
     ?fr snvoc:firstName ?first .
     ?fr snvoc:lastName ?last .
+    ?fr snvoc:id ?frId
 }
 ORDER BY DESC(?creationDate) ?post
 LIMIT 20
