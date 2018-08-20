@@ -26,10 +26,10 @@ WHERE {
     FILTER NOT EXISTS {
         ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr2 .
         ?post2 snvoc:hasCreator ?fr2 .
-	    ?post2 a snvoc:Post .
-	    ?post2 snvoc:hasTag ?tag .
+        ?post2 a snvoc:Post .
+        ?post2 snvoc:hasTag ?tag .
         ?post2 snvoc:creationDate ?creationDate2 .
-	    FILTER (?creationDate2 < ?startDate)
+        FILTER (?creationDate2 < ?startDate)
     }
 }
 GROUP BY ?tagName
