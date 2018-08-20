@@ -9,7 +9,7 @@ PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 SELECT
-    (?fr AS ?personId)
+    (?frId AS ?personId)
     (?first AS ?personFirstName)
     (?last AS ?personLastName)
     (?orgName AS ?organizationName)
