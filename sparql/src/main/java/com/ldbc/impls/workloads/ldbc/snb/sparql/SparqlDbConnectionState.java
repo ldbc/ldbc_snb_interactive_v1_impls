@@ -36,18 +36,18 @@ public class SparqlDbConnectionState<TQueryStore extends QueryStore> extends Bas
     }
 
     @Override
-    public void beginTransaction() throws Exception {
-
+    public void beginTransaction() {
+        repository.getConnection().begin();
     }
 
     @Override
-    public void endTransaction() throws Exception {
-
+    public void endTransaction() {
+        repository.getConnection().commit();
     }
 
     @Override
-    public void rollbackTransaction() throws Exception {
-
+    public void rollbackTransaction() {
+        repository.getConnection().rollback();
     }
 
     public Repository getRepository() {
