@@ -21,9 +21,7 @@ WHERE {
     ?post snvoc:hasCreator ?fr .
     ?post snvoc:hasTag ?tag . 
     ?tag foaf:name ?tagName .
-    ?post snvoc:creationDate ?creationDate . 
-    BIND( ?creationDate >= ?startDate AS ?bigger ) .
-    BIND( ?creationDate < ?endDate AS ?less ) .
+    ?post snvoc:creationDate ?creationDate .
     FILTER (?creationDate >= ?startDate && ?creationDate <= ?endDate ) .
     FILTER NOT EXISTS {
         ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr2 .
