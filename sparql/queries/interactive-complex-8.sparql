@@ -16,14 +16,14 @@ SELECT
     ?commentId
     ?commentContent
 WHERE
-{       
+{
     VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
     ?rootPerson a snvoc:Person .
     ?rootPerson snvoc:id "$personId"^^xsd:long .
     ?message snvoc:hasCreator ?rootPerson .
     ?message a ?type .
     ?comment a snvoc:Comment .
-    ?comment snvoc:replyOf ?message . 
+    ?comment snvoc:replyOf ?message .
     ?comment snvoc:creationDate ?commentCreationDate .
     ?comment snvoc:id ?commentId .
     ?comment snvoc:content ?commentContent .

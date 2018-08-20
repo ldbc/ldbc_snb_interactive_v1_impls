@@ -17,8 +17,8 @@ WHERE
     ?message snvoc:hasTag/foaf:name ?tagName .
     ?comment snvoc:replyOf ?message .
     ?comment snvoc:hasTag/foaf:name ?relatedTagName .
-    FILTER NOT EXISTS {?comment snvoc:hasTag/foaf:name ?tagName} 
-    
+    FILTER NOT EXISTS {?comment snvoc:hasTag/foaf:name ?tagName}
+
 }
 GROUP BY ?relatedTagName
 ORDER BY DESC(?count) ?relatedTagName

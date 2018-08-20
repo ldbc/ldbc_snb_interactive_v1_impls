@@ -15,8 +15,8 @@ SELECT
   (?messageId AS ?postOrCommentId)
   (?content AS ?postOrCommentContent)
   (?creationDate AS ?postOrCommentCreationDate)
-WHERE 
-{   
+WHERE
+{
     VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
     {
         SELECT DISTINCT

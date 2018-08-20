@@ -30,7 +30,7 @@ WHERE
             ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
             ?fr snvoc:id ?frId .
             FILTER(?frId != ?rootId)
-        }    
+        }
     } .
     ?fr snvoc:firstName ?first .
     ?fr snvoc:lastName ?last .

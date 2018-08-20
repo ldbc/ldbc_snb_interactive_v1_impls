@@ -13,7 +13,7 @@ SELECT
     ?firstName
     ?friendshipCreationDate
     ?friendshipCreationDate
-WHERE 
+WHERE
 {
     BIND( "$personId"^^xsd:long AS ?personId )
     ?person a snvoc:Person .
@@ -23,7 +23,7 @@ WHERE
         ?knows snvoc:hasPerson ?fr .
     } UNION {
         ?fr snvoc:knows ?knows .
-        ?knows snvoc:hasPerson ?person .    
+        ?knows snvoc:hasPerson ?person .
     }
     ?knows snvoc:creationDate ?friendshipCreationDate .
     ?fr snvoc:firstName ?firstName .

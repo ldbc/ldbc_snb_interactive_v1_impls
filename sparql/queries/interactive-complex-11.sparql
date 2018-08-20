@@ -20,19 +20,19 @@ WHERE {
             ?fr
             ?frId
         WHERE
-        {       
+        {
             BIND( "$personId"^^xsd:long AS ?rootId )
             ?rootPerson a snvoc:Person .
             ?rootPerson snvoc:id ?rootId .
             ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
             ?fr snvoc:id ?frId .
             FILTER(?frId != ?rootId)
-        }    
+        }
     } .
-    ?fr snvoc:workAt ?work . 
+    ?fr snvoc:workAt ?work .
     ?work snvoc:workFrom ?startYear .
     FILTER (?startYear < $workFromYear) .
-    ?work snvoc:hasOrganisation ?org . 
+    ?work snvoc:hasOrganisation ?org .
     ?org foaf:name ?orgName .
     ?org snvoc:isLocatedIn ?country.
     ?country foaf:name "$countryName" .

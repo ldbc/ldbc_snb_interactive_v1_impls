@@ -32,6 +32,6 @@ WHERE
         ?originalMessage snvoc:id "$replyToPostId"^^xsd:long
     } UNION {
         ?originalMessage a snvoc:Comment .
-        ?originalMessage snvoc:id "$replyToCommentId"^^xsd:long        
+        ?originalMessage snvoc:id "$replyToCommentId"^^xsd:long
     }
 }

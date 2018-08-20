@@ -15,7 +15,7 @@ SELECT
     ?xCount
     ?yCount
     (?xCount + ?yCount AS ?count)
-WHERE 
+WHERE
 {
     {
         SELECT DISTINCT
@@ -28,13 +28,13 @@ WHERE
             ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
             ?fr snvoc:id ?frId .
             FILTER(?frId != ?rootId)
-        }    
+        }
     }
     {
         SELECT
             (?frId AS ?frIdX)
             (COUNT(*) AS ?xCount)
-        WHERE 
+        WHERE
         {
             BIND( "$startDate"^^xsd:date AS ?date1 ) .
             BIND( ?date1 + "P$durationDaysD"^^xsd:duration AS ?date2 ) .
@@ -56,7 +56,7 @@ WHERE
         SELECT
             (?frId AS ?frIdY)
             (COUNT(*) AS ?yCount)
-        WHERE 
+        WHERE
         {
             BIND( "$startDate"^^xsd:date AS ?date1 ) .
             BIND( ?date1 + "P$durationDaysD"^^xsd:duration AS ?date2 ) .

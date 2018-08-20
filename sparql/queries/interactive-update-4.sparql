@@ -8,7 +8,7 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-INSERT 
+INSERT
 {
     sn:forum$forumId a snvoc:Forum .
     sn:forum$forumId snvoc:id "$forumId"^^xsd:long .
@@ -16,7 +16,7 @@ INSERT
     sn:forum$forumId snvoc:creationDate "$creationDate"^^xsd:dateTime .
     sn:forum$forumId snvoc:hasModerator ?moderator .
 }
-WHERE 
+WHERE
 {
     ?moderator a snvoc:Person .
     ?moderator snvoc:id "$moderatorPersonId"^^xsd:long

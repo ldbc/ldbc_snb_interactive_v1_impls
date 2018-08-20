@@ -10,30 +10,30 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 SELECT ?personId ?tagName (SUM(?likeValue) AS ?likeCount) (COUNT(DISTINCT ?reply) AS ?replyCount)
 WHERE
-{   
+{
     {
-        SELECT ?reply 
+        SELECT ?reply
         WHERE
-        {               
+        {
             ?reply a snvoc:Comment .
             ?reply snvoc:content ?content  .
             FILTER( !REGEX(?content, $blacklist) )
-  
+
             ?reply snvoc:hasCreator ?personId .
             ?personId a snvoc:Person .
             ?personId snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country .
-  
+
             ?reply snvoc:hasTag ?tag .
             ?reply snvoc:replyOf ?original .
             OPTIONAL {
-                ?original snvoc:hasTag ?tag 
+                ?original snvoc:hasTag ?tag
                 BIND(1 AS ?commonTagCount)
             }
         }
         GROUP BY ?reply
         HAVING (SUM(COALESCE(?commonTagCount,0)) = 0)
     }
-    
+
     ?reply snvoc:hasTag ?tag .
     ?tag foaf:name ?tagName .
     ?personId a snvoc:Person .

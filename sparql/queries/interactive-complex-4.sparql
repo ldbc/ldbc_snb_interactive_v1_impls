@@ -17,9 +17,9 @@ WHERE {
     ?rootPerson a snvoc:Person .
     ?rootPerson snvoc:id "$personId"^^xsd:long .
     ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
-    ?post a snvoc:Post . 
+    ?post a snvoc:Post .
     ?post snvoc:hasCreator ?fr .
-    ?post snvoc:hasTag ?tag . 
+    ?post snvoc:hasTag ?tag .
     ?tag foaf:name ?tagName .
     ?post snvoc:creationDate ?creationDate .
     FILTER (?creationDate >= ?startDate && ?creationDate <= ?endDate ) .

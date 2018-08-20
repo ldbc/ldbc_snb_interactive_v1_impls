@@ -22,20 +22,20 @@ WHERE {
             ?fr
             ?frId
         WHERE
-        {       
+        {
             BIND( "$personId"^^xsd:long AS ?rootId )
             ?rootPerson a snvoc:Person .
             ?rootPerson snvoc:id ?rootId .
             ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
             ?fr snvoc:id ?frId .
             FILTER(?frId != ?rootId)
-        }    
+        }
     } .
     ?message a ?type .
     ?message snvoc:hasCreator ?fr .
     ?message snvoc:creationDate ?creationDate .
     FILTER(?creationDate < "$maxDate"^^xsd:dateTime) .
-    ?message snvoc:content|snvoc:imageFile ?content . 
+    ?message snvoc:content|snvoc:imageFile ?content .
     ?fr snvoc:firstName ?first .
     ?fr snvoc:lastName ?last .
 }

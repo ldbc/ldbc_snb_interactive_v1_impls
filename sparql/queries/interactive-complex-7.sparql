@@ -17,7 +17,7 @@ SELECT
     (?content AS ?commentOrPostContent)
     (?latency AS ?minutesLatency)
     ?isNew
-WHERE 
+WHERE
 {
     {
         SELECT
@@ -41,7 +41,7 @@ WHERE
                             ?rootPerson snvoc:id "$personId"^^xsd:long .
                             ?message snvoc:hasCreator ?rootPerson .
                             ?message a ?type
-                        }    
+                        }
                     } .
                     ?person a snvoc:Person .
                     ?person snvoc:likes ?like .
@@ -74,8 +74,8 @@ WHERE
     ?like snvoc:hasPost|snvoc:hasComment ?message .
     ?message snvoc:id ?messageId .
     ?like snvoc:creationDate ?likeCreationDate .
-    ?message snvoc:creationDate ?messageCreationDate . 
-    ?message snvoc:content|snvoc:imageFile ?content . 
+    ?message snvoc:creationDate ?messageCreationDate .
+    ?message snvoc:content|snvoc:imageFile ?content .
     BIND( ?likeCreationDate - ?messageCreationDate AS ?latencyInDuration )
     BIND( (DAY(?latencyInDuration) * 24 * 60 + HOURS(?latencyInDuration)) * 60 + MINUTES(?latencyInDuration) AS ?latency )
     ?rootPerson a snvoc:Person .

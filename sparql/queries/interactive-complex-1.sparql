@@ -48,7 +48,7 @@ SELECT
                             BIND( "$personId"^^xsd:long AS ?rootId )
                             ?rootPerson a snvoc:Person .
                             ?rootPerson snvoc:id ?rootId .
-                            ?fr a snvoc:Person . 
+                            ?fr a snvoc:Person .
                             {
                                 ?rootPerson (snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson) ?fr .
                                 BIND( 1 AS ?distOneInner )
@@ -76,11 +76,11 @@ SELECT
     }
     ?fr snvoc:id ?frId .
     ?fr snvoc:lastName ?last .
-    ?fr snvoc:birthday ?bday . 
-    ?fr snvoc:isLocatedIn ?basedURI . 
+    ?fr snvoc:birthday ?bday .
+    ?fr snvoc:isLocatedIn ?basedURI .
     ?basedURI foaf:name ?based .
-    ?fr snvoc:creationDate ?since . 
-    ?fr snvoc:gender ?gen . 
+    ?fr snvoc:creationDate ?since .
+    ?fr snvoc:gender ?gen .
     ?fr snvoc:locationIP ?locationIP .
     ?fr snvoc:browserUsed ?browser .
     OPTIONAL {
@@ -89,13 +89,13 @@ SELECT
                 (?frInner AS ?frInnerUni)
                 (GROUP_CONCAT(CONCAT(?uniName, " ", xsd:string(?classYear), " ", ?uniCountry);separator=", ") AS ?studies)
             {
-                SELECT DISTINCT 
+                SELECT DISTINCT
                     ?frInner
                     ?uniName
                     ?classYear
                     ?uniCountry
-                {   
-                    ?frInner a snvoc:Person . 
+                {
+                    ?frInner a snvoc:Person .
                     ?frInner snvoc:studyAt ?study .
                     ?study snvoc:hasOrganisation ?uni .
                     ?uni foaf:name ?uniName .
@@ -114,7 +114,7 @@ SELECT
                 (?frInner AS ?frInnerComp)
                 (GROUP_CONCAT(CONCAT(?companyName, " ", xsd:string(?workFrom), " ", ?companyCountry);separator=", ") AS ?jobs)
             {
-                SELECT DISTINCT 
+                SELECT DISTINCT
                     ?frInner
                     ?companyName
                     ?workFrom

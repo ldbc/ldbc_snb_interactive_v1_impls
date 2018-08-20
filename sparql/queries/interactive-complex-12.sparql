@@ -14,7 +14,7 @@ SELECT
     (?last AS ?personLastName)
     (GROUP_CONCAT(DISTINCT ?tagName;separator=', ') AS ?tagNames)
     (COUNT(DISTINCT ?reply) AS ?replyCount)
-WHERE 
+WHERE
 {
     ?rootPerson a snvoc:Person .
     ?rootPerson snvoc:id "$personId"^^xsd:long .
@@ -22,7 +22,7 @@ WHERE
     ?fr snvoc:id ?frId .
     ?fr snvoc:firstName ?first .
     ?fr snvoc:lastName ?last .
-    ?reply snvoc:hasCreator ?fr . 
+    ?reply snvoc:hasCreator ?fr .
     ?reply snvoc:replyOf ?post .
     ?post a snvoc:Post .
     ?post snvoc:hasTag ?tag .

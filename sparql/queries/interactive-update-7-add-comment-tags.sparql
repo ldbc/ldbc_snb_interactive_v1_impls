@@ -8,11 +8,11 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-INSERT 
+INSERT
 {
     sn:comm$commentId snvoc:hasTag ?tag .
 }
-WHERE 
+WHERE
 {
     ?tag a ?tagClass .
     ?tagClass a snvoc:TagClass .

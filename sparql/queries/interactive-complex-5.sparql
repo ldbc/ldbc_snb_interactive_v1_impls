@@ -44,7 +44,7 @@ WHERE
         ?post a snvoc:Post .
         ?post snvoc:hasCreator ?fr .
         ?forum snvoc:containerOf ?post .
-        BIND( 1 AS ?hasPostInner )      
+        BIND( 1 AS ?hasPostInner )
     } .
     ?forum snvoc:title ?title .
     ?forum snvoc:id ?forumId .
