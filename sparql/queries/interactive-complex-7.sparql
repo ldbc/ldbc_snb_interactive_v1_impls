@@ -77,7 +77,7 @@ WHERE
     ?message snvoc:creationDate ?messageCreationDate .
     ?message snvoc:content|snvoc:imageFile ?content .
     BIND( ?likeCreationDate - ?messageCreationDate AS ?latencyInDuration )
-    BIND( (DAY(?latencyInDuration) * 24 * 60 + HOURS(?latencyInDuration)) * 60 + MINUTES(?latencyInDuration) AS ?latency )
+    BIND( (DAY(?latencyInDuration) * 24 + HOURS(?latencyInDuration)) * 60 + MINUTES(?latencyInDuration) AS ?latency )
     ?rootPerson a snvoc:Person .
     ?rootPerson snvoc:id "$personId"^^xsd:long .
     BIND( NOT EXISTS { ?rootPerson (snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson) ?person } AS ?isNew )
