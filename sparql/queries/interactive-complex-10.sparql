@@ -9,7 +9,7 @@ PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 SELECT
-    (?fr AS ?personId)
+    (?frId AS ?personId)
     (?first AS ?personFirstName)
     (?last AS ?personLastName)
     (?commonScore AS ?commonInterestScore)
@@ -25,8 +25,9 @@ WHERE
             ?frId
         WHERE
         {
+            BIND( "$personId"^^xsd:long AS ?rootId ) .
             ?rootPerson a snvoc:Person .
-            ?rootPerson snvoc:id "$personId"^^xsd:long .
+            ?rootPerson snvoc:id ?rootId .
             ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
             ?fr snvoc:id ?frId .
             FILTER(?frId != ?rootId)
@@ -44,21 +45,44 @@ WHERE
             SELECT
                 ?frCommonInner
                 ?frCommonInnerId
-                (COUNT(DISTINCT ?post) AS ?commonScoreInner)
-            WHERE {
-                ?rootPerson a snvoc:Person .
-                ?rootPerson snvoc:id "$personId"^^xsd:long .
-                ?post a snvoc:Post .
-                ?post snvoc:hasCreator ?frCommonInner .
-                ?frCommonInner snvoc:id ?frCommonInnerId .
-                ?post snvoc:hasTag ?tag .
-                ?rootPerson snvoc:hasInterest ?tag
+                (COUNT(?post) AS ?commonScoreInner)
+            WHERE
+            {
+                SELECT DISTINCT
+                    ?frCommonInner
+                    ?frCommonInnerId
+                    ?post
+                WHERE {
+                    ?rootPerson a snvoc:Person .
+                    ?rootPerson snvoc:id "$personId"^^xsd:long .
+                    ?post a snvoc:Post .
+                    ?post snvoc:hasCreator ?frCommonInner .
+                    ?frCommonInner snvoc:id ?frCommonInnerId .
+                    ?post snvoc:hasTag ?tag .
+                    ?rootPerson snvoc:hasInterest ?tag
+                }
             }
             GROUP BY ?frCommonInner ?frCommonInnerId
         }
         FILTER(?frCommonInnerId = ?frId)
     } .
-    BIND( COALESCE(?commonScoreInner, 0) AS ?commonScore )
+    OPTIONAL {
+        {
+            SELECT DISTINCT
+                ?frTotalInner
+                ?frTotalInnerId
+            (COUNT(?post) AS ?totalPostCountInner)
+            WHERE {
+                ?post a snvoc:Post .
+                ?post snvoc:hasCreator ?frTotalInner .
+                ?frTotalInner a snvoc:Person .
+                ?frTotalInner snvoc:id ?frTotalInnerId .
+            }
+            GROUP BY ?frTotalInner ?frTotalInnerId
+        }
+        FILTER(?frTotalInnerId = ?frId)
+    }
+    BIND( 2 * COALESCE(?commonScoreInner, 0) - COALESCE(?totalPostCountInner, 0) AS ?commonScore )
 }
-ORDER BY DESC(?similarity) ?frId
+ORDER BY DESC(?commonScore) ?frId
 LIMIT 10
