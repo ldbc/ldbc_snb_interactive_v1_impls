@@ -2,6 +2,8 @@ package sparql;
 
 import com.ldbc.impls.workloads.ldbc.snb.interactive.InteractiveTest;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.interactive.SparqlInteractiveDb;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,5 +29,13 @@ public class SparqlInteractiveTest extends InteractiveTest {
         properties.put("printQueryResults", "true");
         return properties;
     }
+
+    @Ignore
+    @Test
+    public void testQuery13() throws Exception {}
+
+    @Ignore
+    @Test
+    public void testQuery14() throws Exception {}
 
 }
