@@ -12,13 +12,13 @@ INSERT
 {
     sn:pers$personId a snvoc:Person .
     sn:pers$personId snvoc:id $personId .
-    sn:pers$personId snvoc:firstName "$personFirstName"^^xsd:string .
-    sn:pers$personId snvoc:lastName "$personLastName"^^xsd:string .
-    sn:pers$personId snvoc:gender "$gender"^^xsd:string .
-    sn:pers$personId snvoc:birthday "$birthday"^^xsd:date .
-    sn:pers$personId snvoc:creationDate "$creationDate"^^xsd:dateTime .
-    sn:pers$personId snvoc:locationIP "$locationIP"^^xsd:string .
-    sn:pers$personId snvoc:browserUsed "$browserUsed"^^xsd:string .
+    sn:pers$personId snvoc:firstName $personFirstName .
+    sn:pers$personId snvoc:lastName $personLastName .
+    sn:pers$personId snvoc:gender $gender .
+    sn:pers$personId snvoc:birthday $birthday .
+    sn:pers$personId snvoc:creationDate $creationDate .
+    sn:pers$personId snvoc:locationIP $locationIP .
+    sn:pers$personId snvoc:browserUsed $browserUsed .
     sn:pers$personId snvoc:isLocatedIn ?city .
 }
 WHERE

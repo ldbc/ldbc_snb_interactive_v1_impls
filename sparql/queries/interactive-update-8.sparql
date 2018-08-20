@@ -11,7 +11,7 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 INSERT
 {
     ?person1 snvoc:knows _:knows .
-    _:knows snvoc:creationDate "$creationDate"^^xsd:dateTime .
+    _:knows snvoc:creationDate $creationDate .
     _:knows snvoc:hasPerson ?person2 .
 }
 WHERE

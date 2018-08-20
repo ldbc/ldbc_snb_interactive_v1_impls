@@ -35,7 +35,7 @@ WHERE {
     ?work snvoc:hasOrganisation ?org .
     ?org foaf:name ?orgName .
     ?org snvoc:isLocatedIn ?country.
-    ?country foaf:name "$countryName" .
+    ?country foaf:name $countryName .
     ?fr snvoc:firstName ?first .
     ?fr snvoc:lastName ?last .
 }

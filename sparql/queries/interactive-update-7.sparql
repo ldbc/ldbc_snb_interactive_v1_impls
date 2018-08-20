@@ -12,11 +12,11 @@ INSERT
 {
     sn:comm$commentId a snvoc:Comment .
     sn:comm$commentId snvoc:id $commentId .
-    sn:comm$commentId snvoc:creationDate "$creationDate"^^xsd:dateTime .
-    sn:comm$commentId snvoc:locationIP "$locationIP"^^xsd:string .
-    sn:comm$commentId snvoc:browserUsed "$browserUsed"^^xsd:string .
-    sn:comm$commentId snvoc:content "$content"^^xsd:string .
-    sn:comm$commentId snvoc:length "$length"^^xsd:int .
+    sn:comm$commentId snvoc:creationDate $creationDate .
+    sn:comm$commentId snvoc:locationIP $locationIP .
+    sn:comm$commentId snvoc:browserUsed $browserUsed .
+    sn:comm$commentId snvoc:content $content .
+    sn:comm$commentId snvoc:length "$length"^^xsd:integer .
     sn:comm$commentId snvoc:hasCreator ?creator .
     sn:comm$commentId snvoc:isLocatedIn ?country .
     sn:comm$commentId snvoc:replyOf ?originalMessage

@@ -11,7 +11,7 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 INSERT
 {
     ?person snvoc:likes _:like .
-    _:like snvoc:creationDate "$creationDate"^^xsd:dateTime .
+    _:like snvoc:creationDate $creationDate .
     _:like snvoc:hasPost ?post .
 }
 WHERE

@@ -12,8 +12,8 @@ INSERT
 {
     sn:forum$forumId a snvoc:Forum .
     sn:forum$forumId snvoc:id $forumId .
-    sn:forum$forumId snvoc:title "$forumTitle"^^xsd:string .
-    sn:forum$forumId snvoc:creationDate "$creationDate"^^xsd:dateTime .
+    sn:forum$forumId snvoc:title $forumTitle .
+    sn:forum$forumId snvoc:creationDate $creationDate .
     sn:forum$forumId snvoc:hasModerator ?moderator .
 }
 WHERE

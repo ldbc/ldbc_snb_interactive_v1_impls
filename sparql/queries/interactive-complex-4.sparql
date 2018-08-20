@@ -12,7 +12,7 @@ SELECT
     ?tagName
     (COUNT(*) AS ?postCount)
 WHERE {
-    BIND( "$startDate"^^xsd:dateTime AS ?startDate ) .
+    BIND( $startDate AS ?startDate ) .
     BIND( ?startDate + "P$durationDaysD"^^xsd:duration AS ?endDate ) .
     ?rootPerson a snvoc:Person .
     ?rootPerson snvoc:id $personId .

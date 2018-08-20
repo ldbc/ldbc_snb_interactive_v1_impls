@@ -29,7 +29,7 @@ WHERE
     ?tag foaf:name ?tagName .
     ?tag a ?tagType.
     ?tagType rdfs:subClassOf* ?tagSuperType .
-    ?tagSuperType rdfs:label "$tagClassName" .
+    ?tagSuperType rdfs:label $tagClassName .
 }
 GROUP BY ?frId ?first ?last
 ORDER BY DESC(?cnt) ?frId

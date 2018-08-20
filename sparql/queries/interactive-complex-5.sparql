@@ -37,7 +37,7 @@ WHERE
             ?forum snvoc:hasMember ?mem .
             ?mem snvoc:hasPerson ?fr .
             ?mem snvoc:joinDate ?date .
-            FILTER( ?date >= "$minDate"^^xsd:dateTime ) .
+            FILTER( ?date >= $minDate ) .
         }
     }
     OPTIONAL {

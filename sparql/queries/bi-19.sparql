@@ -26,7 +26,7 @@ WHERE
     ?personId a snvoc:Person .
     FILTER( ?personId != ?stranger ) .
     ?personId snvoc:birthday ?personBirthday .
-    FILTER( ?personBirthday > $date^^xsd:date ) .
+    FILTER( ?personBirthday > $date ) .
     FILTER NOT EXISTS{ {?personId snvoc:knows/snvoc:hasPerson ?stranger} UNION {?stranger snvoc:knows/snvoc:hasPerson ?personId} }
     VALUES (?type) {(snvoc:Comment) (snvoc:Post)} .
     ?message a ?type .

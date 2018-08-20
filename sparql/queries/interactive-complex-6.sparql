@@ -13,7 +13,7 @@ SELECT
     (COUNT(?post) AS ?postCount)
 WHERE
 {
-    BIND("$tagName" AS ?tagName)
+    BIND($tagName AS ?tagName)
     {
         SELECT DISTINCT
             ?fr

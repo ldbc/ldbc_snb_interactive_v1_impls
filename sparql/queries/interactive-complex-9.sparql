@@ -34,7 +34,7 @@ WHERE {
     ?message snvoc:hasCreator ?fr .
     ?message a ?type .
     ?message snvoc:creationDate ?creationDate .
-    FILTER(?creationDate < "$maxDate"^^xsd:dateTime) .
+    FILTER(?creationDate < $maxDate) .
     ?message snvoc:content|snvoc:imageFile ?content .
     ?message snvoc:id ?messageId .
     ?fr snvoc:firstName ?first .

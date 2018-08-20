@@ -12,13 +12,13 @@ INSERT
 {
     sn:post$postId a snvoc:Post .
     sn:post$postId snvoc:id $postId .
-    sn:post$postId snvoc:imageFile "$imageFile"^^xsd:string .
-    sn:post$postId snvoc:creationDate "$creationDate"^^xsd:dateTime .
-    sn:post$postId snvoc:locationIP "$locationIP"^^xsd:string .
-    sn:post$postId snvoc:browserUsed "$browserUsed"^^xsd:string .
-    sn:post$postId snvoc:language "$language"^^xsd:string .
-    sn:post$postId snvoc:content "$content"^^xsd:string .
-    sn:post$postId snvoc:length "$length"^^xsd:int .
+    sn:post$postId snvoc:imageFile $imageFile .
+    sn:post$postId snvoc:creationDate $creationDate .
+    sn:post$postId snvoc:locationIP $locationIP .
+    sn:post$postId snvoc:browserUsed $browserUsed .
+    sn:post$postId snvoc:language $language .
+    sn:post$postId snvoc:content $content .
+    sn:post$postId snvoc:length "$length"^^xsd:integer .
     sn:post$postId snvoc:hasCreator ?creator .
     sn:post$postId snvoc:isLocatedIn ?country .
     ?forum snvoc:containerOf sn:post$postId

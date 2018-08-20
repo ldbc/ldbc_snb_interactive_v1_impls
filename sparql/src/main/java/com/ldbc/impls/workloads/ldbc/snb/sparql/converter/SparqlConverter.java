@@ -25,14 +25,14 @@ public class SparqlConverter extends Converter {
     public String convertDateTime(long timestamp) {
         SimpleDateFormat sdf = new SimpleDateFormat(SPARQL_DATETIME_QUERY_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return "\"" + sdf.format(new Date(timestamp)) + "\"";
+        return "\"" + sdf.format(new Date(timestamp)) + "\"^^xsd:dateTime";
     }
 
     @Override
     public String convertDate(long timestamp) {
         SimpleDateFormat sdf = new SimpleDateFormat(SPARQL_DATE_QUERY_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return "\"" + sdf.format(new Date(timestamp)) + "\"";
+        return "\"" + sdf.format(new Date(timestamp)) + "\"^^xsd:date";
     }
 
     public long convertTimestampToEpoch(String timestamp) throws ParseException {

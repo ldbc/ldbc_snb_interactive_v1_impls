@@ -36,7 +36,7 @@ WHERE
             (COUNT(*) AS ?xCount)
         WHERE
         {
-            BIND( $startDate^^xsd:date AS ?date1 ) .
+            BIND( $startDate AS ?date1 ) .
             BIND( ?date1 + "P$durationDaysD"^^xsd:duration AS ?date2 ) .
             VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
             ?message a ?type .
@@ -58,7 +58,7 @@ WHERE
             (COUNT(*) AS ?yCount)
         WHERE
         {
-            BIND( "$startDate"^^xsd:date AS ?date1 ) .
+            BIND( $startDate AS ?date1 ) .
             BIND( ?date1 + "P$durationDaysD"^^xsd:duration AS ?date2 ) .
             VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
             ?message a ?type .

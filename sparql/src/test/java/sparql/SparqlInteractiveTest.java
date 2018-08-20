@@ -2,12 +2,10 @@ package sparql;
 
 import com.ldbc.impls.workloads.ldbc.snb.interactive.InteractiveTest;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.interactive.SparqlInteractiveDb;
-import org.junit.Ignore;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Ignore
 public class SparqlInteractiveTest extends InteractiveTest {
 
     private static String endpoint = "http://localhost:5820/";

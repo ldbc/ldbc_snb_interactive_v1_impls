@@ -11,7 +11,7 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 INSERT
 {
     ?forum snvoc:hasMember _:member .
-    _:member snvoc:joinDate "$joinDate"^^xsd:dateTime .
+    _:member snvoc:joinDate $joinDate .
     _:member snvoc:hasPerson ?person .
 }
 WHERE
