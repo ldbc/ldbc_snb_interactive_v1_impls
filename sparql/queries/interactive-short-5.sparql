@@ -14,7 +14,7 @@ SELECT
     ?lastName
 WHERE
 {
-    BIND( "$messageId"^^xsd:long AS ?messageId )
+    BIND( $messageId AS ?messageId )
     ?message snvoc:id ?messageId .
     ?message snvoc:hasCreator ?creator .
     ?creator snvoc:id ?personId .

@@ -17,7 +17,7 @@ SELECT
 WHERE
 {
     ?rootPerson a snvoc:Person .
-    ?rootPerson snvoc:id "$personId"^^xsd:long .
+    ?rootPerson snvoc:id $personId .
     ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
     ?fr snvoc:id ?frId .
     ?fr snvoc:firstName ?first .

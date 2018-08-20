@@ -21,7 +21,7 @@ WHERE {
             ?frId
         WHERE
         {
-            BIND( "$personId"^^xsd:long AS ?rootId )
+            BIND( $personId AS ?rootId )
             ?rootPerson a snvoc:Person .
             ?rootPerson snvoc:id ?rootId .
             ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .

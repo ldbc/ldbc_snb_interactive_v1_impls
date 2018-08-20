@@ -24,7 +24,7 @@ WHERE
         WHERE {
             ?rootPerson a snvoc:Person .
             ?fr a snvoc:Person .
-            ?rootPerson snvoc:id "$personId"^^xsd:long .
+            ?rootPerson snvoc:id $personId .
             ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr
         }
     }
@@ -39,7 +39,7 @@ WHERE
     } .
     ?message snvoc:creationDate ?creationDate .
     ?message snvoc:id ?messageId .
-    FILTER (?creationDate <= "$maxDate"^^xsd:dateTime) .
+    FILTER (?creationDate <= $maxDate^^xsd:dateTime) .
     ?fr snvoc:firstName ?first .
     ?fr snvoc:lastName ?last .
     ?fr snvoc:id ?frId .

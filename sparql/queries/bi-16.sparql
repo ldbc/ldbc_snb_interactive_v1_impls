@@ -20,7 +20,7 @@ WHERE
                 WHERE
                 {
                     ?rootPerson a snvoc:Person .
-                    ?rootPerson snvoc:id "$personId"^^xsd:long .
+                    ?rootPerson snvoc:id $personId .
 
                     $minPathDistance
                     $maxPathDistance

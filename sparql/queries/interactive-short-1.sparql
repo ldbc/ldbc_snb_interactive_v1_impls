@@ -19,7 +19,7 @@ SELECT
     ?creationDate
 WHERE
 {
-    BIND( "$personId"^^xsd:long AS ?personId )
+    BIND( $personId AS ?personId )
     ?person a snvoc:Person .
     ?person snvoc:id ?personId .
     ?person snvoc:firstName ?firstName .

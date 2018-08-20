@@ -11,11 +11,11 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 PATHS
 START ?person1 {
     ?person1 a snvoc:Person .
-    ?person1 snvoc:id "$person1Id"^^xsd:long .
+    ?person1 snvoc:id $person1Id .
 } 
 END ?person2 {
     ?person2 a snvoc:Person .
-    ?person2 snvoc:id "$person2Id"^^xsd:long .
+    ?person2 snvoc:id $person2Id .
 }
 VIA 
 {

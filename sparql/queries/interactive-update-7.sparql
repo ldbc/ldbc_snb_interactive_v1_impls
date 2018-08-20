@@ -11,7 +11,7 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 INSERT
 {
     sn:comm$commentId a snvoc:Comment .
-    sn:comm$commentId snvoc:id "$commentId"^^xsd:long .
+    sn:comm$commentId snvoc:id $commentId .
     sn:comm$commentId snvoc:creationDate "$creationDate"^^xsd:dateTime .
     sn:comm$commentId snvoc:locationIP "$locationIP"^^xsd:string .
     sn:comm$commentId snvoc:browserUsed "$browserUsed"^^xsd:string .
@@ -24,14 +24,14 @@ INSERT
 WHERE
 {
     ?creator a snvoc:Person .
-    ?creator snvoc:id "$authorPersonId"^^xsd:long .
+    ?creator snvoc:id $authorPersonId .
     ?counrty a dbpedia-owl:Country .
-    ?country snvoc:id "$countryId"^^xsd:long .
+    ?country snvoc:id $countryId .
     {
         ?originalMessage a snvoc:Post .
-        ?originalMessage snvoc:id "$replyToPostId"^^xsd:long
+        ?originalMessage snvoc:id $replyToPostId
     } UNION {
         ?originalMessage a snvoc:Comment .
-        ?originalMessage snvoc:id "$replyToCommentId"^^xsd:long
+        ?originalMessage snvoc:id $replyToCommentId
     }
 }

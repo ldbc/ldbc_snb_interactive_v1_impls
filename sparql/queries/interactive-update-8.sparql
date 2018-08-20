@@ -16,8 +16,8 @@ INSERT
 }
 WHERE
 {
-    ?person1 snvoc:id "$person1Id"^^xsd:long .
+    ?person1 snvoc:id $person1Id .
     ?person1 a snvoc:Person .
-    ?person2 snvoc:id "$person2Id"^^xsd:long .
+    ?person2 snvoc:id $person2Id .
     ?person2 a snvoc:Person .
 }

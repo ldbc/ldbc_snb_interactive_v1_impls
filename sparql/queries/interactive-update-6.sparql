@@ -11,7 +11,7 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 INSERT
 {
     sn:post$postId a snvoc:Post .
-    sn:post$postId snvoc:id "$postId"^^xsd:long .
+    sn:post$postId snvoc:id $postId .
     sn:post$postId snvoc:imageFile "$imageFile"^^xsd:string .
     sn:post$postId snvoc:creationDate "$creationDate"^^xsd:dateTime .
     sn:post$postId snvoc:locationIP "$locationIP"^^xsd:string .
@@ -26,9 +26,9 @@ INSERT
 WHERE
 {
     ?creator a snvoc:Person .
-    ?creator snvoc:id "$authorPersonId"^^xsd:long .
+    ?creator snvoc:id $authorPersonId .
     ?forum a snvoc:Forum .
-    ?forum snvoc:id "$forumId"^^xsd:long .
+    ?forum snvoc:id $forumId .
     ?counrty a dbpedia-owl:Country .
-    ?country snvoc:id "$countryId"^^xsd:long
+    ?country snvoc:id $countryId
 }

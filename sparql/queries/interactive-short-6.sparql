@@ -15,7 +15,7 @@ SELECT
     ?moderatorFirstName
     ?moderatorLastName
 WHERE {
-    BIND( "$messageId"^^xsd:long AS ?messageId )
+    BIND( $messageId AS ?messageId )
     ?message snvoc:id ?messageId .
     OPTIONAL {
         ?message snvoc:replyOf* ?originalPostInner .

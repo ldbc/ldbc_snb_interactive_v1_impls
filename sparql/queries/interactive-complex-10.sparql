@@ -25,7 +25,7 @@ WHERE
             ?frId
         WHERE
         {
-            BIND( "$personId"^^xsd:long AS ?rootId ) .
+            BIND( $personId AS ?rootId ) .
             ?rootPerson a snvoc:Person .
             ?rootPerson snvoc:id ?rootId .
             ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
@@ -54,7 +54,7 @@ WHERE
                     ?post
                 WHERE {
                     ?rootPerson a snvoc:Person .
-                    ?rootPerson snvoc:id "$personId"^^xsd:long .
+                    ?rootPerson snvoc:id $personId .
                     ?post a snvoc:Post .
                     ?post snvoc:hasCreator ?frCommonInner .
                     ?frCommonInner snvoc:id ?frCommonInnerId .

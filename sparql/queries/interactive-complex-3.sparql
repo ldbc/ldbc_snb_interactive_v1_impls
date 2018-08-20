@@ -24,7 +24,7 @@ WHERE
         WHERE
         {
             ?rootPerson a snvoc:Person .
-            ?rootPerson snvoc:id "$personId"^^xsd:long .
+            ?rootPerson snvoc:id $personId .
             ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
             ?fr snvoc:id ?frId .
             FILTER(?frId != ?rootId)
@@ -36,7 +36,7 @@ WHERE
             (COUNT(*) AS ?xCount)
         WHERE
         {
-            BIND( "$startDate"^^xsd:date AS ?date1 ) .
+            BIND( $startDate^^xsd:date AS ?date1 ) .
             BIND( ?date1 + "P$durationDaysD"^^xsd:duration AS ?date2 ) .
             VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
             ?message a ?type .
@@ -47,7 +47,7 @@ WHERE
             ?fr snvoc:id ?frId .
             ?message snvoc:isLocatedIn ?country .
             ?country a dbpedia-owl:Country .
-            ?country foaf:name "$countryXName" .
+            ?country foaf:name $countryXName .
         }
         GROUP BY ?frId
     } .
@@ -69,7 +69,7 @@ WHERE
             ?fr snvoc:id ?frId .
             ?message snvoc:isLocatedIn ?country .
             ?country a dbpedia-owl:Country .
-            ?country foaf:name "$countryYName" .
+            ?country foaf:name $countryYName .
         }
         GROUP BY ?frId
     } .

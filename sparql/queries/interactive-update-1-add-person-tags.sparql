@@ -16,5 +16,5 @@ WHERE
 {
     ?tag a ?tagClass .
     ?tagClass a snvoc:TagClass .
-    ?tag snvoc:id "$tagId"^^xsd:long
+    ?tag snvoc:id $tagId
 }

@@ -17,5 +17,5 @@ INSERT
 WHERE
 {
     ?company a dbpedia-owl:Company .
-    ?company snvoc:id "$organizationId"^^xsd:long
+    ?company snvoc:id $organizationId
 }

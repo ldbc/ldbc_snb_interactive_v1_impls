@@ -11,7 +11,7 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 INSERT
 {
     sn:pers$personId a snvoc:Person .
-    sn:pers$personId snvoc:id "$personId"^^xsd:long .
+    sn:pers$personId snvoc:id $personId .
     sn:pers$personId snvoc:firstName "$personFirstName"^^xsd:string .
     sn:pers$personId snvoc:lastName "$personLastName"^^xsd:string .
     sn:pers$personId snvoc:gender "$gender"^^xsd:string .
@@ -24,5 +24,5 @@ INSERT
 WHERE
 {
     ?city a dbpedia-owl:City .
-    ?city snvoc:id "$cityId"^^xsd:long
+    ?city snvoc:id $cityId
 }

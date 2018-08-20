@@ -15,7 +15,7 @@ WHERE {
     BIND( "$startDate"^^xsd:dateTime AS ?startDate ) .
     BIND( ?startDate + "P$durationDaysD"^^xsd:duration AS ?endDate ) .
     ?rootPerson a snvoc:Person .
-    ?rootPerson snvoc:id "$personId"^^xsd:long .
+    ?rootPerson snvoc:id $personId .
     ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
     ?post a snvoc:Post .
     ?post snvoc:hasCreator ?fr .

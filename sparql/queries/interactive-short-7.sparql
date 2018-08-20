@@ -18,13 +18,13 @@ SELECT
     ?replyAuthorKnowsOriginalMessageAuthor
 WHERE
 {
-    BIND( "$messageId"^^xsd:long AS ?messageId )
+    BIND( $messageId AS ?messageId )
     ?message snvoc:id ?messageId .
     ?message snvoc:hasCreator ?messageCreator .
     ?messageCreator snvoc:id ?messageCreatorId .
     ?comment snvoc:replyOf ?message .
     ?comment a snvoc:Comment .
-    ?comment snvoc:id ?commentId
+    ?comment snvoc:id ?commentId .
     ?comment snvoc:content ?commentContent .
     ?comment snvoc:creationDate ?commentCreationDate .
     ?comment snvoc:hasCreator ?replyAuthor .
