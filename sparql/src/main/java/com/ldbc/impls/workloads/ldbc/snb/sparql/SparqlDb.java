@@ -61,8 +61,6 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery12;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery12Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery13;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery13Result;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery14;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery14Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery2;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery2Result;
@@ -121,8 +119,7 @@ import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConv
 import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertDouble;
 import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertInteger;
 import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertLong;
-import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertLongList;
-import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertSisList;
+import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertNestedList;
 import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertString;
 import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertStringList;
 
@@ -153,8 +150,8 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
             Iterable<String> friendEmails = convertStringList(bs, "friendEmails");
             Iterable<String> friendLanguages = convertStringList(bs, "friendLanguages");
             String friendCityName = convertString(bs, "friendCityName");
-            Iterable<List<Object>> friendUniversities = convertSisList(bs, "friendUniversities");
-            Iterable<List<Object>> friendCompanies = convertSisList(bs, "friendCompanies");
+            Iterable<List<Object>> friendUniversities = convertNestedList(bs, "friendUniversities");
+            Iterable<List<Object>> friendCompanies = convertNestedList(bs, "friendCompanies");
 
             return new LdbcQuery1Result(
                     friendId,
@@ -395,22 +392,6 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
         public LdbcQuery13Result convertSingleResult(BindingSet bs) {
             int shortestPathLength = convertInteger(bs, "shortestPathLength");
             return new LdbcQuery13Result(shortestPathLength);
-        }
-
-    }
-
-    public static class Query14 extends SparqlListOperationHandler<LdbcQuery14, LdbcQuery14Result> {
-
-        @Override
-        public String getQueryString(SparqlDbConnectionState state, LdbcQuery14 operation) {
-            return state.getQueryStore().getQuery14(operation);
-        }
-
-        @Override
-        public LdbcQuery14Result convertSingleResult(BindingSet bs) {
-            Iterable<Long> personIdsInPath = convertLongList(bs, "personIdsInPath");
-            double pathWeight = convertDouble(bs, "pathWeight");
-            return new LdbcQuery14Result(personIdsInPath, pathWeight);
         }
 
     }
