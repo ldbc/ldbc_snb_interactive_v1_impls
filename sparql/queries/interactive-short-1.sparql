@@ -28,7 +28,7 @@ WHERE
     ?person snvoc:birthday ?birthday .
     ?person snvoc:creationDate ?creationDate .
     ?person snvoc:locationIP ?locationIp .
-    ?person snvoc:isLocatedIn ?place .
-    ?place snvoc:id ?placeId .
+    ?person snvoc:isLocatedIn ?city .
+    ?city snvoc:id ?cityId .
     ?person snvoc:browserUsed ?browser .
 }
