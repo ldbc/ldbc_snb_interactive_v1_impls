@@ -7,7 +7,6 @@ import org.junit.Ignore;
 import java.util.HashMap;
 import java.util.Map;
 
-@Ignore
 public class SparqlBiTest extends BiTest {
 
     private static String endpoint = "http://localhost:5820/";
