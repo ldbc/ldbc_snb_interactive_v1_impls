@@ -2,7 +2,7 @@ package com.ldbc.impls.workloads.ldbc.snb.sparql.converter;
 
 import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
 
-import java.sql.Date;
+import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -29,15 +29,9 @@ public class SparqlConverter extends Converter {
         sdfDate.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
-    /**
-     * Converts epoch seconds to SPARQL timestamps.
-     *
-     * @param timestamp
-     * @return
-     */
     @Override
-    public String convertDateTime(long timestamp) {
-        return "\"" + sdfQuery.format(new Date(timestamp)) + "\"^^xsd:dateTime";
+    public String convertDateTime(Date date) {
+        return "\"" + sdfQuery.format(date) + "\"^^xsd:dateTime";
     }
 
     @Override
