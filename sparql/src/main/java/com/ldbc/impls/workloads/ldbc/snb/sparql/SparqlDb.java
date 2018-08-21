@@ -117,6 +117,7 @@ import java.util.stream.Collectors;
 
 import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertBoolean;
 import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertDate;
+import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertDateTime;
 import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertDouble;
 import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertInteger;
 import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertLong;
@@ -145,7 +146,7 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
             String friendLastName = convertString(bs, "friendLastName");
             int distanceFromPerson = convertInteger(bs, "distanceFromPerson");
             long friendBirthday = convertDate(bs, "friendBirthday");
-            long friendCreationDate = convertDate(bs, "friendCreationDate");
+            long friendCreationDate = convertDateTime(bs, "friendCreationDate");
             String friendGender = convertString(bs, "friendGender");
             String friendBrowserUsed = convertString(bs, "friendBrowserUsed");
             String friendLocationIp = convertString(bs, "friendLocationIp");
@@ -187,7 +188,7 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
             String personLastName = convertString(bs, "personLastName");
             long postOrCommentId = convertLong(bs, "postOrCommentId");
             String postOrCommentContent = convertString(bs, "postOrCommentContent");
-            long postOrCommentCreationDate = convertDate(bs, "postOrCommentCreationDate");
+            long postOrCommentCreationDate = convertDateTime(bs, "postOrCommentCreationDate");
             return new LdbcQuery2Result(personId, personFirstName, personLastName, postOrCommentId, postOrCommentContent, postOrCommentCreationDate);
         }
 
@@ -274,7 +275,7 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
             long personId = convertLong(bs, "personId");
             String personFirstName = convertString(bs, "personFirstName");
             String personLastName = convertString(bs, "personLastName");
-            long likeCreationDate = convertDate(bs, "likeCreationDate");
+            long likeCreationDate = convertDateTime(bs, "likeCreationDate");
             long commentOrPostId = convertLong(bs, "commentOrPostId");
             String commentOrPostContent = convertString(bs, "commentOrPostContent");
             int minutesLatency = convertInteger(bs, "minutesLatency");
@@ -296,7 +297,7 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
             long personId = convertLong(bs, "personId");
             String personFirstName = convertString(bs, "personFirstName");
             String personLastName = convertString(bs, "personLastName");
-            long commentCreationDate = convertDate(bs, "commentCreationDate");
+            long commentCreationDate = convertDateTime(bs, "commentCreationDate");
             long commentId = convertLong(bs, "commentId");
             String commentContent = convertString(bs, "commentContent");
             return new LdbcQuery8Result(personId, personFirstName, personLastName, commentCreationDate, commentId, commentContent);
@@ -318,7 +319,7 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
             String personLastName = convertString(bs, "personLastName");
             long commentOrPostId = convertLong(bs, "commentOrPostId");
             String commentOrPostContent = convertString(bs, "commentOrPostContent");
-            long commentOrPostCreationDate = convertDate(bs, "commentOrPostCreationDate");
+            long commentOrPostCreationDate = convertDateTime(bs, "commentOrPostCreationDate");
             return new LdbcQuery9Result(personId, personFirstName, personLastName, commentOrPostId, commentOrPostContent, commentOrPostCreationDate);
         }
 
@@ -430,7 +431,7 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
             String browserUsed = convertString(bs, "browserUsed");
             long cityId = convertLong(bs, "cityId");
             String gender = convertString(bs, "gender");
-            long creationDate = convertDate(bs, "creationDate");
+            long creationDate = convertDateTime(bs, "creationDate");
 
             return new LdbcShortQuery1PersonProfileResult(firstName, lastName, friendBirthday, locationIP, browserUsed, cityId, gender, creationDate);
         }
@@ -448,7 +449,7 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
         public LdbcShortQuery2PersonPostsResult convertSingleResult(BindingSet bs) throws ParseException {
             long messageId = convertLong(bs, "messageId");
             String messageContent = convertString(bs, "messageContent");
-            long messageCreationDate = convertDate(bs, "messageCreationDate");
+            long messageCreationDate = convertDateTime(bs, "messageCreationDate");
             long originalPostId = convertLong(bs, "originalPostId");
             long originalPostAuthorId = convertLong(bs, "originalPostAuthorId");
             String originalPostAuthorFirstName = convertString(bs, "originalPostAuthorFirstName");
@@ -471,7 +472,7 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
             long personId = convertLong(bs, "personId");
             String firstName = convertString(bs, "firstName");
             String lastName = convertString(bs, "lastName");
-            long friendshipCreationDate = convertDate(bs, "friendshipCreationDate");
+            long friendshipCreationDate = convertDateTime(bs, "friendshipCreationDate");
 
             return new LdbcShortQuery3PersonFriendsResult(personId, firstName, lastName, friendshipCreationDate);
         }
@@ -488,7 +489,7 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
         @Override
         public LdbcShortQuery4MessageContentResult convertSingleResult(BindingSet bs) throws ParseException {
             String messageContent = convertString(bs, "messageContent");
-            long messageCreationDate = convertDate(bs, "messageCreationDate");
+            long messageCreationDate = convertDateTime(bs, "messageCreationDate");
 
             return new LdbcShortQuery4MessageContentResult(messageContent, messageCreationDate);
         }
@@ -544,7 +545,7 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
         public LdbcShortQuery7MessageRepliesResult convertSingleResult(BindingSet bs) throws ParseException {
             long commentId = convertLong(bs, "commentId");
             String commentContent = convertString(bs, "commentContent");
-            long commentCreationDate = convertDate(bs, "commentCreationDate");
+            long commentCreationDate = convertDateTime(bs, "commentCreationDate");
             long replyAuthorId = convertLong(bs, "replyAuthorId");
             String replyAuthorFirstName = convertString(bs, "replyAuthorFirstName");
             String replyAuthorLastName = convertString(bs, "replyAuthorLastName");
@@ -693,7 +694,7 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
         public LdbcSnbBiQuery4PopularCountryTopicsResult convertSingleResult(BindingSet bs) throws ParseException {
             long forumId = convertLong(bs, "forumId");
             String forumTitle = convertString(bs, "forumTitle");
-            long forumCreationDate = convertDate(bs, "forumCreationDate");
+            long forumCreationDate = convertDateTime(bs, "forumCreationDate");
             long personId = convertLong(bs, "personId");
             int postCount = convertInteger(bs, "postCount");
             return new LdbcSnbBiQuery4PopularCountryTopicsResult(forumId, forumTitle, forumCreationDate, personId, postCount);
@@ -713,7 +714,7 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
             long personId = convertLong(bs, "personId");
             String personFirstName = convertString(bs, "personFirstName");
             String personLastName = convertString(bs, "personLastName");
-            long personCreationDate = convertDate(bs, "personCreationDate");
+            long personCreationDate = convertDateTime(bs, "personCreationDate");
             int postCount = convertInteger(bs, "postCount");
             return new LdbcSnbBiQuery5TopCountryPostersResult(personId, personFirstName, personLastName, personCreationDate, postCount);
         }
@@ -833,7 +834,7 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
         @Override
         public LdbcSnbBiQuery12TrendingPostsResult convertSingleResult(BindingSet bs) throws ParseException {
             long messageId = convertLong(bs, "messageId");
-            long messageCreationDate = convertDate(bs, "messageCreationDate");
+            long messageCreationDate = convertDateTime(bs, "messageCreationDate");
             String creatorFirstName = convertString(bs, "creatorFirstName");
             String creatorLastName = convertString(bs, "creatorLastName");
             int likeCount = convertInteger(bs, "likeCount");

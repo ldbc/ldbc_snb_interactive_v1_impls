@@ -21,6 +21,11 @@ public class SparqlInputConverter {
 
     public static long convertDate(BindingSet bs, String name) throws ParseException {
         final String timestamp = bs.getBinding(name).getValue().stringValue();
+        return converter.convertDateToEpoch(timestamp);
+    }
+
+    public static long convertDateTime(BindingSet bs, String name) throws ParseException {
+        final String timestamp = bs.getBinding(name).getValue().stringValue();
         return converter.convertTimestampToEpoch(timestamp);
     }
 
