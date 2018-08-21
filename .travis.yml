@@ -31,7 +31,7 @@ script:
   - ./restart-neo4j.sh
   - cd ../..
   # tests
-  - mvn test -B -Dsparql.test.excludes="**/*.java"
+  - mvn test -B
 notifications:
   slack: ldbcouncil:JRXP43nDV4KRgtclmoNZJpyq
   email: false
