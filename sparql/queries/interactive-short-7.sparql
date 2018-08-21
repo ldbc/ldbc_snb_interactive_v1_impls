@@ -12,7 +12,7 @@ SELECT
     ?commentId
     ?commentContent
     ?commentCreationDate
-    ?replyAuthor
+    ?replyAuthorId
     ?replyAuthorFirstName
     ?replyAuthorLastName
     ?replyAuthorKnowsOriginalMessageAuthor
