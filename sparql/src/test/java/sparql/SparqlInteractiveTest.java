@@ -32,10 +32,10 @@ public class SparqlInteractiveTest extends InteractiveTest {
 
     @Ignore
     @Test
-    public void testQuery13() throws Exception {}
+    public void testQuery13() {}
 
     @Ignore
     @Test
-    public void testQuery14() throws Exception {}
+    public void testQuery14() {}
 
 }

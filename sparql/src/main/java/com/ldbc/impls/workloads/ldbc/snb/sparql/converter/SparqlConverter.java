@@ -67,4 +67,9 @@ public class SparqlConverter extends Converter {
         return String.format("\"%020d\"^^xsd:long", value);
     }
 
+    @Override
+    public String convertIdForInsertion(long value) {
+        return String.format("%020d", value);
+    }
+
 }

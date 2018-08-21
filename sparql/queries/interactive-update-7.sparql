@@ -11,7 +11,7 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 INSERT
 {
     sn:comm$commentId a snvoc:Comment .
-    sn:comm$commentId snvoc:id $commentId .
+    sn:comm$commentId snvoc:id "$commentId"^^xsd:long .
     sn:comm$commentId snvoc:creationDate $creationDate .
     sn:comm$commentId snvoc:locationIP $locationIP .
     sn:comm$commentId snvoc:browserUsed $browserUsed .

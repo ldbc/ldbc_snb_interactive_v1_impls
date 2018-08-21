@@ -363,7 +363,7 @@ public abstract class QueryStore {
         return prepare(
                 QueryType.InteractiveUpdate1,
                 new ImmutableMap.Builder<String, String>()
-                        .put(LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()))
+                        .put(LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.personId()))
                         .put(LdbcUpdate1AddPerson.PERSON_FIRST_NAME, getConverter().convertString(operation.personFirstName()))
                         .put(LdbcUpdate1AddPerson.PERSON_LAST_NAME, getConverter().convertString(operation.personLastName()))
                         .put(LdbcUpdate1AddPerson.GENDER, getConverter().convertString(operation.gender()))
@@ -386,7 +386,7 @@ public abstract class QueryStore {
                 QueryType.InteractiveUpdate2,
                 ImmutableMap.of(
                         LdbcUpdate2AddPostLike.PERSON_ID, getConverter().convertId(operation.personId()),
-                        LdbcUpdate2AddPostLike.POST_ID, getConverter().convertId(operation.postId()),
+                        LdbcUpdate2AddPostLike.POST_ID, getConverter().convertIdForInsertion(operation.postId()),
                         LdbcUpdate2AddPostLike.CREATION_DATE, getConverter().convertDateTime(operation.creationDate())
                 )
         );
@@ -397,7 +397,7 @@ public abstract class QueryStore {
                 QueryType.InteractiveUpdate3,
                 ImmutableMap.of(
                         LdbcUpdate3AddCommentLike.PERSON_ID, getConverter().convertId(operation.personId()),
-                        LdbcUpdate3AddCommentLike.COMMENT_ID, getConverter().convertId(operation.commentId()),
+                        LdbcUpdate3AddCommentLike.COMMENT_ID, getConverter().convertIdForInsertion(operation.commentId()),
                         LdbcUpdate3AddCommentLike.CREATION_DATE, getConverter().convertDateTime(operation.creationDate())
                 )
         );
@@ -407,7 +407,7 @@ public abstract class QueryStore {
         return prepare(
                 QueryType.InteractiveUpdate4,
                 ImmutableMap.of(
-                        LdbcUpdate4AddForum.FORUM_ID, getConverter().convertId(operation.forumId()),
+                        LdbcUpdate4AddForum.FORUM_ID, getConverter().convertIdForInsertion(operation.forumId()),
                         LdbcUpdate4AddForum.FORUM_TITLE, getConverter().convertString(operation.forumTitle()),
                         LdbcUpdate4AddForum.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()),
                         LdbcUpdate4AddForum.MODERATOR_PERSON_ID, getConverter().convertId(operation.moderatorPersonId()),
@@ -432,7 +432,7 @@ public abstract class QueryStore {
         return prepare(
                 QueryType.InteractiveUpdate6,
                 new ImmutableMap.Builder<String, String>()
-                        .put(LdbcUpdate6AddPost.POST_ID, getConverter().convertId(operation.postId()))
+                        .put(LdbcUpdate6AddPost.POST_ID, getConverter().convertIdForInsertion(operation.postId()))
                         .put(LdbcUpdate6AddPost.IMAGE_FILE, getConverter().convertString(operation.imageFile()))
                         .put(LdbcUpdate6AddPost.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()))
                         .put(LdbcUpdate6AddPost.LOCATION_IP, getConverter().convertString(operation.locationIp()))
@@ -452,7 +452,7 @@ public abstract class QueryStore {
         return prepare(
                 QueryType.InteractiveUpdate7,
                 new ImmutableMap.Builder<String, String>()
-                        .put(LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertId(operation.commentId()))
+                        .put(LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertIdForInsertion(operation.commentId()))
                         .put(LdbcUpdate7AddComment.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()))
                         .put(LdbcUpdate7AddComment.LOCATION_IP, getConverter().convertString(operation.locationIp()))
                         .put(LdbcUpdate7AddComment.BROWSER_USED, getConverter().convertString(operation.browserUsed()))
@@ -485,7 +485,7 @@ public abstract class QueryStore {
         list.add(prepare(
                 QueryType.InteractiveUpdate1,
                 new ImmutableMap.Builder<String, String>()
-                        .put(LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()))
+                        .put(LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.personId()))
                         .put(LdbcUpdate1AddPerson.PERSON_FIRST_NAME, getConverter().convertString(operation.personFirstName()))
                         .put(LdbcUpdate1AddPerson.PERSON_LAST_NAME, getConverter().convertString(operation.personLastName()))
                         .put(LdbcUpdate1AddPerson.GENDER, getConverter().convertString(operation.gender()))
@@ -501,7 +501,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate1AddPersonCompanies,
                     ImmutableMap.of(
-                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()),
+                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.personId()),
                             "organizationId", getConverter().convertId(organization.organizationId()),
                             "worksFromYear", getConverter().convertInteger(organization.year())
                     )
@@ -511,7 +511,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate1AddPersonEmails,
                     ImmutableMap.of(
-                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()),
+                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.personId()),
                             "email", getConverter().convertString(email)
                     )
             ));
@@ -520,7 +520,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate1AddPersonLanguages,
                     ImmutableMap.of(
-                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()),
+                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.personId()),
                             "language", getConverter().convertString(language)
                     )
             ));
@@ -530,7 +530,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate1AddPersonTags,
                     ImmutableMap.of(
-                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()),
+                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.personId()),
                             "tagId", getConverter().convertId(tagId))
                     )
             );
@@ -539,7 +539,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate1AddPersonUniversities,
                     ImmutableMap.of(
-                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()),
+                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.personId()),
                             "organizationId", getConverter().convertId(organization.organizationId()),
                             "studiesFromYear", getConverter().convertInteger(organization.year())
                     )
@@ -553,7 +553,7 @@ public abstract class QueryStore {
         list.add(prepare(
                 QueryType.InteractiveUpdate4,
                 ImmutableMap.of(
-                        LdbcUpdate4AddForum.FORUM_ID, getConverter().convertId(operation.forumId()),
+                        LdbcUpdate4AddForum.FORUM_ID, getConverter().convertIdForInsertion(operation.forumId()),
                         LdbcUpdate4AddForum.FORUM_TITLE, getConverter().convertString(operation.forumTitle()),
                         LdbcUpdate4AddForum.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()),
                         LdbcUpdate4AddForum.MODERATOR_PERSON_ID, getConverter().convertId(operation.moderatorPersonId())
@@ -564,7 +564,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate4AddForumTags,
                     ImmutableMap.of(
-                            LdbcUpdate4AddForum.FORUM_ID, getConverter().convertId(operation.forumId()),
+                            LdbcUpdate4AddForum.FORUM_ID, getConverter().convertIdForInsertion(operation.forumId()),
                             "tagId", getConverter().convertId(tagId))
                     )
             );
@@ -577,7 +577,7 @@ public abstract class QueryStore {
         list.add(prepare(
                 QueryType.InteractiveUpdate6,
                 new ImmutableMap.Builder<String, String>()
-                        .put(LdbcUpdate6AddPost.POST_ID, getConverter().convertId(operation.postId()))
+                        .put(LdbcUpdate6AddPost.POST_ID, getConverter().convertIdForInsertion(operation.postId()))
                         .put(LdbcUpdate6AddPost.IMAGE_FILE, getConverter().convertString(operation.imageFile()))
                         .put(LdbcUpdate6AddPost.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()))
                         .put(LdbcUpdate6AddPost.LOCATION_IP, getConverter().convertString(operation.locationIp()))
@@ -595,7 +595,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate6AddPostTags,
                     ImmutableMap.of(
-                            LdbcUpdate6AddPost.POST_ID, getConverter().convertId(operation.postId()),
+                            LdbcUpdate6AddPost.POST_ID, getConverter().convertIdForInsertion(operation.postId()),
                             "tagId", getConverter().convertId(tagId))
                     )
             );
@@ -608,7 +608,7 @@ public abstract class QueryStore {
         list.add(prepare(
                 QueryType.InteractiveUpdate7,
                 new ImmutableMap.Builder<String, String>()
-                        .put(LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertId(operation.commentId()))
+                        .put(LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertIdForInsertion(operation.commentId()))
                         .put(LdbcUpdate7AddComment.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()))
                         .put(LdbcUpdate7AddComment.LOCATION_IP, getConverter().convertString(operation.locationIp()))
                         .put(LdbcUpdate7AddComment.BROWSER_USED, getConverter().convertString(operation.browserUsed()))
@@ -624,7 +624,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate7AddCommentTags,
                     ImmutableMap.of(
-                            LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertId(operation.commentId()),
+                            LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertIdForInsertion(operation.commentId()),
                             "tagId", getConverter().convertId(tagId))
                     )
             );

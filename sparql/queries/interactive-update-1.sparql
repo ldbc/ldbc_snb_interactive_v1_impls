@@ -11,7 +11,7 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 INSERT
 {
     sn:pers$personId a snvoc:Person .
-    sn:pers$personId snvoc:id $personId .
+    sn:pers$personId snvoc:id "$personId"^^xsd:long .
     sn:pers$personId snvoc:firstName $personFirstName .
     sn:pers$personId snvoc:lastName $personLastName .
     sn:pers$personId snvoc:gender $gender .

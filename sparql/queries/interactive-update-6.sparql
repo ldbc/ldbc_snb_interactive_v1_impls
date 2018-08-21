@@ -11,7 +11,7 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 INSERT
 {
     sn:post$postId a snvoc:Post .
-    sn:post$postId snvoc:id $postId .
+    sn:post$postId snvoc:id "$postId"^^xsd:long .
     sn:post$postId snvoc:imageFile $imageFile .
     sn:post$postId snvoc:creationDate $creationDate .
     sn:post$postId snvoc:locationIP $locationIP .
