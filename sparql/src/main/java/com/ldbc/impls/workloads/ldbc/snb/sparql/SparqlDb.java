@@ -354,9 +354,9 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
             long personId = convertLong(bs, "personId");
             String personFirstName = convertString(bs, "personFirstName");
             String personLastName = convertString(bs, "personLastName");
-            String organisationName = convertString(bs, "organisationName");
+            String organizationName = convertString(bs, "organizationName");
             int organizationWorkFromYear = convertInteger(bs, "organizationWorkFromYear");
-            return new LdbcQuery11Result(personId, personFirstName, personLastName, organisationName, organizationWorkFromYear);
+            return new LdbcQuery11Result(personId, personFirstName, personLastName, organizationName, organizationWorkFromYear);
         }
 
     }
