@@ -9,8 +9,7 @@ PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 SELECT
-#    *
-    (?fr AS ?friendId)
+    (?frId AS ?friendId)
     (?last AS ?friendLastName)
     (MIN(?dist) AS ?distanceFromPerson)
     (?bday AS ?friendBirthday)
@@ -134,6 +133,6 @@ SELECT
         FILTER( ?frId = ?frInnerCompId)
     }
 }
-GROUP BY ?fr ?last ?bday ?since ?gen ?browser ?locationIP ?based ?studies ?jobs ?emails ?languages
+GROUP BY ?frId ?last ?bday ?since ?gen ?browser ?locationIP ?based ?studies ?jobs ?emails ?languages
 ORDER BY ?distanceFromPerson ?last ?fr
 LIMIT 20
