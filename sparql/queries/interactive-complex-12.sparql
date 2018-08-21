@@ -32,5 +32,5 @@ WHERE
     ?tagSuperType rdfs:label $tagClassName .
 }
 GROUP BY ?frId ?first ?last
-ORDER BY DESC(?cnt) ?frId
+ORDER BY DESC(?replyCount) ?frId
 LIMIT 20
