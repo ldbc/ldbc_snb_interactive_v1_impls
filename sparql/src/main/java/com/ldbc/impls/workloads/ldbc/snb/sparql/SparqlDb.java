@@ -316,7 +316,7 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
             long personId = convertLong(bs, "personId");
             String personFirstName = convertString(bs, "personFirstName");
             String personLastName = convertString(bs, "personLastName");
-            long commentOrPostId = convertDate(bs, "commentOrPostId");
+            long commentOrPostId = convertLong(bs, "commentOrPostId");
             String commentOrPostContent = convertString(bs, "commentOrPostContent");
             long commentOrPostCreationDate = convertDate(bs, "commentOrPostCreationDate");
             return new LdbcQuery9Result(personId, personFirstName, personLastName, commentOrPostId, commentOrPostContent, commentOrPostCreationDate);
