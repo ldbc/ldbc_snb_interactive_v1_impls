@@ -109,8 +109,6 @@ import com.ldbc.impls.workloads.ldbc.snb.sparql.operationhandlers.SparqlSingleto
 import com.ldbc.impls.workloads.ldbc.snb.sparql.operationhandlers.SparqlUpdateOperationHandler;
 import org.openrdf.query.BindingSet;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
@@ -146,7 +144,7 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
             long friendId = convertLong(bs, "friendId");
             String friendLastName = convertString(bs, "friendLastName");
             int distanceFromPerson = convertInteger(bs, "distanceFromPerson");
-            long friendBirthday = convertDate(bs, "friendBirthDay");
+            long friendBirthday = convertDate(bs, "friendBirthday");
             long friendCreationDate = convertDate(bs, "friendCreationDate");
             String friendGender = convertString(bs, "friendGender");
             String friendBrowserUsed = convertString(bs, "friendBrowserUsed");
