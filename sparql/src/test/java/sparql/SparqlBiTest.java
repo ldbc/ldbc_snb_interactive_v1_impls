@@ -2,7 +2,6 @@ package sparql;
 
 import com.ldbc.impls.workloads.ldbc.snb.bi.BiTest;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.bi.SparqlBiDb;
-import org.junit.Ignore;
 
 import java.util.HashMap;
 import java.util.Map;

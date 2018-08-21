@@ -12,8 +12,22 @@ import java.util.stream.Collectors;
 public class SparqlConverter extends Converter {
 
     public static final String SPARQL_DATETIME_QUERY_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-    public static final String SPARQL_DATETIME_RETURN_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+    public static final String SPARQL_DATETIME_RETURN_LONG_FORMAT  = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+    public static final String SPARQL_DATETIME_RETURN_SHORT_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
     public static final String SPARQL_DATE_FORMAT = "yyyy-MM-dd";
+
+
+    final SimpleDateFormat sdfQuery = new SimpleDateFormat(SPARQL_DATETIME_QUERY_FORMAT);
+    final SimpleDateFormat sdfReturnLong = new SimpleDateFormat(SPARQL_DATETIME_RETURN_LONG_FORMAT);
+    final SimpleDateFormat sdfReturnShort = new SimpleDateFormat(SPARQL_DATETIME_RETURN_SHORT_FORMAT);
+    final SimpleDateFormat sdfDate = new SimpleDateFormat(SPARQL_DATE_FORMAT);
+
+    public SparqlConverter() {
+        sdfQuery.setTimeZone(TimeZone.getTimeZone("GMT"));
+        sdfReturnLong.setTimeZone(TimeZone.getTimeZone("GMT"));
+        sdfReturnShort.setTimeZone(TimeZone.getTimeZone("GMT"));
+        sdfDate.setTimeZone(TimeZone.getTimeZone("GMT"));
+    }
 
     /**
      * Converts epoch seconds to SPARQL timestamps.
@@ -23,28 +37,28 @@ public class SparqlConverter extends Converter {
      */
     @Override
     public String convertDateTime(long timestamp) {
-        SimpleDateFormat sdf = new SimpleDateFormat(SPARQL_DATETIME_QUERY_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return "\"" + sdf.format(new Date(timestamp)) + "\"^^xsd:dateTime";
+        return "\"" + sdfQuery.format(new Date(timestamp)) + "\"^^xsd:dateTime";
     }
 
     @Override
     public String convertDate(long timestamp) {
-        SimpleDateFormat sdf = new SimpleDateFormat(SPARQL_DATE_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return "\"" + sdf.format(new Date(timestamp)) + "\"^^xsd:date";
+        return "\"" + sdfDate.format(new Date(timestamp)) + "\"^^xsd:date";
     }
 
     public long convertDateToEpoch(String timestamp) throws ParseException {
-        final SimpleDateFormat sdf = new SimpleDateFormat(SPARQL_DATE_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return sdf.parse(timestamp).toInstant().toEpochMilli();
+        return sdfDate.parse(timestamp).toInstant().toEpochMilli();
     }
 
     public long convertTimestampToEpoch(String timestamp) throws ParseException {
-        final SimpleDateFormat sdf = new SimpleDateFormat(SPARQL_DATETIME_RETURN_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return sdf.parse(timestamp).toInstant().toEpochMilli();
+        java.util.Date date;
+
+        try {
+            date = sdfReturnLong.parse(timestamp);
+        } catch (ParseException e) {
+            date = sdfReturnShort.parse(timestamp);
+        }
+
+        return date.toInstant().toEpochMilli();
     }
 
     public String convertString(String value) {
