@@ -20,8 +20,8 @@ SELECT
     (?emails AS ?friendEmails)
     (?languages AS ?friendLanguages)
     (?based AS ?friendCityName)
-    ?studies
-    ?jobs
+    (?studies AS ?friendUniversities)
+    (?jobs AS ?friendCompanies)
 {
     {
         SELECT
