@@ -38,7 +38,7 @@ select * from (
 		group by e
 	),
 	weightedpaths(path,score) as (
-		select path, coalesce(sum(score),0) from paths, edges left outer join weights on we=e where pid=id group by id,path
+		select path, coalesce(sum(score),0) from paths, edges left join weights on we=e where pid=id group by id,path
 	)
 	select path,score from weightedpaths order by score desc)
 x  order by score desc;

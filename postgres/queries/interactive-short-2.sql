@@ -16,7 +16,7 @@ select p1.m_messageid, COALESCE(m_ps_imagefile,'')||COALESCE(m_content,''), p1.m
 from 
      (select m_messageid, m_content, m_ps_imagefile, m_creationdate, m_c_replyof from cposts
      ) p1
-     left outer join
+     left join
      (select orig_postid, postid as m_messageid, p_personid, p_firstname, p_lastname
       from parent, person
       where replyof is null and creator = p_personid
