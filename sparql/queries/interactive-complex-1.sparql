@@ -134,5 +134,5 @@ SELECT
     }
 }
 GROUP BY ?frId ?last ?bday ?since ?gen ?browser ?locationIP ?based ?studies ?jobs ?emails ?languages
-ORDER BY ?distanceFromPerson ?last ?fr
+ORDER BY ?distanceFromPerson ?last ?frId
 LIMIT 20
