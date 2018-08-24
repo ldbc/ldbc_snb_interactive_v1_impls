@@ -43,18 +43,6 @@ public class SparqlConverter extends Converter {
         return sdfDate.parse(timestamp).toInstant().toEpochMilli();
     }
 
-    public long convertTimestampToEpoch(String timestamp) throws ParseException {
-        java.util.Date date;
-
-        try {
-            date = sdfReturnLong.parse(timestamp);
-        } catch (ParseException e) {
-            date = sdfReturnShort.parse(timestamp);
-        }
-
-        return date.toInstant().toEpochMilli();
-    }
-
     public String convertString(String value) {
         return "\"" + value + "\"";
     }

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import org.openrdf.model.Literal;
 import org.openrdf.query.BindingSet;
 
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,9 +28,9 @@ public class SparqlInputConverter {
         return converter.convertDateToEpoch(timestamp);
     }
 
-    public static long convertDateTime(BindingSet bs, String name) throws ParseException {
-        final String timestamp = bs.getBinding(name).getValue().stringValue();
-        return converter.convertTimestampToEpoch(timestamp);
+    public static long convertDateTime(BindingSet bs, String name) {
+        final XMLGregorianCalendar calendar = ((Literal) bs.getBinding(name).getValue()).calendarValue();
+        return calendar.toGregorianCalendar().toZonedDateTime().toInstant().toEpochMilli();
     }
 
     public static double convertDouble(BindingSet bs, String name) {
