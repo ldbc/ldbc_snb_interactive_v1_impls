@@ -381,21 +381,6 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
 
     }
 
-    public static class Query13 extends SparqlSingletonOperationHandler<LdbcQuery13, LdbcQuery13Result> {
-
-        @Override
-        public String getQueryString(SparqlDbConnectionState state, LdbcQuery13 operation) {
-            return state.getQueryStore().getQuery13(operation);
-        }
-
-        @Override
-        public LdbcQuery13Result convertSingleResult(BindingSet bs) {
-            int shortestPathLength = convertInteger(bs, "shortestPathLength");
-            return new LdbcQuery13Result(shortestPathLength);
-        }
-
-    }
-
     public static class ShortQuery1PersonProfile extends SparqlSingletonOperationHandler<LdbcShortQuery1PersonProfile, LdbcShortQuery1PersonProfileResult> {
 
         @Override

@@ -51,8 +51,6 @@ public class SparqlInteractiveDb extends SparqlDb {
         registerOperationHandler(LdbcQuery10.class, Query10.class);
         registerOperationHandler(LdbcQuery11.class, Query11.class);
         registerOperationHandler(LdbcQuery12.class, Query12.class);
-//        registerOperationHandler(LdbcQuery13.class, Query13.class); // cannot be implemented in standard SPARQL
-//        registerOperationHandler(LdbcQuery14.class, Query14.class); // cannot be implemented in standard SPARQL
 
         registerOperationHandler(LdbcShortQuery1PersonProfile.class, ShortQuery1PersonProfile.class);
         registerOperationHandler(LdbcShortQuery2PersonPosts.class, ShortQuery2PersonPosts.class);
