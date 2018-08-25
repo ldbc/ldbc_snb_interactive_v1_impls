@@ -30,7 +30,10 @@ WHERE
             ?rootPerson snvoc:id ?rootId .
             ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
             ?fr snvoc:id ?frId .
-            FILTER(?frId != ?rootId)
+            FILTER(?frId != ?rootId) .
+            FILTER NOT EXISTS {
+                ?rootPerson (snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson) ?fr .
+            }
         }
     } .
     ?fr snvoc:firstName ?first .
