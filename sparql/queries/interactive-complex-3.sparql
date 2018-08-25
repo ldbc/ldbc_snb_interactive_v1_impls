@@ -9,7 +9,7 @@ PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 SELECT
-    (?fr AS ?personId)
+    (?frId AS ?personId)
     (?firstName AS ?personFirstName)
     (?lastName AS ?personLastName)
     ?xCount
@@ -27,7 +27,10 @@ WHERE
             ?rootPerson snvoc:id $personId .
             ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
             ?fr snvoc:id ?frId .
-            FILTER(?fr != ?rootPerson)
+            ?fr snvoc:isLocatedIn/snvoc:isPartOf ?country .
+            ?country a dbpedia-owl:Country .
+            ?country foaf:name ?countryName .
+            FILTER(?fr != ?rootPerson && ?countryName != $countryXName && ?countryName != $countryYName)
         }
     }
     {
