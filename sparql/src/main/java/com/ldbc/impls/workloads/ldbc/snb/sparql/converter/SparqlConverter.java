@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class SparqlConverter extends Converter {
 
-    public static final String SPARQL_DATETIME_QUERY_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    public static final String SPARQL_DATETIME_QUERY_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     public static final String SPARQL_DATETIME_RETURN_LONG_FORMAT  = "yyyy-MM-dd'T'HH:mm:ss.SSS";
     public static final String SPARQL_DATETIME_RETURN_SHORT_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
     public static final String SPARQL_DATE_FORMAT = "yyyy-MM-dd";
