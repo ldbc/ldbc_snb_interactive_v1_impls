@@ -155,6 +155,10 @@ public abstract class QueryStore {
         InteractiveUpdate6AddPostTags          ("interactive-update-6-add-post-tags"),
         InteractiveUpdate7AddCommentTags       ("interactive-update-7-add-comment-tags"),
 
+        // interactive updates (additional queries for system that insert content/imageFile as separated operation)
+        InteractiveUpdate6AddPostContent       ("interactive-update-6-add-post-content"),
+        InteractiveUpdate6AddPostImageFile     ("interactive-update-6-add-post-imagefile"),
+
         // BI
         BiQuery1 ("bi-1" ),
         BiQuery2 ("bi-2" ),
@@ -600,6 +604,51 @@ public abstract class QueryStore {
                     )
             );
         }
+        return list;
+    }
+
+    public List<String> getUpdate6MultipleSeparatedContent(LdbcUpdate6AddPost operation) {
+        List<String> list = new ArrayList<>();
+        list.add(prepare(
+                QueryType.InteractiveUpdate6,
+                new ImmutableMap.Builder<String, String>()
+                        .put(LdbcUpdate6AddPost.POST_ID, getConverter().convertIdForInsertion(operation.postId()))
+                        .put(LdbcUpdate6AddPost.IMAGE_FILE, getConverter().convertString(operation.imageFile()))
+                        .put(LdbcUpdate6AddPost.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()))
+                        .put(LdbcUpdate6AddPost.LOCATION_IP, getConverter().convertString(operation.locationIp()))
+                        .put(LdbcUpdate6AddPost.BROWSER_USED, getConverter().convertString(operation.browserUsed()))
+                        .put(LdbcUpdate6AddPost.LANGUAGE, getConverter().convertString(operation.language()))
+                        .put(LdbcUpdate6AddPost.CONTENT, getConverter().convertString(operation.content()))
+                        .put(LdbcUpdate6AddPost.LENGTH, getConverter().convertInteger(operation.length()))
+                        .put(LdbcUpdate6AddPost.AUTHOR_PERSON_ID, getConverter().convertId(operation.authorPersonId()))
+                        .put(LdbcUpdate6AddPost.FORUM_ID, getConverter().convertId(operation.forumId()))
+                        .put(LdbcUpdate6AddPost.COUNTRY_ID, getConverter().convertId(operation.countryId()))
+                        .build()
+                )
+        );
+        for (long tagId : operation.tagIds()) {
+            list.add(prepare(
+                    QueryType.InteractiveUpdate6AddPostTags,
+                    ImmutableMap.of(
+                            LdbcUpdate6AddPost.POST_ID, getConverter().convertIdForInsertion(operation.postId()),
+                            "tagId", getConverter().convertId(tagId))
+                    )
+            );
+        }
+
+        list.add(prepare(QueryType.InteractiveUpdate6AddPostContent,
+                ImmutableMap.of(
+                        LdbcUpdate6AddPost.POST_ID, getConverter().convertId(operation.postId()),
+                        LdbcUpdate6AddPost.CONTENT, getConverter().convertString(operation.content()))
+                )
+        );
+        list.add(prepare(QueryType.InteractiveUpdate6AddPostImageFile,
+                ImmutableMap.of(
+                        LdbcUpdate6AddPost.POST_ID, getConverter().convertId(operation.postId()),
+                        LdbcUpdate6AddPost.IMAGE_FILE, getConverter().convertString(operation.imageFile()))
+                )
+        );
+
         return list;
     }
 

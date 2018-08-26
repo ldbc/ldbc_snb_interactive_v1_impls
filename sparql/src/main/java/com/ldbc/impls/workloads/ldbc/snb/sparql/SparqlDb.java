@@ -568,7 +568,7 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
 
         @Override
         public List<String> getQueryString(SparqlDbConnectionState state, LdbcUpdate6AddPost operation) {
-            return state.getQueryStore().getUpdate6Multiple(operation);
+            return state.getQueryStore().getUpdate6MultipleSeparatedContent(operation);
         }
     }
 
