@@ -12,7 +12,7 @@ SELECT
     ?firstName
     ?lastName
     ?birthday
-    ?locationIp
+    ?locationIP
     ?browserUsed
     ?cityId
     ?gender
@@ -27,8 +27,8 @@ WHERE
     ?person snvoc:gender ?gender .
     ?person snvoc:birthday ?birthday .
     ?person snvoc:creationDate ?creationDate .
-    ?person snvoc:locationIP ?locationIp .
+    ?person snvoc:locationIP ?locationIP .
     ?person snvoc:isLocatedIn ?city .
     ?city snvoc:id ?cityId .
-    ?person snvoc:browserUsed ?browser .
+    ?person snvoc:browserUsed ?browserUsed .
 }
