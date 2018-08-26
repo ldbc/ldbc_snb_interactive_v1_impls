@@ -36,4 +36,5 @@ WHERE {
     ?creator snvoc:id ?originalPostAuthorId .
 }
 ORDER BY DESC(?messageCreationDate) DESC(?messageId)
+LIMIT 10
 
