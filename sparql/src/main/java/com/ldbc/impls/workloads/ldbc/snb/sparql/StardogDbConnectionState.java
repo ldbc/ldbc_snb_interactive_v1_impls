@@ -5,25 +5,27 @@ import com.complexible.stardog.sesame.StardogRepository;
 import com.ldbc.impls.workloads.ldbc.snb.BaseDbConnectionState;
 import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
 import org.openrdf.repository.Repository;
-import virtuoso.sesame4.driver.VirtuosoRepository;
 
 import java.util.Map;
 
-public class VirtuosoDbConnectionState<TQueryStore extends QueryStore> extends SparqlDbConnectionState<TQueryStore> {
+public class StardogDbConnectionState<TQueryStore extends QueryStore> extends SparqlDbConnectionState {
 
     private final String endpoint;
+    private final String databaseName;
     private final Repository repository;
 
-    public VirtuosoDbConnectionState(Map<String, String> properties, TQueryStore queryStore) {
+    public StardogDbConnectionState(Map<String, String> properties, TQueryStore queryStore) {
         super(properties, queryStore);
 
         endpoint = properties.get("endpoint");
-        repository = new VirtuosoRepository(endpoint, "dba", "dba");
+        databaseName = properties.get("databaseName");
+        repository = new StardogRepository(ConnectionConfiguration
+                .from(endpoint + databaseName)
+                .credentials("admin", "admin"));
     }
 
     @Override
     public Repository getRepository() {
         return repository;
     }
-
 }

@@ -125,11 +125,6 @@ import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConv
 
 public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
 
-    @Override
-    protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
-        dcs = new SparqlDbConnectionState(properties, new SparqlQueryStore(properties.get("queryDir")));
-    }
-
     public static class Query1 extends SparqlListOperationHandler<LdbcQuery1, LdbcQuery1Result> {
 
         @Override

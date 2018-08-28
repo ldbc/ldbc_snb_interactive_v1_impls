@@ -19,10 +19,10 @@ import java.util.stream.Collectors;
 
 import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.*;
 
-public abstract class VirtuosoDb extends SparqlDb {
+public abstract class StardogDb extends SparqlDb {
 
     @Override
     protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
-        dcs = new VirtuosoDbConnectionState(properties, new SparqlQueryStore(properties.get("queryDir")));
+        dcs = new StardogDbConnectionState(properties, new SparqlQueryStore(properties.get("queryDir")));
     }
 }

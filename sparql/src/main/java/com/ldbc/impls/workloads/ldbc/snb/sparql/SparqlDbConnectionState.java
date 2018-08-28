@@ -8,20 +8,10 @@ import org.openrdf.repository.Repository;
 
 import java.util.Map;
 
-public class SparqlDbConnectionState<TQueryStore extends QueryStore> extends BaseDbConnectionState<TQueryStore> {
-
-    private final String endpoint;
-    private final String databaseName;
-    private final Repository repository;
+public abstract class SparqlDbConnectionState<TQueryStore extends QueryStore> extends BaseDbConnectionState<TQueryStore> {
 
     public SparqlDbConnectionState(Map<String, String> properties, TQueryStore queryStore) {
         super(properties, queryStore);
-
-        endpoint = properties.get("endpoint");
-        databaseName = properties.get("databaseName");
-        repository = new StardogRepository(ConnectionConfiguration
-                .from(endpoint + databaseName)
-                .credentials("admin", "admin"));
     }
 
     public final void logQuery(String queryType, String query) {
@@ -35,23 +25,20 @@ public class SparqlDbConnectionState<TQueryStore extends QueryStore> extends Bas
         }
     }
 
-    @Override
+    public abstract Repository getRepository();
+
     public void beginTransaction() {
-        repository.getConnection().begin();
+        getRepository().getConnection().begin();
     }
 
     @Override
     public void endTransaction() {
-        repository.getConnection().commit();
+        getRepository().getConnection().commit();
     }
 
     @Override
     public void rollbackTransaction() {
-        repository.getConnection().rollback();
-    }
-
-    public Repository getRepository() {
-        return repository;
+        getRepository().getConnection().rollback();
     }
 
     @Override
