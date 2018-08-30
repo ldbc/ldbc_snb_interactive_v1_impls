@@ -13,7 +13,7 @@ SELECT
     (COUNT(*) AS ?postCount)
 WHERE {
     BIND( $startDate AS ?startDate ) .
-    BIND( ?startDate + "P$durationDaysD"^^xsd:duration AS ?endDate ) .
+    BIND( ?startDate + xsd:duration("P$durationDaysD") AS ?endDate ) .
     ?rootPerson a snvoc:Person .
     ?rootPerson snvoc:id $personId .
     ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
