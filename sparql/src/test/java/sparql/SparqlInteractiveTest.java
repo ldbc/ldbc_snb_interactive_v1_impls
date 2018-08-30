@@ -18,6 +18,7 @@ public class SparqlInteractiveTest extends InteractiveTest {
     private static String endpoint = "localhost:1127";
     private static String databaseName = "ldbcsf1";
     private static String queryDir = "queries";
+    private static String graphUri = "http://www.ldbc.eu";
 
     public SparqlInteractiveTest() {
         super(new VirtuosoInteractiveDb());
@@ -31,6 +32,7 @@ public class SparqlInteractiveTest extends InteractiveTest {
     public Map<String, String> getProperties() {
         final Map<String, String> properties = new HashMap<>();
         properties.put("endpoint", endpoint);
+        properties.put("graphUri", graphUri);
         properties.put("databaseName", databaseName);
         properties.put("queryDir", queryDir);
         properties.put("printQueryNames", "true");
@@ -52,13 +54,25 @@ public class SparqlInteractiveTest extends InteractiveTest {
 
     @Test
     public void testQuery3() throws Exception {
-        run(db, new LdbcQuery3(6597069777205L, "Lithuania", "Norway", new Date(1306886400000L), 28, LIMIT));
+        run(db, new LdbcQuery3(17592186055119L, "Laos", "Scotland", new Date(1306886400000L), 28, LIMIT));
+
+    }
+
+    @Test
+    public void testQuery4() throws Exception {
+        run(db, new LdbcQuery4(21990232559429L,new Date(1335830400000L),37, LIMIT));
 
     }
 
     @Test
     public void testQuery6() throws Exception {
         run(db, new LdbcQuery6(30786325583618L, "Angola", LIMIT));
+
+    }
+
+    @Test
+    public void testQuery7() throws Exception {
+        run(db, new LdbcQuery7(17592186053137L, LIMIT));
 
     }
 
@@ -76,7 +90,10 @@ public class SparqlInteractiveTest extends InteractiveTest {
     public void testShortQuery2() throws Exception {
         run(db, new LdbcShortQuery2PersonPosts(8796093030860L,10));
     }
-
+    @Test
+    public void testUpdateQuery2() throws Exception {
+        run(db, new LdbcUpdate2AddPostLike(26388279073665L,1236953235741L,new Date(1347528982194L)));
+    }
     @Test
     public void testUpdateQuery6() throws Exception {
         run(db, new LdbcUpdate6AddPost(111222333444555666L,"", new Date(2199025986581L),"61.16.220.210","Chrome", "tk","About Abbas I of Persia, w Shah Mohammed in a coup and placed the 16-year-old Abbas on the th",93,8796093029267L,549755863266L,0, ImmutableList.of(3L)));

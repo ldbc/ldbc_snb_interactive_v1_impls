@@ -125,6 +125,7 @@ public abstract class QueryStore {
         InteractiveComplexQuery12("interactive-complex-12"),
         InteractiveComplexQuery13("interactive-complex-13"),
         InteractiveComplexQuery14("interactive-complex-14"),
+        InteractiveComplexQuery7WithSecond("interactive-complex-7-with-second"),
 
         // interactive short queries
         InteractiveShortQuery1("interactive-short-1"),
@@ -254,6 +255,12 @@ public abstract class QueryStore {
 
     public String getQuery7(LdbcQuery7 operation) {
         return prepare(QueryType.InteractiveComplexQuery7, new ImmutableMap.Builder<String, String>()
+                .put("personId", getConverter().convertId(operation.personId()))
+                .build());
+    }
+
+    public String getQuery7WithSecond(LdbcQuery7 operation) {
+        return prepare(QueryType.InteractiveComplexQuery7WithSecond, new ImmutableMap.Builder<String, String>()
                 .put("personId", getConverter().convertId(operation.personId()))
                 .build());
     }
