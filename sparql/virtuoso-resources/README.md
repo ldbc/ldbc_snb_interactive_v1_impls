@@ -1,7 +1,7 @@
 1. Download [Virtuoso](https://sourceforge.net/projects/virtuoso/files/virtuoso/) and unzip
 2. Copy the `virtuoso.ini` file to `/path/to/unzipped/virtuoso/database/virtuoso.ini`
    - Replace the `/path/to/ldbc_snb_datagen/social_network_ttl` path with the real path
-3. Copy the start-virtuoso.sh file to `/path/to/unzipped/virtuoso/bin/start-virtuoso.sh`
+3. Copy the `start-virtuoso.sh` file to `/path/to/unzipped/virtuoso/bin/start-virtuoso.sh`
 4. Start Virtuoso by typing `./start-virtuoso.sh`
 5. [Load data](https://github.com/dbpedia/dbpedia-docs/wiki/Loading-Data-Virtuoso)
    - Start isql: `./isql 1127 dba dba`, then type the following commands:
