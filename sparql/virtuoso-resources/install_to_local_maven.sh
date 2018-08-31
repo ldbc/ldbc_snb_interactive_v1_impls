@@ -1,3 +1,5 @@
+#!/bin/bash
+
 mvn install:install-file \
     -Dfile=virtjdbc4.jar \
     -DgroupId=com.virtuoso.virtjdbc4 \
