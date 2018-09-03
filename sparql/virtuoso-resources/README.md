@@ -10,6 +10,7 @@
       ```console
       ld_dir('/path/to/ldbc_snb_datagen/social_network_ttl', '*.ttl', 'http://www.ldbc.eu');
       rdf_loader_run();
+      checkpoint;
       ```
 
 1. Permission to execute insert SPARQL queries over web interface
