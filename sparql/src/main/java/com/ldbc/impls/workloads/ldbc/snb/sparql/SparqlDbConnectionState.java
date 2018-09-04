@@ -5,10 +5,13 @@ import com.complexible.stardog.sesame.StardogRepository;
 import com.ldbc.impls.workloads.ldbc.snb.BaseDbConnectionState;
 import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
 import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryConnection;
 
 import java.util.Map;
 
 public abstract class SparqlDbConnectionState<TQueryStore extends QueryStore> extends BaseDbConnectionState<TQueryStore> {
+
+    protected RepositoryConnection connection;
 
     public SparqlDbConnectionState(Map<String, String> properties, TQueryStore queryStore) {
         super(properties, queryStore);
@@ -28,19 +31,25 @@ public abstract class SparqlDbConnectionState<TQueryStore extends QueryStore> ex
     public abstract Repository getRepository();
 
     public void beginTransaction() {
-        getRepository().getConnection().begin();
+        connection = getRepository().getConnection();
+        connection.begin();
+    }
+
+    @Override
+    public void close() {
+        getRepository().shutDown();
+        if (connection != null) {
+            connection.close();
+        }
     }
 
     @Override
     public void endTransaction() {
-        getRepository().getConnection().commit();
+        connection.commit();
     }
 
     @Override
     public void rollbackTransaction() {
-        getRepository().getConnection().rollback();
+        connection.rollback();
     }
-
-    @Override
-    public void close() {}
 }
