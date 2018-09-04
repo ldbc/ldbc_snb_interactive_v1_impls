@@ -8,6 +8,8 @@ import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlDbConnectionState;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
+import org.openrdf.repository.Repository;
+import org.openrdf.repository.RepositoryConnection;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -19,15 +21,15 @@ public abstract class SparqlListOperationHandler<TOperation extends Operation<Li
     @Override
     public void executeOperation(TOperation operation, SparqlDbConnectionState state,
                                  ResultReporter resultReporter) throws DbException {
-        try {
-            final List<TOperationResult> results = new ArrayList<>();
-            int resultCount = 0;
-            results.clear();
+        final List<TOperationResult> results = new ArrayList<>();
+        int resultCount = 0;
+        results.clear();
 
-            final String queryString = getQueryString(state, operation);
-            state.logQuery(operation.getClass().getSimpleName(), queryString);
+        final String queryString = getQueryString(state, operation);
+        state.logQuery(operation.getClass().getSimpleName(), queryString);
+        try (final RepositoryConnection conn = state.getRepository().getConnection()) {
 
-            TupleQuery tupleQuery = state.getRepository().getConnection().prepareTupleQuery(queryString);
+            TupleQuery tupleQuery = conn.prepareTupleQuery(queryString);
             TupleQueryResult queryResults = tupleQuery.evaluate();
 
             while (queryResults.hasNext()) {

@@ -30,26 +30,9 @@ public abstract class SparqlDbConnectionState<TQueryStore extends QueryStore> ex
 
     public abstract Repository getRepository();
 
-    public void beginTransaction() {
-        connection = getRepository().getConnection();
-        connection.begin();
-    }
 
     @Override
     public void close() {
         getRepository().shutDown();
-        if (connection != null) {
-            connection.close();
-        }
-    }
-
-    @Override
-    public void endTransaction() {
-        connection.commit();
-    }
-
-    @Override
-    public void rollbackTransaction() {
-        connection.rollback();
     }
 }

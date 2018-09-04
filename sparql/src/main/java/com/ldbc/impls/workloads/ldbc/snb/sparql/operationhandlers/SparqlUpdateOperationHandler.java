@@ -8,6 +8,7 @@ import com.ldbc.impls.workloads.ldbc.snb.operationhandlers.MultipleUpdateOperati
 import com.ldbc.impls.workloads.ldbc.snb.operationhandlers.UpdateOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlDbConnectionState;
 import org.openrdf.query.Update;
+import org.openrdf.repository.RepositoryConnection;
 
 import java.util.List;
 
@@ -17,11 +18,11 @@ public abstract class SparqlUpdateOperationHandler<TOperation extends Operation<
     @Override
     public void executeOperation(TOperation operation, SparqlDbConnectionState state,
                                  ResultReporter resultReporter) throws DbException {
-        try {
+        try (final RepositoryConnection conn = state.getRepository().getConnection()) {
             String queryString = getQueryString(state, operation);
             state.logQuery(operation.getClass().getSimpleName(), queryString);
 
-            Update update = state.getRepository().getConnection().prepareUpdate(queryString);
+            Update update = conn.prepareUpdate(queryString);
             update.execute();
         } catch (Exception e) {
             throw new DbException(e);

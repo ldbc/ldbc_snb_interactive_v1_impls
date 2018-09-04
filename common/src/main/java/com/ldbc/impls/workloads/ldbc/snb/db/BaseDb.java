@@ -19,17 +19,5 @@ public abstract class BaseDb<TQueryStore extends QueryStore> extends Db {
     protected BaseDbConnectionState getConnectionState() {
         return dcs;
     }
-
-    public void beginTransaction() throws Exception {
-        dcs.beginTransaction();
-    }
-
-    public void endTransaction() throws Exception {
-        dcs.endTransaction();
-    }
-
-    public void rollbackTransaction() throws Exception {
-        dcs.rollbackTransaction();
-    }
-
+    
 }

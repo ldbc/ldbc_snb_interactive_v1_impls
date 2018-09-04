@@ -15,6 +15,9 @@ import java.util.Map;
 
 public class SparqlInteractiveTest extends InteractiveTest {
 
+    // Stardog
+    // private static String endpoint = "http://localhost:5820/";
+    // Virtuoso
     private static String endpoint = "localhost:1127";
     private static String databaseName = "ldbcsf1";
     private static String queryDir = "queries";
@@ -72,7 +75,7 @@ public class SparqlInteractiveTest extends InteractiveTest {
 
     @Test
     public void testQuery7() throws Exception {
-        run(db, new LdbcQuery7(17592186053137L, LIMIT));
+        run(db, new LdbcQuery7(6597069777240L, LIMIT));
 
     }
 
