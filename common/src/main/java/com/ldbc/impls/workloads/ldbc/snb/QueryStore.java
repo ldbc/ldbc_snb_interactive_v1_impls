@@ -397,7 +397,7 @@ public abstract class QueryStore {
                 QueryType.InteractiveUpdate2,
                 ImmutableMap.of(
                         LdbcUpdate2AddPostLike.PERSON_ID, getConverter().convertId(operation.personId()),
-                        LdbcUpdate2AddPostLike.POST_ID, getConverter().convertIdForInsertion(operation.postId()),
+                        LdbcUpdate2AddPostLike.POST_ID, getConverter().convertId(operation.postId()),
                         LdbcUpdate2AddPostLike.CREATION_DATE, getConverter().convertDateTime(operation.creationDate())
                 )
         );
@@ -408,7 +408,7 @@ public abstract class QueryStore {
                 QueryType.InteractiveUpdate3,
                 ImmutableMap.of(
                         LdbcUpdate3AddCommentLike.PERSON_ID, getConverter().convertId(operation.personId()),
-                        LdbcUpdate3AddCommentLike.COMMENT_ID, getConverter().convertIdForInsertion(operation.commentId()),
+                        LdbcUpdate3AddCommentLike.COMMENT_ID, getConverter().convertId(operation.commentId()),
                         LdbcUpdate3AddCommentLike.CREATION_DATE, getConverter().convertDateTime(operation.creationDate())
                 )
         );
@@ -512,7 +512,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate1AddPersonCompanies,
                     ImmutableMap.of(
-                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.personId()),
+                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()),
                             "organizationId", getConverter().convertId(organization.organizationId()),
                             "worksFromYear", getConverter().convertInteger(organization.year())
                     )
@@ -522,7 +522,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate1AddPersonEmails,
                     ImmutableMap.of(
-                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.personId()),
+                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()),
                             "email", getConverter().convertString(email)
                     )
             ));
@@ -531,7 +531,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate1AddPersonLanguages,
                     ImmutableMap.of(
-                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.personId()),
+                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()),
                             "language", getConverter().convertString(language)
                     )
             ));
@@ -541,7 +541,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate1AddPersonTags,
                     ImmutableMap.of(
-                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.personId()),
+                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()),
                             "tagId", getConverter().convertId(tagId))
                     )
             );
@@ -550,7 +550,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate1AddPersonUniversities,
                     ImmutableMap.of(
-                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.personId()),
+                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()),
                             "organizationId", getConverter().convertId(organization.organizationId()),
                             "studiesFromYear", getConverter().convertInteger(organization.year())
                     )
@@ -575,7 +575,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate4AddForumTags,
                     ImmutableMap.of(
-                            LdbcUpdate4AddForum.FORUM_ID, getConverter().convertIdForInsertion(operation.forumId()),
+                            LdbcUpdate4AddForum.FORUM_ID, getConverter().convertId(operation.forumId()),
                             "tagId", getConverter().convertId(tagId))
                     )
             );
@@ -606,7 +606,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate6AddPostTags,
                     ImmutableMap.of(
-                            LdbcUpdate6AddPost.POST_ID, getConverter().convertIdForInsertion(operation.postId()),
+                            LdbcUpdate6AddPost.POST_ID, getConverter().convertId(operation.postId()),
                             "tagId", getConverter().convertId(tagId))
                     )
             );
@@ -637,7 +637,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate6AddPostTags,
                     ImmutableMap.of(
-                            LdbcUpdate6AddPost.POST_ID, getConverter().convertIdForInsertion(operation.postId()),
+                            LdbcUpdate6AddPost.POST_ID, getConverter().convertId(operation.postId()),
                             "tagId", getConverter().convertId(tagId))
                     )
             );
@@ -680,7 +680,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate7AddCommentTags,
                     ImmutableMap.of(
-                            LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertIdForInsertion(operation.commentId()),
+                            LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertId(operation.commentId()),
                             "tagId", getConverter().convertId(tagId))
                     )
             );
