@@ -14,7 +14,7 @@ values
 (
     :commentId
   , :creationDate
-  , :locationIp
+  , :locationIP
   , :browserUsed
   , :content
   , :length

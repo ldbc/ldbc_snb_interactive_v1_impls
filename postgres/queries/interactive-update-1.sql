@@ -17,7 +17,7 @@ values
   , :gender
   , :birthday
   , :creationDate
-  , :locationIp
+  , :locationIP
   , :browserUsed
   , :cityId
 );

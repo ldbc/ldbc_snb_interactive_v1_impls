@@ -17,7 +17,7 @@ values
     :postId
   , :imageFile
   , :creationDate
-  , :locationIp
+  , :locationIP
   , :browserUsed
   , :language
   , :content
