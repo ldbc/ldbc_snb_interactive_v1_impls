@@ -37,4 +37,4 @@ WHERE
     }
     BIND( COALESCE(?replyAuthorKnowsOriginalMessageAuthorInner, "false"^^xsd:boolean) AS ?replyAuthorKnowsOriginalMessageAuthor ) .
 }
-ORDER BY DESC(?commentCreationDate) ?messageCreatorId
+ORDER BY DESC(?commentCreationDate) ?replyAuthorId
