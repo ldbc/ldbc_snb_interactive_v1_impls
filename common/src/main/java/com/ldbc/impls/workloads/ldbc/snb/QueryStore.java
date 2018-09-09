@@ -125,6 +125,8 @@ public abstract class QueryStore {
         InteractiveComplexQuery12("interactive-complex-12"),
         InteractiveComplexQuery13("interactive-complex-13"),
         InteractiveComplexQuery14("interactive-complex-14"),
+        InteractiveComplexQuery3DurationAsFunction ("interactive-complex-3-duration-as-function" ),
+        InteractiveComplexQuery4DurationAsFunction ("interactive-complex-4-duration-as-function" ),
         InteractiveComplexQuery7WithSecond("interactive-complex-7-with-second"),
 
         // interactive short queries
@@ -256,6 +258,24 @@ public abstract class QueryStore {
     public String getQuery7(LdbcQuery7 operation) {
         return prepare(QueryType.InteractiveComplexQuery7, new ImmutableMap.Builder<String, String>()
                 .put("personId", getConverter().convertId(operation.personId()))
+                .build());
+    }
+
+    public String getQuery3DurationAsFunction(LdbcQuery3 operation) {
+        return prepare(QueryType.InteractiveComplexQuery3DurationAsFunction, new ImmutableMap.Builder<String, String>()
+                .put("personId", getConverter().convertId(operation.personId()))
+                .put("countryXName", getConverter().convertString(operation.countryXName()))
+                .put("countryYName", getConverter().convertString(operation.countryYName()))
+                .put("startDate", getConverter().convertDateTime(operation.startDate()))
+                .put("durationDays", getConverter().convertInteger(operation.durationDays()))
+                .build());
+    }
+
+    public String getQuery4DurationAsFunction(LdbcQuery4 operation) {
+        return prepare(QueryType.InteractiveComplexQuery4DurationAsFunction, new ImmutableMap.Builder<String, String>()
+                .put("personId", getConverter().convertId(operation.personId()))
+                .put("startDate", getConverter().convertDateTime(operation.startDate()))
+                .put("durationDays", getConverter().convertInteger(operation.durationDays()))
                 .build());
     }
 

@@ -127,6 +127,24 @@ public abstract class VirtuosoDb extends SparqlDb {
 
     }
 
+    public static class Query3 extends SparqlDb.Query3 {
+
+        @Override
+        public String getQueryString(SparqlDbConnectionState state, LdbcQuery3 operation) {
+            return appendInputDefine(state, state.getQueryStore().getQuery3DurationAsFunction(operation));
+        }
+
+    }
+
+    public static class Query4 extends SparqlDb.Query4 {
+
+        @Override
+        public String getQueryString(SparqlDbConnectionState state, LdbcQuery4 operation) {
+            return appendInputDefine(state, state.getQueryStore().getQuery4DurationAsFunction(operation));
+        }
+
+    }
+
     public static class Query7 extends SparqlDb.Query7 {
 
         @Override

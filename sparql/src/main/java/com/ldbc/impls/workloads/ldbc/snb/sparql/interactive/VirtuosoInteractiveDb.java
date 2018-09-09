@@ -16,8 +16,8 @@ public class VirtuosoInteractiveDb extends VirtuosoDb {
 
         this.registerOperationHandler(LdbcQuery1.class, SparqlDb.Query1.class);
         this.registerOperationHandler(LdbcQuery2.class, SparqlDb.Query2.class);
-        this.registerOperationHandler(LdbcQuery3.class, SparqlDb.Query3.class);
-        this.registerOperationHandler(LdbcQuery4.class, SparqlDb.Query4.class);
+        this.registerOperationHandler(LdbcQuery3.class, VirtuosoDb.Query3.class);
+        this.registerOperationHandler(LdbcQuery4.class, VirtuosoDb.Query4.class);
         this.registerOperationHandler(LdbcQuery5.class, SparqlDb.Query5.class);
         this.registerOperationHandler(LdbcQuery6.class, SparqlDb.Query6.class);
         this.registerOperationHandler(LdbcQuery7.class, VirtuosoDb.Query7.class);
