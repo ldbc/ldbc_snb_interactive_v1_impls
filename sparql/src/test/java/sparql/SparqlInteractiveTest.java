@@ -2,6 +2,7 @@ package sparql;
 
 import com.google.common.collect.ImmutableList;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
+import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
 import com.ldbc.impls.workloads.ldbc.snb.interactive.InteractiveTest;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.interactive.StardogInteractiveDb;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.interactive.VirtuosoInteractiveDb;
@@ -15,26 +16,40 @@ import java.util.Map;
 
 public class SparqlInteractiveTest extends InteractiveTest {
 
-    // Stardog
-    // private static String endpoint = "http://localhost:5820/";
-    // Virtuoso
-    private static String endpoint = "localhost:1127";
+    private static final boolean isVirtuoso = false;
+
+    private static BaseDb getBaseDb(){
+        if (isVirtuoso) {
+            return new VirtuosoInteractiveDb();
+        }{
+            return new StardogInteractiveDb();
+        }
+    }
+
+    //     Stardog
+    private static String endpointStardog = "http://geraint-oc.db.bme.hu:5820/";
+    //     Virtuoso
+    private static String endpointVirtuoso = "localhost:1127";
     private static String databaseName = "ldbcsf1";
     private static String queryDir = "queries";
     private static String graphUri = "http://www.ldbc.eu";
 
     public SparqlInteractiveTest() {
-        super(new VirtuosoInteractiveDb());
+        super(getBaseDb());
     }
 
-    public void setUp(){
+    public void setUp() {
 
     }
 
     @Override
     public Map<String, String> getProperties() {
         final Map<String, String> properties = new HashMap<>();
-        properties.put("endpoint", endpoint);
+        if (isVirtuoso) {
+            properties.put("endpoint", endpointVirtuoso);
+        }{
+            properties.put("endpoint", endpointStardog);
+        }
         properties.put("graphUri", graphUri);
         properties.put("databaseName", databaseName);
         properties.put("queryDir", queryDir);
