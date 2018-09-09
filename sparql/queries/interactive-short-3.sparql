@@ -9,25 +9,25 @@ PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 SELECT
-    (?frId AS ?personId)
+    ?personId
     ?firstName
     ?lastName
     ?friendshipCreationDate
 WHERE
 {
     BIND( $personId AS ?rootId )
-    ?person a snvoc:Person .
-    ?person snvoc:id ?rootId .
+    ?rootPerson a snvoc:Person .
+    ?rootPerson snvoc:id ?rootId .
     {
-        ?person snvoc:knows ?knows .
-        ?knows snvoc:hasPerson ?fr .
-    } UNION {
-        ?fr snvoc:knows ?knows .
+        ?rootPerson snvoc:knows ?knows .
         ?knows snvoc:hasPerson ?person .
+    } UNION {
+        ?person snvoc:knows ?knows .
+        ?knows snvoc:hasPerson ?rootPerson .
     }
     ?knows snvoc:creationDate ?friendshipCreationDate .
-    ?fr snvoc:firstName ?firstName .
-    ?fr snvoc:lastName ?lastName .
-    ?fr snvoc:id ?frId .
+    ?person snvoc:firstName ?firstName .
+    ?person snvoc:lastName ?lastName .
+    ?person snvoc:id ?personId .
 }
 ORDER BY DESC(?friendshipCreationDate) ?personId
