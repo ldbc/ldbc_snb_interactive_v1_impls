@@ -1,8 +1,8 @@
-MATCH (:Person {id:{1}})-[path:KNOWS*1..3]-(friend:Person)
-WHERE friend.firstName = {2}
+MATCH (:Person {id:$personId})-[path:KNOWS*1..3]-(friend:Person)
+WHERE friend.firstName = $firstName
 WITH friend, min(length(path)) AS distance
 ORDER BY distance ASC, friend.lastName ASC, toInt(friend.id) ASC
-LIMIT {3}
+LIMIT 20
 MATCH (friend)-[:IS_LOCATED_IN]->(friendCity:Place)
 OPTIONAL MATCH (friend)-[studyAt:STUDY_AT]->(uni:Organisation)-[:IS_LOCATED_IN]->(uniCity:Place)
 WITH
@@ -28,18 +28,18 @@ WITH
   friendCity,
   distance
 RETURN
-  friend.id AS id,
-  friend.lastName AS lastName,
-  distance,
-  friend.birthday AS birthday,
-  friend.creationDate AS creationDate,
-  friend.gender AS gender,
-  friend.browserUsed AS browser,
-  friend.locationIP AS locationIp,
-  friend.email AS emails,
-  friend.speaks AS languages,
-  friendCity.name AS cityName,
-  unis,
-  companies
-ORDER BY distance ASC, friend.lastName ASC, toInt(friend.id) ASC
-LIMIT {3};
+  friend.id AS friendId,
+  friend.lastName AS friendLastName,
+  distance AS distanceFromPerson,
+  friend.birthday AS friendBirthday,
+  friend.creationDate AS friendCreationDate,
+  friend.gender AS friendGender,
+  friend.browserUsed AS friendBrowserUsed,
+  friend.locationIP AS friendLocationIp,
+  friend.email AS friendEmails,
+  friend.speaks AS friendLanguages,
+  friendCity.name AS friendCityName,
+  unis AS friendUniversities,
+  companies AS friendCompanies
+ORDER BY distanceFromPerson ASC, friendLastName ASC, toInteger(friendId) ASC
+LIMIT 20

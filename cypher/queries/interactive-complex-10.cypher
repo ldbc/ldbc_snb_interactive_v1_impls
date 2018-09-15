@@ -1,7 +1,7 @@
-MATCH (person:Person {id:{1}})-[:KNOWS*2..2]-(friend:Person)-[:IS_LOCATED_IN]->(city:Place)
+MATCH (person:Person {id:$personId})-[:KNOWS*2..2]-(friend:Person)-[:IS_LOCATED_IN]->(city:Place)
 WHERE 
-  ((friend.birthday_month = {2} AND friend.birthday_day >= 21) OR
-  (friend.birthday_month = ({2}%12)+1 AND friend.birthday_day < 22))
+  ((friend.birthday/100%100 = $month AND friend.birthday%100 >= 21) OR
+  (friend.birthday/100%100 = $nextMonth AND friend.birthday%100 < 22))
   AND not(friend=person)
   AND not((friend)-[:KNOWS]-(person))
 WITH DISTINCT friend, city, person
@@ -16,8 +16,8 @@ RETURN
   friend.id AS personId,
   friend.firstName AS personFirstName,
   friend.lastName AS personLastName,
+  commonPostCount - (postCount - commonPostCount) AS commonInterestScore,
   friend.gender AS personGender,
-  city.name AS personCityName,
-  commonPostCount - (postCount - commonPostCount) AS commonInterestScore
+  city.name AS personCityName
 ORDER BY commonInterestScore DESC, toInt(personId) ASC
-LIMIT {3};
+LIMIT 10

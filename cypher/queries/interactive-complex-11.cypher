@@ -1,13 +1,13 @@
-MATCH (person:Person {id:{1}})-[:KNOWS*1..2]-(friend:Person)
+MATCH (person:Person {id:$personId})-[:KNOWS*1..2]-(friend:Person)
 WHERE not(person=friend)
 WITH DISTINCT friend
-MATCH (friend)-[worksAt:WORK_AT]->(company:Organisation)-[:IS_LOCATED_IN]->(:Place {name:{3}})
-WHERE worksAt.workFrom < {2}
+MATCH (friend)-[worksAt:WORK_AT]->(company:Organisation)-[:IS_LOCATED_IN]->(:Place {name:$countryName})
+WHERE worksAt.workFrom < $workFromYear
 RETURN
-  friend.id AS friendId,
-  friend.firstName AS friendFirstName,
-  friend.lastName AS friendLastName,
-  company.name AS companyName,
-  worksAt.workFrom AS workFromYear
-ORDER BY workFromYear ASC, toInt(friendId) ASC, companyName DESC
-LIMIT {4};
+  friend.id AS personId,
+  friend.firstName AS personFirstName,
+  friend.lastName AS personLastName,
+  company.name AS organizationName,
+  worksAt.workFrom AS organizationWorkFromYear
+ORDER BY organizationWorkFromYear ASC, toInteger(personId) ASC, organizationName DESC
+LIMIT 10

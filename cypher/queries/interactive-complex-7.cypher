@@ -1,4 +1,4 @@
-MATCH (person:Person {id:{1}})<-[:HAS_CREATOR]-(message)<-[like:LIKES]-(liker:Person)
+MATCH (person:Person {id:$personId})<-[:HAS_CREATOR]-(message)<-[like:LIKES]-(liker:Person)
 WITH liker, message, like.creationDate AS likeTime, person
 ORDER BY likeTime DESC, toInt(message.id) ASC
 WITH
@@ -9,13 +9,13 @@ RETURN
   liker.id AS personId,
   liker.firstName AS personFirstName,
   liker.lastName AS personLastName,
-  latestLike.likeTime AS likeTime,
-  latestLike.msg.id AS messageId,
+  latestLike.likeTime AS likeCreationDate,
+  latestLike.msg.id AS commentOrPostId,
   CASE exists(latestLike.msg.content)
     WHEN true THEN latestLike.msg.content
     ELSE latestLike.msg.imageFile
-  END AS messageContent,
-  latestLike.likeTime - latestLike.msg.creationDate AS latencyAsMilli,
+  END AS commentOrPostContent,
+  (latestLike.likeTime - latestLike.msg.creationDate) / 1000 AS minutesLatency,
   not((liker)-[:KNOWS]-(person)) AS isNew
-ORDER BY likeTime DESC, toInt(personId) ASC
-LIMIT {2};
+ORDER BY likeCreationDate DESC, toInteger(personId) ASC
+LIMIT 10

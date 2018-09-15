@@ -1,11 +1,13 @@
-MATCH (person:Person {id:{1}})-[:KNOWS]-(:Person)<-[:HAS_CREATOR]-(post:Post)-[:HAS_TAG]->(tag:Tag)
-WHERE post.creationDate >= {2} AND post.creationDate < {3}
-OPTIONAL MATCH (tag)<-[:HAS_TAG]-(oldPost:Post)-[:HAS_CREATOR]->(:Person)-[:KNOWS]-(person)
-WHERE oldPost.creationDate < {2}
-WITH tag, post, length(collect(oldPost)) AS oldPostCount
-WHERE oldPostCount=0
+MATCH (person:Person {id:$personId})-[:KNOWS]-(:Person)<-[:HAS_CREATOR]-(post:Post)-[:HAS_TAG]->(tag:Tag)
+WHERE post.creationDate >= $startDate
+   AND post.creationDate < $endDate
+WITH person, count(post) AS postsOnTag, tag
+OPTIONAL MATCH (person)-[:KNOWS]-()<-[:HAS_CREATOR]-(oldPost:Post)-[:HAS_TAG]->(tag)
+WHERE oldPost.creationDate < $startDate
+WITH person, postsOnTag, tag, count(oldPost) AS cp
+WHERE cp = 0
 RETURN
   tag.name AS tagName,
-  length(collect(post)) AS postCount
+  sum(postsOnTag) AS postCount
 ORDER BY postCount DESC, tagName ASC
-LIMIT {4};
+LIMIT 10

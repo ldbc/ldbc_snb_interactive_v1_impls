@@ -14,9 +14,16 @@ public class CypherConverter extends Converter {
 
     @Override
     public String convertDateTime(Date date) {
-        final SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        final SimpleDateFormat sdf = new SimpleDateFormat(DATETIME_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         return sdf.format(date);
+    }
+
+    private static long convertDateTimesToEpoch(long dateValue, String format) throws ParseException {
+        final SimpleDateFormat sdf = new SimpleDateFormat(format);
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return sdf.parse(Long.toString(dateValue)).toInstant().toEpochMilli();
+
     }
 
     /**
@@ -27,9 +34,18 @@ public class CypherConverter extends Converter {
      * @return
      */
     public static long convertLongTimestampToEpoch(long timestamp) throws ParseException {
-        final SimpleDateFormat sdf = new SimpleDateFormat(DATETIME_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return sdf.parse(Long.toString(timestamp)).toInstant().toEpochMilli();
+        return convertDateTimesToEpoch(timestamp, DATETIME_FORMAT);
+    }
+
+    /**
+     * Converts timestamp strings (in the format produced by DATAGEN) ({@value #DATE_FORMAT})
+     * to a date.
+     *
+     * @param date
+     * @return
+     */
+    public static long convertLongDateToEpoch(long date) throws ParseException {
+        return convertDateTimesToEpoch(date, DATE_FORMAT);
     }
 
 }

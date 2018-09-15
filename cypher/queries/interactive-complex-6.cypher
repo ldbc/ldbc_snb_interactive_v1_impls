@@ -1,6 +1,6 @@
 MATCH
-  (person:Person {id:{1}})-[:KNOWS*1..2]-(friend:Person),
-  (friend)<-[:HAS_CREATOR]-(friendPost:Post)-[:HAS_TAG]->(knownTag:Tag {name:{2}})
+  (person:Person {id:$personId})-[:KNOWS*1..2]-(friend:Person),
+  (friend)<-[:HAS_CREATOR]-(friendPost:Post)-[:HAS_TAG]->(knownTag:Tag {name:$tagName})
 WHERE not(person=friend)
 MATCH (friendPost)-[:HAS_TAG]->(commonTag:Tag)
 WHERE not(commonTag=knownTag)
@@ -11,4 +11,4 @@ RETURN
   commonTag.name AS tagName,
   count(commonPost) AS postCount
 ORDER BY postCount DESC, tagName ASC
-LIMIT {3};
+LIMIT 10
