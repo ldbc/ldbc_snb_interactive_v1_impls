@@ -483,6 +483,7 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
                     originalPostAuthorLastName);
         }
     }
+
     public static class ShortQuery3PersonFriends extends CypherListOperationHandler<LdbcShortQuery3PersonFriends, LdbcShortQuery3PersonFriendsResult> {
 
         @Override
@@ -501,6 +502,93 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
                     firstName,
                     lastName,
                     friendshipCreationDate);
+        }
+    }
+
+    public static class ShortQuery4MessageContent extends CypherSingletonOperationHandler<LdbcShortQuery4MessageContent, LdbcShortQuery4MessageContentResult> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcShortQuery4MessageContent operation) {
+            return state.getQueryStore().getShortQuery4MessageContent(operation);
+        }
+
+        @Override
+        public LdbcShortQuery4MessageContentResult convertSingleResult(Record record) throws ParseException {
+            // Pay attention, the spec's and the implementation's parameter orders are different.
+            long messageCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(0).asLong());
+            String messageContent = record.get(1).asString();
+            return new LdbcShortQuery4MessageContentResult(
+                    messageContent,
+                    messageCreationDate);
+        }
+    }
+
+    public static class ShortQuery5MessageCreator extends CypherSingletonOperationHandler<LdbcShortQuery5MessageCreator, LdbcShortQuery5MessageCreatorResult> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcShortQuery5MessageCreator operation) {
+            return state.getQueryStore().getShortQuery5MessageCreator(operation);
+        }
+
+        @Override
+        public LdbcShortQuery5MessageCreatorResult convertSingleResult(Record record) {
+            long personId = record.get(0).asLong();
+            String firstName = record.get(1).asString();
+            String lastName = record.get(2).asString();
+            return new LdbcShortQuery5MessageCreatorResult(
+                    personId,
+                    firstName,
+                    lastName);
+        }
+    }
+
+    public static class ShortQuery6MessageForum extends CypherSingletonOperationHandler<LdbcShortQuery6MessageForum, LdbcShortQuery6MessageForumResult> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcShortQuery6MessageForum operation) {
+            return state.getQueryStore().getShortQuery6MessageForum(operation);
+        }
+
+        @Override
+        public LdbcShortQuery6MessageForumResult convertSingleResult(Record record) {
+            long forumId = record.get(0).asLong();
+            String forumTitle = record.get(1).asString();
+            long moderatorId = record.get(2).asLong();
+            String moderatorFirstName = record.get(3).asString();
+            String moderatorLastName = record.get(4).asString();
+            return new LdbcShortQuery6MessageForumResult(
+                    forumId,
+                    forumTitle,
+                    moderatorId,
+                    moderatorFirstName,
+                    moderatorLastName);
+        }
+    }
+
+    public static class ShortQuery7MessageReplies extends CypherListOperationHandler<LdbcShortQuery7MessageReplies, LdbcShortQuery7MessageRepliesResult> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcShortQuery7MessageReplies operation) {
+            return state.getQueryStore().getShortQuery7MessageReplies(operation);
+        }
+
+        @Override
+        public LdbcShortQuery7MessageRepliesResult convertSingleResult(Record record) throws ParseException {
+            long commentId = record.get(0).asLong();
+            String commentContent = record.get(1).asString();
+            long commentCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(2).asLong());
+            long replyAuthorId = record.get(3).asLong();
+            String replyAuthorFirstName = record.get(4).asString();
+            String replyAuthorLastName = record.get(5).asString();
+            boolean replyAuthorKnowsOriginalMessageAuthor = record.get(6).asBoolean();
+            return new LdbcShortQuery7MessageRepliesResult(
+                    commentId,
+                    commentContent,
+                    commentCreationDate,
+                    replyAuthorId,
+                    replyAuthorFirstName,
+                    replyAuthorLastName,
+                    replyAuthorKnowsOriginalMessageAuthor);
         }
     }
 

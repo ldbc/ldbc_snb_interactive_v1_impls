@@ -4,4 +4,4 @@ RETURN
   friend.firstName AS firstName,
   friend.lastName AS lastName,
   r.creationDate AS friendshipCreationDate
-ORDER BY friendshipCreationDate DESC, toInteger(personId) ASC;
+ORDER BY friendshipCreationDate DESC, toInteger(personId) ASC
