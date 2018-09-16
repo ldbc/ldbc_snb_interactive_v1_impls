@@ -61,6 +61,8 @@ import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Values;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -425,6 +427,82 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
     }
 
     // Interactive short reads
+
+    public static class ShortQuery1PersonProfile extends CypherSingletonOperationHandler<LdbcShortQuery1PersonProfile, LdbcShortQuery1PersonProfileResult> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcShortQuery1PersonProfile operation) {
+            return state.getQueryStore().getShortQuery1PersonProfile(operation);
+        }
+
+        @Override
+        public LdbcShortQuery1PersonProfileResult convertSingleResult(Record record) throws ParseException {
+            String firstName = record.get(0).asString();
+            String lastName = record.get(1).asString();
+            long birthday = CypherConverter.convertLongDateToEpoch(record.get(2).asLong());
+            String locationIP = record.get(3).asString();
+            String browserUsed = record.get(4).asString();
+            long cityId = record.get(5).asLong();
+            String gender = record.get(6).asString();
+            long creationDate = CypherConverter.convertLongTimestampToEpoch(record.get(7).asLong());
+            return new LdbcShortQuery1PersonProfileResult(
+                    firstName,
+                    lastName,
+                    birthday,
+                    locationIP,
+                    browserUsed,
+                    cityId,
+                    gender,
+                    creationDate);
+        }
+    }
+
+    public static class ShortQuery2PersonPosts extends CypherListOperationHandler<LdbcShortQuery2PersonPosts, LdbcShortQuery2PersonPostsResult> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcShortQuery2PersonPosts operation) {
+            return state.getQueryStore().getShortQuery2PersonPosts(operation);
+        }
+
+        @Override
+        public LdbcShortQuery2PersonPostsResult convertSingleResult(Record record) throws ParseException {
+            long messageId = record.get(0).asLong();
+            String messageContent = record.get(1).asString();
+            long messageCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(2).asLong());
+            long originalPostId = record.get(3).asLong();
+            long originalPostAuthorId = record.get(4).asLong();
+            String originalPostAuthorFirstName = record.get(5).asString();
+            String originalPostAuthorLastName = record.get(6).asString();
+            return new LdbcShortQuery2PersonPostsResult(
+                    messageId,
+                    messageContent,
+                    messageCreationDate,
+                    originalPostId,
+                    originalPostAuthorId,
+                    originalPostAuthorFirstName,
+                    originalPostAuthorLastName);
+        }
+    }
+    public static class ShortQuery3PersonFriends extends CypherListOperationHandler<LdbcShortQuery3PersonFriends, LdbcShortQuery3PersonFriendsResult> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcShortQuery3PersonFriends operation) {
+            return state.getQueryStore().getShortQuery3PersonFriends(operation);
+        }
+
+        @Override
+        public LdbcShortQuery3PersonFriendsResult convertSingleResult(Record record) throws ParseException {
+            long personId = record.get(0).asLong();
+            String firstName = record.get(1).asString();
+            String lastName = record.get(2).asString();
+            long friendshipCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(3).asLong());
+            return new LdbcShortQuery3PersonFriendsResult(
+                    personId,
+                    firstName,
+                    lastName,
+                    friendshipCreationDate);
+        }
+    }
 
     // Interactive updates
 

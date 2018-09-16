@@ -1,4 +1,4 @@
-MATCH (:Person {id:{id}})<-[:HAS_CREATOR]-(m)-[:REPLY_OF*0..]->(p:Post)
+MATCH (:Person {id:$personId})<-[:HAS_CREATOR]-(m)-[:REPLY_OF*0..]->(p:Post)
 MATCH (p)-[:HAS_CREATOR]->(c)
 RETURN
   m.id as messageId,
@@ -12,4 +12,4 @@ RETURN
   c.firstName as originalPostAuthorFirstName,
   c.lastName as originalPostAuthorLastName
 ORDER BY messageCreationDate DESC
-LIMIT {limit};
+LIMIT 10
