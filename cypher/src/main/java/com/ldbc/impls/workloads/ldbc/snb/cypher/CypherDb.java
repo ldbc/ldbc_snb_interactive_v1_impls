@@ -391,6 +391,39 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
         }
     }
 
+    public static class InteractiveQuery13 extends CypherSingletonOperationHandler<LdbcQuery13, LdbcQuery13Result> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcQuery13 operation) {
+            return state.getQueryStore().getQuery13(operation);
+        }
+
+        @Override
+        public LdbcQuery13Result convertSingleResult(Record record) {
+            return new LdbcQuery13Result(record.get(0).asInt());
+        }
+    }
+
+    public static class InteractiveQuery14 extends CypherListOperationHandler<LdbcQuery14, LdbcQuery14Result> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcQuery14 operation) {
+            return state.getQueryStore().getQuery14(operation);
+        }
+
+        @Override
+        public LdbcQuery14Result convertSingleResult(Record record) throws ParseException {
+            List<Long> personIdsInPath = new ArrayList<>();
+            if (!record.get(0).isNull()) {
+                personIdsInPath = record.get(0).asList((e) -> e.asLong());
+            }
+            double pathWight = record.get(1).asDouble();
+            return new LdbcQuery14Result(
+                    personIdsInPath,
+                    pathWight);
+        }
+    }
+
     // Interactive short reads
 
     // Interactive updates
