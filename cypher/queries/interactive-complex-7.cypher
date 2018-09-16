@@ -15,7 +15,7 @@ RETURN
     WHEN true THEN latestLike.msg.content
     ELSE latestLike.msg.imageFile
   END AS commentOrPostContent,
-  (latestLike.likeTime - latestLike.msg.creationDate) / 1000 AS minutesLatency,
+  latestLike.msg.creationDate AS commentOrPostCreationDate,
   not((liker)-[:KNOWS]-(person)) AS isNew
 ORDER BY likeCreationDate DESC, toInteger(personId) ASC
-LIMIT 10
+LIMIT 20

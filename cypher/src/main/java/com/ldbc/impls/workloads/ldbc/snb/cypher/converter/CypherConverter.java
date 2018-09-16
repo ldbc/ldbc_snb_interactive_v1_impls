@@ -48,4 +48,10 @@ public class CypherConverter extends Converter {
         return convertDateTimesToEpoch(date, DATE_FORMAT);
     }
 
+    public static int convertStartAndEndDateToLatency(long from, long to) throws ParseException {
+        long fromEpoch = convertDateTimesToEpoch(from, DATETIME_FORMAT);
+        long toEpoch = convertDateTimesToEpoch(to, DATETIME_FORMAT);
+        return (int)((toEpoch - fromEpoch) / 1000 / 60);
+    }
+
 }

@@ -253,7 +253,7 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
             long likeCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(3).asLong());
             long commentOrPostId = record.get(4).asLong();
             String commentOrPostContent = record.get(5).asString();
-            int minutesLatency = record.get(6).asInt();
+            int minutesLatency = CypherConverter.convertStartAndEndDateToLatency(record.get(6).asLong(), record.get(3).asLong());
             boolean isNew = record.get(7).asBoolean();
             return new LdbcQuery7Result(
                     personId,
