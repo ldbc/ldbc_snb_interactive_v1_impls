@@ -1,11 +1,14 @@
 package com.ldbc.impls.workloads.ldbc.snb.cypher.converter;
 
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate1AddPerson;
 import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 public class CypherConverter extends Converter {
 
@@ -52,6 +55,16 @@ public class CypherConverter extends Converter {
         long fromEpoch = convertDateTimesToEpoch(from, DATETIME_FORMAT);
         long toEpoch = convertDateTimesToEpoch(to, DATETIME_FORMAT);
         return (int)((toEpoch - fromEpoch) / 1000 / 60);
+    }
+
+    public String convertOrganisations(List<LdbcUpdate1AddPerson.Organization> values) {
+        String res = "[";
+        res += values
+                .stream()
+                .map(v -> "{ organizationId: " + v.organizationId() + ", year: " + v.year() + "}")
+                .collect(Collectors.joining(","));
+        res += "]";
+        return res;
     }
 
 }

@@ -57,6 +57,7 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.converter.CypherConverter;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.operationhandlers.CypherListOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.operationhandlers.CypherSingletonOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.cypher.operationhandlers.CypherUpdateOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
 import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Values;
@@ -593,6 +594,15 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
     }
 
     // Interactive updates
+
+    public static class Update1AddPerson extends CypherUpdateOperationHandler<LdbcUpdate1AddPerson> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcUpdate1AddPerson operation) {
+            return state.getQueryStore().getUpdate1Single(operation);
+        }
+
+    }
 
     // BI queries
 

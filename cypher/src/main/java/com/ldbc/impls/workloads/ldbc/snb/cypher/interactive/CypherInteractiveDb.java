@@ -35,6 +35,8 @@ public class CypherInteractiveDb extends CypherDb {
         registerOperationHandler(LdbcShortQuery5MessageCreator.class, ShortQuery5MessageCreator.class);
         registerOperationHandler(LdbcShortQuery6MessageForum.class, ShortQuery6MessageForum.class);
         registerOperationHandler(LdbcShortQuery7MessageReplies.class, ShortQuery7MessageReplies.class);
+
+        registerOperationHandler(LdbcUpdate1AddPerson.class, Update1AddPerson.class);
     }
 
 }
