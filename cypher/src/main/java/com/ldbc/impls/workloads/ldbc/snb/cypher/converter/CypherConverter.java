@@ -61,7 +61,7 @@ public class CypherConverter extends Converter {
         String res = "[";
         res += values
                 .stream()
-                .map(v -> "{ organizationId: " + v.organizationId() + ", year: " + v.year() + "}")
+                .map(v -> "[" + v.organizationId() + ", " + v.year() + "]")
                 .collect(Collectors.joining(","));
         res += "]";
         return res;

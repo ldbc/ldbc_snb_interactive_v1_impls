@@ -6,9 +6,9 @@ UNWIND $tagIds AS tagId
     CREATE (p)-[:HAS_INTEREST]->(t)
 WITH p, count(*) AS dummy2
 UNWIND $studyAt AS s
-    MATCH (u:Organisation {id: s.organizationId})
-    CREATE (p)-[:STUDY_AT {classYear: s.year}]->(u)
+    MATCH (u:Organisation {id: s[0]})
+    CREATE (p)-[:STUDY_AT {classYear: s[1]}]->(u)
 WITH p, count(*) AS dummy3
 UNWIND $workAt AS w
-    MATCH (comp:Organisation {id: w.organizationId})
-    CREATE (p)-[:WORKS_AT {workFrom: w.year}]->(comp)
+    MATCH (comp:Organisation {id: w[0]})
+    CREATE (p)-[:WORKS_AT {workFrom: w[1]}]->(comp)
