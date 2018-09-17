@@ -22,6 +22,13 @@ public class CypherConverter extends Converter {
         return sdf.format(date);
     }
 
+    @Override
+    public String convertDate(Date date) {
+        final SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return sdf.format(date);
+    }
+
     private static long convertDateTimesToEpoch(long dateValue, String format) throws ParseException {
         final SimpleDateFormat sdf = new SimpleDateFormat(format);
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));

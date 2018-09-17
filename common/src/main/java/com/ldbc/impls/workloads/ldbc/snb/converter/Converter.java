@@ -30,7 +30,11 @@ public class Converter {
     }
 
     public String convertDate(long timestamp) {
-        return convertDateTime(timestamp);
+        return convertDateTime(new Date(timestamp));
+    }
+
+    public String convertDate(Date date) {
+        return convertDateTime(date);
     }
 
     /**
