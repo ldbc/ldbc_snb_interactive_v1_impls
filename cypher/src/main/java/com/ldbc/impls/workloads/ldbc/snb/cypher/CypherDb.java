@@ -601,7 +601,62 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
         public String getQueryString(CypherDbConnectionState state, LdbcUpdate1AddPerson operation) {
             return state.getQueryStore().getUpdate1Single(operation);
         }
+    }
 
+    public static class Update2AddPostLike extends CypherUpdateOperationHandler<LdbcUpdate2AddPostLike> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcUpdate2AddPostLike operation) {
+            return state.getQueryStore().getUpdate2(operation);
+        }
+    }
+
+    public static class Update3AddCommentLike extends CypherUpdateOperationHandler<LdbcUpdate3AddCommentLike> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcUpdate3AddCommentLike operation) {
+            return state.getQueryStore().getUpdate3(operation);
+        }
+    }
+
+    public static class Update4AddForum extends CypherUpdateOperationHandler<LdbcUpdate4AddForum> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcUpdate4AddForum operation) {
+            return state.getQueryStore().getUpdate4Single(operation);
+        }
+    }
+
+    public static class Update5AddForumMembership extends CypherUpdateOperationHandler<LdbcUpdate5AddForumMembership> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcUpdate5AddForumMembership operation) {
+            return state.getQueryStore().getUpdate5(operation);
+        }
+    }
+
+    public static class Update6AddPost extends CypherUpdateOperationHandler<LdbcUpdate6AddPost> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcUpdate6AddPost operation) {
+            return state.getQueryStore().getUpdate6Single(operation);
+        }
+    }
+
+    public static class Update7AddComment extends CypherUpdateOperationHandler<LdbcUpdate7AddComment> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcUpdate7AddComment operation) {
+            return state.getQueryStore().getUpdate7Single(operation);
+        }
+    }
+
+    public static class Update8AddFriendship extends CypherUpdateOperationHandler<LdbcUpdate8AddFriendship> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcUpdate8AddFriendship operation) {
+            return state.getQueryStore().getUpdate8(operation);
+        }
     }
 
     // BI queries
