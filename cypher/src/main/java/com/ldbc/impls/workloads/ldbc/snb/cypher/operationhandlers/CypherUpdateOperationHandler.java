@@ -26,5 +26,6 @@ public abstract class CypherUpdateOperationHandler<TOperation extends Operation<
         } catch (Exception e) {
             throw new DbException(e);
         }
+        resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
     }
 }
