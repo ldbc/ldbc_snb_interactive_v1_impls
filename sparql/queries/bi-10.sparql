@@ -23,7 +23,7 @@ WHERE
                 ?message snvoc:hasTag ?tag .
                 ?tag foaf:name $tag .
                 ?message snvoc:creationDate ?creationDate .
-                FILTER (?creationDate > $date^^xsd:dateTime)
+                FILTER (?creationDate > $date)
             }
             UNION
             {
@@ -46,7 +46,7 @@ WHERE
                     ?message snvoc:hasTag ?tag .
                     ?tag foaf:name $tag .
                     ?message snvoc:creationDate ?creationDate .
-                    FILTER (?creationDate > $date^^xsd:dateTime)
+                    FILTER (?creationDate > $date)
                 }
                 UNION
                 {

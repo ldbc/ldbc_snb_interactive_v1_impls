@@ -27,10 +27,11 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery7AuthoritativeUsers;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopics;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForums;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlDb;
+import com.ldbc.impls.workloads.ldbc.snb.sparql.StardogDb;
 
 import java.util.Map;
 
-public class SparqlBiDb extends SparqlDb {
+public class StardogBiDb extends StardogDb {
 
     @Override
     protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {

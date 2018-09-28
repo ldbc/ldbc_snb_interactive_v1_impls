@@ -8,6 +8,9 @@ import com.ldbc.impls.workloads.ldbc.snb.sparql.SparqlDbConnectionState;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
+import org.openrdf.repository.RepositoryConnection;
+
+import java.text.ParseException;
 
 public abstract class SparqlSingletonOperationHandler<TOperation extends Operation<TOperationResult>, TOperationResult>
         implements SingletonOperationHandler<TOperationResult, TOperation, SparqlDbConnectionState> {
@@ -15,14 +18,14 @@ public abstract class SparqlSingletonOperationHandler<TOperation extends Operati
     @Override
     public void executeOperation(TOperation operation, SparqlDbConnectionState state,
                                  ResultReporter resultReporter) throws DbException {
-        try {
             TOperationResult tuple = null;
             int resultCount = 0;
 
             final String queryString = getQueryString(state, operation);
             state.logQuery(operation.getClass().getSimpleName(), queryString);
 
-            TupleQuery tupleQuery = state.getRepository().getConnection().prepareTupleQuery(queryString);
+        try (final RepositoryConnection conn = state.getRepository().getConnection()) {
+            TupleQuery tupleQuery = conn.prepareTupleQuery(queryString);
             TupleQueryResult queryResults = tupleQuery.evaluate();
 
             if (queryResults.hasNext()) {
@@ -41,6 +44,6 @@ public abstract class SparqlSingletonOperationHandler<TOperation extends Operati
         }
     }
 
-    public abstract TOperationResult convertSingleResult(BindingSet bs);
+    public abstract TOperationResult convertSingleResult(BindingSet bs) throws ParseException;
 
 }

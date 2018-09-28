@@ -35,19 +35,4 @@ public class CypherDbConnectionState extends BaseDbConnectionState<CypherQuerySt
         driver.close();
     }
 
-    @Override
-    public void beginTransaction() throws Exception {
-
-    }
-
-    @Override
-    public void endTransaction() throws Exception {
-
-    }
-
-    @Override
-    public void rollbackTransaction() throws Exception {
-
-    }
-
 }

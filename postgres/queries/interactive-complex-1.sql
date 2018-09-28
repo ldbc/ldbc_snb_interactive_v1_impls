@@ -14,15 +14,15 @@ select
        (select array_agg(ARRAY[o3.o_name, pc_workfrom::text, p3.pl_name]) from person_company, organisation o3, place p3 where pc_personid = id and pc_organisationid = o3.o_organisationid and o3.o_placeid = p3.pl_placeid group by pc_personid) as company
 from
     (
-    select k_person2id as id, 1 as dist from knows, person where k_person1id = :Person and p_personid = k_person2id and p_firstname = :Name
+    select k_person2id as id, 1 as dist from knows, person where k_person1id = :personId and p_personid = k_person2id and p_firstname = :firstName
     union all
     select b.k_person2id as id, 2 as dist from knows a, knows b, person
     where
-      a.k_person1id = :Person and b.k_person1id = a.k_person2id and p_personid = b.k_person2id and p_firstname = :Name
+      a.k_person1id = :personId and b.k_person1id = a.k_person2id and p_personid = b.k_person2id and p_firstname = :firstName
     union all
     select c.k_person2id as id, 3 as dist from knows a, knows b, knows c, person
     where
-      a.k_person1id = :Person and b.k_person1id = a.k_person2id and b.k_person2id = c.k_person1id and p_personid = c.k_person2id and p_firstname = :Name
+      a.k_person1id = :personId and b.k_person1id = a.k_person2id and b.k_person2id = c.k_person1id and p_personid = c.k_person2id and p_firstname = :firstName
     ) tmp, person, place p1
   where
 	p_personid = id and

@@ -8,23 +8,30 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-select
-    (?tagname AS ?tagName)
-    (count(*) AS ?postCount)
-where {
-    ?post a snvoc:Post . ?post snvoc:hasCreator ?fr .
-    ?post snvoc:hasTag ?tag . ?tag foaf:name ?tagname .
-    ?post snvoc:creationDate ?date . sn:pers$Person snvoc:knows ?fr .
-    filter (?date >= $Date0 && ?date <= $Date0 + "P$DurationD"^^xsd:duration) .
-    filter (!exists {
-        sn:pers$Person snvoc:knows ?fr2 .
+SELECT
+    ?tagName
+    (COUNT(*) AS ?postCount)
+WHERE {
+    BIND( $startDate AS ?startDate ) .
+    BIND( ?startDate + "P$durationDaysD"^^xsd:duration AS ?endDate ) .
+    ?rootPerson a snvoc:Person .
+    ?rootPerson snvoc:id $personId .
+    ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
+    ?post a snvoc:Post .
+    ?post snvoc:hasCreator ?fr .
+    ?post snvoc:hasTag ?tag .
+    ?tag foaf:name ?tagName .
+    ?post snvoc:creationDate ?creationDate .
+    FILTER (?creationDate >= ?startDate && ?creationDate <= ?endDate ) .
+    FILTER NOT EXISTS {
+        ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr2 .
         ?post2 snvoc:hasCreator ?fr2 .
-	    ?post2 a snvoc:Post .
-	    ?post2 snvoc:hasTag ?tag .
-        ?post2 snvoc:creationDate ?date2 .
-	    filter (?date2 < $Date0)
-    })
+        ?post2 a snvoc:Post .
+        ?post2 snvoc:hasTag ?tag .
+        ?post2 snvoc:creationDate ?creationDate2 .
+        FILTER (?creationDate2 < ?startDate)
+    }
 }
-group by ?tagname
-order by desc(?cnt) ?tagname
-limit 10
+GROUP BY ?tagName
+ORDER BY DESC(?postCount) ?tagName
+LIMIT 10

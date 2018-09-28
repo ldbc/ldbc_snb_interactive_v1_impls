@@ -22,16 +22,16 @@ WHERE
                     VALUES (?type) {(snvoc:Post) (snvoc:Comment)}
                     ?zombieId a snvoc:Person .
                     ?zombieId snvoc:creationDate ?zombieCreationDate .
-                    FILTER( ?zombieCreationDate < $endDate^^xsd:dateTime )
+                    FILTER( ?zombieCreationDate < $endDate )
                     ?zombieId snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country
                     OPTIONAL {
                         ?message a ?type .
                         ?message snvoc:creationDate ?messageCreationDate .
-                        FILTER( ?messageCreationDate < $endDate^^xsd:dateTime )
+                        FILTER( ?messageCreationDate < $endDate )
                         ?message snvoc:hasCreator ?zombieId .
                     }
-                    BIND( YEAR($endDate^^xsd:dateTime) AS ?endYear)
-                    BIND( MONTH($endDate^^xsd:dateTime) AS ?endMonth)
+                    BIND( YEAR($endDate) AS ?endYear)
+                    BIND( MONTH($endDate) AS ?endMonth)
                     BIND( YEAR(?zombieCreationDate) AS ?zombieCreationYear)
                     BIND( MONTH(?zombieCreationDate) AS ?zombieCreationMonth)
                     BIND( ((?endYear - ?zombieCreationYear) * 12 + ?endMonth - ?zombieCreationMonth + 1) AS ?monthDiff)
@@ -47,16 +47,16 @@ WHERE
                     VALUES (?type) {(snvoc:Post) (snvoc:Comment)}
                     ?likerZombieId a snvoc:Person .
                     ?likerZombieId snvoc:creationDate ?likerZombieCreationDate .
-                    FILTER( ?likerZombieCreationDate < $endDate^^xsd:dateTime )
+                    FILTER( ?likerZombieCreationDate < $endDate )
                     ?likerZombieId snvoc:isLocatedIn/snvoc:isPartOf/foaf:name $country
                     OPTIONAL {
                         ?message a ?type .
                         ?message snvoc:creationDate ?messageCreationDate .
-                        FILTER( ?messageCreationDate < $endDate^^xsd:dateTime )
+                        FILTER( ?messageCreationDate < $endDate )
                         ?message snvoc:hasCreator ?likerZombieId .
                     }
-                    BIND( YEAR($endDate^^xsd:dateTime) AS ?endYear)
-                    BIND( MONTH($endDate^^xsd:dateTime) AS ?endMonth)
+                    BIND( YEAR($endDate) AS ?endYear)
+                    BIND( MONTH($endDate) AS ?endMonth)
                     BIND( YEAR(?likerZombieCreationDate) AS ?likerZombieCreationYear)
                     BIND( MONTH(?likerZombieCreationDate) AS ?likerZombieCreationMonth)
                     BIND( ((?endYear - ?likerZombieCreationYear) * 12 + ?endMonth - ?likerZombieCreationMonth + 1) AS ?monthDiff)
@@ -79,10 +79,10 @@ WHERE
         ?message a ?type .
         ?message snvoc:hasCreator ?zombieId .
         ?message snvoc:creationDate ?messageCreationDate .
-        FILTER( ?messageCreationDate < $endDate^^xsd:dateTime )
+        FILTER( ?messageCreationDate < $endDate )
         ?person a snvoc:Person .
         ?person snvoc:creationDate ?personCreationDate .
-        FILTER( ?personCreationDate < $endDate^^xsd:dateTime )
+        FILTER( ?personCreationDate < $endDate )
         ?person snvoc:likes ?like .
         ?like snvoc:hasComment|snvoc:hasPost ?message
     }

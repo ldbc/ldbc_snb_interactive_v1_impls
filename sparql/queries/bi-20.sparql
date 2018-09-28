@@ -10,15 +10,15 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 SELECT ?tagClassName (COUNT(DISTINCT ?message) AS ?messageCount)
 WHERE
-{ 
+{
     VALUES (?tagClassName) {$tagClasses}
     VALUES (?type) {(snvoc:Post) (snvoc:Comment)}
     ?message a ?type .
     ?message snvoc:hasTag/a ?tagClass .
-    ?tagClass a snvoc:TagClass .    
+    ?tagClass a snvoc:TagClass .
     ?tagClass rdfs:subClassOf* ?parentTagClass .
-    ?parentTagClass rdfs:label ?tagClassName 
-    
+    ?parentTagClass rdfs:label ?tagClassName
+
 }
 GROUP BY ?tagClassName
 ORDER BY DESC(?messageCount) ?tagClassName

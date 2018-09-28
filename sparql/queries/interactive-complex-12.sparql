@@ -8,25 +8,29 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-select
-  (?exp AS ?personId)
-  (?first AS ?personFirstName)
-  (?last AS ?personLastName)
-  (group_concat(distinct ?tagname;separator=', ') AS ?tagNames)
-  (count(distinct ?reply) AS ?replyCount)
-where {
-    sn:pers$Person snvoc:knows ?exp .
-    ?exp snvoc:firstName ?first .
-    ?exp snvoc:lastName ?last .
-    ?reply snvoc:hasCreator ?exp . 
-    ?reply snvoc:replyOf ?org_post .
-    ?org_post a snvoc:Post .
-    ?org_post snvoc:hasTag ?tag .
-    ?tag foaf:name ?tagname .
-    ?tag a ?type.
-    ?type rdfs:subClassOf* ?type1 .
-    ?type1 rdfs:label $TagType .
+SELECT
+    (?frId AS ?personId)
+    (?first AS ?personFirstName)
+    (?last AS ?personLastName)
+    (GROUP_CONCAT(DISTINCT ?tagName;separator=', ') AS ?tagNames)
+    (COUNT(DISTINCT ?reply) AS ?replyCount)
+WHERE
+{
+    ?rootPerson a snvoc:Person .
+    ?rootPerson snvoc:id $personId .
+    ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
+    ?fr snvoc:id ?frId .
+    ?fr snvoc:firstName ?first .
+    ?fr snvoc:lastName ?last .
+    ?reply snvoc:hasCreator ?fr .
+    ?reply snvoc:replyOf ?post .
+    ?post a snvoc:Post .
+    ?post snvoc:hasTag ?tag .
+    ?tag foaf:name ?tagName .
+    ?tag a ?tagType.
+    ?tagType rdfs:subClassOf* ?tagSuperType .
+    ?tagSuperType rdfs:label $tagClassName .
 }
-group by ?exp ?first ?last
-order by desc(?cnt) ?exp
-limit 20
+GROUP BY ?frId ?first ?last
+ORDER BY DESC(?replyCount) ?frId
+LIMIT 20

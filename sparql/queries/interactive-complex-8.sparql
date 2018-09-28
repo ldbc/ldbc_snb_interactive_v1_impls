@@ -8,24 +8,29 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-select
-    (?from AS ?personId)
-    (?first AS ?personFirstName)
-    (?last AS ?personLastName)
-    ((?dt - xsd:dateTime("1970-01-01T00:00:00.000+00:00")) * 1000 as ?commentCreationDate)
-	(?rep AS ?commentId)
-	(?content AS ?commentContent)
-where {
-  { select ?rep ?dt
-    where {
-        ?post snvoc:hasCreator sn:pers$Person .
-        ?rep snvoc:replyOf ?post . ?rep snvoc:creationDate ?dt .
-    }
-    order by desc (?dt)
-    limit 20
-  } .
-  ?rep snvoc:hasCreator ?from .
-  ?from snvoc:firstName ?first . ?from snvoc:lastName ?last .
-  ?rep snvoc:content ?content.
+SELECT
+    ?personId
+    ?personFirstName
+    ?personLastName
+    ?commentCreationDate
+    ?commentId
+    ?commentContent
+WHERE
+{
+    VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
+    ?rootPerson a snvoc:Person .
+    ?rootPerson snvoc:id $personId .
+    ?message snvoc:hasCreator ?rootPerson .
+    ?message a ?type .
+    ?comment a snvoc:Comment .
+    ?comment snvoc:replyOf ?message .
+    ?comment snvoc:creationDate ?commentCreationDate .
+    ?comment snvoc:id ?commentId .
+    ?comment snvoc:content ?commentContent .
+    ?comment snvoc:hasCreator ?person .
+    ?person snvoc:id ?personId .
+    ?person snvoc:firstName ?personFirstName .
+    ?person snvoc:lastName ?personLastName
 }
-order by desc(?creationDate) ?rep
+ORDER BY DESC(?commentCreationDate) ?commentId
+LIMIT 20

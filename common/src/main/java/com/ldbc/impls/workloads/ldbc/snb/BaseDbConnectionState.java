@@ -37,10 +37,4 @@ public abstract class BaseDbConnectionState<TQueryStore extends QueryStore> exte
         }
     }
 
-    public abstract void beginTransaction() throws Exception;
-
-    public abstract void endTransaction() throws Exception;
-
-    public abstract void rollbackTransaction() throws Exception;
-
 }

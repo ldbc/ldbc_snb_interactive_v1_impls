@@ -6,6 +6,10 @@ addons:
 before_script:
   - psql -c "ALTER ROLE postgres PASSWORD 'foo'" -U postgres
 install:
+  # Virtuoso JARs
+  - cd sparql/virtuoso-resources
+  - ./install_to_local_maven.sh
+  - cd ../..
   # Cypher
   - cd cypher
   - ./get-neo4j.sh

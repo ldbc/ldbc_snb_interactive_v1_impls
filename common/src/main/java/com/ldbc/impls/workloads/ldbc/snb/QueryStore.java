@@ -125,6 +125,9 @@ public abstract class QueryStore {
         InteractiveComplexQuery12("interactive-complex-12"),
         InteractiveComplexQuery13("interactive-complex-13"),
         InteractiveComplexQuery14("interactive-complex-14"),
+        InteractiveComplexQuery3DurationAsFunction ("interactive-complex-3-duration-as-function" ),
+        InteractiveComplexQuery4DurationAsFunction ("interactive-complex-4-duration-as-function" ),
+        InteractiveComplexQuery7WithSecond("interactive-complex-7-with-second"),
 
         // interactive short queries
         InteractiveShortQuery1("interactive-short-1"),
@@ -154,6 +157,10 @@ public abstract class QueryStore {
         InteractiveUpdate4AddForumTags         ("interactive-update-4-add-forum-tags"),
         InteractiveUpdate6AddPostTags          ("interactive-update-6-add-post-tags"),
         InteractiveUpdate7AddCommentTags       ("interactive-update-7-add-comment-tags"),
+
+        // interactive updates (additional queries for system that insert content/imageFile as separated operation)
+        InteractiveUpdate6AddPostContent       ("interactive-update-6-add-post-content"),
+        InteractiveUpdate6AddPostImageFile     ("interactive-update-6-add-post-imagefile"),
 
         // BI
         BiQuery1 ("bi-1" ),
@@ -204,103 +211,127 @@ public abstract class QueryStore {
 
     public String getQuery1(LdbcQuery1 operation) {
         return prepare(QueryType.InteractiveComplexQuery1, new ImmutableMap.Builder<String, String>()
-                .put("Person", getConverter().convertId(operation.personId()))
-                .put("Name", getConverter().convertString(operation.firstName()))
+                .put("personId", getConverter().convertId(operation.personId()))
+                .put("firstName", getConverter().convertString(operation.firstName()))
                 .build());
     }
 
     public String getQuery2(LdbcQuery2 operation) {
         return prepare(QueryType.InteractiveComplexQuery2, new ImmutableMap.Builder<String, String>()
-                .put("Person", getConverter().convertId(operation.personId()))
-                .put("Date0", getConverter().convertDateTime(operation.maxDate()))
+                .put("personId", getConverter().convertId(operation.personId()))
+                .put("maxDate", getConverter().convertDateTime(operation.maxDate()))
                 .build());
     }
 
     public String getQuery3(LdbcQuery3 operation) {
         return prepare(QueryType.InteractiveComplexQuery3, new ImmutableMap.Builder<String, String>()
-                .put("Person", getConverter().convertId(operation.personId()))
-                .put("Country1", getConverter().convertString(operation.countryXName()))
-                .put("Country2", getConverter().convertString(operation.countryYName()))
-                .put("Date0", getConverter().convertDateTime(operation.startDate()))
-                .put("Duration", getConverter().convertInteger(operation.durationDays()))
+                .put("personId", getConverter().convertId(operation.personId()))
+                .put("countryXName", getConverter().convertString(operation.countryXName()))
+                .put("countryYName", getConverter().convertString(operation.countryYName()))
+                .put("startDate", getConverter().convertDateTime(operation.startDate()))
+                .put("durationDays", getConverter().convertInteger(operation.durationDays()))
                 .build());
     }
 
     public String getQuery4(LdbcQuery4 operation) {
         return prepare(QueryType.InteractiveComplexQuery4, new ImmutableMap.Builder<String, String>()
-                .put("Person", getConverter().convertId(operation.personId()))
-                .put("Date0", getConverter().convertDateTime(operation.startDate()))
-                .put("Duration", getConverter().convertInteger(operation.durationDays()))
+                .put("personId", getConverter().convertId(operation.personId()))
+                .put("startDate", getConverter().convertDateTime(operation.startDate()))
+                .put("durationDays", getConverter().convertInteger(operation.durationDays()))
                 .build());
     }
 
     public String getQuery5(LdbcQuery5 operation) {
         return prepare(QueryType.InteractiveComplexQuery5, new ImmutableMap.Builder<String, String>()
-                .put("Person", getConverter().convertId(operation.personId()))
-                .put("Date0", getConverter().convertDateTime(operation.minDate()))
+                .put("personId", getConverter().convertId(operation.personId()))
+                .put("minDate", getConverter().convertDateTime(operation.minDate()))
                 .build());
     }
 
     public String getQuery6(LdbcQuery6 operation) {
         return prepare(QueryType.InteractiveComplexQuery6, new ImmutableMap.Builder<String, String>()
-                .put("Person", getConverter().convertId(operation.personId()))
-                .put("Tag", getConverter().convertString(operation.tagName()))
+                .put("personId", getConverter().convertId(operation.personId()))
+                .put("tagName", getConverter().convertString(operation.tagName()))
                 .build());
     }
 
     public String getQuery7(LdbcQuery7 operation) {
         return prepare(QueryType.InteractiveComplexQuery7, new ImmutableMap.Builder<String, String>()
-                .put("Person", getConverter().convertId(operation.personId()))
+                .put("personId", getConverter().convertId(operation.personId()))
+                .build());
+    }
+
+    public String getQuery3DurationAsFunction(LdbcQuery3 operation) {
+        return prepare(QueryType.InteractiveComplexQuery3DurationAsFunction, new ImmutableMap.Builder<String, String>()
+                .put("personId", getConverter().convertId(operation.personId()))
+                .put("countryXName", getConverter().convertString(operation.countryXName()))
+                .put("countryYName", getConverter().convertString(operation.countryYName()))
+                .put("startDate", getConverter().convertDateTime(operation.startDate()))
+                .put("durationDays", getConverter().convertInteger(operation.durationDays()))
+                .build());
+    }
+
+    public String getQuery4DurationAsFunction(LdbcQuery4 operation) {
+        return prepare(QueryType.InteractiveComplexQuery4DurationAsFunction, new ImmutableMap.Builder<String, String>()
+                .put("personId", getConverter().convertId(operation.personId()))
+                .put("startDate", getConverter().convertDateTime(operation.startDate()))
+                .put("durationDays", getConverter().convertInteger(operation.durationDays()))
+                .build());
+    }
+
+    public String getQuery7WithSecond(LdbcQuery7 operation) {
+        return prepare(QueryType.InteractiveComplexQuery7WithSecond, new ImmutableMap.Builder<String, String>()
+                .put("personId", getConverter().convertId(operation.personId()))
                 .build());
     }
 
     public String getQuery8(LdbcQuery8 operation) {
         return prepare(QueryType.InteractiveComplexQuery8, new ImmutableMap.Builder<String, String>()
-                .put("Person", getConverter().convertId(operation.personId()))
+                .put("personId", getConverter().convertId(operation.personId()))
                 .build());
     }
 
     public String getQuery9(LdbcQuery9 operation) {
         return prepare(QueryType.InteractiveComplexQuery9, new ImmutableMap.Builder<String, String>()
-                .put("Person", getConverter().convertId(operation.personId()))
-                .put("Date0", getConverter().convertDateTime(operation.maxDate()))
+                .put("personId", getConverter().convertId(operation.personId()))
+                .put("maxDate", getConverter().convertDateTime(operation.maxDate()))
                 .build());
     }
 
     public String getQuery10(LdbcQuery10 operation) {
         return prepare(QueryType.InteractiveComplexQuery10, new ImmutableMap.Builder<String, String>()
-                .put("Person", getConverter().convertId(operation.personId()))
-                .put("HS0", getConverter().convertInteger(operation.month()))
-                .put("HS1", getConverter().convertInteger(operation.month() % 12 + 1))
+                .put("personId", getConverter().convertId(operation.personId()))
+                .put("month", getConverter().convertInteger(operation.month()))
+                .put("nextMonth", getConverter().convertInteger(operation.month() % 12 + 1))
                 .build());
     }
 
     public String getQuery11(LdbcQuery11 operation) {
         return prepare(QueryType.InteractiveComplexQuery11, new ImmutableMap.Builder<String, String>()
-                .put("Person", getConverter().convertId(operation.personId()))
-                .put("Date0", getConverter().convertInteger(operation.workFromYear()))
-                .put("Country", getConverter().convertString(operation.countryName()))
+                .put("personId", getConverter().convertId(operation.personId()))
+                .put("countryName", getConverter().convertString(operation.countryName()))
+                .put("workFromYear", getConverter().convertInteger(operation.workFromYear()))
                 .build());
     }
 
     public String getQuery12(LdbcQuery12 operation) {
         return prepare(QueryType.InteractiveComplexQuery12, new ImmutableMap.Builder<String, String>()
-                .put("Person", getConverter().convertId(operation.personId()))
-                .put("TagType", getConverter().convertString(operation.tagClassName()))
+                .put("personId", getConverter().convertId(operation.personId()))
+                .put("tagClassName", getConverter().convertString(operation.tagClassName()))
                 .build());
     }
 
     public String getQuery13(LdbcQuery13 operation) {
         return prepare(QueryType.InteractiveComplexQuery13, new ImmutableMap.Builder<String, String>()
-                .put("Person1", getConverter().convertId(operation.person1Id()))
-                .put("Person2", getConverter().convertId(operation.person2Id()))
+                .put("person1Id", getConverter().convertId(operation.person1Id()))
+                .put("person2Id", getConverter().convertId(operation.person2Id()))
                 .build());
     }
 
     public String getQuery14(LdbcQuery14 operation) {
         return prepare(QueryType.InteractiveComplexQuery14, new ImmutableMap.Builder<String, String>()
-                .put("Person1", getConverter().convertId(operation.person1Id()))
-                .put("Person2", getConverter().convertId(operation.person2Id()))
+                .put("person1Id", getConverter().convertId(operation.person1Id()))
+                .put("person2Id", getConverter().convertId(operation.person2Id()))
                 .build());
     }
 
@@ -363,7 +394,7 @@ public abstract class QueryStore {
         return prepare(
                 QueryType.InteractiveUpdate1,
                 new ImmutableMap.Builder<String, String>()
-                        .put(LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()))
+                        .put(LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.personId()))
                         .put(LdbcUpdate1AddPerson.PERSON_FIRST_NAME, getConverter().convertString(operation.personFirstName()))
                         .put(LdbcUpdate1AddPerson.PERSON_LAST_NAME, getConverter().convertString(operation.personLastName()))
                         .put(LdbcUpdate1AddPerson.GENDER, getConverter().convertString(operation.gender()))
@@ -407,7 +438,7 @@ public abstract class QueryStore {
         return prepare(
                 QueryType.InteractiveUpdate4,
                 ImmutableMap.of(
-                        LdbcUpdate4AddForum.FORUM_ID, getConverter().convertId(operation.forumId()),
+                        LdbcUpdate4AddForum.FORUM_ID, getConverter().convertIdForInsertion(operation.forumId()),
                         LdbcUpdate4AddForum.FORUM_TITLE, getConverter().convertString(operation.forumTitle()),
                         LdbcUpdate4AddForum.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()),
                         LdbcUpdate4AddForum.MODERATOR_PERSON_ID, getConverter().convertId(operation.moderatorPersonId()),
@@ -432,7 +463,7 @@ public abstract class QueryStore {
         return prepare(
                 QueryType.InteractiveUpdate6,
                 new ImmutableMap.Builder<String, String>()
-                        .put(LdbcUpdate6AddPost.POST_ID, getConverter().convertId(operation.postId()))
+                        .put(LdbcUpdate6AddPost.POST_ID, getConverter().convertIdForInsertion(operation.postId()))
                         .put(LdbcUpdate6AddPost.IMAGE_FILE, getConverter().convertString(operation.imageFile()))
                         .put(LdbcUpdate6AddPost.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()))
                         .put(LdbcUpdate6AddPost.LOCATION_IP, getConverter().convertString(operation.locationIp()))
@@ -452,7 +483,7 @@ public abstract class QueryStore {
         return prepare(
                 QueryType.InteractiveUpdate7,
                 new ImmutableMap.Builder<String, String>()
-                        .put(LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertId(operation.commentId()))
+                        .put(LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertIdForInsertion(operation.commentId()))
                         .put(LdbcUpdate7AddComment.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()))
                         .put(LdbcUpdate7AddComment.LOCATION_IP, getConverter().convertString(operation.locationIp()))
                         .put(LdbcUpdate7AddComment.BROWSER_USED, getConverter().convertString(operation.browserUsed()))
@@ -485,7 +516,7 @@ public abstract class QueryStore {
         list.add(prepare(
                 QueryType.InteractiveUpdate1,
                 new ImmutableMap.Builder<String, String>()
-                        .put(LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()))
+                        .put(LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.personId()))
                         .put(LdbcUpdate1AddPerson.PERSON_FIRST_NAME, getConverter().convertString(operation.personFirstName()))
                         .put(LdbcUpdate1AddPerson.PERSON_LAST_NAME, getConverter().convertString(operation.personLastName()))
                         .put(LdbcUpdate1AddPerson.GENDER, getConverter().convertString(operation.gender()))
@@ -501,7 +532,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate1AddPersonCompanies,
                     ImmutableMap.of(
-                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()),
+                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.personId()),
                             "organizationId", getConverter().convertId(organization.organizationId()),
                             "worksFromYear", getConverter().convertInteger(organization.year())
                     )
@@ -511,7 +542,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate1AddPersonEmails,
                     ImmutableMap.of(
-                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()),
+                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.personId()),
                             "email", getConverter().convertString(email)
                     )
             ));
@@ -520,7 +551,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate1AddPersonLanguages,
                     ImmutableMap.of(
-                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()),
+                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.personId()),
                             "language", getConverter().convertString(language)
                     )
             ));
@@ -530,7 +561,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate1AddPersonTags,
                     ImmutableMap.of(
-                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()),
+                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.personId()),
                             "tagId", getConverter().convertId(tagId))
                     )
             );
@@ -539,7 +570,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate1AddPersonUniversities,
                     ImmutableMap.of(
-                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertId(operation.personId()),
+                            LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.personId()),
                             "organizationId", getConverter().convertId(organization.organizationId()),
                             "studiesFromYear", getConverter().convertInteger(organization.year())
                     )
@@ -553,7 +584,7 @@ public abstract class QueryStore {
         list.add(prepare(
                 QueryType.InteractiveUpdate4,
                 ImmutableMap.of(
-                        LdbcUpdate4AddForum.FORUM_ID, getConverter().convertId(operation.forumId()),
+                        LdbcUpdate4AddForum.FORUM_ID, getConverter().convertIdForInsertion(operation.forumId()),
                         LdbcUpdate4AddForum.FORUM_TITLE, getConverter().convertString(operation.forumTitle()),
                         LdbcUpdate4AddForum.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()),
                         LdbcUpdate4AddForum.MODERATOR_PERSON_ID, getConverter().convertId(operation.moderatorPersonId())
@@ -564,7 +595,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate4AddForumTags,
                     ImmutableMap.of(
-                            LdbcUpdate4AddForum.FORUM_ID, getConverter().convertId(operation.forumId()),
+                            LdbcUpdate4AddForum.FORUM_ID, getConverter().convertIdForInsertion(operation.forumId()),
                             "tagId", getConverter().convertId(tagId))
                     )
             );
@@ -577,7 +608,7 @@ public abstract class QueryStore {
         list.add(prepare(
                 QueryType.InteractiveUpdate6,
                 new ImmutableMap.Builder<String, String>()
-                        .put(LdbcUpdate6AddPost.POST_ID, getConverter().convertId(operation.postId()))
+                        .put(LdbcUpdate6AddPost.POST_ID, getConverter().convertIdForInsertion(operation.postId()))
                         .put(LdbcUpdate6AddPost.IMAGE_FILE, getConverter().convertString(operation.imageFile()))
                         .put(LdbcUpdate6AddPost.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()))
                         .put(LdbcUpdate6AddPost.LOCATION_IP, getConverter().convertString(operation.locationIp()))
@@ -595,11 +626,56 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate6AddPostTags,
                     ImmutableMap.of(
-                            LdbcUpdate6AddPost.POST_ID, getConverter().convertId(operation.postId()),
+                            LdbcUpdate6AddPost.POST_ID, getConverter().convertIdForInsertion(operation.postId()),
                             "tagId", getConverter().convertId(tagId))
                     )
             );
         }
+        return list;
+    }
+
+    public List<String> getUpdate6MultipleSeparatedContent(LdbcUpdate6AddPost operation) {
+        List<String> list = new ArrayList<>();
+        list.add(prepare(
+                QueryType.InteractiveUpdate6,
+                new ImmutableMap.Builder<String, String>()
+                        .put(LdbcUpdate6AddPost.POST_ID, getConverter().convertIdForInsertion(operation.postId()))
+                        .put(LdbcUpdate6AddPost.IMAGE_FILE, getConverter().convertString(operation.imageFile()))
+                        .put(LdbcUpdate6AddPost.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()))
+                        .put(LdbcUpdate6AddPost.LOCATION_IP, getConverter().convertString(operation.locationIp()))
+                        .put(LdbcUpdate6AddPost.BROWSER_USED, getConverter().convertString(operation.browserUsed()))
+                        .put(LdbcUpdate6AddPost.LANGUAGE, getConverter().convertString(operation.language()))
+                        .put(LdbcUpdate6AddPost.CONTENT, getConverter().convertString(operation.content()))
+                        .put(LdbcUpdate6AddPost.LENGTH, getConverter().convertInteger(operation.length()))
+                        .put(LdbcUpdate6AddPost.AUTHOR_PERSON_ID, getConverter().convertId(operation.authorPersonId()))
+                        .put(LdbcUpdate6AddPost.FORUM_ID, getConverter().convertId(operation.forumId()))
+                        .put(LdbcUpdate6AddPost.COUNTRY_ID, getConverter().convertId(operation.countryId()))
+                        .build()
+                )
+        );
+        for (long tagId : operation.tagIds()) {
+            list.add(prepare(
+                    QueryType.InteractiveUpdate6AddPostTags,
+                    ImmutableMap.of(
+                            LdbcUpdate6AddPost.POST_ID, getConverter().convertIdForInsertion(operation.postId()),
+                            "tagId", getConverter().convertId(tagId))
+                    )
+            );
+        }
+        // Check the query, and you will see why convertId needed instead of convertIdForInsertion
+        list.add(prepare(QueryType.InteractiveUpdate6AddPostContent,
+                ImmutableMap.of(
+                        LdbcUpdate6AddPost.POST_ID, getConverter().convertId(operation.postId()),
+                        LdbcUpdate6AddPost.CONTENT, getConverter().convertString(operation.content()))
+                )
+        );
+        list.add(prepare(QueryType.InteractiveUpdate6AddPostImageFile,
+                ImmutableMap.of(
+                        LdbcUpdate6AddPost.POST_ID, getConverter().convertId(operation.postId()),
+                        LdbcUpdate6AddPost.IMAGE_FILE, getConverter().convertString(operation.imageFile()))
+                )
+        );
+
         return list;
     }
 
@@ -608,7 +684,7 @@ public abstract class QueryStore {
         list.add(prepare(
                 QueryType.InteractiveUpdate7,
                 new ImmutableMap.Builder<String, String>()
-                        .put(LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertId(operation.commentId()))
+                        .put(LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertIdForInsertion(operation.commentId()))
                         .put(LdbcUpdate7AddComment.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()))
                         .put(LdbcUpdate7AddComment.LOCATION_IP, getConverter().convertString(operation.locationIp()))
                         .put(LdbcUpdate7AddComment.BROWSER_USED, getConverter().convertString(operation.browserUsed()))
@@ -624,7 +700,7 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveUpdate7AddCommentTags,
                     ImmutableMap.of(
-                            LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertId(operation.commentId()),
+                            LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertIdForInsertion(operation.commentId()),
                             "tagId", getConverter().convertId(tagId))
                     )
             );

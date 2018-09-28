@@ -123,4 +123,16 @@ public class Converter {
         return Long.toString(value);
     }
 
+    /**
+     * Some implementation, e.g. the SPARQL one, require a different id for updates:
+     * while SparqlConverter#convertId() wraps the value with `"00000..."^^xsd:long`,
+     * updates require plain `00000...` format.
+     *
+     * @param value
+     * @return
+     */
+    public String convertIdForInsertion(long value) {
+        return convertId(value);
+    }
+
 }

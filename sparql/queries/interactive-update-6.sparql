@@ -1,0 +1,32 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX sntag: <http://www.ldbc.eu/ldbc_socialnet/1.0/tag/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dbpedia: <http://dbpedia.org/resource/>
+PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
+
+INSERT
+{
+    sn:post$postId a snvoc:Post .
+    sn:post$postId snvoc:id "$postId"^^xsd:long .
+    sn:post$postId snvoc:creationDate $creationDate .
+    sn:post$postId snvoc:locationIP $locationIP .
+    sn:post$postId snvoc:browserUsed $browserUsed .
+    sn:post$postId snvoc:language $language .
+    sn:post$postId snvoc:length "$length"^^xsd:integer .
+    sn:post$postId snvoc:hasCreator ?creator .
+    sn:post$postId snvoc:isLocatedIn ?country .
+    ?forum snvoc:containerOf sn:post$postId
+}
+WHERE
+{
+    ?creator a snvoc:Person .
+    ?creator snvoc:id $authorPersonId .
+    ?forum a snvoc:Forum .
+    ?forum snvoc:id $forumId .
+    ?counrty a dbpedia-owl:Country .
+    ?country snvoc:id $countryId
+}

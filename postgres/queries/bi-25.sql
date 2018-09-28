@@ -54,8 +54,8 @@ WITH RECURSIVE reply_scores(r_threadid
          , coalesce(s1.reply_personid, s2.orig_personid) AS person2id
          , coalesce(s1.score, 0.0) + coalesce(s2.score, 0.0) AS score
       FROM person_pair_scores_directed s1
-           FULL OUTER JOIN person_pair_scores_directed s2
-                        ON (s1.orig_personid = s2.reply_personid AND s1.reply_personid = s2.orig_personid)
+           FULL JOIN person_pair_scores_directed s2
+                  ON (s1.orig_personid = s2.reply_personid AND s1.reply_personid = s2.orig_personid)
 )
    , wknows AS (
         -- weighted knows

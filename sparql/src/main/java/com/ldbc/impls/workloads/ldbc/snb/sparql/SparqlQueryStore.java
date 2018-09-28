@@ -122,6 +122,4 @@ public class SparqlQueryStore extends QueryStore {
                 .put("maxPathDistance", "").build());
     }
 
-
-
 }

@@ -56,21 +56,4 @@ public class PostgresDbConnectionState<TDbQueryStore extends QueryStore> extends
             }
         }
     }
-
-    @Override
-    public void beginTransaction() throws DbException, SQLException {
-        connection = getConnection();
-        connection.setAutoCommit(false);
-    }
-
-    @Override
-    public void endTransaction() throws SQLException {
-        connection.commit();
-    }
-
-    @Override
-    public void rollbackTransaction() throws SQLException {
-        connection.rollback();
-    }
-
 }

@@ -1,0 +1,23 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX sntag: <http://www.ldbc.eu/ldbc_socialnet/1.0/tag/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dbpedia: <http://dbpedia.org/resource/>
+PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
+
+PATHS
+START ?person1 {
+    ?person1 a snvoc:Person .
+    ?person1 snvoc:id $person1Id .
+} 
+END ?person2 {
+    ?person2 a snvoc:Person .
+    ?person2 snvoc:id $person2Id .
+}
+VIA 
+{
+    ?person1 ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))+ ?person2
+}

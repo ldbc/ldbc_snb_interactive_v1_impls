@@ -61,8 +61,6 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery12;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery12Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery13;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery13Result;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery14;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery14Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery2;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery2Result;
@@ -80,9 +78,33 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery9;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery9Result;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery1PersonProfile;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery1PersonProfileResult;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery2PersonPosts;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery2PersonPostsResult;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery3PersonFriends;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery3PersonFriendsResult;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery4MessageContent;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery4MessageContentResult;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery5MessageCreator;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery5MessageCreatorResult;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery6MessageForum;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery6MessageForumResult;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery7MessageReplies;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery7MessageRepliesResult;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate1AddPerson;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate2AddPostLike;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate3AddCommentLike;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate4AddForum;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate5AddForumMembership;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate6AddPost;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate7AddComment;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate8AddFriendship;
 import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.operationhandlers.SparqlListOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.sparql.operationhandlers.SparqlMultipleUpdateOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.sparql.operationhandlers.SparqlSingletonOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.sparql.operationhandlers.SparqlUpdateOperationHandler;
 import org.openrdf.query.BindingSet;
 
 import java.text.ParseException;
@@ -93,20 +115,15 @@ import java.util.stream.Collectors;
 
 import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertBoolean;
 import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertDate;
+import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertDateTime;
 import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertDouble;
 import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertInteger;
 import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertLong;
-import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertLongList;
-import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertSisList;
+import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertNestedList;
 import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertString;
 import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertStringList;
 
 public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
-
-    @Override
-    protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
-        dcs = new SparqlDbConnectionState(properties, new SparqlQueryStore(properties.get("queryDir")));
-    }
 
     public static class Query1 extends SparqlListOperationHandler<LdbcQuery1, LdbcQuery1Result> {
 
@@ -120,16 +137,16 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
             long friendId = convertLong(bs, "friendId");
             String friendLastName = convertString(bs, "friendLastName");
             int distanceFromPerson = convertInteger(bs, "distanceFromPerson");
-            long friendBirthday = convertDate(bs, "friendBirthDay");
-            long friendCreationDate = convertDate(bs, "friendCreationDate");
+            long friendBirthday = convertDate(bs, "friendBirthday");
+            long friendCreationDate = convertDateTime(bs, "friendCreationDate");
             String friendGender = convertString(bs, "friendGender");
             String friendBrowserUsed = convertString(bs, "friendBrowserUsed");
             String friendLocationIp = convertString(bs, "friendLocationIp");
             Iterable<String> friendEmails = convertStringList(bs, "friendEmails");
             Iterable<String> friendLanguages = convertStringList(bs, "friendLanguages");
             String friendCityName = convertString(bs, "friendCityName");
-            Iterable<List<Object>> friendUniversities = convertSisList(bs, "friendUniversities");
-            Iterable<List<Object>> friendCompanies = convertSisList(bs, "friendCompanies");
+            Iterable<List<Object>> friendUniversities = convertNestedList(bs, "friendUniversities");
+            Iterable<List<Object>> friendCompanies = convertNestedList(bs, "friendCompanies");
 
             return new LdbcQuery1Result(
                     friendId,
@@ -163,7 +180,7 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
             String personLastName = convertString(bs, "personLastName");
             long postOrCommentId = convertLong(bs, "postOrCommentId");
             String postOrCommentContent = convertString(bs, "postOrCommentContent");
-            long postOrCommentCreationDate = convertDate(bs, "postOrCommentCreationDate");
+            long postOrCommentCreationDate = convertDateTime(bs, "postOrCommentCreationDate");
             return new LdbcQuery2Result(personId, personFirstName, personLastName, postOrCommentId, postOrCommentContent, postOrCommentCreationDate);
         }
 
@@ -250,7 +267,7 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
             long personId = convertLong(bs, "personId");
             String personFirstName = convertString(bs, "personFirstName");
             String personLastName = convertString(bs, "personLastName");
-            long likeCreationDate = convertDate(bs, "likeCreationDate");
+            long likeCreationDate = convertDateTime(bs, "likeCreationDate");
             long commentOrPostId = convertLong(bs, "commentOrPostId");
             String commentOrPostContent = convertString(bs, "commentOrPostContent");
             int minutesLatency = convertInteger(bs, "minutesLatency");
@@ -272,7 +289,7 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
             long personId = convertLong(bs, "personId");
             String personFirstName = convertString(bs, "personFirstName");
             String personLastName = convertString(bs, "personLastName");
-            long commentCreationDate = convertDate(bs, "commentCreationDate");
+            long commentCreationDate = convertDateTime(bs, "commentCreationDate");
             long commentId = convertLong(bs, "commentId");
             String commentContent = convertString(bs, "commentContent");
             return new LdbcQuery8Result(personId, personFirstName, personLastName, commentCreationDate, commentId, commentContent);
@@ -292,9 +309,9 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
             long personId = convertLong(bs, "personId");
             String personFirstName = convertString(bs, "personFirstName");
             String personLastName = convertString(bs, "personLastName");
-            long commentOrPostId = convertDate(bs, "commentOrPostId");
+            long commentOrPostId = convertLong(bs, "commentOrPostId");
             String commentOrPostContent = convertString(bs, "commentOrPostContent");
-            long commentOrPostCreationDate = convertDate(bs, "commentOrPostCreationDate");
+            long commentOrPostCreationDate = convertDateTime(bs, "commentOrPostCreationDate");
             return new LdbcQuery9Result(personId, personFirstName, personLastName, commentOrPostId, commentOrPostContent, commentOrPostCreationDate);
         }
 
@@ -332,9 +349,9 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
             long personId = convertLong(bs, "personId");
             String personFirstName = convertString(bs, "personFirstName");
             String personLastName = convertString(bs, "personLastName");
-            String organisationName = convertString(bs, "organisationName");
+            String organizationName = convertString(bs, "organizationName");
             int organizationWorkFromYear = convertInteger(bs, "organizationWorkFromYear");
-            return new LdbcQuery11Result(personId, personFirstName, personLastName, organisationName, organizationWorkFromYear);
+            return new LdbcQuery11Result(personId, personFirstName, personLastName, organizationName, organizationWorkFromYear);
         }
 
     }
@@ -359,37 +376,215 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
 
     }
 
-    public static class Query13 extends SparqlSingletonOperationHandler<LdbcQuery13, LdbcQuery13Result> {
+    public static class ShortQuery1PersonProfile extends SparqlSingletonOperationHandler<LdbcShortQuery1PersonProfile, LdbcShortQuery1PersonProfileResult> {
 
         @Override
-        public String getQueryString(SparqlDbConnectionState state, LdbcQuery13 operation) {
-            return state.getQueryStore().getQuery13(operation);
+        public String getQueryString(SparqlDbConnectionState state, LdbcShortQuery1PersonProfile operation) {
+            return state.getQueryStore().getShortQuery1PersonProfile(operation);
         }
 
         @Override
-        public LdbcQuery13Result convertSingleResult(BindingSet bs) {
-            int shortestPathLength = convertInteger(bs, "shortestPathLength");
-            return new LdbcQuery13Result(shortestPathLength);
-        }
+        public LdbcShortQuery1PersonProfileResult convertSingleResult(BindingSet bs) throws ParseException {
+            String firstName = convertString(bs, "firstName");
+            String lastName = convertString(bs, "lastName");
+            long friendBirthday = convertDate(bs, "birthday");
+            String locationIP = convertString(bs, "locationIP");
+            String browserUsed = convertString(bs, "browserUsed");
+            long cityId = convertLong(bs, "cityId");
+            String gender = convertString(bs, "gender");
+            long creationDate = convertDateTime(bs, "creationDate");
 
-    }
-
-    public static class Query14 extends SparqlListOperationHandler<LdbcQuery14, LdbcQuery14Result> {
-
-        @Override
-        public String getQueryString(SparqlDbConnectionState state, LdbcQuery14 operation) {
-            return state.getQueryStore().getQuery14(operation);
-        }
-
-        @Override
-        public LdbcQuery14Result convertSingleResult(BindingSet bs) {
-            Iterable<Long> personIdsInPath = convertLongList(bs, "personIdsInPath");
-            double pathWeight = convertDouble(bs, "pathWeight");
-            return new LdbcQuery14Result(personIdsInPath, pathWeight);
+            return new LdbcShortQuery1PersonProfileResult(firstName, lastName, friendBirthday, locationIP, browserUsed, cityId, gender, creationDate);
         }
 
     }
 
+    public static class ShortQuery2PersonPosts extends SparqlListOperationHandler<LdbcShortQuery2PersonPosts, LdbcShortQuery2PersonPostsResult> {
+
+        @Override
+        public String getQueryString(SparqlDbConnectionState state, LdbcShortQuery2PersonPosts operation) {
+            return state.getQueryStore().getShortQuery2PersonPosts(operation);
+        }
+
+        @Override
+        public LdbcShortQuery2PersonPostsResult convertSingleResult(BindingSet bs) throws ParseException {
+            long messageId = convertLong(bs, "messageId");
+            String messageContent = convertString(bs, "messageContent");
+            long messageCreationDate = convertDateTime(bs, "messageCreationDate");
+            long originalPostId = convertLong(bs, "originalPostId");
+            long originalPostAuthorId = convertLong(bs, "originalPostAuthorId");
+            String originalPostAuthorFirstName = convertString(bs, "originalPostAuthorFirstName");
+            String originalPostAuthorLastName = convertString(bs, "originalPostAuthorLastName");
+
+            return new LdbcShortQuery2PersonPostsResult(messageId, messageContent, messageCreationDate, originalPostId, originalPostAuthorId, originalPostAuthorFirstName, originalPostAuthorLastName);
+        }
+
+    }
+
+    public static class ShortQuery3PersonFriends extends SparqlListOperationHandler<LdbcShortQuery3PersonFriends, LdbcShortQuery3PersonFriendsResult> {
+
+        @Override
+        public String getQueryString(SparqlDbConnectionState state, LdbcShortQuery3PersonFriends operation) {
+            return state.getQueryStore().getShortQuery3PersonFriends(operation);
+        }
+
+        @Override
+        public LdbcShortQuery3PersonFriendsResult convertSingleResult(BindingSet bs) throws ParseException {
+            long personId = convertLong(bs, "personId");
+            String firstName = convertString(bs, "firstName");
+            String lastName = convertString(bs, "lastName");
+            long friendshipCreationDate = convertDateTime(bs, "friendshipCreationDate");
+
+            return new LdbcShortQuery3PersonFriendsResult(personId, firstName, lastName, friendshipCreationDate);
+        }
+
+    }
+
+    public static class ShortQuery4MessageContent extends SparqlSingletonOperationHandler<LdbcShortQuery4MessageContent, LdbcShortQuery4MessageContentResult> {
+
+        @Override
+        public String getQueryString(SparqlDbConnectionState state, LdbcShortQuery4MessageContent operation) {
+            return state.getQueryStore().getShortQuery4MessageContent(operation);
+        }
+
+        @Override
+        public LdbcShortQuery4MessageContentResult convertSingleResult(BindingSet bs) throws ParseException {
+            String messageContent = convertString(bs, "messageContent");
+            long messageCreationDate = convertDateTime(bs, "messageCreationDate");
+
+            return new LdbcShortQuery4MessageContentResult(messageContent, messageCreationDate);
+        }
+
+    }
+
+    public static class ShortQuery5MessageCreator extends SparqlSingletonOperationHandler<LdbcShortQuery5MessageCreator, LdbcShortQuery5MessageCreatorResult> {
+
+        @Override
+        public String getQueryString(SparqlDbConnectionState state, LdbcShortQuery5MessageCreator operation) {
+            return state.getQueryStore().getShortQuery5MessageCreator(operation);
+        }
+
+        @Override
+        public LdbcShortQuery5MessageCreatorResult convertSingleResult(BindingSet bs) {
+            long personId = convertLong(bs, "personId");
+            String firstName = convertString(bs, "firstName");
+            String lastName = convertString(bs, "lastName");
+
+            return new LdbcShortQuery5MessageCreatorResult(personId, firstName, lastName);
+        }
+
+    }
+
+    public static class ShortQuery6MessageForum extends SparqlSingletonOperationHandler<LdbcShortQuery6MessageForum, LdbcShortQuery6MessageForumResult> {
+
+        @Override
+        public String getQueryString(SparqlDbConnectionState state, LdbcShortQuery6MessageForum operation) {
+            return state.getQueryStore().getShortQuery6MessageForum(operation);
+        }
+
+        @Override
+        public LdbcShortQuery6MessageForumResult convertSingleResult(BindingSet bs) {
+            long forumId = convertLong(bs, "forumId");
+            String forumTitle = convertString(bs, "forumTitle");
+            long moderatorId = convertLong(bs, "moderatorId");
+            String moderatorFirstName = convertString(bs, "moderatorFirstName");
+            String moderatorLastName = convertString(bs, "moderatorLastName");
+
+            return new LdbcShortQuery6MessageForumResult(forumId, forumTitle, moderatorId, moderatorFirstName, moderatorLastName);
+        }
+
+    }
+
+    public static class ShortQuery7MessageReplies extends SparqlListOperationHandler<LdbcShortQuery7MessageReplies, LdbcShortQuery7MessageRepliesResult> {
+
+        @Override
+        public String getQueryString(SparqlDbConnectionState state, LdbcShortQuery7MessageReplies operation) {
+            return state.getQueryStore().getShortQuery7MessageReplies(operation);
+        }
+
+        @Override
+        public LdbcShortQuery7MessageRepliesResult convertSingleResult(BindingSet bs) throws ParseException {
+            long commentId = convertLong(bs, "commentId");
+            String commentContent = convertString(bs, "commentContent");
+            long commentCreationDate = convertDateTime(bs, "commentCreationDate");
+            long replyAuthorId = convertLong(bs, "replyAuthorId");
+            String replyAuthorFirstName = convertString(bs, "replyAuthorFirstName");
+            String replyAuthorLastName = convertString(bs, "replyAuthorLastName");
+            boolean replyAuthorKnowsOriginalMessageAuthor = convertBoolean(bs, "replyAuthorKnowsOriginalMessageAuthor");
+
+            return new LdbcShortQuery7MessageRepliesResult(commentId, commentContent, commentCreationDate, replyAuthorId, replyAuthorFirstName, replyAuthorLastName, replyAuthorKnowsOriginalMessageAuthor);
+        }
+
+    }
+
+    public static class Update1AddPerson extends SparqlMultipleUpdateOperationHandler<LdbcUpdate1AddPerson> {
+
+        @Override
+        public List<String> getQueryString(SparqlDbConnectionState state, LdbcUpdate1AddPerson operation) {
+            return state.getQueryStore().getUpdate1Multiple(operation);
+        }
+
+    }
+
+    public static class Update2AddPostLike extends SparqlUpdateOperationHandler<LdbcUpdate2AddPostLike> {
+
+        @Override
+        public String getQueryString(SparqlDbConnectionState state, LdbcUpdate2AddPostLike operation) {
+            return state.getQueryStore().getUpdate2(operation);
+        }
+
+    }
+
+    public static class Update3AddCommentLike extends SparqlUpdateOperationHandler<LdbcUpdate3AddCommentLike> {
+
+        @Override
+        public String getQueryString(SparqlDbConnectionState state, LdbcUpdate3AddCommentLike operation) {
+            return state.getQueryStore().getUpdate3(operation);
+        }
+    }
+
+    public static class Update4AddForum extends SparqlMultipleUpdateOperationHandler<LdbcUpdate4AddForum> {
+
+        @Override
+        public List<String> getQueryString(SparqlDbConnectionState state, LdbcUpdate4AddForum operation) {
+            return state.getQueryStore().getUpdate4Multiple(operation);
+        }
+    }
+
+    public static class Update5AddForumMembership extends SparqlUpdateOperationHandler<LdbcUpdate5AddForumMembership> {
+
+        @Override
+        public String getQueryString(SparqlDbConnectionState state, LdbcUpdate5AddForumMembership operation) {
+            return state.getQueryStore().getUpdate5(operation);
+        }
+    }
+
+    public static class Update6AddPost extends SparqlMultipleUpdateOperationHandler<LdbcUpdate6AddPost> {
+
+        @Override
+        public List<String> getQueryString(SparqlDbConnectionState state, LdbcUpdate6AddPost operation) {
+            return state.getQueryStore().getUpdate6MultipleSeparatedContent(operation);
+        }
+    }
+
+    public static class Update7AddComment extends SparqlMultipleUpdateOperationHandler<LdbcUpdate7AddComment> {
+
+        @Override
+        public List<String> getQueryString(SparqlDbConnectionState state, LdbcUpdate7AddComment operation) {
+            return state.getQueryStore().getUpdate7Multiple(operation);
+        }
+
+    }
+
+    public static class Update8AddFriendship extends SparqlUpdateOperationHandler<LdbcUpdate8AddFriendship> {
+
+        @Override
+        public String getQueryString(SparqlDbConnectionState state, LdbcUpdate8AddFriendship operation) {
+            return state.getQueryStore().getUpdate8(operation);
+        }
+
+    }
+    
     public static class BiQuery1 extends SparqlListOperationHandler<LdbcSnbBiQuery1PostingSummary, LdbcSnbBiQuery1PostingSummaryResult> {
 
         @Override
@@ -460,7 +655,7 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
         public LdbcSnbBiQuery4PopularCountryTopicsResult convertSingleResult(BindingSet bs) throws ParseException {
             long forumId = convertLong(bs, "forumId");
             String forumTitle = convertString(bs, "forumTitle");
-            long forumCreationDate = convertDate(bs, "forumCreationDate");
+            long forumCreationDate = convertDateTime(bs, "forumCreationDate");
             long personId = convertLong(bs, "personId");
             int postCount = convertInteger(bs, "postCount");
             return new LdbcSnbBiQuery4PopularCountryTopicsResult(forumId, forumTitle, forumCreationDate, personId, postCount);
@@ -480,7 +675,7 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
             long personId = convertLong(bs, "personId");
             String personFirstName = convertString(bs, "personFirstName");
             String personLastName = convertString(bs, "personLastName");
-            long personCreationDate = convertDate(bs, "personCreationDate");
+            long personCreationDate = convertDateTime(bs, "personCreationDate");
             int postCount = convertInteger(bs, "postCount");
             return new LdbcSnbBiQuery5TopCountryPostersResult(personId, personFirstName, personLastName, personCreationDate, postCount);
         }
@@ -600,7 +795,7 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
         @Override
         public LdbcSnbBiQuery12TrendingPostsResult convertSingleResult(BindingSet bs) throws ParseException {
             long messageId = convertLong(bs, "messageId");
-            long messageCreationDate = convertDate(bs, "messageCreationDate");
+            long messageCreationDate = convertDateTime(bs, "messageCreationDate");
             String creatorFirstName = convertString(bs, "creatorFirstName");
             String creatorLastName = convertString(bs, "creatorLastName");
             int likeCount = convertInteger(bs, "likeCount");

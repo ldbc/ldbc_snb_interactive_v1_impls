@@ -8,24 +8,48 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-select
+SELECT
     (?title AS ?forumTitle)
-    (count(?post) as ?postCount)
-where { 
-    {select distinct ?fr
-     where {
-       {sn:pers$Person snvoc:knows ?fr.} union {sn:pers$Person snvoc:knows ?fr2. ?fr2 snvoc:knows ?fr .
-       filter (?fr != sn:pers$Person)}
-     }
+    (SUM(?hasPost) AS ?postCount)
+WHERE
+{
+    {
+        SELECT DISTINCT
+            ?fr
+            ?forum
+        WHERE
+        {
+            {
+                SELECT DISTINCT
+                    ?fr
+                    ?frId
+                WHERE
+                {
+                    BIND( $personId AS ?rootId )
+                    ?rootPerson a snvoc:Person .
+                    ?rootPerson snvoc:id ?rootId .
+                    ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))?/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
+                    ?fr snvoc:id ?frId .
+                    FILTER(?frId != ?rootId)
+                }
+            } .
+            ?forum a snvoc:Forum .
+            ?forum snvoc:hasMember ?mem .
+            ?mem snvoc:hasPerson ?fr .
+            ?mem snvoc:joinDate ?date .
+            FILTER( ?date >= $minDate ) .
+        }
+    }
+    OPTIONAL {
+        ?post a snvoc:Post .
+        ?post snvoc:hasCreator ?fr .
+        ?forum snvoc:containerOf ?post .
+        BIND( 1 AS ?hasPostInner )
     } .
-    ?group snvoc:title ?title. ?group snvoc:hasMember ?mem .
-    ?mem snvoc:hasPerson ?fr . ?mem snvoc:joinDate ?date .
-    filter (?date >= $Date0) .
-    optional {
-      ?post snvoc:hasCreator ?fr .
-      ?group snvoc:containerOf ?post .
-    } .
+    ?forum snvoc:title ?title .
+    ?forum snvoc:id ?forumId .
+    BIND( COALESCE(?hasPostInner, 0) AS ?hasPost )
 }
-group by ?title ?group
-order by desc(?cnt) ?group
-limit 20
+GROUP BY ?title ?forumId
+ORDER BY DESC(?postCount) ?forumId
+LIMIT 20

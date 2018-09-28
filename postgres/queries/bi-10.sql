@@ -36,7 +36,7 @@ WITH person_tag_interest AS (
          , CASE WHEN pti.personid IS NULL then 0 ELSE 100 END -- scored from interest in the given tag
          + coalesce(pms.message_score, 0) AS score
       FROM person_tag_interest pti
-           FULL OUTER JOIN person_message_score pms ON (pti.personid = pms.personid)
+           FULL JOIN person_message_score pms ON (pti.personid = pms.personid)
 )
 SELECT p.personid AS "person.id"
      , p.score AS score

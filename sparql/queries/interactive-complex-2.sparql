@@ -9,20 +9,40 @@ PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 SELECT
-  (?fr AS ?personId)
+  (?frId AS ?personId)
   (?first AS ?personFirstName)
   (?last AS ?personLastName)
-  (?post AS ?postOrCommentId)
+  (?messageId AS ?postOrCommentId)
   (?content AS ?postOrCommentContent)
-  (?date AS ?postOrCommentCreationDate)
-WHERE {
-  sn:pers$Person snvoc:knows/snvoc:hasPerson ?fr .
-  ?fr snvoc:firstName ?first .
-  ?fr snvoc:lastName ?last .
-  ?post snvoc:hasCreator ?fr .
-  {{?post snvoc:content ?content } UNION { ?post snvoc:imageFile ?content }} .
-  ?post snvoc:creationDate ?date .
-  FILTER (?date <= $Date0) .
+  (?creationDate AS ?postOrCommentCreationDate)
+WHERE
+{
+    VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
+    {
+        SELECT DISTINCT
+            ?fr
+        WHERE {
+            ?rootPerson a snvoc:Person .
+            ?fr a snvoc:Person .
+            ?rootPerson snvoc:id $personId .
+            ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr
+        }
+    }
+    ?message snvoc:hasCreator ?fr .
+    ?message a ?type
+    {
+        {
+            ?message snvoc:content ?content
+        } UNION {
+            ?message snvoc:imageFile ?content
+        }
+    } .
+    ?message snvoc:creationDate ?creationDate .
+    ?message snvoc:id ?messageId .
+    FILTER (?creationDate <= $maxDate) .
+    ?fr snvoc:firstName ?first .
+    ?fr snvoc:lastName ?last .
+    ?fr snvoc:id ?frId .
 }
-ORDER BY desc(?creationDate) ?post
+ORDER BY DESC(?creationDate) ?message
 LIMIT 20

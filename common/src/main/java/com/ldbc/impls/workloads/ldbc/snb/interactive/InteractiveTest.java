@@ -150,7 +150,6 @@ public abstract class InteractiveTest extends SnbTest {
 
     @Test
     public void testUpdateQuery1() throws Exception {
-        db.beginTransaction();
         final LdbcUpdate1AddPerson.Organization university1 = new LdbcUpdate1AddPerson.Organization(1001L, 2013);
         final LdbcUpdate1AddPerson.Organization university2 = new LdbcUpdate1AddPerson.Organization(1002L, 2013);
         final LdbcUpdate1AddPerson.Organization company1 = new LdbcUpdate1AddPerson.Organization(1003L, 2013);
@@ -172,40 +171,30 @@ public abstract class InteractiveTest extends SnbTest {
                         ImmutableList.of(company1, company2)
                 )
         );
-        db.rollbackTransaction();
     }
 
     @Test
     public void testUpdateQuery2() throws Exception {
-        db.beginTransaction();
         run(db, new LdbcUpdate2AddPostLike(1021L, 1022L, new Date(0L)));
-        db.rollbackTransaction();
     }
 
     @Test
     public void testUpdateQuery3() throws Exception {
-        db.beginTransaction();
         run(db, new LdbcUpdate3AddCommentLike(1031L, 1032L, new Date(0L)));
-        db.rollbackTransaction();
     }
 
     @Test
     public void testUpdateQuery4() throws Exception {
-        db.beginTransaction();
         run(db, new LdbcUpdate4AddForum(1041L, "", new Date(0L), 1042L, ImmutableList.of(1043L, 1044L)));
-        db.rollbackTransaction();
     }
 
     @Test
     public void testUpdateQuery5() throws Exception {
-        db.beginTransaction();
         run(db, new LdbcUpdate5AddForumMembership(1051L, 1052L, new Date(0L)));
-        db.rollbackTransaction();
     }
 
     @Test
     public void testUpdateQuery6() throws Exception {
-        db.beginTransaction();
         run(db, new LdbcUpdate6AddPost(
                 1061L,
                 "",
@@ -220,12 +209,10 @@ public abstract class InteractiveTest extends SnbTest {
                 1064L,
                 ImmutableList.of(1065L, 1066L)
         ));
-        db.rollbackTransaction();
     }
 
     @Test
     public void testUpdateQuery7() throws Exception {
-        db.beginTransaction();
         run(db, new LdbcUpdate7AddComment(
                 1071L,
                 new Date(0L),
@@ -238,14 +225,11 @@ public abstract class InteractiveTest extends SnbTest {
                 1074L,
                 1075L,
                 ImmutableList.of(1076L, 1077L)));
-        db.rollbackTransaction();
     }
 
     @Test
     public void testUpdateQuery8() throws Exception {
-        db.beginTransaction();
         run(db, new LdbcUpdate8AddFriendship(1081L, 1082L, new Date(0L)));
-        db.rollbackTransaction();
     }
 
 }
