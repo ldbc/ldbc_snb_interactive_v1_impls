@@ -2,7 +2,7 @@ MATCH (c:City {id:$cityId})
 CREATE (p:Person {id: $personId, firstName: $personFirstName, lastName: $personLastName, gender: $gender, birthday: $birthday, creationDate: $creationDate, locationIP: $locationIP, browserUsed: $browserUsed, speaks: $languages, emails: $emails})-[:IS_LOCATED_IN]->(c)
 WITH p, count(*) AS dummy1
 UNWIND $tagIds AS tagId
-    MATCH (t:Tag)
+    MATCH (t:Tag {id: tagId})
     CREATE (p)-[:HAS_INTEREST]->(t)
 WITH p, count(*) AS dummy2
 UNWIND $studyAt AS s
