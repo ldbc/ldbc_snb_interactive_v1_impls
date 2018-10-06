@@ -33,8 +33,6 @@ The queries in this repository are work-in-progress. If possible, please cross-v
 
 ### Interactive
 
-Cypher queries are currently not available. Links for short reads/updates may be broken as the framework is under refactoring and some queries are yet to be implemented.
-
 #### Complex reads
 
 | query          | [01](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-complex-read-01.pdf) | [02](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-complex-read-02.pdf) | [03](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-complex-read-03.pdf) | [04](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-complex-read-04.pdf) | [05](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-complex-read-05.pdf) | [06](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-complex-read-06.pdf) | [07](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-complex-read-07.pdf) | [08](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-complex-read-08.pdf) | [09](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-complex-read-09.pdf) | [10](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-complex-read-10.pdf) | [11](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-complex-read-11.pdf) | [12](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-complex-read-12.pdf) | [13](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-complex-read-13.pdf) | [14](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-complex-read-14.pdf) |
