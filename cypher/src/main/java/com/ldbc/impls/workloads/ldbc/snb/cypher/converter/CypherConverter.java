@@ -69,7 +69,7 @@ public class CypherConverter extends Converter {
         res += values
                 .stream()
                 .map(v -> "[" + v.organizationId() + ", " + v.year() + "]")
-                .collect(Collectors.joining(","));
+                .collect(Collectors.joining(", "));
         res += "]";
         return res;
     }

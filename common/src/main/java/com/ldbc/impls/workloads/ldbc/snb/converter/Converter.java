@@ -75,7 +75,7 @@ public class Converter {
         res += values
                 .stream()
                 .map(v -> "'" + v + "'")
-                .collect(Collectors.joining(","));
+                .collect(Collectors.joining(", "));
         res += "]";
         return res;
     }
@@ -91,7 +91,7 @@ public class Converter {
         res += values
                 .stream()
                 .map(v -> v.toString())
-                .collect(Collectors.joining(","));
+                .collect(Collectors.joining(", "));
         res += "]";
         return res;
     }
@@ -107,7 +107,7 @@ public class Converter {
         res += values
                 .stream()
                 .map(v -> v.toString())
-                .collect(Collectors.joining(","));
+                .collect(Collectors.joining(", "));
         res += "]";
         return res;
     }
