@@ -15,7 +15,7 @@ from forum_person,
    k1.k_person1id = @Person@ and k1.k_person2id = k2.k_person1id and k2.k_person2id <> @Person@
  ) f
 where fp_personid = f.k_person2id and
-      fp_creationdate >= datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate('@Date0@'))
+      fp_joindate >= datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), stringdate('@Date0@'))
 ) tmp left outer join post
 on tmp.fp_forumid = ps_forumid and ps_creatorid = tmp.k_person2id
 group by fp_forumid

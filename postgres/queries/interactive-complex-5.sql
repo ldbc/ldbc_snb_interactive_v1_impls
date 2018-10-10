@@ -13,7 +13,7 @@ from forum, forum_person,
    k1.k_person1id = :personId and k1.k_person2id = k2.k_person1id and k2.k_person2id <> :personId
  ) f
 where f_forumid = fp_forumid and fp_personid = f.k_person2id and
-      fp_creationdate >= :minDate
+      fp_joindate >= :minDate
 ) tmp left join message
 on tmp.f_forumid = m_ps_forumid and m_creatorid = tmp.k_person2id
 group by f_forumid, f_title
