@@ -15,13 +15,13 @@ WITH
   ) AS unis,
   friendCity,
   distance
-OPTIONAL MATCH (friend)-[worksAt:WORK_AT]->(company:Organisation)-[:IS_LOCATED_IN]->(companyCountry:Place)
+OPTIONAL MATCH (friend)-[workAt:WORK_AT]->(company:Organisation)-[:IS_LOCATED_IN]->(companyCountry:Place)
 WITH
   friend,
   collect(
     CASE company.name
       WHEN null THEN null
-      ELSE [company.name, worksAt.workFrom, companyCountry.name]
+      ELSE [company.name, workAt.workFrom, companyCountry.name]
     END
   ) AS companies,
   unis,
