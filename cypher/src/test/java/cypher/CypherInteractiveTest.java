@@ -10,9 +10,9 @@ import java.util.Map;
 @Ignore
 public class CypherInteractiveTest extends InteractiveTest {
 
-    private final String endpoint = "bolt://geraint-oc.db.bme.hu:7687";
+    private final String endpoint = "bolt://localhost:7687";
     private final String user = "neo4j";
-    private final String password = "dba";
+    private final String password = "admin";
     private final String queryDir = "queries";
 
     public CypherInteractiveTest() {
