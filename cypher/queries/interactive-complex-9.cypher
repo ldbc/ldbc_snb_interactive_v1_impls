@@ -1,4 +1,4 @@
-MATCH (:Person {id:$personId})-[:KNOWS*1..2]-(friend:Person)<-[:HAS_CREATOR]-(message)
+MATCH (:Person {id:$personId})-[:KNOWS*1..2]-(friend:Person)<-[:HAS_CREATOR]-(message:Message)
 WHERE message.creationDate < $maxDate
 RETURN DISTINCT
   friend.id AS personId,

@@ -1,4 +1,4 @@
-MATCH (person:Person {id:$personId})-[:KNOWS*1..2]-(friend:Person)<-[:HAS_CREATOR]-(messageX),
+MATCH (person:Person {id:$personId})-[:KNOWS*1..2]-(friend:Person)<-[:HAS_CREATOR]-(messageX:Message),
 (messageX)-[:IS_LOCATED_IN]->(countryX:Place)
 WHERE
   not(person=friend)
@@ -6,7 +6,7 @@ WHERE
   AND countryX.name=$countryXName AND messageX.creationDate>=$startDate
   AND messageX.creationDate<$endDate
 WITH friend, count(DISTINCT messageX) AS xCount
-MATCH (friend)<-[:HAS_CREATOR]-(messageY)-[:IS_LOCATED_IN]->(countryY:Place)
+MATCH (friend)<-[:HAS_CREATOR]-(messageY:Message)-[:IS_LOCATED_IN]->(countryY:Place)
 WHERE
   countryY.name=$countryYName
   AND not((friend)-[:IS_LOCATED_IN]->()-[:IS_PART_OF]->(countryY))
