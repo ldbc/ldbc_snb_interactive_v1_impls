@@ -31,7 +31,7 @@ create table forum (
 create table forum_person (
    fp_forumid bigint not null,
    fp_personid bigint not null,
-   fp_creationdate timestamp without time zone not null
+   fp_joindate timestamp without time zone not null
 );
 
 create table forum_tag (

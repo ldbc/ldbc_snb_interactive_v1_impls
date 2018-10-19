@@ -38,7 +38,7 @@ LINE DELIMITED CSV (delimiter := '|')
 CREATE STREAM forum_person (
    fp_forumid int,
    fp_personid int,
-   fp_creationdate date
+   fp_joindate date
 )
 FROM FILE 'data/forum_hasMember_person_0_0.csv'
 LINE DELIMITED CSV (delimiter := '|')

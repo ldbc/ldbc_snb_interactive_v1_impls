@@ -51,7 +51,7 @@ create table forum_f (
 create table forum_hasmember_person_f (
    fp_forumid bigint not null,
    fp_personid bigint not null,
-   fp_creationdate datetime not null
+   fp_joindate datetime not null
 );
 
 create table forum_hastag_tag_f (

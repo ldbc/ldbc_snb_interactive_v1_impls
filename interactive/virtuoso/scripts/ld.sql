@@ -61,7 +61,7 @@ select (c_commentid + 0), datediff ('millisecond',  stringdate ('1970.1.1 00:00:
     }
   if (fname like '%forum_hasMem%')
     {
-      insert soft forum_person select fp_forumid, fp_personid, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), fp_creationdate) from forum_hasmember_person_f table option (from f) where idn (fp_forumid) is not null;
+      insert soft forum_person select fp_forumid, fp_personid, datediff ('millisecond',  stringdate ('1970.1.1 00:00:00.000+0000'), fp_joindate) from forum_hasmember_person_f table option (from f) where idn (fp_forumid) is not null;
       return;
     }
   if (fname like '%forum_hasTag%')

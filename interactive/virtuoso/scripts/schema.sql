@@ -49,7 +49,7 @@ alter index forum on forum partition (f_forumid int (0hexffff00));
 create table forum_person (
    fp_forumid bigint not null,
    fp_personid bigint not null,
-   fp_creationdate bigint not null,
+   fp_joindate bigint not null,
    primary key (fp_forumid, fp_personid) column
 );
 
@@ -217,7 +217,7 @@ create column index ps_replyof on post (ps_replyof) partition (ps_replyof int (0
 --create column index ps_replyof on post (ps_replyof, ps_creatorid, ps_creationdate) partition (ps_replyof int (0hexffff00));
 create column index ps_forumid on post (ps_forumid, ps_creatorid) partition (ps_forumid int (0hexffff00));
 
-create column index fp_personid on forum_person (fp_personid, fp_creationdate, fp_forumid) partition (fp_personid int (0hexffff00));
+create column index fp_personid on forum_person (fp_personid, fp_joindate, fp_forumid) partition (fp_personid int (0hexffff00));
 
 
 create table k_weight (kw_p1 bigint, kw_p2 bigint, kw_weight real,
