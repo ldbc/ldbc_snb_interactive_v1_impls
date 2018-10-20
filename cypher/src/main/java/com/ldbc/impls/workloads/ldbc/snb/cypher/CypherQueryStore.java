@@ -42,6 +42,7 @@ public class CypherQueryStore extends QueryStore {
                 .build());
     }
 
+    @Override
     public String getQuery4(LdbcQuery4 operation) {
         // We can't use the DB's datetime lib, because currently the dates are stored as longs, see CypherConverter
         Date endDate = addDays(operation.startDate(), operation.durationDays());
