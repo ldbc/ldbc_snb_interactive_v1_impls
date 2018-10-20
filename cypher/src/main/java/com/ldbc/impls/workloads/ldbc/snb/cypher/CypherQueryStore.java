@@ -26,7 +26,6 @@ public class CypherQueryStore extends QueryStore {
         cal.setTime(startDate);
         cal.add(Calendar.DATE, days);
         return cal.getTime();
-
     }
 
     @Override
