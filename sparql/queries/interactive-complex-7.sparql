@@ -13,7 +13,7 @@ SELECT
     (?firstName AS ?personFirstName)
     (?lastName AS ?personLastName)
     ?likeCreationDate
-    (?messageId AS ?commentOrPostId)
+    (?minMessageId AS ?commentOrPostId)
     (?content AS ?commentOrPostContent)
     (?latency AS ?minutesLatency)
     ?isNew
@@ -22,7 +22,7 @@ WHERE
     {
         SELECT
             ?person
-            (MIN(?messageId) AS ?messageId)
+            (MIN(?messageId) AS ?minMessageId)
         WHERE
         {
             {
@@ -72,7 +72,7 @@ WHERE
     ?person snvoc:lastName ?lastName .
     ?person snvoc:likes ?like .
     ?like snvoc:hasPost|snvoc:hasComment ?message .
-    ?message snvoc:id ?messageId .
+    ?message snvoc:id ?minMessageId .
     ?like snvoc:creationDate ?likeCreationDate .
     ?message snvoc:creationDate ?messageCreationDate .
     ?message snvoc:content|snvoc:imageFile ?content .
