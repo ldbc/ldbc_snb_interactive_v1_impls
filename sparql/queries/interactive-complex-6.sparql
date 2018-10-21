@@ -13,7 +13,7 @@ SELECT
     (COUNT(?post) AS ?postCount)
 WHERE
 {
-    BIND($tagName AS ?tagName)
+    BIND($tagName AS ?tagNameParam)
     {
         SELECT DISTINCT
             ?fr
@@ -31,10 +31,10 @@ WHERE
     ?post a snvoc:Post .
     ?post snvoc:hasCreator ?fr .
     ?post snvoc:hasTag ?tag1 .
-    ?tag1 foaf:name ?tagName .
+    ?tag1 foaf:name ?tagNameParam .
     ?post snvoc:hasTag ?tag2 .
     ?tag2 foaf:name ?tag2Name .
-    FILTER (?tag2Name != ?tagName) .
+    FILTER (?tag2Name != ?tagNameParam) .
 }
 GROUP BY ?tag2Name
 ORDER BY DESC(?postCount) ?tag2Name
