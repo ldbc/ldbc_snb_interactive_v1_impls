@@ -11,7 +11,6 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 SELECT ?forumId (COUNT(DISTINCT ?post1) AS ?count1) (COUNT(DISTINCT ?post2) AS ?count2)
 WHERE
 {
-    #BIND (500 as ?treshold)
     BIND ($tagClass1 AS ?tagClassName1)
     BIND ($tagClass2 AS ?tagClassName2)
     ?tag1 a ?tagClass1 .

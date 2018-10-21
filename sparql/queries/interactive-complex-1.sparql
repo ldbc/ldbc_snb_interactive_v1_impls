@@ -56,7 +56,6 @@ SELECT
                                 BIND( 2 AS ?distTwoInner )
                             } UNION {
                                 ?rootPerson ((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson))/((snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson)) ?fr .
-                                #BIND( 3 AS ?distThreeInner )
                             }
                             ?fr snvoc:id ?frId .
                             FILTER(?frId != ?rootId) .
