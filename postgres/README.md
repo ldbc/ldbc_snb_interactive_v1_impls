@@ -65,7 +65,7 @@ export PG_FORCE_REGENERATE=
 The `load.sh` (re)generates PostgreSQL-specific CSV files for posts and comments, if either 
 
  - they don't exist
- - the source CSV is newer than the gerenaretd one
+ - the source CSV is newer than the generated one
  - the user forces to do so by setting the environment variable PG_FORCE_REGENERATE=yes
 
 Most probably you won't need to touch this.
