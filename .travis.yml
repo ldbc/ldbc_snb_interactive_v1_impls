@@ -22,7 +22,7 @@ script:
   # Postgres
   - chmod 755 ~
   - cd postgres/load-scripts
-  - export PG_CSV_DIR=$(pwd)/../test-data
+  - export PG_DATA_DIR=$(pwd)/../test-data
   - ./load.sh
   - cd ../..
   # Cypher

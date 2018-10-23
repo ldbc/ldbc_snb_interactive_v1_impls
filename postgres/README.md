@@ -55,7 +55,7 @@ ldbc.snb.datagen.serializer.personActivitySerializer:ldbc.snb.datagen.serializer
 To run the load script, go the `load-scripts` directory, set the `PG_` environment variables (optional) and issue the following command:
 
 ```bash
-export PG_CSV_DIR=
+export PG_DATA_DIR=
 export PG_DB_NAME=
 export PG_USER=
 ./load.sh
