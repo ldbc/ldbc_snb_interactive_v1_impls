@@ -58,8 +58,17 @@ To run the load script, go the `load-scripts` directory, set the `PG_` environme
 export PG_DATA_DIR=
 export PG_DB_NAME=
 export PG_USER=
+export PG_FORCE_REGENERATE=
 ./load.sh
 ```
+
+The `load.sh` (re)generates PostgreSQL-specific CSV files for posts and comments, if either 
+
+ - they don't exist
+ - the source CSV is newer than the gerenaretd one
+ - the user forces to do so by setting the environment variable PG_FORCE_REGENERATE=yes
+
+Most probably you won't need to touch this.
 
 The `load.sh` has default options that loads the dataset in the generator's directory to the `ldbcsf1` database with your current user. If these fit your needs, just run the script as `./load.sh`.
 
