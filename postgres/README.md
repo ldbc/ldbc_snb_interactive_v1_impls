@@ -59,6 +59,7 @@ export PG_DATA_DIR=
 export PG_DB_NAME=
 export PG_USER=
 export PG_FORCE_REGENERATE=
+export PG_PORT=
 ./load.sh
 ```
 
