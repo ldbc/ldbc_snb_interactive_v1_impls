@@ -30,7 +30,11 @@ public class Converter {
     }
 
     public String convertDate(long timestamp) {
-        return convertDateTime(timestamp);
+        return convertDateTime(new Date(timestamp));
+    }
+
+    public String convertDate(Date date) {
+        return convertDateTime(date);
     }
 
     /**
@@ -71,7 +75,7 @@ public class Converter {
         res += values
                 .stream()
                 .map(v -> "'" + v + "'")
-                .collect(Collectors.joining(","));
+                .collect(Collectors.joining(", "));
         res += "]";
         return res;
     }
@@ -87,7 +91,7 @@ public class Converter {
         res += values
                 .stream()
                 .map(v -> v.toString())
-                .collect(Collectors.joining(","));
+                .collect(Collectors.joining(", "));
         res += "]";
         return res;
     }
@@ -103,7 +107,7 @@ public class Converter {
         res += values
                 .stream()
                 .map(v -> v.toString())
-                .collect(Collectors.joining(","));
+                .collect(Collectors.joining(", "));
         res += "]";
         return res;
     }

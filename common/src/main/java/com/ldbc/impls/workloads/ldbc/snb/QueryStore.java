@@ -149,13 +149,17 @@ public abstract class QueryStore {
         InteractiveUpdate8("interactive-update-8"),
 
         // interactive updates (additional queries for systems that perform them as multiple queries)
+        InteractiveUpdate1AddPerson            ("interactive-update-1-add-person"),
         InteractiveUpdate1AddPersonCompanies   ("interactive-update-1-add-person-companies"),
         InteractiveUpdate1AddPersonEmails      ("interactive-update-1-add-person-emails"),
         InteractiveUpdate1AddPersonLanguages   ("interactive-update-1-add-person-languages"),
         InteractiveUpdate1AddPersonTags        ("interactive-update-1-add-person-tags"),
         InteractiveUpdate1AddPersonUniversities("interactive-update-1-add-person-universities"),
+        InteractiveUpdate4AddForum             ("interactive-update-4-add-forum"),
         InteractiveUpdate4AddForumTags         ("interactive-update-4-add-forum-tags"),
+        InteractiveUpdate6AddPost              ("interactive-update-6-add-post"),
         InteractiveUpdate6AddPostTags          ("interactive-update-6-add-post-tags"),
+        InteractiveUpdate7AddComment           ("interactive-update-7-add-comment"),
         InteractiveUpdate7AddCommentTags       ("interactive-update-7-add-comment-tags"),
 
         // interactive updates (additional queries for system that insert content/imageFile as separated operation)
@@ -398,7 +402,7 @@ public abstract class QueryStore {
                         .put(LdbcUpdate1AddPerson.PERSON_FIRST_NAME, getConverter().convertString(operation.personFirstName()))
                         .put(LdbcUpdate1AddPerson.PERSON_LAST_NAME, getConverter().convertString(operation.personLastName()))
                         .put(LdbcUpdate1AddPerson.GENDER, getConverter().convertString(operation.gender()))
-                        .put(LdbcUpdate1AddPerson.BIRTHDAY, getConverter().convertDateTime(operation.birthday()))
+                        .put(LdbcUpdate1AddPerson.BIRTHDAY, getConverter().convertDate(operation.birthday()))
                         .put(LdbcUpdate1AddPerson.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()))
                         .put(LdbcUpdate1AddPerson.LOCATION_IP, getConverter().convertString(operation.locationIp()))
                         .put(LdbcUpdate1AddPerson.BROWSER_USED, getConverter().convertString(operation.browserUsed()))
@@ -514,13 +518,13 @@ public abstract class QueryStore {
     public List<String> getUpdate1Multiple(LdbcUpdate1AddPerson operation) {
         List<String> list = new ArrayList<>();
         list.add(prepare(
-                QueryType.InteractiveUpdate1,
+                QueryType.InteractiveUpdate1AddPerson,
                 new ImmutableMap.Builder<String, String>()
                         .put(LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.personId()))
                         .put(LdbcUpdate1AddPerson.PERSON_FIRST_NAME, getConverter().convertString(operation.personFirstName()))
                         .put(LdbcUpdate1AddPerson.PERSON_LAST_NAME, getConverter().convertString(operation.personLastName()))
                         .put(LdbcUpdate1AddPerson.GENDER, getConverter().convertString(operation.gender()))
-                        .put(LdbcUpdate1AddPerson.BIRTHDAY, getConverter().convertDateTime(operation.birthday()))
+                        .put(LdbcUpdate1AddPerson.BIRTHDAY, getConverter().convertDate(operation.birthday()))
                         .put(LdbcUpdate1AddPerson.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()))
                         .put(LdbcUpdate1AddPerson.LOCATION_IP, getConverter().convertString(operation.locationIp()))
                         .put(LdbcUpdate1AddPerson.BROWSER_USED, getConverter().convertString(operation.browserUsed()))
@@ -582,7 +586,7 @@ public abstract class QueryStore {
     public List<String> getUpdate4Multiple(LdbcUpdate4AddForum operation) {
         List<String> list = new ArrayList<>();
         list.add(prepare(
-                QueryType.InteractiveUpdate4,
+                QueryType.InteractiveUpdate4AddForum,
                 ImmutableMap.of(
                         LdbcUpdate4AddForum.FORUM_ID, getConverter().convertIdForInsertion(operation.forumId()),
                         LdbcUpdate4AddForum.FORUM_TITLE, getConverter().convertString(operation.forumTitle()),
@@ -606,7 +610,7 @@ public abstract class QueryStore {
     public List<String> getUpdate6Multiple(LdbcUpdate6AddPost operation) {
         List<String> list = new ArrayList<>();
         list.add(prepare(
-                QueryType.InteractiveUpdate6,
+                QueryType.InteractiveUpdate6AddPost,
                 new ImmutableMap.Builder<String, String>()
                         .put(LdbcUpdate6AddPost.POST_ID, getConverter().convertIdForInsertion(operation.postId()))
                         .put(LdbcUpdate6AddPost.IMAGE_FILE, getConverter().convertString(operation.imageFile()))
@@ -637,7 +641,7 @@ public abstract class QueryStore {
     public List<String> getUpdate6MultipleSeparatedContent(LdbcUpdate6AddPost operation) {
         List<String> list = new ArrayList<>();
         list.add(prepare(
-                QueryType.InteractiveUpdate6,
+                QueryType.InteractiveUpdate6AddPost,
                 new ImmutableMap.Builder<String, String>()
                         .put(LdbcUpdate6AddPost.POST_ID, getConverter().convertIdForInsertion(operation.postId()))
                         .put(LdbcUpdate6AddPost.IMAGE_FILE, getConverter().convertString(operation.imageFile()))
@@ -682,7 +686,7 @@ public abstract class QueryStore {
     public List<String> getUpdate7Multiple(LdbcUpdate7AddComment operation) {
         List<String> list = new ArrayList<>();
         list.add(prepare(
-                QueryType.InteractiveUpdate7,
+                QueryType.InteractiveUpdate7AddComment,
                 new ImmutableMap.Builder<String, String>()
                         .put(LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertIdForInsertion(operation.commentId()))
                         .put(LdbcUpdate7AddComment.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()))

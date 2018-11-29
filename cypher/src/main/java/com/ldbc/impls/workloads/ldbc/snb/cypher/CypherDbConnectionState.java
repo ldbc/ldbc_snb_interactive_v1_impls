@@ -26,10 +26,6 @@ public class CypherDbConnectionState extends BaseDbConnectionState<CypherQuerySt
         return driver.session();
     }
 
-    public void freeSession(Session session) throws DbException {
-        session.close();
-    }
-
     @Override
     public void close() throws IOException {
         driver.close();

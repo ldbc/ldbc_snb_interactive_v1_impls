@@ -6,17 +6,27 @@ WHERE
   AND not((friend)-[:KNOWS]-(person))
 WITH DISTINCT friend, city, person
 OPTIONAL MATCH (friend)<-[:HAS_CREATOR]-(post:Post)
-WITH friend, city, collect(post) AS posts, person
-WITH 
+WITH friend, city, collect(post)+[null] AS posts, count(post) AS postCount, person
+UNWIND posts AS commonPostCandidate
+WITH
   friend,
   city,
-  length(posts) AS postCount,
-  length([p IN posts WHERE (p)-[:HAS_TAG]->(:Tag)<-[:HAS_INTEREST]-(person)]) AS commonPostCount
+  commonPostCandidate,
+  postCount,
+  person
+WHERE (commonPostCandidate)-[:HAS_TAG]->(:Tag)<-[:HAS_INTEREST]-(person) OR commonPostCandidate IS NULL
+WITH
+  friend,
+  city,
+  postCount,
+  count(commonPostCandidate) AS commonPostCount
 RETURN
   friend.id AS personId,
   friend.firstName AS personFirstName,
   friend.lastName AS personLastName,
   commonPostCount - (postCount - commonPostCount) AS commonInterestScore,
+  commonPostCount,
+  postCount,
   friend.gender AS personGender,
   city.name AS personCityName
 ORDER BY commonInterestScore DESC, toInteger(personId) ASC
