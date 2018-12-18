@@ -10,12 +10,12 @@ RETURN
   liker.firstName AS personFirstName,
   liker.lastName AS personLastName,
   latestLike.likeTime AS likeCreationDate,
-  latestLike.msg.id AS commentOrPostId,
+  latestLike.msg.id AS messageId,
   CASE exists(latestLike.msg.content)
     WHEN true THEN latestLike.msg.content
     ELSE latestLike.msg.imageFile
-  END AS commentOrPostContent,
-  latestLike.msg.creationDate AS commentOrPostCreationDate,
+  END AS messageContent,
+  latestLike.msg.creationDate AS messageCreationDate,
   not((liker)-[:KNOWS]-(person)) AS isNew
 ORDER BY likeCreationDate DESC, toInteger(personId) ASC
 LIMIT 20
