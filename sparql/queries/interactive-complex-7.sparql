@@ -13,8 +13,8 @@ SELECT
     (?firstName AS ?personFirstName)
     (?lastName AS ?personLastName)
     ?likeCreationDate
-    (?minMessageId AS ?commentOrPostId)
-    (?content AS ?commentOrPostContent)
+    (?minMessageId AS ?messageId)
+    (?content AS ?messageContent)
     (?latency AS ?minutesLatency)
     ?isNew
 WHERE

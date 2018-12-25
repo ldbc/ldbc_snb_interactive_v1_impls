@@ -4,12 +4,12 @@ RETURN DISTINCT
   friend.id AS personId,
   friend.firstName AS personFirstName,
   friend.lastName AS personLastName,
-  message.id AS commentOrPostId,
+  message.id AS messageId,
   CASE exists(message.content)
     WHEN true THEN message.content
     ELSE message.imageFile
-  END AS commentOrPostContent,
-  message.creationDate AS commentOrPostCreationDate
+  END AS messageContent,
+  message.creationDate AS messageCreationDate
 ORDER BY message.creationDate DESC, toInteger(message.id) ASC
 LIMIT 20
 

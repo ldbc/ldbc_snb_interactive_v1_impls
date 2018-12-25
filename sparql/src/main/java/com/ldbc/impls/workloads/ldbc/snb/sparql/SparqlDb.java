@@ -1,7 +1,5 @@
 package com.ldbc.impls.workloads.ldbc.snb.sparql;
 
-import com.ldbc.driver.DbException;
-import com.ldbc.driver.control.LoggingService;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery10TagPerson;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery10TagPersonResult;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery11UnrelatedReplies;
@@ -59,8 +57,6 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery11;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery11Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery12;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery12Result;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery13;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery13Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery2;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery2Result;
@@ -110,7 +106,6 @@ import org.openrdf.query.BindingSet;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.ldbc.impls.workloads.ldbc.snb.sparql.converter.SparqlInputConverter.convertBoolean;
@@ -178,10 +173,10 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
             long personId = convertLong(bs, "personId");
             String personFirstName = convertString(bs, "personFirstName");
             String personLastName = convertString(bs, "personLastName");
-            long postOrCommentId = convertLong(bs, "postOrCommentId");
-            String postOrCommentContent = convertString(bs, "postOrCommentContent");
-            long postOrCommentCreationDate = convertDateTime(bs, "postOrCommentCreationDate");
-            return new LdbcQuery2Result(personId, personFirstName, personLastName, postOrCommentId, postOrCommentContent, postOrCommentCreationDate);
+            long messageId = convertLong(bs, "messageId");
+            String messageContent = convertString(bs, "messageContent");
+            long messageCreationDate = convertDateTime(bs, "messageCreationDate");
+            return new LdbcQuery2Result(personId, personFirstName, personLastName, messageId, messageContent, messageCreationDate);
         }
 
     }
@@ -268,11 +263,11 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
             String personFirstName = convertString(bs, "personFirstName");
             String personLastName = convertString(bs, "personLastName");
             long likeCreationDate = convertDateTime(bs, "likeCreationDate");
-            long commentOrPostId = convertLong(bs, "commentOrPostId");
-            String commentOrPostContent = convertString(bs, "commentOrPostContent");
+            long messageId = convertLong(bs, "messageId");
+            String messageContent = convertString(bs, "messageContent");
             int minutesLatency = convertInteger(bs, "minutesLatency");
             boolean isNew = convertBoolean(bs, "isNew");
-            return new LdbcQuery7Result(personId, personFirstName, personLastName, likeCreationDate, commentOrPostId, commentOrPostContent, minutesLatency, isNew);
+            return new LdbcQuery7Result(personId, personFirstName, personLastName, likeCreationDate, messageId, messageContent, minutesLatency, isNew);
         }
 
     }
@@ -309,10 +304,10 @@ public abstract class SparqlDb extends BaseDb<SparqlQueryStore> {
             long personId = convertLong(bs, "personId");
             String personFirstName = convertString(bs, "personFirstName");
             String personLastName = convertString(bs, "personLastName");
-            long commentOrPostId = convertLong(bs, "commentOrPostId");
-            String commentOrPostContent = convertString(bs, "commentOrPostContent");
-            long commentOrPostCreationDate = convertDateTime(bs, "commentOrPostCreationDate");
-            return new LdbcQuery9Result(personId, personFirstName, personLastName, commentOrPostId, commentOrPostContent, commentOrPostCreationDate);
+            long messageId = convertLong(bs, "messageId");
+            String messageContent = convertString(bs, "messageContent");
+            long messageCreationDate = convertDateTime(bs, "messageCreationDate");
+            return new LdbcQuery9Result(personId, personFirstName, personLastName, messageId, messageContent, messageCreationDate);
         }
 
     }

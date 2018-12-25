@@ -156,17 +156,17 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
             long personId = record.get(0).asLong();
             String personFirstName = record.get(1).asString();
             String personLastName = record.get(2).asString();
-            long postOrCommentId = record.get(3).asLong();
-            String postOrCommentContent = record.get(4).asString();
-            long postOrCommentCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(5).asLong());
+            long messageId = record.get(3).asLong();
+            String messageContent = record.get(4).asString();
+            long messageCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(5).asLong());
 
             return new LdbcQuery2Result(
                     personId,
                     personFirstName,
                     personLastName,
-                    postOrCommentId,
-                    postOrCommentContent,
-                    postOrCommentCreationDate);
+                    messageId,
+                    messageContent,
+                    messageCreationDate);
         }
     }
 
@@ -254,8 +254,8 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
             String personFirstName = record.get(1).asString();
             String personLastName = record.get(2).asString();
             long likeCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(3).asLong());
-            long commentOrPostId = record.get(4).asLong();
-            String commentOrPostContent = record.get(5).asString();
+            long messageId = record.get(4).asLong();
+            String messageContent = record.get(5).asString();
             int minutesLatency = CypherConverter.convertStartAndEndDateToLatency(record.get(6).asLong(), record.get(3).asLong());
             boolean isNew = record.get(7).asBoolean();
             return new LdbcQuery7Result(
@@ -263,8 +263,8 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
                     personFirstName,
                     personLastName,
                     likeCreationDate,
-                    commentOrPostId,
-                    commentOrPostContent,
+                    messageId,
+                    messageContent,
                     minutesLatency,
                     isNew);
         }
@@ -307,16 +307,16 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
             long personId = record.get(0).asLong();
             String personFirstName = record.get(1).asString();
             String personLastName = record.get(2).asString();
-            long commentOrPostId = record.get(3).asLong();
-            String commentOrPostContent = record.get(4).asString();
-            long commentOrPostCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(5).asLong());
+            long messageId = record.get(3).asLong();
+            String messageContent = record.get(4).asString();
+            long messageCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(5).asLong());
             return new LdbcQuery9Result(
                     personId,
                     personFirstName,
                     personLastName,
-                    commentOrPostId,
-                    commentOrPostContent,
-                    commentOrPostCreationDate);
+                    messageId,
+                    messageContent,
+                    messageCreationDate);
         }
     }
 

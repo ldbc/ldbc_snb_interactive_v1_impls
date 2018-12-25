@@ -12,9 +12,9 @@ SELECT
     (?frId AS ?personId)
     (?first AS ?personFirstName)
     (?last AS ?personLastName)
-    (?messageId AS ?commentOrPostId)
-    (?content AS ?commentOrPostContent)
-    (?creationDate AS ?commentOrPostCreationDate)
+    (?messageId AS ?messageId)
+    (?content AS ?messageContent)
+    (?creationDate AS ?messageCreationDate)
 WHERE {
     VALUES (?type) {(snvoc:Comment) (snvoc:Post)}
     {
