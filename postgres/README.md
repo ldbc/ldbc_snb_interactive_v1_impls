@@ -52,7 +52,8 @@ ldbc.snb.datagen.serializer.personActivitySerializer:ldbc.snb.datagen.serializer
 
 ### Loading the data set
 
-To run the load script, go the `load-scripts` directory, set the `PG_` environment variables (optional) and issue the following command:
+To run the load script, go the `load-scripts` directory, set the `PG_` environment variables (optional) and issue the following command.
+For special loading options, see below.
 
 ```bash
 export PG_DATA_DIR=
@@ -87,3 +88,12 @@ You are now connected to database "ldbcsf1" as user "postgres".
 ldbcsf1=# SELECT count(*) FROM person;
 # ...
 ```
+#### Special loading options
+
+In order to allow for easier experimenting, PostgreSQL converter (`load.sh`) accept a few special options using environment variables.
+Most probably you won't need to touch them unless you are experimenting.
+
+
+ - `PG_LOAD_TO_DB`: controls whether we want to do or skip database loading phase. Possible values are:
+    - `load`: loads to the database, as one might expect. **This is the default.**
+    - `skip`: skip loading to the database. Use this to generate only CSV files.

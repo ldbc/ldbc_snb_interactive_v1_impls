@@ -4,6 +4,8 @@
 set -e
 
 PG_DATA_DIR=${PG_DATA_DIR:-$(pwd)/../../../ldbc_snb_datagen/social_network/}
+
+PG_LOAD_TO_DB=${PG_LOAD_TO_DB:-load} # possible values: 'load', 'skip'
 PG_DB_NAME=${PG_DB_NAME:-ldbcsf1}
 PG_USER=${PG_USER:-$USER}
 PG_FORCE_REGENERATE=${PG_FORCE_REGENERATE:-no}
@@ -25,8 +27,10 @@ if [ ! -f $PG_DATA_DIR/comment_0_0-postgres.csv -o $PG_DATA_DIR/comment_0_0.csv 
     $PG_DATA_DIR/comment_0_0-postgres.csv
 fi
 
-/usr/bin/dropdb --if-exists $PG_DB_NAME -U $PG_USER -p $PG_PORT
-/usr/bin/createdb $PG_DB_NAME -U $PG_USER -p $PG_PORT --template template0 -l "C"
-/usr/bin/psql -d $PG_DB_NAME -U $PG_USER -p $PG_PORT -a -f schema.sql
-(cat snb-load.sql | sed "s|PATHVAR|$PG_DATA_DIR|g"; echo "\q\n") | /usr/bin/psql -d $PG_DB_NAME -U $PG_USER -p $PG_PORT
-/usr/bin/psql -d $PG_DB_NAME -U $PG_USER -p $PG_PORT -a -f schema_constraints.sql
+if [ "${PG_LOAD_TO_DB}x" = "loadx" ]; then
+  /usr/bin/dropdb --if-exists $PG_DB_NAME -U $PG_USER -p $PG_PORT
+  /usr/bin/createdb $PG_DB_NAME -U $PG_USER -p $PG_PORT --template template0 -l "C"
+  /usr/bin/psql -d $PG_DB_NAME -U $PG_USER -p $PG_PORT -a -f schema.sql
+  (cat snb-load.sql | sed "s|PATHVAR|$PG_DATA_DIR|g"; echo "\q\n") | /usr/bin/psql -d $PG_DB_NAME -U $PG_USER -p $PG_PORT
+  /usr/bin/psql -d $PG_DB_NAME -U $PG_USER -p $PG_PORT -a -f schema_constraints.sql
+fi
