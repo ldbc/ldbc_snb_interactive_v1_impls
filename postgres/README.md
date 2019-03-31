@@ -94,6 +94,12 @@ Most probably you won't need to touch them unless you are experimenting.
     - `yes`: (re)generate PostgreSQL-specific CSV files for posts and comments.
     - `no`: (re)generate only PostgreSQL-specific CSV files if they don't exist of older than their source files. For performance reasons, **this is the default**.
 
+ - `PG_CREATE_MESSAGE_FILE`: control creating a unified `message` data file of posts and comments. Possible values:
+    - `no`: don't create message file, as we traditionally did. **This is the default.**
+    - `create`: create message file, with no guarantee on being sorted
+    - `sort_by_date`:  create message file, sorted by creation date.
+       **Note:** when you switch messages file to be sorted, you need to use `PG_FORCE_REGENERATE=yes`, orherwise regenerating depends whether the source files have changed.
+
  - `PG_LOAD_TO_DB`: controls whether we want to do or skip database loading phase. Possible values are:
     - `load`: loads to the database, as one might expect. **This is the default.**
     - `skip`: skip loading to the database. Use this to generate only CSV files.
