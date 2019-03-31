@@ -8,8 +8,10 @@ PG_DATA_DIR=${PG_DATA_DIR:-$(pwd)/../../../ldbc_snb_datagen/social_network/}
 PG_LOAD_TO_DB=${PG_LOAD_TO_DB:-load} # possible values: 'load', 'skip'
 PG_DB_NAME=${PG_DB_NAME:-ldbcsf1}
 PG_USER=${PG_USER:-$USER}
-PG_FORCE_REGENERATE=${PG_FORCE_REGENERATE:-no}
 PG_PORT=${PG_PORT:-5432}
+
+PG_FORCE_REGENERATE=${PG_FORCE_REGENERATE:-no}
+
 
 # we regenerate PostgreSQL-specific CSV files for posts and comments, if either
 #  - it doesn't exist
