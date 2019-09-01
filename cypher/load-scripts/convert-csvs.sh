@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "starting preprocessing"
+
 # replace headers
 while read line; do
   IFS=' ' read -r -a array <<< $line
@@ -21,3 +23,5 @@ sed -i "s#|\([0-9][0-9][0-9][0-9]\)-\([0-9][0-9]\)-\([0-9][0-9]\)|#|\1\2\3|#g" "
 # convert each datetime of format yyyy-mm-ddThh:mm:ss.mmm+0000
 # to a number of format yyyymmddhhmmssmmm
 sed -i "s#|\([0-9][0-9][0-9][0-9]\)-\([0-9][0-9]\)-\([0-9][0-9]\)T\([0-9][0-9]\):\([0-9][0-9]\):\([0-9][0-9]\)\.\([0-9][0-9][0-9]\)+0000#|\1\2\3\4\5\6\7#g" ${NEO4J_DATA_DIR}/*${POSTFIX}
+
+echo "preprocessing finished"
