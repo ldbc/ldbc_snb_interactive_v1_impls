@@ -40,14 +40,6 @@ The following script takes care of those steps:
 ./convert-csvs.sh
 ```
 
-Note, if you are using OSX please install `gnu-sed`. 
-```bash
-brew install gnu-sed 
-# GNU "sed" is installed as "gsed"
-# to use as "sed" add a "gnubin" directory to PATH from your start-up file 
-export PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
-```
-
 #### Delete your database and load the SNB CSVs
 
 Be careful -- this deletes all data in your database, imports the SNB data set and restarts the database.
