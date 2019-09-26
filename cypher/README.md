@@ -20,11 +20,12 @@ Go to the `load-scripts/` directory.
 
 #### Preprocessing
 
-Set the `$NEO4J_HOME` and the following environment variables appropriately:
+Set the following environment variables appropriately:
 
 ```bash
-export NEO4J_DATA_DIR=/path/do/the/csv/files
+export NEO4J_HOME=/path/to/the/neo4j/dir
 export NEO4J_DB_DIR=$NEO4J_HOME/data/databases/graph.db
+export NEO4J_DATA_DIR=/path/do/the/csv/files
 export POSTFIX=_0_0.csv
 ```
 
