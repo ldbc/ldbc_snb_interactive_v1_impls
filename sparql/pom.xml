@@ -48,16 +48,6 @@
             <artifactId>sesame-queryalgebra-evaluation</artifactId>
             <version>4.0.0</version>
         </dependency>
-        <dependency>
-            <groupId>com.virtuoso.virtjdbc4</groupId>
-            <artifactId>virtjdbc4</artifactId>
-            <version>3.0</version>
-        </dependency>
-        <dependency>
-            <groupId>virtuoso</groupId>
-            <artifactId>virtuoso-sesame4</artifactId>
-            <version>4.0.0</version>
-        </dependency>
     </dependencies>
 
     <repositories>
