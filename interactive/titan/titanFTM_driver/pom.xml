@@ -13,7 +13,7 @@
         <titan.version>0.5.5-SNAPSHOT</titan.version>
         <titan.groupId>com.thinkaurelius.titan</titan.groupId>
         <!--Use com.hp.alps2 for hp titan-->
-        <!--version>0.0.1-SNAPSHOT</version-->
+        <!--version>0.4.0-SNAPSHOT</version-->
         <!--Use 0.5.5-mapdb version of com.thinkaurelius.titan for titanWithMapDB -->
         <!-- use this property to point towards location of toy example or set at run time, e.g.: -DtoyFolderName=C:\\social_network_toy-->
         <toyFolderName>../social_network_toy</toyFolderName>
