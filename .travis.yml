@@ -8,6 +8,11 @@ addons:
 before_script:
   - psql -c "ALTER ROLE postgres PASSWORD 'foo'" -U postgres
 install:
+  # driver
+  - git clone --depth 1 https://github.com/ldbc/ldbc_snb_driver
+  - cd ldbc_snb_driver 
+  - mvn install -DskipTests
+  - cd ..
   # Cypher
   - cd cypher
   - ./get-neo4j.sh
