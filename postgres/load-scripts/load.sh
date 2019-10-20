@@ -14,15 +14,15 @@ PG_PORT=${PG_PORT:-5432}
 #  - the source CSV is newer
 #  - we are forced to do so by environment variable PG_FORCE_REGENERATE=yes
 
-if [ ! -f $PG_DATA_DIR/post_0_0-postgres.csv -o $PG_DATA_DIR/post_0_0.csv -nt $PG_DATA_DIR/post_0_0-postgres.csv -o "${PG_FORCE_REGENERATE}x" = "yesx" ]; then
-  cat $PG_DATA_DIR/post_0_0.csv | \
+if [ ! -f $PG_DATA_DIR/dynamic/post_0_0-postgres.csv -o $PG_DATA_DIR/dynamic/post_0_0.csv -nt $PG_DATA_DIR/dynamic/post_0_0-postgres.csv -o "${PG_FORCE_REGENERATE}x" = "yesx" ]; then
+  cat $PG_DATA_DIR/dynamic/post_0_0.csv | \
     awk -F '|' '{ print $1"|"$2"|"$3"|"$4"|"$5"|"$6"|"$7"|"$8"|"$9"|"$11"|"$10"|"}' > \
-    $PG_DATA_DIR/post_0_0-postgres.csv
+    $PG_DATA_DIR/dynamic/post_0_0-postgres.csv
 fi
-if [ ! -f $PG_DATA_DIR/comment_0_0-postgres.csv -o $PG_DATA_DIR/comment_0_0.csv -nt $PG_DATA_DIR/comment_0_0-postgres.csv -o "${PG_FORCE_REGENERATE}x" = "yesx" ]; then
-  cat $PG_DATA_DIR/comment_0_0.csv | \
+if [ ! -f $PG_DATA_DIR/dynamic/comment_0_0-postgres.csv -o $PG_DATA_DIR/dynamic/comment_0_0.csv -nt $PG_DATA_DIR/dynamic/comment_0_0-postgres.csv -o "${PG_FORCE_REGENERATE}x" = "yesx" ]; then
+  cat $PG_DATA_DIR/dynamic/comment_0_0.csv | \
     awk -F '|' '{print $1"||"$2"|"$3"|"$4"||"$5"|"$6"|"$7"|"$8"||"$9 $10}' > \
-    $PG_DATA_DIR/comment_0_0-postgres.csv
+    $PG_DATA_DIR/dynamic/comment_0_0-postgres.csv
 fi
 
 /usr/bin/dropdb --if-exists $PG_DB_NAME -U $PG_USER -p $PG_PORT
