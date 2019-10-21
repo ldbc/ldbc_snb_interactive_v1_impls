@@ -79,7 +79,7 @@ create table knows (
 create table likes (
    l_personid bigint not null,
    l_messageid bigint not null,
-   l_creationdate  timestamp without time zone not null
+   l_creationdate timestamp without time zone not null
 );
 
 create table person_language (
