@@ -14,7 +14,7 @@ Multiple configuration files and scripts use [relative paths to address the data
 
 * `ldbc`
   * [`ldbc_snb_datagen`](https://github.com/ldbc/ldbc_snb_datagen)
-  * [`ldbc_snb_driver`](https://github.com/ldbc/ldbc_snb_driver) _(optional)_
+  * [`ldbc_snb_driver`](https://github.com/ldbc/ldbc_snb_driver) – **use the `dev` branch**
   * [`ldbc_snb_implementations`](https://github.com/ldbc/ldbc_snb_implementations/)
 
 ## Implementations
