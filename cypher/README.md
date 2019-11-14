@@ -23,6 +23,8 @@ ldbc.snb.datagen.serializer.dynamicPersonSerializer:ldbc.snb.datagen.serializer.
 ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv.staticserializer.CsvCompositeStaticSerializer
 ```
 
+An example configuration for scale factor 1 is given in the [`params-csv-composite.ini`](https://github.com/ldbc/ldbc_snb_datagen/blob/master/params-csv-composite.ini) file of the DATAGEN repository. For small loading experiments, we recommend using scale factor 0.1, i.e. `snb.interactive.0.1`.
+
 ### Preprocessing and loading
 
 Go to the `load-scripts/` directory.
