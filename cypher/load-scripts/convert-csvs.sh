@@ -2,6 +2,9 @@
 
 echo "starting preprocessing"
 
+mv ${NEO4J_DATA_DIR}/dynamic/* ${NEO4J_DATA_DIR}/
+mv ${NEO4J_DATA_DIR}/static/* ${NEO4J_DATA_DIR}/
+
 # replace headers
 while read line; do
   IFS=' ' read -r -a array <<< $line
