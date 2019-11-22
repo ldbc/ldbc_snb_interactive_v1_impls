@@ -89,10 +89,10 @@ The queries in this repository are work-in-progress. If possible, please cross-v
         mvn clean install -DskipTests
         ```
 
-2. Navigate to the root of this repository and generate the JAR files for the implementations:
+2. Navigate to the root of this repository and build it to generate the JAR files for the implementations:
 
    ```bash
-   mvn clean package -DskipTests
+   ./build.sh
    ```
 
 3. For each implementation, it is possible to (1) create validation parameters, (2) validate against an existing validation parameters, and (3) run the benchmark. Set the parameters according to your system configuration in the appropriate `.properties` file and run the driver with one of the following scripts:
