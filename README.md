@@ -102,7 +102,7 @@ The queries in this repository are work-in-progress. If possible, please cross-v
    ./bi-create-validation-parameters.sh
    ./bi-validate.sh
    ./bi-benchmark.sh
-   # Interactive workload
+   # Interactive workload - note that if the workload contains updates, the database needs to be re-loaded between steps
    ./interactive-create-validation-parameters.sh
    ./interactive-validate.sh
    ./interactive-benchmark.sh
