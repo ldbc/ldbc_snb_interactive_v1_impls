@@ -6,6 +6,8 @@ LDBC SNB implementations
 
 Implementations for the Workload components of the LDBC Social Network Benchmark ([specification](https://ldbc.github.io/ldbc_snb_docs/)).
 
+:warning: The most recent version of the code can be found on the `dev` branch. The `master` branch tends to be better tested and uses a stable version of the LDBC SNB driver.
+
 :warning: Implementations in this repository are preliminary, i.e. they are unaudited and - in rare cases - do not pass validation. For details, feel free to contact us through an issue or email.
 
 ## Directory layout
@@ -80,7 +82,7 @@ The queries in this repository are work-in-progress. If possible, please cross-v
 
 ## User's guide
 
-1. Build the driver binaries from source. This step is optional as the latest stable version of the driver is [released on Bintray](https://github.com/ldbc/ldbc_snb_driver/commit/de2738a1dda69366a2fe1038a071c5a12bf618e9).
+1. If you are on the `dev` branch or any other unstable branche, first build and install the driver from source.
 
     1. Grab the driver source code from: https://github.com/ldbc/ldbc_snb_driver.
     2. Install the driver artifact to the local Maven repository:
