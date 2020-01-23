@@ -9,7 +9,7 @@ before_script:
   - psql -c "ALTER ROLE postgres PASSWORD 'foo'" -U postgres
 install:
   # driver
-  - if [ "$TRAVIS_BRANCH" != "master" ]; then git clone --depth 1 --branch dev https://github.com/ldbc/ldbc_snb_driver && cd ldbc_snb_driver && mvn install -DskipTests && cd ..; fi
+  - if [ "$TRAVIS_BRANCH" != "master" ]; then git clone --depth 1 --branch deletes https://github.com/ldbc/ldbc_snb_driver && cd ldbc_snb_driver && mvn install -DskipTests && cd ..; fi
   # Cypher
   - cd cypher
   - ./get-neo4j.sh
