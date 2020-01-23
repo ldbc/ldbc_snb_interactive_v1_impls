@@ -55,6 +55,7 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForums;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForumsResult;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.converter.CypherConverter;
+import com.ldbc.impls.workloads.ldbc.snb.cypher.operationhandlers.CypherDeleteOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.operationhandlers.CypherListOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.operationhandlers.CypherSingletonOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.operationhandlers.CypherUpdateOperationHandler;
@@ -593,7 +594,7 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
         }
     }
 
-    // Interactive updates
+    // Interactive inserts
 
     public static class Update1AddPerson extends CypherUpdateOperationHandler<LdbcUpdate1AddPerson> {
 
@@ -656,6 +657,72 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
         @Override
         public String getQueryString(CypherDbConnectionState state, LdbcUpdate8AddFriendship operation) {
             return state.getQueryStore().getUpdate8(operation);
+        }
+    }
+
+    // Interactive deletes
+
+    public static class Delete1RemovePerson extends CypherDeleteOperationHandler<LdbcDelete1RemovePerson> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete1RemovePerson operation) {
+            return state.getQueryStore().getDelete1(operation);
+        }
+    }
+
+    public static class Delete2RemovePostLike extends CypherDeleteOperationHandler<LdbcDelete2RemovePostLike> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete2RemovePostLike operation) {
+            return state.getQueryStore().getDelete2(operation);
+        }
+    }
+
+    public static class Delete3RemoveCommentLike extends CypherDeleteOperationHandler<LdbcDelete3RemoveCommentLike> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete3RemoveCommentLike operation) {
+            return state.getQueryStore().getDelete3(operation);
+        }
+    }
+
+    public static class Delete4RemoveForum extends CypherDeleteOperationHandler<LdbcDelete4RemoveForum> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete4RemoveForum operation) {
+            return state.getQueryStore().getDelete4(operation);
+        }
+    }
+
+    public static class Delete5RemoveForumMembership extends CypherDeleteOperationHandler<LdbcDelete5RemoveForumMembership> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete5RemoveForumMembership operation) {
+            return state.getQueryStore().getDelete5(operation);
+        }
+    }
+
+    public static class Delete6RemovePost extends CypherDeleteOperationHandler<LdbcDelete6RemovePost> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete6RemovePost operation) {
+            return state.getQueryStore().getDelete6(operation);
+        }
+    }
+
+    public static class Delete7RemoveComment extends CypherDeleteOperationHandler<LdbcDelete7RemoveComment> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete7RemoveComment operation) {
+            return state.getQueryStore().getDelete7(operation);
+        }
+    }
+
+    public static class Delete8RemoveFriendship extends CypherDeleteOperationHandler<LdbcDelete8RemoveFriendship> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete8RemoveFriendship operation) {
+            return state.getQueryStore().getDelete8(operation);
         }
     }
 

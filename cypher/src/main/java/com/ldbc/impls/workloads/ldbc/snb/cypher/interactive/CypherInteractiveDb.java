@@ -44,6 +44,15 @@ public class CypherInteractiveDb extends CypherDb {
         registerOperationHandler(LdbcUpdate6AddPost.class, Update6AddPost.class);
         registerOperationHandler(LdbcUpdate7AddComment.class, Update7AddComment.class);
         registerOperationHandler(LdbcUpdate8AddFriendship.class, Update8AddFriendship.class);
+
+        registerOperationHandler(LdbcDelete1RemovePerson.class, Delete1RemovePerson.class);
+        registerOperationHandler(LdbcDelete2RemovePostLike.class, Delete2RemovePostLike.class);
+        registerOperationHandler(LdbcDelete3RemoveCommentLike.class, Delete3RemoveCommentLike.class);
+        registerOperationHandler(LdbcDelete4RemoveForum.class, Delete4RemoveForum.class);
+        registerOperationHandler(LdbcDelete5RemoveForumMembership.class, Delete5RemoveForumMembership.class);
+        registerOperationHandler(LdbcDelete6RemovePost.class, Delete6RemovePost.class);
+        registerOperationHandler(LdbcDelete7RemoveComment.class, Delete7RemoveComment.class);
+        registerOperationHandler(LdbcDelete8RemoveFriendship.class, Delete8RemoveFriendship.class);
     }
 
 }
