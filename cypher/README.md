@@ -8,7 +8,8 @@ Run:
 
 ```
 ./get-neo4j.sh
-./environment-variables-neo4j.sh && ./configure-neo4j.sh && neo4j-server/bin/neo4j start
+. ./environment-variables-neo4j.sh
+./configure-neo4j.sh && neo4j-server/bin/neo4j start
 ```
 
 ## Loading the data set

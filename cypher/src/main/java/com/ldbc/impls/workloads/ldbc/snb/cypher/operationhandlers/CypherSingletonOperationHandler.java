@@ -5,9 +5,9 @@ import com.ldbc.driver.Operation;
 import com.ldbc.driver.ResultReporter;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherDbConnectionState;
 import com.ldbc.impls.workloads.ldbc.snb.operationhandlers.SingletonOperationHandler;
-import org.neo4j.driver.v1.Record;
-import org.neo4j.driver.v1.Session;
-import org.neo4j.driver.v1.StatementResult;
+import org.neo4j.driver.Record;
+import org.neo4j.driver.Session;
+import org.neo4j.driver.Result;
 
 import java.text.ParseException;
 
@@ -23,7 +23,7 @@ public abstract class CypherSingletonOperationHandler<TOperation extends Operati
 
             final String queryString = getQueryString(state, operation);
             state.logQuery(operation.getClass().getSimpleName(), queryString);
-            final StatementResult result = session.run(queryString);
+            final Result result = session.run(queryString);
             if (result.hasNext()) {
                 final Record record = result.next();
                 resultCount++;

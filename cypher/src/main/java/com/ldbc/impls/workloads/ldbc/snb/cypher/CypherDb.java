@@ -59,8 +59,8 @@ import com.ldbc.impls.workloads.ldbc.snb.cypher.operationhandlers.CypherListOper
 import com.ldbc.impls.workloads.ldbc.snb.cypher.operationhandlers.CypherSingletonOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.operationhandlers.CypherUpdateOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
-import org.neo4j.driver.v1.Record;
-import org.neo4j.driver.v1.Values;
+import org.neo4j.driver.Record;
+import org.neo4j.driver.Values;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
