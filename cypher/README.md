@@ -6,10 +6,24 @@
 
 Run:
 
-```
+```bash
 ./get-neo4j.sh
+./configure-neo4j.sh
+```
+
+To load the data, do:
+```
 . ./environment-variables-neo4j.sh
-./configure-neo4j.sh && neo4j-server/bin/neo4j start
+export NEO4J_CSV_DIR=/path/to/the/directory/social_network/
+export NEO4J_CSV_POSTFIX=_0_0.csv
+cd load-scripts
+./load-in-one-step.sh
+```
+
+To start the database, invoke:
+
+```bash
+./start-neo4j.sh
 ```
 
 ## Loading the data set
@@ -32,13 +46,10 @@ Go to the `load-scripts/` directory.
 
 #### Preprocessing
 
-Set the following environment variables appropriately:
+Set the Neo4j following environment variables appropriately. Once you got the configuration right, you might want to save these variables for later:
 
 ```bash
-export NEO4J_HOME=/path/to/the/neo4j/dir
-export NEO4J_DB_DIR=$NEO4J_HOME/data/databases/neo4j
-export NEO4J_DATA_DIR=/path/do/the/csv/files
-export POSTFIX=_0_0.csv
+env | grep ^NEO4J_
 ```
 
 The CSV files require a bit of preprocessing:
