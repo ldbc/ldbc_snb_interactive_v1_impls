@@ -45,11 +45,6 @@ public abstract class BiTest extends SnbTest {
     }
 
     @Test
-    public void testBiQuery2() throws DbException {
-        run(db, new LdbcSnbBiQuery2TopTags(1265583600000L, 1290380400000L, "Germany", "United_States", LIMIT));
-    }
-
-    @Test
     public void testBiQuery3() throws DbException {
         run(db, new LdbcSnbBiQuery3TagEvolution(2015, 12, 100));
     }
@@ -80,38 +75,13 @@ public abstract class BiTest extends SnbTest {
     }
 
     @Test
-    public void testBiQuery9() throws DbException {
-        run(db, new LdbcSnbBiQuery9RelatedForums("BaseballPlayer", "ChristianBishop", 200, LIMIT));
-    }
-
-    @Test
     public void testBiQuery10() throws DbException {
         run(db, new LdbcSnbBiQuery10TagPerson("Che_Guevara", 1311307200000L, LIMIT));
     }
 
     @Test
-    public void testBiQuery11() throws DbException {
-        run(db, new LdbcSnbBiQuery11UnrelatedReplies("Germany", Arrays.asList("also"), LIMIT));
-    }
-
-    @Test
-    public void testBiQuery12() throws DbException {
-        run(db, new LdbcSnbBiQuery12TrendingPosts(1311307200000L, 100, LIMIT));
-    }
-
-    @Test
-    public void testBiQuery13() throws DbException {
-        run(db, new LdbcSnbBiQuery13PopularMonthlyTags("Ethiopia", LIMIT));
-    }
-
-    @Test
     public void testBiQuery14() throws DbException {
         run(db, new LdbcSnbBiQuery14TopThreadInitiators(1338523200000L, 1341115200000L, LIMIT));
-    }
-
-    @Test
-    public void testBiQuery15() throws DbException {
-        run(db, new LdbcSnbBiQuery15SocialNormals("Egypt", LIMIT));
     }
 
     @Test
@@ -130,16 +100,6 @@ public abstract class BiTest extends SnbTest {
     }
 
     @Test
-    public void testBiQuery19() throws DbException {
-        run(db, new LdbcSnbBiQuery19StrangerInteraction(599634000000L, "MusicalArtist", "OfficeHolder", LIMIT));
-    }
-
-    @Test
-    public void testBiQuery20() throws DbException {
-        run(db, new LdbcSnbBiQuery20HighLevelTopics(Arrays.asList("Country"), LIMIT));
-    }
-
-    @Test
     public void testBiQuery21() throws DbException {
         run(db, new LdbcSnbBiQuery21Zombies("Ethiopia", 1357016400000L, LIMIT));
     }
@@ -147,16 +107,6 @@ public abstract class BiTest extends SnbTest {
     @Test
     public void testBiQuery22() throws DbException {
         run(db, new LdbcSnbBiQuery22InternationalDialog("Mexico", "Indonesia", LIMIT));
-    }
-
-    @Test
-    public void testBiQuery23() throws DbException {
-        run(db, new LdbcSnbBiQuery23HolidayDestinations("Ethiopia", LIMIT));
-    }
-
-    @Test
-    public void testBiQuery24() throws DbException {
-        run(db, new LdbcSnbBiQuery24MessagesByTopic("Single", LIMIT));
     }
 
     @Test
