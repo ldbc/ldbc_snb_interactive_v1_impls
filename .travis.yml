@@ -16,8 +16,6 @@ install:
   - . environment-variables-neo4j.sh
   - ./configure-neo4j.sh
   - cd ..
-  # environment vars
-  - export POSTFIX=_0_0.csv
 script:
   # Postgres
   - chmod 755 ~
@@ -27,8 +25,9 @@ script:
   - cd ../..
   # Cypher
   - cd cypher
-  - export NEO4J_DATA_DIR=`pwd`/test-data/converted
-  - cp -r test-data/raw/* $NEO4J_DATA_DIR
+  - export NEO4J_CSV_POSTFIX=_0_0.csv
+  - export NEO4J_CSV_DIR=`pwd`/test-data/converted
+  - cp -r test-data/raw/* $NEO4J_CSV_DIR
   - cd load-scripts
   - ./convert-csvs.sh
   - ./import-to-neo4j.sh
