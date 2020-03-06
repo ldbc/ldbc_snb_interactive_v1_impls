@@ -6,7 +6,7 @@ import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcNoResult;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherDbConnectionState;
 import com.ldbc.impls.workloads.ldbc.snb.operationhandlers.UpdateOperationHandler;
-import org.neo4j.driver.v1.Session;
+import org.neo4j.driver.Session;
 
 public abstract class CypherDeleteOperationHandler<TOperation extends Operation<LdbcNoResult>>
         implements UpdateOperationHandler<TOperation, CypherDbConnectionState> {
