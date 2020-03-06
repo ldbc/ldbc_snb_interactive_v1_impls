@@ -7,6 +7,7 @@
 Run:
 
 ```bash
+. ./environment-variables-neo4j.sh
 ./get-neo4j.sh
 ./configure-neo4j.sh
 ```
