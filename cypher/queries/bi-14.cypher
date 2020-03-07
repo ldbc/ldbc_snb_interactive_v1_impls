@@ -1,9 +1,8 @@
 // Q14. Top thread initiators
 /*
-  :param {
+  :param
     startDate: 20120531220000000,
     endDate: 20120630220000000
-  }
 */
 MATCH (person:Person)<-[:HAS_CREATOR]-(post:Post)<-[:REPLY_OF*0..]-(reply:Message)
 WHERE  post.creationDate >= $startDate

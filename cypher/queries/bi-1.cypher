@@ -1,6 +1,6 @@
 // Q1. Posting summary
 /*
-  :param { date: 20110721220000000 }
+  :param date: 20110721220000000
 */
 MATCH (message:Message)
 WHERE message.creationDate < $date

@@ -1,11 +1,10 @@
 // Q25. Weighted interaction paths
 /*
-  :param {
+  :param
     person1Id: 19791209303405,
     person2Id: 19791209308983,
     startDate: 20101031230000000,
     endDate: 20101130230000000
-  }
 */
 MATCH
   path=allShortestPaths((p1:Person {id: $person1Id})-[:KNOWS*]-(p2:Person {id: $person2Id}))
