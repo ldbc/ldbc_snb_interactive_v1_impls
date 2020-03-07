@@ -1,6 +1,6 @@
 // Q17. Friend triangles
 /*
-  :param country: 'Spain'
+  :param country => 'Spain'
 */
 MATCH (country:Country {name: $country})
 MATCH (a:Person)-[:IS_LOCATED_IN]->(:City)-[:IS_PART_OF]->(country)

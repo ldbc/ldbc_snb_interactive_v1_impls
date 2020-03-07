@@ -1,33 +1,22 @@
 // Q21. Zombies in a country
 /*
-  :param
-    country: 'Ethiopia',
-    endDate: 20130101000000000
+  :param country => 'Ethiopia'
+  :param endDate => datetime('2013-01-01')
 */
-MATCH (country:Country {name: $country})
-WITH
-  country,
-  $endDate/10000000000000   AS endDateYear,
-  $endDate/100000000000%100 AS endDateMonth
-MATCH
-  (country)<-[:IS_PART_OF]-(:City)<-[:IS_LOCATED_IN]-(zombie:Person)
+MATCH (country:Country {name: $country})<-[:IS_PART_OF]-(:City)<-[:IS_LOCATED_IN]-(zombie:Person)
 OPTIONAL MATCH
   (zombie)<-[:HAS_CREATOR]-(message:Message)
-WHERE zombie.creationDate  < $endDate
-  AND message.creationDate < $endDate
+WHERE zombie.creationDate  < $endDate.year
+  AND message.creationDate < $endDate.month
 WITH
   country,
   zombie,
-  endDateYear,
-  endDateMonth,
-  zombie.creationDate/10000000000000   AS zombieCreationYear,
-  zombie.creationDate/100000000000%100 AS zombieCreationMonth,
   count(message) AS messageCount
 WITH
   country,
   zombie,
-  12 * (endDateYear  - zombieCreationYear )
-     + (endDateMonth - zombieCreationMonth)
+  12 * ($endDate.year  - zombie.creationDate.year )
+     + ($endDate.month - zombie.creationDate.month)
      + 1 AS months,
   messageCount
 WHERE messageCount / months < 1

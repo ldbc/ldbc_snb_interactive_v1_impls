@@ -1,9 +1,8 @@
 // Q18. How many persons have a given number of posts
 /*
-  :param
-    date: 20110722000000000,
-    lengthThreshold: 20,
-    languages: ['ar']
+  :param date => datetime('2011-07-22')
+  :param lengthThreshold => 20
+  :param languages => ['ar']
 */
 MATCH (person:Person)
 OPTIONAL MATCH (person)<-[:HAS_CREATOR]-(message:Message)-[:REPLY_OF*0..]->(post:Post)
