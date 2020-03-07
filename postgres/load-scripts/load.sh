@@ -16,12 +16,12 @@ PG_PORT=${PG_PORT:-5432}
 
 if [ ! -f $PG_DATA_DIR/dynamic/post_0_0-postgres.csv -o $PG_DATA_DIR/dynamic/post_0_0.csv -nt $PG_DATA_DIR/dynamic/post_0_0-postgres.csv -o "${PG_FORCE_REGENERATE}x" = "yesx" ]; then
   cat $PG_DATA_DIR/dynamic/post_0_0.csv | \
-    awk -F '|' '{ print $1"|"$2"|"$3"|"$4"|"$5"|"$6"|"$7"|"$8"|"$9"|"$11"|"$10"|"}' > \
+    awk -F '|' '{ print $1"|"$2"|"$3"|"$4"|"$5"|"$6"|"$7"|"$8"|"$9"|"$10"|"$12"|"$11"|"}' > \
     $PG_DATA_DIR/dynamic/post_0_0-postgres.csv
 fi
 if [ ! -f $PG_DATA_DIR/dynamic/comment_0_0-postgres.csv -o $PG_DATA_DIR/dynamic/comment_0_0.csv -nt $PG_DATA_DIR/dynamic/comment_0_0-postgres.csv -o "${PG_FORCE_REGENERATE}x" = "yesx" ]; then
   cat $PG_DATA_DIR/dynamic/comment_0_0.csv | \
-    awk -F '|' '{print $1"||"$2"|"$3"|"$4"||"$5"|"$6"|"$7"|"$8"||"$9 $10}' > \
+    awk -F '|' '{print $1"|"$2"|"$3"||"$4"|"$5"||"$6"|"$7"|"$8"|"$9"||"$10 $11}' > \
     $PG_DATA_DIR/dynamic/comment_0_0-postgres.csv
 fi
 
