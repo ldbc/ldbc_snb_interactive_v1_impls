@@ -1,7 +1,6 @@
 // Q10. Central Person for a Tag
 /*
-  :param tag => 'John_Rhys-Davies'
-  :param date => datetime('2012-01-22')
+  :param [{tag, date}] => { RETURN 'John_Rhys-Davies' AS tag, datetime('2012-01-22') AS date }
 */
 MATCH (tag:Tag {name: $tag})
 // score
