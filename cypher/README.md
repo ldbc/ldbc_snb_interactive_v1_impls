@@ -21,10 +21,10 @@ cd load-scripts
 ./load-in-one-step.sh
 ```
 
-To start the database, invoke:
+To start the database, use the following command in the `load-scripts` directory:
 
 ```bash
-./start-neo4j.sh
+./restart-neo4j.sh
 ```
 
 ## Loading the data set
