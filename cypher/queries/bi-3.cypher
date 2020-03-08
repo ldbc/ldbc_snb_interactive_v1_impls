@@ -27,7 +27,7 @@ RETURN
   countMonth1,
   countMonth2,
   abs(countMonth1-countMonth2) AS diff
-  ORDER BY
+ORDER BY
   diff DESC,
   tag.name ASC
-  LIMIT 100
+LIMIT 100
