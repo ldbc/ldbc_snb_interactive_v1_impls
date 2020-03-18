@@ -17,11 +17,11 @@ To load the data, do:
 . ./environment-variables-neo4j.sh
 export NEO4J_CSV_DIR=/path/to/the/directory/social_network/
 export NEO4J_CSV_POSTFIX=_0_0.csv
-cd load-scripts
+cd scripts
 ./load-in-one-step.sh
 ```
 
-To start the database, use the following command in the `load-scripts` directory:
+To start the database, use the following command in the `scripts` directory:
 
 ```bash
 ./restart-neo4j.sh
@@ -43,7 +43,7 @@ An example configuration for scale factor 1 is given in the [`params-csv-composi
 
 ### Preprocessing and loading
 
-Go to the `load-scripts/` directory.
+Go to the `scripts` directory.
 
 #### Preprocessing
 

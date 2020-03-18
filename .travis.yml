@@ -33,7 +33,7 @@ script:
   - export NEO4J_CSV_POSTFIX=_0_0.csv
   - export NEO4J_CSV_DIR=`pwd`/test-data/converted
   - cp -r test-data/raw/* $NEO4J_CSV_DIR
-  - cd load-scripts
+  - cd scripts
   - ./convert-csvs.sh
   - ./import-to-neo4j.sh
   - ./restart-neo4j.sh
