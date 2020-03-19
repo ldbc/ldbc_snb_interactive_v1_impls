@@ -25,8 +25,8 @@ if [ ! -f $PG_DATA_DIR/dynamic/comment_0_0-postgres.csv -o $PG_DATA_DIR/dynamic/
     $PG_DATA_DIR/dynamic/comment_0_0-postgres.csv
 fi
 
-/usr/bin/dropdb --if-exists $PG_DB_NAME -U $PG_USER -p $PG_PORT
-/usr/bin/createdb $PG_DB_NAME -U $PG_USER -p $PG_PORT --template template0 -l "C"
-/usr/bin/psql -d $PG_DB_NAME -U $PG_USER -p $PG_PORT -a -f schema.sql
-(cat snb-load.sql | sed "s|PATHVAR|$PG_DATA_DIR|g"; echo "\q\n") | /usr/bin/psql -d $PG_DB_NAME -U $PG_USER -p $PG_PORT
-/usr/bin/psql -d $PG_DB_NAME -U $PG_USER -p $PG_PORT -a -f schema_constraints.sql
+dropdb --if-exists $PG_DB_NAME -U $PG_USER -p $PG_PORT
+createdb $PG_DB_NAME -U $PG_USER -p $PG_PORT --template template0 -l "C"
+psql -d $PG_DB_NAME -U $PG_USER -p $PG_PORT -a -f schema.sql -v "ON_ERROR_STOP=1"
+(cat snb-load.sql | sed "s|PATHVAR|$PG_DATA_DIR|g") | psql -d $PG_DB_NAME -U $PG_USER -p $PG_PORT -v "ON_ERROR_STOP=1"
+psql -d $PG_DB_NAME -U $PG_USER -p $PG_PORT -a -f schema_constraints.sql -v "ON_ERROR_STOP=1"
