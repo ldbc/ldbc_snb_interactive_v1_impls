@@ -8,7 +8,7 @@ public interface PostgresSnbTest {
     String endpoint = "localhost:5432";
     String user = "postgres";
     String password = "foo";
-    String databaseName = "ldbcsf1";
+    String databaseName = "ldbcsftest";
     String jdbcDriver = "org.postgresql.ds.PGPoolingDataSource";
     String queryDir = "queries";
 
