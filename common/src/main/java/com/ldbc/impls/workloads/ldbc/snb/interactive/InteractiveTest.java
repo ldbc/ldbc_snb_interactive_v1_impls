@@ -150,86 +150,83 @@ public abstract class InteractiveTest extends SnbTest {
 
     @Test
     public void testUpdateQuery1() throws Exception {
-        final LdbcUpdate1AddPerson.Organization university1 = new LdbcUpdate1AddPerson.Organization(1001L, 2013);
-        final LdbcUpdate1AddPerson.Organization university2 = new LdbcUpdate1AddPerson.Organization(1002L, 2013);
-        final LdbcUpdate1AddPerson.Organization company1 = new LdbcUpdate1AddPerson.Organization(1003L, 2013);
-        final LdbcUpdate1AddPerson.Organization company2 = new LdbcUpdate1AddPerson.Organization(1004L, 2013);
+        final LdbcUpdate1AddPerson.Organization university1 = new LdbcUpdate1AddPerson.Organization(5142L, 2004);
         run(db, new LdbcUpdate1AddPerson(
-                        1011L,
-                        "",
-                        "",
-                        "",
-                        new Date(0),
-                        new Date(0),
-                        "",
-                        "",
-                        0,
-                        ImmutableList.of("en", "fr"),
-                        ImmutableList.of("mail1", "mail2"),
-                        ImmutableList.of(1012L, 1013L),
-                        ImmutableList.of(university1, university2),
-                        ImmutableList.of(company1, company2)
+                        10995116277777L,
+                        "Almira",
+                        "Patras",
+                        "female",
+                        new Date(425606400000L), // note that java.util.Date has no timezone
+                        new Date(1291394394934L),
+                        "193.104.227.215",
+                        "Internet Explorer",
+                        1226L,
+                        ImmutableList.of("ru", "en"),
+                        ImmutableList.of("Almira10995116277777@gmail.com", "Almira10995116277777@gmx.com"),
+                        ImmutableList.of(1916L),
+                        ImmutableList.of(university1),
+                        ImmutableList.of()
                 )
         );
     }
 
     @Test
     public void testUpdateQuery2() throws Exception {
-        run(db, new LdbcUpdate2AddPostLike(1021L, 1022L, new Date(0L)));
+        run(db, new LdbcUpdate2AddPostLike(8796093022239L, 206158430617L, new Date(1290749436322L)));
     }
 
     @Test
     public void testUpdateQuery3() throws Exception {
-        run(db, new LdbcUpdate3AddCommentLike(1031L, 1032L, new Date(0L)));
+        run(db, new LdbcUpdate3AddCommentLike(4398046511123L, 343597384736L, new Date(1290725729770L)));
     }
 
     @Test
     public void testUpdateQuery4() throws Exception {
-        run(db, new LdbcUpdate4AddForum(1041L, "", new Date(0L), 1042L, ImmutableList.of(1043L, 1044L)));
+        run(db, new LdbcUpdate4AddForum(343597383803L, "Album 1 of Wolfgang Bauer", new Date(1290883501867L), 10, ImmutableList.of(4844L)));
     }
 
     @Test
     public void testUpdateQuery5() throws Exception {
-        run(db, new LdbcUpdate5AddForumMembership(1051L, 1052L, new Date(0L)));
+        run(db, new LdbcUpdate5AddForumMembership(343597383798L, 8796093022252L, new Date(1290748277090L)));
     }
 
     @Test
     public void testUpdateQuery6() throws Exception {
         run(db, new LdbcUpdate6AddPost(
-                1061L,
+                343597384592L,
+                "photo343597384592.jpg",
+                new Date(1290883512867L),
+                "46.21.0.249",
+                "Internet Explorer",
                 "",
-                new Date(0L),
                 "",
-                "",
-                "",
-                "About Mick Jagger, r, best known as the lead vocalist and a founder member of The Rolling Stones. Jagger's career has spann",
                 0,
-                1062L,
-                1063L,
-                1064L,
-                ImmutableList.of(1065L, 1066L)
+                10L,
+                343597383803L,
+                50L,
+                ImmutableList.of()
         ));
     }
 
     @Test
     public void testUpdateQuery7() throws Exception {
         run(db, new LdbcUpdate7AddComment(
-                1071L,
-                new Date(0L),
-                "",
-                "",
-                "",
+                343597384747L,
+                new Date(1290689294243L),
+                "49.206.89.61",
+                "Safari",
+                "no way!",
+                7,
+                10995116277809L,
                 0,
-                1072L,
-                1073L,
-                1074L,
-                1075L,
-                ImmutableList.of(1076L, 1077L)));
+                -1,
+                343597384736L,
+                ImmutableList.of()));
     }
 
     @Test
     public void testUpdateQuery8() throws Exception {
-        run(db, new LdbcUpdate8AddFriendship(1081L, 1082L, new Date(0L)));
+        run(db, new LdbcUpdate8AddFriendship(4398046511147L, 10995116277809L, new Date(1290907550597L)));
     }
 
 }
