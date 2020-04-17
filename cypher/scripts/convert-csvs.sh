@@ -5,9 +5,20 @@ echo "Starting preprocessing CSV files"
 # replace headers
 while read line; do
   IFS=' ' read -r -a array <<< $line
-  filename=${array[0]}
-  header=${array[1]}
-  sed -i.bkp "1s/.*/$header/" "${NEO4J_CSV_DIR}/${filename}${NEO4J_CSV_POSTFIX}"
+  FILENAME=${array[0]}
+  HEADER=${array[1]}
+
+  echo ${FILENAME}: ${HEADER}
+
+  # using ed (instead of sed) for true in-place edits: https://stackoverflow.com/a/36608249/3580502
+  ed -s ${NEO4J_CSV_DIR}/${FILENAME}${NEO4J_CSV_POSTFIX} << EOF
+1c
+${HEADER}
+.
+w
+q
+EOF
+
 done < headers.txt
 
 # replace labels with one starting with an uppercase letter
