@@ -9,16 +9,8 @@ while read line; do
   HEADER=${array[1]}
 
   echo ${FILENAME}: ${HEADER}
-
-  # using ed (instead of sed) for true in-place edits: https://stackoverflow.com/a/36608249/3580502
-  ed -s ${NEO4J_CSV_DIR}/${FILENAME}${NEO4J_CSV_POSTFIX} << EOF
-1c
-${HEADER}
-.
-w
-q
-EOF
-
+  # replace header (no point using sed to save space as it creates a temporary file as well)
+  echo ${HEADER} | cat - <(tail -n +2 ${NEO4J_CSV_DIR}/${FILENAME}${NEO4J_CSV_POSTFIX}) > tmpfile.csv && mv tmpfile.csv ${NEO4J_CSV_DIR}/${FILENAME}${NEO4J_CSV_POSTFIX}
 done < headers.txt
 
 # replace labels with one starting with an uppercase letter
