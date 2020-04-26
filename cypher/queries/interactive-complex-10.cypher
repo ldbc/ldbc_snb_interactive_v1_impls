@@ -10,8 +10,8 @@ WITH friend, city, collect(post) AS posts, person
 WITH 
   friend,
   city,
-  length(posts) AS postCount,
-  length([p IN posts WHERE (p)-[:HAS_TAG]->(:Tag)<-[:HAS_INTEREST]-(person)]) AS commonPostCount
+  size(posts) AS postCount,
+  size([p IN posts WHERE (p)-[:HAS_TAG]->(:Tag)<-[:HAS_INTEREST]-(person)]) AS commonPostCount
 RETURN
   friend.id AS personId,
   friend.firstName AS personFirstName,
