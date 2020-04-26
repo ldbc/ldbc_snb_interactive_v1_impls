@@ -5,7 +5,7 @@ import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
 import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -16,11 +16,12 @@ import java.util.stream.Collectors;
 
 public class PostgresConverter extends Converter {
 
+    final String POSTGRES_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'";
+    final DateTimeFormatter dfPostgres = DateTimeFormatter.ofPattern(POSTGRES_DATETIME_FORMAT).withZone(GMT);
+
     @Override
     public String convertDateTime(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return "'" + sdf.format(date) + "'::timestamp";
+        return "'" + dfPostgres.format(date.toInstant()) + "'::timestamp";
     }
 
     @Override
