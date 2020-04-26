@@ -1,4 +1,4 @@
-id:ID(Tag)|name:STRING|url:STRING
+id|name|url
 0|Hamid_Karzai|http://dbpedia.org/resource/Hamid_Karzai
 1|Rumi|http://dbpedia.org/resource/Rumi
 2|Mahmud_of_Ghazni|http://dbpedia.org/resource/Mahmud_of_Ghazni

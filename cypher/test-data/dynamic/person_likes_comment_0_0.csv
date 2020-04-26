@@ -1,1 +1,2 @@
-creationDate:DATETIME|deletionDate:DATETIME|:START_ID(Person)|:END_ID(Comment)
+creationDate|Person.id|Comment.id
+2012-06-27T06:47:44.965+00:00|8796093022248|962072676359

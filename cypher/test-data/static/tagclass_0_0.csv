@@ -1,4 +1,4 @@
-id:ID(TagClass)|name:STRING|url:STRING
+id|name|url
 349|OfficeHolder|http://dbpedia.org/ontology/OfficeHolder
 211|Person|http://dbpedia.org/ontology/Person
 239|Agent|http://dbpedia.org/ontology/Agent
