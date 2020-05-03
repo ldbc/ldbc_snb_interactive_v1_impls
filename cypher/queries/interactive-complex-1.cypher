@@ -1,4 +1,5 @@
-MATCH p=shortestPath((:Person {id:$personId})-[path:KNOWS*1..3]-(friend:Person {firstName: $firstName}))
+MATCH p=shortestPath((person:Person {id:$personId})-[path:KNOWS*1..3]-(friend:Person {firstName: $firstName}))
+WHERE person <> friend
 WITH friend, length(p) AS distance
   ORDER BY distance ASC, friend.lastName ASC, toInteger(friend.id) ASC
   LIMIT 20
