@@ -1,6 +1,6 @@
-MATCH (:Person {id:$personId})-[path:KNOWS*1..3]-(friend:Person)
-WHERE friend.firstName = $firstName
-WITH friend, min(length(path)) AS distance
+MATCH p=shortestPath((person:Person {id: $personId})-[path:KNOWS*1..3]-(friend:Person {firstName: $firstName}))
+WHERE person <> friend
+WITH friend, length(p) AS distance
 ORDER BY distance ASC, friend.lastName ASC, toInteger(friend.id) ASC
 LIMIT 20
 MATCH (friend)-[:IS_LOCATED_IN]->(friendCity:Place)
