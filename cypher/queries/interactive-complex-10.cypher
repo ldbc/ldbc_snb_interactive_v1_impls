@@ -1,9 +1,9 @@
 MATCH (person:Person {id:$personId})-[:KNOWS*2..2]-(friend:Person)-[:IS_LOCATED_IN]->(city:Place)
 WHERE 
-  ((friend.birthday/100%100 = $month AND friend.birthday%100 >= 21) OR
-  (friend.birthday/100%100 = $nextMonth AND friend.birthday%100 < 22))
-  AND not(friend=person)
-  AND not((friend)-[:KNOWS]-(person))
+  ((friend.birthday.month = $month     AND friend.birthday.month >= 21) OR
+   (friend.birthday.month = $nextMonth AND friend.birthday.month < 22))
+  AND friend <> person
+  AND NOT (friend)-[:KNOWS]-(person)
 WITH DISTINCT friend, city, person
 OPTIONAL MATCH (friend)<-[:HAS_CREATOR]-(post:Post)
 WITH friend, city, collect(post) AS posts, person

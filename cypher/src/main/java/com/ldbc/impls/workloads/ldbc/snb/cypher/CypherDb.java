@@ -66,9 +66,11 @@ import org.neo4j.driver.Values;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 public abstract class CypherDb extends BaseDb<CypherQueryStore> {
 
@@ -122,7 +124,7 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
             long friendId = record.get(0).asLong();
             String friendLastName = record.get(1).asString();
             int distanceFromPerson = record.get(2).asInt();
-            long friendBirthday = record.get(3).asZonedDateTime().toEpochSecond();
+            long friendBirthday = record.get(3).asLocalDate().atStartOfDay(ZoneId.of("GMT")).toEpochSecond();
             long friendCreationDate = record.get(4).asZonedDateTime().toEpochSecond();
             String friendGender = record.get(5).asString();
             String friendBrowserUsed = record.get(6).asString();
