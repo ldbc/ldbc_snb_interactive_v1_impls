@@ -17,12 +17,19 @@ from
     select k_person2id as id, 1 as dist from knows, person where k_person1id = :personId and p_personid = k_person2id and p_firstname = :firstName
     union all
     select b.k_person2id as id, 2 as dist from knows a, knows b, person
-    where
-      a.k_person1id = :personId and b.k_person1id = a.k_person2id and p_personid = b.k_person2id and p_firstname = :firstName
+    where a.k_person1id = :personId
+      and b.k_person1id = a.k_person2id
+      and p_personid = b.k_person2id
+      and p_firstname = :firstName
+      and p_personid != :personId -- excluding start person
     union all
     select c.k_person2id as id, 3 as dist from knows a, knows b, knows c, person
-    where
-      a.k_person1id = :personId and b.k_person1id = a.k_person2id and b.k_person2id = c.k_person1id and p_personid = c.k_person2id and p_firstname = :firstName
+    where a.k_person1id = :personId
+      and b.k_person1id = a.k_person2id
+      and b.k_person2id = c.k_person1id
+      and p_personid = c.k_person2id
+      and p_firstname = :firstName
+      and p_personid != :personId -- excluding start person
     ) tmp, person, place p1
   where
 	p_personid = id and
