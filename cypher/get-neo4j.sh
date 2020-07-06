@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NEO4J_VERSION=3.3.6
+NEO4J_VERSION=3.5.19
 
 rm -rf neo4j-server
 wget https://neo4j.com/artifact.php?name=neo4j-community-$NEO4J_VERSION-unix.tar.gz -O neo4j.tar.gz
