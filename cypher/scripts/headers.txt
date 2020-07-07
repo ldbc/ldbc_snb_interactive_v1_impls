@@ -7,7 +7,7 @@ static/tag_hasType_tagclass :START_ID(Tag)|:END_ID(TagClass)
 static/organisation_isLocatedIn_place :START_ID(Organisation)|:END_ID(Place)
 static/place_isPartOf_place :START_ID(Place)|:END_ID(Place)
 dynamic/comment creationDate:DATETIME|id:ID(Comment)|locationIP:STRING|browserUsed:STRING|content:STRING|length:LONG
-dynamic/forum creationDate:DATETIME|id:ID(Forum)|title:STRING
+dynamic/forum creationDate:DATETIME|id:ID(Forum)|title:STRING|:LABEL
 dynamic/person creationDate:DATETIME|id:ID(Person)|firstName:STRING|lastName:STRING|gender:STRING|birthday:DATE|locationIP:STRING|browserUsed:STRING|speaks:STRING[]|email:STRING[]
 dynamic/post creationDate:DATETIME|id:ID(Post)|imageFile:STRING|locationIP:STRING|browserUsed:STRING|language:STRING|content:STRING|length:LONG
 dynamic/comment_hasCreator_person creationDate:DATETIME|:START_ID(Comment)|:END_ID(Person)
