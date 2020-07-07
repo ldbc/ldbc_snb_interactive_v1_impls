@@ -15,7 +15,7 @@ dynamic/comment_isLocatedIn_place creationDate:DATETIME|:START_ID(Comment)|:END_
 dynamic/comment_replyOf_comment creationDate:DATETIME|:START_ID(Comment)|:END_ID(Comment)
 dynamic/comment_replyOf_post creationDate:DATETIME|:START_ID(Comment)|:END_ID(Post)
 dynamic/forum_containerOf_post creationDate:DATETIME|:START_ID(Forum)|:END_ID(Post)
-dynamic/forum_hasMember_person creationDate:DATETIME|:START_ID(Forum)|:END_ID(Person)
+dynamic/forum_hasMember_person creationDate:DATETIME|:START_ID(Forum)|:END_ID(Person)|type:STRING|deletionDate:DATETIME
 dynamic/forum_hasModerator_person creationDate:DATETIME|:START_ID(Forum)|:END_ID(Person)
 dynamic/forum_hasTag_tag creationDate:DATETIME|:START_ID(Forum)|:END_ID(Tag)
 dynamic/person_hasInterest_tag creationDate:DATETIME|:START_ID(Person)|:END_ID(Tag)
