@@ -4,7 +4,9 @@ LDBC SNB implementations
 
 [![Build Status](https://travis-ci.org/ldbc/ldbc_snb_implementations.svg?branch=dev)](https://travis-ci.org/ldbc/ldbc_snb_implementations)
 
-Implementations for the Workload components of the LDBC Social Network Benchmark ([specification](https://ldbc.github.io/ldbc_snb_docs/)).
+Implementations for the Workload components of the [LDBC Social Network Benchmark](https://ldbc.github.io/ldbc_snb_docs/).
+
+:scroll: If you wish to cite the LDBC SNB, please refer to the [documentation repository](https://github.com/ldbc/ldbc_snb_docs#how-to-cite-ldbc-benchmarks).
 
 :warning: The most recent version of the code can be found on the `dev` branch, the `stable` branch tends to be better tested and uses a stable version of the LDBC SNB driver.
 
