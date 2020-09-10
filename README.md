@@ -8,9 +8,18 @@ Implementations for the Workload components of the [LDBC Social Network Benchmar
 
 :scroll: If you wish to cite the LDBC SNB, please refer to the [documentation repository](https://github.com/ldbc/ldbc_snb_docs#how-to-cite-ldbc-benchmarks).
 
-:warning: The most recent version of the code can be found on the `dev` branch, the `stable` branch tends to be better tested and uses a stable version of the LDBC SNB driver.
-
 :warning: Implementations in this repository are preliminary, i.e. they are unaudited and - in rare cases - do not pass validation. For details, feel free to contact us through an issue or email.
+
+## Compatibility
+
+The LDBC Social Network Benchmark suite is continuously maintained with improvements in the specification, the data generator, the driver, and the reference implementation.
+To ensure that you are using compatible LDBC repositories, use the following table:
+
+| project | v0.3.x | v0.4.x |
+| ------- | ------ | ------ |
+| [Datagen](https://github.com/ldbc/ldbc_snb_datagen) | [`v0.3.3`](https://github.com/ldbc/ldbc_snb_datagen/releases/tag/v0.3.3) | [`dev`](https://github.com/ldbc/ldbc_snb_datagen/tree/dev) |
+| [Driver](https://github.com/ldbc/ldbc_snb_driver) | [`v0.3.3`](https://github.com/ldbc/ldbc_snb_driver/releases/tag/0.3.3) | [`dev`](https://github.com/ldbc/ldbc_snb_driver/tree/dev) |
+| [Implementations](https://github.com/ldbc/ldbc_snb_implementations) | [`stable`](https://github.com/ldbc/ldbc_snb_implementations/tree/stable) | [`dev`](https://github.com/ldbc/ldbc_snb_implementations/tree/dev) |
 
 ## Directory layout
 
@@ -18,8 +27,8 @@ Multiple configuration files and scripts use [relative paths to address the data
 
 * `ldbc`
   * [`ldbc_snb_datagen`](https://github.com/ldbc/ldbc_snb_datagen)
-  * [`ldbc_snb_driver`](https://github.com/ldbc/ldbc_snb_driver) – **use the `dev` branch**
-  * [`ldbc_snb_implementations`](https://github.com/ldbc/ldbc_snb_implementations/)
+  * [`ldbc_snb_driver`](https://github.com/ldbc/ldbc_snb_driver)
+  * [`ldbc_snb_implementations`](https://github.com/ldbc/ldbc_snb_implementations)
 
 ## Implementations
 
