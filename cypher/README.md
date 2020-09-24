@@ -4,7 +4,7 @@
 
 ## Starting Neo4j
 
-Run:
+To grab the Neo4j binaries and configure the server, run:
 
 ```bash
 . ./environment-variables-neo4j.sh
@@ -13,6 +13,7 @@ Run:
 ```
 
 To load the data, do:
+
 ```
 . ./environment-variables-neo4j.sh
 export NEO4J_CSV_DIR=/path/to/the/directory/social_network/
