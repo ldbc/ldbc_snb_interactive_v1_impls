@@ -14,7 +14,7 @@ To grab the Neo4j binaries and configure the server, run:
 
 To load the data, do:
 
-```
+```bash
 . ./environment-variables-neo4j.sh
 export NEO4J_CSV_DIR=/path/to/the/directory/social_network/
 export NEO4J_CSV_POSTFIX=_0_0.csv
@@ -35,12 +35,12 @@ To start the database, use the following command in the `scripts` directory:
 The data set needs to be generated and preprocessed before loading it to the database. To generate it, use the `CSVComposite` serializer classes of the [DATAGEN](https://github.com/ldbc/ldbc_snb_datagen/) project:
 
 ```
-ldbc.snb.datagen.serializer.dynamicActivitySerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.activity.CsvCompositeDynamicActivitySerializer
-ldbc.snb.datagen.serializer.dynamicPersonSerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.person.CsvCompositeDynamicPersonSerializer
-ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv.staticserializer.CsvCompositeStaticSerializer
+generator.scaleFactor:0.1
+generator.mode:interactive
+serializer.format:CsvBasic
 ```
 
-An example configuration for scale factor 1 is given in the [`params-csv-composite.ini`](https://github.com/ldbc/ldbc_snb_datagen/blob/master/params-csv-composite.ini) file of the DATAGEN repository. For small loading experiments, we recommend using scale factor 0.1, i.e. `snb.interactive.0.1`.
+An example configuration for scale factor 1 is given in the [`params-csv-composite.ini`](https://github.com/ldbc/ldbc_snb_datagen/blob/dev/params-csv-composite.ini) file of the DATAGEN repository. For small loading experiments, we recommend using scale factor 0.1.
 
 ### Preprocessing and loading
 
