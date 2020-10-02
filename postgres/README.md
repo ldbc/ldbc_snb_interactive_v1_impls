@@ -52,13 +52,13 @@ ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv
 
 ### Loading the data set
 
-To run the load script, go the `load-scripts` directory, set the `PG_` environment variables (optional) and issue the following command:
+To run the load script, go the `load-scripts` directory, set the `PG_` environment variables (optional) and issue the following command.
+For special loading options, see below.
 
 ```bash
 export PG_CSV_DIR=
 export PG_DB_NAME=
 export PG_USER=
-export PG_FORCE_REGENERATE=
 export PG_PORT=
 ./load.sh
 ```
@@ -67,9 +67,7 @@ The `load.sh` (re)generates PostgreSQL-specific CSV files for posts and comments
 
  - they don't exist
  - the source CSV is newer than the generated one
- - the user forces to do so by setting the environment variable PG_FORCE_REGENERATE=yes
-
-Most probably you won't need to touch this.
+ - the user forces to do so by setting the environment variable `PG_FORCE_REGENERATE=yes` (see below for special loading options.)
 
 The `load.sh` has default options that loads the dataset in the generator's directory to the `ldbcsf1` database with your current user. If these fit your needs, just run the script as `./load.sh`.
 
@@ -87,3 +85,21 @@ You are now connected to database "ldbcsf1" as user "postgres".
 ldbcsf1=# SELECT count(*) FROM person;
 # ...
 ```
+#### Special loading options
+
+In order to allow for easier experimenting, PostgreSQL converter (`load.sh`) accept a few special options using environment variables.
+Most probably you won't need to touch them unless you are experimenting.
+
+ - `PG_FORCE_REGENERATE`: you can force the loader to (re)generate PostgreSQL-specific CSV files for posts and comments. Possible values are:
+    - `yes`: (re)generate PostgreSQL-specific CSV files for posts and comments.
+    - `no`: (re)generate only PostgreSQL-specific CSV files if they don't exist of older than their source files. For performance reasons, **this is the default**.
+
+ - `PG_CREATE_MESSAGE_FILE`: control creating a unified `message` data file of posts and comments. Possible values:
+    - `no`: don't create message file, as we traditionally did. **This is the default.**
+    - `create`: create message file, with no guarantee on being sorted
+    - `sort_by_date`:  create message file, sorted by creation date.
+       **Note:** when you switch messages file to be sorted, you need to use `PG_FORCE_REGENERATE=yes`, orherwise regenerating depends whether the source files have changed.
+
+ - `PG_LOAD_TO_DB`: controls whether we want to do or skip database loading phase. Possible values are:
+    - `load`: loads to the database, as one might expect. **This is the default.**
+    - `skip`: skip loading to the database. Use this to generate only CSV files.
