@@ -33,6 +33,7 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate7AddComment;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate8AddFriendship;
 import com.ldbc.impls.workloads.ldbc.snb.SnbTest;
 import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Date;
@@ -148,6 +149,7 @@ public abstract class InteractiveTest extends SnbTest {
         run(db, new LdbcShortQuery7MessageReplies(2061584476422L));
     }
 
+    @Ignore
     @Test
     public void testUpdateQuery1() throws Exception {
         final LdbcUpdate1AddPerson.Organization university1 = new LdbcUpdate1AddPerson.Organization(1001L, 2013);
@@ -173,26 +175,31 @@ public abstract class InteractiveTest extends SnbTest {
         );
     }
 
+    @Ignore
     @Test
     public void testUpdateQuery2() throws Exception {
         run(db, new LdbcUpdate2AddPostLike(1021L, 1022L, new Date(0L)));
     }
 
+    @Ignore
     @Test
     public void testUpdateQuery3() throws Exception {
         run(db, new LdbcUpdate3AddCommentLike(1031L, 1032L, new Date(0L)));
     }
 
+    @Ignore
     @Test
     public void testUpdateQuery4() throws Exception {
         run(db, new LdbcUpdate4AddForum(1041L, "", new Date(0L), 1042L, ImmutableList.of(1043L, 1044L)));
     }
 
+    @Ignore
     @Test
     public void testUpdateQuery5() throws Exception {
         run(db, new LdbcUpdate5AddForumMembership(1051L, 1052L, new Date(0L)));
     }
 
+    @Ignore
     @Test
     public void testUpdateQuery6() throws Exception {
         run(db, new LdbcUpdate6AddPost(
@@ -211,6 +218,7 @@ public abstract class InteractiveTest extends SnbTest {
         ));
     }
 
+    @Ignore
     @Test
     public void testUpdateQuery7() throws Exception {
         run(db, new LdbcUpdate7AddComment(
@@ -227,6 +235,7 @@ public abstract class InteractiveTest extends SnbTest {
                 ImmutableList.of(1076L, 1077L)));
     }
 
+    @Ignore
     @Test
     public void testUpdateQuery8() throws Exception {
         run(db, new LdbcUpdate8AddFriendship(1081L, 1082L, new Date(0L)));

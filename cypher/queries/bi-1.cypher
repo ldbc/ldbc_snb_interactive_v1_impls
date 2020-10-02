@@ -1,6 +1,6 @@
 // Q1. Posting summary
 /*
-  :param { date: 20110721220000000 }
+  :param date => datetime('2011-07-21')
 */
 MATCH (message:Message)
 WHERE message.creationDate < $date
@@ -12,7 +12,7 @@ WHERE message.creationDate < $date
 WITH
   totalMessageCount,
   message,
-  message.creationDate/10000000000000 AS year
+  message.creationDate.year AS year
 WITH
   totalMessageCount,
   year,

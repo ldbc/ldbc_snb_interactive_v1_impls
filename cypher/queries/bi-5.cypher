@@ -1,6 +1,6 @@
 // Q5. Top posters in a country
 /*
-  :param { country: 'Belarus' }
+  :param country => 'Belarus'
 */
 MATCH
   (:Country {name: $country})<-[:IS_PART_OF]-(:City)<-[:IS_LOCATED_IN]-

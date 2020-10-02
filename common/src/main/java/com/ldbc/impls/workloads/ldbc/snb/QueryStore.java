@@ -27,6 +27,14 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery6ActivePosters;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery7AuthoritativeUsers;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery8RelatedTopics;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForums;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcDelete1RemovePerson;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcDelete2RemovePostLike;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcDelete3RemoveCommentLike;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcDelete4RemoveForum;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcDelete5RemoveForumMembership;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcDelete6RemovePost;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcDelete7RemoveComment;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcDelete8RemoveFriendship;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery11;
@@ -165,6 +173,16 @@ public abstract class QueryStore {
         // interactive updates (additional queries for system that insert content/imageFile as separated operation)
         InteractiveUpdate6AddPostContent       ("interactive-update-6-add-post-content"),
         InteractiveUpdate6AddPostImageFile     ("interactive-update-6-add-post-imagefile"),
+
+        // interactive deletes
+        InteractiveDelete1("interactive-delete-1"),
+        InteractiveDelete2("interactive-delete-2"),
+        InteractiveDelete3("interactive-delete-3"),
+        InteractiveDelete4("interactive-delete-4"),
+        InteractiveDelete5("interactive-delete-5"),
+        InteractiveDelete6("interactive-delete-6"),
+        InteractiveDelete7("interactive-delete-7"),
+        InteractiveDelete8("interactive-delete-8"),
 
         // BI
         BiQuery1 ("bi-1" ),
@@ -710,6 +728,84 @@ public abstract class QueryStore {
             );
         }
         return list;
+    }
+
+    // Interactive deletes
+
+    public String getDelete1(LdbcDelete1RemovePerson operation) {
+        return prepare(
+                QueryType.InteractiveDelete1,
+                ImmutableMap.of(
+                        LdbcDelete1RemovePerson.PERSON_ID, getConverter().convertId(operation.personId())
+                )
+        );
+    }
+
+    public String getDelete2(LdbcDelete2RemovePostLike operation) {
+        return prepare(
+                QueryType.InteractiveDelete2,
+                ImmutableMap.of(
+                        LdbcDelete2RemovePostLike.PERSON_ID, getConverter().convertId(operation.personId()),
+                        LdbcDelete2RemovePostLike.POST_ID, getConverter().convertId(operation.postId())
+                )
+        );
+    }
+
+    public String getDelete3(LdbcDelete3RemoveCommentLike operation) {
+        return prepare(
+                QueryType.InteractiveDelete3,
+                ImmutableMap.of(
+                        LdbcDelete3RemoveCommentLike.PERSON_ID, getConverter().convertId(operation.personId()),
+                        LdbcDelete3RemoveCommentLike.COMMENT_ID, getConverter().convertId(operation.personId())
+                )
+        );
+    }
+
+    public String getDelete4(LdbcDelete4RemoveForum operation) {
+        return prepare(
+                QueryType.InteractiveDelete4,
+                ImmutableMap.of(
+                        LdbcDelete4RemoveForum.FORUM_ID, getConverter().convertId(operation.forumId())
+                )
+        );
+    }
+
+    public String getDelete5(LdbcDelete5RemoveForumMembership operation) {
+        return prepare(
+                QueryType.InteractiveDelete5,
+                ImmutableMap.of(
+                        LdbcDelete5RemoveForumMembership.FORUM_ID, getConverter().convertId(operation.forumId()),
+                        LdbcDelete5RemoveForumMembership.PERSON_ID, getConverter().convertId(operation.personId())
+                )
+        );
+    }
+
+    public String getDelete6(LdbcDelete6RemovePost operation) {
+        return prepare(
+                QueryType.InteractiveDelete6,
+                ImmutableMap.of(
+                        LdbcDelete6RemovePost.POST_ID, getConverter().convertId(operation.postId())
+                )
+        );
+    }
+
+    public String getDelete7(LdbcDelete7RemoveComment operation) {
+        return prepare(
+                QueryType.InteractiveDelete7,
+                ImmutableMap.of(
+                        LdbcDelete7RemoveComment.COMMENT_ID, getConverter().convertId(operation.commentId())
+                )
+        );
+    }
+
+    public String getDelete8(LdbcDelete8RemoveFriendship operation) {
+        return prepare(
+                QueryType.InteractiveDelete8,
+                ImmutableMap.of(
+                        LdbcDelete8RemoveFriendship.PERSON1_ID, getConverter().convertId(operation.person1Id()),
+                        LdbcDelete8RemoveFriendship.PERSON2_ID, getConverter().convertId(operation.person2Id())
+                )
+        );
     }
 
     // BI queries

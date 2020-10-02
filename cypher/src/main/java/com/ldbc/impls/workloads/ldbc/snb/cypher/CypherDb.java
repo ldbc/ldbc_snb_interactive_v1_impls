@@ -55,19 +55,22 @@ import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForums;
 import com.ldbc.driver.workloads.ldbc.snb.bi.LdbcSnbBiQuery9RelatedForumsResult;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.converter.CypherConverter;
+import com.ldbc.impls.workloads.ldbc.snb.cypher.operationhandlers.CypherDeleteOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.operationhandlers.CypherListOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.operationhandlers.CypherSingletonOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.operationhandlers.CypherUpdateOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
-import org.neo4j.driver.v1.Record;
-import org.neo4j.driver.v1.Values;
+import org.neo4j.driver.Record;
+import org.neo4j.driver.Values;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 public abstract class CypherDb extends BaseDb<CypherQueryStore> {
 
@@ -121,8 +124,8 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
             long friendId = record.get(0).asLong();
             String friendLastName = record.get(1).asString();
             int distanceFromPerson = record.get(2).asInt();
-            long friendBirthday = CypherConverter.convertLongDateToEpoch(record.get(3).asLong());
-            long friendCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(4).asLong());
+            long friendBirthday = record.get(3).asLocalDate().atStartOfDay(ZoneId.of("GMT")).toEpochSecond();
+            long friendCreationDate = record.get(4).asZonedDateTime().toEpochSecond();
             String friendGender = record.get(5).asString();
             String friendBrowserUsed = record.get(6).asString();
             String friendLocationIp = record.get(7).asString();
@@ -158,7 +161,7 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
             String personLastName = record.get(2).asString();
             long messageId = record.get(3).asLong();
             String messageContent = record.get(4).asString();
-            long messageCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(5).asLong());
+            long messageCreationDate = record.get(5).asZonedDateTime().toEpochSecond();
 
             return new LdbcQuery2Result(
                     personId,
@@ -253,10 +256,10 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
             long personId = record.get(0).asLong();
             String personFirstName = record.get(1).asString();
             String personLastName = record.get(2).asString();
-            long likeCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(3).asLong());
+            long likeCreationDate = record.get(3).asZonedDateTime().toEpochSecond();
             long messageId = record.get(4).asLong();
             String messageContent = record.get(5).asString();
-            int minutesLatency = CypherConverter.convertStartAndEndDateToLatency(record.get(6).asLong(), record.get(3).asLong());
+            int minutesLatency = record.get(6).asInt();
             boolean isNew = record.get(7).asBoolean();
             return new LdbcQuery7Result(
                     personId,
@@ -282,7 +285,7 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
             long personId = record.get(0).asLong();
             String personFirstName = record.get(1).asString();
             String personLastName = record.get(2).asString();
-            long commentCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(3).asLong());
+            long commentCreationDate = record.get(3).asZonedDateTime().toEpochSecond();
             long commentId = record.get(4).asLong();
             String commentContent = record.get(5).asString();
             return new LdbcQuery8Result(
@@ -309,7 +312,7 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
             String personLastName = record.get(2).asString();
             long messageId = record.get(3).asLong();
             String messageContent = record.get(4).asString();
-            long messageCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(5).asLong());
+            long messageCreationDate = record.get(5).asZonedDateTime().toEpochSecond();
             return new LdbcQuery9Result(
                     personId,
                     personFirstName,
@@ -440,12 +443,12 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
         public LdbcShortQuery1PersonProfileResult convertSingleResult(Record record) throws ParseException {
             String firstName = record.get(0).asString();
             String lastName = record.get(1).asString();
-            long birthday = CypherConverter.convertLongDateToEpoch(record.get(2).asLong());
+            long birthday = record.get(2).asZonedDateTime().toEpochSecond();
             String locationIP = record.get(3).asString();
             String browserUsed = record.get(4).asString();
             long cityId = record.get(5).asLong();
             String gender = record.get(6).asString();
-            long creationDate = CypherConverter.convertLongTimestampToEpoch(record.get(7).asLong());
+            long creationDate = record.get(7).asZonedDateTime().toEpochSecond();
             return new LdbcShortQuery1PersonProfileResult(
                     firstName,
                     lastName,
@@ -469,7 +472,7 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
         public LdbcShortQuery2PersonPostsResult convertSingleResult(Record record) throws ParseException {
             long messageId = record.get(0).asLong();
             String messageContent = record.get(1).asString();
-            long messageCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(2).asLong());
+            long messageCreationDate = record.get(2).asZonedDateTime().toEpochSecond();
             long originalPostId = record.get(3).asLong();
             long originalPostAuthorId = record.get(4).asLong();
             String originalPostAuthorFirstName = record.get(5).asString();
@@ -497,7 +500,7 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
             long personId = record.get(0).asLong();
             String firstName = record.get(1).asString();
             String lastName = record.get(2).asString();
-            long friendshipCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(3).asLong());
+            long friendshipCreationDate = record.get(3).asZonedDateTime().toEpochSecond();
             return new LdbcShortQuery3PersonFriendsResult(
                     personId,
                     firstName,
@@ -516,7 +519,7 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
         @Override
         public LdbcShortQuery4MessageContentResult convertSingleResult(Record record) throws ParseException {
             // Pay attention, the spec's and the implementation's parameter orders are different.
-            long messageCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(0).asLong());
+            long messageCreationDate = record.get(0).asZonedDateTime().toEpochSecond();
             String messageContent = record.get(1).asString();
             return new LdbcShortQuery4MessageContentResult(
                     messageContent,
@@ -577,7 +580,7 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
         public LdbcShortQuery7MessageRepliesResult convertSingleResult(Record record) throws ParseException {
             long commentId = record.get(0).asLong();
             String commentContent = record.get(1).asString();
-            long commentCreationDate = CypherConverter.convertLongTimestampToEpoch(record.get(2).asLong());
+            long commentCreationDate = record.get(2).asZonedDateTime().toEpochSecond();
             long replyAuthorId = record.get(3).asLong();
             String replyAuthorFirstName = record.get(4).asString();
             String replyAuthorLastName = record.get(5).asString();
@@ -593,7 +596,7 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
         }
     }
 
-    // Interactive updates
+    // Interactive inserts
 
     public static class Update1AddPerson extends CypherUpdateOperationHandler<LdbcUpdate1AddPerson> {
 
@@ -656,6 +659,72 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
         @Override
         public String getQueryString(CypherDbConnectionState state, LdbcUpdate8AddFriendship operation) {
             return state.getQueryStore().getUpdate8(operation);
+        }
+    }
+
+    // Interactive deletes
+
+    public static class Delete1RemovePerson extends CypherDeleteOperationHandler<LdbcDelete1RemovePerson> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete1RemovePerson operation) {
+            return state.getQueryStore().getDelete1(operation);
+        }
+    }
+
+    public static class Delete2RemovePostLike extends CypherDeleteOperationHandler<LdbcDelete2RemovePostLike> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete2RemovePostLike operation) {
+            return state.getQueryStore().getDelete2(operation);
+        }
+    }
+
+    public static class Delete3RemoveCommentLike extends CypherDeleteOperationHandler<LdbcDelete3RemoveCommentLike> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete3RemoveCommentLike operation) {
+            return state.getQueryStore().getDelete3(operation);
+        }
+    }
+
+    public static class Delete4RemoveForum extends CypherDeleteOperationHandler<LdbcDelete4RemoveForum> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete4RemoveForum operation) {
+            return state.getQueryStore().getDelete4(operation);
+        }
+    }
+
+    public static class Delete5RemoveForumMembership extends CypherDeleteOperationHandler<LdbcDelete5RemoveForumMembership> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete5RemoveForumMembership operation) {
+            return state.getQueryStore().getDelete5(operation);
+        }
+    }
+
+    public static class Delete6RemovePost extends CypherDeleteOperationHandler<LdbcDelete6RemovePost> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete6RemovePost operation) {
+            return state.getQueryStore().getDelete6(operation);
+        }
+    }
+
+    public static class Delete7RemoveComment extends CypherDeleteOperationHandler<LdbcDelete7RemoveComment> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete7RemoveComment operation) {
+            return state.getQueryStore().getDelete7(operation);
+        }
+    }
+
+    public static class Delete8RemoveFriendship extends CypherDeleteOperationHandler<LdbcDelete8RemoveFriendship> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete8RemoveFriendship operation) {
+            return state.getQueryStore().getDelete8(operation);
         }
     }
 
@@ -732,7 +801,7 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
         public LdbcSnbBiQuery4PopularCountryTopicsResult convertSingleResult(Record record) throws ParseException {
             long forumId = record.get(0).asLong();
             String title = record.get(1).asString();
-            long creationDate = CypherConverter.convertLongTimestampToEpoch(record.get(2).asLong());
+            long creationDate = record.get(2).asZonedDateTime().toEpochSecond();
             long moderator = record.get(3).asLong();
             int count = record.get(4).asInt();
             return new LdbcSnbBiQuery4PopularCountryTopicsResult(forumId, title, creationDate, moderator, count);
@@ -752,7 +821,7 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
             long personId = record.get(0).asLong();
             String firstName = record.get(1).asString();
             String lastName = record.get(2).asString();
-            long creationDate = CypherConverter.convertLongTimestampToEpoch(record.get(3).asLong());
+            long creationDate = record.get(3).asZonedDateTime().toEpochSecond();
             int count = record.get(4).asInt();
             return new LdbcSnbBiQuery5TopCountryPostersResult(personId, firstName, lastName, creationDate, count);
         }
@@ -872,7 +941,7 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
         @Override
         public LdbcSnbBiQuery12TrendingPostsResult convertSingleResult(Record record) throws ParseException {
             long personId = record.get(0).asLong();
-            long creationDate = CypherConverter.convertLongTimestampToEpoch(record.get(1).asLong());
+            long creationDate = record.get(1).asZonedDateTime().toEpochSecond();
             String firstName = record.get(2).asString();
             String lastName = record.get(3).asString();
             int likeCount = record.get(4).asInt();

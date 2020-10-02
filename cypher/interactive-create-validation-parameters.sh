@@ -1,3 +1,3 @@
 #!/bin/bash
 
-java -cp target/cypher-0.0.1-SNAPSHOT.jar com.ldbc.driver.Client -P interactive-create-validation-parameters.properties
+java -cp target/cypher-0.4.0-SNAPSHOT.jar com.ldbc.driver.Client -dm CREATE_VALIDATION_PARAMS -P interactive-create-validation-parameters.properties

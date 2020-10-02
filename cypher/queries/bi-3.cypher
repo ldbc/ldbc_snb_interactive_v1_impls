@@ -1,25 +1,17 @@
 // Q3. Tag evolution
 /*
-  :param {
-    year: 2010,
-    month: 10
-  }
+  :param [{ year, month }] => { RETURN 2010 AS year, 10 AS month }
 */
-WITH
-  $year AS year1,
-  $month AS month1,
-  $year + toInteger($month / 12.0) AS year2,
-  $month % 12 + 1 AS month2
-// year-month 1
 MATCH (tag:Tag)
+// year-month 1
 OPTIONAL MATCH (message1:Message)-[:HAS_TAG]->(tag)
-  WHERE message1.creationDate/10000000000000   = year1
-    AND message1.creationDate/100000000000%100 = month1
-WITH year2, month2, tag, count(message1) AS countMonth1
+  WHERE message1.creationDate.year = $year
+    AND message1.creationDate.month = $month
+WITH tag, count(message1) AS countMonth1
 // year-month 2
 OPTIONAL MATCH (message2:Message)-[:HAS_TAG]->(tag)
-  WHERE message2.creationDate/10000000000000   = year2
-    AND message2.creationDate/100000000000%100 = month2
+  WHERE message2.creationDate.year = $year + toInteger($month / 12)
+    AND message2.creationDate.month = $month % 12 + 1
 WITH
   tag,
   countMonth1,

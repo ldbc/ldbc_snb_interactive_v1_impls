@@ -2,20 +2,33 @@
 LDBC SNB implementations
 ------------------------
 
-[![Build Status](https://travis-ci.org/ldbc/ldbc_snb_implementations.svg?branch=master)](https://travis-ci.org/ldbc/ldbc_snb_implementations)
+[![Build Status](https://travis-ci.org/ldbc/ldbc_snb_implementations.svg?branch=dev)](https://travis-ci.org/ldbc/ldbc_snb_implementations)
 
-Implementations for the Workload components of the LDBC Social Network Benchmark ([specification](https://ldbc.github.io/ldbc_snb_docs/)).
+Implementations for the Workload components of the [LDBC Social Network Benchmark](https://ldbc.github.io/ldbc_snb_docs/).
 
-:warning: Implementations in this repository are preliminary, i.e. they are not audited and - in rare cases - not even validated. For details, feel free to contact us through an issue or email.
+:scroll: If you wish to cite the LDBC SNB, please refer to the [documentation repository](https://github.com/ldbc/ldbc_snb_docs#how-to-cite-ldbc-benchmarks).
+
+:warning: Implementations in this repository are preliminary, i.e. they are unaudited and - in rare cases - do not pass validation. For details, feel free to contact us through an issue or email.
+
+## Compatibility
+
+The LDBC Social Network Benchmark suite is continuously maintained with improvements in the specification, the data generator, the driver, and the reference implementation.
+To ensure that you are using compatible LDBC repositories, use the following table:
+
+| project | v0.3.x | v0.4.x |
+| ------- | ------ | ------ |
+| [Datagen](https://github.com/ldbc/ldbc_snb_datagen) | [`v0.3.3`](https://github.com/ldbc/ldbc_snb_datagen/releases/tag/v0.3.3) | [`dev`](https://github.com/ldbc/ldbc_snb_datagen/tree/dev) |
+| [Driver](https://github.com/ldbc/ldbc_snb_driver) | [`v0.3.3`](https://github.com/ldbc/ldbc_snb_driver/releases/tag/0.3.3) | [`dev`](https://github.com/ldbc/ldbc_snb_driver/tree/dev) |
+| [Implementations](https://github.com/ldbc/ldbc_snb_implementations) | [`stable`](https://github.com/ldbc/ldbc_snb_implementations/tree/stable) | [`dev`](https://github.com/ldbc/ldbc_snb_implementations/tree/dev) |
 
 ## Directory layout
 
-Multiple configuration files and scripts use [relative paths to address the data generator's directory](https://github.com/ldbc/ldbc_snb_implementations/search?q=ldbc_snb_datagen). Hence, it is recommended to clone the LDBC data generator and the LDBC implementations repositories next to each other with their directory names intact. For example:
+Multiple configuration files and scripts use [relative paths to address the data generator's directory](https://github.com/ldbc/ldbc_snb_implementations/search?q=ldbc_snb_datagen). Hence, it is recommended to clone the LDBC Data Generator and the LDBC implementations repositories next to each other and keep their original directory names. For example:
 
 * `ldbc`
   * [`ldbc_snb_datagen`](https://github.com/ldbc/ldbc_snb_datagen)
-  * [`ldbc_snb_driver`](https://github.com/ldbc/ldbc_snb_driver) _(optional)_
-  * [`ldbc_snb_implementations`](https://github.com/ldbc/ldbc_snb_implementations/)
+  * [`ldbc_snb_driver`](https://github.com/ldbc/ldbc_snb_driver)
+  * [`ldbc_snb_implementations`](https://github.com/ldbc/ldbc_snb_implementations)
 
 ## Implementations
 
@@ -49,13 +62,13 @@ The queries in this repository are work-in-progress. If possible, please cross-v
 | PostgreSQL     | [01](postgres/queries/interactive-short-1.sql)  | [02](postgres/queries/interactive-short-2.sql)  | [03](postgres/queries/interactive-short-3.sql)  | [04](postgres/queries/interactive-short-4.sql)  | [05](postgres/queries/interactive-short-5.sql)  | [06](postgres/queries/interactive-short-6.sql)  | [07](postgres/queries/interactive-short-7.sql)  |
 | SPARQL         | [01](sparql/queries/interactive-short-1.sparql) | [02](sparql/queries/interactive-short-2.sparql) | [03](sparql/queries/interactive-short-3.sparql) | [04](sparql/queries/interactive-short-4.sparql) | [05](sparql/queries/interactive-short-5.sparql) | [06](sparql/queries/interactive-short-6.sparql) | [07](sparql/queries/interactive-short-7.sparql) |
 
-#### Updates
+#### Inserts
 
-| query          | [01](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-update-01.pdf) | [02](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-update-02.pdf) | [03](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-update-03.pdf) | [04](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-update-04.pdf) | [05](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-update-05.pdf) | [06](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-update-06.pdf) | [07](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-update-07.pdf) | [08](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-update-08.pdf) |
+| query          | [01](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-insert-01.pdf) | [02](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-insert-02.pdf) | [03](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-insert-03.pdf) | [04](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-insert-04.pdf) | [05](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-insert-05.pdf) | [06](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-insert-06.pdf) | [07](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-insert-07.pdf) | [08](https://ldbc.github.io/ldbc_snb_docs_snapshot/interactive-insert-08.pdf) |
 | -------------- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Neo4j (Cypher) | [01](cypher/queries/interactive-update-1.cypher) | [02](cypher/queries/interactive-update-2.cypher) | [03](cypher/queries/interactive-update-3.cypher) | [04](cypher/queries/interactive-update-4.cypher) | [05](cypher/queries/interactive-update-5.cypher) | [06](cypher/queries/interactive-update-6.cypher) | [07](cypher/queries/interactive-update-7.cypher) | [08](cypher/queries/interactive-update-8.cypher) |
-| PostgreSQL     | [01/p](postgres/queries/interactive-update-1.sql) [01/c](postgres/queries/interactive-update-1-add-person-companies.sql) [01/e](postgres/queries/interactive-update-1-add-person-emails.sql) [01/l](postgres/queries/interactive-update-1-add-person-languages.sql) [01/t](postgres/queries/interactive-update-1-add-person-tags.sql) [01/u](postgres/queries/interactive-update-1-add-person-universities.sql) | [02](postgres/queries/interactive-update-2.sql) | [03](postgres/queries/interactive-update-3.sql) | [04/f](postgres/queries/interactive-update-4.sql) [04/t](postgres/queries/interactive-update-4-add-forum-tags.sql) | [05](postgres/queries/interactive-update-5.sql) | [06/p](postgres/queries/interactive-update-6.sql) [06/t](postgres/queries/interactive-update-6-add-post-tags.sql) | [07/c](postgres/queries/interactive-update-7.sql) [07/t](postgres/queries/interactive-update-7-add-comment-tags.sql) | [08](postgres/queries/interactive-update-8.sql) |
-| SPARQL         | [01/p](sparql/queries/interactive-update-1.sparql) [01/c](sparql/queries/interactive-update-1-add-person-companies.sparql) [01/e](sparql/queries/interactive-update-1-add-person-emails.sparql) [01/l](sparql/queries/interactive-update-1-add-person-languages.sparql) [01/t](sparql/queries/interactive-update-1-add-person-tags.sparql) [01/u](sparql/queries/interactive-update-1-add-person-universities.sparql) | [02](sparql/queries/interactive-update-2.sparql) | [03](sparql/queries/interactive-update-3.sparql) | [04/f](sparql/queries/interactive-update-4.sparql) [04/t](sparql/queries/interactive-update-4-add-forum-tags.sparql) | [05](sparql/queries/interactive-update-5.sparql) | [06/p](sparql/queries/interactive-update-6.sparql) [06/t](sparql/queries/interactive-update-6-add-post-tags.sparql) [06/i](sparql/queries/interactive-update-6-add-post-imagefile.sparql) [06/c](sparql/queries/interactive-update-6-add-post-content.sparql) | [07/c](sparql/queries/interactive-update-7.sparql) [07/t](sparql/queries/interactive-update-7-add-comment-tags.sparql) | [08](sparql/queries/interactive-update-8.sparql) |
+| PostgreSQL     | [01/p](postgres/queries/interactive-update-1-add-person.sql) [01/c](postgres/queries/interactive-update-1-add-person-companies.sql) [01/e](postgres/queries/interactive-update-1-add-person-emails.sql) [01/l](postgres/queries/interactive-update-1-add-person-languages.sql) [01/t](postgres/queries/interactive-update-1-add-person-tags.sql) [01/u](postgres/queries/interactive-update-1-add-person-universities.sql) | [02](postgres/queries/interactive-update-2.sql) | [03](postgres/queries/interactive-update-3.sql) | [04/f](postgres/queries/interactive-update-4-add-forum.sql) [04/t](postgres/queries/interactive-update-4-add-forum-tags.sql) | [05](postgres/queries/interactive-update-5.sql) | [06/p](postgres/queries/interactive-update-6-add-post.sql) [06/t](postgres/queries/interactive-update-6-add-post-tags.sql) | [07/c](postgres/queries/interactive-update-7-add-comment.sql) [07/t](postgres/queries/interactive-update-7-add-comment-tags.sql) | [08](postgres/queries/interactive-update-8.sql) |
+| SPARQL         | [01/p](sparql/queries/interactive-update-1-add-person.sparql) [01/c](sparql/queries/interactive-update-1-add-person-companies.sparql) [01/e](sparql/queries/interactive-update-1-add-person-emails.sparql) [01/l](sparql/queries/interactive-update-1-add-person-languages.sparql) [01/t](sparql/queries/interactive-update-1-add-person-tags.sparql) [01/u](sparql/queries/interactive-update-1-add-person-universities.sparql) | [02](sparql/queries/interactive-update-2.sparql) | [03](sparql/queries/interactive-update-3.sparql) | [04/f](sparql/queries/interactive-update-4-add-forum.sparql) [04/t](sparql/queries/interactive-update-4-add-forum-tags.sparql) | [05](sparql/queries/interactive-update-5.sparql) | [06/p](sparql/queries/interactive-update-6-add-post.sparql) [06/t](sparql/queries/interactive-update-6-add-post-tags.sparql) [06/i](sparql/queries/interactive-update-6-add-post-imagefile.sparql) [06/c](sparql/queries/interactive-update-6-add-post-content.sparql) | [07/c](sparql/queries/interactive-update-7-add-comment.sparql) [07/t](sparql/queries/interactive-update-7-add-comment-tags.sparql) | [08](sparql/queries/interactive-update-8.sparql) |
 
 ### BI
 
@@ -80,7 +93,7 @@ The queries in this repository are work-in-progress. If possible, please cross-v
 
 ## User's guide
 
-1. Build the driver binaries from source. This step is optional as the latest stable version of the driver is [released on Bintray](https://github.com/ldbc/ldbc_snb_driver/commit/de2738a1dda69366a2fe1038a071c5a12bf618e9).
+1. If you are on the `dev` branch or any other unstable branche, first build and install the driver from source.
 
     1. Grab the driver source code from: https://github.com/ldbc/ldbc_snb_driver.
     2. Install the driver artifact to the local Maven repository:
@@ -89,10 +102,10 @@ The queries in this repository are work-in-progress. If possible, please cross-v
         mvn clean install -DskipTests
         ```
 
-2. Navigate to the root of this repository and generate the JAR files for the implementations:
+2. Navigate to the root of this repository and build it to generate the JAR files for the implementations:
 
    ```bash
-   mvn clean package -DskipTests
+   ./build.sh
    ```
 
 3. For each implementation, it is possible to (1) create validation parameters, (2) validate against an existing validation parameters, and (3) run the benchmark. Set the parameters according to your system configuration in the appropriate `.properties` file and run the driver with one of the following scripts:
@@ -102,7 +115,7 @@ The queries in this repository are work-in-progress. If possible, please cross-v
    ./bi-create-validation-parameters.sh
    ./bi-validate.sh
    ./bi-benchmark.sh
-   # Interactive workload
+   # Interactive workload - note that if the workload contains updates, the database needs to be re-loaded between steps
    ./interactive-create-validation-parameters.sh
    ./interactive-validate.sh
    ./interactive-benchmark.sh

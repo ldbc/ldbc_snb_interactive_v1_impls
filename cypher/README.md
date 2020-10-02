@@ -2,6 +2,32 @@
 
 [(open)Cypher](http://www.opencypher.org/) implementation of the [LDBC SNB BI benchmark](https://github.com/ldbc/ldbc_snb_docs).
 
+## Starting Neo4j
+
+To grab the Neo4j binaries and configure the server, run:
+
+```bash
+. ./environment-variables-neo4j.sh
+./get-neo4j.sh
+./configure-neo4j.sh
+```
+
+To load the data, do:
+
+```bash
+. ./environment-variables-neo4j.sh
+export NEO4J_CSV_DIR=/path/to/the/directory/social_network/
+export NEO4J_CSV_POSTFIX=_0_0.csv
+cd scripts
+./load-in-one-step.sh
+```
+
+To start the database, use the following command in the `scripts` directory:
+
+```bash
+./restart-neo4j.sh
+```
+
 ## Loading the data set
 
 ### Generating the data set
@@ -9,23 +35,23 @@
 The data set needs to be generated and preprocessed before loading it to the database. To generate it, use the `CSVComposite` serializer classes of the [DATAGEN](https://github.com/ldbc/ldbc_snb_datagen/) project:
 
 ```
-ldbc.snb.datagen.serializer.personSerializer:ldbc.snb.datagen.serializer.snb.interactive.CSVCompositePersonSerializer
-ldbc.snb.datagen.serializer.invariantSerializer:ldbc.snb.datagen.serializer.snb.interactive.CSVCompositeInvariantSerializer
-ldbc.snb.datagen.serializer.personActivitySerializer:ldbc.snb.datagen.serializer.snb.interactive.CSVCompositePersonActivitySerializer
+generator.scaleFactor:0.1
+generator.mode:interactive
+serializer.format:CsvBasic
 ```
+
+An example configuration for scale factor 1 is given in the [`params-csv-composite.ini`](https://github.com/ldbc/ldbc_snb_datagen/blob/dev/params-csv-composite.ini) file of the DATAGEN repository. For small loading experiments, we recommend using scale factor 0.1.
 
 ### Preprocessing and loading
 
-Go to the `load-scripts/` directory.
+Go to the `scripts` directory.
 
 #### Preprocessing
 
-Set the `$NEO4J_HOME` and the following environment variables appropriately:
+Set the Neo4j following environment variables appropriately. Once you got the configuration right, you might want to save these variables for later:
 
 ```bash
-export NEO4J_DATA_DIR=/path/do/the/csv/files
-export NEO4J_DB_DIR=$NEO4J_HOME/data/databases/graph.db
-export POSTFIX=_0_0.csv
+env | grep ^NEO4J_
 ```
 
 The CSV files require a bit of preprocessing:

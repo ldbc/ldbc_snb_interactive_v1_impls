@@ -1,8 +1,8 @@
-MATCH (:Person {id:$personId})-[path:KNOWS*1..3]-(friend:Person)
-WHERE friend.firstName = $firstName
-WITH friend, min(length(path)) AS distance
-ORDER BY distance ASC, friend.lastName ASC, toInteger(friend.id) ASC
-LIMIT 20
+MATCH p=shortestPath((person:Person {id:$personId})-[path:KNOWS*1..3]-(friend:Person {firstName: $firstName}))
+WHERE person <> friend
+WITH friend, length(p) AS distance
+  ORDER BY distance ASC, friend.lastName ASC, toInteger(friend.id) ASC
+  LIMIT 20
 MATCH (friend)-[:IS_LOCATED_IN]->(friendCity:Place)
 OPTIONAL MATCH (friend)-[studyAt:STUDY_AT]->(uni:Organisation)-[:IS_LOCATED_IN]->(uniCity:Place)
 WITH
@@ -11,7 +11,7 @@ WITH
     CASE uni.name
       WHEN null THEN null
       ELSE [uni.name, studyAt.classYear, uniCity.name]
-    END
+      END
   ) AS unis,
   friendCity,
   distance
@@ -22,7 +22,7 @@ WITH
     CASE company.name
       WHEN null THEN null
       ELSE [company.name, workAt.workFrom, companyCountry.name]
-    END
+      END
   ) AS companies,
   unis,
   friendCity,
@@ -41,5 +41,5 @@ RETURN
   friendCity.name AS friendCityName,
   unis AS friendUniversities,
   companies AS friendCompanies
-ORDER BY distanceFromPerson ASC, friendLastName ASC, toInteger(friendId) ASC
-LIMIT 20
+  ORDER BY distanceFromPerson ASC, friendLastName ASC, toInteger(friendId) ASC
+  LIMIT 20

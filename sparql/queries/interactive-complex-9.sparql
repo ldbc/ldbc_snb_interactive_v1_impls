@@ -12,7 +12,7 @@ SELECT
     (?frId AS ?personId)
     (?first AS ?personFirstName)
     (?last AS ?personLastName)
-    (?messageId AS ?messageId)
+    ?messageId
     (?content AS ?messageContent)
     (?creationDate AS ?messageCreationDate)
 WHERE {

@@ -11,3 +11,5 @@ validation_params.csv
 *-actual.json
 *-expected.json
 results-*/
+*.DS_Store
+*.report

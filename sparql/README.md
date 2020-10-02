@@ -2,6 +2,8 @@
 
 [SPARQL 1.1](https://www.w3.org/TR/sparql11-query/) implementation of the [LDBC SNB BI benchmark](https://github.com/ldbc/ldbc_snb_docs).
 
+:warning: This implementation is currently not maintained by the task force. Please reach out through an issue/email if you're interested in maintaining it.
+
 ## Loading the data set
 
 ### Generating the data set

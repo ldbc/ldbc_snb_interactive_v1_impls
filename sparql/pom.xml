@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.ldbc.snb</groupId>
         <artifactId>implementations</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.4.0-SNAPSHOT</version>
     </parent>
 
     <properties>
@@ -19,18 +19,18 @@
         <dependency>
             <groupId>com.ldbc.snb</groupId>
             <artifactId>common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.4.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.complexible.stardog</groupId>
             <artifactId>client-http</artifactId>
-            <version>5.2.1</version>
+            <version>7.0.1</version>
             <type>pom</type>
         </dependency>
         <dependency>
             <groupId>com.complexible.stardog</groupId>
             <artifactId>server</artifactId>
-            <version>5.2.1</version>
+            <version>7.0.1</version>
             <type>pom</type>
         </dependency>
         <dependency>
@@ -46,16 +46,6 @@
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-queryalgebra-evaluation</artifactId>
-            <version>4.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.virtuoso.virtjdbc4</groupId>
-            <artifactId>virtjdbc4</artifactId>
-            <version>3.0</version>
-        </dependency>
-        <dependency>
-            <groupId>virtuoso</groupId>
-            <artifactId>virtuoso-sesame4</artifactId>
             <version>4.0.0</version>
         </dependency>
     </dependencies>

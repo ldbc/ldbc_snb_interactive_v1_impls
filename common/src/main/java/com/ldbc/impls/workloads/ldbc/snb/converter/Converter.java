@@ -3,15 +3,18 @@ package com.ldbc.impls.workloads.ldbc.snb.converter;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate1AddPerson;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 public class Converter {
 
-    final static String DATAGEN_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'+0000'";
+    protected final ZoneId GMT = ZoneId.of("GMT");
+    final String DATAGEN_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'+0000'";
+    final DateTimeFormatter dfGeneric = DateTimeFormatter.ofPattern(DATAGEN_FORMAT).withZone(GMT);
 
     /**
      * Converts epoch seconds to a date to the format of the converter (e.g. PostgreSQL-style timestamps).
@@ -24,9 +27,7 @@ public class Converter {
     }
 
     public String convertDateTime(Date date) {
-        final SimpleDateFormat sdf = new SimpleDateFormat(DATAGEN_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return "'" + sdf.format(date) + "'";
+        return "'" + dfGeneric.format(date.toInstant()) + "'";
     }
 
     public String convertDate(long timestamp) {
@@ -38,16 +39,14 @@ public class Converter {
     }
 
     /**
-     * Converts timestamp strings (in the format produced by DATAGEN) ({@value #DATAGEN_FORMAT})
+     * Converts timestamp strings (in the format produced by DATAGEN)
      * to a date.
      *
      * @param timestamp
      * @return
      */
     public long convertTimestampToEpoch(String timestamp) throws ParseException {
-        final SimpleDateFormat sdf = new SimpleDateFormat(DATAGEN_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return sdf.parse(timestamp).toInstant().toEpochMilli();
+        return Instant.from(dfGeneric.parse(timestamp)).toEpochMilli();
     }
 
     /**

@@ -1,12 +1,9 @@
 // Q16. Experts in social circle
 /*
-  :param {
-    personId: 19791209310731,
-    country: 'Pakistan',
-    tagClass: 'MusicalArtist',
-    minPathDistance: 3,
-    maxPathDistance: 5
-  }
+  :param [{personId, country, tagClass}] => { RETURN 19791209310731 AS personId, 'Pakistan' AS country, 'MusicalArtist' AS tagClass }
+
+  minPathDistance: 3,
+  maxPathDistance: 5
 */
 // This query will not work in a browser as is. I tried alternatives approaches,
 // e.g. enabling path of arbitrary lengths, saving the path to a variable p and
