@@ -1,19 +1,42 @@
-// Q14. Top thread initiators
+// Q14. International dialog
 /*
-  :param [{startDate, endDate}] => { RETURN datetime('2012-05-31') AS startDate, datetime('2012-06-30') AS endDate }
+  :param [{country1, country2}] => { RETURN 'Mexico' AS country1, 'Indonesia' AS country2}
 */
-MATCH (person:Person)<-[:HAS_CREATOR]-(post:Post)<-[:REPLY_OF*0..]-(reply:Message)
-WHERE  post.creationDate >= $startDate
-  AND  post.creationDate <= $endDate
-  AND reply.creationDate >= $startDate
-  AND reply.creationDate <= $endDate
-RETURN
-  person.id,
-  person.firstName,
-  person.lastName,
-  count(DISTINCT post) AS threadCount,
-  count(DISTINCT reply) AS messageCount
+MATCH
+  (country1:Country {name: $country1})<-[:IS_PART_OF]-(city1:City)<-[:IS_LOCATED_IN]-(person1:Person),
+  (country2:Country {name: $country2})<-[:IS_PART_OF]-(city2:City)<-[:IS_LOCATED_IN]-(person2:Person)
+WITH person1, person2, city1, 0 AS score
+// subscore 1
+OPTIONAL MATCH (person1)<-[:HAS_CREATOR]-(c:Comment)-[:REPLY_OF]->(:Message)-[:HAS_CREATOR]->(person2)
+WITH DISTINCT person1, person2, city1, score + (CASE c WHEN null THEN 0 ELSE  4 END) AS score
+// subscore 2
+OPTIONAL MATCH (person1)<-[:HAS_CREATOR]-(m:Message)<-[:REPLY_OF]-(:Comment)-[:HAS_CREATOR]->(person2)
+WITH DISTINCT person1, person2, city1, score + (CASE m WHEN null THEN 0 ELSE  1 END) AS score
+// subscore 3
+OPTIONAL MATCH (person1)-[k:KNOWS]-(person2)
+WITH DISTINCT person1, person2, city1, score + (CASE k WHEN null THEN 0 ELSE 15 END) AS score
+// subscore 4
+OPTIONAL MATCH (person1)-[:LIKES]->(m:Message)-[:HAS_CREATOR]->(person2)
+WITH DISTINCT person1, person2, city1, score + (CASE m WHEN null THEN 0 ELSE 10 END) AS score
+// subscore 5
+OPTIONAL MATCH (person1)<-[:HAS_CREATOR]-(m:Message)<-[:LIKES]-(person2)
+WITH DISTINCT person1, person2, city1, score + (CASE m WHEN null THEN 0 ELSE  1 END) AS score
+// preorder
 ORDER BY
-  messageCount DESC,
-  person.id ASC
-LIMIT 100
+  city1.name ASC,
+  score DESC,
+  person1.id ASC,
+  person2.id ASC
+WITH
+  city1,
+  // using a list might be faster, but the browser query editor does not like it
+  collect({score: score, person1: person1, person2: person2})[0] AS top
+RETURN
+  top.person1.id,
+  top.person2.id,
+  city1.name,
+  top.score
+ORDER BY
+  top.score DESC,
+  top.person1.id ASC,
+  top.person2.id ASC

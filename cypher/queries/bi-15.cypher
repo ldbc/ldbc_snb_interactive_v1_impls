@@ -1,4 +1,4 @@
-// Q25. Weighted interaction paths
+// Q15. Weighted interaction paths
 /*
   :param [{person1Id, person2Id, startDate, endDate}] => { RETURN 19791209303405 AS person1Id, 19791209308983 AS person2Id, datetime('2010-10-31') AS startDate, datetime('2010-11-30') AS endDate}
 */

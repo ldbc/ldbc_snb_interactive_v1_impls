@@ -1,18 +1,14 @@
-// Q6. Most active Posters of a given Topic
+// Q6. Most authoritative users on a given topic
 /*
-  :param tag => 'Abbas_I_of_Persia'
+  :param tag => 'Arnold_Schwarzenegger'
 */
-MATCH (tag:Tag {name: $tag})<-[:HAS_TAG]-(message:Message)-[:HAS_CREATOR]->(person:Person)
-OPTIONAL MATCH (:Person)-[like:LIKES]->(message)
-OPTIONAL MATCH (message)<-[:REPLY_OF]-(comment:Comment)
-WITH person, count(DISTINCT like) AS likeCount, count(DISTINCT comment) AS replyCount, count(DISTINCT message) AS messageCount
+MATCH (tag:Tag {name: $tag})<-[:HAS_TAG]-(message2:Message)-[:HAS_CREATOR]->(person1)
+OPTIONAL MATCH (message2)<-[:LIKES]-(person2:Person)
+MATCH (person2)<-[:HAS_CREATOR]-(message3:Message)<-[like:LIKES]-(p3:Person)
 RETURN
-  person.id,
-  replyCount,
-  likeCount,
-  messageCount,
-  1*messageCount + 2*replyCount + 10*likeCount AS score
+  person1.id,
+  count(DISTINCT like) AS authorityScore // 'DISTINCT like' ensures that each p2's popularity score is only added once for each p1
 ORDER BY
-  score DESC,
-  person.id ASC
+  authorityScore DESC,
+  person1.id ASC
 LIMIT 100

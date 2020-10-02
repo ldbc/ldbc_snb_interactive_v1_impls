@@ -1,18 +1,27 @@
-// Q4. Popular topics in a country
+// Q4. Top posters in a country
 /*
-  :param [{ tagClass, country}] => { RETURN 'MusicalArtist' AS tagClass, 'Burma' AS country }
+  :param country => 'Belarus'
 */
 MATCH
   (:Country {name: $country})<-[:IS_PART_OF]-(:City)<-[:IS_LOCATED_IN]-
-  (person:Person)<-[:HAS_MODERATOR]-(forum:Forum)-[:CONTAINER_OF]->
-  (post:Post)-[:HAS_TAG]->(:Tag)-[:HAS_TYPE]->(:TagClass {name: $tagClass})
+  (person:Person)<-[:HAS_MEMBER]-(forum:Forum)
+WITH forum, count(person) AS numberOfMembers
+ORDER BY numberOfMembers DESC, forum.id ASC
+LIMIT 100
+WITH collect(forum) AS popularForums
+UNWIND popularForums AS forum
+MATCH
+  (forum)-[:HAS_MEMBER]->(person:Person)
+OPTIONAL MATCH
+  (person)<-[:HAS_CREATOR]-(post:Post)<-[:CONTAINER_OF]-(popularForum:Forum)
+WHERE popularForum IN popularForums
 RETURN
-  forum.id,
-  forum.title,
-  forum.creationDate,
   person.id,
+  person.firstName,
+  person.lastName,
+  person.creationDate,
   count(DISTINCT post) AS postCount
 ORDER BY
   postCount DESC,
-  forum.id ASC
-LIMIT 20
+  person.id ASC
+LIMIT 100

@@ -1,4 +1,4 @@
-// Q21. Zombies in a country
+// Q13. Zombies in a country
 /*
   :param [{country, endDate}] => { RETURN 'Ethiopia' AS country, datetime('2013-01-01') AS endDate }
 */

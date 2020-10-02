@@ -1,31 +1,8 @@
-// Q16. Experts in social circle
-/*
-  :param [{personId, country, tagClass}] => { RETURN 19791209310731 AS personId, 'Pakistan' AS country, 'MusicalArtist' AS tagClass }
-
-  minPathDistance: 3,
-  maxPathDistance: 5
-*/
-// This query will not work in a browser as is. I tried alternatives approaches,
-// e.g. enabling path of arbitrary lengths, saving the path to a variable p and
-// checking for `$minPathDistance <= length(p)`, but these could not be
-// evaluated due to the excessive amount of paths.
-// If you would like to test the query in the browser, replace the values of
-// $minPathDistance and $maxPathDistance to a constant.
-MATCH
-  (:Person {id: $personId})-[:KNOWS*$minPathDistance..$maxPathDistance]-(person:Person)
-WITH DISTINCT person
-MATCH
-  (person)-[:IS_LOCATED_IN]->(:City)-[:IS_PART_OF]->(:Country {name: $country}),
-  (person)<-[:HAS_CREATOR]-(message:Message)-[:HAS_TAG]->(:Tag)-[:HAS_TYPE]->
-  (:TagClass {name: $tagClass})
-MATCH
-  (message)-[:HAS_TAG]->(tag:Tag)
-RETURN
-  person.id,
-  tag.name,
-  count(DISTINCT message) AS messageCount
-ORDER BY
-  messageCount DESC,
-  tag.name ASC,
-  person.id ASC
-LIMIT 100
+// Q16. Fake news detection
+MATCH 
+  (tag:Tag {name: $tagX}),
+  (person1)<-[:HAS_CREATOR]-(message1:Message)-[:HAS_TAG]->(tag),
+  (person2)<-[:HAS_CREATOR]-(message2:Message)-[:HAS_TAG]->(tag)
+WHERE message1.creationDate.day = $dayX
+  AND message2.creationDate.day = $dayX
+RETURN person1, person2  
