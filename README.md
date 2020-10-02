@@ -84,13 +84,6 @@ The queries in this repository are work-in-progress. If possible, please cross-v
 | PostgreSQL     | [11](postgres/queries/bi-11.sql)  | [12](postgres/queries/bi-12.sql)  | [13](postgres/queries/bi-13.sql)  | [14](postgres/queries/bi-14.sql)  | [15](postgres/queries/bi-15.sql)  | [16](postgres/queries/bi-16.sql)  | [17](postgres/queries/bi-17.sql)  | [18](postgres/queries/bi-18.sql)  | [19](postgres/queries/bi-19.sql)  | [20](postgres/queries/bi-20.sql)  |
 | SPARQL         | [11](sparql/queries/bi-11.sparql) | [12](sparql/queries/bi-12.sparql) | [13](sparql/queries/bi-13.sparql) | [14](sparql/queries/bi-14.sparql) | [15](sparql/queries/bi-15.sparql) | [16](sparql/queries/bi-16.sparql) | [17](sparql/queries/bi-17.sparql) | [18](sparql/queries/bi-18.sparql) | [19](sparql/queries/bi-19.sparql) | [20](sparql/queries/bi-20.sparql) |
 
-| query          | [21](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-21.pdf) | [22](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-22.pdf) | [23](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-23.pdf) | [24](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-24.pdf) | [25](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-25.pdf) |
-| -------------- | --- | --- | --- | --- | --- |
-| Neo4j (Cypher) | [21](cypher/queries/bi-21.cypher) | [22](cypher/queries/bi-22.cypher) | [23](cypher/queries/bi-23.cypher) | [24](cypher/queries/bi-24.cypher) | [25](cypher/queries/bi-25.cypher) |
-| PostgreSQL     | [21](postgres/queries/bi-21.sql)  | [22](postgres/queries/bi-22.sql)  | [23](postgres/queries/bi-23.sql)  | [24](postgres/queries/bi-24.sql)  | [25](postgres/queries/bi-25.sql)  |
-| SPARQL         | [21](sparql/queries/bi-21.sparql) | [22](sparql/queries/bi-22.sparql) | [23](sparql/queries/bi-23.sparql) | [24](sparql/queries/bi-24.sparql) | [25](sparql/queries/bi-25.sparql) |
-
-
 ## User's guide
 
 1. If you are on the `dev` branch or any other unstable branche, first build and install the driver from source.
