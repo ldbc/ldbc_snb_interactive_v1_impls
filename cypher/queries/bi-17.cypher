@@ -1,6 +1,6 @@
 // Q17. Information propagation analysis
 /*
-:param [{tag}] => {RETURN 'Elizabeth_Taylor' as tag}
+  :param [{tag, delta}] => {RETURN 'Elizabeth_Taylor' AS tag, 10 AS delta}
 */
 MATCH
   (tag:Tag {name: $tag}),
@@ -9,7 +9,8 @@ MATCH
   (forum1)<-[:HAS_MEMBER]->(person2:Person)<-[:HAS_CREATOR]-(comment:Comment)-[:HAS_TAG]->(tag),
   (forum1)<-[:HAS_MEMBER]->(person3:Person)<-[:HAS_CREATOR]-(message2:Message)-[:HAS_TAG]->(tag),
   (comment)-[:REPLY_OF]->(message2)-[:REPLY_OF*0..]->(post2:Post)<-[:CONTAINER_OF]-(forum2:Forum)
-WHERE
-  NOT (forum2)-[:HAS_MEMBER]->(person1)
+WHERE forum1 <> forum2
+  AND message2.creationDate > message1.creationDate + duration('PT'+ $delta + 'H')
+  AND NOT (forum2)-[:HAS_MEMBER]->(person1)
 RETURN person1.id
 LIMIT 10
