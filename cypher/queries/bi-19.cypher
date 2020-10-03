@@ -11,7 +11,7 @@ CALL gds.alpha.shortestPath.stream({
   relationshipQuery:
     'MATCH
        (personA:Person)-[:KNOWS]-(personB:Person),
-       (personA)<-[:HAS_CREATOR]-(c:Comment)-[replyOf:REPLY_OF]->(m:Message)-[:HAS_CREATOR]->(personB)
+       (personA)<-[:HAS_CREATOR]-(:Message)-[replyOf:REPLY_OF]-(:Message)-[:HAS_CREATOR]->(personB)
      RETURN
         id(personA) AS source,
         id(personB) AS target,
