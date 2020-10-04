@@ -112,19 +112,4 @@ For more details, on validating and benchmarking, visit the [driver wiki](https:
 
 ### Generating small test data tests
 
-To generate small data sets, use scale factor 1 (SF1) with the persons and years set according to this template:
-
-```
-ldbc.snb.datagen.generator.scaleFactor:snb.interactive.1
-
-ldbc.snb.datagen.generator.numPersons:50
-ldbc.snb.datagen.generator.numYears:1
-ldbc.snb.datagen.generator.startYear:2010
-
-ldbc.snb.datagen.generator.numThreads:1
-ldbc.snb.datagen.serializer.outputDir:./test_data/
-
-ldbc.snb.datagen.serializer.personSerializer:ldbc.snb.datagen.serializer.snb.interactive.<SerializerType>PersonSerializer
-ldbc.snb.datagen.serializer.invariantSerializer:ldbc.snb.datagen.serializer.snb.interactive.<SerializerType>InvariantSerializer
-ldbc.snb.datagen.serializer.personActivitySerializer:ldbc.snb.datagen.serializer.snb.interactive.<SerializerType>PersonActivitySerializer
-```
+To generate small data sets, use scale factor 0.003 (`generator.scaleFactor:0.003`).
