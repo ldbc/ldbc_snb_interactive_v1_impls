@@ -116,7 +116,7 @@ public class Converter {
     }
 
     /**
-     * Some implementations, e.g. the SPARQL one, will not work with a simple toString and require some tinkering,
+     * Some implementations, e.g. the SPARQL one (now deprecated), will not work with a simple toString and require some tinkering,
      * e.g. padding the id with '0' characters.
      *
      * @param value
@@ -127,7 +127,7 @@ public class Converter {
     }
 
     /**
-     * Some implementation, e.g. the SPARQL one, require a different id for updates:
+     * Some implementation, e.g. the SPARQL one (now deprecated), require a different id for updates:
      * while SparqlConverter#convertId() wraps the value with `"00000..."^^xsd:long`,
      * updates require plain `00000...` format.
      *
