@@ -1,11 +1,11 @@
 // Q19. Interaction path between cities
 // Requires the Neo4j Graph Data Science Library
 /*
-  :param [{city1, city2}] => {RETURN 'Astana' AS city1, 'Athens' AS city2}
+  :param [{city1Id, city2Id}] => {RETURN '1178' AS city1Id, '1142' AS city2Id} // Astana and Athens
 */
 MATCH
-  (person1:Person)-[:IS_LOCATED_IN]->(city1:City {name: $city1}),
-  (person2:Person)-[:IS_LOCATED_IN]->(city2:City {name: $city2})
+  (person1:Person)-[:IS_LOCATED_IN]->(city1:City {id: $city1Id}),
+  (person2:Person)-[:IS_LOCATED_IN]->(city2:City {id: $city2Id})
 CALL gds.alpha.shortestPath.stream({
   nodeQuery: 'MATCH (p:Person) RETURN id(p) AS id',
   relationshipQuery:

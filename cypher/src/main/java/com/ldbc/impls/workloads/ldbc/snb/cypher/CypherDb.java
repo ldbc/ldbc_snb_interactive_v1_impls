@@ -934,4 +934,81 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
         }
     }
 
+    public static class BiQuery16 extends CypherListOperationHandler<LdbcSnbBiQuery16FakeNewsDetection, LdbcSnbBiQuery16FakeNewsDetectionResult> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcSnbBiQuery16FakeNewsDetection operation) {
+            return state.getQueryStore().getQuery16(operation);
+        }
+
+        @Override
+        public LdbcSnbBiQuery16FakeNewsDetectionResult convertSingleResult(Record record) {
+            long personId = record.get(0).asLong();
+            int messageCountA = record.get(1).asInt();
+            int messageCountB = record.get(2).asInt();
+            return new LdbcSnbBiQuery16FakeNewsDetectionResult(personId, messageCountA, messageCountB);
+        }
+    }
+
+    public static class BiQuery17 extends CypherListOperationHandler<LdbcSnbBiQuery17InformationPropagationAnalysis, LdbcSnbBiQuery17InformationPropagationAnalysisResult> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcSnbBiQuery17InformationPropagationAnalysis operation) {
+            return state.getQueryStore().getQuery17(operation);
+        }
+
+        @Override
+        public LdbcSnbBiQuery17InformationPropagationAnalysisResult convertSingleResult(Record record) {
+            long person1Id = record.get(0).asLong();
+            int messageCount = record.get(1).asInt();
+            return new LdbcSnbBiQuery17InformationPropagationAnalysisResult(person1Id, messageCount);
+        }
+    }
+
+    public static class BiQuery18 extends CypherListOperationHandler<LdbcSnbBiQuery18FriendRecommendation, LdbcSnbBiQuery18FriendRecommendationResult> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcSnbBiQuery18FriendRecommendation operation) {
+            return state.getQueryStore().getQuery18(operation);
+        }
+
+        @Override
+        public LdbcSnbBiQuery18FriendRecommendationResult convertSingleResult(Record record) {
+            long person2Id = record.get(0).asLong();
+            int mutualFriendCount = record.get(1).asInt();
+            return new LdbcSnbBiQuery18FriendRecommendationResult(person2Id, mutualFriendCount);
+        }
+    }
+
+    public static class BiQuery19 extends CypherListOperationHandler<LdbcSnbBiQuery19InteractionPathBetweenCities, LdbcSnbBiQuery19InteractionPathBetweenCitiesResult> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcSnbBiQuery19InteractionPathBetweenCities operation) {
+            return state.getQueryStore().getQuery19(operation);
+        }
+
+        @Override
+        public LdbcSnbBiQuery19InteractionPathBetweenCitiesResult convertSingleResult(Record record) {
+            long person1Id = record.get(0).asLong();
+            long person2Id = record.get(1).asLong();
+            float totalWeight = (float) record.get(2).asDouble(); // asFloat returns 'cannot coerce with system float without losing precision
+            return new LdbcSnbBiQuery19InteractionPathBetweenCitiesResult(person1Id, person2Id, totalWeight);
+        }
+    }
+
+    public static class BiQuery20 extends CypherListOperationHandler<LdbcSnbBiQuery20Recruitment, LdbcSnbBiQuery20RecruitmentResult> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcSnbBiQuery20Recruitment operation) {
+            return state.getQueryStore().getQuery20(operation);
+        }
+
+        @Override
+        public LdbcSnbBiQuery20RecruitmentResult convertSingleResult(Record record) {
+            long person1Id = record.get(0).asLong();
+            int totalWeight = record.get(1).asInt();
+            return new LdbcSnbBiQuery20RecruitmentResult(person1Id, totalWeight);
+        }
+    }
+
 }

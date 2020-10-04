@@ -12,5 +12,5 @@ MATCH
 WHERE forum1 <> forum2
   AND message2.creationDate > message1.creationDate + duration('PT'+ $delta + 'H')
   AND NOT (forum2)-[:HAS_MEMBER]->(person1)
-RETURN person1.id
+RETURN person1.id, count(message2) AS messageCount
 LIMIT 10

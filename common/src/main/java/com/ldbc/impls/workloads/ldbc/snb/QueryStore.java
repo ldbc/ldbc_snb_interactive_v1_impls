@@ -145,11 +145,6 @@ public abstract class QueryStore {
         BiQuery18("bi-18"),
         BiQuery19("bi-19"),
         BiQuery20("bi-20"),
-        BiQuery21("bi-21"),
-        BiQuery22("bi-22"),
-        BiQuery23("bi-23"),
-        BiQuery24("bi-24"),
-        BiQuery25("bi-25"),
         ;
 
         private String name;
@@ -852,6 +847,47 @@ public abstract class QueryStore {
                 .put(LdbcSnbBiQuery15WeightedPaths.PERSON2_ID, getConverter().convertId(operation.person2Id()))
                 .put(LdbcSnbBiQuery15WeightedPaths.START_DATE, getConverter().convertDateTime(operation.startDate()))
                 .put(LdbcSnbBiQuery15WeightedPaths.END_DATE, getConverter().convertDateTime(operation.endDate()))
+                .build());
+    }
+
+    public String getQuery16(LdbcSnbBiQuery16FakeNewsDetection operation) {
+        return prepare(QueryType.BiQuery16, new ImmutableMap.Builder<String, String>()
+                .put(LdbcSnbBiQuery16FakeNewsDetection.TAG_A, getConverter().convertString(operation.tagA()))
+                .put(LdbcSnbBiQuery16FakeNewsDetection.DATE_A, getConverter().convertDateTime(operation.dateA()))
+                .put(LdbcSnbBiQuery16FakeNewsDetection.TAG_B, getConverter().convertString(operation.tagB()))
+                .put(LdbcSnbBiQuery16FakeNewsDetection.DATE_B, getConverter().convertDateTime(operation.dateB()))
+                .put(LdbcSnbBiQuery16FakeNewsDetection.MAX_KNOWS_LIMIT, getConverter().convertInteger(operation.maxKnowsLimit()))
+                .put(LdbcSnbBiQuery16FakeNewsDetection.LIMIT, getConverter().convertInteger(operation.limit()))
+                .build());
+    }
+
+    public String getQuery17(LdbcSnbBiQuery17InformationPropagationAnalysis operation) {
+        return prepare(QueryType.BiQuery17, new ImmutableMap.Builder<String, String>()
+                .put(LdbcSnbBiQuery17InformationPropagationAnalysis.TAG, getConverter().convertString(operation.tag()))
+                .put(LdbcSnbBiQuery17InformationPropagationAnalysis.DELTA, getConverter().convertInteger(operation.delta()))
+                .put(LdbcSnbBiQuery17InformationPropagationAnalysis.LIMIT, getConverter().convertInteger(operation.limit()))
+                .build());
+    }
+
+    public String getQuery18(LdbcSnbBiQuery18FriendRecommendation operation) {
+        return prepare(QueryType.BiQuery18, new ImmutableMap.Builder<String, String>()
+                .put(LdbcSnbBiQuery18FriendRecommendation.PERSON1_ID, getConverter().convertId(operation.person1Id()))
+                .put(LdbcSnbBiQuery18FriendRecommendation.TAG, getConverter().convertString(operation.tag()))
+                .put(LdbcSnbBiQuery18FriendRecommendation.LIMIT, getConverter().convertInteger(operation.limit()))
+                .build());
+    }
+
+    public String getQuery19(LdbcSnbBiQuery19InteractionPathBetweenCities operation) {
+        return prepare(QueryType.BiQuery19, new ImmutableMap.Builder<String, String>()
+                .put(LdbcSnbBiQuery19InteractionPathBetweenCities.CITY1_ID, getConverter().convertId(operation.city1Id()))
+                .put(LdbcSnbBiQuery19InteractionPathBetweenCities.CITY2_ID, getConverter().convertId(operation.city2Id()))
+                .build());
+    }
+
+    public String getQuery20(LdbcSnbBiQuery20Recruitment operation) {
+        return prepare(QueryType.BiQuery20, new ImmutableMap.Builder<String, String>()
+                .put(LdbcSnbBiQuery20Recruitment.COMPANY, getConverter().convertString(operation.company()))
+                .put(LdbcSnbBiQuery20Recruitment.PERSON2_ID, getConverter().convertId(operation.person2Id()))
                 .build());
     }
 

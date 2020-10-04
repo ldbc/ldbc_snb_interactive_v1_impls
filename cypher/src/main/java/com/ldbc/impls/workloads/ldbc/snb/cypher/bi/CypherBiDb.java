@@ -28,6 +28,11 @@ public class CypherBiDb extends CypherDb {
         registerOperationHandler(LdbcSnbBiQuery13Zombies.class, BiQuery13.class);
         registerOperationHandler(LdbcSnbBiQuery14InternationalDialog.class, BiQuery14.class);
         registerOperationHandler(LdbcSnbBiQuery15WeightedPaths.class, BiQuery15.class);
+        registerOperationHandler(LdbcSnbBiQuery16FakeNewsDetection.class, BiQuery16.class);
+        registerOperationHandler(LdbcSnbBiQuery17InformationPropagationAnalysis.class, BiQuery17.class);
+        registerOperationHandler(LdbcSnbBiQuery18FriendRecommendation.class, BiQuery18.class);
+        registerOperationHandler(LdbcSnbBiQuery19InteractionPathBetweenCities.class, BiQuery19.class);
+        registerOperationHandler(LdbcSnbBiQuery20Recruitment.class, BiQuery20.class);
     }
 
 }
