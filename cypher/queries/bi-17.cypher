@@ -1,13 +1,16 @@
-// Q17. Friend triangles
+// Q17. Information propagation analysis
 /*
-  :param country => 'Spain'
+  :param [{tag, delta}] => {RETURN 'Elizabeth_Taylor' AS tag, 10 AS delta}
 */
-MATCH (country:Country {name: $country})
-MATCH (a:Person)-[:IS_LOCATED_IN]->(:City)-[:IS_PART_OF]->(country)
-MATCH (b:Person)-[:IS_LOCATED_IN]->(:City)-[:IS_PART_OF]->(country)
-MATCH (c:Person)-[:IS_LOCATED_IN]->(:City)-[:IS_PART_OF]->(country)
-MATCH (a)-[:KNOWS]-(b), (b)-[:KNOWS]-(c), (c)-[:KNOWS]-(a)
-WHERE a.id < b.id
-  AND b.id < c.id
-RETURN count(*) AS count
-// as a less elegant solution, count(a) also works
+MATCH
+  (tag:Tag {name: $tag}),
+  (person1:Person)<-[:HAS_CREATOR]-(message1:Message)-[:REPLY_OF*0..]->(post1:Post)<-[:CONTAINER_OF]-(forum1:Forum),
+  (message1)-[:HAS_TAG]->(tag),
+  (forum1)<-[:HAS_MEMBER]->(person2:Person)<-[:HAS_CREATOR]-(comment:Comment)-[:HAS_TAG]->(tag),
+  (forum1)<-[:HAS_MEMBER]->(person3:Person)<-[:HAS_CREATOR]-(message2:Message)-[:HAS_TAG]->(tag),
+  (comment)-[:REPLY_OF]->(message2)-[:REPLY_OF*0..]->(post2:Post)<-[:CONTAINER_OF]-(forum2:Forum)
+WHERE forum1 <> forum2
+  AND message2.creationDate > message1.creationDate + duration('PT'+ $delta + 'H')
+  AND NOT (forum2)-[:HAS_MEMBER]->(person1)
+RETURN person1.id, count(message2) AS messageCount
+LIMIT 10

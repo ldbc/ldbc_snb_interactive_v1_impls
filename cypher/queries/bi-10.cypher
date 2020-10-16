@@ -1,35 +1,31 @@
-// Q10. Central Person for a Tag
+// Q10. Experts in social circle
 /*
-  :param [{tag, date}] => { RETURN 'John_Rhys-Davies' AS tag, datetime('2012-01-22') AS date }
+  :param [{personId, country, tagClass}] => { RETURN 19791209310731 AS personId, 'Pakistan' AS country, 'MusicalArtist' AS tagClass }
+
+  minPathDistance: 3,
+  maxPathDistance: 5
 */
-MATCH (tag:Tag {name: $tag})
-// score
-OPTIONAL MATCH (tag)<-[interest:HAS_INTEREST]-(person:Person)
-WITH tag, collect(person) AS interestedPersons
-OPTIONAL MATCH (tag)<-[:HAS_TAG]-(message:Message)-[:HAS_CREATOR]->(person:Person)
-         WHERE message.creationDate > $date
-WITH tag, interestedPersons + collect(person) AS persons
-UNWIND persons AS person
-// poor man's disjoint union (should be changed to UNION + post-union processing in the future)
-WITH DISTINCT tag, person
-WITH
-  tag,
-  person,
-  100 * size([(tag)<-[interest:HAS_INTEREST]-(person) | interest])
-    + size([(tag)<-[:HAS_TAG]-(message:Message)-[:HAS_CREATOR]->(person) WHERE message.creationDate > $date | message])
-  AS score
-OPTIONAL MATCH (person)-[:KNOWS]-(friend)
-WITH
-  person,
-  score,
-  100 * size([(tag)<-[interest:HAS_INTEREST]-(friend) | interest])
-    + size([(tag)<-[:HAS_TAG]-(message:Message)-[:HAS_CREATOR]->(friend) WHERE message.creationDate > $date | message])
-  AS friendScore
+// This query will not work in a browser as is. I tried alternatives approaches,
+// e.g. enabling path of arbitrary lengths, saving the path to a variable p and
+// checking for `$minPathDistance <= length(p)`, but these could not be
+// evaluated due to the excessive amount of paths.
+// If you would like to test the query in the browser, replace the values of
+// $minPathDistance and $maxPathDistance to a constant.
+MATCH
+  (:Person {id: $personId})-[:KNOWS*$minPathDistance..$maxPathDistance]-(person:Person)
+WITH DISTINCT person
+MATCH
+  (person)-[:IS_LOCATED_IN]->(:City)-[:IS_PART_OF]->(:Country {name: $country}),
+  (person)<-[:HAS_CREATOR]-(message:Message)-[:HAS_TAG]->(:Tag)-[:HAS_TYPE]->
+  (:TagClass {name: $tagClass})
+MATCH
+  (message)-[:HAS_TAG]->(tag:Tag)
 RETURN
   person.id,
-  score,
-  sum(friendScore) AS friendsScore
+  tag.name,
+  count(DISTINCT message) AS messageCount
 ORDER BY
-  score + friendsScore DESC,
+  messageCount DESC,
+  tag.name ASC,
   person.id ASC
 LIMIT 100

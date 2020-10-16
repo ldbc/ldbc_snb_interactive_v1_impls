@@ -1,31 +1,34 @@
-// Q16. Experts in social circle
+// Q16. Fake news detection
 /*
-  :param [{personId, country, tagClass}] => { RETURN 19791209310731 AS personId, 'Pakistan' AS country, 'MusicalArtist' AS tagClass }
-
-  minPathDistance: 3,
-  maxPathDistance: 5
+  :param [{tagA, dateA, tagB, dateB, maxKnowsLimit}] => { RETURN
+    'Sammy_Sosa' AS tagA,
+    date('2011-10-06') AS dateA,
+    'Peter_Hain' AS tagB,
+    date('2011-10-12') AS dateB,
+    5 AS maxKnowsLimit
+  }
 */
-// This query will not work in a browser as is. I tried alternatives approaches,
-// e.g. enabling path of arbitrary lengths, saving the path to a variable p and
-// checking for `$minPathDistance <= length(p)`, but these could not be
-// evaluated due to the excessive amount of paths.
-// If you would like to test the query in the browser, replace the values of
-// $minPathDistance and $maxPathDistance to a constant.
-MATCH
-  (:Person {id: $personId})-[:KNOWS*$minPathDistance..$maxPathDistance]-(person:Person)
-WITH DISTINCT person
-MATCH
-  (person)-[:IS_LOCATED_IN]->(:City)-[:IS_PART_OF]->(:Country {name: $country}),
-  (person)<-[:HAS_CREATOR]-(message:Message)-[:HAS_TAG]->(:Tag)-[:HAS_TYPE]->
-  (:TagClass {name: $tagClass})
-MATCH
-  (message)-[:HAS_TAG]->(tag:Tag)
+UNWIND [
+    {letter: 'A', tag: $tagA, date: $dateA},
+    {letter: 'B', tag: $tagB, date: $dateB}
+  ] AS param
+WITH param.letter AS paramLetter, param.tag AS paramTagX, param.date AS paramDateX
+CALL {
+  WITH paramTagX, paramDateX
+  MATCH (person1:Person)<-[:HAS_CREATOR]-(message1:Message)-[:HAS_TAG]->(tag:Tag {name: paramTagX})
+  WHERE date(message1.creationDate) = paramDateX
+  // filter out people with more than $maxKnowsLimit friends who posted the same kind of message
+  OPTIONAL MATCH (person1)-[:KNOWS]-(person2:Person)<-[:HAS_CREATOR]-(message2:Message)-[:HAS_TAG]->(tag)
+  WHERE date(message2.creationDate) = paramDateX
+  WITH person1, count(DISTINCT message1) AS cm, count(DISTINCT person2) AS cp2
+  WHERE cp2 <= $maxKnowsLimit
+  // return count
+  RETURN person1, cm
+}
+WITH person1, collect({letter: paramLetter, messageCount: cm}) AS results
+WHERE size(results) = 2
 RETURN
-  person.id,
-  tag.name,
-  count(DISTINCT message) AS messageCount
-ORDER BY
-  messageCount DESC,
-  tag.name ASC,
-  person.id ASC
-LIMIT 100
+  person1.id,
+  [r IN results WHERE r.letter = 'A' | r.messageCount][0] AS messageCountA,
+  [r IN results WHERE r.letter = 'B' | r.messageCount][0] AS messageCountB
+ORDER BY messageCountA + messageCountB DESC, person1.id ASC

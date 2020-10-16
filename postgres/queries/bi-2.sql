@@ -1,32 +1,28 @@
-/* Q2. Top tags for country, age, gender, time
-\set startDate '\'2010-01-01T00:00:00.000+00:00\''::timestamp
-\set endDate   '\'2010-11-08T00:00:00.000+00:00\''::timestamp
-\set country1  '\'Ethiopia\''
-\set country2  '\'Belarus\''
+/* Q2. Tag evolution
+\set year 2010
+\set month 11
  */
-SELECT co.pl_name AS "country.name"
-     , extract(MONTH FROM p.m_creationdate) as messageMonth
-     , cr.p_gender AS "person.gender"
-     , floor(extract(YEARS FROM age('2013-01-01'::date, cr.p_birthday))/5) AS ageGroup
-     , t.t_name AS "tag.name"
-     , count(*) AS messageCount
-  FROM message p
-     , message_tag pt
+WITH detail AS (
+SELECT t.t_name
+     , count(DISTINCT CASE WHEN extract(MONTH FROM m.m_creationdate)  = :month THEN m.m_messageid ELSE NULL END) AS countMonth1
+     , count(DISTINCT CASE WHEN extract(MONTH FROM m.m_creationdate) != :month THEN m.m_messageid ELSE NULL END) AS countMonth2
+  FROM message m
+     , message_tag mt
      , tag t
-     , person cr -- creator
-     , place  ci  -- city
-     , place  co  -- country
  WHERE 1=1
     -- join
-   AND p.m_messageid = pt.mt_messageid
-   AND pt.mt_tagid = t.t_tagid
-   AND p.m_creatorid = cr.p_personid
-   AND cr.p_placeid = ci.pl_placeid
-   AND ci.pl_containerplaceid = co.pl_placeid
+   AND m.m_messageid = mt.mt_messageid
+   AND mt.mt_tagid = t.t_tagid
     -- filter
-   AND co.pl_name in (:country1, :country2)
-   AND p.m_creationdate BETWEEN :startDate AND :endDate
- GROUP BY co.pl_name, messageMonth, cr.p_gender, t.t_name, ageGroup
-HAVING count(*) > 100
+   AND m.m_creationdate >= make_date(:year, :month, 1)
+   AND m.m_creationdate <  make_date(:year, :month, 1) + make_interval(months => 2)
+ GROUP BY t.t_name
+)
+SELECT t_name as "tag.name"
+     , countMonth1
+     , countMonth2
+     , abs(countMonth1-countMonth2) AS diff
+  FROM detail d
+ ORDER BY diff desc, t_name
  LIMIT 100
 ;

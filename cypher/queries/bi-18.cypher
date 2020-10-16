@@ -1,19 +1,10 @@
-// Q18. How many persons have a given number of posts
+// Q18. Friend recommendation
 /*
-  :param [{date, lengthThreshold, languages}] => { RETURN datetime('2011-07-22') AS date, 20 AS lengthThreshold, ['ar'] AS languages }
+  :param [{person1Id, tag}] => {RETURN 290 AS person1Id, 'Elizabeth_Taylor' AS tag}
 */
-MATCH (person:Person)
-OPTIONAL MATCH (person)<-[:HAS_CREATOR]-(message:Message)-[:REPLY_OF*0..]->(post:Post)
-WHERE message.content IS NOT NULL
-  AND message.length < $lengthThreshold
-  AND message.creationDate > $date
-  AND post.language IN $languages
-WITH
-  person,
-  count(message) AS messageCount
-RETURN
-  messageCount,
-  count(person) AS personCount
-ORDER BY
-  personCount DESC,
-  messageCount DESC
+MATCH (person1:Person {id: $person1Id})-[:KNOWS]-(mutualFriend:Person)-[:KNOWS]-(person2:Person)-[:HAS_INTEREST]-(q:Tag {name: $tag})
+WHERE person1 <> person2
+  AND NOT (person1)-[:KNOWS]-(person2)
+RETURN person2.id AS person2Id, count(DISTINCT mutualFriend) AS mutualFriendCount
+ORDER BY mutualFriendCount DESC, person2Id ASC
+LIMIT 20

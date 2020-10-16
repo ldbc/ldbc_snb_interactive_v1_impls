@@ -1,23 +1,54 @@
-/* Q8. Related Topics
-\set tag '\'Enrique_Iglesias\''
+/* Q8. Central Person for a Tag
+\set tag '\'Che_Guevara\''
+\set date '\'2011-07-22T00:00:00.000+00:00\''::timestamp
  */
-SELECT t2.t_name AS "relatedTag.name"
-     , count(*) AS count
-  FROM tag t INNER JOIN message_tag pt ON (t.t_tagid = pt.mt_tagid)
-             -- as an optimization, we don't need message here as it's ID is in message_tag pt
-             -- so proceed to the comment directly
-             INNER JOIN message c      ON (pt.mt_messageid = c.m_c_replyof)
-             -- comment's tag
-             INNER JOIN message_tag ct ON (c.m_messageid = ct.mt_messageid)
-             INNER JOIN tag t2      ON (ct.mt_tagid = t2.t_tagid)
-             -- comment doesn't have the given tag: antijoin in the where clause
-             LEFT  JOIN message_tag nt ON (c.m_messageid = nt.mt_messageid AND nt.mt_tagid = pt.mt_tagid)
+WITH person_tag_interest AS (
+    SELECT p.p_personid AS personid
+      FROM person p
+         , person_tag pt
+         , tag t
+     WHERE 1=1
+        -- join
+       AND p.p_personid = pt.pt_personid
+       AND pt.pt_tagid = t.t_tagid
+        -- filter
+       AND t.t_name = :tag
+)
+   , person_message_score AS (
+    SELECT p.p_personid AS personid
+         , count(*) AS message_score
+      FROM message m
+         , person p
+         , message_tag pt
+         , tag t
+     WHERE 1=1
+        -- join
+       AND m.m_creatorid = p.p_personid
+       AND m.m_messageid = pt.mt_messageid
+       AND pt.mt_tagid = t.t_tagid
+        -- filter
+       AND m.m_creationdate > :date
+       AND t.t_name = :tag
+     GROUP BY p.p_personid
+)
+   , person_score AS (
+    SELECT coalesce(pti.personid, pms.personid) AS personid
+         , CASE WHEN pti.personid IS NULL then 0 ELSE 100 END -- scored from interest in the given tag
+         + coalesce(pms.message_score, 0) AS score
+      FROM person_tag_interest pti
+           FULL JOIN person_message_score pms ON (pti.personid = pms.personid)
+)
+SELECT p.personid AS "person.id"
+     , p.score AS score
+     , sum(f.score) AS friendsScore
+  FROM person_score p
+     , knows k
+     , person_score f -- the friend
  WHERE 1=1
     -- join
-   AND nt.mt_messageid IS NULL -- antijoin: comment (c) does not have the given tag
-    -- filter
-   AND t.t_name = :tag
- GROUP BY t2.t_name
- ORDER BY count DESC, t2.t_name
+   AND p.personid = k.k_person1id
+   AND k.k_person2id = f.personid
+ GROUP BY p.personid, p.score
+ ORDER BY p.score + sum(f.score) DESC, p.personid
  LIMIT 100
 ;

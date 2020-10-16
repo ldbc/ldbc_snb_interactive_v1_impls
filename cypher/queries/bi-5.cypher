@@ -1,27 +1,18 @@
-// Q5. Top posters in a country
+// Q5. Most active Posters of a given Topic
 /*
-  :param country => 'Belarus'
+  :param tag => 'Abbas_I_of_Persia'
 */
-MATCH
-  (:Country {name: $country})<-[:IS_PART_OF]-(:City)<-[:IS_LOCATED_IN]-
-  (person:Person)<-[:HAS_MEMBER]-(forum:Forum)
-WITH forum, count(person) AS numberOfMembers
-ORDER BY numberOfMembers DESC, forum.id ASC
-LIMIT 100
-WITH collect(forum) AS popularForums
-UNWIND popularForums AS forum
-MATCH
-  (forum)-[:HAS_MEMBER]->(person:Person)
-OPTIONAL MATCH
-  (person)<-[:HAS_CREATOR]-(post:Post)<-[:CONTAINER_OF]-(popularForum:Forum)
-WHERE popularForum IN popularForums
+MATCH (tag:Tag {name: $tag})<-[:HAS_TAG]-(message:Message)-[:HAS_CREATOR]->(person:Person)
+OPTIONAL MATCH (:Person)-[like:LIKES]->(message)
+OPTIONAL MATCH (message)<-[:REPLY_OF]-(comment:Comment)
+WITH person, count(DISTINCT like) AS likeCount, count(DISTINCT comment) AS replyCount, count(DISTINCT message) AS messageCount
 RETURN
   person.id,
-  person.firstName,
-  person.lastName,
-  person.creationDate,
-  count(DISTINCT post) AS postCount
+  replyCount,
+  likeCount,
+  messageCount,
+  1*messageCount + 2*replyCount + 10*likeCount AS score
 ORDER BY
-  postCount DESC,
+  score DESC,
   person.id ASC
 LIMIT 100

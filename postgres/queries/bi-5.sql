@@ -1,39 +1,32 @@
-/* Q5. Top posters in a country
-\set country '\'Belarus\''
+/* Q5. Most active Posters of a given Topic
+\set tag '\'Abbas_I_of_Persia\''
  */
-WITH top100_popular_forums AS (
-  SELECT fp_forumid AS forumid
-    FROM forum_person fp
-       , person p
-       , place ci -- city
-       , place co -- country
-   WHERE 1=1
-      -- join
-     AND fp.fp_personid = p.p_personid
-     AND p.p_placeid = ci.pl_placeid
-     AND ci.pl_containerplaceid = co.pl_placeid
-      -- filter
-     AND co.pl_name = :country
-   GROUP BY fp_forumid
-   ORDER BY count(*) DESC, fp_forumid
-   LIMIT 100
+WITH detail AS (
+SELECT cr.p_personid AS person_id
+     , count(DISTINCT r.m_messageid)  AS replyCount
+     , count(DISTINCT l.l_messageid||' '||l.l_personid) AS likeCount
+     , count(DISTINCT m.m_messageid)  AS messageCount
+     , null as score
+  FROM tag t
+     , message_tag pt
+     , message m LEFT JOIN message  r ON (m.m_messageid = r.m_c_replyof) -- m: all messages, not just posts; r: direct reply to m
+              LEFT JOIN likes l ON (m.m_messageid = l.l_messageid)  -- l: likes to m
+     , person cr -- creator
+ WHERE 1=1
+    -- join
+   AND t.t_tagid = pt.mt_tagid
+   AND pt.mt_messageid = m.m_messageid
+   AND m.m_creatorid = cr.p_personid
+    -- filter
+   AND t.t_name = :tag
+ GROUP BY cr.p_personid
 )
-SELECT au.p_personid AS "person.id"
-     , au.p_firstname AS "person.firstName"
-     , au.p_lastname AS "person.lastName"
-     , au.p_creationdate
-     -- a single person might be member of more than 1 of the top100 forums, so their posts should be DISTINCT counted
-     , count(DISTINCT p.m_messageid) AS postCount
-  FROM top100_popular_forums t
-       INNER JOIN forum_person fp ON (t.forumid = fp.fp_forumid)
-       -- author of the post
-       INNER JOIN person au ON (fp.fp_personid = au.p_personid)
-       LEFT JOIN message p ON (1=1
-                        AND au.p_personid = p.m_creatorid
-                        AND p.m_ps_forumid IN (SELECT forumid from top100_popular_forums)
-                        AND p.m_c_replyof IS NULL
-                           )
- GROUP BY au.p_personid, au.p_firstname, au.p_lastname, au.p_creationdate
- ORDER BY postCount DESC, au.p_personid
+SELECT person_id AS "person.id"
+     , replyCount
+     , likeCount
+     , messageCount
+     , 1*messageCount + 2*replyCount + 10*likeCount AS score
+  FROM detail
+ ORDER BY score DESC, person_id
  LIMIT 100
 ;

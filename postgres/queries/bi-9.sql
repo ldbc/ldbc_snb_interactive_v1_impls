@@ -1,46 +1,48 @@
-/* Q9. Forum with related Tags
-\set tagClass1 '\'BaseballPlayer\''
-\set tagClass2 '\'ChristianBishop\''
-\set threshold 200
+/* Q9. Top thread initiators
+\set startDate '\'2012-06-01T00:00:00.000+00:00\''::timestamp
+\set endDate   '\'2012-07-01T00:00:00.000+00:00\''::timestamp
  */
-WITH popular_forums AS (
-  SELECT fp_forumid as forumid
-    FROM forum_person
-   GROUP BY fp_forumid
-  HAVING count(*) > :threshold
+WITH RECURSIVE post_all(psa_threadid
+                      , psa_thread_creatorid
+                      , psa_messageid
+                      , psa_creationdate
+                      , psa_messagetype
+                       ) AS (
+    SELECT m_messageid AS psa_threadid
+         , m_creatorid AS psa_thread_creatorid
+         , m_messageid AS psa_messageid
+         , m_creationdate
+         , 'Post'
+      FROM message
+     WHERE 1=1
+       AND m_c_replyof IS NULL -- post, not comment
+       AND m_creationdate BETWEEN :startDate AND :endDate
+  UNION ALL
+    SELECT psa.psa_threadid AS psa_threadid
+         , psa.psa_thread_creatorid AS psa_thread_creatorid
+         , m_messageid
+         , m_creationdate
+         , 'Comment'
+      FROM message p
+         , post_all psa
+     WHERE 1=1
+       AND p.m_c_replyof = psa.psa_messageid
+        -- this is a performance optimisation only
+       AND m_creationdate BETWEEN :startDate AND :endDate
 )
-SELECT f.f_forumid AS "forum.id"
-     , count(DISTINCT p1.m_messageid) AS count1
-     , count(DISTINCT p2.m_messageid) AS count2
-  FROM tagclass tc1
-     , tag t1
-     , message_tag pt1
-     , message p1
-     , tagclass tc2
-     , tag t2
-     , message_tag pt2
-     , message p2
-     , forum f
-     , popular_forums pf
- WHERE 1=1
-    -- join
-    -- tagClass1 to forum
-   AND tc1.tc_tagclassid = t1.t_tagclassid
-   AND t1.t_tagid = pt1.mt_tagid
-   AND pt1.mt_messageid = p1.m_messageid
-   AND p1.m_ps_forumid = f.f_forumid
-   AND f.f_forumid = pf.forumid
-    -- tagClass2 to forum
-   AND tc2.tc_tagclassid = t2.t_tagclassid
-   AND t2.t_tagid = pt2.mt_tagid
-   AND pt2.mt_messageid = p2.m_messageid
-   AND p2.m_ps_forumid = f.f_forumid
-    -- filter
-   AND tc1.tc_name = :tagClass1
-   AND tc2.tc_name = :tagClass2
-   AND p1.m_c_replyof IS NULL
-   AND p2.m_c_replyof IS NULL
- GROUP BY f.f_forumid
- ORDER BY abs(count(DISTINCT p2.m_messageid) - count(DISTINCT p1.m_messageid) ) DESC, f.f_forumid
+SELECT p.p_personid AS "person.id"
+     , p.p_firstname AS "person.firstName"
+     , p.p_lastname AS "person.lastName"
+     , count(DISTINCT psa.psa_threadid) AS threadCount
+     -- if the thread initiator message does not count as a reply
+     --, count(DISTINCT CASE WHEN psa.psa_messagetype = 'Comment' then psa.psa_messageid ELSE null END) AS messageCount
+     , count(DISTINCT psa.psa_messageid) AS messageCount
+  FROM person p left join post_all psa on (
+       1=1
+   AND p.p_personid = psa.psa_thread_creatorid
+   AND psa_creationdate BETWEEN :startDate AND :endDate
+   )
+ GROUP BY p.p_personid, p.p_firstname, p.p_lastname
+ ORDER BY messageCount DESC, p.p_personid
  LIMIT 100
 ;
