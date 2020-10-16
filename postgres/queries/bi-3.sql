@@ -1,28 +1,33 @@
-/* Q3. Tag evolution
-\set year 2010
-\set month 11
+/* Q3. Popular topics in a country
+\set tagClass '\'MusicalArtist\''
+\set country  '\'Burma\''
  */
-WITH detail AS (
-SELECT t.t_name
-     , count(DISTINCT CASE WHEN extract(MONTH FROM m.m_creationdate)  = :month THEN m.m_messageid ELSE NULL END) AS countMonth1
-     , count(DISTINCT CASE WHEN extract(MONTH FROM m.m_creationdate) != :month THEN m.m_messageid ELSE NULL END) AS countMonth2
-  FROM message m
-     , message_tag mt
+SELECT f.f_forumid      AS "forum.id"
+     , f.f_title        AS "forum.title"
+     , f.f_creationdate AS "forum.creationDate"
+     , f.f_moderatorid  AS "person.id"
+     , count(DISTINCT p.m_messageid) AS postCount
+  FROM tagClass tc
      , tag t
+     , message_tag pt
+     , message p
+     , forum f
+     , person m   -- moderator
+     , place  ci  -- city
+     , place  co  -- country
  WHERE 1=1
     -- join
-   AND m.m_messageid = mt.mt_messageid
-   AND mt.mt_tagid = t.t_tagid
+   AND tc.tc_tagclassid = t.t_tagclassid
+   AND t.t_tagid = pt.mt_tagid
+   AND pt.mt_messageid = p.m_messageid
+   AND p.m_ps_forumid = f.f_forumid
+   AND f.f_moderatorid = m.p_personid
+   AND m.p_placeid = ci.pl_placeid
+   AND ci.pl_containerplaceid = co.pl_placeid
     -- filter
-   AND m.m_creationdate >= make_date(:year, :month, 1)
-   AND m.m_creationdate <  make_date(:year, :month, 1) + make_interval(months => 2)
- GROUP BY t.t_name
-)
-SELECT t_name as "tag.name"
-     , countMonth1
-     , countMonth2
-     , abs(countMonth1-countMonth2) AS diff
-  FROM detail d
- ORDER BY diff desc, t_name
- LIMIT 100
+   AND tc.tc_name = :tagClass
+   AND co.pl_name = :country
+ GROUP BY f.f_forumid, f.f_title, f.f_creationdate, f.f_moderatorid
+ ORDER BY postCount DESC, f.f_forumid
+ LIMIT 20
 ;
