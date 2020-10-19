@@ -1,5 +1,5 @@
 MATCH (:Person {id:$personId})-[:KNOWS]-(friend:Person)<-[:HAS_CREATOR]-(message:Message)
-WHERE message.creationDate <= $maxDate
+WHERE message.creationDate < $maxDate
 RETURN
   friend.id AS personId,
   friend.firstName AS personFirstName,
