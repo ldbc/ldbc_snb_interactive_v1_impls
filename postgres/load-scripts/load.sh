@@ -3,7 +3,7 @@
 # exit upon error
 set -e
 
-PG_CSV_DIR=${PG_CSV_DIR:-$(pwd)/../../../ldbc_snb_datagen/social_network/}
+PG_CSV_DIR=${PG_CSV_DIR:-$(pwd)/../../../ldbc_snb_datagen/out/social_network/}
 PG_LOAD_TO_DB=${PG_LOAD_TO_DB:-load} # possible values: 'load', 'skip'
 PG_DB_NAME=${PG_DB_NAME:-ldbcsf1}
 PG_USER=${PG_USER:-$USER}
@@ -19,12 +19,12 @@ PG_CREATE_MESSAGE_FILE=${PG_CREATE_MESSAGE_FILE:-no} # possible values: 'no', 'c
 
 if [ ! -f $PG_CSV_DIR/dynamic/post_0_0-postgres.csv -o $PG_CSV_DIR/dynamic/post_0_0.csv -nt $PG_CSV_DIR/dynamic/post_0_0-postgres.csv -o "${PG_FORCE_REGENERATE}x" = "yesx" ]; then
   cat $PG_CSV_DIR/dynamic/post_0_0.csv | \
-    awk -F '|' '{ print $1"|"$2"|"$3"|"$4"|"$5"|"$6"|"$7"|"$8"|"$9"|"$10"|"$12"|"$11"|"}' > \
+    awk -F '|' '{ print $1"|"$2"|"$3"|"$4"|"$5"|"$6"|"$7"|"$8"|"$9"|"$11"|"$10"|"}' > \
     $PG_CSV_DIR/dynamic/post_0_0-postgres.csv
 fi
 if [ ! -f $PG_CSV_DIR/dynamic/comment_0_0-postgres.csv -o $PG_CSV_DIR/dynamic/comment_0_0.csv -nt $PG_CSV_DIR/dynamic/comment_0_0-postgres.csv -o "${PG_FORCE_REGENERATE}x" = "yesx" ]; then
   cat $PG_CSV_DIR/dynamic/comment_0_0.csv | \
-    awk -F '|' '{print $1"|"$2"|"$3"||"$4"|"$5"||"$6"|"$7"|"$8"|"$9"||"$10 $11}' > \
+    awk -F '|' '{print $1"|"$2"||"$3"|"$4"||"$5"|"$6"|"$7"|"$8"||"$9 $10}' > \
     $PG_CSV_DIR/dynamic/comment_0_0-postgres.csv
 fi
 
