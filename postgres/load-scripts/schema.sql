@@ -55,7 +55,7 @@ create table person (
    p_firstname varchar not null,
    p_lastname varchar not null,
    p_gender varchar not null,
-   p_birthday timestamp without time zone not null,
+   p_birthday date not null,
    p_locationip varchar not null,
    p_browserused varchar not null,
    p_placeid bigint
