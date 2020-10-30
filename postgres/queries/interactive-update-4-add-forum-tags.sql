@@ -1,9 +1,11 @@
 insert into forum_tag (
-    ft_forumid
+    ft_creationdate
+  , ft_forumid
   , ft_tagid
 )
 values
 (
-    :forumId
+    :creationDate
+  , :forumId
   , :tagId
 );

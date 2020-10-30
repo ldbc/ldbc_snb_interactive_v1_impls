@@ -1,9 +1,11 @@
 insert into person_tag (
-    pt_personid
+    pt_creationdate
+  , pt_personid
   , pt_tagid
 )
 values
 (
-    :personId
+    :creationDate
+  , :personId
   , :tagId
 );

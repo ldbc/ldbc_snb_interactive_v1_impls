@@ -1,7 +1,7 @@
 insert into message (
     -- only comment-related fields are filled explicitly
-    m_messageid
-  , m_creationdate
+    m_creationdate
+  , m_messageid
   , m_locationip
   , m_browserused
   , m_content
@@ -12,8 +12,8 @@ insert into message (
 )
 values
 (
-    :commentId
-  , :creationDate
+    :creationDate
+  , :commentId
   , :locationIP
   , :browserUsed
   , :content

@@ -1,8 +1,8 @@
 insert into message (
     -- only post-related fields are filled explicitly
-    m_messageid
+    m_creationdate
+  , m_messageid
   , m_ps_imagefile
-  , m_creationdate
   , m_locationip
   , m_browserused
   , m_ps_language
@@ -14,9 +14,9 @@ insert into message (
 )
 values
 (
-    :postId
+    :creationDate
+  , :postId
   , :imageFile
-  , :creationDate
   , :locationIP
   , :browserUsed
   , :language

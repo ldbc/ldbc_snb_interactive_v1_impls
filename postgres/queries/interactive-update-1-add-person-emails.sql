@@ -1,9 +1,11 @@
 insert into person_email (
-    pe_personid
+    pe_creationdate
+  , pe_personid
   , pe_email
 )
 values
 (
-    :personId
+    :creationDate
+  , :personId
   , :email
 );
