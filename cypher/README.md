@@ -2,13 +2,12 @@
 
 [(open)Cypher](http://www.opencypher.org/) implementation of the [LDBC SNB BI benchmark](https://github.com/ldbc/ldbc_snb_docs).
 
-## Starting Neo4j
+## Initializing Neo4j
 
-Run:
-
-```
+```bash
 ./get-neo4j.sh
-./environment-variables-neo4j.sh && ./configure-neo4j.sh && neo4j-server/bin/neo4j start
+. environment-variables-neo4j.sh
+./configure-neo4j.sh
 ```
 
 ## Loading the data set
@@ -34,8 +33,10 @@ Go to the `load-scripts/` directory.
 Set the following environment variables appropriately:
 
 ```bash
+# NEO4J_HOME and NEO4J_DB_DIR are set by the environment-variables-neo4j.sh
 export NEO4J_HOME=/path/to/the/neo4j/dir
 export NEO4J_DB_DIR=$NEO4J_HOME/data/databases/graph.db
+# set according to your data source
 export NEO4J_DATA_DIR=/path/do/the/csv/files
 export POSTFIX=_0_0.csv
 ```
