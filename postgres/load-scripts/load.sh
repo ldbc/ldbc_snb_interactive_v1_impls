@@ -12,6 +12,18 @@ PG_PORT=${PG_PORT:-5432}
 PG_FORCE_REGENERATE=${PG_FORCE_REGENERATE:-no}
 PG_CREATE_MESSAGE_FILE=${PG_CREATE_MESSAGE_FILE:-no} # possible values: 'no', 'create', 'sort_by_date'
 
+echo ===============================================================================
+echo Loading data to the Postgres database with the following configuration
+echo -------------------------------------------------------------------------------
+echo PG_CSV_DIR: $PG_CSV_DIR
+echo PG_LOAD_TO_DB: $PG_LOAD_TO_DB
+echo PG_DB_NAME: $PG_DB_NAME
+echo PG_USER: $PG_USER
+echo PG_PORT: $PG_PORT
+echo PG_FORCE_REGENERATE: $PG_FORCE_REGENERATE
+echo PG_CREATE_MESSAGE_FILE: $PG_CREATE_MESSAGE_FILE
+echo ===============================================================================
+
 # we regenerate PostgreSQL-specific CSV files for posts and comments, if either
 #  - it doesn't exist
 #  - the source CSV is newer
