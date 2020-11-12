@@ -12,6 +12,9 @@ PG_PORT=${PG_PORT:-5432}
 PG_FORCE_REGENERATE=${PG_FORCE_REGENERATE:-no}
 PG_CREATE_MESSAGE_FILE=${PG_CREATE_MESSAGE_FILE:-no} # possible values: 'no', 'create', 'sort_by_date'
 
+# $USER is unset on certain systems
+: ${PG_USER:?"Environment variable PG_USER is unset or empty"}
+
 echo ===============================================================================
 echo Loading data to the Postgres database with the following configuration
 echo -------------------------------------------------------------------------------
