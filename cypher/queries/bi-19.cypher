@@ -22,5 +22,5 @@ CALL gds.alpha.shortestPath.stream({
 })
 YIELD cost
 RETURN person1.id, person2.id, sum(cost) AS totalWeight
-ORDER BY totalWeight DESC, person1.id ASC
+ORDER BY totalWeight DESC, person1.id ASC, person2.id ASC
 LIMIT 20
