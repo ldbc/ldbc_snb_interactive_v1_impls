@@ -1,7 +1,7 @@
 // Q19. Interaction path between cities
 // Requires the Neo4j Graph Data Science Library
 /*
-  :param [{city1Id, city2Id}] => {RETURN 1178 AS city1Id, 1142 AS city2Id} // Astana and Athens
+  :param [{city1Id, city2Id}] => {RETURN 1178 AS city1Id, 1142 AS city2Id}
 */
 MATCH
   (person1:Person)-[:IS_LOCATED_IN]->(city1:City {id: $city1Id}),
