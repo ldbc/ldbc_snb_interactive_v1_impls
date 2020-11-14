@@ -1,0 +1,67 @@
+version: 2.1
+orbs:
+  slack: circleci/slack@3.4.2
+workflows:
+  version: 2
+  build:
+    jobs:
+      - test:
+          filters:
+            branches:
+              ignore:
+                - stable
+
+jobs:
+  test:
+    resource_class: large
+    working_directory: ~/ldbc/ldbc_snb_datagen
+    docker:
+      - image: ubuntu:20.04
+    steps:
+      - checkout
+      - run:
+          name: Setup
+          command: |
+            export DEBIAN_FRONTEND=noninteractive
+            apt update
+            # install dependencies
+            apt install -y git wget unzip maven
+            # driver
+            git clone --depth 1 --branch dev https://github.com/ldbc/ldbc_snb_driver && cd ldbc_snb_driver && mvn install -DskipTests && cd ..
+            # PostgreSQL
+            apt install -y postgresql
+            # hack: overwrite existing pg_hba.conf file
+            echo > /etc/postgresql/12/main/pg_hba.conf
+            echo "local all postgres trust" >> /etc/postgresql/12/main/pg_hba.conf
+            echo "host all all 127.0.0.1/32 trust" >> /etc/postgresql/12/main/pg_hba.conf
+            /etc/init.d/postgresql start
+            # Neo4j
+            cd cypher
+            ./get-neo4j.sh
+            cd ..
+      - run:
+          name: Load
+          command: |
+            # PostgreSQL
+            cd postgres/load-scripts
+            export PG_USER=postgres
+            export PG_CSV_DIR=$(pwd)/../test-data
+            ./load.sh
+            cd ../..
+            # Cypher
+            cd cypher
+            . environment-variables-neo4j.sh
+            export NEO4J_CSV_POSTFIX=_0_0.csv
+            export NEO4J_CSV_DIR=`pwd`/test-data
+            cd scripts
+            ./convert-csvs.sh
+            ./import-to-neo4j.sh
+            ../configure-neo4j.sh
+            ./restart-neo4j.sh
+            sleep 15
+            $NEO4J_HOME/bin/cypher-shell -u neo4j -p admin "MATCH (p:Person) RETURN p.id LIMIT 1"
+            cd ../..
+      - run:
+          name: Test
+          command: mvn test -B
+      - slack/status
