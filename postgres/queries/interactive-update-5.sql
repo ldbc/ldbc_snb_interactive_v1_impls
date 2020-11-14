@@ -1,11 +1,11 @@
 insert into forum_person (
-    fp_forumid
+    fp_creationdate
+  , fp_forumid
   , fp_personid
-  , fp_creationdate
 )
 values
 (
-    :forumId
+    :creationDate
+  , :forumId
   , :personId
-  , :creationDate
 );

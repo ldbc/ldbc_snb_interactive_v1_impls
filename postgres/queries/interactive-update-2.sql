@@ -1,11 +1,11 @@
 insert into likes (
-    l_personid
+    l_creationdate
+  , l_personid
   , l_messageid
-  , l_creationdate
 )
 values
 (
-    :personId
+    :creationDate
+  , :personId
   , :postId
-  , :creationDate
 );

@@ -1,9 +1,11 @@
 insert into person_language (
-    plang_personid
+    plang_creationdate
+  , plang_personid
   , plang_language
 )
 values
 (
-    :personId
+    :creationDate
+  , :personId
   , :language
 );
