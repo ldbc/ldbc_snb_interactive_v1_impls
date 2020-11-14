@@ -1,7 +1,7 @@
 #!/bin/bash
 
-NEO4J_VERSION=4.1.1
-NEO4J_GDS_VERSION=1.3.4
+NEO4J_VERSION=4.1.4
+NEO4J_GDS_VERSION=1.4.0
 
 rm -rf neo4j-server
 if [ ! -f neo4j.tar.gz ]; then
