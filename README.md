@@ -2,7 +2,7 @@
 LDBC SNB implementations
 ------------------------
 
-[![Build Status](https://travis-ci.org/ldbc/ldbc_snb_implementations.svg?branch=dev)](https://travis-ci.org/ldbc/ldbc_snb_implementations)
+[![Build Status](https://circleci.com/gh/ldbc/ldbc_snb_implementations.svg?style=svg)](https://circleci.com/gh/ldbc/ldbc_snb_implementations)
 
 Implementations for the Workload components of the [LDBC Social Network Benchmark](https://ldbc.github.io/ldbc_snb_docs/).
 
