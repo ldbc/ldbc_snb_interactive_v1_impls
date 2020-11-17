@@ -29,3 +29,4 @@ while ! nc -z localhost 7687; do
   sleep 1
 done
 echo
+./create-indices.sh
