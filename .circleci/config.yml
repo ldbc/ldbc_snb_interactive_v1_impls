@@ -25,7 +25,7 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             apt update
             # install dependencies
-            apt install -y curl git wget unzip maven
+            apt install -y curl git wget unzip maven netcat
             # driver
             git clone --depth 1 --branch dev https://github.com/ldbc/ldbc_snb_driver && cd ldbc_snb_driver && mvn install -DskipTests && cd ..
             # PostgreSQL
