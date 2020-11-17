@@ -54,12 +54,7 @@ jobs:
             export NEO4J_CSV_POSTFIX=_0_0.csv
             export NEO4J_CSV_DIR=`pwd`/test-data
             cd scripts
-            ./convert-csvs.sh
-            ./import-to-neo4j.sh
-            ../configure-neo4j.sh
-            ./restart-neo4j.sh
-            sleep 15
-            $NEO4J_HOME/bin/cypher-shell -u neo4j -p admin "MATCH (p:Person) RETURN p.id LIMIT 1"
+            ./load-in-one-step.sh
             cd ../..
       - run:
           name: Test
