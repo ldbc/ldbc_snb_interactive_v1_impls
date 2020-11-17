@@ -2,6 +2,8 @@
 
 set -e
 
+cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 echo ===============================================================================
 echo Loading the Neo4j database with the following parameters
 echo -------------------------------------------------------------------------------

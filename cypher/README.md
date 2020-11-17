@@ -4,18 +4,18 @@
 
 ## Starting Neo4j
 
-To grab the Neo4j binaries and configure the server, run:
+To grab the Neo4j binaries and spin up a server, run:
 
 ```bash
-. ./environment-variables-neo4j.sh
-./get-neo4j.sh
-./configure-neo4j.sh
+scripts/get-neo4j.sh
+. scripts/environment-variables-neo4j.sh
+scripts/configure-neo4j.sh
 ```
 
 To load the data, do:
 
 ```bash
-. ./environment-variables-neo4j.sh
+scripts/get-neo4j.sh
 export NEO4J_CSV_DIR=/path/to/the/directory/social_network/
 export NEO4J_CSV_POSTFIX=_0_0.csv
 cd scripts

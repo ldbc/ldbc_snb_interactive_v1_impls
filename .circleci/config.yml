@@ -37,7 +37,7 @@ jobs:
             /etc/init.d/postgresql start
             # Neo4j
             cd cypher
-            ./get-neo4j.sh
+            scripts/get-neo4j.sh
             cd ..
       - run:
           name: Load
@@ -50,12 +50,10 @@ jobs:
             cd ../..
             # Cypher
             cd cypher
-            . environment-variables-neo4j.sh
-            export NEO4J_CSV_POSTFIX=_0_0.csv
+            . scripts/environment-variables-default.sh
             export NEO4J_CSV_DIR=`pwd`/test-data
-            cd scripts
-            ./load-in-one-step.sh
-            cd ../..
+            scripts/load-in-one-step.sh
+            cd ..
       - run:
           name: Test
           command: mvn test -B
