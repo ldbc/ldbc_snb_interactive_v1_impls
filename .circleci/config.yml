@@ -40,18 +40,22 @@ jobs:
             scripts/get-neo4j.sh
             cd ..
       - run:
+          name: Download data
+          command: |
+            git clone --branch gh-pages --depth 1 https://github.com/ldbc/ldbc_snb_datagen/
+      - run:
           name: Load
           command: |
             # PostgreSQL
             cd postgres
             export PG_USER=postgres
-            export PG_CSV_DIR=$(pwd)/test-data
+            export PG_CSV_DIR=`pwd`/../ldbc_snb_datagen/social_network-csv-merge-foreign
             scripts/load.sh
             cd ..
             # Cypher
             cd cypher
             . scripts/environment-variables-default.sh
-            export NEO4J_CSV_DIR=`pwd`/test-data
+            export NEO4J_CSV_DIR=`pwd`/../ldbc_snb_datagen/social_network-csv-composite
             scripts/load-in-one-step.sh
             cd ..
       - run:
