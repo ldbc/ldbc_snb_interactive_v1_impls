@@ -60,16 +60,16 @@ export PG_CSV_DIR=
 export PG_DB_NAME=
 export PG_USER=
 export PG_PORT=
-./load.sh
+scripts/load.sh
 ```
 
-The `load.sh` (re)generates PostgreSQL-specific CSV files for posts and comments, if either 
+The `load.sh` script (re)generates PostgreSQL-specific CSV files for posts and comments, if any of the following holds:
 
  - they don't exist
  - the source CSV is newer than the generated one
  - the user forces to do so by setting the environment variable `PG_FORCE_REGENERATE=yes` (see below for special loading options.)
 
-The `load.sh` has default options that loads the dataset in the generator's directory to the `ldbcsf1` database with your current user. If these fit your needs, just run the script as `./load.sh`.
+The `load.sh` has default options that loads the dataset in the generator's directory to the `ldbcsf1` database with your current user. If these fit your needs, just run the script as `scripts/load.sh`.
 
 If you get _Permission denied_ errors, change the permissions of your home directory to 755 - but please make sure you understand its implications first:
 
