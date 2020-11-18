@@ -43,11 +43,11 @@ jobs:
           name: Load
           command: |
             # PostgreSQL
-            cd postgres/load-scripts
+            cd postgres
             export PG_USER=postgres
-            export PG_CSV_DIR=$(pwd)/../test-data
-            ./load.sh
-            cd ../..
+            export PG_CSV_DIR=$(pwd)/test-data
+            scripts/load.sh
+            cd ..
             # Cypher
             cd cypher
             . scripts/environment-variables-default.sh

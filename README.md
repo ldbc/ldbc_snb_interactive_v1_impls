@@ -95,21 +95,21 @@ The queries in this repository are work-in-progress. If possible, please cross-v
    ./build.sh
    ```
 
-3. For each implementation, it is possible to (1) create validation parameters, (2) validate against an existing validation parameters, and (3) run the benchmark. Set the parameters according to your system configuration in the appropriate `.properties` file and run the driver with one of the following scripts:
+3. For each implementation, it is possible to (1) create validation parameters, (2) validate against an existing validation parameters, and (3) run the benchmark. Set the parameters according to your system configuration in the appropriate `.properties` file and run the driver with one of the following scripts in the `driver` directory:
 
    ```bash
    # BI workload
-   ./bi-create-validation-parameters.sh
-   ./bi-validate.sh
-   ./bi-benchmark.sh
+   driver/bi-create-validation-parameters.sh
+   driver/bi-validate.sh
+   driver/bi-benchmark.sh
    # Interactive workload - note that if the workload contains updates, the database needs to be re-loaded between steps
-   ./interactive-create-validation-parameters.sh
-   ./interactive-validate.sh
-   ./interactive-benchmark.sh
+   driver/interactive-create-validation-parameters.sh
+   driver/interactive-validate.sh
+   driver/interactive-benchmark.sh
    ```
 
 For more details, on validating and benchmarking, visit the [driver wiki](https://github.com/ldbc/ldbc_snb_driver/wiki).
 
-### Generating small test data tests
+### Testing
 
-To generate small data sets, use scale factor 0.003 (`generator.scaleFactor:0.003`).
+To generate small data sets for smoke tests, use scale factor 0.003 (`generator.scaleFactor:0.003`).

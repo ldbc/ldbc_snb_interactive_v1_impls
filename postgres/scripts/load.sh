@@ -3,6 +3,8 @@
 # exit upon error
 set -e
 
+cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 PG_CSV_DIR=${PG_CSV_DIR:-$(pwd)/../../../ldbc_snb_datagen/out/social_network/}
 PG_LOAD_TO_DB=${PG_LOAD_TO_DB:-load} # possible values: 'load', 'skip'
 PG_DB_NAME=${PG_DB_NAME:-ldbcsf1}
