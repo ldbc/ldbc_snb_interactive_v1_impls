@@ -42,12 +42,12 @@ local all postgres trust
 
 ### Generating the data set
 
-The data set needs to be generated and preprocessed before loading it to the database. To generate it, use the `CSVMergeForeign` serializer classes of the [DATAGEN](https://github.com/ldbc/ldbc_snb_datagen/) project:
+The data set needs to be generated and preprocessed before loading it to the database. To generate it, use the `CSVMergeForeign` serializer classes of the [Datagen](https://github.com/ldbc/ldbc_snb_datagen/) project:
 
 ```
-ldbc.snb.datagen.serializer.dynamicActivitySerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.activity.CsvMergeForeignDynamicActivitySerializer
-ldbc.snb.datagen.serializer.dynamicPersonSerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.person.CsvMergeForeignDynamicPersonSerializer
-ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv.staticserializer.CsvMergeForeignStaticSerializer
+generator.scaleFactor:0.003
+generator.mode:interactive
+serializer.format:CsvMergeForeign
 ```
 
 ### Loading the data set
