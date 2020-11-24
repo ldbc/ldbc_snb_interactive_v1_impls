@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 $NEO4J_HOME/bin/neo4j-admin import \
   --id-type=INTEGER \
   --nodes=Place="${NEO4J_CSV_DIR}/static/place${NEO4J_CSV_POSTFIX}" \

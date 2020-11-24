@@ -2,6 +2,8 @@
 
 echo "Starting preprocessing CSV files"
 
+cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 # replace headers
 while read line; do
   IFS=' ' read -r -a array <<< $line
