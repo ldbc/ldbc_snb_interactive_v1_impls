@@ -13,7 +13,7 @@ UNWIND popularForums AS forum
 MATCH
   (forum)-[:HAS_MEMBER]->(person:Person)
 OPTIONAL MATCH
-  (person)<-[:HAS_CREATOR]-(message:Message)<-[:CONTAINER_OF]-(popularForum:Forum)
+  (person)<-[:HAS_CREATOR]-(message:Message)-[:REPLY_OF*0..]->(post:Post)<-[:CONTAINER_OF]-(popularForum:Forum)
 WHERE popularForum IN popularForums
 RETURN
   person.id,
