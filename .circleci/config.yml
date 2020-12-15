@@ -28,12 +28,7 @@ jobs:
             # driver
             git clone --depth 1 --branch dev https://github.com/ldbc/ldbc_snb_driver && cd ldbc_snb_driver && mvn install -DskipTests && cd ..
             # PostgreSQL
-            sudo apt install -y postgresql
-            # hack: overwrite existing pg_hba.conf file
-            sudo bash -c 'echo > /etc/postgresql/12/main/pg_hba.conf'
-            sudo bash -c 'echo "local all postgres trust" >> /etc/postgresql/12/main/pg_hba.conf'
-            sudo bash -c 'echo "host all all 127.0.0.1/32 trust" >> /etc/postgresql/12/main/pg_hba.conf'
-            sudo /etc/init.d/postgresql start
+            # TODO
       - run:
           name: Download data
           command: |
@@ -42,11 +37,7 @@ jobs:
           name: Load
           command: |
             # PostgreSQL
-            cd postgres
-            export PG_USER=postgres
-            export PG_CSV_DIR=`pwd`/../ldbc_snb_datagen/social_network-csv-merge-foreign
-            scripts/load.sh
-            cd ..
+            # TODO
             # Cypher
             cd cypher
             . scripts/environment-variables-default.sh
