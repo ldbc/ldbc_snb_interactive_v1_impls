@@ -24,11 +24,4 @@ echo ===========================================================================
 ./import-to-neo4j.sh
 ./configure-neo4j.sh
 ./restart-neo4j.sh
-
-echo Waiting for the database to start
-while ! nc -z localhost 7687; do
-  echo -n .
-  sleep 1
-done
-echo
 ./create-indices.sh
