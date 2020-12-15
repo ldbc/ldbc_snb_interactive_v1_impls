@@ -24,6 +24,7 @@ SELECT au.p_personid AS "person.id"
      , au.p_creationdate
      -- a single person might be member of more than 1 of the top100 forums, so their posts should be DISTINCT counted
      , count(DISTINCT p.m_messageid) AS postCount
+     -- TODO: count (message)-[:REPLY_OF*0]->(post)-[:CONTAINER_OF]->(forum)
   FROM top100_popular_forums t
        INNER JOIN forum_person fp ON (t.forumid = fp.fp_forumid)
        -- author of the post

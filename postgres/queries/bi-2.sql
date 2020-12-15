@@ -1,6 +1,7 @@
 /* Q2. Tag evolution
 \set year 2010
 \set month 11
+\set tagClass '\'MusicalArtist\''
  */
 WITH detail AS (
 SELECT t.t_name
@@ -9,11 +10,14 @@ SELECT t.t_name
   FROM message m
      , message_tag mt
      , tag t
+     , tagClass tc
  WHERE 1=1
     -- join
+   AND tc.tc_tagclassid = t.t_tagclassid
    AND m.m_messageid = mt.mt_messageid
    AND mt.mt_tagid = t.t_tagid
     -- filter
+   AND tc.tc_name = :tagClass
    AND m.m_creationdate >= make_date(:year, :month, 1)
    AND m.m_creationdate <  make_date(:year, :month, 1) + make_interval(months => 2)
  GROUP BY t.t_name

@@ -7,6 +7,7 @@ SELECT f.f_forumid      AS "forum.id"
      , f.f_creationdate AS "forum.creationDate"
      , f.f_moderatorid  AS "person.id"
      , count(DISTINCT p.m_messageid) AS postCount
+     -- TODO: count (message)-[:REPLY_OF*0]->(post)-[:CONTAINER_OF]->(forum)
   FROM tagClass tc
      , tag t
      , message_tag pt

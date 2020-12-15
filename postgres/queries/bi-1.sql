@@ -1,12 +1,12 @@
 /* Q1. Posting summary
-\set date '\'2011-07-21T22:00:00.000+00:00\''::timestamp
+\set datetime '\'2011-07-21T22:00:00.000+00:00\''::timestamp
  */
 WITH 
   message_count AS (
     SELECT 0.0 + count(*) AS cnt
       FROM message
      WHERE 1=1
-       AND m_creationdate < :date
+       AND m_creationdate < :datetime
 )
 , message_prep AS (
     SELECT extract(year from m_creationdate) AS messageYear
@@ -20,7 +20,7 @@ WITH
          , m_length
       FROM message
      WHERE 1=1
-       AND m_creationdate < :date
+       AND m_creationdate < :datetime
        --AND m_content IS NOT NULL
        AND m_ps_imagefile IS NULL -- FIXME CHECKME: posts w/ m_ps_imagefile IS NOT NULL should have m_content IS NULL
 )
