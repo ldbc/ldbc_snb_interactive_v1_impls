@@ -4,20 +4,20 @@
 
 ## Starting Neo4j
 
-To grab the Neo4j binaries and spin up a server, run:
+The Neo4j instance is run in Docker. To initialize the environment variables, use:
 
 ```bash
-scripts/get-neo4j.sh
-. scripts/environment-variables-neo4j.sh
-scripts/configure-neo4j.sh
+. scripts/environment-variables-default.sh
 ```
 
-To load the data, do:
+To load the data, you might want to adjust the following variables:
 
 ```bash
-scripts/get-neo4j.sh
 export NEO4J_CSV_DIR=/path/to/the/directory/social_network/
 export NEO4J_CSV_POSTFIX=_0_0.csv
+```
+
+```bash
 scripts/load-in-one-step.sh
 ```
 

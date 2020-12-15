@@ -1,3 +1,5 @@
 #!/bin/bash
 
-cat indices.cypher | $NEO4J_HOME/bin/cypher-shell -u neo4j -p admin
+cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+docker exec --interactive ${NEO4J_CONTAINER_NAME} cypher-shell < indices.cypher

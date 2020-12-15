@@ -1,4 +1,3 @@
 #!/bin/bash
 
-$NEO4J_HOME/bin/neo4j stop
-sleep 1
+docker stop ${NEO4J_CONTAINER_NAME} || echo "No container ${NEO4J_CONTAINER_NAME} found"
