@@ -15,7 +15,7 @@ where
   k_person2id = p_personid and 
   p_personid = p1.m_creatorid and 
   p1.m_c_replyof = p2.m_messageid and 
-  p2.m_c_replyof is null and
+  p2.m_c_replyof is null and -- only posts not comments
   p2.m_messageid = mt_messageid and 
   mt_tagid = t_tagid
 group by p_personid, p_firstname, p_lastname
