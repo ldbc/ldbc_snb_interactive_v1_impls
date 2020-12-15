@@ -41,6 +41,7 @@ jobs:
             # Cypher
             cd cypher
             . scripts/environment-variables-default.sh
+            export NEO4J_CSV_DIR=`pwd`/../ldbc_snb_datagen/social_network-csv-composite
             scripts/load-in-one-step.sh
             cd ..
       - run:
