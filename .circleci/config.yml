@@ -22,18 +22,18 @@ jobs:
           name: Setup
           command: |
             export DEBIAN_FRONTEND=noninteractive
-            apt update
+            sudo apt update
             # install dependencies
-            apt install -y curl git wget unzip maven netcat
+            sudo apt install -y curl git wget unzip maven netcat
             # driver
             git clone --depth 1 --branch dev https://github.com/ldbc/ldbc_snb_driver && cd ldbc_snb_driver && mvn install -DskipTests && cd ..
             # PostgreSQL
-            apt install -y postgresql
+            sudo apt install -y postgresql
             # hack: overwrite existing pg_hba.conf file
-            echo > /etc/postgresql/12/main/pg_hba.conf
-            echo "local all postgres trust" >> /etc/postgresql/12/main/pg_hba.conf
-            echo "host all all 127.0.0.1/32 trust" >> /etc/postgresql/12/main/pg_hba.conf
-            /etc/init.d/postgresql start
+            sudo bash -c 'echo > /etc/postgresql/12/main/pg_hba.conf'
+            sudo bash -c 'echo "local all postgres trust" >> /etc/postgresql/12/main/pg_hba.conf'
+            sudo bash -c 'echo "host all all 127.0.0.1/32 trust" >> /etc/postgresql/12/main/pg_hba.conf'
+            sudo /etc/init.d/postgresql start
       - run:
           name: Download data
           command: |
