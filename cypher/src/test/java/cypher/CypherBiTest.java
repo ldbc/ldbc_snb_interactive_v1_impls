@@ -10,6 +10,8 @@ public class CypherBiTest extends BiTest {
 
     private final String endpoint = "bolt://localhost:7687";
     private final String queryDir = "queries";
+    private final String user = "neo4j";
+    private final String password = "";
 
     public CypherBiTest() {
         super(new CypherBiDb());
@@ -19,6 +21,8 @@ public class CypherBiTest extends BiTest {
     protected final Map<String, String> getProperties() {
         Map<String, String> properties = new HashMap<>();
         properties.put("endpoint", endpoint);
+        properties.put("user", user);
+        properties.put("password", password);
         properties.put("queryDir", queryDir);
         properties.put("printQueryNames", "true");
         properties.put("printQueryStrings", "false");

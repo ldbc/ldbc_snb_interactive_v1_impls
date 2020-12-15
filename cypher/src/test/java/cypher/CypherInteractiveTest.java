@@ -12,6 +12,8 @@ public class CypherInteractiveTest extends InteractiveTest {
 
     private final String endpoint = "bolt://localhost:7687";
     private final String queryDir = "queries";
+    private final String user = "neo4j";
+    private final String password = "";
 
     public CypherInteractiveTest() {
         super(new CypherInteractiveDb());
@@ -22,6 +24,8 @@ public class CypherInteractiveTest extends InteractiveTest {
         final Map<String, String> properties = new HashMap<>();
         properties.put("endpoint", endpoint);
         properties.put("queryDir", queryDir);
+        properties.put("user", user);
+        properties.put("password", password);
         properties.put("printQueryNames", "true");
         properties.put("printQueryStrings", "false");
         properties.put("printQueryResults", "false");
