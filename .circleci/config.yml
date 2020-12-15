@@ -37,7 +37,7 @@ jobs:
       - run:
           name: Download data
           command: |
-            git clone --branch gh-pages --depth 1 https://github.com/ldbc/ldbc_snb_datagen/
+            git clone --branch gh-pages --depth 1 https://github.com/ldbc/ldbc_snb_datagen
       - run:
           name: Load
           command: |
