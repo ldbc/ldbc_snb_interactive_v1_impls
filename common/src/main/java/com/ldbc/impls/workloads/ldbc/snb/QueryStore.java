@@ -747,7 +747,7 @@ public abstract class QueryStore {
 
     public String getQuery1(LdbcSnbBiQuery1PostingSummary operation) {
         return prepare(QueryType.BiQuery1, new ImmutableMap.Builder<String, String>()
-                .put(LdbcSnbBiQuery1PostingSummary.DATE, getConverter().convertDateTime(operation.date()))
+                .put(LdbcSnbBiQuery1PostingSummary.DATETIME, getConverter().convertDateTime(operation.datetime()))
                 .build());
     }
 
@@ -755,6 +755,7 @@ public abstract class QueryStore {
         return prepare(QueryType.BiQuery2, new ImmutableMap.Builder<String, String>()
                 .put(LdbcSnbBiQuery2TagEvolution.YEAR, getConverter().convertInteger(operation.year()))
                 .put(LdbcSnbBiQuery2TagEvolution.MONTH, getConverter().convertInteger(operation.month()))
+                .put(LdbcSnbBiQuery2TagEvolution.TAG_CLASS, getConverter().convertString(operation.tagClass()))
                 .build());
     }
 
@@ -816,6 +817,7 @@ public abstract class QueryStore {
     public String getQuery11(LdbcSnbBiQuery11FriendshipTriangles operation) {
         return prepare(QueryType.BiQuery11, new ImmutableMap.Builder<String, String>()
                 .put(LdbcSnbBiQuery11FriendshipTriangles.COUNTRY, getConverter().convertString(operation.country()))
+                .put(LdbcSnbBiQuery11FriendshipTriangles.START_DATE, getConverter().convertDateTime(operation.startDate()))
                 .build());
     }
 

@@ -1,4 +1,4 @@
-// Q4. Top posters in a country
+// Q4. Top messageers in a country
 /*
   :param country => 'Belarus'
 */
@@ -13,15 +13,15 @@ UNWIND popularForums AS forum
 MATCH
   (forum)-[:HAS_MEMBER]->(person:Person)
 OPTIONAL MATCH
-  (person)<-[:HAS_CREATOR]-(post:Post)<-[:CONTAINER_OF]-(popularForum:Forum)
+  (person)<-[:HAS_CREATOR]-(message:Message)<-[:CONTAINER_OF]-(popularForum:Forum)
 WHERE popularForum IN popularForums
 RETURN
   person.id,
   person.firstName,
   person.lastName,
   person.creationDate,
-  count(DISTINCT post) AS postCount
+  count(DISTINCT message) AS messageCount
 ORDER BY
-  postCount DESC,
+  messageCount DESC,
   person.id ASC
 LIMIT 100

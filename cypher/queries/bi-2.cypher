@@ -1,8 +1,8 @@
 // Q2. Tag evolution
 /*
-  :param [{ year, month }] => { RETURN 2010 AS year, 10 AS month }
+  :param [{ year, month, tagClass }] => { RETURN 2010 AS year, 10 AS month, 'MusicalArtist' AS tagClass }
 */
-MATCH (tag:Tag)
+MATCH (tag:Tag)-[:HAS_TYPE]->(:TagClass {name: $tagClass})
 // year-month 1
 OPTIONAL MATCH (message1:Message)-[:HAS_TAG]->(tag)
   WHERE message1.creationDate.year = $year

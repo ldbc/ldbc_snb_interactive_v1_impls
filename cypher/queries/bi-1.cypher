@@ -1,13 +1,13 @@
 // Q1. Posting summary
 /*
-  :param date => datetime('2011-07-21')
+  :param datetime => datetime('2011-07-21')
 */
 MATCH (message:Message)
-WHERE message.creationDate < $date
+WHERE message.creationDate < $datetime
 WITH count(message) AS totalMessageCountInt // this should be a subquery once Cypher supports it
 WITH toFloat(totalMessageCountInt) AS totalMessageCount
 MATCH (message:Message)
-WHERE message.creationDate < $date
+WHERE message.creationDate < $datetime
   AND message.content IS NOT NULL
 WITH
   totalMessageCount,

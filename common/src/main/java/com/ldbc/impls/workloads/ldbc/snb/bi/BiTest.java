@@ -23,7 +23,7 @@ public abstract class BiTest extends SnbTest {
 
     @Test
     public void testBiQuery2() throws DbException {
-        run(db, new LdbcSnbBiQuery2TagEvolution(2015, 12, 100));
+        run(db, new LdbcSnbBiQuery2TagEvolution(2015, 12, "MusicalArtist", LIMIT));
     }
 
     @Test
@@ -68,7 +68,7 @@ public abstract class BiTest extends SnbTest {
 
     @Test
     public void testBiQuery11() throws DbException {
-        run(db, new LdbcSnbBiQuery11FriendshipTriangles("Ethiopia"));
+        run(db, new LdbcSnbBiQuery11FriendshipTriangles("Ethiopia", 1338523200000L));
     }
 
     @Test
@@ -112,13 +112,13 @@ public abstract class BiTest extends SnbTest {
     @Ignore
     @Test
     public void testBiQuery19() throws DbException {
-        run(db, new LdbcSnbBiQuery19InteractionPathBetweenCities(1178L, 1142L));
+        run(db, new LdbcSnbBiQuery19InteractionPathBetweenCities(1178L, 1142L, 20));
     }
 
     @Ignore
     @Test
     public void testBiQuery20() throws DbException {
-        run(db, new LdbcSnbBiQuery20Recruitment("TajAir", 13194139533688L));
+        run(db, new LdbcSnbBiQuery20Recruitment("TajAir", 13194139533688L, 20));
     }
 
 }
