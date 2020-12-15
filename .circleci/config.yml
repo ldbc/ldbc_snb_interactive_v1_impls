@@ -34,10 +34,6 @@ jobs:
             echo "local all postgres trust" >> /etc/postgresql/12/main/pg_hba.conf
             echo "host all all 127.0.0.1/32 trust" >> /etc/postgresql/12/main/pg_hba.conf
             /etc/init.d/postgresql start
-            # Neo4j
-            cd cypher
-            scripts/get-neo4j.sh
-            cd ..
       - run:
           name: Download data
           command: |
@@ -54,7 +50,6 @@ jobs:
             # Cypher
             cd cypher
             . scripts/environment-variables-default.sh
-            export NEO4J_CSV_DIR=`pwd`/../ldbc_snb_datagen/social_network-csv-composite
             scripts/load-in-one-step.sh
             cd ..
       - run:
