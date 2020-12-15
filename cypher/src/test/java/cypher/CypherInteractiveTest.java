@@ -11,8 +11,6 @@ import java.util.Map;
 public class CypherInteractiveTest extends InteractiveTest {
 
     private final String endpoint = "bolt://localhost:7687";
-    private final String user = "neo4j";
-    private final String password = "admin";
     private final String queryDir = "queries";
 
     public CypherInteractiveTest() {
@@ -23,12 +21,10 @@ public class CypherInteractiveTest extends InteractiveTest {
     protected final Map<String, String> getProperties() {
         final Map<String, String> properties = new HashMap<>();
         properties.put("endpoint", endpoint);
-        properties.put("user", user);
-        properties.put("password", password);
         properties.put("queryDir", queryDir);
         properties.put("printQueryNames", "true");
-        properties.put("printQueryStrings", "true");
-        properties.put("printQueryResults", "true");
+        properties.put("printQueryStrings", "false");
+        properties.put("printQueryResults", "false");
         return properties;
     }
 
