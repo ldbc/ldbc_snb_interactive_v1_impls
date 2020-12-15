@@ -14,9 +14,8 @@ workflows:
 jobs:
   test:
     resource_class: large
-    working_directory: ~/ldbc/ldbc_snb_datagen
-    docker:
-      - image: ubuntu:20.04
+    machine:
+      image: ubuntu-2004:202008-01
     steps:
       - checkout
       - run:
