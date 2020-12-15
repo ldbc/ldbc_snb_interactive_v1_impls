@@ -23,7 +23,7 @@ public abstract class BiTest extends SnbTest {
 
     @Test
     public void testBiQuery2() throws DbException {
-        run(db, new LdbcSnbBiQuery2TagEvolution(2015, 12, "MusicalArtist", LIMIT));
+        run(db, new LdbcSnbBiQuery2TagEvolution(1311307200000L, "MusicalArtist", LIMIT));
     }
 
     @Test

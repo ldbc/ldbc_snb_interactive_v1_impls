@@ -10,7 +10,7 @@ MATCH
   (forum1)<-[:HAS_MEMBER]->(person3:Person)<-[:HAS_CREATOR]-(message2:Message)-[:HAS_TAG]->(tag),
   (comment)-[:REPLY_OF]->(message2)-[:REPLY_OF*0..]->(post2:Post)<-[:CONTAINER_OF]-(forum2:Forum)
 WHERE forum1 <> forum2
-  AND message2.creationDate > message1.creationDate + duration('PT'+ $delta + 'H')
+  AND message2.creationDate > message1.creationDate + duration({hours: $delta})
   AND NOT (forum2)-[:HAS_MEMBER]->(person1)
 RETURN person1.id, count(message2) AS messageCount
 LIMIT 10

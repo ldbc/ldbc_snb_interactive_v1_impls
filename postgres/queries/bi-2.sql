@@ -1,12 +1,11 @@
 /* Q2. Tag evolution
-\set year 2010
-\set month 11
+\set date '\'2012-06-01T00:00:00.000+00:00\''::timestamp
 \set tagClass '\'MusicalArtist\''
  */
 WITH detail AS (
 SELECT t.t_name
-     , count(DISTINCT CASE WHEN extract(MONTH FROM m.m_creationdate)  = :month THEN m.m_messageid ELSE NULL END) AS countMonth1
-     , count(DISTINCT CASE WHEN extract(MONTH FROM m.m_creationdate) != :month THEN m.m_messageid ELSE NULL END) AS countMonth2
+     , count(DISTINCT CASE WHEN m.m_creationdate <  :date + INTERVAL '100 days' THEN m.m_messageid ELSE NULL END) AS countMonth1
+     , count(DISTINCT CASE WHEN m.m_creationdate >= :date + INTERVAL '100 days' THEN m.m_messageid ELSE NULL END) AS countMonth2
   FROM message m
      , message_tag mt
      , tag t
@@ -18,8 +17,8 @@ SELECT t.t_name
    AND mt.mt_tagid = t.t_tagid
     -- filter
    AND tc.tc_name = :tagClass
-   AND m.m_creationdate >= make_date(:year, :month, 1)
-   AND m.m_creationdate <  make_date(:year, :month, 1) + make_interval(months => 2)
+   AND :date <= m.m_creationdate
+   AND m.m_creationdate <= :date + INTERVAL '200 days'
  GROUP BY t.t_name
 )
 SELECT t_name as "tag.name"

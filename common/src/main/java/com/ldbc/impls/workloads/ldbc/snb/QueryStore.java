@@ -753,8 +753,7 @@ public abstract class QueryStore {
 
     public String getQuery2(LdbcSnbBiQuery2TagEvolution operation) {
         return prepare(QueryType.BiQuery2, new ImmutableMap.Builder<String, String>()
-                .put(LdbcSnbBiQuery2TagEvolution.YEAR, getConverter().convertInteger(operation.year()))
-                .put(LdbcSnbBiQuery2TagEvolution.MONTH, getConverter().convertInteger(operation.month()))
+                .put(LdbcSnbBiQuery2TagEvolution.DATE, getConverter().convertDate(operation.date()))
                 .put(LdbcSnbBiQuery2TagEvolution.TAG_CLASS, getConverter().convertString(operation.tagClass()))
                 .build());
     }
