@@ -20,7 +20,8 @@ CALL gds.alpha.shortestPath.stream({
   endNode: person2,
   relationshipWeightProperty: 'weight'
 })
-YIELD cost
-RETURN person1.id, max(cost) AS totalWeight
+YIELD nodeId, cost
+WHERE nodeId = id(person2)
+RETURN person1.id, cost AS totalWeight
 ORDER BY totalWeight DESC, person1.id ASC
 LIMIT 20
