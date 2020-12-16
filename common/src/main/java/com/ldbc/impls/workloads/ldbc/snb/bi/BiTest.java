@@ -91,31 +91,26 @@ public abstract class BiTest extends SnbTest {
         run(db, new LdbcSnbBiQuery15WeightedPaths(2199023264119L, 8796093028894L, 1275364800000L, 1277956800000L));
     }
 
-    @Ignore
     @Test
     public void testBiQuery16() throws DbException {
         run(db, new LdbcSnbBiQuery16FakeNewsDetection("Imelda_Marcos", 1317859200L, "Che", 1318377600L, 5, 10));
     }
 
-    @Ignore
     @Test
     public void testBiQuery17() throws DbException {
         run(db, new LdbcSnbBiQuery17InformationPropagationAnalysis("Elizabeth_Taylor", 10, 20));
     }
 
-    @Ignore
     @Test
     public void testBiQuery18() throws DbException {
         run(db, new LdbcSnbBiQuery18FriendRecommendation(290L, "Elizabeth_Taylor", 20));
     }
 
-    @Ignore
     @Test
     public void testBiQuery19() throws DbException {
         run(db, new LdbcSnbBiQuery19InteractionPathBetweenCities(1178L, 1142L, 20));
     }
 
-    @Ignore
     @Test
     public void testBiQuery20() throws DbException {
         run(db, new LdbcSnbBiQuery20Recruitment("TajAir", 13194139533688L, 20));
