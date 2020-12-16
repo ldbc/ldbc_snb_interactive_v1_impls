@@ -22,5 +22,5 @@ echo ===========================================================================
 ./delete-neo4j-database.sh
 ./convert-csvs.sh
 ./import-to-neo4j.sh
-./restart-neo4j.sh
+./start-neo4j.sh
 ./create-indices.sh
