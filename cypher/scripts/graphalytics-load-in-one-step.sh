@@ -10,7 +10,7 @@ echo NEO4J_DATA_DIR: $NEO4J_DATA_DIR
 echo NEO4J_CSV_POSTFIX: $NEO4J_CSV_POSTFIX
 echo ===============================================================================
 
-./stop-neo4j-database.sh && \
+./stop-neo4j.sh && \
   ./delete-neo4j-database.sh && \
   ./convert-csvs.sh && \
   ./graphalytics-import-to-neo4j.sh

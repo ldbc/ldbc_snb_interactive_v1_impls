@@ -18,7 +18,7 @@ echo ===========================================================================
 : ${NEO4J_DATA_DIR:?"Environment variable NEO4J_DATA_DIR is unset or empty"}
 : ${NEO4J_CSV_POSTFIX:?"Environment variable NEO4J_CSV_POSTFIX is unset or empty"}
 
-./stop-neo4j-database.sh
+./stop-neo4j.sh
 ./delete-neo4j-database.sh
 ./convert-csvs.sh
 ./import-to-neo4j.sh
