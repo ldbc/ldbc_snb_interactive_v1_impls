@@ -1,6 +1,13 @@
 // Q10. Experts in social circle
 /*
-  :param [{personId, country, tagClass, minPathDistance, maxPathDistance}] => { RETURN 17592186054360 AS expertCandidatePersonId, 'Pakistan' AS country, 'MusicalArtist' AS tagClass, 3 AS minPathDistance, 5 AS maxPathDistance }
+  :param [{personId, country, tagClass, minPathDistance, maxPathDistance}] => {
+    RETURN
+      17592186054360 AS expertCandidatePersonId,
+      'Pakistan' AS country,
+      'MusicalArtist' AS tagClass,
+      3 AS minPathDistance,
+      5 AS maxPathDistance
+    }
 */
 MATCH (startPerson:Person {id: $personId})
 CALL apoc.path.subgraphNodes(startPerson, {
