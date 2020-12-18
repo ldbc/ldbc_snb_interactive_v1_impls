@@ -1,31 +1,37 @@
 // Q10. Experts in social circle
 /*
-  :param [{personId, country, tagClass}] => { RETURN 19791209310731 AS personId, 'Pakistan' AS country, 'MusicalArtist' AS tagClass }
-
-  minPathDistance: 3,
-  maxPathDistance: 5
+  :param [{personId, country, tagClass, minPathDistance, maxPathDistance}] => { RETURN 17592186054360 AS expertCandidatePersonId, 'Pakistan' AS country, 'MusicalArtist' AS tagClass, 3 AS minPathDistance, 5 AS maxPathDistance }
 */
-// This query will not work in a browser as is. I tried alternatives approaches,
-// e.g. enabling path of arbitrary lengths, saving the path to a variable p and
-// checking for `$minPathDistance <= length(p)`, but these could not be
-// evaluated due to the excessive amount of paths.
-// If you would like to test the query in the browser, replace the values of
-// $minPathDistance and $maxPathDistance to a constant.
+MATCH (startPerson:Person {id: $personId})
+CALL apoc.path.subgraphNodes(startPerson, {
+	relationshipFilter: "KNOWS",
+    minLevel: 1,
+    maxLevel: $minPathDistance-1
+})
+YIELD node
+WITH startPerson, collect(DISTINCT node) AS nodesCloserThanMinPathDistance
+CALL apoc.path.subgraphNodes(startPerson, {
+	relationshipFilter: "KNOWS",
+    minLevel: 1,
+    maxLevel: $maxPathDistance
+})
+YIELD node
+WITH nodesCloserThanMinPathDistance, collect(DISTINCT node) AS nodesCloserThanMaxPathDistance
+// compute the difference of sets: nodesCloserThanMaxPathDistance - nodesCloserThanMinPathDistance
+WITH [n IN nodesCloserThanMaxPathDistance WHERE NOT n IN nodesCloserThanMinPathDistance] AS expertCandidatePersons
+UNWIND expertCandidatePersons AS expertCandidatePerson
 MATCH
-  (:Person {id: $personId})-[:KNOWS*$minPathDistance..$maxPathDistance]-(person:Person)
-WITH DISTINCT person
-MATCH
-  (person)-[:IS_LOCATED_IN]->(:City)-[:IS_PART_OF]->(:Country {name: $country}),
-  (person)<-[:HAS_CREATOR]-(message:Message)-[:HAS_TAG]->(:Tag)-[:HAS_TYPE]->
+  (expertCandidatePerson)-[:IS_LOCATED_IN]->(:City)-[:IS_PART_OF]->(:Country {name: $country}),
+  (expertCandidatePerson)<-[:HAS_CREATOR]-(message:Message)-[:HAS_TAG]->(:Tag)-[:HAS_TYPE]->
   (:TagClass {name: $tagClass})
 MATCH
   (message)-[:HAS_TAG]->(tag:Tag)
 RETURN
-  person.id,
+  expertCandidatePerson.id,
   tag.name,
   count(DISTINCT message) AS messageCount
 ORDER BY
   messageCount DESC,
   tag.name ASC,
-  person.id ASC
+  expertCandidatePerson.id ASC
 LIMIT 100
