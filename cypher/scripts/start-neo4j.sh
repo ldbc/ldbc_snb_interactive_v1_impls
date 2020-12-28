@@ -3,7 +3,7 @@
 cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ..
 
-: ${NEO4J_HOME:?"Environment variable NEO4J_HOME is unset or empty"}
+: ${NEO4J_CONTAINER_ROOT:?"Environment variable NEO4J_CONTAINER_ROOT is unset or empty"}
 : ${NEO4J_DATA_DIR:?"Environment variable NEO4J_DATA_DIR is unset or empty"}
 : ${NEO4J_VERSION:?"Environment variable NEO4J_VERSION is unset or empty"}
 : ${NEO4J_CONTAINER_NAME:?"Environment variable NEO4J_CONTAINER_NAME is unset or empty"}
@@ -20,9 +20,9 @@ docker run --rm \
     --detach \
     ${NEO4J_ENV_VARS} \
     --volume=${NEO4J_DATA_DIR}:/data \
-    --volume=${NEO4J_HOME}/logs:/logs \
-    --volume=${NEO4J_HOME}/import:/var/lib/neo4j/import \
-    --volume=${NEO4J_HOME}/plugins:/plugins \
+    --volume=${NEO4J_CONTAINER_ROOT}/logs:/logs \
+    --volume=${NEO4J_CONTAINER_ROOT}/import:/var/lib/neo4j/import \
+    --volume=${NEO4J_CONTAINER_ROOT}/plugins:/plugins \
     --env NEO4JLABS_PLUGINS='["apoc", "graph-data-science"]' \
     --env NEO4J_AUTH=none \
     --name ${NEO4J_CONTAINER_NAME} \
