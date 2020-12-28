@@ -56,12 +56,6 @@ The following script takes care of those steps:
 scripts/convert-csvs.sh
 ```
 
-#### Initial password for Neo4j
-
-```bash
-scripts/configure-neo4j.sh
-```
-
 #### Delete your database and load the SNB CSVs
 
 Be careful -- this deletes all data in your database, imports the SNB data set and restarts the database.
