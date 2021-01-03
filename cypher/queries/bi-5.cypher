@@ -1,6 +1,6 @@
 // Q5. Most active Posters of a given Topic
 /*
-  :param tag => 'Abbas_I_of_Persia'
+:param tag => 'Snowboard'
 */
 MATCH (tag:Tag {name: $tag})<-[:HAS_TAG]-(message:Message)-[:HAS_CREATOR]->(person:Person)
 OPTIONAL MATCH (:Person)-[like:LIKES]->(message)

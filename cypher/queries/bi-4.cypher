@@ -1,10 +1,9 @@
 // Q4. Top messageers in a country
 /*
-  :param country => 'Belarus'
+:param country => 'Spain'
 */
 MATCH
-  (:Country {name: $country})<-[:IS_PART_OF]-(:City)<-[:IS_LOCATED_IN]-
-  (person:Person)<-[:HAS_MEMBER]-(forum:Forum)
+  (:Country {name: $country})<-[:IS_PART_OF]-(:City)<-[:IS_LOCATED_IN]-(person:Person)<-[:HAS_MEMBER]-(forum:Forum)
 WITH forum, count(person) AS numberOfMembers
 ORDER BY numberOfMembers DESC, forum.id ASC
 LIMIT 100
