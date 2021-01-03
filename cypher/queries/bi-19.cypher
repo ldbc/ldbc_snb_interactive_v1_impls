@@ -1,5 +1,5 @@
 // Q19. Interaction path between cities
-// Requires the Neo4j Graph Data Science Library
+// Requires the Neo4j Graph Data Science library
 /*
 :param [{city1Id, city2Id}] => {RETURN 2 AS city1Id, 4 AS city2Id}
 */

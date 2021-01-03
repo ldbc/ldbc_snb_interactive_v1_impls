@@ -1,5 +1,5 @@
 // Q20. Recruitment
-// Requires the Neo4j Graph Data Science Library
+// Requires the Neo4j Graph Data Science library
 /*
 :param [{company, person2Id}] => {RETURN 'SoftEngCo' AS company, 5 AS person2Id}
 */
