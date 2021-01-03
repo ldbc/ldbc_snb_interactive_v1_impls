@@ -1,10 +1,10 @@
 // Q16. Fake news detection
 /*
 :param [{tagA, dateA, tagB, dateB, maxKnowsLimit}] => { RETURN
-  'Sammy_Sosa' AS tagA,
-  date('2011-10-06') AS dateA,
-  'Peter_Hain' AS tagB,
-  date('2011-10-12') AS dateB,
+  'Pyrenees' AS tagA,
+  date('2011-10-10') AS dateA,
+  'Snowboard' AS tagB,
+  date('2012-03-04') AS dateB,
   5 AS maxKnowsLimit
 }
 */
