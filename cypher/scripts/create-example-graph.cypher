@@ -1,4 +1,3 @@
-MATCH (n) DETACH DELETE n WITH count(*) AS dummy
 CREATE
   // Persons
   (pA:Person {id: 1, firstName: 'Amelie',   creationDate: datetime('2010-06-10T11:05:56.000+00:00')}),
