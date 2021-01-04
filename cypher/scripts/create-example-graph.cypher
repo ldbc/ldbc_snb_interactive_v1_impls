@@ -36,7 +36,7 @@ CREATE
   (tc1:TagClass {id: 1, name: 'Holiday resorts'}),
   (tc2:TagClass {id: 2, name: 'Ski resorts'}),
   (tc3:TagClass {id: 3, name: 'Sports'}),
-  (tc3)-[:IS_SUBCLASS_OF]->(tc1),
+  (tc2)-[:IS_SUBCLASS_OF]->(tc1),
   // Tags
   (t1:Tag {id: 1, name: 'Pyrenees'}),
   (t2:Tag {id: 2, name: 'Snowboard'}),
@@ -46,13 +46,15 @@ CREATE
   (t2)-[:HAS_TYPE]->(tc3),
   // Forums
   (forum1:Forum {id: 1, creationDate: datetime('2011-10-10T11:01:47.000+00:00'), title: 'Skiing trips'}),
-  (forum2:Forum {id: 2, creationDate: datetime('2011-10-10T11:05:56.000+00:00'), title: 'Movies'}), // TODO: creationdate
+  (forum2:Forum {id: 2, creationDate: datetime('2011-10-10T11:05:56.000+00:00'), title: 'Cinéma'}), // TODO: creationdate
   (forum1)-[:HAS_TAG]->(t1),
   (forum1)-[:HAS_MEMBER]->(pA),
   (forum1)-[:HAS_MEMBER]->(pB),
   (forum1)-[:HAS_MODERATOR]->(pB),
   (forum1)-[:HAS_MEMBER]->(pC),
   (forum2)-[:HAS_MEMBER]->(pC),
+  (forum2)-[:HAS_MODERATOR]->(pC),
+  (forum2)-[:HAS_MEMBER]->(pA),
   // Messages,
   (p1:Message:Post    {id: 10, creationDate: datetime('2011-10-10T11:05:56.000+00:00'), length: 24, content: 'We should go to Hautacam', language: 'en'}),
   (c1:Message:Comment {id:  1, creationDate: datetime('2011-10-10T11:08:01.000+00:00'), length: 24, content: 'Yes, I like the Pyrenees'}),
@@ -72,6 +74,7 @@ CREATE
   (c6)-[:REPLY_OF]->(p2),
   (pA)-[:LIKES]->(p1),
   (pB)-[:LIKES]->(c2),
+  (pB)-[:LIKES]->(c3),
   (pC)-[:LIKES]->(p1),
   (pC)-[:LIKES]->(c4),
   (p1)-[:HAS_CREATOR]->(pB),
