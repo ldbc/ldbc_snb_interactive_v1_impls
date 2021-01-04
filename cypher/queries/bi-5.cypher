@@ -3,9 +3,11 @@
 :param tag => 'Snowboard'
 */
 MATCH (tag:Tag {name: $tag})<-[:HAS_TAG]-(message:Message)-[:HAS_CREATOR]->(person:Person)
-OPTIONAL MATCH (:Person)-[like:LIKES]->(message)
-OPTIONAL MATCH (message)<-[:REPLY_OF]-(comment:Comment)
-WITH person, count(DISTINCT like) AS likeCount, count(DISTINCT comment) AS replyCount, count(DISTINCT message) AS messageCount
+OPTIONAL MATCH (message)<-[likes:LIKES]-(:Person)
+WITH person, message, count(likes) AS likeCount
+OPTIONAL MATCH (message)<-[:REPLY_OF]-(reply:Comment)
+WITH person, message, likeCount, count(reply) AS replyCount
+WITH person, count(message) AS messageCount, sum(likeCount) AS likeCount, sum(replyCount) AS replyCount
 RETURN
   person.id,
   replyCount,
