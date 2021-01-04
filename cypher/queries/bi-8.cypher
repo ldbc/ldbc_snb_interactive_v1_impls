@@ -10,7 +10,6 @@ OPTIONAL MATCH (tag)<-[:HAS_TAG]-(message:Message)-[:HAS_CREATOR]->(person:Perso
          WHERE message.creationDate > $date
 WITH tag, interestedPersons + collect(person) AS persons
 UNWIND persons AS person
-// poor man's disjoint union (should be changed to UNION + post-union processing in the future)
 WITH DISTINCT tag, person
 WITH
   tag,
@@ -18,6 +17,8 @@ WITH
   100 * size([(tag)<-[interest:HAS_INTEREST]-(person) | interest]) + size([(tag)<-[:HAS_TAG]-(message:Message)-[:HAS_CREATOR]->(person) WHERE message.creationDate > $date | message])
   AS score
 OPTIONAL MATCH (person)-[:KNOWS]-(friend)
+// We need to use a redundant computation due to the lack of composable graph queries in the currently supported Cypher version.
+// This might change in the future with new Cypher versions and GQL.
 WITH
   person,
   score,
