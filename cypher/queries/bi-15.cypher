@@ -1,6 +1,6 @@
 // Q15. Weighted interaction paths
 /*
-:param [{person1Id, person2Id, startDate, endDate}] => {
+:param [{ person1Id, person2Id, startDate, endDate }] => {
   RETURN
     2 AS person1Id,
     4 AS person2Id,

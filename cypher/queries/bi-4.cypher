@@ -2,8 +2,7 @@
 /*
 :param country => 'Spain'
 */
-MATCH
-  (:Country {name: $country})<-[:IS_PART_OF]-(:City)<-[:IS_LOCATED_IN]-(person:Person)<-[:HAS_MEMBER]-(forum:Forum)
+MATCH (:Country {name: $country})<-[:IS_PART_OF]-(:City)<-[:IS_LOCATED_IN]-(person:Person)<-[:HAS_MEMBER]-(forum:Forum)
 WITH forum, count(person) AS numberOfMembers
 ORDER BY numberOfMembers DESC, forum.id ASC
 LIMIT 100

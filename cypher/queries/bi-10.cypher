@@ -1,7 +1,7 @@
 // Q10. Experts in social circle
 // Requires the Neo4j APOC library
 /*
-:param [{personId, country, tagClass, minPathDistance, maxPathDistance}] => {
+:param [{ personId, country, tagClass, minPathDistance, maxPathDistance }] => {
   RETURN
     5 AS personId,
     'France' AS country,
