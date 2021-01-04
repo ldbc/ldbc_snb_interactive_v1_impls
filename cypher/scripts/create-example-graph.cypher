@@ -1,10 +1,10 @@
 CREATE
   // Persons
-  (pA:Person {id: 1, firstName: 'Amelie',   creationDate: datetime('2010-06-10T11:05:56.000+00:00')}),
-  (pB:Person {id: 2, firstName: 'Bernardo', creationDate: datetime('2010-06-10T11:05:56.000+00:00')}),
-  (pC:Person {id: 3, firstName: 'Cedric',   creationDate: datetime('2010-06-10T11:05:56.000+00:00')}),
-  (pD:Person {id: 4, firstName: 'Diane',    creationDate: datetime('2010-06-10T11:05:56.000+00:00')}),
-  (pE:Person {id: 5, firstName: 'Eve',      creationDate: datetime('2010-06-10T11:05:56.000+00:00')}),
+  (pA:Person {id: 1, firstName: 'Amelie',   lastName: '', creationDate: datetime('2010-06-10T11:05:56.000+00:00')}),
+  (pB:Person {id: 2, firstName: 'Bernardo', lastName: '', creationDate: datetime('2010-06-10T11:05:56.000+00:00')}),
+  (pC:Person {id: 3, firstName: 'Cedric',   lastName: '', creationDate: datetime('2010-06-10T11:05:56.000+00:00')}),
+  (pD:Person {id: 4, firstName: 'Diane',    lastName: '', creationDate: datetime('2010-06-10T11:05:56.000+00:00')}),
+  (pE:Person {id: 5, firstName: 'Eve',      lastName: '', creationDate: datetime('2010-06-10T11:05:56.000+00:00')}),
   (pA)-[:KNOWS {creationDate: datetime('2010-06-10T11:05:56.000+00:00')}]->(pB),
   (pA)-[:KNOWS {creationDate: datetime('2010-06-10T11:05:56.000+00:00')}]->(pC),
   (pA)-[:KNOWS {creationDate: datetime('2010-06-10T11:05:56.000+00:00')}]->(pD),
@@ -45,7 +45,7 @@ CREATE
   (t2)-[:HAS_TYPE]->(tc3),
   // Forums
   (forum1:Forum {id: 1, creationDate: datetime('2011-10-10T11:01:47.000+00:00'), title: 'Skiing trips'}),
-  (forum2:Forum {id: 2, creationDate: datetime('2011-10-10T11:05:56.000+00:00'), title: 'Cinéma'}), // TODO: creationdate
+  (forum2:Forum {id: 2, creationDate: datetime('2012-02-01T13:07:26.000+00:00'), title: 'Cinéma'}),
   (forum1)-[:HAS_TAG]->(t1),
   (forum1)-[:HAS_MEMBER]->(pA),
   (forum1)-[:HAS_MEMBER]->(pB),
