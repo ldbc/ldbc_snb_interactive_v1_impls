@@ -3,11 +3,11 @@ WITH start_node(v) AS (
 )
 select * from (
 	WITH RECURSIVE
-	search_graph(link, depth, path) AS (
+	search_graph(link, level, path) AS (
 	        (SELECT v::bigint, 0, ARRAY[]::bigint[][] from start_node)
 	      UNION ALL
-	        (WITH sg(link,depth) as (select * from search_graph)
-	        SELECT distinct k_person2id, x.depth + 1,path || ARRAY[[x.link, k_person2id]]
+	        (WITH sg(link,level) as (select * from search_graph)
+	        SELECT distinct k_person2id, x.level + 1,path || ARRAY[[x.link, k_person2id]]
 	        FROM knows, sg x
 	        WHERE x.link = k_person1id and not exists(select * from sg y where y.link = :person2Id::bigint) and not exists( select * from sg y where y.link=k_person2id)
 	        )
