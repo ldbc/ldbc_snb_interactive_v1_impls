@@ -11,7 +11,7 @@ CALL gds.alpha.shortestPath.stream({
   relationshipQuery:
     'MATCH
        (personA:Person)-[:KNOWS]-(personB:Person),
-       (personA)-[saA:STUDY_AT]->(u:University)<-[saB:STUDY_AT]->(personB)
+       (personA)-[saA:STUDY_AT]->(u:University)<-[saB:STUDY_AT]-(personB)
      RETURN
         id(personA) AS source,
         id(personB) AS target,
