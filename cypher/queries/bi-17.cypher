@@ -13,4 +13,5 @@ WHERE forum1 <> forum2
   AND message2.creationDate > message1.creationDate + duration({hours: $delta})
   AND NOT (forum2)-[:HAS_MEMBER]->(person1)
 RETURN person1.id, count(message2) AS messageCount
+ORDER BY person1.id ASC
 LIMIT 10
