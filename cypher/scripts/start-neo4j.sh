@@ -9,7 +9,7 @@ cd ..
 : ${NEO4J_CONTAINER_NAME:?"Environment variable NEO4J_CONTAINER_NAME is unset or empty"}
 
 if [ ! -d ${NEO4J_DATA_DIR} ]; then
-    echo "Neo4j data is not loaded"
+    echo "Neo4j data directory does not exist"
     exit 1
 fi
 
