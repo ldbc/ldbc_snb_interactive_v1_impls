@@ -10,6 +10,20 @@ Implementations for the Workload components of the LDBC Social Network Benchmark
 
 :warning: Implementations in this repository are preliminary, i.e. they are unaudited and - in rare cases - do not pass validation. For details, feel free to contact us through an issue or email.
 
+## Compatibility
+
+The LDBC Social Network Benchmark suite is continuously maintained with improvements in the specification, the data generator, the driver, and the reference implementation.
+To ensure that you are using compatible LDBC repositories, use the following table:
+
+| project | v0.3.x | v0.4.x |
+| ------- | ------ | ------ |
+| [Documentation](https://github.com/ldbc/ldbc_snb_docs) | [`v0.3.3`](https://github.com/ldbc/ldbc_snb_docs/releases/tag/v0.3.3) | [`dev`](https://github.com/ldbc/ldbc_snb_docs/tree/dev) |
+| [Datagen](https://github.com/ldbc/ldbc_snb_datagen) | [`v0.3.3`](https://github.com/ldbc/ldbc_snb_datagen/releases/tag/v0.3.3) | [`dev`](https://github.com/ldbc/ldbc_snb_datagen/tree/dev) |
+| [Driver](https://github.com/ldbc/ldbc_snb_driver) | [`v0.3.3`](https://github.com/ldbc/ldbc_snb_driver/releases/tag/0.3.3) | [`dev`](https://github.com/ldbc/ldbc_snb_driver/tree/dev) |
+| [Implementations](https://github.com/ldbc/ldbc_snb_implementations) | [`stable`](https://github.com/ldbc/ldbc_snb_implementations/tree/stable) | [`dev`](https://github.com/ldbc/ldbc_snb_implementations/tree/dev) |
+
+The `stable` branches of the repositories correspond to the `v0.3.x`, and the `dev` branches correspond to the `v0.4.x` releases.
+
 ## Directory layout
 
 Multiple configuration files and scripts use [relative paths to address the data generator's directory](https://github.com/ldbc/ldbc_snb_implementations/search?q=ldbc_snb_datagen). Hence, it is recommended to clone the LDBC Data Generator and the LDBC implementations repositories next to each other and keep their original directory names. For example:
