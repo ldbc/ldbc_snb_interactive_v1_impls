@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 echo "Starting preprocessing CSV files"
 
 cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
