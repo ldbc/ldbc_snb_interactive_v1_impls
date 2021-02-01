@@ -1,3 +1,5 @@
+// Draft example graph.
+// For an actively maintained example graph, see the https://github.com/ldbc/ldbc_snb_data_converter repository
 CREATE
   // Persons
   (pA:Person {id: 1, firstName: 'Amelie',   lastName: '', creationDate: datetime('2010-06-10T11:05:56.000+00:00')}),
