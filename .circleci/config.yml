@@ -27,6 +27,10 @@ jobs:
             sudo apt install -y curl git wget unzip maven netcat
             # driver
             git clone --depth 1 --branch dev https://github.com/ldbc/ldbc_snb_driver && cd ldbc_snb_driver && mvn install -DskipTests && cd ..
+            # Cypher
+            cd cypher
+            scripts/install-dependencies.sh
+            cd ..
             # PostgreSQL
             # TODO
       - run:
@@ -52,4 +56,9 @@ jobs:
       - run:
           name: Test
           command: mvn test -B
+      - run:
+          name: Run Cypher Python script
+          command: |
+            cd cypher
+            python3 bi.py
       - slack/status
