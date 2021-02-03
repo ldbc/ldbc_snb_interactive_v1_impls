@@ -1,0 +1,2 @@
+date|lengthThreshold|languages[]
+2010-07-22|50|en;fr

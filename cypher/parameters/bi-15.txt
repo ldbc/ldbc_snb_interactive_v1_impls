@@ -1,0 +1,2 @@
+person1Id|person2Id|startDate|endDate
+2|4|2011-06-01|2012-05-31

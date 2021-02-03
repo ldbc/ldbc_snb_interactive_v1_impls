@@ -1,0 +1,2 @@
+tagA|dateA|tagB|dateB|maxKnowsLimit
+Pyrenees|2011-10-10|Snowboard|2012-03-04|5

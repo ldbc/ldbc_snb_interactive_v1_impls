@@ -1,0 +1,2 @@
+country|endDate
+France|2013-01-01

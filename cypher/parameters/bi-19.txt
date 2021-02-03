@@ -1,0 +1,2 @@
+city1Id|city2Id
+5|6

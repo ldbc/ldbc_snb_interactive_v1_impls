@@ -1,0 +1,2 @@
+personId|country|tagClass|minPathDistance|maxPathDistance
+5|France|Sports|2|3
