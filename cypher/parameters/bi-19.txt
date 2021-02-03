@@ -1,2 +1,2 @@
-city1Id|city2Id
+city1Id:ID|city2Id:ID
 5|6

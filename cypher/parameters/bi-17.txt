@@ -1,2 +1,2 @@
-tag|delta
+tag:STRING|delta:LONG
 Snowboard|10

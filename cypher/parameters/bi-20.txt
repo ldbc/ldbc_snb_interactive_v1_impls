@@ -1,2 +1,2 @@
-company|person2Id
+company:STRING|person2Id:ID
 SoftEngCo|5

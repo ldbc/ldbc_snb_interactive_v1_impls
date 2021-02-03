@@ -1,2 +1,2 @@
-tagClass|country
+tagClass:STRING|country:STRING
 Sports|Spain

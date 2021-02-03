@@ -1,2 +1,2 @@
-country1|country2
+country1:STRING|country2:STRING
 France|Spain

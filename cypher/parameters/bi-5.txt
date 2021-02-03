@@ -1,2 +1,2 @@
-tag
+tag:STRING
 Snowboard

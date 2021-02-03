@@ -1,2 +1,2 @@
-startDate|endDate
+startDate:DATETIME|endDate:DATETIME
 2011-10-01|2011-10-15

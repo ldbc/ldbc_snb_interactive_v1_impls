@@ -1,2 +1,2 @@
-person1Id|tag
+person1Id:ID|tag:STRING
 2|Snowboard

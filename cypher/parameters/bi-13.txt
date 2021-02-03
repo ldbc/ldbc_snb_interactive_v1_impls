@@ -1,2 +1,2 @@
-country|endDate
+country:STRING|endDate:DATETIME
 France|2013-01-01

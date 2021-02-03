@@ -1,2 +1,2 @@
-person1Id|person2Id|startDate|endDate
+person1Id:ID|person2Id:ID|startDate:DATETIME|endDate:DATETIME
 2|4|2011-06-01|2012-05-31

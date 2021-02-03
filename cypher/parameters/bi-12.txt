@@ -1,2 +1,2 @@
-date|lengthThreshold|languages[]
+date:DATETIME|lengthThreshold:LONG|languages:STRING[]
 2010-07-22|50|en;fr

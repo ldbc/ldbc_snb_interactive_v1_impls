@@ -35,14 +35,13 @@ with driver.session() as session:
         parameters_csv = csv.DictReader(open(f'parameters/bi-{query_id}.txt'), delimiter='|')
         
         for query_parameters in parameters_csv:
-            query_parameters = {k: int(v) if re.match(r'^[0-9]+$', v) else v for k, v in query_parameters.items()}
-            query_parameters = {
-              k.replace('[]', ''):
-              v.split(';') if re.findall('\[\]$', k) else v for k, v in query_parameters.items()
-            }
-            #re.findall('\[\]$', 'A')
-            query_parameters = {k: convert_to_datetime(v) if re.findall('date', k.lower()) else v for k, v in query_parameters.items()}
-            print(query_parameters)
+            # convert fields based on type designators
+            query_parameters = {k: int(v)                 if re.match('.*:(ID|LONG)', k) else v for k, v in query_parameters.items()}
+            query_parameters = {k: convert_to_datetime(v) if re.match('.*:DATETIME', k)  else v for k, v in query_parameters.items()}
+            query_parameters = {k: v.split(';')           if re.findall('\[\]$', k)      else v for k, v in query_parameters.items()}
+            # drop type designators
+            type_pattern = re.compile(':.*')
+            query_parameters = {type_pattern.sub('', k): v for k, v in query_parameters.items()}
             run_query(session, query_id, query_spec, query_parameters)
 
 driver.close()

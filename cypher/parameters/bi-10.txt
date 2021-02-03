@@ -1,2 +1,2 @@
-personId|country|tagClass|minPathDistance|maxPathDistance
+personId:ID|country:STRING|tagClass:STRING|minPathDistance:LONG|maxPathDistance:LONG
 5|France|Sports|2|3
