@@ -32,7 +32,11 @@ jobs:
       - run:
           name: Download data
           command: |
-            git clone --branch gh-pages --depth 1 https://github.com/ldbc/ldbc_snb_datagen
+            mkdir data/
+            cd data
+            wget https://ldbc.github.io/ldbc_snb_data_converter/csv-composite-projected-fk-legacy-filenames.zip
+            unzip csv-composite-projected-fk-legacy-filenames.zip
+            cd ..
       - run:
           name: Load
           command: |
@@ -41,7 +45,8 @@ jobs:
             # Cypher
             cd cypher
             . scripts/environment-variables-default.sh
-            export NEO4J_CSV_DIR=`pwd`/../ldbc_snb_datagen/social_network-csv-composite
+            export NEO4J_CSV_DIR=`pwd`/../data/csv-composite-projected-fk-legacy-filenames
+            export NEO4J_CSV_POSTFIX=.csv
             scripts/load-in-one-step.sh
             cd ..
       - run:
