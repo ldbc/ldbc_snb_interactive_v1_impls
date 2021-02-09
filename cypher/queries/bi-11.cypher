@@ -12,4 +12,5 @@ WHERE a.id < b.id
   AND $startDate <= k1.creationDate
   AND $startDate <= k2.creationDate
   AND $startDate <= k3.creationDate
+WITH DISTINCT a, b, c
 RETURN count(*) AS count
