@@ -1,6 +1,6 @@
 from neo4j import GraphDatabase, time
 from datetime import datetime
-from neo4j.time import DateTime
+from neo4j.time import DateTime, Date
 import time
 import pytz
 import csv
@@ -25,6 +25,10 @@ def convert_to_datetime(timestamp):
     dt = datetime.strptime(timestamp, '%Y-%m-%d')
     return DateTime(dt.year, dt.month, dt.day, 0, 0, 0, pytz.timezone('GMT'))
 
+def convert_to_date(timestamp):
+    dt = datetime.strptime(timestamp, '%Y-%m-%d')
+    return Date(dt.year, dt.month, dt.day)
+
 driver = GraphDatabase.driver("bolt://localhost:7687")
 
 with driver.session() as session:
@@ -37,6 +41,7 @@ with driver.session() as session:
         for query_parameters in parameters_csv:
             # convert fields based on type designators
             query_parameters = {k: int(v)                 if re.match('.*:(ID|LONG)', k) else v for k, v in query_parameters.items()}
+            query_parameters = {k: convert_to_date(v)     if re.match('.*:DATE$', k)     else v for k, v in query_parameters.items()}
             query_parameters = {k: convert_to_datetime(v) if re.match('.*:DATETIME', k)  else v for k, v in query_parameters.items()}
             query_parameters = {k: v.split(';')           if re.findall('\[\]$', k)      else v for k, v in query_parameters.items()}
             # drop type designators
