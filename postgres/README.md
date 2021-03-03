@@ -25,6 +25,8 @@ CREATE USER usr PASSWORD 'foo';
 ALTER ROLE usr WITH login createdb superuser;
 ```
 
+On Fedora, refer to the [Fedora wiki](https://fedoraproject.org/wiki/PostgreSQL#pg_hba.conf).
+
 ## Allow access from all local users
 
 Alternatively, you can allow any local users to access the database.
