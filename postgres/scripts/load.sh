@@ -63,7 +63,7 @@ fi
 
 if [ "${PG_LOAD_TO_DB}x" = "loadx" ]; then
   /usr/bin/dropdb --if-exists $PG_DB_NAME -U $PG_USER -p $PG_PORT
-  /usr/bin/createdb $PG_DB_NAME -U $PG_USER -p $PG_PORT --template template0 -l "C"
+  /usr/bin/createdb $PG_DB_NAME -U $PG_USER -p $PG_PORT --template template0 --locale "POSIX"
   /usr/bin/psql -d $PG_DB_NAME -U $PG_USER -p $PG_PORT -a -f schema.sql
   (cat snb-load.sql | sed "s|PATHVAR|$PG_CSV_DIR|g"; echo "\q\n") | /usr/bin/psql -d $PG_DB_NAME -U $PG_USER -p $PG_PORT
   /usr/bin/psql -d $PG_DB_NAME -U $PG_USER -p $PG_PORT -a -f schema_constraints.sql
