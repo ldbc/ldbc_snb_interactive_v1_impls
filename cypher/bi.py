@@ -32,11 +32,12 @@ def convert_to_date(timestamp):
 driver = GraphDatabase.driver("bolt://localhost:7687")
 
 with driver.session() as session:
-    for query_id in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14a", "14b", "15", "16", "17", "18", "19", "20"]:
-        query_file = open(f'queries/bi-{query_id}.cypher', 'r')
+    for query_variant in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14a", "14b", "15", "16", "17", "18", "19", "20"]:
+        query_num = re.sub("[^0-9]", "", query_variant)
+        query_file = open(f'queries/bi-{query_num}.cypher', 'r')
         query_spec = query_file.read()
 
-        parameters_csv = csv.DictReader(open(f'parameters/bi-{query_id}.txt'), delimiter='|')
+        parameters_csv = csv.DictReader(open(f'parameters/bi-{query_variant}.txt'), delimiter='|')
         
         for query_parameters in parameters_csv:
             # convert fields based on type designators
@@ -47,6 +48,6 @@ with driver.session() as session:
             # drop type designators
             type_pattern = re.compile(':.*')
             query_parameters = {type_pattern.sub('', k): v for k, v in query_parameters.items()}
-            run_query(session, query_id, query_spec, query_parameters)
+            run_query(session, query_variant, query_spec, query_parameters)
 
 driver.close()
