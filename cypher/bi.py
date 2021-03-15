@@ -32,7 +32,7 @@ def convert_to_date(timestamp):
 driver = GraphDatabase.driver("bolt://localhost:7687")
 
 with driver.session() as session:
-    for query_id in range(1, 21):
+    for query_id in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14a", "14b", "15", "16", "17", "18", "19", "20"]:
         query_file = open(f'queries/bi-{query_id}.cypher', 'r')
         query_spec = query_file.read()
 
