@@ -22,7 +22,7 @@ def run_query(session, query_id, query_spec, query_parameters):
     return (duration, result)
 
 def convert_to_datetime(timestamp):
-    dt = datetime.strptime(timestamp, '%Y-%m-%d')
+    dt = datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S.%f+00:00')
     return DateTime(dt.year, dt.month, dt.day, 0, 0, 0, pytz.timezone('GMT'))
 
 def convert_to_date(timestamp):

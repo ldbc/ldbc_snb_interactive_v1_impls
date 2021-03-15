@@ -1,2 +1,2 @@
-country:STRING|startDate:DATETIME
+country:STRING|startDate:DATE
 France|2010-05-01

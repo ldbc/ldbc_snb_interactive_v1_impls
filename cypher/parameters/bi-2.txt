@@ -1,2 +1,2 @@
-date:DATETIME|tagClass:STRING
+date:DATE|tagClass:STRING
 2011-10-01|Sports
