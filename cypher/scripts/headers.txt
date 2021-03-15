@@ -11,7 +11,7 @@ dynamic/forum creationDate:DATETIME|id:ID(Forum)|title:STRING
 dynamic/person creationDate:DATETIME|id:ID(Person)|firstName:STRING|lastName:STRING|gender:STRING|birthday:DATE|locationIP:STRING|browserUsed:STRING|speaks:STRING[]|email:STRING[]
 dynamic/post creationDate:DATETIME|id:ID(Post)|imageFile:STRING|locationIP:STRING|browserUsed:STRING|language:STRING|content:STRING|length:LONG
 dynamic/comment_hasCreator_person creationDate:DATETIME|:START_ID(Comment)|:END_ID(Person)
-dynamic/comment_isLocatedIn_place creationDate:DATETIME|:START_ID(Comment)|:END_ID(Place)
+dynamic/comment_isLocatedIn_country creationDate:DATETIME|:START_ID(Comment)|:END_ID(Place)
 dynamic/comment_replyOf_comment creationDate:DATETIME|:START_ID(Comment)|:END_ID(Comment)
 dynamic/comment_replyOf_post creationDate:DATETIME|:START_ID(Comment)|:END_ID(Post)
 dynamic/forum_containerOf_post creationDate:DATETIME|:START_ID(Forum)|:END_ID(Post)
@@ -19,7 +19,7 @@ dynamic/forum_hasMember_person creationDate:DATETIME|:START_ID(Forum)|:END_ID(Pe
 dynamic/forum_hasModerator_person creationDate:DATETIME|:START_ID(Forum)|:END_ID(Person)
 dynamic/forum_hasTag_tag creationDate:DATETIME|:START_ID(Forum)|:END_ID(Tag)
 dynamic/person_hasInterest_tag creationDate:DATETIME|:START_ID(Person)|:END_ID(Tag)
-dynamic/person_isLocatedIn_place creationDate:DATETIME|:START_ID(Person)|:END_ID(Place)
+dynamic/person_isLocatedIn_city creationDate:DATETIME|:START_ID(Person)|:END_ID(Place)
 dynamic/person_knows_person creationDate:DATETIME|:START_ID(Person)|:END_ID(Person)
 dynamic/person_likes_comment creationDate:DATETIME|:START_ID(Person)|:END_ID(Comment)
 dynamic/person_likes_post creationDate:DATETIME|:START_ID(Person)|:END_ID(Post)
@@ -28,4 +28,4 @@ dynamic/person_workAt_organisation creationDate:DATETIME|:START_ID(Person)|:END_
 dynamic/post_hasCreator_person creationDate:DATETIME|:START_ID(Post)|:END_ID(Person)
 dynamic/comment_hasTag_tag creationDate:DATETIME|:START_ID(Comment)|:END_ID(Tag)
 dynamic/post_hasTag_tag creationDate:DATETIME|:START_ID(Post)|:END_ID(Tag)
-dynamic/post_isLocatedIn_place creationDate:DATETIME|:START_ID(Post)|:END_ID(Place)
+dynamic/post_isLocatedIn_country creationDate:DATETIME|:START_ID(Post)|:END_ID(Place)
