@@ -26,16 +26,13 @@ This script replaces the headers in the input CSVs, load them, starts Neo4j, and
 
 ## Loading the example data set
 
-Transform the example data set in the [data converter](https://github.com/ldbc/ldbc_snb_data_converter) repository, then rename it:
+Transform the example data set in the [data converter](https://github.com/ldbc/ldbc_snb_data_converter) repository:
 
-```bash
-./rename.sh
-```
+Then, in in this repository, run
 
-In this repository, run
 ```bash
 . scripts/environment-variables-default.sh
-export NEO4J_CSV_DIR=${DATA_CONVERTER_DIR}/ldbc_snb_data_converter/data/csv-composite-projected-fk-legacy-filenames
+export NEO4J_CSV_DIR=${DATA_CONVERTER_DIR}/ldbc_snb_data_converter/data/csv-composite-projected-fk
 export NEO4J_CSV_POSTFIX=.csv
 scripts/load-in-one-step.sh
 ```
