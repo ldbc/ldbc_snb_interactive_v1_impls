@@ -29,7 +29,7 @@ docker run --rm \
     --env NEO4JLABS_PLUGINS='["apoc", "graph-data-science"]' \
     --env NEO4J_AUTH=none \
     --name ${NEO4J_CONTAINER_NAME} \
-    neo4j:${NEO4J_VERSION} \
+    neo4j:${NEO4J_VERSION}
 
 echo "Waiting for the database to start..."
 until docker exec --interactive --tty ${NEO4J_CONTAINER_NAME} cypher-shell "RETURN 'Database has started successfully' AS message"; do

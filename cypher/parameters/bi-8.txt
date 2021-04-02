@@ -1,2 +1,2 @@
-tag:STRING|date:DATETIME
+tag:STRING|date:DATE
 Pyrenees|2010-10-01

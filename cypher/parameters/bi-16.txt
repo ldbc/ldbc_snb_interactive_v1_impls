@@ -1,2 +1,2 @@
-tagA:STRING|dateA:DATETIME|tagB:STRING|dateB:DATETIME|maxKnowsLimit:LONG
+tagA:STRING|dateA:DATE|tagB:STRING|dateB:DATE|maxKnowsLimit:LONG
 Pyrenees|2011-10-10|Snowboard|2012-03-04|5
