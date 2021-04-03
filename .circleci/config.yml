@@ -36,8 +36,8 @@ jobs:
       - run:
           name: Download data
           command: |
-            mkdir data/
-            cd data
+            mkdir test-data/
+            cd test-data
             wget -q https://ldbc.github.io/ldbc_snb_data_converter/csv-composite-projected-fk.zip
             unzip csv-composite-projected-fk.zip
             cd ..
@@ -49,7 +49,7 @@ jobs:
             # Cypher
             cd cypher
             . scripts/environment-variables-default.sh
-            export NEO4J_CSV_DIR=`pwd`/../data/csv-composite-projected-fk
+            export NEO4J_CSV_DIR=`pwd`/../test-data/csv-composite-projected-fk
             export NEO4J_CSV_POSTFIX=.csv
             scripts/load-in-one-step.sh
             cd ..
