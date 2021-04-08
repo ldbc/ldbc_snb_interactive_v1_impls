@@ -37,8 +37,8 @@ with driver.session() as session:
         query_file = open(f'queries/bi-{query_num}.cypher', 'r')
         query_spec = query_file.read()
 
-        parameters_csv = csv.DictReader(open(f'parameters/bi-{query_variant}.txt'), delimiter='|')
-        
+        parameters_csv = csv.DictReader(open(f'parameters/bi-{query_variant}.csv'), delimiter='|')
+
         for query_parameters in parameters_csv:
             # convert fields based on type designators
             query_parameters = {k: int(v)                 if re.match('.*:(ID|LONG)', k) else v for k, v in query_parameters.items()}
