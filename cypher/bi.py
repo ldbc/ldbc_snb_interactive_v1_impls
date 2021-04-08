@@ -39,6 +39,7 @@ with driver.session() as session:
 
         parameters_csv = csv.DictReader(open(f'parameters/bi-{query_variant}.csv'), delimiter='|')
 
+        k = 0
         for query_parameters in parameters_csv:
             # convert fields based on type designators
             query_parameters = {k: int(v)                 if re.match('.*:(ID|LONG)', k) else v for k, v in query_parameters.items()}
@@ -49,5 +50,8 @@ with driver.session() as session:
             type_pattern = re.compile(':.*')
             query_parameters = {type_pattern.sub('', k): v for k, v in query_parameters.items()}
             run_query(session, query_variant, query_spec, query_parameters)
+            k += 1
+            if k == 5:
+                break
 
 driver.close()
