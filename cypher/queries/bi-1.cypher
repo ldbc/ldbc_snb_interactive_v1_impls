@@ -1,6 +1,6 @@
 // Q1. Posting summary
 /*
-:param datetime => datetime('2011-12-01')
+:param datetime => datetime('2011-12-01T00:00:00.000')
 */
 MATCH (message:Message)
 WHERE message.creationDate < $datetime
