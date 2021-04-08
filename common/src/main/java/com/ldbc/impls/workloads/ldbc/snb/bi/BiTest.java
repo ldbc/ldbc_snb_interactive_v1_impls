@@ -32,6 +32,7 @@ public abstract class BiTest extends SnbTest {
     }
 
     @Test
+    @Ignore
     public void testBiQuery4() throws DbException {
         run(db, new LdbcSnbBiQuery4TopCountryPosters("Ethiopia", LIMIT));
     }
