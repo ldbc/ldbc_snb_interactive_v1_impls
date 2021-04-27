@@ -1,7 +1,7 @@
 bi-1 datetime:DATETIME
 bi-2 date:DATE|tagClass:STRING
 bi-3 tagClass:STRING|country:STRING
-bi-4 country:STRING
+bi-4 date:DATE
 bi-5 tag:STRING
 bi-6 tag:STRING
 bi-7 tag:STRING

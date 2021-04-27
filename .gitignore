@@ -13,3 +13,4 @@ validation_params.csv
 results-*/
 *.DS_Store
 *.report
+test-data/
