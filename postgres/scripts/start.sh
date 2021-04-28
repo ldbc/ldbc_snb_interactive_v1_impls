@@ -1,12 +1,14 @@
 #!/bin/bash
 
-set -e
+set -eu
 set -o pipefail
 
 cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ..
 
 . scripts/vars.sh
+
+echo "mounting -> ${POSTGRES_DATA_DIR}"
 
 docker run --rm \
     --publish=5432:5432 \
