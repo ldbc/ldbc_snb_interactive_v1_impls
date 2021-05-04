@@ -40,8 +40,6 @@ Each project has its own README:
 * [Neo4j implementation](cypher/)
 * [PostgreSQL implementation](postgres/)
 
-The [Sparksee implementation](https://github.com/DAMA-UPC/ldbc-sparksee) is maintained in a separate repository.
-
 ## Queries
 
 The queries in this repository are work-in-progress. If possible, please cross-validate your queries against multiple implementations.
