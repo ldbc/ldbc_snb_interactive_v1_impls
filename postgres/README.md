@@ -5,7 +5,7 @@
 ## Start the database
 
 ```bash
-export POSTGRES_DATA_DIR=`pwd`/../ldbc_snb_data_converter/data/csv-composite-merged-fk/
+export POSTGRES_DATA_DIR=`pwd`/../../ldbc_snb_data_converter/data/csv-composite-merged-fk/
 ./start.sh
 ./load.sh
 ```
