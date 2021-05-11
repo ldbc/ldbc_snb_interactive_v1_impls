@@ -64,12 +64,4 @@
         </pluginManagement>
     </build>
 
-    <repositories>
-        <repository>
-            <id>ldbc</id>
-            <name>LDBC SNB</name>
-            <url>https://dl.bintray.com/ldbc/snb/</url>
-        </repository>
-    </repositories>
-
 </project>
