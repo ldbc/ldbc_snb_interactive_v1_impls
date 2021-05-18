@@ -5,8 +5,8 @@
 MATCH (country:Country {name: $country})<-[:IS_PART_OF]-(:City)<-[:IS_LOCATED_IN]-(zombie:Person)
 OPTIONAL MATCH
   (zombie)<-[:HAS_CREATOR]-(message:Message)
-WHERE zombie.creationDate  < $endDate.year
-  AND message.creationDate < $endDate.month
+WHERE zombie.creationDate  < $endDate
+  AND message.creationDate < $endDate
 WITH
   country,
   zombie,
