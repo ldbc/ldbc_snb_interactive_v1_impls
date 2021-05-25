@@ -1,4 +1,4 @@
-MATCH (m:Message {id:$messageId})<-[:REPLY_OF]-(c:Comment)-[:HAS_CREATOR]->(p:Person)
+MATCH (m:Message {id: $messageId})<-[:REPLY_OF]-(c:Comment)-[:HAS_CREATOR]->(p:Person)
 OPTIONAL MATCH (m)-[:HAS_CREATOR]->(a:Person)-[r:KNOWS]-(p)
 RETURN
   c.id AS commentId,
@@ -8,7 +8,7 @@ RETURN
   p.firstName AS replyAuthorFirstName,
   p.lastName AS replyAuthorLastName,
   CASE r
-    WHEN null THEN false
+    WHEN NULL THEN false
     ELSE true
   END AS replyAuthorKnowsOriginalMessageAuthor
 ORDER BY commentCreationDate DESC, replyAuthorId

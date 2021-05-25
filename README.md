@@ -30,7 +30,7 @@ Multiple configuration files and scripts use [relative paths to address the data
 
 * `ldbc`
   * [`ldbc_snb_datagen`](https://github.com/ldbc/ldbc_snb_datagen)
-  * [`ldbc_snb_driver`](https://github.com/ldbc/ldbc_snb_driver) – **use the `dev` branch**
+  * [`ldbc_snb_driver`](https://github.com/ldbc/ldbc_snb_driver)
   * [`ldbc_snb_implementations`](https://github.com/ldbc/ldbc_snb_implementations/)
 
 ## Implementations
@@ -68,24 +68,6 @@ The queries in this repository are work-in-progress. If possible, please cross-v
 | -------------- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Neo4j (Cypher) | [01](cypher/queries/interactive-update-1.cypher) | [02](cypher/queries/interactive-update-2.cypher) | [03](cypher/queries/interactive-update-3.cypher) | [04](cypher/queries/interactive-update-4.cypher) | [05](cypher/queries/interactive-update-5.cypher) | [06](cypher/queries/interactive-update-6.cypher) | [07](cypher/queries/interactive-update-7.cypher) | [08](cypher/queries/interactive-update-8.cypher) |
 | PostgreSQL     | [01/p](postgres/queries/interactive-update-1-add-person.sql) [01/c](postgres/queries/interactive-update-1-add-person-companies.sql) [01/e](postgres/queries/interactive-update-1-add-person-emails.sql) [01/l](postgres/queries/interactive-update-1-add-person-languages.sql) [01/t](postgres/queries/interactive-update-1-add-person-tags.sql) [01/u](postgres/queries/interactive-update-1-add-person-universities.sql) | [02](postgres/queries/interactive-update-2.sql) | [03](postgres/queries/interactive-update-3.sql) | [04/f](postgres/queries/interactive-update-4-add-forum.sql) [04/t](postgres/queries/interactive-update-4-add-forum-tags.sql) | [05](postgres/queries/interactive-update-5.sql) | [06/p](postgres/queries/interactive-update-6-add-post.sql) [06/t](postgres/queries/interactive-update-6-add-post-tags.sql) | [07/c](postgres/queries/interactive-update-7-add-comment.sql) [07/t](postgres/queries/interactive-update-7-add-comment-tags.sql) | [08](postgres/queries/interactive-update-8.sql) |
-
-### BI
-
-| query          | [01](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-01.pdf) | [02](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-02.pdf) | [03](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-03.pdf) | [04](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-04.pdf) | [05](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-05.pdf) | [06](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-06.pdf) | [07](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-07.pdf) | [08](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-08.pdf) | [09](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-09.pdf) | [10](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-10.pdf) |
-| -------------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Neo4j (Cypher) | [01](cypher/queries/bi-1.cypher) | [02](cypher/queries/bi-2.cypher) | [03](cypher/queries/bi-3.cypher) | [04](cypher/queries/bi-4.cypher) | [05](cypher/queries/bi-5.cypher) | [06](cypher/queries/bi-6.cypher) | [07](cypher/queries/bi-7.cypher) | [08](cypher/queries/bi-8.cypher) | [09](cypher/queries/bi-9.cypher) | [10](cypher/queries/bi-10.cypher) |
-| PostgreSQL     | [01](postgres/queries/bi-1.sql)  | [02](postgres/queries/bi-2.sql)  | [03](postgres/queries/bi-3.sql)  | [04](postgres/queries/bi-4.sql)  | [05](postgres/queries/bi-5.sql)  | [06](postgres/queries/bi-6.sql)  | [07](postgres/queries/bi-7.sql)  | [08](postgres/queries/bi-8.sql)  | [09](postgres/queries/bi-9.sql)  | [10](postgres/queries/bi-10.sql)  |
-
-| query          | [11](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-11.pdf) | [12](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-12.pdf) | [13](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-13.pdf) | [14](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-14.pdf) | [15](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-15.pdf) | [16](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-16.pdf) | [17](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-17.pdf) | [18](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-18.pdf) | [19](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-19.pdf) | [20](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-20.pdf) |
-| -------------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Neo4j (Cypher) | [11](cypher/queries/bi-11.cypher) | [12](cypher/queries/bi-12.cypher) | [13](cypher/queries/bi-13.cypher) | [14](cypher/queries/bi-14.cypher) | [15](cypher/queries/bi-15.cypher) | [16](cypher/queries/bi-16.cypher) | [17](cypher/queries/bi-17.cypher) | [18](cypher/queries/bi-18.cypher) | [19](cypher/queries/bi-19.cypher) | [20](cypher/queries/bi-20.cypher) |
-| PostgreSQL     | [11](postgres/queries/bi-11.sql)  | [12](postgres/queries/bi-12.sql)  | [13](postgres/queries/bi-13.sql)  | [14](postgres/queries/bi-14.sql)  | [15](postgres/queries/bi-15.sql)  | [16](postgres/queries/bi-16.sql)  | [17](postgres/queries/bi-17.sql)  | [18](postgres/queries/bi-18.sql)  | [19](postgres/queries/bi-19.sql)  | [20](postgres/queries/bi-20.sql)  |
-
-| query          | [21](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-21.pdf) | [22](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-22.pdf) | [23](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-23.pdf) | [24](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-24.pdf) | [25](https://ldbc.github.io/ldbc_snb_docs_snapshot/bi-read-25.pdf) |
-| -------------- | --- | --- | --- | --- | --- |
-| Neo4j (Cypher) | [21](cypher/queries/bi-21.cypher) | [22](cypher/queries/bi-22.cypher) | [23](cypher/queries/bi-23.cypher) | [24](cypher/queries/bi-24.cypher) | [25](cypher/queries/bi-25.cypher) |
-| PostgreSQL     | [21](postgres/queries/bi-21.sql)  | [22](postgres/queries/bi-22.sql)  | [23](postgres/queries/bi-23.sql)  | [24](postgres/queries/bi-24.sql)  | [25](postgres/queries/bi-25.sql)  |
-
 
 ## User's guide
 
@@ -125,17 +107,14 @@ For more details, on validating and benchmarking, visit the [driver wiki](https:
 
 ### Generating small test data tests
 
-To generate small data sets, use scale factor 1 (SF1) with the persons and years set according to this template:
+To generate small data sets, use scale factor 1 (SF1) with the persons and years set according to this template. Note that a certain number of persons (~250) is required for the parameter generation script to function correctly.
 
-```
+```ini
 ldbc.snb.datagen.generator.scaleFactor:snb.interactive.1
 
-ldbc.snb.datagen.generator.numPersons:50
+ldbc.snb.datagen.generator.numPersons:250
 ldbc.snb.datagen.generator.numYears:1
-ldbc.snb.datagen.generator.startYear:2010
-
 ldbc.snb.datagen.generator.numThreads:1
-ldbc.snb.datagen.serializer.outputDir:./test_data/
 
 ldbc.snb.datagen.serializer.personSerializer:ldbc.snb.datagen.serializer.snb.interactive.<SerializerType>PersonSerializer
 ldbc.snb.datagen.serializer.invariantSerializer:ldbc.snb.datagen.serializer.snb.interactive.<SerializerType>InvariantSerializer

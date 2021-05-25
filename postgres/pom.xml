@@ -9,8 +9,8 @@
     </parent>
 
     <artifactId>postgres</artifactId>
-    <name>PostgreSQL DB class</name>
-    <description>PostgreSQL connector for LDBC driver</description>
+    <name>Cypher client</name>
+    <description>PostgreSQL implementation for the LDBC SNB driver</description>
 
     <dependencies>
         <dependency>

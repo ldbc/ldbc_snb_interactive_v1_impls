@@ -1,9 +1,9 @@
 MATCH
-  (person:Person {id:$personId})-[:KNOWS*1..2]-(friend:Person),
-  (friend)<-[:HAS_CREATOR]-(friendPost:Post)-[:HAS_TAG]->(knownTag:Tag {name:$tagName})
-WHERE not(person=friend)
+  (person:Person {id: $personId})-[:KNOWS*1..2]-(friend:Person),
+  (friend)<-[:HAS_CREATOR]-(friendPost:Post)-[:HAS_TAG]->(knownTag:Tag {name: $tagName})
+WHERE person <> friend
 MATCH (friendPost)-[:HAS_TAG]->(commonTag:Tag)
-WHERE not(commonTag=knownTag)
+WHERE commonTag <> knownTag
 WITH DISTINCT commonTag, knownTag, friend
 MATCH (commonTag)<-[:HAS_TAG]-(commonPost:Post)-[:HAS_TAG]->(knownTag)
 WHERE (commonPost)-[:HAS_CREATOR]->(friend)

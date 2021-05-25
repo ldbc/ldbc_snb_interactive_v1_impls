@@ -1,2 +1,14 @@
-neo4j-server/
-neo4j*.tar.gz
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+.idea/
+*.iml
+validation_params.csv
+*.swp
+*-actual.json
+*-expected.json
+*.DS_Store
+*.report

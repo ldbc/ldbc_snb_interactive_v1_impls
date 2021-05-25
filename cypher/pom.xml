@@ -9,8 +9,8 @@
     </parent>
 
     <artifactId>cypher</artifactId>
-    <name>Cypher BI class</name>
-    <description>Cypher implementation for SNB BI driver</description>
+    <name>Cypher client</name>
+    <description>Cypher implementation for the LDBC SNB driver</description>
 
     <dependencies>
         <dependency>
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>org.neo4j.driver</groupId>
             <artifactId>neo4j-java-driver</artifactId>
-            <version>1.6.3</version>
+            <version>4.2.5</version>
         </dependency>
     </dependencies>
     <build>

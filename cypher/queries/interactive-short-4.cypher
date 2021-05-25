@@ -1,6 +1,6 @@
-MATCH (m:Message {id:$messageId})
+MATCH (m:Message {id: $messageId})
 RETURN
-  m.creationDate as messageCreationDate,
+  m.creationDate AS messageCreationDate,
   CASE exists(m.content)
     WHEN true THEN m.content
     ELSE m.imageFile

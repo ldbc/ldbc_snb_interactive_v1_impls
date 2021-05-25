@@ -1,4 +1,4 @@
-MATCH (person:Person {id:$personId})<-[:HAS_CREATOR]-(message)<-[like:LIKES]-(liker:Person)
+MATCH (person:Person {id: $personId})<-[:HAS_CREATOR]-(message)<-[like:LIKES]-(liker:Person)
 WITH liker, message, like.creationDate AS likeTime, person
 ORDER BY likeTime DESC, toInteger(message.id) ASC
 WITH

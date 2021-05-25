@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class Converter {
 
-    final static String DATAGEN_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'+0000'";
+    final static String DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'+0000'";
 
     /**
      * Converts epoch seconds to a date to the format of the converter (e.g. PostgreSQL-style timestamps).
@@ -24,32 +24,14 @@ public class Converter {
     }
 
     public String convertDateTime(Date date) {
-        final SimpleDateFormat sdf = new SimpleDateFormat(DATAGEN_FORMAT);
+        final SimpleDateFormat sdf = new SimpleDateFormat(DATETIME_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         return "'" + sdf.format(date) + "'";
-    }
-
-    public String convertDate(long timestamp) {
-        return convertDateTime(new Date(timestamp));
     }
 
     public String convertDate(Date date) {
         return convertDateTime(date);
     }
-
-    /**
-     * Converts timestamp strings (in the format produced by DATAGEN) ({@value #DATAGEN_FORMAT})
-     * to a date.
-     *
-     * @param timestamp
-     * @return
-     */
-    public long convertTimestampToEpoch(String timestamp) throws ParseException {
-        final SimpleDateFormat sdf = new SimpleDateFormat(DATAGEN_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return sdf.parse(timestamp).toInstant().toEpochMilli();
-    }
-
     /**
      * Surrounds a string in single quotes and escape single quotes in the string itself.
      *

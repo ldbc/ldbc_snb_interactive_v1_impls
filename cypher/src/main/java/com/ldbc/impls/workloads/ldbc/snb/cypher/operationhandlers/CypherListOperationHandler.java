@@ -5,9 +5,9 @@ import com.ldbc.driver.Operation;
 import com.ldbc.driver.ResultReporter;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherDbConnectionState;
 import com.ldbc.impls.workloads.ldbc.snb.operationhandlers.ListOperationHandler;
-import org.neo4j.driver.v1.Record;
-import org.neo4j.driver.v1.Session;
-import org.neo4j.driver.v1.StatementResult;
+import org.neo4j.driver.Record;
+import org.neo4j.driver.Result;
+import org.neo4j.driver.Session;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public abstract class CypherListOperationHandler<TOperation extends Operation<Li
 
         final String queryString = getQueryString(state, operation);
         state.logQuery(operation.getClass().getSimpleName(), queryString);
-        final StatementResult result = session.run(queryString);
+        final Result result = session.run(queryString);
         while (result.hasNext()) {
             final Record record = result.next();
 

@@ -14,10 +14,4 @@ public class DateConverterTest {
         Assert.assertEquals("'2009-12-31T23:00:00.000+0000'", timestamp);
     }
 
-    @Test
-    public void timestampToEpochTest() throws ParseException {
-        long epoch = new Converter().convertTimestampToEpoch("2009-12-31T23:00:00.000+0000");
-        Assert.assertEquals(1262300400000L, epoch);
-    }
-
 }

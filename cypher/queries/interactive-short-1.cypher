@@ -1,10 +1,10 @@
-MATCH (n:Person {id:$personId})-[:IS_LOCATED_IN]->(p:Place)
+MATCH (person:Person {id: $personId})-[:IS_LOCATED_IN]->(city:City)
 RETURN
-  n.firstName AS firstName,
-  n.lastName AS lastName,
-  n.birthday AS birthday,
-  n.locationIP AS locationIP,
-  n.browserUsed AS browserUsed,
-  p.id AS cityId,
-  n.gender AS gender,
-  n.creationDate AS creationDate
+  person.firstName AS firstName,
+  person.lastName AS lastName,
+  person.birthday AS birthday,
+  person.locationIP AS locationIP,
+  person.browserUsed AS browserUsed,
+  city.id AS cityId,
+  person.gender AS gender,
+  person.creationDate AS creationDate

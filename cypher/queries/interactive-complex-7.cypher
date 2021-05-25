@@ -1,4 +1,4 @@
-MATCH (person:Person {id:$personId})<-[:HAS_CREATOR]-(message:Message)<-[like:LIKES]-(liker:Person)
+MATCH (person:Person {id: $personId})<-[:HAS_CREATOR]-(message:Message)<-[like:LIKES]-(liker:Person)
 WITH liker, message, like.creationDate AS likeTime, person
 ORDER BY likeTime DESC, toInteger(message.id) ASC
 WITH
@@ -15,7 +15,7 @@ RETURN
     WHEN true THEN latestLike.msg.content
     ELSE latestLike.msg.imageFile
   END AS messageContent,
-  latestLike.msg.creationDate AS messageCreationDate,
-  not((liker)-[:KNOWS]-(person)) AS isNew
+  latestLike.likeTime.minute - latestLike.msg.creationDate.minute AS minutesLatency,
+  NOT (liker)-[:KNOWS]-(person) AS isNew
 ORDER BY likeCreationDate DESC, toInteger(personId) ASC
 LIMIT 20

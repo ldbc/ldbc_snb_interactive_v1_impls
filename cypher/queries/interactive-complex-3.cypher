@@ -1,17 +1,15 @@
-MATCH (person:Person {id:$personId})-[:KNOWS*1..2]-(friend:Person)<-[:HAS_CREATOR]-(messageX:Message),
-(messageX)-[:IS_LOCATED_IN]->(countryX:Place)
-WHERE
-  not(person=friend)
-  AND not((friend)-[:IS_LOCATED_IN]->()-[:IS_PART_OF]->(countryX))
-  AND countryX.name=$countryXName AND messageX.creationDate>=$startDate
-  AND messageX.creationDate<$endDate
+MATCH
+  (person:Person {id:$personId})-[:KNOWS*1..2]-(friend:Person)<-[:HAS_CREATOR]-(messageX:Message),
+  (messageX)-[:IS_LOCATED_IN]->(countryX:Country {name: $countryXName})
+WHERE person <> friend
+  AND NOT (friend)-[:IS_LOCATED_IN]->()-[:IS_PART_OF]->(countryX)
+  AND messageX.creationDate >= datetime($startDate)
+  AND messageX.creationDate < datetime($endDate)
 WITH friend, count(DISTINCT messageX) AS xCount
-MATCH (friend)<-[:HAS_CREATOR]-(messageY:Message)-[:IS_LOCATED_IN]->(countryY:Place)
-WHERE
-  countryY.name=$countryYName
-  AND not((friend)-[:IS_LOCATED_IN]->()-[:IS_PART_OF]->(countryY))
-  AND messageY.creationDate>=$startDate
-  AND messageY.creationDate<$endDate
+MATCH (friend)<-[:HAS_CREATOR]-(messageY:Message)-[:IS_LOCATED_IN]->(countryY:Country {name: $countryYName})
+WHERE NOT (friend)-[:IS_LOCATED_IN]->()-[:IS_PART_OF]->(countryY)
+  AND messageY.creationDate >= datetime($startDate)
+  AND messageY.creationDate < datetime($endDate)
 WITH
   friend.id AS personId,
   friend.firstName AS personFirstName,
