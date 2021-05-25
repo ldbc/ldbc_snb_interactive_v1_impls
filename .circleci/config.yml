@@ -5,11 +5,7 @@ workflows:
   version: 2
   build:
     jobs:
-      - test:
-          filters:
-            branches:
-              ignore:
-                - stable
+      - test
 
 jobs:
   test:
@@ -24,41 +20,34 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             sudo apt update
             # install dependencies
-            sudo apt install -y curl git wget unzip maven netcat
+            sudo apt install -y git
             # driver
-            git clone --depth 1 --branch dev https://github.com/ldbc/ldbc_snb_driver && cd ldbc_snb_driver && mvn install -DskipTests && cd ..
+            git clone --depth 1 --branch stable https://github.com/ldbc/ldbc_snb_driver && cd ldbc_snb_driver && mvn install -DskipTests && cd ..
             # Cypher
             cd cypher
-            scripts/install-dependencies.sh
             cd ..
             # PostgreSQL
             # TODO
       - run:
-          name: Download data
+          name: Prepare Cypher test data
           command: |
-            mkdir data/
-            cd data
-            wget https://ldbc.github.io/ldbc_snb_data_converter/csv-composite-projected-fk-legacy-filenames.zip
-            unzip csv-composite-projected-fk-legacy-filenames.zip
-            cd ..
+            cp -r cypher/test-data/raw/* cypher/test-data/converted/
       - run:
           name: Load
           command: |
-            # PostgreSQL
-            # TODO
             # Cypher
             cd cypher
             . scripts/environment-variables-default.sh
-            export NEO4J_CSV_DIR=`pwd`/../data/csv-composite-projected-fk-legacy-filenames
-            export NEO4J_CSV_POSTFIX=.csv
             scripts/load-in-one-step.sh
             cd ..
+            # PostgreSQL
+            # TODO
       - run:
-          name: Test
-          command: mvn test -B
+          name: Package
+          command: mvn package -DskipTests
       - run:
-          name: Run Cypher Python script
+          name: Run Cypher project
           command: |
             cd cypher
-            python3 bi.py
+            ./interactive-create-validation-parameters.sh
       - slack/status
