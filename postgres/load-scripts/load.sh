@@ -9,16 +9,11 @@ PG_USER=${PG_USER:-$USER}
 PG_FORCE_REGENERATE=${PG_FORCE_REGENERATE:-no}
 PG_PORT=${PG_PORT:-5432}
 
-# we regenerate PostgreSQL-specific CSV files for posts and comments, if either
+# we regenerate PostgreSQL-specific CSV files for comments, if either
 #  - it doesn't exist
 #  - the source CSV is newer
 #  - we are forced to do so by environment variable PG_FORCE_REGENERATE=yes
 
-if [ ! -f $PG_DATA_DIR/dynamic/post_0_0-postgres.csv -o $PG_DATA_DIR/dynamic/post_0_0.csv -nt $PG_DATA_DIR/dynamic/post_0_0-postgres.csv -o "${PG_FORCE_REGENERATE}x" = "yesx" ]; then
-  cat $PG_DATA_DIR/dynamic/post_0_0.csv | \
-    awk -F '|' '{ print $1"|"$2"|"$3"|"$4"|"$5"|"$6"|"$7"|"$8"|"$9"|"$11"|"$10"|"}' > \
-    $PG_DATA_DIR/dynamic/post_0_0-postgres.csv
-fi
 if [ ! -f $PG_DATA_DIR/dynamic/comment_0_0-postgres.csv -o $PG_DATA_DIR/dynamic/comment_0_0.csv -nt $PG_DATA_DIR/dynamic/comment_0_0-postgres.csv -o "${PG_FORCE_REGENERATE}x" = "yesx" ]; then
   cat $PG_DATA_DIR/dynamic/comment_0_0.csv | \
     awk -F '|' '{print $1"||"$2"|"$3"|"$4"||"$5"|"$6"|"$7"|"$8"||"$9 $10}' > \

@@ -53,7 +53,7 @@ COPY tag FROM 'PATHVAR/static/tag_0_0.csv' WITH DELIMITER '|' CSV HEADER;
 -- PROBLEMATIC
 
 -- Populate message table
-COPY message FROM 'PATHVAR/dynamic/post_0_0-postgres.csv'    WITH (FORCE_NOT_NULL ("m_content"),  DELIMITER '|', HEADER, FORMAT csv);
+COPY message (m_messageid, m_ps_imagefile, m_creationdate, m_locationip, m_browserused, m_ps_language, m_content, m_length, m_creatorid, m_ps_forumid, m_locationid) FROM 'PATHVAR/dynamic/post_0_0.csv' WITH (FORCE_NOT_NULL ("m_content"),  DELIMITER '|', HEADER, FORMAT csv);
 COPY message FROM 'PATHVAR/dynamic/comment_0_0-postgres.csv' WITH (FORCE_NOT_NULL ("m_content"),  DELIMITER '|', HEADER, FORMAT csv);
 
 create view country as select city.pl_placeid as ctry_city, ctry.pl_name as ctry_name from place city, place ctry where city.pl_containerplaceid = ctry.pl_placeid and ctry.pl_type = 'country';
