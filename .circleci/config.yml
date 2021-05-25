@@ -22,7 +22,7 @@ jobs:
             # install dependencies
             sudo apt install -y git
             # driver
-            git clone --depth 1 --branch stable https://github.com/ldbc/ldbc_snb_driver && cd ldbc_snb_driver && mvn install -DskipTests && cd ..
+            git clone --depth 1 --branch 0.3.5 https://github.com/ldbc/ldbc_snb_driver && cd ldbc_snb_driver && mvn install -DskipTests && cd ..
             # Cypher
             cd cypher
             cd ..
