@@ -19,5 +19,5 @@ RETURN
   commonPostCount - (postCount - commonPostCount) AS commonInterestScore,
   friend.gender AS personGender,
   city.name AS personCityName
-ORDER BY commonInterestScore DESC, toInteger(personId) ASC
+ORDER BY commonInterestScore DESC, personId ASC
 LIMIT 10

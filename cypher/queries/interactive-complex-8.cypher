@@ -7,5 +7,5 @@ RETURN
   comment.creationDate AS commentCreationDate,
   comment.id AS commentId,
   comment.content AS commentContent
-ORDER BY commentCreationDate DESC, toInteger(commentId) ASC
+ORDER BY commentCreationDate DESC, commentId ASC
 LIMIT 20

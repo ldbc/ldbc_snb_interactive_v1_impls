@@ -8,5 +8,5 @@ RETURN
   friend.lastName AS personLastName,
   collect(DISTINCT tag.name) AS tagNames,
   count(DISTINCT comment) AS replyCount
-ORDER BY replyCount DESC, toInteger(personId) ASC
+ORDER BY replyCount DESC, personId ASC
 LIMIT 20

@@ -7,5 +7,5 @@ WITH forum, count(post) AS postCount
 RETURN
   forum.title AS forumTitle,
   postCount
-ORDER BY postCount DESC, toInteger(forum.id) ASC
+ORDER BY postCount DESC, forum.id ASC
 LIMIT 20

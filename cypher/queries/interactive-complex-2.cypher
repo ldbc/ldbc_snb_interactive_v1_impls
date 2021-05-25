@@ -10,5 +10,5 @@ RETURN
     ELSE message.imageFile
   END AS messageContent,
   message.creationDate AS messageCreationDate
-ORDER BY messageCreationDate DESC, toInteger(messageId) ASC
+ORDER BY messageCreationDate DESC, messageId ASC
 LIMIT 20

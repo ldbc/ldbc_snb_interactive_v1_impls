@@ -1,6 +1,6 @@
 MATCH (person:Person {id: $personId})<-[:HAS_CREATOR]-(message)<-[like:LIKES]-(liker:Person)
 WITH liker, message, like.creationDate AS likeTime, person
-ORDER BY likeTime DESC, toInteger(message.id) ASC
+ORDER BY likeTime DESC, message.id ASC
 WITH
   liker,
   collect([message, likeTime]) AS latestLikes,
@@ -21,5 +21,5 @@ RETURN
   END AS messageContent,
   latestLike[0].creationDate AS messageCreationDate,
   not((liker)-[:KNOWS]-(person)) AS isNew
-ORDER BY likeCreationDate DESC, toInteger(personId) ASC
+ORDER BY likeCreationDate DESC, personId ASC
 LIMIT 20

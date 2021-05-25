@@ -23,5 +23,5 @@ RETURN
   xCount,
   yCount,
   xCount + yCount AS count
-ORDER BY count DESC, toInteger(personId) ASC
+ORDER BY count DESC, personId ASC
 LIMIT 20

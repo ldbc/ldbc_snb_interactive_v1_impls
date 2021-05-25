@@ -10,6 +10,6 @@ RETURN DISTINCT
     ELSE message.imageFile
   END AS messageContent,
   message.creationDate AS messageCreationDate
-ORDER BY message.creationDate DESC, toInteger(message.id) ASC
+ORDER BY message.creationDate DESC, message.id ASC
 LIMIT 20
 
