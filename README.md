@@ -83,7 +83,7 @@ The queries in this repository are work-in-progress. If possible, please cross-v
 
 ## User's guide
 
-1. If you are on the `dev` branch or any other unstable branche, first build and install the driver from source.
+1. If you are on the `dev` branch or any other unstable branch, first build and install the driver from source.
 
     1. Grab the driver source code from: https://github.com/ldbc/ldbc_snb_driver.
     2. Install the driver artifact to the local Maven repository:
