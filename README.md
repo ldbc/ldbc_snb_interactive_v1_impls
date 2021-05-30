@@ -1,13 +1,7 @@
 ![LDBC_LOGO](https://raw.githubusercontent.com/wiki/ldbc/ldbc_snb_datagen/images/ldbc-logo.png)
-LDBC SNB implementations
-------------------------
+# LDBC SNB Interactive workload implementations
 
-| branch    | build status |
-| --------- | ------------ |
-| `dev`     | [![Build Status](https://circleci.com/gh/ldbc/ldbc_snb_implementations.svg?style=svg)](https://circleci.com/gh/ldbc/ldbc_snb_implementations) |
-| `stable`  | [![Build Status](https://circleci.com/gh/ldbc/ldbc_snb_implementations/tree/stable.svg?style=svg)](https://circleci.com/gh/ldbc/ldbc_snb_implementations?branch=stable) |
-
-Implementations for the Workload components of the LDBC Social Network Benchmark ([specification](https://ldbc.github.io/ldbc_snb_docs/)).
+Implementations for the Interactive workload of the LDBC Social Network Benchmark ([specification](https://ldbc.github.io/ldbc_snb_docs/)).
 
 This repository contains reference implementations for the two SNB workload:
 
