@@ -9,27 +9,16 @@ LDBC SNB implementations
 
 Implementations for the Workload components of the LDBC Social Network Benchmark ([specification](https://ldbc.github.io/ldbc_snb_docs/)).
 
-:warning: The most recent version of the code can be found on the `dev` branch. The `master` branch tends to be better tested and uses a stable version of the LDBC SNB driver.
+This repository contains reference implementations for the two SNB workload:
+
+* `stable` contains implementations of the Interactive workload using Java clients and the [LDBC driver](https://github.com/ldbc/ldbc_snb_driver/). It uses data sets and parameters produced by the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen/tree/stable). It is tested and had been used for audited benchmark runs.
+* `dev` contains implementations of the work-in-progress BI workload using Python clients and a lightweight driver (due to the simpler workflow of the workload). It uses data sets and parameters produced by the [Spark-based Datagen](https://github.com/ldbc/ldbc_snb_datagen). This implementation is experimental with frequent breaking changes.
 
 :warning: Implementations in this repository are preliminary, i.e. they are unaudited and - in rare cases - do not pass validation. For details, feel free to contact us through an issue or email.
 
-## Compatibility
-
-The LDBC Social Network Benchmark suite is continuously maintained with improvements in the specification, the data generator, the driver, and the reference implementation.
-To ensure that you are using compatible LDBC repositories, use the following table:
-
-| project | v0.3.x | v0.4.x |
-| ------- | ------ | ------ |
-| [Documentation](https://github.com/ldbc/ldbc_snb_docs) | [`v0.3.3`](https://github.com/ldbc/ldbc_snb_docs/releases/tag/v0.3.3) | [`dev`](https://github.com/ldbc/ldbc_snb_docs/tree/dev) |
-| [Datagen](https://github.com/ldbc/ldbc_snb_datagen) | [`v0.3.3`](https://github.com/ldbc/ldbc_snb_datagen/releases/tag/v0.3.3) | [`dev`](https://github.com/ldbc/ldbc_snb_datagen/tree/dev) |
-| [Driver](https://github.com/ldbc/ldbc_snb_driver) | [`v0.3.3`](https://github.com/ldbc/ldbc_snb_driver/releases/tag/0.3.3) | [`dev`](https://github.com/ldbc/ldbc_snb_driver/tree/dev) |
-| [Implementations](https://github.com/ldbc/ldbc_snb_implementations) | [`stable`](https://github.com/ldbc/ldbc_snb_implementations/tree/stable) | [`dev`](https://github.com/ldbc/ldbc_snb_implementations/tree/dev) |
-
-The `stable` branches of the repositories correspond to the `v0.3.x`, and the `dev` branches correspond to the `v0.4.x` releases.
-
 ## Directory layout
 
-Multiple configuration files and scripts use [relative paths to address the data generator's directory](https://github.com/ldbc/ldbc_snb_implementations/search?q=ldbc_snb_datagen). Hence, it is recommended to clone the LDBC Data Generator and the LDBC implementations repositories next to each other and keep their original directory names. For example:
+Some configuration files and scripts use [relative paths to address the data generator's directory](https://github.com/ldbc/ldbc_snb_implementations/search?q=ldbc_snb_datagen). Hence, it is recommended to clone the LDBC Data Generator and the LDBC implementations repositories next to each other and keep their original directory names. For example:
 
 * `ldbc`
   * [`ldbc_snb_datagen`](https://github.com/ldbc/ldbc_snb_datagen)
