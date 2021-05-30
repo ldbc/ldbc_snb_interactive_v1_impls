@@ -24,7 +24,7 @@ env | grep ^NEO4J_
 
 ### Generating the data set
 
-The data set needs to be generated and preprocessed before loading it to the database. To generate it, use the `CsvComposite` serializer classes of the [Hadoop-based Datagen (`stable` branch)](https://github.com/ldbc/ldbc_snb_implementations/tree/stable):
+The data set needs to be generated and preprocessed before loading it to the database. To generate it, use the `CsvComposite` serializer classes of the [Hadoop-based Datagen (`stable` branch)](https://github.com/ldbc/ldbc_snb_datagen/tree/stable):
 
 ```ini
 ldbc.snb.datagen.serializer.dynamicActivitySerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.activity.CsvCompositeDynamicActivitySerializer

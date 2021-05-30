@@ -12,12 +12,12 @@ This repository contains reference implementations for the two SNB workload:
 
 ## Directory layout
 
-Some configuration files and scripts use [relative paths to address the data generator's directory](https://github.com/ldbc/ldbc_snb_implementations/search?q=ldbc_snb_datagen). Hence, it is recommended to clone the LDBC Data Generator and the LDBC implementations repositories next to each other and keep their original directory names. For example:
+Some configuration files and scripts use [relative paths to address the data generator's directory](https://github.com/ldbc/ldbc_snb_interactive/search?q=ldbc_snb_datagen). Hence, it is recommended to clone the LDBC Data Generator and the LDBC implementations repositories next to each other and keep their original directory names. For example:
 
 * `ldbc`
   * [`ldbc_snb_datagen`](https://github.com/ldbc/ldbc_snb_datagen)
   * [`ldbc_snb_driver`](https://github.com/ldbc/ldbc_snb_driver)
-  * [`ldbc_snb_implementations`](https://github.com/ldbc/ldbc_snb_implementations/)
+  * [`ldbc_snb_interactive`](https://github.com/ldbc/ldbc_snb_interactive/)
 
 ## Implementations
 
