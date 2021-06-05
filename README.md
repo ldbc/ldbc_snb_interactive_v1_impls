@@ -1,4 +1,4 @@
-![LDBC_LOGO](https://raw.githubusercontent.com/wiki/ldbc/ldbc_snb_datagen/images/ldbc-logo.png)
+![LDBC_LOGO](https://raw.githubusercontent.com/wiki/ldbc/ldbc_snb_datagen_hadoop/images/ldbc-logo.png)
 # LDBC SNB Interactive workload implementations
 
 Implementations for the Interactive workload of the LDBC Social Network Benchmark ([specification](https://ldbc.github.io/ldbc_snb_docs/)).
@@ -6,16 +6,16 @@ Implementations for the Interactive workload of the LDBC Social Network Benchmar
 This repository contains reference implementations for the two SNB workload:
 
 * `stable` contains implementations of the Interactive workload using Java clients and the [LDBC driver](https://github.com/ldbc/ldbc_snb_driver/). It uses data sets and parameters produced by the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop). It is tested and had been used for audited benchmark runs.
-* `dev` contains implementations of the work-in-progress BI workload using Python clients and a lightweight driver (due to the simpler workflow of the workload). It uses data sets and parameters produced by the [Spark-based Datagen](https://github.com/ldbc/ldbc_snb_datagen). This implementation is experimental with frequent breaking changes.
+* `dev` contains implementations of the work-in-progress BI workload using Python clients and a lightweight driver (due to the simpler workflow of the workload). It uses data sets and parameters produced by the [Spark-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop). This implementation is experimental with frequent breaking changes.
 
 :warning: Implementations in this repository are preliminary, i.e. they are unaudited and - in rare cases - do not pass validation. For details, feel free to contact us through an issue or email.
 
 ## Directory layout
 
-Some configuration files and scripts use [relative paths to address the data generator's directory](https://github.com/ldbc/ldbc_snb_interactive/search?q=ldbc_snb_datagen). Hence, it is recommended to clone the LDBC Data Generator and the LDBC implementations repositories next to each other and keep their original directory names. For example:
+Some configuration files and scripts use [relative paths to address the data generator's directory](https://github.com/ldbc/ldbc_snb_interactive/search?q=ldbc_snb_datagen_hadoop). Hence, it is recommended to clone the LDBC Data Generator and the LDBC implementations repositories next to each other and keep their original directory names. For example:
 
 * `ldbc`
-  * [`ldbc_snb_datagen`](https://github.com/ldbc/ldbc_snb_datagen)
+  * [`ldbc_snb_datagen_hadoop`](https://github.com/ldbc/ldbc_snb_datagen_hadoop_hadoop)
   * [`ldbc_snb_driver`](https://github.com/ldbc/ldbc_snb_driver)
   * [`ldbc_snb_interactive`](https://github.com/ldbc/ldbc_snb_interactive/)
 

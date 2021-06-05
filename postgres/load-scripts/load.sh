@@ -3,7 +3,7 @@
 # exit upon error
 set -e
 
-PG_DATA_DIR=${PG_DATA_DIR:-$(pwd)/../../../ldbc_snb_datagen/social_network/}
+PG_DATA_DIR=${PG_DATA_DIR:-$(pwd)/../../../ldbc_snb_datagen_hadoop/social_network/}
 PG_DB_NAME=${PG_DB_NAME:-ldbcsf1}
 PG_USER=${PG_USER:-$USER}
 PG_FORCE_REGENERATE=${PG_FORCE_REGENERATE:-no}
