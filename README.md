@@ -23,8 +23,8 @@ Some configuration files and scripts use [relative paths to address the data gen
 
 Each project has its own README:
 
-* [Cypher (Neo4j driver) implementation](cypher/)
-* [PostgreSQL implementation](postgres/)
+* [Cypher (Neo4j) implementation](cypher/)
+* [SQL (PostgreSQL) implementation](postgres/)
 
 The [Sparksee implementation](https://github.com/DAMA-UPC/ldbc-sparksee) is maintained in a separate repository.
 
@@ -79,15 +79,12 @@ The queries in this repository are work-in-progress. If possible, please cross-v
 3. For each implementation, it is possible to (1) create validation parameters, (2) validate against an existing validation parameters, and (3) run the benchmark. Set the parameters according to your system configuration in the appropriate `.properties` file and run the driver with one of the following scripts:
 
    ```bash
-   # BI workload
-   ./bi-create-validation-parameters.sh
-   ./bi-validate.sh
-   ./bi-benchmark.sh
-   # Interactive workload - note that if the workload contains updates, the database needs to be re-loaded between steps
    ./interactive-create-validation-parameters.sh
    ./interactive-validate.sh
    ./interactive-benchmark.sh
    ```
+
+:warning: Note that if the workload contains updates, the database needs to be re-loaded between steps – otherwise repeated updates would insert duplicate entries.
 
 For more details, on validating and benchmarking, visit the [driver wiki](https://github.com/ldbc/ldbc_snb_driver/wiki).
 
