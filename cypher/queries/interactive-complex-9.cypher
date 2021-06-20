@@ -5,10 +5,7 @@ RETURN DISTINCT
   friend.firstName AS personFirstName,
   friend.lastName AS personLastName,
   message.id AS messageId,
-  CASE exists(message.content)
-    WHEN true THEN message.content
-    ELSE message.imageFile
-  END AS messageContent,
+  coalesce(message.content, message.imageFile) AS messageContent,
   message.creationDate AS messageCreationDate
 ORDER BY message.creationDate DESC, message.id ASC
 LIMIT 20
