@@ -10,7 +10,7 @@
 
     <artifactId>common</artifactId>
     <name>Common classes</name>
-    <description>Common classes for SNB BI driver</description>
+    <description>Common classes for SNB Interactive driver</description>
 
     <dependencies>
         <dependency>
