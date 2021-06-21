@@ -7,8 +7,5 @@ RETURN
   p.id AS replyAuthorId,
   p.firstName AS replyAuthorFirstName,
   p.lastName AS replyAuthorLastName,
-  CASE r
-    WHEN NULL THEN false
-    ELSE true
-  END AS replyAuthorKnowsOriginalMessageAuthor
+  (r IS NOT NULL) AS replyAuthorKnowsOriginalMessageAuthor
 ORDER BY commentCreationDate DESC, replyAuthorId

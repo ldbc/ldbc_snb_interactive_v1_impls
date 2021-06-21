@@ -15,10 +15,7 @@ RETURN
   liker.lastName AS personLastName,
   latestLike[1] AS likeCreationDate,
   latestLike[0].id AS messageId,
-  CASE exists(latestLike[0].content)
-    WHEN true THEN latestLike[0].content
-    ELSE latestLike[0].imageFile
-  END AS messageContent,
+  coalesce(latestLike[0].content, latestLike[0].imageFile) AS messageContent,
   latestLike[0].creationDate AS messageCreationDate,
   not((liker)-[:KNOWS]-(person)) AS isNew
 ORDER BY likeCreationDate DESC, personId ASC
