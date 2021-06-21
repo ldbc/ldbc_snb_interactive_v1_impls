@@ -23,31 +23,42 @@ jobs:
             sudo apt install -y git
             # driver
             git clone --depth 1 --branch 0.3.5 https://github.com/ldbc/ldbc_snb_driver && cd ldbc_snb_driver && mvn install -DskipTests && cd ..
-            # Cypher
-            cd cypher
-            cd ..
             # PostgreSQL
-            # TODO
+            pip3 install --user --progress-bar off psycopg2-binary
       - run:
-          name: Prepare Cypher test data
+          name: Prepare Neo4j/Cypher test data
           command: |
             cp -r cypher/test-data/raw/* cypher/test-data/converted/
       - run:
-          name: Load
+          name: Load Cypher/Neo4j database
           command: |
-            # Cypher
             cd cypher
             . scripts/environment-variables-default.sh
             scripts/load-in-one-step.sh
             cd ..
-            # PostgreSQL
-            # TODO
       - run:
-          name: Package
-          command: mvn package -DskipTests
+          name: Load PostgreSQL database
+          command: |
+            cd postgres
+            export POSTGRES_CSV_DIR=`pwd`/test-data/
+            scripts/start.sh
+            scripts/create-db.sh
+            scripts/load.sh
+            cd ..
       - run:
-          name: Run Cypher project
+          name: Build
+          command: ./build.sh
+      - run:
+          name: Create validation parameters with Neo4j/Cypher project
           command: |
             cd cypher
             ./interactive-create-validation-parameters.sh
+            cd ..
+      - run:
+          name: Cross-validate Postgres project
+          command: |
+            cp cypher/validation_params.csv postgres/
+            cd postgres
+            ./interactive-validate.sh
+            cd ..
       - slack/status
