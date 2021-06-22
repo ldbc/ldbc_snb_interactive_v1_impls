@@ -9,7 +9,7 @@ The recommended environment for executing this benchmark is as follows: the benc
 * Bash
 * Java 8
 * Docker 19+
-* enough free spaces in the directory `$NEO4J_CONTAINER_ROOT` (its default value is specified in `scripts/environment-variables-default.sh`)
+* enough free space in the directory `$NEO4J_CONTAINER_ROOT` (its default value is specified in `scripts/environment-variables-default.sh`)
 
 ## Initializing environment variables
 
