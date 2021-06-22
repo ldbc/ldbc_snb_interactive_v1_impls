@@ -71,7 +71,7 @@ create table person (
    p_firstname varchar not null,
    p_lastname varchar not null,
    p_gender varchar not null,
-   p_birthday timestamp with time zone not null,
+   p_birthday date not null,
    p_creationdate timestamp with time zone not null,
    p_locationip varchar not null,
    p_browserused varchar not null,
