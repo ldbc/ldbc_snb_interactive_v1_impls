@@ -56,6 +56,13 @@ The following script takes care of these steps:
 scripts/convert-csvs.sh
 ```
 
+To use the example data set, first copy the vanilla data set produced the generator, then run the covnersion script:
+
+```bash
+cp -r test-data/vanilla/* test-data/converted/
+scripts/convert-csvs.sh
+```
+
 #### Delete your database and load the SNB CSVs
 
 To load and index the data, run the following sequence of commands:
