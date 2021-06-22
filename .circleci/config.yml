@@ -26,6 +26,9 @@ jobs:
             # PostgreSQL
             pip3 install --user --progress-bar off psycopg2-binary
       - run:
+          name: Build project
+          command: ./build.sh
+      - run:
           name: Prepare Neo4j/Cypher test data
           command: |
             cp -r cypher/test-data/raw/* cypher/test-data/converted/
@@ -37,7 +40,13 @@ jobs:
             scripts/load-in-one-step.sh
             cd ..
       - run:
-          name: Load PostgreSQL database
+          name: Create validation parameters with Neo4j/Cypher project
+          command: |
+            cd cypher
+            ./interactive-create-validation-parameters.sh
+            cd ..
+      - run:
+          name: Load PostgreSQL database (1st time)
           command: |
             cd postgres
             export POSTGRES_CSV_DIR=`pwd`/test-data/
@@ -46,13 +55,19 @@ jobs:
             scripts/load.sh
             cd ..
       - run:
-          name: Build
-          command: ./build.sh
-      - run:
-          name: Create validation parameters with Neo4j/Cypher project
+          name: Create validation parameters with PostgreSQL project
           command: |
-            cd cypher
+            cd postgres
             ./interactive-create-validation-parameters.sh
+            cd ..
+      - run:
+          name: Load PostgreSQL database (2nd time)
+          command: |
+            cd postgres
+            export POSTGRES_CSV_DIR=`pwd`/test-data/
+            scripts/start.sh
+            scripts/create-db.sh
+            scripts/load.sh
             cd ..
       - run:
           name: Cross-validate Postgres project
