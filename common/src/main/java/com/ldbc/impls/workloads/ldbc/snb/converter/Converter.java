@@ -22,6 +22,7 @@ public class Converter {
     public String convertDate(Date date) {
         return convertDateTime(date);
     }
+
     /**
      * Surrounds a string in single quotes and escape single quotes in the string itself.
      *
