@@ -34,17 +34,17 @@ create table message (
     m_ps_language varchar,
     m_content text not null,
     m_length int not null,
-    m_creatorid bigint,
-    m_locationid bigint,
-    m_ps_forumid bigint,
-    m_c_replyof bigint
+    m_creatorid bigint not null,
+    m_locationid bigint not null,
+    m_ps_forumid bigint, -- null for comments
+    m_c_replyof bigint -- null for posts
 );
 
 create table forum (
    f_forumid bigint not null,
    f_title varchar not null,
    f_creationdate timestamp with time zone not null,
-   f_moderatorid bigint
+   f_moderatorid bigint not null
 );
 
 create table forum_person (
@@ -63,7 +63,7 @@ create table organisation (
    o_type varchar not null,
    o_name varchar not null,
    o_url varchar not null,
-   o_placeid bigint
+   o_placeid bigint not null
 );
 
 create table person (
@@ -75,7 +75,7 @@ create table person (
    p_creationdate timestamp with time zone not null,
    p_locationip varchar not null,
    p_browserused varchar not null,
-   p_placeid bigint
+   p_placeid bigint not null
 );
 
 create table person_email (
@@ -123,7 +123,7 @@ create table place (
    pl_name varchar not null,
    pl_url varchar not null,
    pl_type varchar not null,
-   pl_containerplaceid bigint
+   pl_containerplaceid bigint -- null for continents
 );
 
 create table message_tag (
@@ -135,7 +135,7 @@ create table tagclass (
    tc_tagclassid bigint not null,
    tc_name varchar not null,
    tc_url varchar not null,
-   tc_subclassoftagclassid bigint
+   tc_subclassoftagclassid bigint -- null for the root tagclass (Thing)
 );
 
 create table tag (
