@@ -1,3 +1,22 @@
+drop view if exists country;
+drop table if exists forum_person;
+drop table if exists forum_tag;
+drop table if exists person_email;
+drop table if exists person_tag;
+drop table if exists person_language;
+drop table if exists person_university;
+drop table if exists person_company;
+drop table if exists message_tag;
+drop table if exists organisation;
+drop table if exists knows;
+drop table if exists likes;
+drop table if exists tag;
+drop table if exists tagclass;
+drop table if exists message;
+drop table if exists forum;
+drop table if exists person;
+drop table if exists place;
+
 create table message (
     /*
      * m_ps_ denotes field specific to posts

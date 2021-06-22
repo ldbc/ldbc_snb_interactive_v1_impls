@@ -2,90 +2,42 @@
 
 [PostgreSQL](https://www.postgresql.org/) implementation of the [LDBC Social Network Benchmark's Interactive workload](https://github.com/ldbc/ldbc_snb_docs).
 
-## Configuring the database
+## Setup
 
-The default configuration uses the `ldbcsf1` database.
+The recommended environment for executing this benchmark is as follows: the benchmark scripts (Bash) and the LDBC driver (Java 8) run on the host machine, while the PostgreSQL database runs in a Docker container. Therefore, the requirements are as follows:
 
-On a typical Ubuntu install, you might want to run:
+* Bash
+* Java 8
+* Docker 19+
+* enough free space in the directory `$POSTGRES_DATABASE_DIR` (its default value is specified in `scripts/vars.sh`)
 
-```bash
-sudo -u postgres psql
-```
+The default configuration of the database (e.g. database name, user, password) is set in the `scripts/vars.sh` file.
 
-To allow access from JDBC, you have to set a password. For example, to set the default password of user `postgres` to `foo`, issue the following command:
+## Loading the data and running the benchmark
 
-```sql
-ALTER ROLE postgres PASSWORD 'foo';
-```
+1. Set the `POSTGRES_CSV_DIR` environment variable to point to the data set, e.g.:
 
-If you want to create a separate user `usr` with the password `foo`, use the following commands:
+    ```bash
+    export POSTGRES_CSV_DIR=`pwd`/test-data/
+    ```
 
-```sql
-CREATE USER usr PASSWORD 'foo';
-ALTER ROLE usr WITH login createdb superuser;
-```
+2. To start the DBMS, create a database and load the data, run:
 
-On Fedora, refer to the [Fedora wiki](https://fedoraproject.org/wiki/PostgreSQL#pg_hba.conf).
+    ```bash
+    scripts/start.sh
+    scripts/create-db.sh
+    scripts/load.sh
+    ```
 
-## Allow access from all local users
+    Note that the `load.sh` (re)generates PostgreSQL-specific CSV files for comments (`-postgres.csv`), if either 
+    * they do no exist,
+    * the source CSV is newer than the generated one, or
+    * the user forces to do so by setting the environment variable `POSTGRES_FORCE_REGENERATE=yes`
 
-Alternatively, you can allow any local users to access the database.
+3. To run the scripts of benchmark framework, edit the `interactive-{create-validation-parameters,validate,benchmark}.properties` files, then run their script, one of:
 
-:warning: Warning: never do this on a production system.
-
-Edit the `pg_hba.conf` file and add the following line:
-
-```
-local all postgres trust
-# local all postgres peer
-```
-
-## Loading the data set
-
-### Generating the data set
-
-The data set needs to be generated and preprocessed before loading it to the database. To generate it, use the `CSVMergeForeign` serializer classes of the [DATAGEN](https://github.com/ldbc/ldbc_snb_datagen_hadoop/) project:
-
-```
-ldbc.snb.datagen.serializer.dynamicActivitySerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.activity.CsvMergeForeignDynamicActivitySerializer
-ldbc.snb.datagen.serializer.dynamicPersonSerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.person.CsvMergeForeignDynamicPersonSerializer
-ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv.staticserializer.CsvMergeForeignStaticSerializer
-```
-
-### Loading the data set
-
-To run the load script, go the `load-scripts` directory, set the `PG_` environment variables (optional) and issue the following command:
-
-```bash
-export PG_DATA_DIR=
-export PG_DB_NAME=
-export PG_USER=
-export PG_FORCE_REGENERATE=
-export PG_PORT=
-./load.sh
-```
-
-The `load.sh` (re)generates PostgreSQL-specific CSV files for posts and comments, if either 
-
- - they don't exist
- - the source CSV is newer than the generated one
- - the user forces to do so by setting the environment variable PG_FORCE_REGENERATE=yes
-
-Most probably you won't need to touch this.
-
-The `load.sh` has default options that loads the dataset in the generator's directory to the `ldbcsf1` database with your current user. If these fit your needs, just run the script as `./load.sh`.
-
-If you get _Permission denied_ errors, change the permissions of your home directory to 755 - but please make sure you understand its implications first:
-
-```bash
-chmod 755 ~
-```
-
-To play around with the data, join PostgreSQL and switch to the database:
-
-```sql
-postgres=# \c ldbcsf1
-You are now connected to database "ldbcsf1" as user "postgres".
-ldbcsf1=# SELECT count(*) FROM person;
-# ...
-```
+    ```bash
+    ./interactive-benchmark.sh
+    ./interactive-create-validation-parameters.sh
+    ./interactive-validate.sh
+    ```
