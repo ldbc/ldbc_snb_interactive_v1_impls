@@ -13,16 +13,6 @@ public class Converter {
 
     final static String DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'+0000'";
 
-    /**
-     * Converts epoch seconds to a date to the format of the converter (e.g. PostgreSQL-style timestamps).
-     *
-     * @param timestamp
-     * @return
-     */
-    public String convertDateTime(long timestamp) {
-        return convertDateTime(new Date(timestamp));
-    }
-
     public String convertDateTime(Date date) {
         final SimpleDateFormat sdf = new SimpleDateFormat(DATETIME_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
