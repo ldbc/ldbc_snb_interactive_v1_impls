@@ -80,7 +80,7 @@ The queries in this repository are work-in-progress. If possible, please cross-v
    driver/benchmark.sh
    ```
 
-:warning: *Note that if the default workload contains updates which are persisten in the database. Therefore, the database needs to be re-loaded between steps – otherwise repeated updates would insert duplicate entries.*
+:warning: *Note that if the default workload contains updates which are persisted in the database. Therefore, the database needs to be re-loaded between steps – otherwise repeated updates would insert duplicate entries.*
 
 For more details, on validating and benchmarking, visit the [driver wiki](https://github.com/ldbc/ldbc_snb_driver/wiki).
 
