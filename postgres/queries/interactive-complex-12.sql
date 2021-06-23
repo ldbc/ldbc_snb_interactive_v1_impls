@@ -1,3 +1,7 @@
+/* Q12. Expert search
+\set personId 10995116278009
+\set tagClassName '\'Monarch\''
+ */
 with recursive extended_tags(s_subtagclassid,s_supertagclassid) as (
 	select tc_tagclassid, tc_tagclassid from tagclass
 	UNION
@@ -21,3 +25,4 @@ where
 group by p_personid, p_firstname, p_lastname
 order by 5 desc, 1
 limit 20
+;

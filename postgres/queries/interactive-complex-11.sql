@@ -1,3 +1,8 @@
+/* Q11. Job referral
+\set personId 10995116277918
+\set countryName '\'Hungary\''
+\set workFromYear 2011
+ */
 select p_personid,p_firstname, p_lastname, o_name, pc_workfrom
 from person, person_company, organisation, place,
  ( select k_person2id
@@ -19,3 +24,4 @@ where
     pl_name = :countryName
 order by pc_workfrom, p_personid, o_name desc
 limit 10
+;

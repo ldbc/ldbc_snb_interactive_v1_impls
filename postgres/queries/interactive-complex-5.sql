@@ -1,3 +1,7 @@
+/* Q5 New groups
+\set personId 6597069766734
+\set minDate '\'2010-11-01\''::date
+ */
 select f_title, count(m_messageid)
 from (
 select f_title, f_forumid, f.k_person2id
@@ -19,3 +23,4 @@ on tmp.f_forumid = m_ps_forumid and m_creatorid = tmp.k_person2id
 group by f_forumid, f_title
 order by 2 desc, f_forumid
 limit 20
+;

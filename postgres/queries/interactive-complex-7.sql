@@ -1,5 +1,5 @@
 /* Q7. Recent likers
-\set personId '4398046511268'
+\set personId 4398046511268
  */
  select p_personid, p_firstname, p_lastname, l.l_creationdate, m_messageid,
 	COALESCE(m_ps_imagefile, m_content),

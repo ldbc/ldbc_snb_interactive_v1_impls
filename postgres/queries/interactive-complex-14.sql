@@ -1,3 +1,7 @@
+/* Q14. Trusted connection paths
+\set person1Id 8796093022357
+\set person2Id 8796093022390
+ */
 WITH start_node(v) AS (
 	SELECT :person1Id::bigint
 )
@@ -42,3 +46,4 @@ select * from (
 	)
 	select path,score from weightedpaths order by score desc)
 x  order by score desc;
+;

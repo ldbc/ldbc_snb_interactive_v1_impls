@@ -1,6 +1,6 @@
 /* Q10. Friend recommendation
-\set personId '4398046511333'
-\set month '5'
+\set personId 4398046511333
+\set month 5
  */
 select p_personid, p_firstname, p_lastname,
        ( select count(distinct m_messageid)

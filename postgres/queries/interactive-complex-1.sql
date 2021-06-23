@@ -2,7 +2,6 @@
 \set personId 4398046511333
 \set firstName '\'Jose\''
  */
-
 select
   id,
   p_lastname,
@@ -41,3 +40,4 @@ from
 	p_placeid = p1.pl_placeid
   group by id, p_lastname, p_birthday, p_creationdate, p_gender, p_browserused, p_locationip, p1.pl_name
   order by dist, p_lastname, id LIMIT 20
+;

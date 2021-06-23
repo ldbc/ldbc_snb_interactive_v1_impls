@@ -1,3 +1,7 @@
+/* Q13. Single shortest path
+\set person1Id 8796093022390
+\set person2Id 8796093022357
+ */
 WITH RECURSIVE search_graph(link, depth, path) AS (
 		SELECT :person1Id::bigint, 0, ARRAY[:person1Id::bigint]::bigint[]
       UNION ALL
@@ -16,3 +20,4 @@ WITH RECURSIVE search_graph(link, depth, path) AS (
 select max(depth) from (
 select depth from search_graph where link = :person2Id::bigint
 union select -1) tmp;
+;
