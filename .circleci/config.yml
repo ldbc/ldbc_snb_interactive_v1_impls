@@ -70,6 +70,7 @@ jobs:
           command: |
             cp cypher/validation_params.csv postgres/
             cd postgres
-            driver/validate.sh
+            driver/validate.sh | tee validation-log.txt
+            grep 'Validation Result: PASS' validation-log.txt
             cd ..
       - slack/status
