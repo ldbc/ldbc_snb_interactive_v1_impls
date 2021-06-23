@@ -11,7 +11,7 @@ with recursive cposts(m_messageid, m_content, m_ps_imagefile, m_creationdate, m_
       from message,parent
       where m_messageid=replyof
 )
-select p1.m_messageid, COALESCE(m_ps_imagefile, m_content), p1.m_creationdate,
+select p1.m_messageid, COALESCE(m_ps_imagefile, m_content, ''), p1.m_creationdate,
        p2.m_messageid, p2.p_personid, p2.p_firstname, p2.p_lastname
 from 
      (select m_messageid, m_content, m_ps_imagefile, m_creationdate, m_c_replyof from cposts
