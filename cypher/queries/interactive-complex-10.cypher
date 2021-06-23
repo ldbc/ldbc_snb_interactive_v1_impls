@@ -1,7 +1,13 @@
+/* Q10. Friend recommendation
+:param [{ personId, month }] => { RETURN
+  4398046511333 AS personId,
+  5 AS month
+}
+ */
 MATCH (person:Person {id: $personId})-[:KNOWS*2..2]-(friend:Person)-[:IS_LOCATED_IN]->(city:City)
 WHERE 
-  ((friend.birthday.month = $month     AND friend.birthday.month >= 21) OR
-   (friend.birthday.month = $nextMonth AND friend.birthday.month < 22))
+  ((friend.birthday.month = $month          AND friend.birthday.day >= 21) OR
+   (friend.birthday.month = $month % 12 + 1 AND friend.birthday.day < 22))
   AND friend <> person
   AND NOT (friend)-[:KNOWS]-(person)
 WITH DISTINCT friend, city, person
