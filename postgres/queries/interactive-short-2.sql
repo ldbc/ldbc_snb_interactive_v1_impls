@@ -2,15 +2,15 @@
 \set personId 10995116277795
  */
 with recursive cposts(m_messageid, m_content, m_ps_imagefile, m_creationdate, m_c_replyof, m_creatorid) AS (
-	  select m_messageid, m_content, m_ps_imagefile, m_creationdate, m_c_replyof, m_creatorid
-	  from message
-	  where m_creatorid = :personId
-	  order by m_creationdate desc
-	  limit 10
+      select m_messageid, m_content, m_ps_imagefile, m_creationdate, m_c_replyof, m_creatorid
+      from message
+      where m_creatorid = :personId
+      order by m_creationdate desc
+      limit 10
 ), parent(postid,replyof,orig_postid,creator) AS (
-	  select m_messageid, m_c_replyof, m_messageid, m_creatorid from cposts
-	UNION ALL
-	  select m_messageid, m_c_replyof, orig_postid, m_creatorid
+      select m_messageid, m_c_replyof, m_messageid, m_creatorid from cposts
+    UNION ALL
+      select m_messageid, m_c_replyof, orig_postid, m_creatorid
       from message,parent
       where m_messageid=replyof
 )

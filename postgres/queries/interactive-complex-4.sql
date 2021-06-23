@@ -16,7 +16,7 @@ where
         select * from
   (select distinct mt_tagid from message, message_tag, knows
         where
-	k_person1id = :personId and
+    k_person1id = :personId and
         k_person2id = m_creatorid and
         m_c_replyof IS NULL and -- post, not comment
         mt_messageid = m_messageid and

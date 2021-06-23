@@ -3,8 +3,8 @@
  */
 select p2.m_messageid, p2.m_content, p2.m_creationdate, p_personid, p_firstname, p_lastname,
     (case when exists (
-     	   	       select 1 from knows
-		       where p1.m_creatorid = k_person1id and p2.m_creatorid = k_person2id)
+                       select 1 from knows
+               where p1.m_creatorid = k_person1id and p2.m_creatorid = k_person2id)
       then TRUE
       else FALSE
       end)
