@@ -1,4 +1,12 @@
-MATCH (person:Person {id: $personId})-[:KNOWS*1..2]-(friend:Person)
+// Q11. Job referral
+/*
+:param [{ personId, countryName, workFromYear }] => { RETURN
+  10995116277918 AS personId,
+  "Hungary" AS countryName,
+  2011 AS workFromYear
+}
+ */
+ MATCH (person:Person {id: $personId})-[:KNOWS*1..2]-(friend:Person)
 WHERE person <> friend
 WITH DISTINCT friend
 MATCH (friend)-[workAt:WORK_AT]->(company:Organisation)-[:IS_LOCATED_IN]->(:Country {name: $countryName})

@@ -1,3 +1,7 @@
+// IS7. Replies of a message
+/*
+:param messageId: 206158432794
+ */
 MATCH (m:Message {id: $messageId})<-[:REPLY_OF]-(c:Comment)-[:HAS_CREATOR]->(p:Person)
 OPTIONAL MATCH (m)-[:HAS_CREATOR]->(a:Person)-[r:KNOWS]-(p)
 RETURN

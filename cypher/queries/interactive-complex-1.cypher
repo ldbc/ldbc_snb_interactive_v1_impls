@@ -1,3 +1,10 @@
+// Q1. Transitive friends with certain name
+/*
+:param [{ personId, firstName }] => { RETURN
+  4398046511333 AS personId,
+  "Jose" AS firstName
+}
+ */
 MATCH p=shortestPath((person:Person {id: $personId})-[path:KNOWS*1..3]-(friend:Person {firstName: $firstName}))
 WHERE person <> friend
 WITH friend, length(p) AS distance

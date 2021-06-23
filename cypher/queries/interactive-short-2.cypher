@@ -1,3 +1,7 @@
+// IS2. Recent messages of a person
+/*
+:param personId: 10995116277795
+ */
 MATCH (:Person {id: $personId})<-[:HAS_CREATOR]-(m:Message)-[:REPLY_OF*0..]->(p:Post)
 MATCH (p)-[:HAS_CREATOR]->(c)
 RETURN

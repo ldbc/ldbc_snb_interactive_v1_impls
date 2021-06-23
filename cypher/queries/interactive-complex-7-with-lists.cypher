@@ -1,3 +1,8 @@
+// Q7. Recent likers
+// This variant of the query uses lists instead of maps for storing elements of the latestLikes array
+/*
+:param personId: 4398046511268
+ */
 MATCH (person:Person {id: $personId})<-[:HAS_CREATOR]-(message)<-[like:LIKES]-(liker:Person)
 WITH liker, message, like.creationDate AS likeTime, person
 ORDER BY likeTime DESC, message.id ASC

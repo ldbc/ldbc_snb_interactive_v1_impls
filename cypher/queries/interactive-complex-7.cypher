@@ -1,4 +1,5 @@
-/* Q7. Recent likers
+// Q7. Recent likers
+/*
 :param personId: 4398046511268
  */
 MATCH (person:Person {id: $personId})<-[:HAS_CREATOR]-(message:Message)<-[like:LIKES]-(liker:Person)

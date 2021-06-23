@@ -1,3 +1,10 @@
+// Q6. Tag co-occurrence
+/*
+:param [{ personId, tagName }] => { RETURN
+  4398046511333 AS personId,
+  "Carl_Gustaf_Emil_Mannerheim" AS tagName
+}
+ */
 MATCH
   (person:Person {id: $personId})-[:KNOWS*1..2]-(friend:Person),
   (friend)<-[:HAS_CREATOR]-(friendPost:Post)-[:HAS_TAG]->(knownTag:Tag {name: $tagName})

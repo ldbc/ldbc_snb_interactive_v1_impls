@@ -1,4 +1,5 @@
-/* Q10. Friend recommendation
+// Q10. Friend recommendation
+/*
 :param [{ personId, month }] => { RETURN
   4398046511333 AS personId,
   5 AS month
