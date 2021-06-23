@@ -15,12 +15,12 @@ insert into message (
 values
 (
     :postId
-  , :imageFile
+  , CASE :imageFile WHEN '' THEN NULL ELSE :imageFile END
   , :creationDate
   , :locationIP
   , :browserUsed
   , :language
-  , :content
+  , CASE :content WHEN '' THEN NULL ELSE :content END
   , :length
   , :authorPersonId
   , :countryId
