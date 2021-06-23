@@ -202,7 +202,6 @@ public abstract class QueryStore {
         return prepare(QueryType.InteractiveComplexQuery10, new ImmutableMap.Builder<String, String>()
                 .put(LdbcQuery10.PERSON_ID, getConverter().convertId(operation.personId()))
                 .put(LdbcQuery10.MONTH, getConverter().convertInteger(operation.month()))
-                .put("nextMonth", getConverter().convertInteger(operation.month() % 12 + 1))
                 .build());
     }
 

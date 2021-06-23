@@ -10,5 +10,5 @@ validation_params.csv
 *.swp
 *-actual.json
 *-expected.json
-results-*/
+results/
 *.DS_Store

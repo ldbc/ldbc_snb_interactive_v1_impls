@@ -1,6 +1,6 @@
 MATCH (person:Person {id: $personId})-[:KNOWS]-(:Person)<-[:HAS_CREATOR]-(post:Post)-[:HAS_TAG]->(tag:Tag)
 WHERE post.creationDate >= datetime($startDate)
-  AND post.creationDate < datetime($endDate)
+  AND post.creationDate < datetime($startDate) + duration({days: $durationDays})
 WITH person, count(post) AS postsOnTag, tag
 OPTIONAL MATCH (person)-[:KNOWS]-()<-[:HAS_CREATOR]-(oldPost:Post)-[:HAS_TAG]->(tag)
          WHERE oldPost.creationDate < datetime($startDate)

@@ -8,6 +8,7 @@ import org.postgresql.ds.PGConnectionPoolDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class PostgresDbConnectionState<TDbQueryStore extends QueryStore> extends BaseDbConnectionState<TDbQueryStore> {
 
@@ -29,6 +30,7 @@ public class PostgresDbConnectionState<TDbQueryStore extends QueryStore> extends
     public Connection getConnection() throws DbException {
         try {
             if (connection == null) {
+                TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
                 connection = ds.getConnection();
             }
         } catch (SQLException e) {

@@ -28,29 +28,29 @@ create table message (
      */
     m_messageid bigint not null,
     m_ps_imagefile varchar,
-    m_creationdate timestamp without time zone not null,
+    m_creationdate timestamp with time zone not null,
     m_locationip varchar not null,
     m_browserused varchar not null,
     m_ps_language varchar,
     m_content text not null,
     m_length int not null,
-    m_creatorid bigint,
-    m_locationid bigint,
-    m_ps_forumid bigint,
-    m_c_replyof bigint
+    m_creatorid bigint not null,
+    m_locationid bigint not null,
+    m_ps_forumid bigint, -- null for comments
+    m_c_replyof bigint -- null for posts
 );
 
 create table forum (
    f_forumid bigint not null,
    f_title varchar not null,
-   f_creationdate timestamp without time zone not null,
-   f_moderatorid bigint
+   f_creationdate timestamp with time zone not null,
+   f_moderatorid bigint not null
 );
 
 create table forum_person (
    fp_forumid bigint not null,
    fp_personid bigint not null,
-   fp_joindate timestamp without time zone not null
+   fp_joindate timestamp with time zone not null
 );
 
 create table forum_tag (
@@ -63,7 +63,7 @@ create table organisation (
    o_type varchar not null,
    o_name varchar not null,
    o_url varchar not null,
-   o_placeid bigint
+   o_placeid bigint not null
 );
 
 create table person (
@@ -71,11 +71,11 @@ create table person (
    p_firstname varchar not null,
    p_lastname varchar not null,
    p_gender varchar not null,
-   p_birthday timestamp without time zone not null,
-   p_creationdate timestamp without time zone not null,
+   p_birthday date not null,
+   p_creationdate timestamp with time zone not null,
    p_locationip varchar not null,
    p_browserused varchar not null,
-   p_placeid bigint
+   p_placeid bigint not null
 );
 
 create table person_email (
@@ -92,13 +92,13 @@ create table person_tag (
 create table knows (
    k_person1id bigint not null,
    k_person2id bigint not null,
-   k_creationdate timestamp without time zone not null
+   k_creationdate timestamp with time zone not null
 );
 
 create table likes (
    l_personid bigint not null,
    l_messageid bigint not null,
-   l_creationdate timestamp without time zone not null
+   l_creationdate timestamp with time zone not null
 );
 
 create table person_language (
@@ -123,7 +123,7 @@ create table place (
    pl_name varchar not null,
    pl_url varchar not null,
    pl_type varchar not null,
-   pl_containerplaceid bigint
+   pl_containerplaceid bigint -- null for continents
 );
 
 create table message_tag (
@@ -135,7 +135,7 @@ create table tagclass (
    tc_tagclassid bigint not null,
    tc_name varchar not null,
    tc_url varchar not null,
-   tc_subclassoftagclassid bigint
+   tc_subclassoftagclassid bigint -- null for the root tagclass (Thing)
 );
 
 create table tag (

@@ -24,7 +24,7 @@ env | grep ^NEO4J_
 
 ### Generating the data set
 
-The data set needs to be generated and preprocessed before loading it to the database. To generate it, use the `CsvComposite` serializer classes of the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop):
+The data sets need to be generated and preprocessed before loading it to the database. To generate such data sets, use the `CsvComposite` serializer classes of the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop):
 
 ```ini
 ldbc.snb.datagen.serializer.dynamicActivitySerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.activity.CsvCompositeDynamicActivitySerializer
@@ -32,25 +32,25 @@ ldbc.snb.datagen.serializer.dynamicPersonSerializer:ldbc.snb.datagen.serializer.
 ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv.staticserializer.CsvCompositeStaticSerializer
 ```
 
-An example configuration for scale factor 1 is given in the [`params-csv-composite.ini`](https://github.com/ldbc/ldbc_snb_datagen_hadoop/blob/stable/params-csv-composite.ini) file of the Datagen repository. For small loading experiments, we recommend using scale factor 0.1, i.e. `snb.interactive.0.1`.
+An example configuration for scale factor 1 is given in the [`params-csv-composite.ini`](https://github.com/ldbc/ldbc_snb_datagen_hadoop/blob/main/params-csv-composite.ini) file of the Datagen repository. For small loading experiments, we recommend using scale factor 0.1, i.e. `snb.interactive.0.1`.
 
 ### Preprocessing and loading
-
-#### Preprocessing
 
 Set the following environment variables based on your data source. The default values of these point to the example data set under the `test-data` directory:
 
 ```bash
-export NEO4J_CSV_DIR=
 export NEO4J_POSTFIX=
+export NEO4J_VANILLA_CSV_DIR=
+export NEO4J_CONVERTED_CSV_DIR=
 ```
+#### Preprocessing
 
 The CSV files produced by Datagen require a bit of preprocessing:
 
 * headers should be replaced with Neo4j-compatible ones (e.g. `:START_ID(Person)|:END_ID(Comment)|creationDate:DATETIME`)
 * the first letter of labels should be changed to uppercase (e.g. change `city` to `City`)
 
-The following script takes care of these steps:
+The following script performs these changes on the files in `$NEO4J_VANILLA_CSV_DIR` and places the resulting files in `$NEO4J_CONVERTED_CSV_DIR`:
 
 ```bash
 scripts/convert-csvs.sh
@@ -60,7 +60,7 @@ scripts/convert-csvs.sh
 
 To load and index the data, run the following sequence of commands:
 
-:warning: Be careful -- this deletes all data in your database, imports the SNB data set and restarts the database.
+:warning: Be careful -- this stops the currently running (containerized) Neo4j database and deletes all of its data.
 
 ```bash
 scripts/stop-neo4j.sh
@@ -70,10 +70,18 @@ scripts/start-neo4j.sh
 scripts/create-indices.sh
 ```
 
-#### All-in-one loading script
-
-If you know what you're doing, you can run all scripts with a single command:
+You can run all these scripts with a single command:
 
 ```bash
 scripts/load-in-one-step.sh
+```
+
+#### Running the benchmark
+
+To run the scripts of benchmark framework, edit the `driver/{create-validation-parameters,validate,benchmark}.properties` files, then run their script, one of:
+
+```bash
+driver/create-validation-parameters.sh
+driver/validate.sh
+driver/benchmark.sh
 ```

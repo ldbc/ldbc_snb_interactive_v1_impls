@@ -68,8 +68,8 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
             long friendId = record.get(0).asLong();
             String friendLastName = record.get(1).asString();
             int distanceFromPerson = record.get(2).asInt();
-            long friendBirthday = record.get(3).asLocalDate().atStartOfDay(ZoneId.of("GMT")).toEpochSecond();
-            long friendCreationDate = record.get(4).asZonedDateTime().toEpochSecond();
+            long friendBirthday = record.get(3).asLocalDate().atStartOfDay(ZoneId.of("GMT")).toInstant().toEpochMilli();
+            long friendCreationDate = record.get(4).asZonedDateTime().toInstant().toEpochMilli();
             String friendGender = record.get(5).asString();
             String friendBrowserUsed = record.get(6).asString();
             String friendLocationIp = record.get(7).asString();
@@ -105,7 +105,7 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
             String personLastName = record.get(2).asString();
             long messageId = record.get(3).asLong();
             String messageContent = record.get(4).asString();
-            long messageCreationDate = record.get(5).asZonedDateTime().toEpochSecond();
+            long messageCreationDate = record.get(5).asZonedDateTime().toInstant().toEpochMilli();
 
             return new LdbcQuery2Result(
                     personId,
@@ -200,7 +200,7 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
             long personId = record.get(0).asLong();
             String personFirstName = record.get(1).asString();
             String personLastName = record.get(2).asString();
-            long likeCreationDate = record.get(3).asZonedDateTime().toEpochSecond();
+            long likeCreationDate = record.get(3).asZonedDateTime().toInstant().toEpochMilli();
             long messageId = record.get(4).asLong();
             String messageContent = record.get(5).asString();
             int minutesLatency = record.get(6).asInt();
@@ -229,7 +229,7 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
             long personId = record.get(0).asLong();
             String personFirstName = record.get(1).asString();
             String personLastName = record.get(2).asString();
-            long commentCreationDate = record.get(3).asZonedDateTime().toEpochSecond();
+            long commentCreationDate = record.get(3).asZonedDateTime().toInstant().toEpochMilli();
             long commentId = record.get(4).asLong();
             String commentContent = record.get(5).asString();
             return new LdbcQuery8Result(
@@ -256,7 +256,7 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
             String personLastName = record.get(2).asString();
             long messageId = record.get(3).asLong();
             String messageContent = record.get(4).asString();
-            long messageCreationDate = record.get(5).asZonedDateTime().toEpochSecond();
+            long messageCreationDate = record.get(5).asZonedDateTime().toInstant().toEpochMilli();
             return new LdbcQuery9Result(
                     personId,
                     personFirstName,
@@ -387,12 +387,12 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
         public LdbcShortQuery1PersonProfileResult convertSingleResult(Record record) throws ParseException {
             String firstName = record.get(0).asString();
             String lastName = record.get(1).asString();
-            long birthday = record.get(2).asLocalDate().atStartOfDay(ZoneId.of("GMT")).toEpochSecond();
+            long birthday = record.get(2).asLocalDate().atStartOfDay(ZoneId.of("GMT")).toInstant().toEpochMilli();
             String locationIP = record.get(3).asString();
             String browserUsed = record.get(4).asString();
             long cityId = record.get(5).asLong();
             String gender = record.get(6).asString();
-            long creationDate = record.get(7).asZonedDateTime().toEpochSecond();
+            long creationDate = record.get(7).asZonedDateTime().toInstant().toEpochMilli();
             return new LdbcShortQuery1PersonProfileResult(
                     firstName,
                     lastName,
@@ -416,7 +416,7 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
         public LdbcShortQuery2PersonPostsResult convertSingleResult(Record record) throws ParseException {
             long messageId = record.get(0).asLong();
             String messageContent = record.get(1).asString();
-            long messageCreationDate = record.get(2).asZonedDateTime().toEpochSecond();
+            long messageCreationDate = record.get(2).asZonedDateTime().toInstant().toEpochMilli();
             long originalPostId = record.get(3).asLong();
             long originalPostAuthorId = record.get(4).asLong();
             String originalPostAuthorFirstName = record.get(5).asString();
@@ -444,7 +444,7 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
             long personId = record.get(0).asLong();
             String firstName = record.get(1).asString();
             String lastName = record.get(2).asString();
-            long friendshipCreationDate = record.get(3).asZonedDateTime().toEpochSecond();
+            long friendshipCreationDate = record.get(3).asZonedDateTime().toInstant().toEpochMilli();
             return new LdbcShortQuery3PersonFriendsResult(
                     personId,
                     firstName,
@@ -463,7 +463,7 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
         @Override
         public LdbcShortQuery4MessageContentResult convertSingleResult(Record record) throws ParseException {
             // Pay attention, the spec's and the implementation's parameter orders are different.
-            long messageCreationDate = record.get(0).asZonedDateTime().toEpochSecond();
+            long messageCreationDate = record.get(0).asZonedDateTime().toInstant().toEpochMilli();
             String messageContent = record.get(1).asString();
             return new LdbcShortQuery4MessageContentResult(
                     messageContent,
@@ -524,7 +524,7 @@ public abstract class CypherDb extends BaseDb<CypherQueryStore> {
         public LdbcShortQuery7MessageRepliesResult convertSingleResult(Record record) throws ParseException {
             long commentId = record.get(0).asLong();
             String commentContent = record.get(1).asString();
-            long commentCreationDate = record.get(2).asZonedDateTime().toEpochSecond();
+            long commentCreationDate = record.get(2).asZonedDateTime().toInstant().toEpochMilli();
             long replyAuthorId = record.get(3).asLong();
             String replyAuthorFirstName = record.get(4).asString();
             String replyAuthorLastName = record.get(5).asString();

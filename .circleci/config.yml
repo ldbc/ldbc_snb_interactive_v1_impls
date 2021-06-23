@@ -26,9 +26,8 @@ jobs:
             # PostgreSQL
             pip3 install --user --progress-bar off psycopg2-binary
       - run:
-          name: Prepare Neo4j/Cypher test data
-          command: |
-            cp -r cypher/test-data/raw/* cypher/test-data/converted/
+          name: Build project
+          command: ./build.sh
       - run:
           name: Load Cypher/Neo4j database
           command: |
@@ -37,7 +36,13 @@ jobs:
             scripts/load-in-one-step.sh
             cd ..
       - run:
-          name: Load PostgreSQL database
+          name: Create validation parameters with Neo4j/Cypher project
+          command: |
+            cd cypher
+            driver/create-validation-parameters.sh
+            cd ..
+      - run:
+          name: Load PostgreSQL database (1st time)
           command: |
             cd postgres
             export POSTGRES_CSV_DIR=`pwd`/test-data/
@@ -46,19 +51,26 @@ jobs:
             scripts/load.sh
             cd ..
       - run:
-          name: Build
-          command: ./build.sh
-      - run:
-          name: Create validation parameters with Neo4j/Cypher project
+          name: Create validation parameters with PostgreSQL project
           command: |
-            cd cypher
-            ./interactive-create-validation-parameters.sh
+            cd postgres
+            driver/create-validation-parameters.sh
+            cd ..
+      - run:
+          name: Load PostgreSQL database (2nd time)
+          command: |
+            cd postgres
+            export POSTGRES_CSV_DIR=`pwd`/test-data/
+            scripts/start.sh
+            scripts/create-db.sh
+            scripts/load.sh
             cd ..
       - run:
           name: Cross-validate Postgres project
           command: |
             cp cypher/validation_params.csv postgres/
             cd postgres
-            ./interactive-validate.sh
+            driver/validate.sh | tee validation-log.txt
+            grep 'Validation Result: PASS' validation-log.txt
             cd ..
       - slack/status

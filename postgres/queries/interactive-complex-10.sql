@@ -1,3 +1,7 @@
+/* Q10. Friend recommendation
+\set personId '4398046511333'
+\set month '5'
+ */
 select p_personid, p_firstname, p_lastname,
        ( select count(distinct m_messageid)
          from message, message_tag pt1
@@ -28,7 +32,8 @@ p_personid = f.k_person2id and
 (
 	(extract(month from p_birthday) = :month and (case when extract(day from p_birthday) >= 21 then true else false end))
 	or
-	(extract(month from p_birthday) = :nextMonth and (case when extract(day from p_birthday) <  22 then true else false end))
+	(extract(month from p_birthday) = :month % 12 + 1 and (case when extract(day from p_birthday) <  22 then true else false end))
 )
 order by score desc, p_personid
 limit 10
+;
