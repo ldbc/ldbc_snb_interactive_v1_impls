@@ -1,14 +1,10 @@
 ![LDBC_LOGO](https://raw.githubusercontent.com/wiki/ldbc/ldbc_snb_datagen_hadoop/images/ldbc-logo.png)
 # LDBC SNB Interactive workload implementations
 
-Implementations for the Interactive workload of the LDBC Social Network Benchmark ([specification](https://ldbc.github.io/ldbc_snb_docs/)).
+Reference implementations for the Interactive workload of the LDBC Social Network Benchmark ([specification](https://ldbc.github.io/ldbc_snb_docs/)).
+To get the reference implementations for the BI workload, visit the [`ldbc_snb_bi` repository](https://github.com/ldbc/ldbc_snb_bi/).
 
-This repository contains reference implementations for the two SNB workload:
-
-* `stable` contains implementations of the Interactive workload using Java clients and the [LDBC driver](https://github.com/ldbc/ldbc_snb_driver/). It uses data sets and parameters produced by the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop). It is tested and had been used for audited benchmark runs.
-* `dev` contains implementations of the work-in-progress BI workload using Python clients and a lightweight driver (due to the simpler workflow of the workload). It uses data sets and parameters produced by the [Spark-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop). This implementation is experimental with frequent breaking changes.
-
-:warning: Implementations in this repository are preliminary, i.e. they are unaudited and - in rare cases - do not pass validation. For details, feel free to contact us through an issue or email.
+:warning: The goal of the implementations in this to serve as reference implementations which other implementations can cross-validated against. Therefore, our primary objective was readability and not absolute performance when formulating the queries.
 
 ## Directory layout
 
@@ -57,10 +53,10 @@ The queries in this repository are work-in-progress. If possible, please cross-v
 
 ## User's guide
 
-1. Grab the `stable` driver source code from:
+1. Grab the driver source code from:
 
    ```bash
-   git clone --branch stable https://github.com/ldbc/ldbc_snb_driver
+   git clone https://github.com/ldbc/ldbc_snb_driver
    ```
 
 1. Install the driver artifact to the local Maven repository:
@@ -76,15 +72,15 @@ The queries in this repository are work-in-progress. If possible, please cross-v
    ./build.sh
    ```
 
-3. For each implementation, it is possible to (1) create validation parameters, (2) validate against an existing validation parameters, and (3) run the benchmark. Set the parameters according to your system configuration in the appropriate `.properties` file and run the driver with one of the following scripts:
+3. For each implementation, it is possible to (1) create validation parameters, (2) validate against an existing validation parameters, and (3) run the benchmark. In the directory of the implemenetation, set the parameters according to your system configuration in the `.properties` file and run the driver with one of the following scripts:
 
    ```bash
-   ./interactive-create-validation-parameters.sh
-   ./interactive-validate.sh
-   ./interactive-benchmark.sh
+   driver/create-validation-parameters.sh
+   driver/validate.sh
+   driver/benchmark.sh
    ```
 
-:warning: Note that if the workload contains updates, the database needs to be re-loaded between steps – otherwise repeated updates would insert duplicate entries.
+:warning: *Note that if the default workload contains updates which are persisten in the database. Therefore, the database needs to be re-loaded between steps – otherwise repeated updates would insert duplicate entries.*
 
 For more details, on validating and benchmarking, visit the [driver wiki](https://github.com/ldbc/ldbc_snb_driver/wiki).
 

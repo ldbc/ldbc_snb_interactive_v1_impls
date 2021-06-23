@@ -34,10 +34,10 @@ The default configuration of the database (e.g. database name, user, password) i
     * the source CSV is newer than the generated one, or
     * the user forces to do so by setting the environment variable `POSTGRES_FORCE_REGENERATE=yes`
 
-3. To run the scripts of benchmark framework, edit the `interactive-{create-validation-parameters,validate,benchmark}.properties` files, then run their script, one of:
+3. To run the scripts of benchmark framework, edit the `driver/{create-validation-parameters,validate,benchmark}.properties` files, then run their script, one of:
 
     ```bash
-    ./interactive-benchmark.sh
-    ./interactive-create-validation-parameters.sh
-    ./interactive-validate.sh
+    driver/create-validation-parameters.sh
+    driver/validate.sh
+    driver/benchmark.sh
     ```
