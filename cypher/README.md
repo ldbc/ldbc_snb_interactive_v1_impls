@@ -36,30 +36,23 @@ An example configuration for scale factor 1 is given in the [`params-csv-composi
 
 ### Preprocessing and loading
 
-#### Preprocessing
-
 Set the following environment variables based on your data source. The default values of these point to the example data set under the `test-data` directory:
 
 ```bash
-export NEO4J_CSV_DIR=
 export NEO4J_POSTFIX=
+export NEO4J_VANILLA_CSV_DIR=
+export NEO4J_CONVERTED_CSV_DIR=
 ```
+#### Preprocessing
 
 The CSV files produced by Datagen require a bit of preprocessing:
 
 * headers should be replaced with Neo4j-compatible ones (e.g. `:START_ID(Person)|:END_ID(Comment)|creationDate:DATETIME`)
 * the first letter of labels should be changed to uppercase (e.g. change `city` to `City`)
 
-The following script performs these changes:
+The following script performs these changes on the files in `$NEO4J_VANILLA_CSV_DIR` and places the resulting files in `$NEO4J_CONVERTED_CSV_DIR`:
 
 ```bash
-scripts/convert-csvs.sh
-```
-
-To use the example data set provided in the repository, first copy the vanilla data set produced the generator, then run the covnersion script:
-
-```bash
-cp -r test-data/vanilla/* test-data/converted/
 scripts/convert-csvs.sh
 ```
 
@@ -67,7 +60,7 @@ scripts/convert-csvs.sh
 
 To load and index the data, run the following sequence of commands:
 
-:warning: Be careful -- this deletes all data in your database, imports the SNB data set and restarts the database.
+:warning: Be careful -- this stops the currently running (containerized) Neo4j database and deletes all of its data.
 
 ```bash
 scripts/stop-neo4j.sh
@@ -77,9 +70,7 @@ scripts/start-neo4j.sh
 scripts/create-indices.sh
 ```
 
-#### All-in-one loading script
-
-If you know what you're doing, you can run all scripts with a single command:
+You can run all these scripts with a single command:
 
 ```bash
 scripts/load-in-one-step.sh

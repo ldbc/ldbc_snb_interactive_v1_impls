@@ -29,10 +29,6 @@ jobs:
           name: Build project
           command: ./build.sh
       - run:
-          name: Prepare Neo4j/Cypher test data
-          command: |
-            cp -r cypher/test-data/vanilla/* cypher/test-data/converted/
-      - run:
           name: Load Cypher/Neo4j database
           command: |
             cd cypher
