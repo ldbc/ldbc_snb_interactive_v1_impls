@@ -1,5 +1,5 @@
 MATCH
-  (person:Person {id:$personId})-[:KNOWS*1..2]-(friend:Person)<-[:HAS_CREATOR]-(messageX:Message),
+  (person:Person {id: $personId})-[:KNOWS*1..2]-(friend:Person)<-[:HAS_CREATOR]-(messageX:Message),
   (messageX)-[:IS_LOCATED_IN]->(countryX:Country {name: $countryXName})
 WHERE person <> friend
   AND NOT (friend)-[:IS_LOCATED_IN]->()-[:IS_PART_OF]->(countryX)
