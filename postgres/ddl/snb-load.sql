@@ -53,7 +53,7 @@ COPY tag FROM '/data/static/tag_0_0.csv' WITH DELIMITER '|' CSV HEADER;
 -- PROBLEMATIC
 
 -- Populate message table
-COPY message (m_messageid, m_ps_imagefile, m_creationdate, m_locationip, m_browserused, m_ps_language, m_content, m_length, m_creatorid, m_ps_forumid, m_locationid) FROM '/data/dynamic/post_0_0.csv' WITH (FORCE_NOT_NULL ("m_content"),  DELIMITER '|', HEADER, FORMAT csv);
-COPY message FROM '/data/dynamic/comment_0_0-postgres.csv' WITH (FORCE_NOT_NULL ("m_content"),  DELIMITER '|', HEADER, FORMAT csv);
+COPY message (m_messageid, m_ps_imagefile, m_creationdate, m_locationip, m_browserused, m_ps_language, m_content, m_length, m_creatorid, m_ps_forumid, m_locationid) FROM '/data/dynamic/post_0_0.csv' WITH (DELIMITER '|', HEADER, FORMAT csv);
+COPY message FROM '/data/dynamic/comment_0_0-postgres.csv' WITH (DELIMITER '|', HEADER, FORMAT csv);
 
 CREATE view country AS SELECT city.pl_placeid AS ctry_city, ctry.pl_name AS ctry_name FROM place city, place ctry WHERE city.pl_containerplaceid = ctry.pl_placeid AND ctry.pl_type = 'country';
