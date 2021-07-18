@@ -85,10 +85,6 @@ public class Converter {
         return res;
     }
 
-    public String convertBlacklist(List<String> words) {
-        return convertStringList(words);
-    }
-
     /**
      * Some implementations, e.g. the (deprecated) SPARQL one, will not work with a simple toString and require some tinkering,
      * e.g. padding the id with '0' characters.
