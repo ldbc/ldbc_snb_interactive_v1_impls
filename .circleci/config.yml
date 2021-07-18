@@ -95,12 +95,9 @@ jobs:
           command: |
             wget https://surfdrive.surf.nl/files/index.php/s/Ar7kacLw3LVzQaf/download --quiet --output-document=sf1.zip
             unzip sf1.zip
-            # substitution parameters
+            # substitution parameters and updateStreams for Neo4j/Cypher
             cp ./sf1/substitution_parameters/* ./cypher/test-data/substitution_parameters/
-            cp ./sf1/substitution_parameters/* ./postgres/test-data/substitution_parameters/
-            # updateStreams (same for csv_composite and csv_merge_foreign)
             cp ./sf1/social_network-csv_composite/updateStream* ./cypher/test-data/update_streams/
-            cp ./sf1/social_network-csv_composite/updateStream* ./postgres/test-data/update_streams/
       - run:
           name: SF1 data set - Load Cypher/Neo4j database
           command: |
@@ -128,7 +125,7 @@ jobs:
       - run:
           name: SF1 data set - Cross-validate the Postgres project based on the results from Neo4j/Cypher
           command: |
-            mv cypher/validation_params_cypher_sf1.csv postgres/validation_params_sf1.csv
+            mv cypher/validation_params_cypher_sf1.csv postgres/validation_params.csv
             cd postgres
             driver/validate.sh | tee validation-log.txt
             grep 'Validation Result: PASS' validation-log.txt
