@@ -21,7 +21,7 @@ jobs:
             sudo apt update
             # install dependencies
             sudo apt install -y git
-            # driver
+            # clone, build, and install driver
             git clone --depth 1 --branch 0.3.5 https://github.com/ldbc/ldbc_snb_driver && cd ldbc_snb_driver && mvn install -DskipTests && cd ..
             # PostgreSQL
             pip3 install --user --progress-bar off psycopg2-binary
