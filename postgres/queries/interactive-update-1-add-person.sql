@@ -15,7 +15,7 @@ values
   , :personFirstName
   , :personLastName
   , :gender
-  , :birthday
+  , :birthday::date
   , :creationDate
   , :locationIP
   , :browserUsed

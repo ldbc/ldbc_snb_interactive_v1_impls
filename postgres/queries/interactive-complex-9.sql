@@ -1,6 +1,6 @@
 /* Q9. Recent messages by friends or friends of friends
 \set personId 4398046511268
-\set maxDate '\'2010-11-16\''::date
+\set maxDate '\'2010-11-16\''
  */
 select p_personid, p_firstname, p_lastname,
        m_messageid, COALESCE(m_ps_imagefile, m_content), m_creationdate
@@ -17,7 +17,7 @@ from
   ) f, person, message
 where
   p_personid = m_creatorid and p_personid = f.k_person2id and
-  m_creationdate < :maxDate
+  m_creationdate < :maxDate::date
 order by m_creationdate desc, m_messageid asc
 limit 20
 ;
