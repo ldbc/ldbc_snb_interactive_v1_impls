@@ -95,9 +95,10 @@ jobs:
           command: |
             wget https://surfdrive.surf.nl/files/index.php/s/Ar7kacLw3LVzQaf/download --quiet --output-document=sf1.zip
             unzip sf1.zip
+            # substitution parameters
             cp ./sf1/substitution_parameters/* ./cypher/test-data/substitution_parameters/
             cp ./sf1/substitution_parameters/* ./postgres/test-data/substitution_parameters/
-            # updateStreams
+            # updateStreams (same for csv_composite and csv_merge_foreign)
             cp ./sf1/social_network-csv_composite/updateStream* ./cypher/test-data/update_streams/
             cp ./sf1/social_network-csv_composite/updateStream* ./postgres/test-data/update_streams/
       - run:
