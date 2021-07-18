@@ -5,7 +5,7 @@ import os
 def vacuum(con):
     old_isolation_level = con.isolation_level
     pg_con.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
-    pg_con.cursor().execute("VACUUM FULL")
+    pg_con.cursor().execute("ANALYZE")
     pg_con.set_isolation_level(old_isolation_level)
 
 print("Running Postgres / psycopg2")
