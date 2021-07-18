@@ -20,7 +20,7 @@ To set and list the default envinment variables, runs:
 env | grep ^NEO4J_
 ```
 
-## Loading the data set
+## Generating and loading the data set
 
 ### Generating the data set
 
@@ -56,7 +56,7 @@ The following script performs these changes on the files in `$NEO4J_VANILLA_CSV_
 scripts/convert-csvs.sh
 ```
 
-#### Delete your database and load the SNB CSVs
+#### Load the data set
 
 To load and index the data, run the following sequence of commands:
 
@@ -76,7 +76,7 @@ You can run all these scripts with a single command:
 scripts/load-in-one-step.sh
 ```
 
-#### Running the benchmark
+## Running the benchmark
 
 To run the scripts of benchmark framework, edit the `driver/{create-validation-parameters,validate,benchmark}.properties` files, then run their script, one of:
 

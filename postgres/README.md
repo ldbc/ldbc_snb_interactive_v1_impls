@@ -13,7 +13,19 @@ The recommended environment for executing this benchmark is as follows: the benc
 
 The default configuration of the database (e.g. database name, user, password) is set in the `scripts/vars.sh` file.
 
-## Loading the data and running the benchmark
+## Generating and loading the data set
+
+### Generating the data set
+
+The data sets need to be generated and preprocessed before loading it to the database. To generate such data sets, use the `CsvMergeForeignDynamicActivitySerializer` serializer classes of the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop):
+
+```ini
+ldbc.snb.datagen.serializer.dynamicActivitySerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.activity.CsvMergeForeignDynamicActivitySerializer
+ldbc.snb.datagen.serializer.dynamicPersonSerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.person.CsvMergeForeignDynamicPersonSerializer
+ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv.staticserializer.CsvMergeForeignStaticSerializer
+```
+
+### Loading the data set
 
 1. Set the `POSTGRES_CSV_DIR` environment variable to point to the data set, e.g.:
 
@@ -33,6 +45,8 @@ The default configuration of the database (e.g. database name, user, password) i
     * they do no exist,
     * the source CSV is newer than the generated one, or
     * the user forces to do so by setting the environment variable `POSTGRES_FORCE_REGENERATE=yes`
+
+### Running the benchmark
 
 3. To run the scripts of benchmark framework, edit the `driver/{create-validation-parameters,validate,benchmark}.properties` files, then run their script, one of:
 
