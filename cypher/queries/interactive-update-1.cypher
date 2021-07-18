@@ -4,7 +4,7 @@ CREATE (p:Person {
     firstName: $personFirstName,
     lastName: $personLastName,
     gender: $gender,
-    birthday: datetime($birthday),
+    birthday: date($birthday),
     creationDate: datetime($creationDate),
     locationIP: $locationIP,
     browserUsed: $browserUsed,

@@ -9,7 +9,7 @@ workflows:
 
 jobs:
   test:
-    resource_class: large
+    resource_class: xlarge
     machine:
       image: ubuntu-2004:202008-01
     steps:
@@ -29,21 +29,21 @@ jobs:
           name: Build project
           command: ./build.sh
       - run:
-          name: Load Cypher/Neo4j database (1st time)
+          name: Tiny data set - Load Cypher/Neo4j database (1st time)
           command: |
             cd cypher
             . scripts/environment-variables-default.sh
             scripts/load-in-one-step.sh
             cd ..
       - run:
-          name: Create validation parameters with Neo4j/Cypher project
+          name: Tiny data set - Create validation parameters with Neo4j/Cypher project
           command: |
             cd cypher
             driver/create-validation-parameters.sh
-            mv validation_params.csv validation_params_cypher.csv
+            mv validation_params.csv validation_params_cypher_tiny.csv
             cd ..
       - run:
-          name: Load PostgreSQL database (1st time)
+          name: Tiny data set - Load PostgreSQL database (1st time)
           command: |
             cd postgres
             export POSTGRES_CSV_DIR=`pwd`/test-data/
@@ -52,29 +52,29 @@ jobs:
             scripts/load.sh
             cd ..
       - run:
-          name: Create validation parameters with the PostgreSQL project
+          name: Tiny data set - Create validation parameters with the PostgreSQL project
           command: |
             cd postgres
             driver/create-validation-parameters.sh
-            mv validation_params.csv validation_params_postgres.csv
+            mv validation_params.csv validation_params_postgres_tiny.csv
             cd ..
       - run:
-          name: Load Cypher/Neo4j database (2nd time)
+          name: Tiny data set - Load Cypher/Neo4j database (2nd time)
           command: |
             cd cypher
             . scripts/environment-variables-default.sh
             scripts/load-in-one-step.sh
             cd ..
       - run:
-          name: Cross-validate the Neo4j/Cypher project based on the results from Postgres
+          name: Tiny data set - Cross-validate the Neo4j/Cypher project based on the results from Postgres
           command: |
-            mv postgres/validation_params_postgres.csv cypher/validation_params.csv
+            mv postgres/validation_params_postgres_tiny.csv cypher/validation_params.csv
             cd cypher
             driver/validate.sh | tee validation-log.txt
             grep 'Validation Result: PASS' validation-log.txt
             cd ..
       - run:
-          name: Load PostgreSQL database (2nd time)
+          name: Tiny data set - Load PostgreSQL database (2nd time)
           command: |
             cd postgres
             export POSTGRES_CSV_DIR=`pwd`/test-data/
@@ -83,9 +83,49 @@ jobs:
             scripts/load.sh
             cd ..
       - run:
-          name: Cross-validate the Postgres project based on the results from Neo4j/Cypher
+          name: Tiny data set - Cross-validate the Postgres project based on the results from Neo4j/Cypher
           command: |
-            mv cypher/validation_params_cypher.csv postgres/validation_params.csv
+            mv cypher/validation_params_cypher_tiny.csv postgres/validation_params.csv
+            cd postgres
+            driver/validate.sh | tee validation-log.txt
+            grep 'Validation Result: PASS' validation-log.txt
+            cd ..
+      - run:
+          name: Download SF1 data set
+          command: |
+            wget https://surfdrive.surf.nl/files/index.php/s/Ar7kacLw3LVzQaf/download --quiet --output-document=sf1.zip
+            unzip sf1.zip
+            # substitution parameters and updateStreams for Neo4j/Cypher
+            cp ./sf1/substitution_parameters/* ./cypher/test-data/substitution_parameters/
+            cp ./sf1/social_network-csv_composite/updateStream* ./cypher/test-data/update_streams/
+      - run:
+          name: SF1 data set - Load Cypher/Neo4j database
+          command: |
+            cd cypher
+            . scripts/environment-variables-default.sh
+            export NEO4J_VANILLA_CSV_DIR=`pwd`/../sf1/social_network-csv_composite
+            scripts/load-in-one-step.sh
+            cd ..
+      - run:
+          name: SF1 data set - Create validation parameters with the Neo4j/Cypher
+          command: |
+            cd cypher
+            driver/create-validation-parameters.sh
+            mv validation_params.csv validation_params_cypher_sf1.csv
+            cd ..
+      - run:
+          name: SF1 data set - Load PostgreSQL database
+          command: |
+            cd postgres
+            export POSTGRES_CSV_DIR=`pwd`/../sf1/social_network-csv_merge_foreign
+            scripts/start.sh
+            scripts/create-db.sh
+            scripts/load.sh
+            cd ..
+      - run:
+          name: SF1 data set - Cross-validate the Postgres project based on the results from Neo4j/Cypher
+          command: |
+            mv cypher/validation_params_cypher_sf1.csv postgres/validation_params.csv
             cd postgres
             driver/validate.sh | tee validation-log.txt
             grep 'Validation Result: PASS' validation-log.txt

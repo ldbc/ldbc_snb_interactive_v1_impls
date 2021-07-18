@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 public class Converter {
 
     final static String DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'+0000'";
+    final static String DATE_FORMAT = "yyyy-MM-dd";
 
     public String convertDateTime(Date date) {
         final SimpleDateFormat sdf = new SimpleDateFormat(DATETIME_FORMAT);
@@ -20,7 +21,9 @@ public class Converter {
     }
 
     public String convertDate(Date date) {
-        return convertDateTime(date);
+        final SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return "'" + sdf.format(date) + "'";
     }
 
     /**
@@ -83,10 +86,6 @@ public class Converter {
                 .collect(Collectors.joining(", "));
         res += "]";
         return res;
-    }
-
-    public String convertBlacklist(List<String> words) {
-        return convertStringList(words);
     }
 
     /**
