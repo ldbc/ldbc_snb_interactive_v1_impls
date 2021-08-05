@@ -45,20 +45,20 @@ export NEO4J_CONVERTED_CSV_DIR=
 ```
 #### Preprocessing
 
-The CSV files produced by Datagen require a bit of preprocessing:
+1. The CSV files produced by Datagen require a bit of preprocessing:
 
-* headers should be replaced with Neo4j-compatible ones (e.g. `:START_ID(Person)|:END_ID(Comment)|creationDate:DATETIME`)
-* the first letter of labels should be changed to uppercase (e.g. change `city` to `City`)
+    * headers should be replaced with Neo4j-compatible ones (e.g. `:START_ID(Person)|:END_ID(Comment)|creationDate:DATETIME`)
+    * the first letter of labels should be changed to uppercase (e.g. change `city` to `City`)
 
-The following script performs these changes on the files in `$NEO4J_VANILLA_CSV_DIR` and places the resulting files in `$NEO4J_CONVERTED_CSV_DIR`:
+    The following script performs these changes on the files in `$NEO4J_VANILLA_CSV_DIR` and places the resulting files in `$NEO4J_CONVERTED_CSV_DIR`:
 
-```bash
-scripts/convert-csvs.sh
-```
+    ```bash
+    scripts/convert-csvs.sh
+    ```
 
 #### Load the data set
 
-To load and index the data, run the following sequence of commands:
+2. To load and index the data, run the following sequence of commands:
 
 :warning: Be careful -- this stops the currently running (containerized) Neo4j database and deletes all of its data.
 
@@ -70,7 +70,7 @@ scripts/start-neo4j.sh
 scripts/create-indices.sh
 ```
 
-You can run all these scripts with a single command:
+3. You can run all these scripts with a single command:
 
 ```bash
 scripts/load-in-one-step.sh
@@ -78,10 +78,12 @@ scripts/load-in-one-step.sh
 
 ## Running the benchmark
 
-To run the scripts of benchmark framework, edit the `driver/{create-validation-parameters,validate,benchmark}.properties` files, then run their script, one of:
+4. To run the scripts of benchmark framework, edit the `driver/{create-validation-parameters,validate,benchmark}.properties` files, then run their script, one of:
 
 ```bash
 driver/create-validation-parameters.sh
 driver/validate.sh
 driver/benchmark.sh
 ```
+
+:warning: *Note that if the default workload contains updates which are persisted in the database. Therefore, the database needs to be re-loaded between steps – otherwise repeated updates would insert duplicate entries.*
