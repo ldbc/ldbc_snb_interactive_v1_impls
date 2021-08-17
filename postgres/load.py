@@ -25,7 +25,9 @@ def main(argv=None):
         help="PostgreSQL database",
     )
     parser.add_argument(
-        "--host", default="localhost", help="PostgreSQL host",
+        "--host",
+        default=os.environ.get("POSTGRES_HOST", "localhost"),
+        help="PostgreSQL host",
     )
     parser.add_argument(
         "--port",
