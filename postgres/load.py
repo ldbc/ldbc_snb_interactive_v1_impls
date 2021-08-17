@@ -5,8 +5,8 @@ import os
 import psycopg2
 
 
-def vacuum(con, pg_con):
-    old_isolation_level = con.isolation_level
+def vacuum(pg_con):
+    old_isolation_level = pg_con.isolation_level
     pg_con.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
     pg_con.cursor().execute("VACUUM FULL")
     pg_con.set_isolation_level(old_isolation_level)
