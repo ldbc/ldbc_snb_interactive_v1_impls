@@ -3,9 +3,13 @@ package com.ldbc.impls.workloads.ldbc.snb.graphdb;
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.control.LoggingService;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8Result;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery9;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery9Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate2AddPostLike;
 import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.converter.GraphDBConverter;
@@ -14,6 +18,7 @@ import com.ldbc.impls.workloads.ldbc.snb.graphdb.operationhandlers.GraphDBUpdate
 
 import org.eclipse.rdf4j.query.BindingSet;
 
+import java.util.List;
 import java.util.Map;
 
 public class GraphDB extends BaseDb<GraphDBQueryStore> {
@@ -44,19 +49,63 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 		public String getQueryString(GraphDBConnectionState state, LdbcQuery8 operation) {
 			return state.getQueryStore().getQuery8(operation);
 		}
-
+		//?from ?first ?last ?dt ?rep ?content
 		@Override
-		public LdbcQuery8Result convertSingleResult(BindingSet bindingSet) {
+		public LdbcQuery8Result convertSingleResult(BindingSet bindingSet, List<String> bindingNames) {
+			GraphDBConverter graphDbConverter = new GraphDBConverter();
 			return new LdbcQuery8Result(
-					Long.parseLong(bindingSet.getBinding("from").getValue().stringValue()),
-					bindingSet.getBinding("first").getValue().stringValue(),
-					bindingSet.getBinding("last").getValue().stringValue(),
-					GraphDBConverter.stringTimestampToEpoch(bindingSet.getBinding("dt").getValue().stringValue()),
-					Long.parseLong(bindingSet.getBinding("rep").getValue().stringValue()),
-					bindingSet.getBinding("content").getValue().stringValue());
+					graphDbConverter.asLong(bindingSet.getBinding(bindingNames.get(0)).getValue()),
+					bindingSet.getBinding(bindingNames.get(1)).getValue().stringValue(),
+					bindingSet.getBinding(bindingNames.get(2)).getValue().stringValue(),
+					GraphDBConverter.stringTimestampToEpoch(bindingSet.getBinding(bindingNames.get(3)).getValue().stringValue()),
+					graphDbConverter.asLong(bindingSet.getBinding(bindingNames.get(4)).getValue()),
+					bindingSet.getBinding(bindingNames.get(5)).getValue().stringValue());
 		}
 
 	}
+
+	public static class InteractiveQuery9 extends GraphDBListOperationHandler<LdbcQuery9, LdbcQuery9Result> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcQuery9 operation) {
+			return state.getQueryStore().getQuery9(operation);
+		}
+
+		//?fr ?first ?last ?post ?content ?date
+		@Override
+		public LdbcQuery9Result convertSingleResult(BindingSet bindingSet, List<String> bindingNames) {
+			GraphDBConverter graphDbConverter = new GraphDBConverter();
+			return new LdbcQuery9Result(
+					graphDbConverter.asLong(bindingSet.getBinding(bindingNames.get(0)).getValue()),
+					bindingSet.getBinding(bindingNames.get(1)).getValue().stringValue(),
+					bindingSet.getBinding(bindingNames.get(2)).getValue().stringValue(),
+					graphDbConverter.asLong(bindingSet.getBinding(bindingNames.get(3)).getValue()),
+					bindingSet.getBinding(bindingNames.get(4)).getValue().stringValue(),
+					GraphDBConverter.stringTimestampToEpoch(bindingSet.getBinding(bindingNames.get(5)).getValue().stringValue()));
+
+		}
+	}
+
+	// public static class InteractiveQuery10 extends GraphDBListOperationHandler<LdbcQuery10, LdbcQuery9Result> {
+	//
+	// 	@Override
+	// 	public String getQueryString(GraphDBConnectionState state, LdbcQuery9 operation) {
+	// 		return state.getQueryStore().getQuery9(operation);
+	// 	}
+	//
+	// 	//?first ?last  ?score ?fof ?gender ?locationname
+	// 	@Override
+	// 	public LdbcQuery10Result convertSingleResult(BindingSet bindingSet, List<String> bindingNames) {
+	// 		GraphDBConverter graphDbConverter = new GraphDBConverter();
+	// 		return new LdbcQuery10Result(
+	// 				bindingSet.getBinding(bindingNames.get(1)).getValue().stringValue(),
+	// 				bindingSet.getBinding(bindingNames.get(2)).getValue().stringValue(),
+	// 				graphDbConverter.asLong(bindingSet.getBinding(bindingNames.get(3)).getValue()),
+	// 				bindingSet.getBinding(bindingNames.get(4)).getValue().stringValue(),
+	// 				GraphDBConverter.stringTimestampToEpoch(bindingSet.getBinding(bindingNames.get(5)).getValue().stringValue()));
+	//
+	// 	}
+	// }
 
 	// Interactive writes
 
