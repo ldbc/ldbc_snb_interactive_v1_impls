@@ -2,6 +2,7 @@ package com.ldbc.impls.workloads.ldbc.snb.graphdb;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.control.LoggingService;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10Result;
@@ -14,7 +15,6 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate2AddPostLike;
 import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.converter.GraphDBConverter;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.operationhandlers.GraphDBListOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.graphdb.operationhandlers.GraphDBUpdateOperationHandler;
 
 import org.eclipse.rdf4j.query.BindingSet;
 
@@ -22,9 +22,12 @@ import java.util.List;
 import java.util.Map;
 
 public class GraphDB extends BaseDb<GraphDBQueryStore> {
+
+	private static final GraphDBConverter cnv = new GraphDBConverter();
+
 	@Override
 	protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
-
+		dcs = new GraphDBConnectionState(properties, new GraphDBQueryStore(properties.get("queryDir")));
 	}
 
 	// Interactive complex reads
@@ -37,8 +40,20 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 		}
 
 		@Override
-		public LdbcQuery1Result convertSingleResult(BindingSet bindingSet) {
-			return null;
+		public LdbcQuery1Result convertSingleResult(List<String> names, BindingSet bs) {
+			return new LdbcQuery1Result(cnv.asLong(bs, names.get(0)),
+					cnv.asString(bs, names.get(1)),
+					cnv.asInt(bs, names.get(2)),
+					cnv.timestampToEpoch(bs, names.get(3)),
+					cnv.timestampToEpoch(bs, names.get(4)),
+					cnv.asString(bs, names.get(5)),
+					cnv.asString(bs, names.get(6)),
+					cnv.asString(bs, names.get(7)),
+					cnv.asStringCollection(bs, names.get(8)),
+					cnv.asStringCollection(bs, names.get(9)),
+					cnv.asString(bs, names.get(10)),
+					cnv.asObjectCollection(bs, names.get(11)),
+					cnv.asObjectCollection(bs, names.get(12)));
 		}
 	}
 
