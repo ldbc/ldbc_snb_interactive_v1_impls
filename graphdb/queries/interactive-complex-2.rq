@@ -4,7 +4,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 select ?fr ?first ?last ?post ?content ?date
 where {
-	sn:pers%Person% snvoc:knows/snvoc:hasPerson ?fr.
+	sn:pers%personId% snvoc:knows/snvoc:hasPerson ?fr.
 	?fr snvoc:firstName ?first. 
 	?fr snvoc:lastName ?last .
 	?post snvoc:hasCreator ?fr.
@@ -14,7 +14,7 @@ where {
 	  { ?post snvoc:imageFile ?content }
 	} .
 	?post snvoc:creationDate ?date.
-	filter (?date <= "%Date0%"^^xsd:dateTime).
+	filter (?date <= "%maxDate%"^^xsd:dateTime).
 }
 order by desc (?date) ?post
 limit 20

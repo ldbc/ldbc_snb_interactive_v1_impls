@@ -31,7 +31,7 @@ public abstract class GraphDBListOperationHandler<TOperation extends Operation<L
 			while (queryResultIter.hasNext()) {
 				BindingSet bindingSet = queryResultIter.next();
 
-				TOperationResult tuple = convertSingleResult(bindingSet);
+				TOperationResult tuple = convertSingleResult(queryResultIter.getBindingNames(), bindingSet);
 				if (dbConnectionState.isPrintResults()) {
 					System.out.println(tuple.toString());
 				}
@@ -42,5 +42,5 @@ public abstract class GraphDBListOperationHandler<TOperation extends Operation<L
 		resultReporter.report(resultCount, results, operation);
 	}
 
-	public abstract TOperationResult convertSingleResult(BindingSet bindingSet);
+	public abstract TOperationResult convertSingleResult(List<String> variableNames, BindingSet bindingSet);
 }
