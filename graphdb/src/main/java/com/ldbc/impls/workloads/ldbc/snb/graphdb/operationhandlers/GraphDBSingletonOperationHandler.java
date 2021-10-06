@@ -10,6 +10,8 @@ import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 
+import java.util.List;
+
 public abstract class GraphDBSingletonOperationHandler<TOperation extends Operation<TOperationResult>, TOperationResult>
 		implements SingletonOperationHandler<TOperationResult, TOperation, GraphDBConnectionState> {
 
@@ -27,7 +29,7 @@ public abstract class GraphDBSingletonOperationHandler<TOperation extends Operat
 			if (queryResult.hasNext()) {
 				BindingSet bindingSet = queryResult.next();
 
-				tuple = convertSingleResult(bindingSet);
+				tuple = convertSingleResult(queryResult.getBindingNames(), bindingSet);
 				if (dbConnectionState.isPrintResults()) {
 					System.out.println(tuple.toString());
 				}
@@ -37,5 +39,5 @@ public abstract class GraphDBSingletonOperationHandler<TOperation extends Operat
 		resultReporter.report(resultCount, tuple, operation);
 	}
 
-	public abstract TOperationResult convertSingleResult(BindingSet bindingSet);
+	public abstract TOperationResult convertSingleResult(List<String> variableNames, BindingSet bindingSet);
 }

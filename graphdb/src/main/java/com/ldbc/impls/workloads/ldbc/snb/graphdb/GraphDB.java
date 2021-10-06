@@ -2,16 +2,14 @@ package com.ldbc.impls.workloads.ldbc.snb.graphdb;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.control.LoggingService;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1Result;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8Result;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
 import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.converter.GraphDBConverter;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.operationhandlers.GraphDBListOperationHandler;
 
 import org.eclipse.rdf4j.query.BindingSet;
 
+import java.util.List;
 import java.util.Map;
 
 public class GraphDB extends BaseDb<GraphDBQueryStore> {
@@ -33,53 +31,39 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 		}
 
 		@Override
-		public LdbcQuery1Result convertSingleResult(BindingSet bs) {
-			return new LdbcQuery1Result(cnv.asLong(bs, "fr"),
-					cnv.asString(bs, "last"),
-					cnv.asInt(bs, "mindist"),
-					cnv.timestampToEpoch(bs, "bday"),
-					cnv.timestampToEpoch(bs, "since"),
-					cnv.asString(bs, "gen"),
-					cnv.asString(bs, "browser"),
-					cnv.asString(bs, "locationIP"),
-					cnv.asStringCollection(bs, "emails"),
-					cnv.asStringCollection(bs, "lngs"),
-					cnv.asString(bs, "based"),
-					cnv.asObjectCollection(bs, "studyAt"),
-					cnv.asObjectCollection(bs, "workAt"));
+		public LdbcQuery1Result convertSingleResult(List<String> names, BindingSet bs) {
+			return new LdbcQuery1Result(cnv.asLong(bs, names.get(0)),
+					cnv.asString(bs, names.get(1)),
+					cnv.asInt(bs, names.get(2)),
+					cnv.timestampToEpoch(bs, names.get(3)),
+					cnv.timestampToEpoch(bs, names.get(4)),
+					cnv.asString(bs, names.get(5)),
+					cnv.asString(bs, names.get(6)),
+					cnv.asString(bs, names.get(7)),
+					cnv.asStringCollection(bs, names.get(8)),
+					cnv.asStringCollection(bs, names.get(9)),
+					cnv.asString(bs, names.get(10)),
+					cnv.asObjectCollection(bs, names.get(11)),
+					cnv.asObjectCollection(bs, names.get(12)));
 		}
 	}
 
-	public static class InteractiveQuery8 extends GraphDBListOperationHandler<LdbcQuery8, LdbcQuery8Result> {
+	public static class InteractiveQuery2 extends GraphDBListOperationHandler<LdbcQuery2, LdbcQuery2Result> {
 
 		@Override
-		public String getQueryString(GraphDBConnectionState state, LdbcQuery8 operation) {
-			return state.getQueryStore().getQuery8(operation);
+		public String getQueryString(GraphDBConnectionState state, LdbcQuery2 operation) {
+			return state.getQueryStore().getQuery2(operation);
 		}
 
 		@Override
-		public LdbcQuery8Result convertSingleResult(BindingSet bindingSet) {
-			return new LdbcQuery8Result(
-					Long.parseLong(bindingSet.getBinding("from").getValue().stringValue()),
-					bindingSet.getBinding("first").getValue().stringValue(),
-					bindingSet.getBinding("last").getValue().stringValue(),
-					cnv.timestampToEpoch(bindingSet, "dt"),
-					Long.parseLong(bindingSet.getBinding("rep").getValue().stringValue()),
-					bindingSet.getBinding("content").getValue().stringValue());
+		public LdbcQuery2Result convertSingleResult(List<String> names, BindingSet bs) {
+			return new LdbcQuery2Result(cnv.asLong(bs, names.get(0)),
+					cnv.asString(bs, names.get(1)),
+					cnv.asString(bs, names.get(2)),
+					cnv.asLong(bs, names.get(3)),
+					cnv.asString(bs, names.get(4)),
+					cnv.timestampToEpoch(bs, names.get(5)));
 		}
-
 	}
-
-	// Interactive writes
-//
-//		public static class Update2AddPostLike extends GraphDBUpdateOperationHandler<LdbcUpdate2AddPostLike> {
-//
-//			@Override
-//			public String getQueryString(GraphDBConnectionState state, LdbcUpdate2AddPostLike operation) {
-//				return state.getQueryStore().getUpdate2(operation);
-//			}
-//		}
-//
-//	}
 }
 

@@ -29,7 +29,7 @@ where {
         ?work_org foaf:name ?work_name .
     }
     ?fr a snvoc:Person .
-    ?fr snvoc:firstName "%Name%" .
+    ?fr snvoc:firstName "%firstName%" .
     ?fr snvoc:lastName ?last .
     ?fr snvoc:birthday ?bday .
     ?fr snvoc:isLocatedIn ?basedURI .
@@ -42,7 +42,7 @@ where {
         select distinct ?fr ?dist
         where {
             VALUES (?source ?destination) {
-                (sn:pers%Person% undef)
+                (sn:pers%personId% undef)
             }
             SERVICE <http://www.ontotext.com/path#search> {
                 <urn:path> onto:findPath onto:allPaths ;
