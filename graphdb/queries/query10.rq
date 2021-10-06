@@ -1,0 +1,57 @@
+#query 10
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX onto: <http://www.ontotext.com/path#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+select ?first ?last (sum(?match) - sum(if(?match != 1, 1,0)) as ?score) ?fof ?gender ?locationname
+where {
+    {
+        select distinct ?fof
+        where {
+            VALUES (?source ?destination) {
+                (sn:pers%Person% undef)
+            }
+            SERVICE <http://www.ontotext.com/path#search> {
+                <urn:path> onto:findPath onto:allPaths ;
+                           onto:sourceNode ?source ;
+                           onto:destinationNode ?destination ;
+                           onto:minPathLength "2"^^xsd:int;
+                           onto:maxPathLength "2"^^xsd:int;
+                           onto:startNode ?start ;
+                           onto:endNode ?fof .
+                SERVICE <urn:path> {
+                    ?start snvoc:knows/snvoc:hasPerson ?fof.
+                }
+            }
+            minus {
+                ?source snvoc:knows/snvoc:hasPerson ?fof 
+            } 
+        }
+    } 
+    {
+        select  distinct ?fof ?bday
+        where {
+            values ?month {%HS1%}
+            ?fof snvoc:birthday ?bday .
+            filter (1 = if (Month(?bday) = if (?month < 13, ?month, ?month - 12), if (Day(?bday) > 21, 1, 0),
+                    if (Month(?bday) = if ((?month +1) < 13, (?month+1), ((?month - 12)+1)), if (Day(?bday) < 22, 1, 0), 0)))
+        } 
+        
+    }
+
+    ?fof snvoc:firstName ?first .
+    ?fof snvoc:lastName ?last .
+    ?fof snvoc:gender ?gender .
+    ?fof snvoc:isLocatedIn ?based .
+    ?based foaf:name ?locationname .
+    ?post snvoc:hasCreator ?fof .
+    bind (if (
+            exists {
+			sn:pers%Person% snvoc:hasInterest ?tag .
+        	?post snvoc:hasTag ?tag . 
+			}, 1, 0) as ?match)
+}
+group by ?fof ?first ?last ?gender ?locationname
+order by desc(?score) ?fof
+limit 1000

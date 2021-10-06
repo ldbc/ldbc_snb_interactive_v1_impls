@@ -1,0 +1,27 @@
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX ofn:<http://www.ontotext.com/sparql/functions/>
+
+select ?liker ?first ?last ?post ?content ?is_new ?lag ?ldt
+where {
+    ?post snvoc:hasCreator sn:pers%Person% .
+    {
+        {
+            ?post snvoc:content ?content 
+        } union {
+            ?post snvoc:imageFile ?content
+        }
+    } .
+    ?lk snvoc:hasPost ?post .
+    ?liker snvoc:likes ?lk .
+    ?liker snvoc:firstName ?first .
+    ?liker snvoc:lastName ?last .
+    ?post snvoc:creationDate ?dt .
+    ?lk snvoc:creationDate ?ldt .
+    
+    sn:pers%Person% snvoc:knows ?likerNode.
+    bind(if (exists{?likerNode snvoc:hasPerson ?liker}, 0, 1) as ?is_new).
+    bind(ofn:minutesBetween(?dt, ?ldt) as ?lag).
+}
+order by desc (?ldt) ?liker
+limit 20

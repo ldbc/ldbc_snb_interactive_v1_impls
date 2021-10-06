@@ -1,0 +1,65 @@
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX onto: <http://www.ontotext.com/path#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+select ?fr ?last (min(?dist) as ?mindist) (group_concat(distinct ?email;
+        separator=", ") as ?emails) (group_concat(distinct ?lng;
+        separator=", ") as ?lngs) ?based (group_concat(distinct concat(?study_name, " ", str(?study_year), " ", ?study_country);
+        separator=", ") as ?studyAt) (group_concat(distinct concat(?work_name, " ", str(?work_year), " ", ?work_country);
+        separator=", ") as ?workAt) ?bday ?since ?gen ?browser ?locationIP
+where {
+    ?fr snvoc:email ?email .
+    ?fr snvoc:speaks ?lng .
+    {
+        ?fr snvoc:studyAt ?study .
+        ?study snvoc:classYear ?study_year .
+        ?study snvoc:hasOrganisation ?study_org .
+        ?study_org snvoc:isLocatedIn ?study_countryURI.
+        ?study_countryURI foaf:name ?study_country .
+        ?study_org foaf:name ?study_name .
+    }
+    {
+        ?fr snvoc:workAt ?work .
+        ?work snvoc:workFrom ?work_year .
+        ?work snvoc:hasOrganisation ?work_org .
+        ?work_org snvoc:isLocatedIn ?work_countryURI.
+        ?work_countryURI foaf:name ?work_country .
+        ?work_org foaf:name ?work_name .
+    }
+    ?fr a snvoc:Person .
+    ?fr snvoc:firstName "%Name%" .
+    ?fr snvoc:lastName ?last .
+    ?fr snvoc:birthday ?bday .
+    ?fr snvoc:isLocatedIn ?basedURI .
+    ?basedURI foaf:name ?based .
+    ?fr snvoc:creationDate ?since .
+    ?fr snvoc:gender ?gen .
+    ?fr snvoc:locationIP ?locationIP .
+    ?fr snvoc:browserUsed ?browser .
+    {
+        select distinct ?fr ?dist
+        where {
+            VALUES (?source ?destination) {
+                (sn:pers%Person% undef)
+            }
+            SERVICE <http://www.ontotext.com/path#search> {
+                <urn:path> onto:findPath onto:allPaths ;
+                           onto:sourceNode ?source ;
+                           onto:destinationNode ?destination ;
+                           onto:exportBindingIndex ?dist ;
+                           onto:maxPathLength "3"^^xsd:int;
+                           onto:startNode ?start ;
+                           onto:endNode ?fr .
+                SERVICE <urn:path> {
+                    ?start snvoc:knows/snvoc:hasPerson ?fr.
+                }
+            }
+        }
+        group by ?fr ?dist
+    }
+}
+group by ?fr ?last ?bday ?since ?gen ?browser ?locationIP ?based ?dist
+order by ?mindist ?last ?fr
+limit 20

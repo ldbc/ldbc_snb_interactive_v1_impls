@@ -1,0 +1,69 @@
+2004026 fr -> post
+
+query 9 -> bottlneck is filter (<) which cause the very slow execution
+
+return:348299
+Showing results from 1 to 1 of 1. Query took 7m 47s, moments ago. 
+
+return all: 2004026
+Showing results from 1 to 1 of 1. Query took 13s, moments ago. 
+
+all post :creationDate ?date in repo are 5526876
+joinDate are 1611869
+
+
+query 6 -> there is an error of th equery e.g. not correct against the query description
+
+unique tag names: 13025
+
+post hasTag ?tag
+?tag foaf:name ?tagname
+all tagnames 3721417
+post tagname pair (3721417)
+
+
+query 6 we need to do intersect over ?fr between 2 subqueries:
+ - subqu1ry 1 finds all ?fr that are friends
+ - subquery 2 finds all posts that are tagged with the tag and posted by some perseon ?fr
+
+then just intersect and return all tagnames that are not ?tagname
+# query 6
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX onto: <http://www.ontotext.com/path#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+select ?tagname (count (distinct ?post) as ?count)
+where {
+    {
+        select distinct ?fr
+        where {
+            VALUES (?source ?destination) {
+                (sn:pers%Person% undef)
+            }
+            SERVICE <http://www.ontotext.com/path#search> {
+                <urn:path> onto:findPath onto:allPaths ;
+                           onto:sourceNode ?source ;
+                           onto:destinationNode ?destination ;
+                           onto:maxPathLength "2"^^xsd:int;
+                                                   onto:startNode ?start ;
+                                                   onto:endNode ?fr .
+                SERVICE <urn:path> {
+                    ?start snvoc:knows/snvoc:hasPerson ?fr.
+                }
+            }
+        }
+    } .
+    {
+        select ?post ?fr {
+            ?post snvoc:hasCreator ?fr .
+            ?post snvoc:hasTag/foaf:name "%Tag%" .
+        }
+    }
+    ?post snvoc:hasTag ?tag .
+    ?tag foaf:name ?tagname .
+    filter(?tagname != "%Tag%")
+}
+group by ?tagname
+order by desc(?count) ?tagname
+limit 10

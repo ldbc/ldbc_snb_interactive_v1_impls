@@ -1,0 +1,39 @@
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX onto: <http://www.ontotext.com/path#>
+
+select ?first ?last ?startdate ?orgname ?fr
+where {
+    ?w snvoc:hasOrganisation ?org .
+    ?org foaf:name ?orgname .
+    ?org snvoc:isLocatedIn ?country.
+    ?country foaf:name "%Country%" .
+    ?fr snvoc:workAt ?w .
+    ?w snvoc:workFrom ?startdate .
+    filter (?startdate < "%Date0%"^^xsd:integer) .
+    {
+        select distinct ?fr
+            where {
+                VALUES (?source ?destination) {
+                    (sn:pers%Person% undef)
+                }
+                SERVICE <http://www.ontotext.com/path#search> {
+                    <urn:path> onto:findPath onto:allPaths ;
+                               onto:sourceNode ?source ;
+                               onto:destinationNode ?destination ;
+                               onto:maxPathLength "2"^^xsd:int;
+                               onto:startNode ?start ;
+                               onto:endNode ?fr .
+                    SERVICE <urn:path> {
+                        ?start snvoc:knows/snvoc:hasPerson ?fr.
+                    }
+                }
+            }
+    } .
+    ?fr snvoc:firstName ?first .
+    ?fr snvoc:lastName ?last .
+}
+order by ?startdate ?fr ?orgname
+limit 10
