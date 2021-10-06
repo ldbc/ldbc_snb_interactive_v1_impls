@@ -1,0 +1,27 @@
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX onto: <http://www.ontotext.com/path#>
+
+select ?dist where
+{
+
+            VALUES (?source ?destination) {
+                (sn:pers%Person1% sn:pers%Person2%)
+            }
+            SERVICE <http://www.ontotext.com/path#search> {
+                <urn:path> onto:findPath onto:distance ;
+                           onto:sourceNode ?source ;
+                           onto:destinationNode ?destination ;
+                           onto:distanceBinding ?dist ;
+                           onto:startNode ?start ;
+                           onto:endNode ?fr .
+                SERVICE <urn:path> {
+                    ?start snvoc:knows/snvoc:hasPerson ?fr.
+                }
+            }
+   
+}
+
+group by ?source
+order by ?dist
+limit 1

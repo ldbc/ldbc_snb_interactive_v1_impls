@@ -1,0 +1,26 @@
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+select ?tagname (count (distinct ?post) as ?count) 
+where {
+    sn:pers%Person% snvoc:knows/snvoc:hasPerson ?fr .
+    ?post a snvoc:Post .
+    ?post snvoc:hasCreator ?fr .
+    ?post snvoc:hasTag ?tag .
+    ?tag foaf:name ?tagname .
+    ?post snvoc:creationDate ?date .
+    bind ("%Date0%"^^xsd:dateTime + "P%Duration%D"^^xsd:duration as ?dateAdded).
+    filter (?date >= "%Date0%"^^xsd:dateTime && ?date <= ?dateAdded) .
+    filter (!exists {
+            sn:pers%Person% snvoc:knows/snvoc:hasPerson ?fr2 .
+            ?post2 snvoc:hasCreator ?fr2 .
+            ?post2 snvoc:hasTag ?tag .
+            ?post2 snvoc:creationDate ?date2 .
+            filter (?date2 < "%Date0%"^^xsd:dateTime)
+        })
+}
+group by ?tagname
+order by desc(2) ?tagname
+limit 10

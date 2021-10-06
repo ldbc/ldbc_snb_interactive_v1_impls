@@ -1,0 +1,50 @@
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX dbpedia: <http://dbpedia.org/resource/>
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX onto: <http://www.ontotext.com/path#>
+
+select distinct ?fr (sample(?fname) as ?first) (sample(?lname) as ?last) (sum (?c1) as ?ct1) (sum(?c2) as ?ct2) ((?ct1 + ?ct2) as ?sum)
+where {
+    {
+        {
+            select distinct ?fr
+            where {
+                VALUES (?source ?destination) {
+                    (sn:pers%Person% undef)
+                }
+                SERVICE <http://www.ontotext.com/path#search> {
+                    <urn:path> onto:findPath onto:allPaths ;
+                               onto:sourceNode ?source ;
+                               onto:destinationNode ?destination ;
+                               onto:maxPathLength "1"^^xsd:int;
+                               onto:startNode ?start ;
+                               onto:endNode ?fr .
+                    SERVICE <urn:path> {
+                        ?start snvoc:knows/snvoc:hasPerson ?fr.
+                    }
+                }
+                ?fr snvoc:isLocatedIn ?city .
+                filter (!exists{?city snvoc:isLocatedIn dbpedia:%Country1%.})
+                filter (!exists{?city snvoc:isLocatedIn dbpedia:%Country2%..})
+            }
+        }
+        ?fr snvoc:firstName ?fname .
+        ?fr snvoc:lastName ?lname .
+        ?fr snvoc:isLocatedIn ?city .
+        {
+                ?post snvoc:hasCreator ?fr .
+                ?post snvoc:creationDate ?date .
+                bind ("%Date0%"^^xsd:dateTime + "P%Duration%D"^^xsd:duration as ?dateAdded).
+                filter (?date >= "%Date0%"^^xsd:dateTime && ?date < ?dateAdded) .
+            	{
+                	?post snvoc:isLocatedIn dbpedia:%Country1%. bind(1 as ?c1).
+            	} union {
+                	?post snvoc:isLocatedIn dbpedia:%Country2%. bind(1 as ?c2).
+                }
+        }        
+    }
+} 
+group by ?fr
+order by desc(?sum) ?fr
+limit 20

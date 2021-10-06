@@ -1,0 +1,21 @@
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+select ?fr ?first ?last ?post ?content ?date
+where {
+	sn:pers%Person% snvoc:knows/snvoc:hasPerson ?fr.
+	?fr snvoc:firstName ?first. 
+	?fr snvoc:lastName ?last .
+	?post snvoc:hasCreator ?fr.
+	{ 
+	  {?post snvoc:content ?content } 
+	  union 
+	  { ?post snvoc:imageFile ?content }
+	} .
+	?post snvoc:creationDate ?date.
+	filter (?date <= "%Date0%"^^xsd:dateTime).
+}
+order by desc (?date) ?post
+limit 20
+
