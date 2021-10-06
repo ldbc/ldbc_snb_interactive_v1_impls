@@ -6,11 +6,9 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8Result;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate2AddPostLike;
 import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.converter.GraphDBConverter;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.operationhandlers.GraphDBListOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.graphdb.operationhandlers.GraphDBUpdateOperationHandler;
 
 import org.eclipse.rdf4j.query.BindingSet;
 
@@ -35,20 +33,20 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 		}
 
 		@Override
-		public LdbcQuery1Result convertSingleResult(BindingSet bindingSet) {
-			return new LdbcQuery1Result(cnv.asLong(bindingSet, "fr"),
-					cnv.asString(bindingSet, "last"),
-					cnv.asInt(bindingSet, "mindist"),
-					cnv.timestampToEpoch(bindingSet, "bday"),
-					cnv.timestampToEpoch(bindingSet, "since"),
-					cnv.asString(bindingSet, "gen"),
-					cnv.asString(bindingSet, "browser"),
-					cnv.asString(bindingSet, "locationIP"),
-					cnv.asStringCollection(bindingSet, "emails"),
-					cnv.asStringCollection(bindingSet, "lngs"),
-					cnv.asString(bindingSet, "based"),
-					cnv.asObjectCollection(bindingSet, "studyAt"),
-					cnv.asObjectCollection(bindingSet, "workAt"));
+		public LdbcQuery1Result convertSingleResult(BindingSet bs) {
+			return new LdbcQuery1Result(cnv.asLong(bs, "fr"),
+					cnv.asString(bs, "last"),
+					cnv.asInt(bs, "mindist"),
+					cnv.timestampToEpoch(bs, "bday"),
+					cnv.timestampToEpoch(bs, "since"),
+					cnv.asString(bs, "gen"),
+					cnv.asString(bs, "browser"),
+					cnv.asString(bs, "locationIP"),
+					cnv.asStringCollection(bs, "emails"),
+					cnv.asStringCollection(bs, "lngs"),
+					cnv.asString(bs, "based"),
+					cnv.asObjectCollection(bs, "studyAt"),
+					cnv.asObjectCollection(bs, "workAt"));
 		}
 
 
