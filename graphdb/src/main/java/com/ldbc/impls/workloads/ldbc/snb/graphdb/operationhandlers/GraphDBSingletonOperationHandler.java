@@ -4,42 +4,37 @@ import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;
 import com.ldbc.driver.ResultReporter;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.GraphDBConnectionState;
-import com.ldbc.impls.workloads.ldbc.snb.operationhandlers.ListOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.operationhandlers.SingletonOperationHandler;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public abstract class GraphDBListOperationHandler<TOperation extends Operation<List<TOperationResult>>, TOperationResult>
-		implements ListOperationHandler<TOperationResult, TOperation, GraphDBConnectionState> {
+public abstract class GraphDBSingletonOperationHandler<TOperation extends Operation<TOperationResult>, TOperationResult>
+		implements SingletonOperationHandler<TOperationResult, TOperation, GraphDBConnectionState> {
 
 	@Override
 	public void executeOperation(TOperation operation, GraphDBConnectionState dbConnectionState, ResultReporter resultReporter)
 			throws DbException {
-		List<TOperationResult> results = new ArrayList<>();
+		TOperationResult tuple = null;
 		int resultCount = 0;
-		//results.clear();
 
 		final String queryString = getQueryString(dbConnectionState, operation);
 		try (RepositoryConnection conn = dbConnectionState.getConnection()) {
 			dbConnectionState.logQuery(operation.getClass().getSimpleName(), queryString);
 
-			TupleQueryResult queryResultIter = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryString).evaluate();
-			while (queryResultIter.hasNext()) {
-				BindingSet bindingSet = queryResultIter.next();
+			TupleQueryResult queryResult = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryString).evaluate();
+			if (queryResult.hasNext()) {
+				BindingSet bindingSet = queryResult.next();
 
-				TOperationResult tuple = convertSingleResult(bindingSet);
+				tuple = convertSingleResult(bindingSet);
 				if (dbConnectionState.isPrintResults()) {
 					System.out.println(tuple.toString());
 				}
-				results.add(tuple);
 				resultCount++;
 			}
 		}
-		resultReporter.report(resultCount, results, operation);
+		resultReporter.report(resultCount, tuple, operation);
 	}
 
 	public abstract TOperationResult convertSingleResult(BindingSet bindingSet);
