@@ -48,27 +48,26 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 					cnv.asObjectCollection(bs, "studyAt"),
 					cnv.asObjectCollection(bs, "workAt"));
 		}
+	}
 
+	public static class InteractiveQuery8 extends GraphDBListOperationHandler<LdbcQuery8, LdbcQuery8Result> {
 
-		public static class InteractiveQuery8 extends GraphDBListOperationHandler<LdbcQuery8, LdbcQuery8Result> {
-
-			@Override
-			public String getQueryString(GraphDBConnectionState state, LdbcQuery8 operation) {
-				return state.getQueryStore().getQuery8(operation);
-			}
-
-			@Override
-			public LdbcQuery8Result convertSingleResult(BindingSet bindingSet) {
-				return new LdbcQuery8Result(
-						Long.parseLong(bindingSet.getBinding("from").getValue().stringValue()),
-						bindingSet.getBinding("first").getValue().stringValue(),
-						bindingSet.getBinding("last").getValue().stringValue(),
-						cnv.timestampToEpoch(bindingSet, "dt"),
-						Long.parseLong(bindingSet.getBinding("rep").getValue().stringValue()),
-						bindingSet.getBinding("content").getValue().stringValue());
-			}
-
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcQuery8 operation) {
+			return state.getQueryStore().getQuery8(operation);
 		}
+
+		@Override
+		public LdbcQuery8Result convertSingleResult(BindingSet bindingSet) {
+			return new LdbcQuery8Result(
+					Long.parseLong(bindingSet.getBinding("from").getValue().stringValue()),
+					bindingSet.getBinding("first").getValue().stringValue(),
+					bindingSet.getBinding("last").getValue().stringValue(),
+					cnv.timestampToEpoch(bindingSet, "dt"),
+					Long.parseLong(bindingSet.getBinding("rep").getValue().stringValue()),
+					bindingSet.getBinding("content").getValue().stringValue());
+		}
+
 	}
 
 	// Interactive writes
