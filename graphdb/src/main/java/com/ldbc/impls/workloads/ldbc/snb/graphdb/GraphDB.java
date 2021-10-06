@@ -8,16 +8,12 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate2AddPostLike;
 import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
+import com.ldbc.impls.workloads.ldbc.snb.graphdb.converter.GraphDBConverter;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.operationhandlers.GraphDBListOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.operationhandlers.GraphDBUpdateOperationHandler;
 
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.query.BindingSet;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class GraphDB extends BaseDb<GraphDBQueryStore> {
@@ -42,25 +38,28 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 	}
 
 
-	// public static class InteractiveQuery8 extends GraphDBListOperationHandler<LdbcQuery8, LdbcQuery8Result> {
-	//
-	// 	@Override
-	// 	public String getQueryString(GraphDBConnectionState state, LdbcQuery8 operation) {
-	// 		return state.getQueryStore().getQuery8(operation);
-	// 	}
-	//
-	// 	@Override
-	// 	public LdbcQuery8Result convertSingleResult(BindingSet bindingSet) {
-	// 		return new LdbcQuery8Result(
-	// 				Long.parseLong(bindingSet.getBinding("personId").getValue().stringValue()),
-	// 				result.getString(2),
-	// 				result.getString(3),
-	// 				PostgresConverter.stringTimestampToEpoch(result, 4),
-	// 				Long.parseLong(bindingSet.getBinding("personId").getValue().stringValue()),
-	// 				result.getString(6));
-	// 	}
-	// 	}
-	//}
+	public static class InteractiveQuery8 extends GraphDBListOperationHandler<LdbcQuery8, LdbcQuery8Result> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcQuery8 operation) {
+			return state.getQueryStore().getQuery8(operation);
+		}
+
+		@Override
+		public LdbcQuery8Result convertSingleResult(BindingSet bindingSet) {
+			return new LdbcQuery8Result(
+					Long.parseLong(bindingSet.getBinding("from").getValue().stringValue()),
+					bindingSet.getBinding("first").getValue().stringValue(),
+					bindingSet.getBinding("last").getValue().stringValue(),
+					GraphDBConverter.stringTimestampToEpoch(bindingSet.getBinding("dt").getValue().stringValue()),
+					Long.parseLong(bindingSet.getBinding("rep").getValue().stringValue()),
+					bindingSet.getBinding("content").getValue().stringValue());
+		}
+
+	}
+
+	// Interactive writes
+
 	public static class Update2AddPostLike extends GraphDBUpdateOperationHandler<LdbcUpdate2AddPostLike> {
 
 		@Override
