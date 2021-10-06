@@ -17,9 +17,12 @@ import org.eclipse.rdf4j.query.BindingSet;
 import java.util.Map;
 
 public class GraphDB extends BaseDb<GraphDBQueryStore> {
+
+	private static final GraphDBConverter cnv = new GraphDBConverter();
+
 	@Override
 	protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
-
+		dcs = new GraphDBConnectionState(properties, new GraphDBQueryStore(properties.get("queryDir")));
 	}
 
 	// Interactive complex reads
@@ -33,39 +36,53 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 
 		@Override
 		public LdbcQuery1Result convertSingleResult(BindingSet bindingSet) {
-			return null;
-		}
-	}
-
-
-	public static class InteractiveQuery8 extends GraphDBListOperationHandler<LdbcQuery8, LdbcQuery8Result> {
-
-		@Override
-		public String getQueryString(GraphDBConnectionState state, LdbcQuery8 operation) {
-			return state.getQueryStore().getQuery8(operation);
-		}
-
-		@Override
-		public LdbcQuery8Result convertSingleResult(BindingSet bindingSet) {
-			return new LdbcQuery8Result(
-					Long.parseLong(bindingSet.getBinding("from").getValue().stringValue()),
-					bindingSet.getBinding("first").getValue().stringValue(),
-					bindingSet.getBinding("last").getValue().stringValue(),
-					GraphDBConverter.stringTimestampToEpoch(bindingSet.getBinding("dt").getValue().stringValue()),
-					Long.parseLong(bindingSet.getBinding("rep").getValue().stringValue()),
-					bindingSet.getBinding("content").getValue().stringValue());
+			return new LdbcQuery1Result(cnv.asLong(bindingSet, "fr"),
+					cnv.asString(bindingSet, "last"),
+					cnv.asInt(bindingSet, "mindist"),
+					cnv.timestampToEpoch(bindingSet, "bday"),
+					cnv.timestampToEpoch(bindingSet, "since"),
+					cnv.asString(bindingSet, "gen"),
+					cnv.asString(bindingSet, "browser"),
+					cnv.asString(bindingSet, "locationIP"),
+					cnv.asStringCollection(bindingSet, "emails"),
+					cnv.asStringCollection(bindingSet, "lngs"),
+					cnv.asString(bindingSet, "based"),
+					cnv.asObjectCollection(bindingSet, "studyAt"),
+					cnv.asObjectCollection(bindingSet, "workAt"));
 		}
 
+
+		public static class InteractiveQuery8 extends GraphDBListOperationHandler<LdbcQuery8, LdbcQuery8Result> {
+
+			@Override
+			public String getQueryString(GraphDBConnectionState state, LdbcQuery8 operation) {
+				return state.getQueryStore().getQuery8(operation);
+			}
+
+			@Override
+			public LdbcQuery8Result convertSingleResult(BindingSet bindingSet) {
+				return new LdbcQuery8Result(
+						Long.parseLong(bindingSet.getBinding("from").getValue().stringValue()),
+						bindingSet.getBinding("first").getValue().stringValue(),
+						bindingSet.getBinding("last").getValue().stringValue(),
+						cnv.timestampToEpoch(bindingSet, "dt"),
+						Long.parseLong(bindingSet.getBinding("rep").getValue().stringValue()),
+						bindingSet.getBinding("content").getValue().stringValue());
+			}
+
+		}
 	}
 
 	// Interactive writes
-
-	public static class Update2AddPostLike extends GraphDBUpdateOperationHandler<LdbcUpdate2AddPostLike> {
-
-		@Override
-		public String getQueryString(GraphDBConnectionState state, LdbcUpdate2AddPostLike operation) {
-			return state.getQueryStore().getUpdate2(operation);
-		}
-	}
-
+//
+//		public static class Update2AddPostLike extends GraphDBUpdateOperationHandler<LdbcUpdate2AddPostLike> {
+//
+//			@Override
+//			public String getQueryString(GraphDBConnectionState state, LdbcUpdate2AddPostLike operation) {
+//				return state.getQueryStore().getUpdate2(operation);
+//			}
+//		}
+//
+//	}
 }
+
