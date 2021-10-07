@@ -15,6 +15,7 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate2AddPostLike;
 import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.converter.GraphDBConverter;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.operationhandlers.GraphDBListOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.graphdb.operationhandlers.GraphDBUpdateOperationHandler;
 
 import org.eclipse.rdf4j.query.BindingSet;
 
@@ -66,14 +67,13 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 		}
 		//?from ?first ?last ?dt ?rep ?content
 		@Override
-		public LdbcQuery8Result convertSingleResult(BindingSet bindingSet, List<String> bindingNames) {
-			GraphDBConverter graphDbConverter = new GraphDBConverter();
+		public LdbcQuery8Result convertSingleResult(List<String> bindingNames, BindingSet bindingSet) {
 			return new LdbcQuery8Result(
-					graphDbConverter.asLong(bindingSet.getBinding(bindingNames.get(0)).getValue()),
+					cnv.asLong(bindingSet, bindingNames.get(0)),
 					bindingSet.getBinding(bindingNames.get(1)).getValue().stringValue(),
 					bindingSet.getBinding(bindingNames.get(2)).getValue().stringValue(),
-					GraphDBConverter.stringTimestampToEpoch(bindingSet.getBinding(bindingNames.get(3)).getValue().stringValue()),
-					graphDbConverter.asLong(bindingSet.getBinding(bindingNames.get(4)).getValue()),
+					cnv.timestampToEpoch(bindingSet, bindingNames.get(3)),
+					cnv.asLong(bindingSet, bindingNames.get(4)),
 					bindingSet.getBinding(bindingNames.get(5)).getValue().stringValue());
 		}
 
@@ -88,15 +88,14 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 
 		//?fr ?first ?last ?post ?content ?date
 		@Override
-		public LdbcQuery9Result convertSingleResult(BindingSet bindingSet, List<String> bindingNames) {
-			GraphDBConverter graphDbConverter = new GraphDBConverter();
+		public LdbcQuery9Result convertSingleResult( List<String> bindingNames, BindingSet bindingSet) {
 			return new LdbcQuery9Result(
-					graphDbConverter.asLong(bindingSet.getBinding(bindingNames.get(0)).getValue()),
+					cnv.asLong(bindingSet, bindingNames.get(0)),
 					bindingSet.getBinding(bindingNames.get(1)).getValue().stringValue(),
 					bindingSet.getBinding(bindingNames.get(2)).getValue().stringValue(),
-					graphDbConverter.asLong(bindingSet.getBinding(bindingNames.get(3)).getValue()),
+					cnv.asLong(bindingSet, bindingNames.get(3)),
 					bindingSet.getBinding(bindingNames.get(4)).getValue().stringValue(),
-					GraphDBConverter.stringTimestampToEpoch(bindingSet.getBinding(bindingNames.get(5)).getValue().stringValue()));
+					cnv.timestampToEpoch(bindingSet, bindingNames.get(5)));
 
 		}
 	}
