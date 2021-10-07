@@ -68,6 +68,85 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 		}
 	}
 
+	public static class InteractiveQuery3 extends GraphDBListOperationHandler<LdbcQuery3, LdbcQuery3Result> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcQuery3 operation) {
+			return state.getQueryStore().getQuery3(operation);
+		}
+
+		@Override
+		public LdbcQuery3Result convertSingleResult(List<String> names, BindingSet bs) {
+			return new LdbcQuery3Result(cnv.asLong(bs, names.get(0)),
+					cnv.asString(bs, names.get(1)),
+					cnv.asString(bs, names.get(2)),
+					cnv.asInt(bs, names.get(3)),
+					cnv.asInt(bs, names.get(4)),
+					cnv.asInt(bs, names.get(5)));
+		}
+	}
+
+	public static class InteractiveQuery4 extends GraphDBListOperationHandler<LdbcQuery4, LdbcQuery4Result> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcQuery4 operation) {
+			return state.getQueryStore().getQuery4(operation);
+		}
+
+		@Override
+		public LdbcQuery4Result convertSingleResult(List<String> names, BindingSet bs) {
+			return new LdbcQuery4Result(cnv.asString(bs, names.get(0)),
+					cnv.asInt(bs, names.get(1)));
+		}
+	}
+
+	public static class InteractiveQuery5 extends GraphDBListOperationHandler<LdbcQuery5, LdbcQuery5Result> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcQuery5 operation) {
+			return state.getQueryStore().getQuery5(operation);
+		}
+
+		@Override
+		public LdbcQuery5Result convertSingleResult(List<String> names, BindingSet bs) {
+			return new LdbcQuery5Result(cnv.asString(bs, names.get(0)),
+					cnv.asInt(bs, names.get(1)));
+		}
+	}
+
+	public static class InteractiveQuery6 extends GraphDBListOperationHandler<LdbcQuery6, LdbcQuery6Result> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcQuery6 operation) {
+			return state.getQueryStore().getQuery6(operation);
+		}
+
+		@Override
+		public LdbcQuery6Result convertSingleResult(List<String> names, BindingSet bs) {
+			return new LdbcQuery6Result(cnv.asString(bs, names.get(0)),
+					cnv.asInt(bs, names.get(1)));
+		}
+	}
+
+	public static class InteractiveQuery7 extends GraphDBListOperationHandler<LdbcQuery7, LdbcQuery7Result> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcQuery7 operation) {
+			return state.getQueryStore().getQuery7(operation);
+		}
+
+		@Override
+		public LdbcQuery7Result convertSingleResult(List<String> names, BindingSet bs) {
+			return new LdbcQuery7Result(cnv.asLong(bs, names.get(0)),
+					cnv.asString(bs, names.get(1)),
+					cnv.asString(bs, names.get(2)),
+					cnv.timestampToEpoch(bs, names.get(3)),
+					cnv.asLong(bs, names.get(4)),
+					cnv.asString(bs, names.get(5)),
+					cnv.asInt(bs, names.get(6)),
+					cnv.asBoolean(bs, names.get(7)));
+		}
+	}
 
 	public static class InteractiveQuery8 extends GraphDBListOperationHandler<LdbcQuery8, LdbcQuery8Result> {
 
@@ -75,6 +154,7 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 		public String getQueryString(GraphDBConnectionState state, LdbcQuery8 operation) {
 			return state.getQueryStore().getQuery8(operation);
 		}
+
 		//?from ?first ?last ?dt ?rep ?content
 		@Override
 		public LdbcQuery8Result convertSingleResult(List<String> bindingNames, BindingSet bindingSet) {
@@ -98,7 +178,7 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 
 		//?fr ?first ?last ?post ?content ?date
 		@Override
-		public LdbcQuery9Result convertSingleResult( List<String> bindingNames, BindingSet bindingSet) {
+		public LdbcQuery9Result convertSingleResult(List<String> bindingNames, BindingSet bindingSet) {
 			return new LdbcQuery9Result(
 					cnv.asLong(bindingSet, bindingNames.get(0)),
 					bindingSet.getBinding(bindingNames.get(1)).getValue().stringValue(),
