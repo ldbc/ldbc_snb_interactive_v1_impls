@@ -5,7 +5,7 @@ where {
     {
         select ?rep ?dt
         where {
-            ?post snvoc:hasCreator sn:pers%Person% .
+            ?post snvoc:hasCreator sn:pers%personId% .
             ?rep snvoc:replyOf ?post .
             ?rep snvoc:creationDate ?dt .
         }
