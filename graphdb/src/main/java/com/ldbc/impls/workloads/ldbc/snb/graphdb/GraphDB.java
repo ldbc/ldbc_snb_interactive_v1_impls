@@ -2,10 +2,7 @@ package com.ldbc.impls.workloads.ldbc.snb.graphdb;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.control.LoggingService;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8Result;
@@ -45,7 +42,7 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 			return new LdbcQuery1Result(cnv.asLong(bs, names.get(0)),
 					cnv.asString(bs, names.get(1)),
 					cnv.asInt(bs, names.get(2)),
-					cnv.timestampToEpoch(bs, names.get(3)),
+					cnv.localDateToEpoch(bs, names.get(3)),
 					cnv.timestampToEpoch(bs, names.get(4)),
 					cnv.asString(bs, names.get(5)),
 					cnv.asString(bs, names.get(6)),
