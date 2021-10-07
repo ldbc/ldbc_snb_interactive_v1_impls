@@ -4,11 +4,11 @@ PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
 PREFIX onto: <http://www.ontotext.com/path#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-select ?fr ?last (min(?dist) as ?mindist) (group_concat(distinct ?email;
+select ?fr ?last (min(?dist) as ?mindist) ?bday ?since ?gen ?browser ?locationIP (group_concat(distinct ?email;
         separator=", ") as ?emails) (group_concat(distinct ?lng;
         separator=", ") as ?lngs) ?based (group_concat(distinct concat(?study_name, " ", str(?study_year), " ", ?study_country);
         separator=", ") as ?studyAt) (group_concat(distinct concat(?work_name, " ", str(?work_year), " ", ?work_country);
-        separator=", ") as ?workAt) ?bday ?since ?gen ?browser ?locationIP
+        separator=", ") as ?workAt)
 where {
     ?fr snvoc:email ?email .
     ?fr snvoc:speaks ?lng .
@@ -39,7 +39,7 @@ where {
     ?fr snvoc:locationIP ?locationIP .
     ?fr snvoc:browserUsed ?browser .
     {
-        select distinct ?fr ?dist
+        select distinct ?fr (?index + 1 as ?dist)
         where {
             VALUES (?source ?destination) {
                 (sn:pers%personId% undef)
@@ -48,7 +48,7 @@ where {
                 <urn:path> onto:findPath onto:allPaths ;
                            onto:sourceNode ?source ;
                            onto:destinationNode ?destination ;
-                           onto:exportBindingIndex ?dist ;
+                           onto:resultBindingIndex ?index ;
                            onto:maxPathLength "3"^^xsd:int;
                            onto:startNode ?start ;
                            onto:endNode ?fr .
@@ -57,7 +57,7 @@ where {
                 }
             }
         }
-        group by ?fr ?dist
+        group by ?fr ?index
     }
 }
 group by ?fr ?last ?bday ?since ?gen ?browser ?locationIP ?based ?dist

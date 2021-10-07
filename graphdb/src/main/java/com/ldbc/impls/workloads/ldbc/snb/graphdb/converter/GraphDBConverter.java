@@ -1,12 +1,10 @@
 package com.ldbc.impls.workloads.ldbc.snb.graphdb.converter;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
 import org.eclipse.rdf4j.model.Literal;
@@ -78,5 +76,11 @@ public class GraphDBConverter extends Converter {
 	@Override
 	public String convertString(String value) {
 		return value;
+	}
+
+	@Override
+	public String convertDate(Date date) {
+		return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
+				.format(date);
 	}
 }
