@@ -3,6 +3,7 @@ package com.ldbc.impls.workloads.ldbc.snb.graphdb.converter;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
@@ -34,7 +35,7 @@ public class GraphDBConverter extends Converter {
 		if (value == null) {
 			return new ArrayList<>();
 		} else {
-			return List.of(Arrays.asList(value.stringValue().split(", ")));
+			return Collections.singletonList(Arrays.asList(value.stringValue().split(", ")));
 		}
 	}
 
@@ -50,5 +51,24 @@ public class GraphDBConverter extends Converter {
 
 	public String asString(BindingSet bindingSet, String name) {
 		return bindingSet.getValue(name).stringValue();
+	}
+
+	@Override
+	public String convertId(long value) {
+		String personIdAsString = String.valueOf(value);
+		int maxLength = 20;
+
+		StringBuilder sb = new StringBuilder(personIdAsString);
+		if (sb.length() <= maxLength) {
+			while (sb.length() < maxLength) {
+				sb.insert(0, '0');
+			}
+		}
+		return sb.toString();
+	}
+
+	@Override
+	public String convertString(String value) {
+		return value;
 	}
 }

@@ -7,11 +7,17 @@ import com.ldbc.impls.workloads.ldbc.snb.graphdb.converter.GraphDBConverter;
 
 public class GraphDBQueryStore extends QueryStore {
 
+	public GraphDBQueryStore(String path) throws DbException {
+		super(path, ".rq");
+	}
+
 	protected Converter getConverter() {
 		return new GraphDBConverter();
 	}
 
-	public GraphDBQueryStore(String path) throws DbException {
-		super(path, ".rq");
-	}
+	@Override
+	protected String getParameterPrefix() { return "%"; }
+
+	@Override
+	protected String getParameterPostfix() { return "%"; }
 }
