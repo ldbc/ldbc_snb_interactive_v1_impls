@@ -2,9 +2,8 @@ package com.ldbc.impls.workloads.ldbc.snb.graphdb;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.control.LoggingService;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8Result;
@@ -57,6 +56,23 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 		}
 	}
 
+	public static class InteractiveQuery2 extends GraphDBListOperationHandler<LdbcQuery2, LdbcQuery2Result> {
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcQuery2 operation) {
+			return state.getQueryStore().getQuery2(operation);
+		}
+
+		@Override
+		public LdbcQuery2Result convertSingleResult(List<String> names, BindingSet bs) {
+			return new LdbcQuery2Result(cnv.asLong(bs, names.get(0)),
+					cnv.asString(bs, names.get(1)),
+					cnv.asString(bs, names.get(2)),
+					cnv.asLong(bs, names.get(3)),
+					cnv.asString(bs, names.get(4)),
+					cnv.timestampToEpoch(bs, names.get(5)));
+		}
+	}
+
 
 	public static class InteractiveQuery8 extends GraphDBListOperationHandler<LdbcQuery8, LdbcQuery8Result> {
 
@@ -93,7 +109,7 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 					cnv.asString(bindingSet, bindingNames.get(1)),
 					cnv.asString(bindingSet, bindingNames.get(2)),
 					cnv.asLong(bindingSet, bindingNames.get(3)),
-					cnv.asString(bindingSet, bindingNames.get(4)),
+					bindingSet.getBinding(bindingNames.get(4)).getValue().stringValue(),
 					cnv.timestampToEpoch(bindingSet, bindingNames.get(5)));
 
 		}
