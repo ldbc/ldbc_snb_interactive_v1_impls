@@ -6,12 +6,12 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
 import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.converter.GraphDBConverter;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.operationhandlers.GraphDBListOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.graphdb.operationhandlers.GraphDBSingletonOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.operationhandlers.GraphDBUpdateOperationHandler;
 
-import org.eclipse.rdf4j.model.IRI;
-import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.query.BindingSet;
 
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 
@@ -218,6 +218,29 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 		@Override
 		public String getQueryString(GraphDBConnectionState state, LdbcUpdate2AddPostLike operation) {
 			return state.getQueryStore().getUpdate2(operation);
+		}
+	}
+
+	// Interactive short reads
+
+	public static class ShortQuery1PersonProfile extends GraphDBSingletonOperationHandler<LdbcShortQuery1PersonProfile,
+			LdbcShortQuery1PersonProfileResult> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcShortQuery1PersonProfile operation) {
+			return state.getQueryStore().getShortQuery1PersonProfile(operation);
+		}
+
+		@Override
+		public LdbcShortQuery1PersonProfileResult convertSingleResult(List<String> names, BindingSet bs) {
+			return new LdbcShortQuery1PersonProfileResult(cnv.asString(bs, names.get(0)),
+					cnv.asString(bs, names.get(1)),
+					cnv.localDateToEpoch(bs, names.get(2)),
+					cnv.asString(bs, names.get(3)),
+					cnv.asString(bs, names.get(4)),
+					cnv.asLong(bs, names.get(5)),
+					cnv.asString(bs, names.get(6)),
+					cnv.timestampToEpoch(bs, names.get(7)));
 		}
 	}
 

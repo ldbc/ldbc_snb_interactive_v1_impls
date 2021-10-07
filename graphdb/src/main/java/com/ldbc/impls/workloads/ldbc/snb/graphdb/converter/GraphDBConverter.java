@@ -59,6 +59,10 @@ public class GraphDBConverter extends Converter {
 		return bindingSet.getValue(name).stringValue();
 	}
 
+	public String asStringIri(BindingSet bindingSet, String name) {
+		return ((SimpleIRI) bindingSet.getValue(name)).getLocalName();
+	}
+
 	public boolean asBoolean(BindingSet bindingSet, String name) {
 		return ((Literal) bindingSet.getValue(name)).booleanValue();
 	}
