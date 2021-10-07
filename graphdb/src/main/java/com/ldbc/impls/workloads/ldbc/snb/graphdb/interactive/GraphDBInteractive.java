@@ -28,7 +28,7 @@ public class GraphDBInteractive extends GraphDB {
 		registerOperationHandler(LdbcQuery13.class, InteractiveQuery13.class);
 		registerOperationHandler(LdbcQuery14.class, InteractiveQuery14.class);
 //
-//		registerOperationHandler(LdbcShortQuery1PersonProfile.class, ShortQuery1PersonProfile.class);
+		registerOperationHandler(LdbcShortQuery1PersonProfile.class, ShortQuery1PersonProfile.class);
 //		registerOperationHandler(LdbcShortQuery2PersonPosts.class, ShortQuery2PersonPosts.class);
 //		registerOperationHandler(LdbcShortQuery3PersonFriends.class, ShortQuery3PersonFriends.class);
 //		registerOperationHandler(LdbcShortQuery4MessageContent.class, ShortQuery4MessageContent.class);
