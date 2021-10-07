@@ -4,7 +4,7 @@ PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX onto: <http://www.ontotext.com/path#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-select ?first ?last (sum(?match) - sum(if(?match != 1, 1,0)) as ?score) ?fof ?gender ?locationname
+select ?fof ?first ?last (sum(?match) - sum(if(?match != 1, 1,0)) as ?score) ?gender ?locationname
 where {
     {
         select distinct ?fof

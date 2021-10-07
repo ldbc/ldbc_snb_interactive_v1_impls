@@ -4,20 +4,20 @@ PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX onto: <http://www.ontotext.com/path#>
 
-select ?first ?last ?startdate ?orgname ?fr
+select ?fr ?first ?last ?orgname ?startdate
 where {
     ?w snvoc:hasOrganisation ?org .
     ?org foaf:name ?orgname .
     ?org snvoc:isLocatedIn ?country.
-    ?country foaf:name "%Country%" .
+    ?country foaf:name "%countryName%" .
     ?fr snvoc:workAt ?w .
     ?w snvoc:workFrom ?startdate .
-    filter (?startdate < "%Date0%"^^xsd:integer) .
+    filter (?startdate < "%workFromYear%"^^xsd:integer) .
     {
         select distinct ?fr
             where {
                 VALUES (?source ?destination) {
-                    (sn:pers%Person% undef)
+                    (sn:pers%personId% undef)
                 }
                 SERVICE <http://www.ontotext.com/path#search> {
                     <urn:path> onto:findPath onto:allPaths ;

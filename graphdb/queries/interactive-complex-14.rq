@@ -34,7 +34,7 @@ where {
     {
         SELECT distinct ?start ?end where {
             VALUES (?source ?destination) {
-                (sn:pers%Person1% sn:pers%Person2%)
+                (sn:pers%person1Id% sn:pers%person2Id%)
             }
             SERVICE <http://www.ontotext.com/path#search> {
                 <urn:path> onto:findPath onto:shortestPath ;
