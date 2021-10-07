@@ -3,16 +3,11 @@ package com.ldbc.impls.workloads.ldbc.snb.graphdb;
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.control.LoggingService;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1Result;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8Result;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery9;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery9Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate2AddPostLike;
 import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.converter.GraphDBConverter;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.operationhandlers.GraphDBListOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.graphdb.operationhandlers.GraphDBSingletonOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.operationhandlers.GraphDBUpdateOperationHandler;
 
 import org.eclipse.rdf4j.query.BindingSet;
@@ -136,6 +131,74 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 		}
 	}
 
+	public static class InteractiveQuery11 extends GraphDBListOperationHandler<LdbcQuery11, LdbcQuery11Result> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcQuery11 operation) {
+			return state.getQueryStore().getQuery11(operation);
+		}
+
+		//select ?fr ?first ?last ?orgname ?startdate
+		@Override
+		public LdbcQuery11Result convertSingleResult(List<String> bindingNames, BindingSet bindingSet) {
+			return new LdbcQuery11Result(
+					cnv.asLong(bindingSet, bindingNames.get(0)),
+					cnv.asString(bindingSet, bindingNames.get(1)),
+					cnv.asString(bindingSet, bindingNames.get(2)),
+					cnv.asString(bindingSet, bindingNames.get(3)),
+					cnv.asInt(bindingSet, bindingNames.get(4)));
+
+		}
+	}
+
+	public static class InteractiveQuery12 extends GraphDBListOperationHandler<LdbcQuery12, LdbcQuery12Result> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcQuery12 operation) {
+			return state.getQueryStore().getQuery12(operation);
+		}
+
+		//?exp ?first ?last ?tagnames ?count
+		@Override
+		public LdbcQuery12Result convertSingleResult(List<String> bindingNames, BindingSet bindingSet) {
+			return new LdbcQuery12Result(
+					cnv.asLong(bindingSet, bindingNames.get(0)),
+					cnv.asString(bindingSet, bindingNames.get(1)),
+					cnv.asString(bindingSet, bindingNames.get(2)),
+					cnv.asStringCollection(bindingSet, bindingNames.get(8)),
+					cnv.asInt(bindingSet, bindingNames.get(4)));
+
+		}
+	}
+
+	public static class InteractiveQuery13 extends GraphDBSingletonOperationHandler<LdbcQuery13, LdbcQuery13Result> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcQuery13 operation) {
+			return state.getQueryStore().getQuery13(operation);
+		}
+
+		@Override
+		public LdbcQuery13Result convertSingleResult(List<String> bindingNames, BindingSet bindingSet) {
+			return new LdbcQuery13Result(
+					cnv.asInt(bindingSet, bindingNames.get(0)));
+		}
+	}
+
+	// public static class InteractiveQuery14 extends GraphDBListOperationHandler<LdbcQuery14, LdbcQuery14Result> {
+	//
+	// 	@Override
+	// 	public String getQueryString(GraphDBConnectionState state, LdbcQuery14 operation) {
+	// 		return state.getQueryStore().getQuery14(operation);
+	// 	}
+	//
+	// 	@Override
+	// 	public LdbcQuery14Result convertSingleResult(List<String> bindingNames, BindingSet bindingSet) {
+	// 		return new LdbcQuery14Result(
+	// 				cnv.asInt(bindingSet, bindingNames.get(0)));
+	// 				cnv.asDouble(bindingSet, bindingNames.get(1)));
+	// 	}
+	// }
 	// Interactive writes
 
 	public static class Update2AddPostLike extends GraphDBUpdateOperationHandler<LdbcUpdate2AddPostLike> {
