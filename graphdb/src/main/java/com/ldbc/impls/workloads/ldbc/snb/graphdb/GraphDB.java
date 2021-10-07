@@ -186,7 +186,6 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 					cnv.asLong(bindingSet, bindingNames.get(3)),
 					bindingSet.getBinding(bindingNames.get(4)).getValue().stringValue(),
 					cnv.timestampToEpoch(bindingSet, bindingNames.get(5)));
-
 		}
 	}
 
@@ -207,7 +206,6 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 					cnv.asInt(bindingSet, bindingNames.get(3)),
 					cnv.asString(bindingSet, bindingNames.get(4)),
 					cnv.asString(bindingSet, bindingNames.get(5)));
-
 		}
 	}
 
@@ -227,7 +225,6 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 					cnv.asString(bindingSet, bindingNames.get(2)),
 					cnv.asString(bindingSet, bindingNames.get(3)),
 					cnv.asInt(bindingSet, bindingNames.get(4)));
-
 		}
 	}
 
@@ -245,9 +242,8 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 					cnv.asLong(bindingSet, bindingNames.get(0)),
 					cnv.asString(bindingSet, bindingNames.get(1)),
 					cnv.asString(bindingSet, bindingNames.get(2)),
-					cnv.asStringCollection(bindingSet, bindingNames.get(8)),
+					cnv.asStringCollection(bindingSet, bindingNames.get(3)),
 					cnv.asInt(bindingSet, bindingNames.get(4)));
-
 		}
 	}
 
@@ -265,20 +261,20 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 		}
 	}
 
-	// public static class InteractiveQuery14 extends GraphDBListOperationHandler<LdbcQuery14, LdbcQuery14Result> {
-	//
-	// 	@Override
-	// 	public String getQueryString(GraphDBConnectionState state, LdbcQuery14 operation) {
-	// 		return state.getQueryStore().getQuery14(operation);
-	// 	}
-	//
-	// 	@Override
-	// 	public LdbcQuery14Result convertSingleResult(List<String> bindingNames, BindingSet bindingSet) {
-	// 		return new LdbcQuery14Result(
-	// 				cnv.asInt(bindingSet, bindingNames.get(0)));
-	// 				cnv.asDouble(bindingSet, bindingNames.get(1)));
-	// 	}
-	// }
+	public static class InteractiveQuery14 extends GraphDBListOperationHandler<LdbcQuery14, LdbcQuery14Result> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcQuery14 operation) {
+			return state.getQueryStore().getQuery14(operation);
+		}
+
+		@Override
+		public LdbcQuery14Result convertSingleResult(List<String> bindingNames, BindingSet bindingSet) {
+			return new LdbcQuery14Result(
+					cnv.asNumberCollection(bindingSet, bindingNames.get(0)),
+					cnv.asDouble(bindingSet, bindingNames.get(1)));
+		}
+	}
 	// Interactive writes
 
 	public static class Update2AddPostLike extends GraphDBUpdateOperationHandler<LdbcUpdate2AddPostLike> {
