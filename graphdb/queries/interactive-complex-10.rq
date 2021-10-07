@@ -4,13 +4,13 @@ PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX onto: <http://www.ontotext.com/path#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-select ?first ?last (sum(?match) - sum(if(?match != 1, 1,0)) as ?score) ?fof ?gender ?locationname
+select ?fof ?first ?last (sum(?match) - sum(if(?match != 1, 1,0)) as ?score) ?gender ?locationname
 where {
     {
         select distinct ?fof
         where {
             VALUES (?source ?destination) {
-                (sn:pers%Person% undef)
+                (sn:pers%personId% undef)
             }
             SERVICE <http://www.ontotext.com/path#search> {
                 <urn:path> onto:findPath onto:allPaths ;
@@ -32,7 +32,7 @@ where {
     {
         select  distinct ?fof ?bday
         where {
-            values ?month {%HS1%}
+            values ?month {%month%}
             ?fof snvoc:birthday ?bday .
             filter (1 = if (Month(?bday) = if (?month < 13, ?month, ?month - 12), if (Day(?bday) > 21, 1, 0),
                     if (Month(?bday) = if ((?month +1) < 13, (?month+1), ((?month - 12)+1)), if (Day(?bday) < 22, 1, 0), 0)))
@@ -48,7 +48,7 @@ where {
     ?post snvoc:hasCreator ?fof .
     bind (if (
             exists {
-			sn:pers%Person% snvoc:hasInterest ?tag .
+			sn:pers%personId% snvoc:hasInterest ?tag .
         	?post snvoc:hasTag ?tag . 
 			}, 1, 0) as ?match)
 }
