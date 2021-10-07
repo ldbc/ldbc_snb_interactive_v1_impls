@@ -3,6 +3,8 @@ package com.ldbc.impls.workloads.ldbc.snb.graphdb;
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.control.LoggingService;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery10Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery1Result;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery8Result;
@@ -67,11 +69,11 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 		public LdbcQuery8Result convertSingleResult(List<String> bindingNames, BindingSet bindingSet) {
 			return new LdbcQuery8Result(
 					cnv.asLong(bindingSet, bindingNames.get(0)),
-					bindingSet.getBinding(bindingNames.get(1)).getValue().stringValue(),
-					bindingSet.getBinding(bindingNames.get(2)).getValue().stringValue(),
+					cnv.asString(bindingSet, bindingNames.get(1)),
+					cnv.asString(bindingSet, bindingNames.get(2)),
 					cnv.timestampToEpoch(bindingSet, bindingNames.get(3)),
 					cnv.asLong(bindingSet, bindingNames.get(4)),
-					bindingSet.getBinding(bindingNames.get(5)).getValue().stringValue());
+					cnv.asString(bindingSet, bindingNames.get(5)));
 		}
 
 	}
@@ -88,35 +90,35 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 		public LdbcQuery9Result convertSingleResult( List<String> bindingNames, BindingSet bindingSet) {
 			return new LdbcQuery9Result(
 					cnv.asLong(bindingSet, bindingNames.get(0)),
-					bindingSet.getBinding(bindingNames.get(1)).getValue().stringValue(),
-					bindingSet.getBinding(bindingNames.get(2)).getValue().stringValue(),
+					cnv.asString(bindingSet, bindingNames.get(1)),
+					cnv.asString(bindingSet, bindingNames.get(2)),
 					cnv.asLong(bindingSet, bindingNames.get(3)),
-					bindingSet.getBinding(bindingNames.get(4)).getValue().stringValue(),
+					cnv.asString(bindingSet, bindingNames.get(4)),
 					cnv.timestampToEpoch(bindingSet, bindingNames.get(5)));
 
 		}
 	}
 
-	// public static class InteractiveQuery10 extends GraphDBListOperationHandler<LdbcQuery10, LdbcQuery9Result> {
-	//
-	// 	@Override
-	// 	public String getQueryString(GraphDBConnectionState state, LdbcQuery9 operation) {
-	// 		return state.getQueryStore().getQuery9(operation);
-	// 	}
-	//
-	// 	//?first ?last  ?score ?fof ?gender ?locationname
-	// 	@Override
-	// 	public LdbcQuery10Result convertSingleResult(BindingSet bindingSet, List<String> bindingNames) {
-	// 		GraphDBConverter graphDbConverter = new GraphDBConverter();
-	// 		return new LdbcQuery10Result(
-	// 				bindingSet.getBinding(bindingNames.get(1)).getValue().stringValue(),
-	// 				bindingSet.getBinding(bindingNames.get(2)).getValue().stringValue(),
-	// 				graphDbConverter.asLong(bindingSet.getBinding(bindingNames.get(3)).getValue()),
-	// 				bindingSet.getBinding(bindingNames.get(4)).getValue().stringValue(),
-	// 				GraphDBConverter.stringTimestampToEpoch(bindingSet.getBinding(bindingNames.get(5)).getValue().stringValue()));
-	//
-	// 	}
-	// }
+	public static class InteractiveQuery10 extends GraphDBListOperationHandler<LdbcQuery10, LdbcQuery10Result> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcQuery10 operation) {
+			return state.getQueryStore().getQuery10(operation);
+		}
+
+		//?fof ?first ?last  ?score  ?gender ?locationname
+		@Override
+		public LdbcQuery10Result convertSingleResult(List<String> bindingNames, BindingSet bindingSet) {
+			return new LdbcQuery10Result(
+					cnv.asLong(bindingSet, bindingNames.get(0)),
+					cnv.asString(bindingSet, bindingNames.get(1)),
+					cnv.asString(bindingSet, bindingNames.get(2)),
+					cnv.asInt(bindingSet, bindingNames.get(3)),
+					cnv.asString(bindingSet, bindingNames.get(4)),
+					cnv.asString(bindingSet, bindingNames.get(5)));
+
+		}
+	}
 
 	// Interactive writes
 
