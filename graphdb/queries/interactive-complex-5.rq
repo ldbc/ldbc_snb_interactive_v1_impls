@@ -1,20 +1,3 @@
-#query 5
-# need following update to perform well, the relation between post : person : member : forum is always 1:1 fro a given post, 
-# so we can benefit from it
-#
-# PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
-# insert {
-#     ?post snvoc:hasCreatorMember ?mem
-# } where { 
-#     ?post snvoc:hasCreator ?fr .
-#     ?forum snvoc:containerOf ?post .    
-#     ?forum snvoc:hasMember ?mem .
-#     ?mem snvoc:hasPerson ?fr .
-# }  
-#
-# we could try to alter the ruleset to derive that from the actual data
-#
-
 PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
 PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
@@ -26,7 +9,7 @@ where {
        select distinct ?fr
         where {
             VALUES (?source ?destination) {
-                (sn:pers%Person% undef)
+                (sn:pers%personId% undef)
             }
             SERVICE <http://www.ontotext.com/path#search> {
                 <urn:path> onto:findPath onto:allPaths ;
@@ -45,7 +28,7 @@ where {
     ?post snvoc:hasCreator ?fr .
     ?post snvoc:hasCreatorMember ?mem .
     ?mem snvoc:joinDate ?date .
-    filter (?date >= "%Date0%"^^xsd:dateTime) .
+    filter (?date >= "%minDate%"^^xsd:dateTime) .
     ?group snvoc:containerOf ?post .
     ?group snvoc:title ?title.
 }

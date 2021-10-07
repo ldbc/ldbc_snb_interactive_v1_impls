@@ -59,6 +59,10 @@ public class GraphDBConverter extends Converter {
 		return bindingSet.getValue(name).stringValue();
 	}
 
+	public boolean asBoolean(BindingSet bindingSet, String name) {
+		return ((Literal) bindingSet.getValue(name)).booleanValue();
+	}
+
 	@Override
 	public String convertId(long value) {
 		String personIdAsString = String.valueOf(value);
