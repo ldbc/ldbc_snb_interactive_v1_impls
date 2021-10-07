@@ -1,6 +1,8 @@
 package com.ldbc.impls.workloads.ldbc.snb.graphdb.converter;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,6 +21,12 @@ public class GraphDBConverter extends Converter {
 	public long timestampToEpoch(BindingSet bindingSet, String name) {
 		Instant instant = Instant.parse(bindingSet.getValue(name).stringValue());
 		return instant.toEpochMilli();
+	}
+
+	//converts date of type "2011-08-12" to millisecond.
+	public long localDateToEpoch(BindingSet bindingSet, String name) {
+		String s = bindingSet.getValue(name).stringValue();
+		return LocalDate.parse(s).atStartOfDay(ZoneId.of("GMT")).toInstant().toEpochMilli();
 	}
 
 	public Iterable<String> asStringCollection(BindingSet bindingSet, String name) {
