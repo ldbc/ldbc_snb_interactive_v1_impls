@@ -306,6 +306,13 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 			return state.getQueryStore().getUpdate5(operation);
 		}
 	}
+	public static class Update6AddPost extends GraphDBUpdateOperationHandler<LdbcUpdate6AddPost> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcUpdate6AddPost operation) {
+			return state.getQueryStore().getUpdate6Single(operation);
+		}
+	}
 
 	// Interactive short reads
 
