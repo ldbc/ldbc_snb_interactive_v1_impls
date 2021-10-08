@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
 import org.eclipse.rdf4j.model.Literal;
@@ -36,6 +37,16 @@ public class GraphDBConverter extends Converter {
 		}
 	}
 
+	public Iterable<Number> asNumberCollection(BindingSet bindingSet, String name) {
+		Value value = bindingSet.getValue(name);
+		if (value == null) {
+			return new ArrayList<>();
+		} else {
+			List<String> stringList = Arrays.asList(value.stringValue().split(", "));
+			return stringList.stream().map((x) -> Long.parseLong(x)).collect(Collectors.toList());
+		}
+	}
+
 	public Iterable<List<Object>> asObjectCollection(BindingSet bindingSet, String name) {
 		Value value = bindingSet.getValue(name);
 		if (value == null) {
@@ -53,6 +64,10 @@ public class GraphDBConverter extends Converter {
 
 	public int asInt(BindingSet bindingSet, String name) {
 		return ((Literal) bindingSet.getValue(name)).intValue();
+	}
+
+	public double asDouble(BindingSet bindingSet, String name) {
+		return ((Literal) bindingSet.getValue(name)).doubleValue();
 	}
 
 	public String asString(BindingSet bindingSet, String name) {
