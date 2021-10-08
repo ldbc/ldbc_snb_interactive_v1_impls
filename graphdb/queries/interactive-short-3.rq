@@ -1,0 +1,13 @@
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?knownFriendId ?friendFirstName ?friendLastName ?creationDate
+WHERE {
+    sn:pers%personId% snvoc:knows ?knownFriendNode .
+    ?knownFriendNode snvoc:hasPerson ?knownFriendId ;
+                     snvoc:creationDate ?creationDate .
+    ?knownFriendId snvoc:firstName ?friendFirstName ;
+                   snvoc:lastName ?friendLastName .
+} ORDER BY DESC(?creationDate) ?knownFriendId

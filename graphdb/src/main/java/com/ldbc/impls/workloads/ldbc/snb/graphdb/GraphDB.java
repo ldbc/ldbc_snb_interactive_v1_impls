@@ -307,9 +307,114 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 					cnv.localDateToEpoch(bs, names.get(2)),
 					cnv.asString(bs, names.get(3)),
 					cnv.asString(bs, names.get(4)),
-					cnv.asLong(bs, names.get(5)),
+					cnv.asInt(bs, names.get(5)),
 					cnv.asString(bs, names.get(6)),
 					cnv.timestampToEpoch(bs, names.get(7)));
+		}
+	}
+
+	public static class ShortQuery2PersonPosts extends GraphDBListOperationHandler<LdbcShortQuery2PersonPosts,
+			LdbcShortQuery2PersonPostsResult> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcShortQuery2PersonPosts operation) {
+			return state.getQueryStore().getShortQuery2PersonPosts(operation);
+		}
+
+		@Override
+		public LdbcShortQuery2PersonPostsResult convertSingleResult(List<String> names, BindingSet bs) {
+			return new LdbcShortQuery2PersonPostsResult(cnv.asLong(bs, names.get(0)),
+					cnv.asString(bs, names.get(1)),
+					cnv.timestampToEpoch(bs, names.get(2)),
+					cnv.asLong(bs, names.get(3)),
+					cnv.asLong(bs, names.get(4)),
+					cnv.asString(bs, names.get(5)),
+					cnv.asString(bs, names.get(6)));
+		}
+	}
+
+	public static class ShortQuery3PersonFriends extends GraphDBListOperationHandler<LdbcShortQuery3PersonFriends,
+			LdbcShortQuery3PersonFriendsResult> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcShortQuery3PersonFriends operation) {
+			return state.getQueryStore().getShortQuery3PersonFriends(operation);
+		}
+
+		@Override
+		public LdbcShortQuery3PersonFriendsResult convertSingleResult(List<String> names, BindingSet bs) {
+			return new LdbcShortQuery3PersonFriendsResult(cnv.asLong(bs, names.get(0)),
+					cnv.asString(bs, names.get(1)),
+					cnv.asString(bs, names.get(2)),
+					cnv.timestampToEpoch(bs, names.get(3)));
+		}
+	}
+
+	public static class ShortQuery4MessageContent extends GraphDBSingletonOperationHandler<LdbcShortQuery4MessageContent,
+			LdbcShortQuery4MessageContentResult> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcShortQuery4MessageContent operation) {
+			return state.getQueryStore().getShortQuery4MessageContent(operation);
+		}
+
+		@Override
+		public LdbcShortQuery4MessageContentResult convertSingleResult(List<String> names, BindingSet bs) {
+			return new LdbcShortQuery4MessageContentResult(cnv.asString(bs, names.get(0)),
+					cnv.timestampToEpoch(bs, names.get(1)));
+		}
+	}
+
+	public static class ShortQuery5MessageCreator extends GraphDBSingletonOperationHandler<LdbcShortQuery5MessageCreator,
+			LdbcShortQuery5MessageCreatorResult> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcShortQuery5MessageCreator operation) {
+			return state.getQueryStore().getShortQuery5MessageCreator(operation);
+		}
+
+		@Override
+		public LdbcShortQuery5MessageCreatorResult convertSingleResult(List<String> names, BindingSet bs) {
+			return new LdbcShortQuery5MessageCreatorResult(cnv.asLong(bs, names.get(0)),
+					cnv.asString(bs, names.get(1)),
+					cnv.asString(bs, names.get(2)));
+		}
+	}
+	public static class ShortQuery6MessageForum extends GraphDBSingletonOperationHandler<LdbcShortQuery6MessageForum,
+			LdbcShortQuery6MessageForumResult> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcShortQuery6MessageForum operation) {
+			return state.getQueryStore().getShortQuery6MessageForum(operation);
+		}
+
+		@Override
+		public LdbcShortQuery6MessageForumResult convertSingleResult(List<String> names, BindingSet bs) {
+			return new LdbcShortQuery6MessageForumResult(cnv.asLong(bs, names.get(0)),
+					cnv.asString(bs, names.get(1)),
+					cnv.asLong(bs, names.get(2)),
+					cnv.asString(bs, names.get(3)),
+					cnv.asString(bs, names.get(4)));
+		}
+	}
+
+	public static class ShortQuery7MessageReplies extends GraphDBListOperationHandler<LdbcShortQuery7MessageReplies,
+			LdbcShortQuery7MessageRepliesResult> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcShortQuery7MessageReplies operation) {
+			return state.getQueryStore().getShortQuery7MessageReplies(operation);
+		}
+
+		@Override
+		public LdbcShortQuery7MessageRepliesResult convertSingleResult(List<String> names, BindingSet bs) {
+			return new LdbcShortQuery7MessageRepliesResult(cnv.asLong(bs, names.get(0)),
+					cnv.asString(bs, names.get(1)),
+					cnv.timestampToEpoch(bs, names.get(2)),
+					cnv.asLong(bs, names.get(3)),
+					cnv.asString(bs, names.get(4)),
+					cnv.asString(bs, names.get(5)),
+					cnv.asBoolean(bs, names.get(6)));
 		}
 	}
 
