@@ -1,0 +1,20 @@
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+
+SELECT ?message ?content ?creationDate ?originalPost ?postCreator ?creatorFirstName ?creatorLastName
+WHERE {
+	?message snvoc:hasCreator sn:pers%personId% .
+	{
+	  {?message snvoc:content ?content ;
+             snvoc:replyOf ?originalPost }
+	  UNION
+	  {?message snvoc:imageFile ?content .
+            BIND (?message AS ?originalPost)}
+	} .
+    ?message snvoc:id ?messageId ;
+          snvoc:creationDate ?creationDate .
+    ?originalPost snvoc:hasCreator ?postCreator .
+    ?postCreator snvoc:firstName ?creatorFirstName ;
+     		 snvoc:lastName ?creatorLastName ;
+} ORDER by DESC(?creationDate)
+LIMIT 10

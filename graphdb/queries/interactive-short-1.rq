@@ -5,6 +5,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
 SELECT ?firstName ?lastName ?birthday ?locationIP ?usedBrowser ?cityId ?gender ?creationDate
 WHERE {
+    sn:pers%personId% rdf:type snvoc:Person ;
     snvoc:firstName ?firstName ;
     snvoc:lastName ?lastName ;
     snvoc:gender ?gender ;
