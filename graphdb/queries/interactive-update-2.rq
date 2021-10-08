@@ -1,0 +1,11 @@
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+
+INSERT {
+    sn:pers%personId% snvoc:likes _:bnode .
+    _:bnode snvoc:hasPost sn:post%postId% ;
+    snvoc:creationDate %creationDate%^^xsd:dateTime .
+} WHERE{
+      sn:pers%personId%  rdf:type snvoc:Person .
+      sn:post%postId% rdf:type snvoc:Post .
+ }

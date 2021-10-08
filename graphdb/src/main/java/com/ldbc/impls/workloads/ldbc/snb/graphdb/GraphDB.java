@@ -285,6 +285,27 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 			return state.getQueryStore().getUpdate2(operation);
 		}
 	}
+	public static class Update3AddCommentLike extends GraphDBUpdateOperationHandler<LdbcUpdate3AddCommentLike> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcUpdate3AddCommentLike operation) {
+			return state.getQueryStore().getUpdate3(operation);
+		}
+	}
+	public static class Update4AddForum extends GraphDBUpdateOperationHandler<LdbcUpdate4AddForum> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcUpdate4AddForum operation) {
+			return state.getQueryStore().getUpdate4Single(operation);
+		}
+	}
+	public static class Update5AddForumMembership extends GraphDBUpdateOperationHandler<LdbcUpdate5AddForumMembership> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcUpdate5AddForumMembership operation) {
+			return state.getQueryStore().getUpdate5(operation);
+		}
+	}
 
 	// Interactive short reads
 
