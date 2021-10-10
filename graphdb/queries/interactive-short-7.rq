@@ -1,0 +1,17 @@
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+
+SELECT ?repliedComment ?repliedCommentContent ?repliedCommentCreationDate ?replyAuthor ?replyAuthorFirstName ?replyAuthorLastName ?knowsAuthor
+WHERE {
+	?message snvoc:id "%messageId%"^^xsd:long ;
+             snvoc:hasCreator ?messageAuthor .
+    ?repliedComment snvoc:replyOf ?replyMessage .
+    ?replyMessage snvoc:id "%messageId%"^^xsd:long .
+    ?repliedComment snvoc:content ?repliedCommentContent ;
+    				snvoc:creationDate ?repliedCommentCreationDate ;
+        			snvoc:hasCreator ?replyAuthor .
+    ?replyAuthor snvoc:firstName ?replyAuthorFirstName ;
+                 snvoc:lastName ?replyAuthorLastName .
+ BIND (?replyAuthor != ?messageAuthor && EXISTS { ?replyAuthor snvoc:knows ?messageAuthor } AS ?knowsAuthor)
+} ORDER BY DESC(?repliedCommentCreationDate) ?replyAuthor

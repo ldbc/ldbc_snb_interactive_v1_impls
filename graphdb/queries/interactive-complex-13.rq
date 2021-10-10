@@ -19,7 +19,7 @@ select ?dist where
                     ?start snvoc:knows/snvoc:hasPerson ?fr.
                 }
             }
-   
+
 }
 
 group by ?source ?dist
