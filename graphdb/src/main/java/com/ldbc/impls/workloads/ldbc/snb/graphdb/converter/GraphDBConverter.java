@@ -57,8 +57,8 @@ public class GraphDBConverter extends Converter {
 	}
 
 	public long asLong(BindingSet bindingSet, String name) {
-		int numberIndex = 4;
 		String localName = ((SimpleIRI) bindingSet.getValue(name)).getLocalName();
+		int numberIndex = localName.indexOf('0');
 		return Long.parseLong(localName.substring(numberIndex));
 	}
 

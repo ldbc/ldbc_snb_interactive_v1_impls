@@ -1,0 +1,18 @@
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?forum ?title ?moderator ?moderatorFirstName ?moderatorLastName
+WHERE {
+    ?message snvoc:id "%messageId%"^^xsd:long .
+    OPTIONAL {
+        ?message snvoc:replyOf* ?originalPost .
+        ?originalPost rdf:type snvoc:Post .
+    } .
+    BIND(COALESCE(?originalPost, ?message) AS ?forumPost) .
+    ?forum snvoc:containerOf ?forumPost ;
+           snvoc:title ?title ;
+           snvoc:hasModerator ?moderator .
+    ?moderator snvoc:firstName ?moderatorFirstName ;
+                 snvoc:lastName ?moderatorLastName .
+}

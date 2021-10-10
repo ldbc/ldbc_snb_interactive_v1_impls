@@ -1,0 +1,10 @@
+personId|tagClassName
+32985348833849|EurovisionSongContestEntry
+28587302322471|Architect
+454|Boxer
+10995116277882|IceHockeyPlayer
+17592186044519|Architect
+32985348834036|Architect
+30786325577784|EurovisionSongContestEntry
+17592186045093|IceHockeyPlayer
+19791209300317|Boxer
