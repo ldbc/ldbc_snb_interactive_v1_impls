@@ -43,6 +43,6 @@ public class GraphDBInteractive extends GraphDB {
 		registerOperationHandler(LdbcUpdate5AddForumMembership.class, Update5AddForumMembership.class);
 		registerOperationHandler(LdbcUpdate6AddPost.class, Update6AddPost.class);
 //		registerOperationHandler(LdbcUpdate7AddComment.class, Update7AddComment.class);
-//		registerOperationHandler(LdbcUpdate8AddFriendship.class, Update8AddFriendship.class);
+		registerOperationHandler(LdbcUpdate8AddFriendship.class, Update8AddFriendship.class);
 	}
 }

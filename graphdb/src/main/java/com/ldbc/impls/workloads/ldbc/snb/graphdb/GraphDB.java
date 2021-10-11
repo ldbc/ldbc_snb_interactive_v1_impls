@@ -324,6 +324,13 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 		}
 	}
 
+	public static class Update8AddFriendship extends GraphDBUpdateOperationHandler<LdbcUpdate8AddFriendship> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcUpdate8AddFriendship operation) {
+			return state.getQueryStore().getUpdate8(operation);
+		}
+	}
 	// Interactive short reads
 
 	public static class ShortQuery1PersonProfile extends GraphDBSingletonOperationHandler<LdbcShortQuery1PersonProfile,
