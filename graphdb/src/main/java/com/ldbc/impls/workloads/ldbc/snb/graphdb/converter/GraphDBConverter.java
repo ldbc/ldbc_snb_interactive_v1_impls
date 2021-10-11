@@ -109,16 +109,18 @@ public class GraphDBConverter extends Converter {
 	@Override
 	public String convertDateTime(Date date) {
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-		return "'" + sdf.format(date) + "'";
+		return sdf.format(date)	;
 	}
-
 	@Override
 	public String convertLongList(List<Long> values) {
+		if (values.isEmpty()){
+			return "";
+		}
 		String res = "\"";
 		res += values
 				.stream()
 				.map(v -> v.toString())
-				.collect(Collectors.joining(", "));
+				.collect(Collectors.joining("\"^^xsd:int, \""));
 		return res+"\"^^xsd:int";
 	}
 }

@@ -6,6 +6,7 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery4MessageCont
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery5MessageCreator;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery6MessageForum;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery7MessageReplies;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate6AddPost;
 import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
 import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.converter.GraphDBConverter;
@@ -55,6 +56,27 @@ public class GraphDBQueryStore extends QueryStore {
 		return prepare(
 				QueryType.InteractiveShortQuery7,
 				ImmutableMap.of(LdbcShortQuery7MessageReplies.MESSAGE_ID, String.valueOf(operation.messageId()))
+		);
+	}
+
+	@Override
+	public String getUpdate6Single(LdbcUpdate6AddPost operation) {
+		return prepare(
+				QueryType.InteractiveUpdate6,
+				new ImmutableMap.Builder<String, String>()
+						.put(LdbcUpdate6AddPost.POST_ID, getConverter().convertIdForInsertion(operation.postId()))
+						.put(LdbcUpdate6AddPost.IMAGE_FILE, getConverter().convertString(operation.imageFile()))
+						.put(LdbcUpdate6AddPost.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()))
+						.put(LdbcUpdate6AddPost.LOCATION_IP, getConverter().convertString(operation.locationIp()))
+						.put(LdbcUpdate6AddPost.BROWSER_USED, getConverter().convertString(operation.browserUsed()))
+						.put(LdbcUpdate6AddPost.LANGUAGE, getConverter().convertString(operation.language()))
+						.put(LdbcUpdate6AddPost.CONTENT, getConverter().convertString(operation.content()))
+						.put(LdbcUpdate6AddPost.LENGTH, getConverter().convertInteger(operation.length()))
+						.put(LdbcUpdate6AddPost.AUTHOR_PERSON_ID, getConverter().convertId(operation.authorPersonId()))
+						.put(LdbcUpdate6AddPost.FORUM_ID, getConverter().convertId(operation.forumId()))
+						.put(LdbcUpdate6AddPost.COUNTRY_ID, Long.toString(operation.countryId()))
+						.put(LdbcUpdate6AddPost.TAG_IDS, getConverter().convertLongList(operation.tagIds()))
+						.build()
 		);
 	}
 }
