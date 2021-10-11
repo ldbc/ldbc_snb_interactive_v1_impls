@@ -13,15 +13,24 @@ INSERT
     snvoc:browserUsed "%browserUsed%" ;
     snvoc:content "%content%" ;
     snvoc:length "%length%"^^xsd:int .
-sn:post00000000412316864186 snvoc:language "%language%" ;
+    sn:post%postId% snvoc:language "%language%" ;
                             snvoc:isLocatedIn ?country ;
     snvoc:hasCreator sn:pers%authorPersonId% ;
-snvoc:hasTag ?tag .
-sn:forum%forumId% snvoc:containerOf sn:post%postId% .
+    snvoc:hasTag ?tag .
+    sn:forum%forumId% snvoc:containerOf sn:post%postId% .
 }
 WHERE {
     sn:pers%authorPersonId% rdf:type snvoc:Person .
-    sn:forum%forumId% rdf:type snvoc:forum.
-    ?tag snvoc:id %tagIds% .
+    sn:forum%forumId% rdf:type snvoc:Forum.
+    ?country rdf:type dbpedia-owl:Country .
     ?country snvoc:id  "%countryId%"^^xsd:int .
+    {
+               SELECT  ?tag
+               WHERE {
+                   ?tag snvoc:id ?tagId .
+                   ?tag rdf:type ?tagClass .
+                   ?tagClass rdf:type snvoc:TagClass .
+                   FILTER (?tagId in (%tagIds%)) .
+               }
+           }
 }
