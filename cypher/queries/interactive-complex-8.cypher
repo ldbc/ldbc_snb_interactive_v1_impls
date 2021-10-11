@@ -1,7 +1,7 @@
 // Q8. Recent replies
 /*
 :param personId: 143
- */
+*/
 MATCH
   (start:Person {id: $personId})<-[:HAS_CREATOR]-(:Message)<-[:REPLY_OF]-(comment:Comment)-[:HAS_CREATOR]->(person:Person)
 RETURN

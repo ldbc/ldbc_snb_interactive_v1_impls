@@ -4,7 +4,7 @@
   4398046511333 AS personId,
   5 AS month
 }
- */
+*/
 MATCH (person:Person {id: $personId})-[:KNOWS*2..2]-(friend:Person)-[:IS_LOCATED_IN]->(city:City)
 WHERE 
   ((friend.birthday.month = $month          AND friend.birthday.day >= 21) OR

@@ -7,7 +7,7 @@
   "2010-06-01" AS startDate,
   28 AS durationDays
 }
- */
+*/
 MATCH
   (person:Person {id: $personId})-[:KNOWS*1..2]-(friend:Person)<-[:HAS_CREATOR]-(messageX:Message),
   (messageX)-[:IS_LOCATED_IN]->(countryX:Country {name: $countryXName})

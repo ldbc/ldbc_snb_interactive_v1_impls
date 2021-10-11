@@ -4,7 +4,7 @@
   8796093022357 AS person1Id,
   8796093022390 AS person2Id
 }
- */
+*/
 MATCH path = allShortestPaths((person1:Person {id: $person1Id})-[:KNOWS*]-(person2:Person {id: $person2Id}))
 WITH nodes(path) AS pathNodes
 RETURN

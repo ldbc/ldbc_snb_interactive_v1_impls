@@ -1,7 +1,7 @@
 // Q7. Recent likers
 /*
 :param personId: 4398046511268
- */
+*/
 MATCH (person:Person {id: $personId})<-[:HAS_CREATOR]-(message:Message)<-[like:LIKES]-(liker:Person)
 WITH liker, message, like.creationDate AS likeTime, person
 ORDER BY likeTime DESC, message.id ASC
