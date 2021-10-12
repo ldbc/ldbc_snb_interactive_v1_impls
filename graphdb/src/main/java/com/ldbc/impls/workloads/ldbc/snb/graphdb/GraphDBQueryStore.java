@@ -13,6 +13,8 @@ import com.ldbc.impls.workloads.ldbc.snb.graphdb.converter.GraphDBConverter;
 
 public class GraphDBQueryStore extends QueryStore {
 
+	private static final String SUBJECT_ID = "subjectId";
+
 	public GraphDBQueryStore(String path) throws DbException {
 		super(path, ".rq");
 	}
@@ -61,6 +63,9 @@ public class GraphDBQueryStore extends QueryStore {
 
 	@Override
 	public String getUpdate6Single(LdbcUpdate6AddPost operation) {
+//		return super.getUpdate6Single(operation).replace(getParameterPrefix() + "postIdSubj" + getParameterPostfix(),
+//				getConverter().convertId(operation.postId()));
+
 		return prepare(
 				QueryType.InteractiveUpdate6,
 				new ImmutableMap.Builder<String, String>()
@@ -74,8 +79,9 @@ public class GraphDBQueryStore extends QueryStore {
 						.put(LdbcUpdate6AddPost.LENGTH, getConverter().convertInteger(operation.length()))
 						.put(LdbcUpdate6AddPost.AUTHOR_PERSON_ID, getConverter().convertId(operation.authorPersonId()))
 						.put(LdbcUpdate6AddPost.FORUM_ID, getConverter().convertId(operation.forumId()))
-						.put(LdbcUpdate6AddPost.COUNTRY_ID, Long.toString(operation.countryId()))
+						.put(LdbcUpdate6AddPost.COUNTRY_ID, getConverter().convertIdForInsertion(operation.countryId()))
 						.put(LdbcUpdate6AddPost.TAG_IDS, getConverter().convertLongList(operation.tagIds()))
+						.put(SUBJECT_ID, getConverter().convertId(operation.postId()))
 						.build()
 		);
 	}
