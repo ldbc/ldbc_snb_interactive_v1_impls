@@ -258,6 +258,9 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 
 		@Override
 		public LdbcQuery13Result convertSingleResult(List<String> bindingNames, BindingSet bindingSet) {
+			if(bindingNames.get(0).isEmpty()) {
+				System.out.println("empty");
+			}
 			return new LdbcQuery13Result(
 					cnv.asInt(bindingSet, bindingNames.get(0)));
 		}
@@ -288,6 +291,14 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 		}
 	}
 
+//	public static class Update1AddPerson extends GraphDBUpdateOperationHandler<LdbcUpdate1AddPerson> {
+//
+//		@Override
+//		public String getQueryString(GraphDBConnectionState state, LdbcUpdate1AddPerson operation) {
+//			return state.getQueryStore().getUpdate1Single(operation);
+//		}
+//	}
+
 	public static class Update2AddPostLike extends GraphDBUpdateOperationHandler<LdbcUpdate2AddPostLike> {
 
 		@Override
@@ -295,6 +306,7 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 			return state.getQueryStore().getUpdate2(operation);
 		}
 	}
+
 	public static class Update3AddCommentLike extends GraphDBUpdateOperationHandler<LdbcUpdate3AddCommentLike> {
 
 		@Override
@@ -302,6 +314,7 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 			return state.getQueryStore().getUpdate3(operation);
 		}
 	}
+
 	public static class Update4AddForum extends GraphDBUpdateOperationHandler<LdbcUpdate4AddForum> {
 
 		@Override
@@ -309,6 +322,7 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 			return state.getQueryStore().getUpdate4Single(operation);
 		}
 	}
+
 	public static class Update5AddForumMembership extends GraphDBUpdateOperationHandler<LdbcUpdate5AddForumMembership> {
 
 		@Override
@@ -316,6 +330,7 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 			return state.getQueryStore().getUpdate5(operation);
 		}
 	}
+
 	public static class Update6AddPost extends GraphDBUpdateOperationHandler<LdbcUpdate6AddPost> {
 
 		@Override

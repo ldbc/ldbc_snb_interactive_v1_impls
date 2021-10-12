@@ -103,7 +103,7 @@ public class GraphDBConverter extends Converter {
 
 	@Override
 	public String convertDate(Date date) {
-		return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
+		return new SimpleDateFormat("yyyy-MM-dd")
 				.format(date);
 	}
 

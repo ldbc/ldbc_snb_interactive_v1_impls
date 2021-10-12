@@ -5,7 +5,7 @@ PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 INSERT {
-    sn:pers%personId% rdf:type snvoc:Person ;
+    sn:pers%subjectId% rdf:type snvoc:Person ;
     snvoc:id "%personId%"^^xsd:long ;
     snvoc:firstName "%personFirstName%" ;
     snvoc:lastName "%personLastName%" ;
@@ -21,15 +21,15 @@ INSERT {
 };
 
 INSERT DATA {
-    sn:pers%personId% snvoc:email "%emails%" .
+    sn:pers%subjectId% snvoc:email "%emails%" .
 };
 
 INSERT DATA {
-    sn:pers%personId% snvoc:speaks "%languages%" .
+    sn:pers%subjectId% snvoc:speaks "%languages%" .
 };
 
 INSERT {
-    sn:pers%personId% snvoc:hasInterest ?tag .
+    sn:pers%subjectId% snvoc:hasInterest ?tag .
 } WHERE {
     ?tag snvoc:id "%tagIds%"^^xsd:int ;
    		 rdf:type ?tagClass .
@@ -37,7 +37,7 @@ INSERT {
 };
 
 INSERT {
-    sn:pers%personId% snvoc:snvoc:studyAt ?study .
+    sn:pers%subjectId% snvoc:snvoc:studyAt ?study .
 } WHERE {
     ?study snvoc:hasOrganisation ?organization ;
            snvoc:classYear "%studiesFromYear%"^^xsd:integer .
@@ -46,7 +46,7 @@ INSERT {
 };
 
 INSERT {
-    sn:pers%personId% snvoc:snvoc:workAt ?work .
+    sn:pers%subjectId% snvoc:snvoc:workAt ?work .
 } WHERE {
     ?work snvoc:hasOrganisation ?organization ;
            snvoc:workFrom "%worksFromYear%"^^xsd:integer .
