@@ -59,6 +59,11 @@ public class GraphDBQueryStore extends QueryStore {
 				ImmutableMap.of(LdbcShortQuery7MessageReplies.MESSAGE_ID, String.valueOf(operation.messageId()))
 		);
 	}
+	@Override
+	public String getUpdate4Single(LdbcUpdate4AddForum operation) {
+	 return super.getUpdate4Single(operation).replace(getParameterPrefix() + "subjectId" + getParameterPostfix(),
+						getConverter().convertId(operation.forumId()));
+	}
 
 	@Override
 	public List<String> getUpdate1Multiple(LdbcUpdate1AddPerson operation) {
@@ -69,6 +74,9 @@ public class GraphDBQueryStore extends QueryStore {
 
 	@Override
 	public String getUpdate6Single(LdbcUpdate6AddPost operation) {
+//		return super.getUpdate6Single(operation).replace(getParameterPrefix() + "postIdSubj" + getParameterPostfix(),
+//				getConverter().convertId(operation.postId()));
+
 		return prepare(
 				QueryType.InteractiveUpdate6,
 				new ImmutableMap.Builder<String, String>()
@@ -85,6 +93,26 @@ public class GraphDBQueryStore extends QueryStore {
 						.put(LdbcUpdate6AddPost.COUNTRY_ID, getConverter().convertIdForInsertion(operation.countryId()))
 						.put(LdbcUpdate6AddPost.TAG_IDS, getConverter().convertLongList(operation.tagIds()))
 						.put(SUBJECT_ID, getConverter().convertId(operation.postId()))
+						.build()
+		);
+	}
+
+	public String getUpdate7Single(LdbcUpdate7AddComment operation) {
+		return prepare(
+				QueryType.InteractiveUpdate7,
+				new ImmutableMap.Builder<String, String>()
+						.put(LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertIdForInsertion(operation.commentId()))
+						.put(LdbcUpdate7AddComment.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()))
+						.put(LdbcUpdate7AddComment.LOCATION_IP, getConverter().convertString(operation.locationIp()))
+						.put(LdbcUpdate7AddComment.BROWSER_USED, getConverter().convertString(operation.browserUsed()))
+						.put(LdbcUpdate7AddComment.CONTENT, getConverter().convertString(operation.content()))
+						.put(LdbcUpdate7AddComment.LENGTH, getConverter().convertInteger(operation.length()))
+						.put(LdbcUpdate7AddComment.AUTHOR_PERSON_ID, getConverter().convertId(operation.authorPersonId()))
+						.put(LdbcUpdate7AddComment.COUNTRY_ID, Long.toString(operation.countryId()))
+						.put(LdbcUpdate7AddComment.REPLY_TO_POST_ID, getConverter().convertId(operation.replyToPostId()))
+						.put(LdbcUpdate7AddComment.REPLY_TO_COMMENT_ID, getConverter().convertId(operation.replyToCommentId()))
+						.put(LdbcUpdate7AddComment.TAG_IDS, getConverter().convertLongList(operation.tagIds()))
+						.put(SUBJECT_ID, getConverter().convertId(operation.commentId()))
 						.build()
 		);
 	}

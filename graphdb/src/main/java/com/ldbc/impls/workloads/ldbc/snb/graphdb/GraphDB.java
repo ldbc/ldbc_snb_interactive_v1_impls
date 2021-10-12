@@ -338,6 +338,13 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 			return state.getQueryStore().getUpdate6Single(operation);
 		}
 	}
+	public static class Update7AddComment extends GraphDBUpdateOperationHandler<LdbcUpdate7AddComment> {
+
+		@Override
+		public String getQueryString(GraphDBConnectionState state, LdbcUpdate7AddComment operation) {
+			return state.getQueryStore().getUpdate7Single(operation);
+		}
+	}
 
 	public static class Update8AddFriendship extends GraphDBUpdateOperationHandler<LdbcUpdate8AddFriendship> {
 
