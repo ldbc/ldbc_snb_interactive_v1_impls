@@ -5,7 +5,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 INSERT
 {
-    sn:post%postId% rdf:type snvoc:Post ;
+    sn:post%subjectId% rdf:type snvoc:Post ;
     snvoc:id "%postId%"^^xsd:long ;
     snvoc:imageFile "%imageFile%" ;
     snvoc:creationDate "%creationDate%"^^xsd:dateTime ;
@@ -13,7 +13,7 @@ INSERT
     snvoc:browserUsed "%browserUsed%" ;
     snvoc:content "%content%" ;
     snvoc:length "%length%"^^xsd:int .
-    sn:post%postId% snvoc:language "%language%" ;
+    sn:post%subjectId% snvoc:language "%language%" ;
                             snvoc:isLocatedIn ?country ;
 }
 WHERE {
@@ -21,19 +21,19 @@ WHERE {
     ?country snvoc:id  "%countryId%"^^xsd:int .
 };
 INSERT{
-    sn:post%postId% snvoc:hasCreator sn:pers%authorPersonId% .
+    sn:post%subjectId% snvoc:hasCreator sn:pers%authorPersonId% .
 }
 WHERE {
     sn:pers%authorPersonId% rdf:type snvoc:Person .
 };
 INSERT{
-    sn:forum%forumId% snvoc:containerOf sn:post%postId% .
+    sn:forum%forumId% snvoc:containerOf sn:post%subjectId% .
 }
 WHERE {
     sn:forum%forumId% rdf:type snvoc:Forum.
 };
 INSERT{
-    sn:post%postId% snvoc:hasTag ?tag .
+    sn:post%subjectId% snvoc:hasTag ?tag .
 }
 WHERE {
    SELECT  ?tag
