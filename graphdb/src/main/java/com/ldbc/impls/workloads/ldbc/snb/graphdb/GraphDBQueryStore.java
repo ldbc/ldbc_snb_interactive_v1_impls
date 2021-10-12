@@ -102,6 +102,7 @@ public class GraphDBQueryStore extends QueryStore {
 						.put(LdbcUpdate7AddComment.REPLY_TO_POST_ID, getConverter().convertId(operation.replyToPostId()))
 						.put(LdbcUpdate7AddComment.REPLY_TO_COMMENT_ID, getConverter().convertId(operation.replyToCommentId()))
 						.put(LdbcUpdate7AddComment.TAG_IDS, getConverter().convertLongList(operation.tagIds()))
+						.put(SUBJECT_ID, getConverter().convertId(operation.commentId()))
 						.build()
 		);
 	}

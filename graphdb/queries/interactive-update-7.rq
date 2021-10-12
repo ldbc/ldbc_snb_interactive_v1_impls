@@ -5,7 +5,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 INSERT DATA {
-    sn:comm%commentId%
+    sn:comm%subjectId%
     rdf:type snvoc:Comment ;
     snvoc:id "%commentId%"^^xsd:long ;
     snvoc:creationDate "%creationDate%"^^xsd:dateTime ;
@@ -14,7 +14,7 @@ INSERT DATA {
     snvoc:content "%content%" ;
     snvoc:length "%length%"^^xsd:int .
 };
-INSERT {  sn:comm%commentId% snvoc:replyOf ?commOrPost .
+INSERT {  sn:comm%subjectId% snvoc:replyOf ?commOrPost .
 } WHERE {
     BIND ( (IF (%replyToPostId% = -1,
                     sn:comm%replyToCommentId%,
@@ -24,18 +24,18 @@ INSERT {  sn:comm%commentId% snvoc:replyOf ?commOrPost .
 	{ SELECT * WHERE { ?commOrPost ?p ?o . } }
 };
 INSERT{
-   sn:comm%commentId% snvoc:isLocatedIn ?country .
+   sn:comm%subjectId% snvoc:isLocatedIn ?country .
 } WHERE {
     ?country rdf:type dbpedia-owl:Country .
     ?country snvoc:id  "%countryId%"^^xsd:int .
 };
 INSERT{
-  sn:comm%commentId% snvoc:hasCreator sn:pers%authorPersonId% .
+  sn:comm%subjectId% snvoc:hasCreator sn:pers%authorPersonId% .
 } WHERE {
     ?person rdf:type snvoc:Person .
 };
 INSERT {
-     sn:comm%commentId% snvoc:hasTag ?tag .
+     sn:comm%subjectId% snvoc:hasTag ?tag .
 } WHERE {
    SELECT ?tag
    WHERE {
