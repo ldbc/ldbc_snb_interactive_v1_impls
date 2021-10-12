@@ -6,6 +6,7 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery4MessageCont
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery5MessageCreator;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery6MessageForum;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery7MessageReplies;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate4AddForum;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate6AddPost;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate7AddComment;
 import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
@@ -60,6 +61,11 @@ public class GraphDBQueryStore extends QueryStore {
 				QueryType.InteractiveShortQuery7,
 				ImmutableMap.of(LdbcShortQuery7MessageReplies.MESSAGE_ID, String.valueOf(operation.messageId()))
 		);
+	}
+	@Override
+	public String getUpdate4Single(LdbcUpdate4AddForum operation) {
+	 return super.getUpdate4Single(operation).replace(getParameterPrefix() + "subjectId" + getParameterPostfix(),
+						getConverter().convertId(operation.forumId()));
 	}
 
 	@Override
