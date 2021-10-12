@@ -2,14 +2,13 @@ package com.ldbc.impls.workloads.ldbc.snb.graphdb;
 
 import com.google.common.collect.ImmutableMap;
 import com.ldbc.driver.DbException;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery4MessageContent;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery5MessageCreator;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery6MessageForum;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcShortQuery7MessageReplies;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate6AddPost;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
 import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
 import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.converter.GraphDBConverter;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class GraphDBQueryStore extends QueryStore {
 
@@ -62,10 +61,14 @@ public class GraphDBQueryStore extends QueryStore {
 	}
 
 	@Override
-	public String getUpdate6Single(LdbcUpdate6AddPost operation) {
-//		return super.getUpdate6Single(operation).replace(getParameterPrefix() + "postIdSubj" + getParameterPostfix(),
-//				getConverter().convertId(operation.postId()));
+	public List<String> getUpdate1Multiple(LdbcUpdate1AddPerson operation) {
+		String subjectId = getConverter().convertId(operation.personId());
+		return super.getUpdate1Multiple(operation).stream().map(q -> q.replace(
+				getParameterPrefix() + SUBJECT_ID + getParameterPostfix(), subjectId)).collect(Collectors.toList());
+	}
 
+	@Override
+	public String getUpdate6Single(LdbcUpdate6AddPost operation) {
 		return prepare(
 				QueryType.InteractiveUpdate6,
 				new ImmutableMap.Builder<String, String>()
