@@ -5,7 +5,7 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 INSERT {
     sn:forum%forumId% snvoc:hasMember _:hasMember .
     _:hasMember snvoc:hasPerson sn:pers%personId% ;
-    snvoc:joinDate "%creationDate%"^^xsd:dateTime .
+    snvoc:joinDate "%joinDate%"^^xsd:dateTime .
 } WHERE{
       sn:pers%personId% rdf:type snvoc:Person .
       sn:forum%forumId% rdf:type snvoc:Forum .
