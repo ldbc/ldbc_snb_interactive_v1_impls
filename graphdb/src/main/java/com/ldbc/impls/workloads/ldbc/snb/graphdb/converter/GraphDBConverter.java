@@ -106,11 +106,13 @@ public class GraphDBConverter extends Converter {
 		return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
 				.format(date);
 	}
+
 	@Override
 	public String convertDateTime(Date date) {
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 		return sdf.format(date)	;
 	}
+
 	@Override
 	public String convertLongList(List<Long> values) {
 		if (values.isEmpty()){
@@ -122,5 +124,10 @@ public class GraphDBConverter extends Converter {
 				.map(v -> v.toString())
 				.collect(Collectors.joining("\"^^xsd:int, \""));
 		return res+"\"^^xsd:int";
+	}
+
+	@Override
+	public String convertIdForInsertion(long value) {
+		return Long.toString(value);
 	}
 }

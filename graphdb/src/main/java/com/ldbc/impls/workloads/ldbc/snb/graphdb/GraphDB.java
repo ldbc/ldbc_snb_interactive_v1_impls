@@ -7,6 +7,7 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate2AddPostLike;
 import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.converter.GraphDBConverter;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.operationhandlers.GraphDBListOperationHandler;
+import com.ldbc.impls.workloads.ldbc.snb.graphdb.operationhandlers.GraphDBMultipleUpdateOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.operationhandlers.GraphDBSingletonOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.operationhandlers.GraphDBUpdateOperationHandler;
 
@@ -276,7 +277,16 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 					cnv.asDouble(bindingSet, bindingNames.get(1)));
 		}
 	}
+
 	// Interactive writes
+
+	public static class Update1AddPerson extends GraphDBMultipleUpdateOperationHandler<LdbcUpdate1AddPerson> {
+
+		@Override
+		public List<String> getQueryString(GraphDBConnectionState state, LdbcUpdate1AddPerson operation) {
+			return state.getQueryStore().getUpdate1Multiple(operation);
+		}
+	}
 
 	public static class Update2AddPostLike extends GraphDBUpdateOperationHandler<LdbcUpdate2AddPostLike> {
 
@@ -328,6 +338,7 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 			return state.getQueryStore().getUpdate8(operation);
 		}
 	}
+
 	// Interactive short reads
 
 	public static class ShortQuery1PersonProfile extends GraphDBSingletonOperationHandler<LdbcShortQuery1PersonProfile,

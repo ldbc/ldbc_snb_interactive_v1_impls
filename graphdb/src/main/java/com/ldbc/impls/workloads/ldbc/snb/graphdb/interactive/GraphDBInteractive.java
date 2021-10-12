@@ -27,7 +27,7 @@ public class GraphDBInteractive extends GraphDB {
 		registerOperationHandler(LdbcQuery12.class, InteractiveQuery12.class);
 		registerOperationHandler(LdbcQuery13.class, InteractiveQuery13.class);
 		registerOperationHandler(LdbcQuery14.class, InteractiveQuery14.class);
-//
+
 		registerOperationHandler(LdbcShortQuery1PersonProfile.class, ShortQuery1PersonProfile.class);
     	registerOperationHandler(LdbcShortQuery2PersonPosts.class, ShortQuery2PersonPosts.class);
 		registerOperationHandler(LdbcShortQuery3PersonFriends.class, ShortQuery3PersonFriends.class);
@@ -35,8 +35,8 @@ public class GraphDBInteractive extends GraphDB {
 		registerOperationHandler(LdbcShortQuery5MessageCreator.class, ShortQuery5MessageCreator.class);
 		registerOperationHandler(LdbcShortQuery6MessageForum.class, ShortQuery6MessageForum.class);
 		registerOperationHandler(LdbcShortQuery7MessageReplies.class, ShortQuery7MessageReplies.class);
-//
-//		registerOperationHandler(LdbcUpdate1AddPerson.class, Update1AddPerson.class);
+
+		registerOperationHandler(LdbcUpdate1AddPerson.class, Update1AddPerson.class);
 		registerOperationHandler(LdbcUpdate2AddPostLike.class, Update2AddPostLike.class);
 		registerOperationHandler(LdbcUpdate3AddCommentLike.class, Update3AddCommentLike.class);
 		registerOperationHandler(LdbcUpdate4AddForum.class, Update4AddForum.class);
