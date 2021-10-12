@@ -331,6 +331,7 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 			return state.getQueryStore().getUpdate8(operation);
 		}
 	}
+
 	// Interactive short reads
 
 	public static class ShortQuery1PersonProfile extends GraphDBSingletonOperationHandler<LdbcShortQuery1PersonProfile,
