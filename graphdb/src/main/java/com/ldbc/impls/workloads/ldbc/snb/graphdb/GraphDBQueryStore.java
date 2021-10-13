@@ -9,7 +9,6 @@ import com.ldbc.impls.workloads.ldbc.snb.graphdb.converter.GraphDBConverter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GraphDBQueryStore extends QueryStore {
 
@@ -21,7 +20,7 @@ public class GraphDBQueryStore extends QueryStore {
 	}
 
 	protected Converter getConverter() {
-		return new GraphDBConverter(); // or Converter / super method
+		return new GraphDBConverter();
 	}
 
 	@Override
