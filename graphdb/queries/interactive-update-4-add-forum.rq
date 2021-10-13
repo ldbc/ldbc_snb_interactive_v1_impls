@@ -1,0 +1,14 @@
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+INSERT {
+	sn:forum%subjectId% rdf:type snvoc:Forum ;
+    snvoc:id "%forumId%"^^xsd:long ;
+    snvoc:title "%forumTitle%" ;
+    snvoc:creationDate "%creationDate%"^^xsd:dateTime ;
+    snvoc:hasModerator sn:pers%moderatorPersonId% .
+} WHERE {
+    sn:pers%moderatorPersonId% rdf:type snvoc:Person .
+};

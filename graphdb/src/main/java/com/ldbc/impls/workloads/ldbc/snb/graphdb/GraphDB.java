@@ -13,7 +13,6 @@ import com.ldbc.impls.workloads.ldbc.snb.graphdb.operationhandlers.GraphDBUpdate
 
 import org.eclipse.rdf4j.query.BindingSet;
 
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +24,6 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 	protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
 		dcs = new GraphDBConnectionState(properties, new GraphDBQueryStore(properties.get("queryDir")));
 	}
-
 	// Interactive complex reads
 
 	public static class InteractiveQuery1 extends GraphDBListOperationHandler<LdbcQuery1, LdbcQuery1Result> {
@@ -291,14 +289,6 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 		}
 	}
 
-//	public static class Update1AddPerson extends GraphDBUpdateOperationHandler<LdbcUpdate1AddPerson> {
-//
-//		@Override
-//		public String getQueryString(GraphDBConnectionState state, LdbcUpdate1AddPerson operation) {
-//			return state.getQueryStore().getUpdate1Single(operation);
-//		}
-//	}
-
 	public static class Update2AddPostLike extends GraphDBUpdateOperationHandler<LdbcUpdate2AddPostLike> {
 
 		@Override
@@ -315,11 +305,11 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 		}
 	}
 
-	public static class Update4AddForum extends GraphDBUpdateOperationHandler<LdbcUpdate4AddForum> {
+	public static class Update4AddForum extends GraphDBMultipleUpdateOperationHandler<LdbcUpdate4AddForum> {
 
 		@Override
-		public String getQueryString(GraphDBConnectionState state, LdbcUpdate4AddForum operation) {
-			return state.getQueryStore().getUpdate4Single(operation);
+		public List<String> getQueryString(GraphDBConnectionState state, LdbcUpdate4AddForum operation) {
+			return state.getQueryStore().getUpdate4Multiple(operation);
 		}
 	}
 
