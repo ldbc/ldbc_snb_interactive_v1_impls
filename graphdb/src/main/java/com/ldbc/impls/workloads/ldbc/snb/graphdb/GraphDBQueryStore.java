@@ -7,6 +7,7 @@ import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
 import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.converter.GraphDBConverter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -115,5 +116,37 @@ public class GraphDBQueryStore extends QueryStore {
 						.put(SUBJECT_ID, getConverter().convertId(operation.commentId()))
 						.build()
 		);
+	}
+
+	public List<String> getUpdate6Multiple(LdbcUpdate6AddPost operation) {
+		List<String> list = new ArrayList<>();
+		list.add(prepare(
+						QueryType.InteractiveUpdate6AddPost,
+						new ImmutableMap.Builder<String, String>()
+								.put(LdbcUpdate6AddPost.POST_ID, getConverter().convertIdForInsertion(operation.postId()))
+								.put(LdbcUpdate6AddPost.IMAGE_FILE, getConverter().convertString(operation.imageFile()))
+								.put(LdbcUpdate6AddPost.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()))
+								.put(LdbcUpdate6AddPost.LOCATION_IP, getConverter().convertString(operation.locationIp()))
+								.put(LdbcUpdate6AddPost.BROWSER_USED, getConverter().convertString(operation.browserUsed()))
+								.put(LdbcUpdate6AddPost.LANGUAGE, getConverter().convertString(operation.language()))
+								.put(LdbcUpdate6AddPost.CONTENT, getConverter().convertString(operation.content()))
+								.put(LdbcUpdate6AddPost.LENGTH, getConverter().convertInteger(operation.length()))
+								.put(LdbcUpdate6AddPost.AUTHOR_PERSON_ID, getConverter().convertId(operation.authorPersonId()))
+								.put(LdbcUpdate6AddPost.FORUM_ID, getConverter().convertId(operation.forumId()))
+								.put(LdbcUpdate6AddPost.COUNTRY_ID, getConverter().convertIdForInsertion(operation.countryId()))
+								.put(SUBJECT_ID, getConverter().convertId(operation.postId()))
+								.build()
+				)
+		);
+		for (long tagId : operation.tagIds()) {
+			list.add(prepare(
+							QueryType.InteractiveUpdate6AddPostTags,
+							ImmutableMap.of(
+									SUBJECT_ID, getConverter().convertId(operation.postId()),
+									"tagId", getConverter().convertIdForInsertion(tagId))
+					)
+			);
+		}
+		return list;
 	}
 }

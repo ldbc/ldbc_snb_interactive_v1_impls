@@ -331,18 +331,18 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 		}
 	}
 
-	public static class Update6AddPost extends GraphDBUpdateOperationHandler<LdbcUpdate6AddPost> {
+	public static class Update6AddPost extends GraphDBMultipleUpdateOperationHandler<LdbcUpdate6AddPost> {
 
 		@Override
-		public String getQueryString(GraphDBConnectionState state, LdbcUpdate6AddPost operation) {
-			return state.getQueryStore().getUpdate6Single(operation);
+		public List<String> getQueryString(GraphDBConnectionState state, LdbcUpdate6AddPost operation) {
+			return state.getQueryStore().getUpdate6Multiple(operation);
 		}
 	}
-	public static class Update7AddComment extends GraphDBUpdateOperationHandler<LdbcUpdate7AddComment> {
+	public static class Update7AddComment extends GraphDBMultipleUpdateOperationHandler<LdbcUpdate7AddComment> {
 
 		@Override
-		public String getQueryString(GraphDBConnectionState state, LdbcUpdate7AddComment operation) {
-			return state.getQueryStore().getUpdate7Single(operation);
+		public List<String> getQueryString(GraphDBConnectionState state, LdbcUpdate7AddComment operation) {
+			return state.getQueryStore().getUpdate7Multiple(operation);
 		}
 	}
 

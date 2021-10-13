@@ -32,15 +32,3 @@ INSERT{
 WHERE {
     sn:forum%forumId% rdf:type snvoc:Forum.
 };
-INSERT{
-    sn:post%subjectId% snvoc:hasTag ?tag .
-}
-WHERE {
-   SELECT  ?tag
-   WHERE {
-   ?tag snvoc:id ?tagId .
-   ?tag rdf:type ?tagClass .
-   ?tagClass rdf:type snvoc:TagClass .
-   FILTER (?tagId in (%tagIds%)) .
-   }
- }
