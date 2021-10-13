@@ -109,6 +109,10 @@ public class GraphDBConverter extends Converter {
 		return sdf.format(date)	;
 	}
 
+	public static String convertDateBirthday(Date date){
+		return new SimpleDateFormat("yyyy-MM-dd")
+			.format(date);}
+
 	@Override
 	public String convertIdForInsertion(long value) {
 		return Long.toString(value);
