@@ -10,7 +10,7 @@ sn:forum%subjectId%
     snvoc:title "%forumTitle%" ;
     snvoc:creationDate "%creationDate%"^^xsd:dateTime .
   };
-  INSERT {
+INSERT {
     sn:forum%subjectId% snvoc:hasModerator sn:pers%moderatorPersonId% ;
 } WHERE {
     sn:pers%moderatorPersonId% rdf:type snvoc:Person .
