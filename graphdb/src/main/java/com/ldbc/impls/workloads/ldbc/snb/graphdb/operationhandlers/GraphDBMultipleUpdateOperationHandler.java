@@ -17,11 +17,14 @@ public abstract class GraphDBMultipleUpdateOperationHandler<TOperation extends O
 	@Override
 	public void executeOperation(TOperation operation, GraphDBConnectionState dbConnectionState, ResultReporter resultReporter) throws DbException {
 		List<String> queryStrings = getQueryString(dbConnectionState, operation);
+		try (RepositoryConnection conn = dbConnectionState.getConnection()) {
 		for (String queryString : queryStrings) {
-			try (RepositoryConnection conn = dbConnectionState.getConnection()) {
 				Update update = conn.prepareUpdate(QueryLanguage.SPARQL, queryString);
 				update.execute();
 			}
-		}
+		} catch (Exception e) {
+		throw new DbException(e);
+	}
+		resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
 	}
 }
