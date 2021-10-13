@@ -8,7 +8,6 @@ import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.converter.GraphDBConverter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GraphDBQueryStore extends QueryStore {
 
