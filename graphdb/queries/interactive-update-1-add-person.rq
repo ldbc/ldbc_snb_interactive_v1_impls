@@ -4,7 +4,7 @@ PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-INSERT {
+INSERT DATA {
     sn:pers%subjectId% rdf:type snvoc:Person ;
     snvoc:id "%personId%"^^xsd:long ;
     snvoc:firstName "%personFirstName%" ;
@@ -13,9 +13,11 @@ INSERT {
     snvoc:birthday "%birthday%"^^xsd:date ;
     snvoc:locationIP "%locationIP%" ;
     snvoc:browserUsed "%browserUsed%" ;
-    snvoc:creationDate "%creationDate%"^^xsd:dateTime ;
-    snvoc:isLocatedIn ?countryIri .
+    snvoc:creationDate "%creationDate%"^^xsd:dateTime .
+};
+INSERT{
+     sn:pers%subjectId% snvoc:isLocatedIn ?countryIri .
 } WHERE {
-    ?countryIri rdf:type dbpedia-owl:Country ;
+    ?countryIri rdf:type dbpedia-owl:City ;
     			snvoc:id "%cityId%"^^xsd:int .
 };
