@@ -21,7 +21,11 @@ INSERT {  sn:comm%subjectId% snvoc:replyOf ?commOrPost .
                     sn:post%replyToPostId%
                    ))
                     AS ?commOrPost)
-	{ SELECT * WHERE { ?commOrPost ?p ?o . } }
+ BIND ((IF (00000001099511639206 = -1,
+                    snvoc:Comment,
+                    snvoc:Post
+                   )) AS ?type)
+          ?commOrPost rdf:type ?type .
 };
 INSERT{
    sn:comm%subjectId% snvoc:isLocatedIn ?country .
