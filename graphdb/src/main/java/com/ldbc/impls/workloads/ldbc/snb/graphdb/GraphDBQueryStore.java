@@ -194,4 +194,34 @@ public class GraphDBQueryStore extends QueryStore {
 		}
 		return list;
 	}
+	@Override
+	public List<String> getUpdate7Multiple(LdbcUpdate7AddComment operation) {
+		List<String> list = new ArrayList<>();
+		list.add(prepare(
+				QueryType.InteractiveUpdate7AddComment,
+				new ImmutableMap.Builder<String, String>()
+						.put(LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertIdForInsertion(operation.commentId()))
+						.put(LdbcUpdate7AddComment.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()))
+						.put(LdbcUpdate7AddComment.LOCATION_IP, getConverter().convertString(operation.locationIp()))
+						.put(LdbcUpdate7AddComment.BROWSER_USED, getConverter().convertString(operation.browserUsed()))
+						.put(LdbcUpdate7AddComment.CONTENT, getConverter().convertString(operation.content()))
+						.put(LdbcUpdate7AddComment.LENGTH, getConverter().convertInteger(operation.length()))
+						.put(LdbcUpdate7AddComment.AUTHOR_PERSON_ID, getConverter().convertId(operation.authorPersonId()))
+						.put(LdbcUpdate6AddPost.COUNTRY_ID, getConverter().convertIdForInsertion(operation.countryId()))
+						.put(LdbcUpdate7AddComment.REPLY_TO_POST_ID, getConverter().convertId(operation.replyToPostId()))
+						.put(LdbcUpdate7AddComment.REPLY_TO_COMMENT_ID, getConverter().convertId(operation.replyToCommentId()))
+						.put(SUBJECT_ID, getConverter().convertId(operation.commentId()))
+						.build()
+		));
+		for (long tagId : operation.tagIds()) {
+			list.add(prepare(
+							QueryType.InteractiveUpdate7AddCommentTags,
+							ImmutableMap.of(
+									SUBJECT_ID, getConverter().convertId(operation.commentId()),
+									"tagId", getConverter().convertIdForInsertion(tagId))
+					)
+			);
+		}
+		return list;
+	}
 }
