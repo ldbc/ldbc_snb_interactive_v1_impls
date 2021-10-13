@@ -33,15 +33,4 @@ INSERT{
   sn:comm%subjectId% snvoc:hasCreator sn:pers%authorPersonId% .
 } WHERE {
     ?person rdf:type snvoc:Person .
-};
-INSERT {
-     sn:comm%subjectId% snvoc:hasTag ?tag .
-} WHERE {
-   SELECT ?tag
-   WHERE {
-   ?tag snvoc:id ?tagId .
-   ?tag rdf:type ?tagClass .
-   ?tagClass rdf:type snvoc:TagClass .
-   FILTER (?tagId in (%tagIds%)) .
-   }
 }
