@@ -1,7 +1,7 @@
 FROM adoptopenjdk/openjdk11:alpine
 
 # Build time arguments
-ARG version=9.1.1
+ARG version=${GRAPHDB_VERSION}
 ARG edition=free
 
 ENV GRAPHDB_PARENT_DIR=/opt/graphdb
