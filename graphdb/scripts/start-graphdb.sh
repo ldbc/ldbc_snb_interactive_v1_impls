@@ -7,4 +7,4 @@ cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 cd ../config
 
-docker-compose up -f docker-compose-start.yml -d
+docker-compose -f docker-compose-start.yml up -d
