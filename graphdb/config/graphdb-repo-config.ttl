@@ -1,0 +1,49 @@
+#
+# Sesame configuration template for a GraphDB Free repository
+#
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix rep: <http://www.openrdf.org/config/repository#>.
+@prefix sr: <http://www.openrdf.org/config/repository/sail#>.
+@prefix sail: <http://www.openrdf.org/config/sail#>.
+@prefix owlim: <http://www.ontotext.com/trree/owlim#>.
+
+[] a rep:Repository ;
+    rep:repositoryID "ldbc-snb-interactive" ;
+    rdfs:label "LDBC SNB Interactive repository" ;
+    rep:repositoryImpl [
+        rep:repositoryType "graphdb:FreeSailRepository" ;
+        sr:sailImpl [
+            sail:sailType "graphdb:FreeSail" ;
+
+            owlim:owlim-license "" ;
+
+            owlim:base-URL "http://example.org/owlim#" ;
+            owlim:defaultNS "" ;
+            owlim:entity-index-size "10000000" ;
+            owlim:entity-id-size  "40" ;    # or 32
+            owlim:imports "" ;
+            owlim:repository-type "file-repository" ;
+            owlim:storage-folder "storage" ;
+            owlim:ruleset "rdfsplus-optimized" ;
+            # owlim:ruleset "owl-horst-optimized" ;
+            # owlim:ruleset "empty" ;
+
+            owlim:enable-context-index "true" ;
+
+            # Indexes to speed up the read queries
+            owlim:enablePredicateList "true" ;
+            owlim:enable-literal-index "true" ;
+            owlim:in-memory-literal-properties "true" ;
+
+            owlim:enable-optimization  "true" ;
+            owlim:check-for-inconsistencies "false" ;
+            owlim:disable-sameAs  "true" ;
+            owlim:transaction-mode "safe" ;
+            owlim:transaction-isolation "true" ;
+            owlim:query-timeout  "0" ;
+            owlim:query-limit-results  "0" ;
+            owlim:throw-QueryEvaluationException-on-timeout "false" ;
+            owlim:read-only "false" ;
+            owlim:nonInterpretablePredicates "http://www.w3.org/2000/01/rdf-schema#label;http://www.w3.org/1999/02/22-rdf-syntax-ns#type;http://www.ontotext.com/owlim/ces#gazetteerConfig;http://www.ontotext.com/owlim/ces#metadataConfig" ;
+        ]
+    ].
