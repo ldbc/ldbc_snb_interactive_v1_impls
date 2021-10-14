@@ -5,7 +5,7 @@ services:
     container_name: ${GRAPHDB_PRELOAD_CONTAINER_NAME}
     # image: ontotext/graphdb:${GRAPHDB_VERSION}-ee
     build:
-      context: ../free-edition
+      context: .
       dockerfile: Dockerfile
       args:
         version: ${GRAPHDB_VERSION}
