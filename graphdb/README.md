@@ -48,6 +48,24 @@ export GRAPHDB_IMPORT_TTL_DIR=`pwd`/test-data/
 export GRAPHDB_REPOSITORY_CONFIG_FILE=`pwd`/config/graphdb-repo-config.ttl
 ```
 
+### Running GraphDB in a Docker container
+
+Check [Docker Hub Images](https://hub.docker.com/r/ontotext/graphdb/) for information on how to use the images. Note that to use GraphDB EE or SE docker images, you will need a license.
+
+Currently, there are no public images for GraphDB Free and you will have to build one following the above instructions:
+
+- Register on the Ontotext website for the GraphDB Free edition. Download the zip distribution and set `GRAPHDB_DIST_ZIP_FOLDER_PATH` environment variable to point to `graphdb-${GRAPHDB_VERSION}-ee-dist.zip` folder.
+
+```bash
+export GRAPHDB_DIST_ZIP_FOLDER_PATH=
+```
+
+- To build the docker image, run:
+
+```bash
+scripts/build-graphdb-free-image.sh
+```
+
 ### Loading the data set
 
 3. To start GraphDB and load the data, run the following scripts:
@@ -68,7 +86,7 @@ scripts/start-graphdb.sh
 ```bash
 driver/create-validation-parameters.sh
 driver/validate.sh
-driver/benchmark.sh
+
  ```
 
 :warning: *Note that if the default workload contains updates which are persisted in the database. Therefore, the database needs to be re-loaded between steps – otherwise repeated updates would insert duplicate entries.*

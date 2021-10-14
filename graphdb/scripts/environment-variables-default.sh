@@ -8,6 +8,6 @@ export GRAPHDB_REPOSITORY_CONFIG_FILE=`pwd`/config/graphdb-repo-config.ttl
 export GRAPHDB_HEAP_SIZE=8g
 export GRAPHDB_VERSION=9.9.1
 export GRAPHDB_CONTAINER_NAME=snb-interactive-graphdb
-export GRAPHDB_PRELOAD_CONTAINER_NAME=graphdb-preload
+export GRAPHDB_PRELOAD_CONTAINER_NAME=preload-graphdb
 export GRAPHDB_DIST_ZIP_FOLDER_PATH=
 export GRAPHDB_PORT=7200

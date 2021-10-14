@@ -8,4 +8,3 @@ cd ../config
 
 docker-compose -f docker-compose-preload.yml build
 docker-compose -f docker-compose-preload.yml up -d
-
