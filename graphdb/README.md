@@ -63,7 +63,7 @@ scripts/start-graphdb.sh
 
 ## Running the benchmark
 
-4To run the scripts of benchmark framework, edit the `driver/{create-validation-parameters,validate,benchmark}.properties` files, then run their script, one of:
+4. To run the scripts of benchmark framework, edit the `driver/{create-validation-parameters,validate,benchmark}.properties` files, then run their script, one of:
 
 ```bash
 driver/create-validation-parameters.sh
