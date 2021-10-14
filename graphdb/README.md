@@ -38,15 +38,15 @@ env | grep ^GRAPHDB_
 
 1. Set the `GRAPHDB_IMPORT_TTL_DIR` environment variable to point to the generated dataset. Its default value points to the example dataset under the `test-data` directory:
 
-    ```bash
-    export GRAPHDB_IMPORT_TTL_DIR=`pwd`/test-data/
-    ```
+```bash
+export GRAPHDB_IMPORT_TTL_DIR=`pwd`/test-data/
+```
 
 2. You can change the GraphDB repository configuration pointed by `GRAPHDB_REPOSITORY_CONFIG_FILE` environment variable which by default uses the example configuration in `config` directory:
 
-    ```bash
-    export GRAPHDB_REPOSITORY_CONFIG_FILE=`pwd`/config/graphdb-repo-config.ttl
-    ```
+```bash
+export GRAPHDB_REPOSITORY_CONFIG_FILE=`pwd`/config/graphdb-repo-config.ttl
+```
 
 ### Loading the data set
 
@@ -63,7 +63,7 @@ scripts/start-graphdb.sh
 
 ## Running the benchmark
 
-3. To run the scripts of benchmark framework, edit the `driver/{create-validation-parameters,validate,benchmark}.properties` files, then run their script, one of:
+4To run the scripts of benchmark framework, edit the `driver/{create-validation-parameters,validate,benchmark}.properties` files, then run their script, one of:
 
 ```bash
 driver/create-validation-parameters.sh
