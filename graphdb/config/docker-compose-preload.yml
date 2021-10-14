@@ -1,0 +1,34 @@
+version: "3"
+
+services:
+  graphdb:
+    container_name: graphdb-preload
+    # image: ontotext/graphdb:${GRAPHDB_VERSION}-ee
+    build:
+      context: ../free-edition
+      dockerfile: Dockerfile
+      args:
+        version: ${GRAPHDB_VERSION}
+
+    # Load all files from GRAPHDB_IMPORT_TTL_DIR in repo defined in config/graphdb-repo-config.ttl
+    entrypoint: [ "/opt/graphdb/dist/bin/preload", "--force", "--recursive", "-q", "/tmp", "-c", "/opt/graphdb/graphdb-repo-config.ttl", "/opt/graphdb/home/graphdb-import" ]
+
+    # Preload given file to existing repository (here "ldbc-snb-interactive")
+    # entrypoint: [ "/opt/graphdb/dist/bin/preload", "-f", "-i", "ldbc-snb-interactive", "/root/graphdb-import" ]
+
+    environment: 
+      GDB_JAVA_OPTS: >-
+        -Xmx${GRAPHDB_HEAP_SIZE} -Xms${GRAPHDB_HEAP_SIZE}
+        -Dgraphdb.home=/opt/graphdb/home
+        -Dgraphdb.workbench.importDirectory=/opt/graphdb/home/graphdb-import
+        -Dgraphdb.workbench.cors.enable=true
+        -Denable-context-index=true
+        -Dentity-pool-implementation=transactional
+        -Dhealth.max.query.time.seconds=60
+        -Dgraphdb.append.request.id.headers=true
+        -Dreuse.vars.in.subselects=true
+    volumes:
+      # Change folders in the .environment-variables-default.sh file or directly here
+      - ${GRAPHDB_CONTAINER_ROOT}:/opt/graphdb/home
+      - ${GRAPHDB_IMPORT_TTL_DIR}:/opt/graphdb/home/graphdb-import
+      - ${GRAPHDB_REPOSITORY_CONFIG_FILE}:/opt/graphdb/graphdb-repo-free.ttl
