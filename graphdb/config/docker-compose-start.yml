@@ -3,7 +3,7 @@ version: "3"
 services:
   graphdb:
     container_name: ${GRAPHDB_CONTAINER_NAME}
-    # image: ontotext/graphdb:9.3.0-ee
+    # image: ontotext/graphdb:${GRAPHDB_VERSION}-ee
     build:
       context: ./free-edition
       dockerfile: Dockerfile
