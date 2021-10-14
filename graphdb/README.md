@@ -9,11 +9,7 @@ The recommended environment for executing this benchmark is as follows: the benc
 * Bash
 * Java 8
 * Docker 19+
-* enough free space in the directory `$GRAPHDB_DATABASE_DIR` (its default value is specified in  `scripts/environment-variables-default.sh`)
-
-## Initializing environment variables
-
-... initialize database variables ...
+* enough free space in the directory `GRAPHDB_CONTAINER_ROOT` (its default value is specified in `scripts/environment-variables-default.sh`)
 
 ## Generating and loading the data set
 
@@ -27,11 +23,43 @@ ldbc.snb.datagen.serializer.dynamicPersonSerializer:ldbc.snb.datagen.serializer.
 ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.turtle.TurtleStaticSerializer
 ```
 
-An example configuration for scale factor 1 is given in the [`params-csv-composite.ini`](https://github.com/ldbc/ldbc_snb_datagen_hadoop/blob/main/params-csv-composite.ini) file of the Datagen repository. For small loading experiments, we recommend using scale factor 0.1, i.e. `snb.interactive.0.1`.
+An example configuration for scale factor 1 is given in the [`params-ttl.ini`](https://github.com/ldbc/ldbc_snb_datagen_hadoop/blob/main/params-ttl.ini) file of the Datagen repository. For small loading experiments, you can use scale factor 0.1, i.e. `snb.interactive.0.1`.
+
+### Initializing environment variables
+
+To set and list the default environment variables, run:
+
+```bash
+. scripts/environment-variables-default.sh
+env | grep ^GRAPHDB_
+```
+
+***After that you need to change the following environment variables based on your data source.***
+
+1. Set the `GRAPHDB_IMPORT_TTL_DIR` environment variable to point to the generated dataset. Its default value points to the example dataset under the `test-data` directory:
+
+    ```bash
+    export GRAPHDB_IMPORT_TTL_DIR=`pwd`/test-data/
+    ```
+
+2. You can change the GraphDB repository configuration pointed by `GRAPHDB_REPOSITORY_CONFIG_FILE` environment variable which by default uses the example configuration in `config` directory:
+
+    ```bash
+    export GRAPHDB_REPOSITORY_CONFIG_FILE=`pwd`/config/graphdb-repo-config.ttl
+    ```
 
 ### Loading the data set
 
-..... load data ......
+3. To start GraphDB and load the data, run the following scripts:
+
+:warning: Note that this will stop the currently running (containerized) GraphDB and delete all of its data.
+
+```bash
+scripts/stop-graphdb.sh
+scripts/delete-graphdb-database.sh
+scripts/graphdb-preload.sh
+scripts/start-graphdb.sh
+```
 
 ## Running the benchmark
 
