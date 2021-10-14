@@ -2,7 +2,7 @@ version: "3"
 
 services:
   graphdb:
-    container_name: graphdb-preload
+    container_name: ${GRAPHDB_PRELOAD_CONTAINER_NAME}
     # image: ontotext/graphdb:${GRAPHDB_VERSION}-ee
     build:
       context: ../free-edition
