@@ -8,7 +8,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        version: 9.9.1
+        version: ${GRAPHDB_VERSION}
     restart: unless-stopped
     environment: 
       GDB_JAVA_OPTS: >-
@@ -22,7 +22,7 @@ services:
         -Dgraphdb.append.request.id.headers=true
         -Dreuse.vars.in.subselects=true
     ports: 
-      - 7200:7200
+      - ${GRAPHDB_PORT}:7200
     volumes:
       - ${GRAPHDB_CONTAINER_ROOT}:/opt/graphdb/home
 
