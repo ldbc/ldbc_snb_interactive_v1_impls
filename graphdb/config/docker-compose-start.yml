@@ -5,7 +5,7 @@ services:
     container_name: ${GRAPHDB_CONTAINER_NAME}
     # image: ontotext/graphdb:9.3.0-ee
     build:
-      context: ./free-edition
+      context: .
       dockerfile: Dockerfile
       args:
         version: 9.9.1

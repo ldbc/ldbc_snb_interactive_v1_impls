@@ -9,4 +9,5 @@ export GRAPHDB_HEAP_SIZE=8g
 export GRAPHDB_VERSION=9.9.1
 export GRAPHDB_CONTAINER_NAME=snb-interactive-graphdb
 export PRELOAD_CONTAINER_NAME=preload-graphdb
+export PATH_TO_DIST_ZIP_FILE=
 export GRAPHDB_PORT = 7200
