@@ -23,7 +23,7 @@ ldbc.snb.datagen.serializer.dynamicPersonSerializer:ldbc.snb.datagen.serializer.
 ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.turtle.TurtleStaticSerializer
 ```
 
-An example configuration for scale factor 1 is given in the [`params-csv-composite.ini`](https://github.com/ldbc/ldbc_snb_datagen_hadoop/blob/main/params-csv-composite.ini) file of the Datagen repository. For small loading experiments, we recommend using scale factor 0.1, i.e. `snb.interactive.0.1`.
+An example configuration for scale factor 1 is given in the [`params-ttl.ini`](https://github.com/ldbc/ldbc_snb_datagen_hadoop/blob/main/params-ttl.ini) file of the Datagen repository. For small loading experiments, you can use scale factor 0.1, i.e. `snb.interactive.0.1`.
 
 ### Initializing environment variables
 
@@ -34,7 +34,7 @@ To set and list the default environment variables, run:
 env | grep ^GRAPHDB_
 ```
 
-***After that change the following environment variables based on your data source.***
+***After that you need to change the following environment variables based on your data source.***
 
 1. Set the `GRAPHDB_IMPORT_TTL_DIR` environment variable to point to the generated dataset. Its default value points to the example dataset under the `test-data` directory:
 
@@ -52,7 +52,14 @@ env | grep ^GRAPHDB_
 
 3. To start GraphDB and load the data, run the following scripts:
 
+:warning: Note that this will stop the currently running (containerized) GraphDB and delete all of its data.
 
+```bash
+scripts/stop-graphdb.sh
+scripts/delete-graphdb-database.sh
+scripts/graphdb-preload.sh
+scripts/start-graphdb.sh
+```
 
 ## Running the benchmark
 
