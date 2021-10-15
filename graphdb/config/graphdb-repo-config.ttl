@@ -24,8 +24,7 @@
             owlim:imports "" ;
             owlim:repository-type "file-repository" ;
             owlim:storage-folder "storage" ;
-            # owlim:ruleset "rdfsPlus-snb-q5.pie" ;
-             owlim:ruleset "rdfsplus-optimized" ;
+            owlim:ruleset "/opt/graphdb/rdfsPlus-snb-q5.pie" ;
             # owlim:ruleset "owl-horst-optimized" ;
             # owlim:ruleset "empty" ;
 
