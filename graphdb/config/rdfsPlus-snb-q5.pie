@@ -63,9 +63,9 @@ Rules
 	  forum <snvoc:hasMember> mem
 	  mem <snvoc:hasPerson> fr
 	  forum <snvoc:containerOf> post
-	  post <snvoc:hasCreator> ?fr 
+	  post <snvoc:hasCreator> fr 
 	------------------------
-    	  post <snvoc:hasCreatorMember> ?mem
+    	  post <snvoc:hasCreatorMember> mem
 
 
 	Id: rdfs7
