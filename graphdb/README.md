@@ -96,7 +96,7 @@ scripts/start-graphdb.sh
 ```bash
 driver/create-validation-parameters.sh
 driver/validate.sh
-
+driver/benchmark.sh
  ```
 
 :warning: *Note that if the default workload contains updates which are persisted in the database. Therefore, the database needs to be re-loaded between steps – otherwise repeated updates would insert duplicate entries.*
