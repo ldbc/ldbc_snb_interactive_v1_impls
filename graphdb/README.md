@@ -25,6 +25,8 @@ ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.tur
 
 An example configuration for scale factor 1 is given in the [`params-ttl.ini`](https://github.com/ldbc/ldbc_snb_datagen_hadoop/blob/main/params-ttl.ini) file of the Datagen repository. For small loading experiments, you can use scale factor 0.1, i.e. `snb.interactive.0.1`.
 
+> The result of execution will generate three .ttl files `social_network_activity_0_0.ttl`, `social_network_person_0_0.ttl` and `social_network_static_0_0.ttl`
+
 ### Initializing environment variables
 
 To set and list the default environment variables, run:
@@ -36,7 +38,7 @@ env | grep ^GRAPHDB_
 
 ***After that you need to change the following environment variables based on your data source.***
 
-1. Set the `GRAPHDB_IMPORT_TTL_DIR` environment variable to point to the generated dataset. Its default value points to the example dataset under the `test-data` directory:
+1. Set the `GRAPHDB_IMPORT_TTL_DIR` environment variable to point to the generated data set. Its default value points to the example data set under the `test-data` directory:
 
 ```bash
 export GRAPHDB_IMPORT_TTL_DIR=`pwd`/test-data/
