@@ -56,7 +56,9 @@ Check [Docker Hub Images](https://hub.docker.com/r/ontotext/graphdb/) for inform
 
 Currently, there are no public images for GraphDB Free and you will have to build one following the above instructions:
 
-- Register on the Ontotext website for the GraphDB Free edition. Download the zip distribution and set `GRAPHDB_DIST_ZIP_FOLDER_PATH` environment variable to point to `graphdb-${GRAPHDB_VERSION}-ee-dist.zip` folder.
+- Register on the [Ontotext website](https://www.ontotext.com/products/graphdb/graphdb-free/?hsCtaTracking=394693e6-2c2a-4b0f-8dcd-a5c322997796%7C7148c241-badf-4c36-8449-faf12dca6d1f) for the GraphDB Free edition.
+- Download the zip distribution - GraphDB as a stand-alone distributive. 
+- Set `GRAPHDB_DIST_ZIP_FOLDER_PATH` environment variable to point to `graphdb-free-${GRAPHDB_VERSION}-dist.zip` folder.
 
 ```bash
 export GRAPHDB_DIST_ZIP_FOLDER_PATH=
