@@ -5,8 +5,10 @@ services:
     container_name: ${GRAPHDB_PRELOAD_CONTAINER_NAME}
     image: ontotext/graphdb:${GRAPHDB_VERSION}-free
     # Load all files from GRAPHDB_IMPORT_TTL_DIR in repo with configuration defined in config/graphdb-repo-config.ttl
-    entrypoint: [ "/opt/graphdb/dist/bin/preload", "--force", "--recursive", "-q", "/tmp", "-c", "/opt/graphdb/graphdb-repo-config.ttl", "/opt/graphdb/home/graphdb-import/social_network_activity${GRAPHDB_TTL_POSTFIX}",
-                 "/opt/graphdb/home/graphdb-import/social_network_person${GRAPHDB_TTL_POSTFIX}", "/opt/graphdb/home/graphdb-import/social_network_static${GRAPHDB_TTL_POSTFIX}"]
+    entrypoint: [ "/opt/graphdb/dist/bin/preload", "--force", "--recursive", "-q", "/tmp", "-c", "/opt/graphdb/graphdb-repo-config.ttl",
+                  "/opt/graphdb/home/graphdb-import/social_network_activity${GRAPHDB_TTL_POSTFIX}",
+                 "/opt/graphdb/home/graphdb-import/social_network_person${GRAPHDB_TTL_POSTFIX}",
+                  "/opt/graphdb/home/graphdb-import/social_network_static${GRAPHDB_TTL_POSTFIX}"]
     environment:
       GDB_JAVA_OPTS: >-
         -Xmx${GRAPHDB_HEAP_SIZE} -Xms${GRAPHDB_HEAP_SIZE}
