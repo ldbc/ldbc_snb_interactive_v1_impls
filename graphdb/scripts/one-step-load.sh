@@ -7,5 +7,5 @@ cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 ./stop-graphdb.sh
 ./delete-graphdb-database.sh
-./graphdb-preload.sh
+./graphdb-loadrdf.sh
 ./start-graphdb.sh
