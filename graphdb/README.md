@@ -79,6 +79,13 @@ scripts/graphdb-preload.sh
 scripts/start-graphdb.sh
 ```
 
+> Or run all these scripts with a single command:
+>  
+> ```bash
+>    scripts/one-step-load.sh
+> ```
+> 
+
 ## Running the benchmark
 
 4. To run the scripts of benchmark framework, edit the `driver/{create-validation-parameters,validate,benchmark}.properties` files, then run their script, one of:
