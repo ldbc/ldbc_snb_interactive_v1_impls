@@ -11,4 +11,5 @@ export GRAPHDB_CONTAINER_NAME=snb-interactive-graphdb
 export GRAPHDB_PRELOAD_CONTAINER_NAME=preload-graphdb
 export GRAPHDB_IMPORT_TTL_DIR=
 export GRAPHDB_DIST_ZIP_FOLDER_PATH=
+export GRAPHDB_TTL_POSTFIX=_0_0.ttl
 export GRAPHDB_PORT=7200
