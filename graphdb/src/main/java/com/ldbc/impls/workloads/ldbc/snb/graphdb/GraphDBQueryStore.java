@@ -30,6 +30,14 @@ public class GraphDBQueryStore extends QueryStore {
 	protected String getParameterPostfix() { return PARAMETER_SEPARATOR; }
 
 	@Override
+	public String getShortQuery3PersonFriends(LdbcShortQuery3PersonFriends operation) {
+		return prepare(
+				QueryType.InteractiveShortQuery3,
+				ImmutableMap.of(LdbcShortQuery3PersonFriends.PERSON_ID, String.valueOf(operation.personId()))
+		);
+	}
+
+	@Override
 	public String getShortQuery4MessageContent(LdbcShortQuery4MessageContent operation) {
 		return prepare(
 				QueryType.InteractiveShortQuery4,
