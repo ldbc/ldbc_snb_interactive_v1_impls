@@ -68,11 +68,6 @@ public class GraphDBQueryStore extends QueryStore {
 				ImmutableMap.of(LdbcShortQuery7MessageReplies.MESSAGE_ID, String.valueOf(operation.messageId()))
 		);
 	}
-	@Override
-	public String getUpdate4Single(LdbcUpdate4AddForum operation) {
-	 return super.getUpdate4Single(operation).replace(getParameterPrefix() + "subjectId" + getParameterPostfix(),
-						getConverter().convertId(operation.forumId()));
-	}
 
 	@Override
 	public List<String> getUpdate1Multiple(LdbcUpdate1AddPerson operation) {
@@ -84,7 +79,6 @@ public class GraphDBQueryStore extends QueryStore {
 						.put(LdbcUpdate1AddPerson.PERSON_FIRST_NAME, getConverter().convertString(operation.personFirstName()))
 						.put(LdbcUpdate1AddPerson.PERSON_LAST_NAME, getConverter().convertString(operation.personLastName()))
 						.put(LdbcUpdate1AddPerson.GENDER, getConverter().convertString(operation.gender()))
-						//.put(LdbcUpdate1AddPerson.BIRTHDAY, super.getConverter().convertDate(operation.birthday()))
 						.put(LdbcUpdate1AddPerson.BIRTHDAY, GraphDBConverter.convertDateBirthday(operation.birthday()))
 						.put(LdbcUpdate1AddPerson.CREATION_DATE, getConverter().convertDateTime(operation.creationDate()))
 						.put(LdbcUpdate1AddPerson.LOCATION_IP, getConverter().convertString(operation.locationIp()))
@@ -122,16 +116,7 @@ public class GraphDBQueryStore extends QueryStore {
 					)
 			));
 		}
-
-		for (long tagId : operation.tagIds()) {
-			list.add(prepare(
-							QueryType.InteractiveUpdate1AddPersonTags,
-							ImmutableMap.of(
-									SUBJECT_ID, getConverter().convertId(operation.personId()),
-									"tagId", getConverter().convertIdForInsertion(tagId))
-					)
-			);
-		}
+		convertTags(list, operation.tagIds(), operation.personId());
 		for (LdbcUpdate1AddPerson.Organization organization : operation.studyAt()) {
 			list.add(prepare(
 					QueryType.InteractiveUpdate1AddPersonUniversities,
@@ -158,16 +143,7 @@ public class GraphDBQueryStore extends QueryStore {
 						SUBJECT_ID, getConverter().convertId(operation.forumId())
 				)
 		));
-
-		for (long tagId : operation.tagIds()) {
-			list.add(prepare(
-							QueryType.InteractiveUpdate4AddForumTags,
-							ImmutableMap.of(
-									SUBJECT_ID, getConverter().convertId(operation.forumId()),
-									"tagId", getConverter().convertIdForInsertion(tagId))
-					)
-			);
-		}
+		convertTags(list, operation.tagIds(), operation.forumId());
 		return list;
 	}
 
@@ -191,17 +167,10 @@ public class GraphDBQueryStore extends QueryStore {
 								.build()
 				)
 		);
-		for (long tagId : operation.tagIds()) {
-			list.add(prepare(
-							QueryType.InteractiveUpdate6AddPostTags,
-							ImmutableMap.of(
-									SUBJECT_ID, getConverter().convertId(operation.postId()),
-									"tagId", getConverter().convertIdForInsertion(tagId))
-					)
-			);
-		}
+		convertTags(list, operation.tagIds(), operation.postId());
 		return list;
 	}
+
 	@Override
 	public List<String> getUpdate7Multiple(LdbcUpdate7AddComment operation) {
 		List<String> list = new ArrayList<>();
@@ -221,15 +190,20 @@ public class GraphDBQueryStore extends QueryStore {
 						.put(SUBJECT_ID, getConverter().convertId(operation.commentId()))
 						.build()
 		));
-		for (long tagId : operation.tagIds()) {
+		convertTags(list, operation.tagIds(), operation.commentId());
+		return list;
+	}
+
+	private void convertTags(List<String> list, List<Long> tags, long id) {
+		for (long tagId : tags) {
 			list.add(prepare(
 							QueryType.InteractiveUpdate7AddCommentTags,
 							ImmutableMap.of(
-									SUBJECT_ID, getConverter().convertId(operation.commentId()),
+									SUBJECT_ID, getConverter().convertId(id),
 									"tagId", getConverter().convertIdForInsertion(tagId))
 					)
 			);
 		}
-		return list;
 	}
+
 }

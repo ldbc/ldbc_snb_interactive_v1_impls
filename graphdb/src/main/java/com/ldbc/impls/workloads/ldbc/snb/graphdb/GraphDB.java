@@ -24,6 +24,7 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 	protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
 		dcs = new GraphDBConnectionState(properties, new GraphDBQueryStore(properties.get("queryDir")));
 	}
+
 	// Interactive complex reads
 
 	public static class InteractiveQuery1 extends GraphDBListOperationHandler<LdbcQuery1, LdbcQuery1Result> {
@@ -155,7 +156,6 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 			return state.getQueryStore().getQuery8(operation);
 		}
 
-		//?from ?first ?last ?dt ?rep ?content
 		@Override
 		public LdbcQuery8Result convertSingleResult(List<String> bindingNames, BindingSet bindingSet) {
 			return new LdbcQuery8Result(
@@ -176,7 +176,6 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 			return state.getQueryStore().getQuery9(operation);
 		}
 
-		//?fr ?first ?last ?post ?content ?date
 		@Override
 		public LdbcQuery9Result convertSingleResult(List<String> bindingNames, BindingSet bindingSet) {
 			return new LdbcQuery9Result(
@@ -196,7 +195,6 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 			return state.getQueryStore().getQuery10(operation);
 		}
 
-		//?fof ?first ?last  ?score  ?gender ?locationname
 		@Override
 		public LdbcQuery10Result convertSingleResult(List<String> bindingNames, BindingSet bindingSet) {
 			return new LdbcQuery10Result(
@@ -216,7 +214,6 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 			return state.getQueryStore().getQuery11(operation);
 		}
 
-		//select ?fr ?first ?last ?orgname ?startdate
 		@Override
 		public LdbcQuery11Result convertSingleResult(List<String> bindingNames, BindingSet bindingSet) {
 			return new LdbcQuery11Result(
@@ -235,7 +232,6 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 			return state.getQueryStore().getQuery12(operation);
 		}
 
-		//?exp ?first ?last ?tagnames ?count
 		@Override
 		public LdbcQuery12Result convertSingleResult(List<String> bindingNames, BindingSet bindingSet) {
 			return new LdbcQuery12Result(
