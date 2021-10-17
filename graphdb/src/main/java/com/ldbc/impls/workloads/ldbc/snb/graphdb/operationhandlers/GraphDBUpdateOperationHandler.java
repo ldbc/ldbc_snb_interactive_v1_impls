@@ -17,8 +17,8 @@ public abstract class GraphDBUpdateOperationHandler<TOperation extends Operation
 	@Override
 	public void executeOperation(TOperation operation, GraphDBConnectionState dbConnectionState,
 			ResultReporter resultReporter) throws DbException {
+		String updateString = getQueryString(dbConnectionState, operation);
 		try (RepositoryConnection conn = dbConnectionState.getConnection()) {
-			String updateString = getQueryString(dbConnectionState, operation);
 			Update update = conn.prepareUpdate(QueryLanguage.SPARQL, updateString);
 			update.execute();
 		} catch (Exception e) {
