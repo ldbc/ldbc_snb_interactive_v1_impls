@@ -1,20 +1,25 @@
 PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
 PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
-SELECT ?message ?content ?creationDate ?originalPost ?postCreator ?creatorFirstName ?creatorLastName
+SELECT ?message ?content ?creationDate ?originalPost ?originalPoster ?originalPosterFirstName ?originalPosterLastName
 WHERE {
-	?message snvoc:hasCreator sn:pers%personId% .
-	{
-	  {?message snvoc:content ?content ;
-             snvoc:replyOf ?originalPost }
+    ?message snvoc:hasCreator sn:pers%personId% ;
+	 		 snvoc:creationDate ?creationDate .
+    {
+	  {
+        ?message snvoc:content ?content ;
+                snvoc:replyOf* ?originalPost .
+        ?originalPost rdf:type snvoc:Post .
+       }
 	  UNION
-	  {?message snvoc:imageFile ?content .
-            BIND (?message AS ?originalPost)}
+	  {
+        ?message snvoc:imageFile ?content .
+        BIND (?message AS ?originalPost)
+      }
 	} .
-    ?message snvoc:id ?messageId ;
-          snvoc:creationDate ?creationDate .
-    ?originalPost snvoc:hasCreator ?postCreator .
-    ?postCreator snvoc:firstName ?creatorFirstName ;
-     		 snvoc:lastName ?creatorLastName ;
-} ORDER by DESC(?creationDate)
+	?originalPost snvoc:hasCreator ?originalPoster .
+    ?originalPoster snvoc:firstName ?originalPosterFirstName ;
+    				snvoc:lastName ?originalPosterLastName .
+} ORDER BY DESC(?creationDate) DESC(?message)
 LIMIT 10
