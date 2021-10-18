@@ -166,7 +166,6 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 					cnv.asLong(bindingSet, bindingNames.get(4)),
 					cnv.asString(bindingSet, bindingNames.get(5)));
 		}
-
 	}
 
 	public static class InteractiveQuery9 extends GraphDBListOperationHandler<LdbcQuery9, LdbcQuery9Result> {
