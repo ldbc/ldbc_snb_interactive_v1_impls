@@ -24,6 +24,7 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 	protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
 		dcs = new GraphDBConnectionState(properties, new GraphDBQueryStore(properties.get("queryDir")));
 	}
+
 	// Interactive complex reads
 
 	public static class InteractiveQuery1 extends GraphDBListOperationHandler<LdbcQuery1, LdbcQuery1Result> {

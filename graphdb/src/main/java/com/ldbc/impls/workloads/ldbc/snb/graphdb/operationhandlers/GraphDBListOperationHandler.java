@@ -21,7 +21,6 @@ public abstract class GraphDBListOperationHandler<TOperation extends Operation<L
 			throws DbException {
 		List<TOperationResult> results = new ArrayList<>();
 		int resultCount = 0;
-		//results.clear();
 
 		final String queryString = getQueryString(dbConnectionState, operation);
 		try (RepositoryConnection conn = dbConnectionState.getConnection()) {

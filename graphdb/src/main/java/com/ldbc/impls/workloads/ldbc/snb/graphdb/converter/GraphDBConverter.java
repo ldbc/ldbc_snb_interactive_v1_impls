@@ -43,7 +43,7 @@ public class GraphDBConverter extends Converter {
 			return new ArrayList<>();
 		} else {
 			List<String> stringList = Arrays.asList(value.stringValue().split(", "));
-			return stringList.stream().map((x) -> Long.parseLong(x)).collect(Collectors.toList());
+			return stringList.stream().map(Long::parseLong).collect(Collectors.toList());
 		}
 	}
 
@@ -109,9 +109,10 @@ public class GraphDBConverter extends Converter {
 		return sdf.format(date)	;
 	}
 
-	public static String convertDateBirthday(Date date){
+	public static String convertDateBirthday(Date date) {
 		return new SimpleDateFormat("yyyy-MM-dd")
-			.format(date);}
+				.format(date);
+	}
 
 	@Override
 	public String convertIdForInsertion(long value) {
