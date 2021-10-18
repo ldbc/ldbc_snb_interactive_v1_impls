@@ -19,10 +19,11 @@
             <artifactId>common</artifactId>
             <version>0.3.6-SNAPSHOT</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.eclipse.rdf4j/rdf4j-repository-http -->
         <dependency>
-            <groupId>com.ontotext.graphdb</groupId>
-            <artifactId>graphdb-enterprise-runtime</artifactId>
-            <version>9.9.0</version>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-repository-http</artifactId>
+            <version>3.7.3</version>
         </dependency>
     </dependencies>
     <build>
