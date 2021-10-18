@@ -155,7 +155,6 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 			return state.getQueryStore().getQuery8(operation);
 		}
 
-		//?from ?first ?last ?dt ?rep ?content
 		@Override
 		public LdbcQuery8Result convertSingleResult(List<String> bindingNames, BindingSet bindingSet) {
 			return new LdbcQuery8Result(
@@ -166,7 +165,6 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 					cnv.asLong(bindingSet, bindingNames.get(4)),
 					cnv.asString(bindingSet, bindingNames.get(5)));
 		}
-
 	}
 
 	public static class InteractiveQuery9 extends GraphDBListOperationHandler<LdbcQuery9, LdbcQuery9Result> {
@@ -176,7 +174,6 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 			return state.getQueryStore().getQuery9(operation);
 		}
 
-		//?fr ?first ?last ?post ?content ?date
 		@Override
 		public LdbcQuery9Result convertSingleResult(List<String> bindingNames, BindingSet bindingSet) {
 			return new LdbcQuery9Result(
@@ -196,7 +193,6 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 			return state.getQueryStore().getQuery10(operation);
 		}
 
-		//?fof ?first ?last  ?score  ?gender ?locationname
 		@Override
 		public LdbcQuery10Result convertSingleResult(List<String> bindingNames, BindingSet bindingSet) {
 			return new LdbcQuery10Result(
@@ -216,7 +212,6 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 			return state.getQueryStore().getQuery11(operation);
 		}
 
-		//select ?fr ?first ?last ?orgname ?startdate
 		@Override
 		public LdbcQuery11Result convertSingleResult(List<String> bindingNames, BindingSet bindingSet) {
 			return new LdbcQuery11Result(
@@ -235,7 +230,6 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 			return state.getQueryStore().getQuery12(operation);
 		}
 
-		//?exp ?first ?last ?tagnames ?count
 		@Override
 		public LdbcQuery12Result convertSingleResult(List<String> bindingNames, BindingSet bindingSet) {
 			return new LdbcQuery12Result(
