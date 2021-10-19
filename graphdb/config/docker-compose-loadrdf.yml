@@ -4,6 +4,7 @@ services:
   graphdb:
     container_name: ${GRAPHDB_LOADRDF_CONTAINER_NAME}
     image: ontotext/graphdb:${GRAPHDB_VERSION}-free
+    user: "${CURRENT_UID}"
     # Load all files from GRAPHDB_IMPORT_TTL_DIR in repo with configuration defined in config/graphdb-repo-config.ttl
     entrypoint: [ "/opt/graphdb/dist/bin/loadrdf", "--force", "-m", "parallel",  "/tmp", "-c", "/opt/graphdb/graphdb-repo-config.ttl",
                   "/opt/graphdb/home/graphdb-import/social_network_activity${GRAPHDB_TTL_POSTFIX}",
