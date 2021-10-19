@@ -1,3 +1,58 @@
+#PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+#PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+#PREFIX dbpedia: <http://dbpedia.org/resource/>
+#PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+#PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+#PREFIX onto: <http://www.ontotext.com/path#>
+#
+#select ?start ?end (count(distinct ?post) + 0.5*count(distinct ?comment) + count(distinct ?postFr) + 0.5*count(distinct ?commentFr) as ?pathWeight)
+#where {
+#    ?post1 snvoc:hasCreator ?start.
+#    ?post1 snvoc:replyOf ?post2.
+#    ?post2 snvoc:hasCreator ?end.
+#    ?post1 a snvoc:Comment.
+#    optional {
+#        ?post2 a snvoc:Post.
+#        bind(?post2 as ?post)
+#    }
+#    optional {
+#        ?post2 a snvoc:Comment.
+#        bind(?post2 as ?comment)
+#    }
+#    ?post3 snvoc:hasCreator ?end.
+#    ?post3 snvoc:replyOf ?post4.
+#    ?post4 snvoc:hasCreator ?start.
+#    ?post3 a snvoc:Comment.
+#    optional {
+#        ?post4 a snvoc:Post.
+#        bind(?post4 as ?postFr)
+#    }
+#    optional {
+#        ?post4 a snvoc:Comment.
+#        bind(?post4 as ?commentFr)
+#    }
+#    {
+#        SELECT distinct ?start ?end where {
+#            VALUES (?source ?destination) {
+#                (sn:pers%person1Id% sn:pers%person2Id%)
+#            }
+#            SERVICE <http://www.ontotext.com/path#search> {
+#                <urn:path> onto:findPath onto:shortestPath ;
+#                           onto:sourceNode ?source ;
+#                           onto:destinationNode ?destination ;
+#                           onto:startNode ?start ;
+#                           onto:endNode ?end .
+#                SERVICE <urn:path> {
+#                    ?start snvoc:knows/snvoc:hasPerson ?end .
+#                }
+#            }
+#        }
+#    }
+#}
+#group by ?start ?end
+#order by desc(?pathWeight)
+#limit 10
+
 PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
@@ -5,8 +60,9 @@ PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX onto: <http://www.ontotext.com/path#>
 
-select ?start ?end (count(distinct ?post) + 0.5*count(distinct ?comment) + count(distinct ?postFr) + 0.5*count(distinct ?commentFr) as ?pathWeight)
+select (concat (group_concat(distinct ?startId; separator=", "), ", ", xsd:string(?destId)) as ?path) (count(distinct ?post) + 0.5*count(distinct ?comment) + count(distinct ?postFr) + 0.5*count(distinct ?commentFr) as ?pathWeight)
 where {
+    optional{
     ?post1 snvoc:hasCreator ?start.
     ?post1 snvoc:replyOf ?post2.
     ?post2 snvoc:hasCreator ?end.
@@ -15,10 +71,12 @@ where {
         ?post2 a snvoc:Post.
         bind(?post2 as ?post)
     }
-    optional {
+         optional {
         ?post2 a snvoc:Comment.
         bind(?post2 as ?comment)
     }
+    }
+    optional {
     ?post3 snvoc:hasCreator ?end.
     ?post3 snvoc:replyOf ?post4.
     ?post4 snvoc:hasCreator ?start.
@@ -31,8 +89,9 @@ where {
         ?post4 a snvoc:Comment.
         bind(?post4 as ?commentFr)
     }
+    }
     {
-        SELECT distinct ?start ?end where {
+        SELECT distinct ?start ?end ?destination where {
             VALUES (?source ?destination) {
                 (sn:pers%person1Id% sn:pers%person2Id%)
             }
@@ -41,14 +100,16 @@ where {
                            onto:sourceNode ?source ;
                            onto:destinationNode ?destination ;
                            onto:startNode ?start ;
-                           onto:endNode ?end .
+                           onto:endNode ?end ;
+                           onto:pathIndex ?pathIndex .
                 SERVICE <urn:path> {
                     ?start snvoc:knows/snvoc:hasPerson ?end .
                 }
             }
         }
     }
+    ?start snvoc:id ?startId .
+    ?destination snvoc:id ?destId .
 }
-group by ?start ?end
-order by desc(?pathWeight) 
-limit 10
+group by ?pathIndex ?destId
+order by desc(?pathWeight)
