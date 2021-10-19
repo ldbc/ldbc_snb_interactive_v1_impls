@@ -11,7 +11,7 @@ To get the reference implementations for the BI workload, visit the [`ldbc_snb_b
 Some configuration files and scripts use [relative paths to address the data generator's directory](https://github.com/ldbc/ldbc_snb_interactive/search?q=ldbc_snb_datagen_hadoop). Hence, it is recommended to clone the LDBC Data Generator and the LDBC implementations repositories next to each other and keep their original directory names. For example:
 
 * `ldbc`
-  * [`ldbc_snb_datagen_hadoop`](https://github.com/ldbc/ldbc_snb_datagen_hadoop_hadoop)
+  * [`ldbc_snb_datagen_hadoop`](https://github.com/ldbc/ldbc_snb_datagen_hadoop)
   * [`ldbc_snb_driver`](https://github.com/ldbc/ldbc_snb_driver)
   * [`ldbc_snb_interactive`](https://github.com/ldbc/ldbc_snb_interactive/)
 
