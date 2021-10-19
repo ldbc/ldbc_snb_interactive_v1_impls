@@ -1,3 +1,18 @@
+# need following update to perform well, the relation between post : person : member : forum is always 1:1 fro a given post,
+# so we can benefit from it
+#
+# PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+# insert {
+#     ?post snvoc:hasCreatorMember ?mem
+# } where {
+#     ?post snvoc:hasCreator ?fr .
+#     ?forum snvoc:containerOf ?post .
+#     ?forum snvoc:hasMember ?mem .
+#     ?mem snvoc:hasPerson ?fr .
+# }
+#
+# we could try to alter the ruleset to derive that from the actual data
+
 PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
 PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>

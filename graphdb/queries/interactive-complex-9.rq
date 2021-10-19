@@ -28,7 +28,7 @@ where {
     ?fr snvoc:lastName ?last .
     ?post snvoc:hasCreator ?fr.
     ?post snvoc:creationDate ?date.
-    filter (?date < ?dateAsDateTime).
+    filter (?date < "%maxDate%"^^xsd:dateTime).
     {
         {
             ?post snvoc:content ?content
@@ -36,7 +36,6 @@ where {
             ?post snvoc:imageFile ?content
         }
     } .
-     BIND (xsd:dateTime(CONCAT("%maxDate%","T00:00:00")) as ?dateAsDateTime)
 }
 order by desc (?date) ?post
 limit 20
