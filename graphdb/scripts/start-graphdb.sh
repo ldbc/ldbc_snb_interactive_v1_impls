@@ -12,6 +12,8 @@ cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 cd ../config
 
+export CURRENT_UID=$(id -u):$(id -g)
+
 echo -n "Waiting for the database to start..."
 docker-compose -f docker-compose-start.yml up -d
 echo
