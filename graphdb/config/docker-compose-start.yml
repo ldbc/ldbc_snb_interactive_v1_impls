@@ -4,6 +4,7 @@ services:
   graphdb:
     container_name: ${GRAPHDB_CONTAINER_NAME}
     image: ontotext/graphdb:${GRAPHDB_VERSION}-free
+    user: "${CURRENT_UID}"
     restart: unless-stopped
     environment: 
       GDB_JAVA_OPTS: >-
