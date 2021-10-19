@@ -251,9 +251,6 @@ public class GraphDB extends BaseDb<GraphDBQueryStore> {
 
 		@Override
 		public LdbcQuery13Result convertSingleResult(List<String> bindingNames, BindingSet bindingSet) {
-			if(bindingNames.get(0).isEmpty()) {
-				System.out.println("empty");
-			}
 			return new LdbcQuery13Result(
 					cnv.asInt(bindingSet, bindingNames.get(0)));
 		}
