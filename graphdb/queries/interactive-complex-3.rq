@@ -25,8 +25,8 @@ where {
                     }
                 }
                 ?fr snvoc:isLocatedIn ?city .
-                filter (!exists{?city snvoc:isLocatedIn dbpedia:%countryXName%.})
-                filter (!exists{?city snvoc:isLocatedIn dbpedia:%countryYName%.})
+                filter (!exists{?city snvoc:isPartOf dbpedia:%countryXName%.})
+                filter (!exists{?city snvoc:isPartOf dbpedia:%countryYName%.})
             }
         }
         ?fr snvoc:firstName ?fname .
