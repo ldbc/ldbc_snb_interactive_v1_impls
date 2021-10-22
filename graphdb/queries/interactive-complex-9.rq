@@ -3,7 +3,7 @@ PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX onto: <http://www.ontotext.com/path#>
 
-select ?fr ?first ?last ?post ?content ?date
+select distinct ?fr ?first ?last ?post ?content ?date
 where {
     {
         select distinct ?fr
@@ -16,26 +16,25 @@ where {
                                onto:sourceNode ?source ;
                                onto:destinationNode ?destination ;
                                onto:maxPathLength "2"^^xsd:int;
+                               onto:bidirectional true ;
                                onto:startNode ?start ;
                                onto:endNode ?fr .
                     SERVICE <urn:path> {
-                        ?start snvoc:knows/snvoc:hasPerson ?fr.
+                       ?fr snvoc:knows/snvoc:hasPerson ?start.
                     }
                 }
             }
     }
-    ?fr snvoc:firstName ?first .
-    ?fr snvoc:lastName ?last .
     ?post snvoc:hasCreator ?fr.
     ?post snvoc:creationDate ?date.
     filter (?date < "%maxDate%"^^xsd:dateTime).
-    {
         {
             ?post snvoc:content ?content
         } union {
             ?post snvoc:imageFile ?content
         }
-    } .
+        ?fr snvoc:firstName ?first .
+    ?fr snvoc:lastName ?last .
 }
 order by desc (?date) ?post
 limit 20

@@ -17,20 +17,19 @@ where {
                            onto:sourceNode ?source ;
                            onto:destinationNode ?destination ;
                            onto:maxPathLength "2"^^xsd:int;
-                                                   onto:startNode ?start ;
-                                                   onto:endNode ?fr .
+                            onto:bidirectional true ;
+                           onto:startNode ?start ;
+                           onto:endNode ?fr .
                 SERVICE <urn:path> {
-                    ?start snvoc:knows/snvoc:hasPerson ?fr.
+                  ?fr snvoc:knows/snvoc:hasPerson ?start .
                 }
             }
         }
     } .
-    {
-        select ?post ?fr {
-            ?post snvoc:hasCreator ?fr .
-            ?post snvoc:hasTag/foaf:name "%tagName%" .
-        }
-    }
+     ?post snvoc:hasCreator ?fr .
+     ?post snvoc:hasTag/foaf:name "%tagName%" .
+
+    ?post rdf:type snvoc:Post .
     ?post snvoc:hasTag ?tag .
     ?tag foaf:name ?tagname .
     filter(?tagname != "%tagName%")
