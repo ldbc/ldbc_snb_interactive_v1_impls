@@ -24,10 +24,11 @@ where {
                                onto:sourceNode ?source ;
                                onto:destinationNode ?destination ;
                                onto:maxPathLength "2"^^xsd:int;
+                               onto:bidirectional true ;
                                onto:startNode ?start ;
                                onto:endNode ?fr .
                     SERVICE <urn:path> {
-                        ?start snvoc:knows/snvoc:hasPerson ?fr.
+                      ?start snvoc:knows/snvoc:hasPerson ?fr.
                     }
                 }
             }
@@ -35,5 +36,5 @@ where {
     ?fr snvoc:firstName ?first .
     ?fr snvoc:lastName ?last .
 }
-order by ?startdate ?fr ?orgname
+order by ?startdate ?fr DESC(?orgname)
 limit 10

@@ -1,12 +1,13 @@
 PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
-PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
-PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX onto: <http://www.ontotext.com/path#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-select ?fof ?first ?last (sum(?match) - sum(if(?match != 1, 1,0)) as ?score) ?gender ?locationname
-where {
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+select distinct ?foaf ?firstName ?lastName (if(sum(?match) = -1, 0, (sum(?match) - sum (if(?match = 0, 1, 0)))) as ?similarity) ?gender ?cityName where {
     {
-        select distinct ?fof
+        select distinct ?foaf
         where {
             VALUES (?source ?destination) {
                 (sn:pers%personId% undef)
@@ -17,40 +18,37 @@ where {
                            onto:destinationNode ?destination ;
                            onto:minPathLength "2"^^xsd:int;
                            onto:maxPathLength "2"^^xsd:int;
+                           onto:bidirectional true ;
                            onto:startNode ?start ;
-                           onto:endNode ?fof .
+                           onto:endNode ?foaf .
                 SERVICE <urn:path> {
-                    ?start snvoc:knows/snvoc:hasPerson ?fof.
+                    ?start snvoc:knows/snvoc:hasPerson ?foaf.
                 }
             }
             minus {
-                ?source snvoc:knows/snvoc:hasPerson ?fof 
-            } 
+                ?source (snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson) ?foaf
+            }
         }
-    } 
-    {
-        select  distinct ?fof ?bday
-        where {
-            values ?month {%month%}
-            ?fof snvoc:birthday ?bday .
-            filter (1 = if (Month(?bday) = if (?month < 13, ?month, ?month - 12), if (Day(?bday) > 21, 1, 0),
-                    if (Month(?bday) = if ((?month +1) < 13, (?month+1), ((?month - 12)+1)), if (Day(?bday) < 22, 1, 0), 0)))
-        } 
-        
     }
-
-    ?fof snvoc:firstName ?first .
-    ?fof snvoc:lastName ?last .
-    ?fof snvoc:gender ?gender .
-    ?fof snvoc:isLocatedIn ?based .
-    ?based foaf:name ?locationname .
-    ?post snvoc:hasCreator ?fof .
-    bind (if (
+    ?foaf snvoc:firstName ?firstName ;
+          snvoc:lastName ?lastName ;
+          snvoc:gender ?gender ;
+          snvoc:birthday ?birthday ;
+          snvoc:isLocatedIn ?city .
+    ?city foaf:name ?cityName .
+    BIND (IF(%month% = 12, 1, %month% + 1) AS ?nextMonth)
+   	FILTER ((MONTH(?birthday) = %month% && DAY(?birthday) >= 21) || (MONTH(?birthday) = (?nextMonth) && DAY(?birthday) < 22)) .
+    optional {
+	  ?post snvoc:hasCreator ?foaf ;
+          rdf:type snvoc:Post .
+       bind (if (
             exists {
 			sn:pers%personId% snvoc:hasInterest ?tag .
-        	?post snvoc:hasTag ?tag . 
-			}, 1, 0) as ?match)
+        	?post snvoc:hasTag ?tag .
+			}, 1, 0) as ?score)
+    }
+    bind(coalesce(?score, -1) as ?match)
 }
-group by ?fof ?first ?last ?gender ?locationname
-order by desc(?score) ?fof
-limit 1000
+group by ?foaf ?firstName ?lastName ?gender ?cityName
+order by desc(?similarity) ?foaf
+limit 10

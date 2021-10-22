@@ -15,6 +15,8 @@ import org.eclipse.rdf4j.query.BindingSet;
 
 public class GraphDBConverter extends Converter {
 
+	private final static String COLLECTION_SEPARATOR = ", ";
+
 	//converts date of type "2011-08-12T20:17:46.384Z" to millisecond.
 	// This is the datetime type of sparql
 	public long timestampToEpoch(BindingSet bindingSet, String name) {
@@ -29,30 +31,35 @@ public class GraphDBConverter extends Converter {
 	}
 
 	public Iterable<String> asStringCollection(BindingSet bindingSet, String name) {
-		Value value = bindingSet.getValue(name);
-		if (value == null) {
+		String stringValue = bindingSet.getValue(name).stringValue();
+		if (stringValue.isEmpty()) {
 			return new ArrayList<>();
 		} else {
-			return Arrays.asList(value.stringValue().split(", "));
+			return Arrays.asList(stringValue.split(COLLECTION_SEPARATOR));
 		}
 	}
 
 	public Iterable<Number> asNumberCollection(BindingSet bindingSet, String name) {
-		Value value = bindingSet.getValue(name);
-		if (value == null) {
+		String stringValue = bindingSet.getValue(name).stringValue();
+		if (stringValue.isEmpty()) {
 			return new ArrayList<>();
 		} else {
-			List<String> stringList = Arrays.asList(value.stringValue().split(", "));
+			List<String> stringList = Arrays.asList(stringValue.split(COLLECTION_SEPARATOR));
 			return stringList.stream().map(Long::parseLong).collect(Collectors.toList());
 		}
 	}
 
 	public Iterable<List<Object>> asObjectCollection(BindingSet bindingSet, String name) {
-		Value value = bindingSet.getValue(name);
-		if (value == null) {
+		String stringValue = bindingSet.getValue(name).stringValue();
+		if (stringValue.isEmpty()) {
 			return new ArrayList<>();
 		} else {
-			return Collections.singletonList(Arrays.asList(value.stringValue().split(", ")));
+			List<List<Object>> result = new ArrayList<>();
+			String[] organizations = stringValue.split(COLLECTION_SEPARATOR);
+			for (String organization : organizations) {
+				result.add(Arrays.asList(organization.split(" ")));
+			}
+			return result;
 		}
 	}
 
@@ -80,16 +87,7 @@ public class GraphDBConverter extends Converter {
 
 	@Override
 	public String convertId(long value) {
-		String personIdAsString = String.valueOf(value);
-		int maxLength = 20;
-
-		StringBuilder sb = new StringBuilder(personIdAsString);
-		if (sb.length() <= maxLength) {
-			while (sb.length() < maxLength) {
-				sb.insert(0, '0');
-			}
-		}
-		return sb.toString();
+		return String.format("%020d", value);
 	}
 
 	@Override
