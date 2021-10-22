@@ -7,18 +7,18 @@ WHERE {
         VALUES (?source ?destination) {
             (sn:pers%person1Id% sn:pers%person2Id%)
         }
-        SERVICE <http://www.ontotext.com/path#search> {
-            <urn:path> onto:findPath onto:shortestPath ;
-                       onto:sourceNode ?source ;
-                       onto:destinationNode ?destination ;
-                       onto:resultBindingIndex ?dist ;
-                       onto:startNode ?start ;
-                       onto:endNode ?fr .
-            SERVICE <urn:path> {
-                ?start snvoc:knows/snvoc:hasPerson ?fr.
+           SERVICE <http://www.ontotext.com/path#search> {
+                    <urn:path> onto:findPath onto:distance ;
+                               onto:sourceNode ?source ;
+                               onto:destinationNode ?destination ;
+                               onto:distanceBinding ?dist ;
+                               onto:bidirectional true;
+                               onto:startNode ?start ;
+                               onto:endNode ?fr .
+                    SERVICE <urn:path> {
+                          ?fr snvoc:knows/snvoc:hasPerson ?start.
+                    }
+                }
             }
-        }
-        filter (?fr = sn:pers%person2Id%)
-    }
-    BIND ( IF (BOUND (?dist), ?dist + 1, -1 )  as ?distOrNotFound  ) .
+            BIND ( IF (BOUND (?dist), ?dist, -1 )  as ?distOrNotFound  ) .
 }
