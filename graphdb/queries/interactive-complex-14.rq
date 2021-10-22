@@ -91,7 +91,7 @@ where {
     }
     }
     {
-        SELECT distinct ?start ?end ?destination where {
+        SELECT distinct ?start ?end ?pathIndex ?destination where {
             VALUES (?source ?destination) {
                 (sn:pers%person1Id% sn:pers%person2Id%)
             }
@@ -99,6 +99,7 @@ where {
                 <urn:path> onto:findPath onto:shortestPath ;
                            onto:sourceNode ?source ;
                            onto:destinationNode ?destination ;
+                           onto:bidirectional true;
                            onto:startNode ?start ;
                            onto:endNode ?end ;
                            onto:pathIndex ?pathIndex .
