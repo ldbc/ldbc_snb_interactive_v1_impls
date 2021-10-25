@@ -18,7 +18,7 @@ PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX onto: <http://www.ontotext.com/path#>
 
-select ?title (count (distinct ?post) as ?count)
+select ?title  (SUM(?friendHasPostOrNot) AS ?count)
 where {
     {
        select distinct ?fr
@@ -38,15 +38,21 @@ where {
                 }
             } 
         }
-    } 
-
-    ?post snvoc:hasCreator ?fr .
-    ?post snvoc:hasCreatorMember ?mem .
+    }
+    ?forum snvoc:hasMember ?mem .
     ?mem snvoc:joinDate ?date .
-    filter (?date >= "%minDate%"^^xsd:dateTime) .
-    ?group snvoc:containerOf ?post .
-    ?group snvoc:title ?title.
+    ?mem snvoc:hasPerson ?fr .
+    filter (?date > "%minDate%"^^xsd:dateTime) .
+
+    OPTIONAL{
+        ?post snvoc:hasCreator ?fr .
+         ?forum snvoc:containerOf ?post .
+          BIND( 1 AS ?friendHasPost )
+        }
+        ?forum snvoc:title ?title.
+        ?forum snvoc:id ?forumId .
+         BIND( COALESCE(?friendHasPost, 0) AS ?friendHasPostOrNot )
 }
-group by ?title
-order by desc(?count) ?title
+group by ?title ?forumId
+order by desc(?count) ?forumId
 limit 20

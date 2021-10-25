@@ -6,7 +6,8 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
 select ?tagname (count (distinct ?post) as ?count) 
 where {
-    sn:pers%personId% (snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson) ?fr.
+   # sn:pers%personId% (snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson) ?fr.
+   sn:pers%personId% (snvoc:knows/snvoc:hasPerson) ?fr.
     ?post snvoc:hasCreator ?fr .
      ?post rdf:type snvoc:Post .
     ?post snvoc:hasTag ?tag .
@@ -15,13 +16,16 @@ where {
     bind ("%startDate%"^^xsd:dateTime + "P%durationDays%D"^^xsd:duration as ?dateAdded).
     filter (?date >= "%startDate%"^^xsd:dateTime && ?date < ?dateAdded) .
       FILTER NOT EXISTS {
-            sn:pers%personId% (snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson) ?fr2.
+            sn:pers%personId% (snvoc:knows/snvoc:hasPerson) ?fr2.
             ?post2 snvoc:hasCreator ?fr2 .
             ?post2 rdf:type snvoc:Post .
             ?post2 snvoc:hasTag ?tag .
             ?post2 snvoc:creationDate ?date2 .
             filter (?date2 < "%startDate%"^^xsd:dateTime)
+            filter ( sn:pers%personId% != ?fr2).
         }
+            filter ( sn:pers%personId% != ?fr).
+
 }
 group by ?tagname
 order by desc(?count) ?tagname
