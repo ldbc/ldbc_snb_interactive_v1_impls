@@ -59,36 +59,32 @@ PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX onto: <http://www.ontotext.com/path#>
-
-select (concat (group_concat(distinct ?startId; separator=", "), ", ", xsd:string(?destId)) as ?path) (count(distinct ?post) + 0.5*count(distinct ?comment) + count(distinct ?postFr) + 0.5*count(distinct ?commentFr) as ?pathWeight)
+select (concat (group_concat(distinct ?startId;
+            separator=", "), ", ", xsd:string(?destId)) as ?path)
+(count(?postOfReply) + count(?commentOfReply)*0.5 as ?pathWeight)
 where {
-    optional{
-    ?post1 snvoc:hasCreator ?start.
-    ?post1 snvoc:replyOf ?post2.
-    ?post2 snvoc:hasCreator ?end.
-    ?post1 a snvoc:Comment.
     optional {
-        ?post2 a snvoc:Post.
-        bind(?post2 as ?post)
-    }
-         optional {
-        ?post2 a snvoc:Comment.
-        bind(?post2 as ?comment)
-    }
-    }
-    optional {
-    ?post3 snvoc:hasCreator ?end.
-    ?post3 snvoc:replyOf ?post4.
-    ?post4 snvoc:hasCreator ?start.
-    ?post3 a snvoc:Comment.
-    optional {
-        ?post4 a snvoc:Post.
-        bind(?post4 as ?postFr)
-    }
-    optional {
-        ?post4 a snvoc:Comment.
-        bind(?post4 as ?commentFr)
-    }
+        {
+            ?comment snvoc:hasCreator ?start  .
+            ?comment rdf:type snvoc:Comment .
+            ?comment snvoc:replyOf ?messageOfReply .
+            ?messageOfReply snvoc:hasCreator ?end.
+        }
+        union
+        {
+            ?comment snvoc:hasCreator ?end  .
+            ?comment rdf:type snvoc:Comment .
+            ?comment snvoc:replyOf ?messageOfReply .
+            ?messageOfReply snvoc:hasCreator ?start .
+        }
+        optional {
+            ?messageOfReply rdf:type snvoc:Post.
+            bind(?messageOfReply as ?postOfReply)
+        }
+        optional {
+            ?messageOfReply rdf:type snvoc:Comment.
+            bind(?messageOfReply as ?commentOfReply)
+        }
     }
     {
         SELECT distinct ?start ?end ?pathIndex ?destination where {
