@@ -59,9 +59,8 @@ PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX onto: <http://www.ontotext.com/path#>
-select (concat (group_concat(distinct ?startId;
-            separator=", "), ", ", xsd:string(?destId)) as ?path)
-(count(?postOfReply) + count(?commentOfReply)*0.5 as ?pathWeight)
+
+select (concat (group_concat(distinct ?startId; separator=", "), ", ", xsd:string(?destId)) as ?path) (count(?postOfReply) + count(?commentOfReply)*0.5 as ?pathWeight)
 where {
     optional {
         {

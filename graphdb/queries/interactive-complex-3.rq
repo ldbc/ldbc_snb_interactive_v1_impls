@@ -31,7 +31,6 @@ where {
         }
         ?fr snvoc:firstName ?fname .
         ?fr snvoc:lastName ?lname .
-        ?fr snvoc:isLocatedIn ?city .
         {
                 ?post snvoc:hasCreator ?fr .
                 ?post snvoc:creationDate ?date .
@@ -42,7 +41,8 @@ where {
             	} union {
                 	?post snvoc:isLocatedIn dbpedia:%countryYName%. bind(1 as ?c2).
                 }
-        }        
+        }
+        filter (?c1 > 0 && ?c2 > 0)
     }
 } 
 group by ?fr
