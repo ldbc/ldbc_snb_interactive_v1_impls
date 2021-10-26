@@ -7,13 +7,8 @@ SELECT ?knownFriend ?friendFirstName ?friendLastName ?creationDate
 WHERE {
     ?person snvoc:id "%personId%"^^xsd:long ;
             rdf:type snvoc:Person .
-    {
-        ?person snvoc:knows ?knownFriendNode .
-        ?knownFriendNode snvoc:hasPerson ?knownFriend .
-    } UNION {
-        ?knownFriend snvoc:knows ?knownFriendNode .
-        ?knownFriendNode snvoc:hasPerson ?person .
-    }
+    ?person snvoc:knows ?knownFriendNode .
+    ?knownFriendNode snvoc:hasPerson ?knownFriend .
     ?knownFriendNode snvoc:creationDate ?creationDate .
     ?knownFriend snvoc:firstName ?friendFirstName ;
                    snvoc:lastName ?friendLastName .
