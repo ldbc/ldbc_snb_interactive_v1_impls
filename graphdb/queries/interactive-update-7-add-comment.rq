@@ -20,7 +20,7 @@ INSERT {  sn:comm%subjectId% snvoc:replyOf ?commOrPost .
                     sn:post%replyToPostId%
                    ))
                     AS ?commOrPost)
- BIND ((IF (00000001099511639206 = -1,
+ BIND ((IF (%replyToPostId%  = -1,
                     snvoc:Comment,
                     snvoc:Post
                    )) AS ?type)
