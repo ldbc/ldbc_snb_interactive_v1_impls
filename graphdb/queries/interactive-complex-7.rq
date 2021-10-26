@@ -1,27 +1,30 @@
-PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
 PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
 PREFIX ofn:<http://www.ontotext.com/sparql/functions/>
 
-select ?liker ?first ?last ?ldt ?post ?content ?lag ?is_new
-where {
-    ?post snvoc:hasCreator sn:pers%personId% .
+select ?liker ?firstName ?lastName ?recentDate ?likedMessage ?content ?latency ?is_new where {
     {
-        {
-            ?post snvoc:content ?content 
-        } union {
-            ?post snvoc:imageFile ?content
-        }
-    } .
-    ?lk snvoc:hasPost ?post .
-    ?liker snvoc:likes ?lk .
-    ?liker snvoc:firstName ?first .
-    ?liker snvoc:lastName ?last .
-    ?post snvoc:creationDate ?dt .
-    ?lk snvoc:creationDate ?ldt .
-    
-    sn:pers%personId% snvoc:knows ?likerNode.
-    bind(if (exists{?likerNode snvoc:hasPerson ?liker}, 0, 1) as ?is_new).
-    bind(ofn:minutesBetween(?dt, ?ldt) as ?lag).
+        select ?liker (min(?message) as ?likedMessage) ?recentDate where {
+            {
+                select ?liker (max(?ldt) as ?recentDate) where {
+                    ?message snvoc:hasCreator sn:pers%personId% .
+                    ?liker snvoc:likes ?lk .
+                    ?lk snvoc:hasPost|snvoc:hasComment ?message .
+                    ?lk snvoc:creationDate ?ldt .
+                } group by ?liker
+            }
+            ?liker snvoc:likes ?lk .
+            ?lk snvoc:creationDate ?recentDate .
+            ?lk snvoc:hasPost|snvoc:hasComment ?message .
+        } group by ?liker ?recentDate
+    }
+    ?liker snvoc:firstName ?firstName .
+    ?liker snvoc:lastName ?lastName .
+    ?likedMessage snvoc:content|snvoc:imageFile ?content .
+    ?likedMessage snvoc:creationDate ?creationDate .
+
+    bind(ofn:minutesBetween(?creationDate, ?recentDate) as ?latency).
+    bind(not exists { sn:pers%personId% (snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson) ?liker } as ?is_new )
 }
-order by desc (?ldt) ?liker
+order by desc (?recentDate) ?liker
 limit 20
