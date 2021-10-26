@@ -1,36 +1,17 @@
-PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
-PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
 PREFIX onto: <http://www.ontotext.com/path#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 
-select ?fr ?last (min(?dist) as ?mindist) ?bday ?since ?gen ?browser ?locationIP (group_concat(distinct ?email;
+select ?fr ?lastName ?mindist ?bday ?since ?gen ?browser ?locationIP (group_concat(distinct ?email;
         separator=", ") as ?emails) (group_concat(distinct ?lng;
         separator=", ") as ?lngs) ?based (group_concat(distinct concat(?study_name, " ", str(?study_year), " ", ?study_country);
         separator=", ") as ?studyAt) (group_concat(distinct concat(?work_name, " ", str(?work_year), " ", ?work_country);
         separator=", ") as ?workAt)
 where {
-    ?fr snvoc:email ?email .
-    ?fr snvoc:speaks ?lng .
-    {
-        ?fr snvoc:studyAt ?study .
-        ?study snvoc:classYear ?study_year .
-        ?study snvoc:hasOrganisation ?study_org .
-        ?study_org snvoc:isLocatedIn ?study_countryURI.
-        ?study_countryURI foaf:name ?study_country .
-        ?study_org foaf:name ?study_name .
-    }
-    {
-        ?fr snvoc:workAt ?work .
-        ?work snvoc:workFrom ?work_year .
-        ?work snvoc:hasOrganisation ?work_org .
-        ?work_org snvoc:isLocatedIn ?work_countryURI.
-        ?work_countryURI foaf:name ?work_country .
-        ?work_org foaf:name ?work_name .
-    }
-    ?fr a snvoc:Person .
     ?fr snvoc:firstName "%firstName%" .
-    ?fr snvoc:lastName ?last .
+    ?fr snvoc:lastName ?lastName .
     ?fr snvoc:birthday ?bday .
     ?fr snvoc:isLocatedIn ?basedURI .
     ?basedURI foaf:name ?based .
@@ -38,9 +19,26 @@ where {
     ?fr snvoc:gender ?gen .
     ?fr snvoc:locationIP ?locationIP .
     ?fr snvoc:browserUsed ?browser .
+    ?fr snvoc:email ?email .
+    ?fr snvoc:speaks ?lng .
+    optional {
+        ?fr snvoc:studyAt ?study .
+        ?study snvoc:classYear ?study_year .
+        ?study snvoc:hasOrganisation ?study_org .
+        ?study_org snvoc:isLocatedIn ?study_countryURI.
+        ?study_countryURI foaf:name ?study_country .
+        ?study_org foaf:name ?study_name .
+    }
+    optional {
+        ?fr snvoc:workAt ?work .
+        ?work snvoc:workFrom ?work_year .
+        ?work snvoc:hasOrganisation ?work_org .
+        ?work_org snvoc:isLocatedIn ?work_countryURI.
+        ?work_countryURI foaf:name ?work_country .
+        ?work_org foaf:name ?work_name .
+    }
     {
-        select distinct ?fr (?index + 1 as ?dist)
-        where {
+        select distinct ?fr (min(?index + 1) as ?mindist) where {
             VALUES (?source ?destination) {
                 (sn:pers%personId% undef)
             }
@@ -50,16 +48,16 @@ where {
                            onto:destinationNode ?destination ;
                            onto:resultBindingIndex ?index ;
                            onto:maxPathLength "3"^^xsd:int;
+                           onto:bidirectional true ;
                            onto:startNode ?start ;
                            onto:endNode ?fr .
                 SERVICE <urn:path> {
                     ?start snvoc:knows/snvoc:hasPerson ?fr.
                 }
             }
-        }
-        group by ?fr ?index
+        } group by ?fr
     }
 }
-group by ?fr ?last ?bday ?since ?gen ?browser ?locationIP ?based ?dist
-order by ?mindist ?last ?fr
+group by ?fr ?lastName ?bday ?since ?gen ?browser ?locationIP ?based ?mindist
+order by ?mindist ?lastName ?fr
 limit 20
