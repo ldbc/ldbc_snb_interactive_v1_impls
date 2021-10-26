@@ -12,13 +12,13 @@ WHERE {
     ?repliedComment snvoc:content ?repliedCommentContent ;
     				snvoc:creationDate ?repliedCommentCreationDate ;
         			snvoc:hasCreator ?replyAuthor .
-    ?replyAuthor snvoc:firstName ?replyAuthorFirstName ;
-                 snvoc:lastName ?replyAuthorLastName ;
-                 snvoc:id ?replyAuthorId .
                    OPTIONAL {
                      ?messageAuthor snvoc:knows/snvoc:hasPerson ?replyAuthor .
                      BIND( "true"^^xsd:boolean AS ?isKnown ) .
                  }
                  BIND (IF((?replyAuthor != ?messageAuthor && COALESCE(?isKnown, false)), true, false) AS
               ?knowsAuthor)
+       ?replyAuthor snvoc:firstName ?replyAuthorFirstName ;
+                  snvoc:lastName ?replyAuthorLastName ;
+                  snvoc:id ?replyAuthorId .
 } ORDER BY DESC(?repliedCommentCreationDate) ?replyAuthorId
