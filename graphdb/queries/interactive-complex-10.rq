@@ -26,7 +26,7 @@ select distinct ?foaf ?firstName ?lastName (if(sum(?match) = -1, 0, (sum(?match)
                 }
             }
             minus {
-                ?source (snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson) ?foaf
+                ?source snvoc:knows/snvoc:hasPerson ?foaf
             }
         }
     }

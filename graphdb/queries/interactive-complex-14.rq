@@ -94,7 +94,6 @@ where {
                 <urn:path> onto:findPath onto:shortestPath ;
                            onto:sourceNode ?source ;
                            onto:destinationNode ?destination ;
-                           onto:bidirectional true;
                            onto:startNode ?start ;
                            onto:endNode ?end ;
                            onto:pathIndex ?pathIndex .

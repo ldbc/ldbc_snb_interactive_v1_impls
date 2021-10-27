@@ -3,7 +3,6 @@ PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 select distinct ?directFriend  ?first ?last ?post ?content ?date
 where {
-    #?directFriend (snvoc:knows/snvoc:hasPerson)|^(snvoc:knows/snvoc:hasPerson) sn:pers%personId%.
     sn:pers%personId%  (snvoc:knows/snvoc:hasPerson) ?directFriend .
     ?directFriend ^snvoc:hasCreator ?post .
     ?directFriend snvoc:firstName ?first.
