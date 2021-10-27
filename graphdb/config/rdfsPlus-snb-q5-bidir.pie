@@ -1,0 +1,154 @@
+Prefices
+{
+	rdf : http://www.w3.org/1999/02/22-rdf-syntax-ns#
+	rdfs : http://www.w3.org/2000/01/rdf-schema#
+	owl : http://www.w3.org/2002/07/owl#
+	onto : http://www.ontotext.com/
+	xsd : http://www.w3.org/2001/XMLSchema#
+	psys : http://proton.semanticweb.org/protonsys#
+	pext : http://proton.semanticweb.org/protonext#
+	snvoc: http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/
+}
+
+Axioms
+{
+	<rdf:type> <rdf:type> <rdf:Property>
+	<rdf:subject> <rdf:type> <rdf:Property>
+	<rdf:predicate> <rdf:type> <rdf:Property>
+	<rdf:object> <rdf:type> <rdf:Property>
+	<rdf:first> <rdf:type> <rdf:Property>
+	<rdf:rest> <rdf:type> <rdf:Property>
+	<rdf:value> <rdf:type> <rdf:Property>
+	<rdf:nil> <rdf:type> <rdf:List>
+	<rdfs:subClassOf> <rdfs:domain> <rdfs:Class>
+	<rdf:subject> <rdfs:domain> <rdf:Statement>
+	<rdf:predicate> <rdfs:domain> <rdf:Statement>
+	<rdf:object> <rdfs:domain> <rdf:Statement>
+	<rdf:first> <rdfs:domain> <rdf:List>
+	<rdf:rest> <rdfs:domain> <rdf:List>
+	<rdfs:domain> <rdfs:range> <rdfs:Class>
+	<rdfs:range> <rdfs:range> <rdfs:Class>
+	<rdfs:subClassOf> <rdfs:range> <rdfs:Class>
+	<rdf:rest> <rdfs:range> <rdf:List>
+	<rdfs:comment> <rdfs:range> <rdfs:Literal>
+	<rdfs:label> <rdfs:range> <rdfs:Literal>
+	<rdf:Alt> <rdfs:subClassOf> <rdfs:Container>
+	<rdf:Bag> <rdfs:subClassOf> <rdfs:Container>
+	<rdf:Seq> <rdfs:subClassOf> <rdfs:Container>
+	<rdfs:ContainerMembershipProperty> <rdfs:subClassOf> <rdf:Property>
+	<rdfs:isDefinedBy> <rdfs:subPropertyOf> <rdfs:seeAlso>
+	<rdf:XMLLiteral> <rdf:type> <rdfs:Datatype>
+	<rdf:XMLLiteral> <rdfs:subClassOf> <rdfs:Literal>
+	<rdfs:Datatype> <rdfs:subClassOf> <rdfs:Class>
+	<owl:equivalentClass> <rdf:type> <owl:TransitiveProperty>
+	<owl:equivalentClass> <rdf:type> <owl:SymmetricProperty>
+	<owl:equivalentClass> <rdfs:subPropertyOf> <rdfs:subClassOf>
+	<owl:equivalentProperty> <rdf:type> <owl:TransitiveProperty>
+	<owl:equivalentProperty> <rdf:type> <owl:SymmetricProperty>
+	<owl:equivalentProperty> <rdfs:subPropertyOf> <rdfs:subPropertyOf>
+	<owl:inverseOf> <rdf:type> <owl:SymmetricProperty>
+	<rdfs:subClassOf> <rdf:type> <owl:TransitiveProperty>
+	<rdfs:subPropertyOf> <rdf:type> <owl:TransitiveProperty>
+	<rdf:type> <psys:transitiveOver> <rdfs:subClassOf>
+	<owl:differentFrom> <rdf:type> <owl:SymmetricProperty>
+	<xsd:nonNegativeInteger> <rdf:type> <rdfs:Datatype>
+	<xsd:string> <rdf:type> <rdfs:Datatype>
+	<rdf:_1> <rdf:type> <rdf:Property>
+	<rdf:_1> <rdf:type> <rdfs:ContainerMembershipProperty>
+}
+
+Rules
+{
+	Id: rule_snb_q5
+	  forum <snvoc:hasMember> mem
+	  mem <snvoc:hasPerson> fr
+	  forum <snvoc:containerOf> post
+	  post <snvoc:hasCreator> fr 
+	------------------------
+    	  post <snvoc:hasCreatorMember> mem
+
+
+	Id: rdfs7
+
+	  a b c
+	  b <rdfs:subPropertyOf> d [Constraint b != d]
+	------------------------------------
+	  a d c
+
+
+	Id: rdfs8_10
+
+	  a <rdf:type> <rdfs:Class>
+	------------------------------------
+	  a <rdfs:subClassOf> a
+
+
+	Id: proton_TransitiveOver
+
+	  a <psys:transitiveOver> b
+	  c a d
+	  d b e
+	------------------------------------
+	  c a e
+
+
+	Id: proton_TransProp
+
+	  a <rdf:type> <owl:TransitiveProperty>
+	------------------------------------
+	  a <psys:transitiveOver> a
+
+
+	Id: proton_TransPropInduct
+
+	  a <psys:transitiveOver> a
+	------------------------------------
+	  a <rdf:type> <owl:TransitiveProperty>
+
+
+	Id: owl_invOf
+
+	  a b c
+	  b <owl:inverseOf> d
+	------------------------------------
+	  c d a
+
+
+	Id: owl_invOfBySymProp
+
+	  a <rdf:type> <owl:SymmetricProperty>
+	------------------------------------
+	  a <owl:inverseOf> a
+
+
+	Id: owl_SymPropByInverse
+
+	  a <owl:inverseOf> a
+	------------------------------------
+	  a <rdf:type> <owl:SymmetricProperty>
+
+
+	Id: owl_EquivClassBySubClass
+
+	  a <rdfs:subClassOf> b [Constraint b != a]
+	  b <rdfs:subClassOf> a [Cut]
+	------------------------------------
+	  a <owl:equivalentClass> b
+
+
+	Id: owl_EquivPropBySubProp
+
+	  a <rdfs:subPropertyOf> b [Constraint b != a]
+	  b <rdfs:subPropertyOf> a [Cut]
+	------------------------------------
+	  a <owl:equivalentProperty> b
+	
+	  
+	Id: rule_snb_knows_bidirectional
+	  p <snvoc:knows> rel [Constraint p != fr]
+	  rel <snvoc:hasPerson> fr 
+	---------------------------
+	 fr <snvoc:knows> rel 
+	 rel <snvoc:hasPerson> p
+
+}
