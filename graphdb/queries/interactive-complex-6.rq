@@ -17,7 +17,6 @@ where {
                            onto:sourceNode ?source ;
                            onto:destinationNode ?destination ;
                            onto:maxPathLength "2"^^xsd:int;
-                            onto:bidirectional true ;
                            onto:startNode ?start ;
                            onto:endNode ?fr .
                 SERVICE <urn:path> {
