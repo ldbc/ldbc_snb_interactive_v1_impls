@@ -19,7 +19,7 @@ where {
                                onto:startNode ?start ;
                                onto:endNode ?fr .
                     SERVICE <urn:path> {
-                       ?fr snvoc:knows/snvoc:hasPerson ?start.
+                       ?start snvoc:knows/snvoc:hasPerson ?fr.
                     }
                 }
             }
