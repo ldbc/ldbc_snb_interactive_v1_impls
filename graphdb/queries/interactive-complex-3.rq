@@ -17,7 +17,7 @@ where {
                     <urn:path> onto:findPath onto:allPaths ;
                                onto:sourceNode ?source ;
                                onto:destinationNode ?destination ;
-                               onto:maxPathLength "1"^^xsd:int;
+                               onto:maxPathLength "2"^^xsd:int;
                                onto:startNode ?start ;
                                onto:endNode ?fr .
                     SERVICE <urn:path> {
