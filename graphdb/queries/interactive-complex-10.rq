@@ -18,7 +18,6 @@ select distinct ?foaf ?firstName ?lastName (if(sum(?match) = -1, 0, (sum(?match)
                            onto:destinationNode ?destination ;
                            onto:minPathLength "2"^^xsd:int;
                            onto:maxPathLength "2"^^xsd:int;
-                           onto:bidirectional true ;
                            onto:startNode ?start ;
                            onto:endNode ?foaf .
                 SERVICE <urn:path> {
