@@ -21,11 +21,11 @@ select distinct ?foaf ?firstName ?lastName (if(sum(?match) = -1, 0, (sum(?match)
                            onto:startNode ?start ;
                            onto:endNode ?foaf .
                 SERVICE <urn:path> {
-                    ?start snvoc:knows/snvoc:hasPerson ?foaf.
+                    ?start snvoc:directKnows ?foaf.
                 }
             }
             minus {
-                ?source snvoc:knows/snvoc:hasPerson ?foaf
+                ?source snvoc:directKnows ?foaf
             }
         }
     }

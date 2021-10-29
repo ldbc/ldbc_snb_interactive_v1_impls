@@ -1,5 +1,6 @@
 PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
 PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+
 select ?from ?first ?last ?dt ?rep ?content
 where {
     {

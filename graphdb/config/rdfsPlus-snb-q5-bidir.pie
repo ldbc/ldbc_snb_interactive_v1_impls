@@ -146,9 +146,9 @@ Rules
 	  
 	Id: rule_snb_knows_bidirectional
 	  p <snvoc:knows> rel [Constraint p != fr]
-	  rel <snvoc:hasPerson> fr 
+	  rel <snvoc:hasPerson> fr [Constraint p != fr]
 	---------------------------
-	 fr <snvoc:knows> rel 
-	 rel <snvoc:hasPerson> p
+	 fr <snvoc:directKnows> p
+	 p <snvoc:directKnows> fr
 
 }

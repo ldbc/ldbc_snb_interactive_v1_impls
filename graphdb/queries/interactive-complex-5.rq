@@ -34,7 +34,7 @@ where {
                            onto:startNode ?start ;
                            onto:endNode ?fr .
                 SERVICE <urn:path> {
-                    ?start snvoc:knows/snvoc:hasPerson ?fr.
+                    ?start snvoc:directKnows ?fr.
                 }
             } 
         }
