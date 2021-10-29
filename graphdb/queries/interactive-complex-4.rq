@@ -6,9 +6,9 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 
 select ?tagname (count (distinct ?post) as ?count) 
 where {
-   sn:pers%personId% (snvoc:knows/snvoc:hasPerson) ?fr.
+    sn:pers%personId% (snvoc:directKnows) ?fr.
     ?post snvoc:hasCreator ?fr .
-     ?post rdf:type snvoc:Post .
+    ?post rdf:type snvoc:Post .
     ?post snvoc:hasTag ?tag .
     ?tag foaf:name ?tagname .
     ?post snvoc:creationDate ?date .
