@@ -39,9 +39,10 @@ where {
     }
     {
         select distinct ?fr (min(?index + 1) as ?mindist) where {
-            VALUES (?source ?destination) {
-                (sn:pers%personId% undef)
+            VALUES (?source ) {
+                ( sn:pers%personId% )
             }
+            ?destination snvoc:firstName "%firstName%" .
             SERVICE <http://www.ontotext.com/path#search> {
                 <urn:path> onto:findPath onto:allPaths ;
                            onto:sourceNode ?source ;
@@ -51,7 +52,7 @@ where {
                            onto:startNode ?start ;
                            onto:endNode ?fr .
                 SERVICE <urn:path> {
-                    ?start snvoc:knows/snvoc:hasPerson ?fr.
+                    ?start snvoc:directKnows ?fr.
                 }
             }
         } group by ?fr

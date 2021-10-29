@@ -24,8 +24,7 @@ select ?liker ?firstName ?lastName ?recentDate ?likedMessage ?content ?latency ?
     ?likedMessage snvoc:creationDate ?creationDate .
 
     bind(ofn:minutesBetween(?creationDate, ?recentDate) as ?latency).
-    bind(not exists { sn:pers%personId% snvoc:knows/snvoc:hasPerson ?liker } as ?is_new )
-    filter ( sn:pers%personId% != ?liker).
+    bind(not exists { sn:pers%personId% snvoc:directKnows ?liker } as ?is_new )
 }
 order by desc (?recentDate) ?liker
 limit 20
