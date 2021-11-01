@@ -26,16 +26,17 @@ public abstract class GraphDBListOperationHandler<TOperation extends Operation<L
 		try (RepositoryConnection conn = dbConnectionState.getConnection()) {
 			dbConnectionState.logQuery(operation.getClass().getSimpleName(), queryString);
 
-			TupleQueryResult queryResultIter = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryString).evaluate();
-			while (queryResultIter.hasNext()) {
-				BindingSet bindingSet = queryResultIter.next();
+			try (TupleQueryResult queryResultIter = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryString).evaluate()) {
+				while (queryResultIter.hasNext()) {
+					BindingSet bindingSet = queryResultIter.next();
 
-				TOperationResult tuple = convertSingleResult(queryResultIter.getBindingNames(), bindingSet);
-				if (dbConnectionState.isPrintResults()) {
-					System.out.println(tuple.toString());
+					TOperationResult tuple = convertSingleResult(queryResultIter.getBindingNames(), bindingSet);
+					if (dbConnectionState.isPrintResults()) {
+						System.out.println(tuple.toString());
+					}
+					results.add(tuple);
+					resultCount++;
 				}
-				results.add(tuple);
-				resultCount++;
 			}
 		}
 		resultReporter.report(resultCount, results, operation);
