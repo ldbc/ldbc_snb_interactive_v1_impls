@@ -3,7 +3,6 @@ PREFIX onto: <http://www.ontotext.com/path#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-
 select ?fr ?lastName ?mindist ?bday ?since ?gen ?browser ?locationIP (group_concat(distinct ?email;
         separator=", ") as ?emails) (group_concat(distinct ?lng;
         separator=", ") as ?lngs) ?based (group_concat(distinct concat(?study_name, " ", str(?study_year), " ", ?study_country);
@@ -44,7 +43,7 @@ where {
             }
             ?destination snvoc:firstName "%firstName%" .
             SERVICE <http://www.ontotext.com/path#search> {
-                <urn:path> onto:findPath onto:allPaths ;
+                <urn:path> onto:findPath onto:shortestPath ;
                            onto:sourceNode ?source ;
                            onto:destinationNode ?destination ;
                            onto:resultBindingIndex ?index ;
