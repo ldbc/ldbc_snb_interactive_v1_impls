@@ -4,28 +4,15 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-
 select distinct ?foaf ?firstName ?lastName (if(sum(?match) = -1, 0, (sum(?match) - sum (if(?match = 0, 1, 0)))) as ?similarity) ?gender ?cityName where {
     {
         select distinct ?foaf
         where {
-            VALUES (?source ?destination) {
-                (sn:pers%personId% undef)
-            }
-            SERVICE <http://www.ontotext.com/path#search> {
-                <urn:path> onto:findPath onto:allPaths ;
-                           onto:sourceNode ?source ;
-                           onto:destinationNode ?destination ;
-                           onto:minPathLength "2"^^xsd:int;
-                           onto:maxPathLength "2"^^xsd:int;
-                           onto:startNode ?start ;
-                           onto:endNode ?foaf .
-                SERVICE <urn:path> {
-                    ?start snvoc:directKnows ?foaf.
-                }
-            }
-            minus {
-                ?source snvoc:directKnows ?foaf
+            {
+                sn:pers%personId% snvoc:directKnows/snvoc:directKnows ?foaf.
+                filter (?foaf != sn:pers%personId%)
+            } minus {
+                sn:pers%personId% snvoc:directKnows ?foaf
             }
         }
     }
