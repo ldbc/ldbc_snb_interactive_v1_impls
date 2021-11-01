@@ -10,7 +10,6 @@ import java.util.TimeZone;
 public class GraphDBConnectionState extends BaseDbConnectionState<GraphDBQueryStore> {
 
 	protected final HTTPRepository graphDBHTTPRepository;
-	protected RepositoryConnection repositoryConnection;
 
 	public GraphDBConnectionState(Map<String, String> properties, GraphDBQueryStore queryStore) {
 		super(properties, queryStore);
@@ -22,21 +21,17 @@ public class GraphDBConnectionState extends BaseDbConnectionState<GraphDBQuerySt
 			String password = properties.get("password");
 			graphDBHTTPRepository.setUsernameAndPassword(user, password);
 		}
+		TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
 	}
 
 	public RepositoryConnection getConnection() {
-		if (repositoryConnection == null) {
-			TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
-			repositoryConnection = graphDBHTTPRepository.getConnection();
-		}
-
-		return repositoryConnection;
+		return graphDBHTTPRepository.getConnection();
 	}
 
 	@Override
 	public void close() {
-		if (repositoryConnection != null) {
-			repositoryConnection.close();
+		if (graphDBHTTPRepository.getConnection() != null) {
+			graphDBHTTPRepository.getConnection().close();
 		}
 	}
 }
