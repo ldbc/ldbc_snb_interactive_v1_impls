@@ -25,15 +25,16 @@ public abstract class GraphDBSingletonOperationHandler<TOperation extends Operat
 		try (RepositoryConnection conn = dbConnectionState.getConnection()) {
 			dbConnectionState.logQuery(operation.getClass().getSimpleName(), queryString);
 
-			TupleQueryResult queryResult = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryString).evaluate();
-			if (queryResult.hasNext()) {
-				BindingSet bindingSet = queryResult.next();
+			try (TupleQueryResult queryResult = conn.prepareTupleQuery(QueryLanguage.SPARQL, queryString).evaluate()) {
+				if (queryResult.hasNext()) {
+					BindingSet bindingSet = queryResult.next();
 
-				tuple = convertSingleResult(queryResult.getBindingNames(), bindingSet);
-				if (dbConnectionState.isPrintResults()) {
-					System.out.println(tuple.toString());
+					tuple = convertSingleResult(queryResult.getBindingNames(), bindingSet);
+					if (dbConnectionState.isPrintResults()) {
+						System.out.println(tuple.toString());
+					}
+					resultCount++;
 				}
-				resultCount++;
 			}
 		}
 		resultReporter.report(resultCount, tuple, operation);
