@@ -33,7 +33,7 @@ public class GraphDBConverter extends Converter {
 	public Iterable<String> asStringCollection(BindingSet bindingSet, String name) {
 		String stringValue = bindingSet.getValue(name).stringValue();
 		if (stringValue.isEmpty()) {
-			return new ArrayList<>();
+			return Collections.emptyList();
 		} else {
 			return Arrays.asList(stringValue.split(COLLECTION_SEPARATOR));
 		}
@@ -42,7 +42,7 @@ public class GraphDBConverter extends Converter {
 	public Iterable<Number> asNumberCollection(BindingSet bindingSet, String name) {
 		String stringValue = bindingSet.getValue(name).stringValue();
 		if (stringValue.isEmpty()) {
-			return new ArrayList<>();
+			return Collections.emptyList();
 		} else {
 			List<String> stringList = Arrays.asList(stringValue.split(COLLECTION_SEPARATOR));
 			return stringList.stream().map(Long::parseLong).collect(Collectors.toList());
@@ -52,7 +52,7 @@ public class GraphDBConverter extends Converter {
 	public Iterable<List<Object>> asObjectCollection(BindingSet bindingSet, String name) {
 		String stringValue = bindingSet.getValue(name).stringValue();
 		if (stringValue.isEmpty()) {
-			return new ArrayList<>();
+			return Collections.emptyList();
 		} else {
 			List<List<Object>> result = new ArrayList<>();
 			String[] organizations = stringValue.split(COLLECTION_SEPARATOR);
