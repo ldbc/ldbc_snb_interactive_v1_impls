@@ -1,57 +1,36 @@
-# need following update to perform well, the relation between post : person : member : forum is always 1:1 fro a given post,
-# so we can benefit from it
-#
-# PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
-# insert {
-#     ?post snvoc:hasCreatorMember ?mem
-# } where {
-#     ?post snvoc:hasCreator ?fr .
-#     ?forum snvoc:containerOf ?post .
-#     ?forum snvoc:hasMember ?mem .
-#     ?mem snvoc:hasPerson ?fr .
-# }
-#
-# we could try to alter the ruleset to derive that from the actual data
-
 PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
 PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX onto: <http://www.ontotext.com/path#>
-
 select ?title  (SUM(?friendHasPostOrNot) AS ?count)
 where {
     {
-       select distinct ?fr
-        where {
-            VALUES (?source ?destination) {
-                (sn:pers%personId% undef)
-            }
-            SERVICE <http://www.ontotext.com/path#search> {
-                <urn:path> onto:findPath onto:allPaths ;
-                           onto:sourceNode ?source ;
-                           onto:destinationNode ?destination ;
-                           onto:maxPathLength "2"^^xsd:int;
-                           onto:startNode ?start ;
-                           onto:endNode ?fr .
-                SERVICE <urn:path> {
-                    ?start snvoc:directKnows ?fr.
+        select * where {
+            {
+                select distinct ?fr
+                where {
+                    {
+                        sn:pers%personId% snvoc:directKnows ?fr.
+                    } union {
+                        sn:pers%personId% snvoc:directKnows/snvoc:directKnows ?fr.
+                        filter ( ?fr != sn:pers%personId%)
+                    }
                 }
-            } 
+            }
+            ?forum snvoc:hasMember ?mem .
+            ?mem snvoc:joinDate ?date .
+            ?mem snvoc:hasPerson ?fr .
+            filter (?date > "%minDate%"^^xsd:dateTime) .
         }
     }
-    ?forum snvoc:hasMember ?mem .
-    ?mem snvoc:joinDate ?date .
-    ?mem snvoc:hasPerson ?fr .
-    filter (?date > "%minDate%"^^xsd:dateTime) .
-
     OPTIONAL{
         ?post snvoc:hasCreator ?fr .
-         ?forum snvoc:containerOf ?post .
-          BIND( 1 AS ?friendHasPost )
-        }
-        ?forum snvoc:title ?title.
-        ?forum snvoc:id ?forumId .
-         BIND( COALESCE(?friendHasPost, 0) AS ?friendHasPostOrNot )
+        ?forum snvoc:containerOf ?post .
+        BIND( 1 AS ?friendHasPost )
+    }
+    ?forum snvoc:title ?title.
+    ?forum snvoc:id ?forumId .
+    BIND( COALESCE(?friendHasPost, 0) AS ?friendHasPostOrNot )
 }
 group by ?title ?forumId
 order by desc(?count) ?forumId

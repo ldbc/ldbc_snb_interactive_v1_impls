@@ -1,33 +1,18 @@
 PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
 PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-PREFIX onto: <http://www.ontotext.com/path#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 select ?tagname (count (distinct ?post) as ?count)
 where {
     {
-        select distinct ?fr
-        where {
-            VALUES (?source ?destination) {
-                (sn:pers%personId% undef)
-            }
-            SERVICE <http://www.ontotext.com/path#search> {
-                <urn:path> onto:findPath onto:allPaths ;
-                           onto:sourceNode ?source ;
-                           onto:destinationNode ?destination ;
-                           onto:maxPathLength "2"^^xsd:int;
-                           onto:startNode ?start ;
-                           onto:endNode ?fr .
-                SERVICE <urn:path> {
-                  ?start snvoc:directKnows ?fr .
-                }
-            }
-        }
-    } .
-     ?post snvoc:hasCreator ?fr .
-     ?post snvoc:hasTag/foaf:name "%tagName%" .
-
+        sn:pers%personId% snvoc:directKnows ?fr .
+    } union {
+        sn:pers%personId% snvoc:directKnows/snvoc:directKnows ?fr .
+        filter( ?fr != sn:pers%personId% )
+    }
+    ?post snvoc:hasCreator ?fr .
+    ?post snvoc:hasTag/foaf:name "%tagName%" .
     ?post rdf:type snvoc:Post .
     ?post snvoc:hasTag ?tag .
     ?tag foaf:name ?tagname .
