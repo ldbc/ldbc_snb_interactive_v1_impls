@@ -1,50 +1,42 @@
-PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
-PREFIX onto: <http://www.ontotext.com/path#>
-
-select distinct ?fr (sample(?fname) as ?first) (sample(?lname) as ?last) (sum (?c1) as ?ct1) (sum(?c2) as ?ct2) ((?ct1 + ?ct2) as ?sum)
-where {
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX dbpedia: <http://dbpedia.org/resource/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+select ?fr ?fname ?lname ?first ?second ?sum where {
     {
-        {
-            select distinct ?fr
-            where {
-                VALUES (?source ?destination) {
-                    (sn:pers%personId% undef)
-                }
-                SERVICE <http://www.ontotext.com/path#search> {
-                    <urn:path> onto:findPath onto:allPaths ;
-                               onto:sourceNode ?source ;
-                               onto:destinationNode ?destination ;
-                               onto:maxPathLength "2"^^xsd:int;
-                               onto:startNode ?start ;
-                               onto:endNode ?fr .
-                    SERVICE <urn:path> {
-                        ?start snvoc:directKnows ?fr.
+        select ?fr (sum(?one) as ?first) (sum(?two) as ?second) (?first + ?second as ?sum)
+        where {
+            {
+                select distinct ?fr {
+                    {
+                        sn:pers%personId% snvoc:directKnows  ?fr.
+                    } union {
+                        sn:pers%personId% snvoc:directKnows/snvoc:directKnows ?fr.
+                        filter (?fr != sn:pers%personId%)
                     }
+                    ?fr snvoc:isLocatedIn ?city .
+                    ?city snvoc:isPartOf ?cnt .
+                    filter (?cnt != dbpedia:%countryXName% && ?cnt != dbpedia:%countryYName%)
                 }
-                ?fr snvoc:isLocatedIn ?city .
-                filter (!exists{?city snvoc:isPartOf dbpedia:%countryXName%.})
-                filter (!exists{?city snvoc:isPartOf dbpedia:%countryYName%.})
             }
-        }
-        ?fr snvoc:firstName ?fname .
-        ?fr snvoc:lastName ?lname .
-        {
+            {
                 ?post snvoc:hasCreator ?fr .
+                ?post snvoc:isLocatedIn dbpedia:%countryXName% .
                 ?post snvoc:creationDate ?date .
-                bind ("%startDate%"^^xsd:dateTime + "P%durationDays%D"^^xsd:duration as ?dateAdded).
-                filter (?date >= "%startDate%"^^xsd:dateTime && ?date < ?dateAdded) .
-            	{
-                	?post snvoc:isLocatedIn dbpedia:%countryXName%. bind(1 as ?c1).
-            	} union {
-                	?post snvoc:isLocatedIn dbpedia:%countryYName%. bind(1 as ?c2).
-                }
-        }
-        filter (?c1 > 0 && ?c2 > 0)
+            } union {
+                ?post1 snvoc:hasCreator ?fr .
+                ?post1 snvoc:isLocatedIn dbpedia:%countryYName% .
+                ?post1 snvoc:creationDate ?date .
+            }
+            bind ("%startDate%"^^xsd:dateTime + "P%durationDays%D"^^xsd:duration as ?dateAdded).
+            filter (?date >= "%startDate%"^^xsd:dateTime && ?date < ?dateAdded) .
+            BIND ((IF (bound(?post), 1,0)) AS ?one)
+            BIND ((IF (bound(?post1), 1,0)) AS ?two)
+        } group by ?fr
     }
-} 
-group by ?fr
+    filter(?first != 0 && ?second != 0)
+    ?fr snvoc:firstName ?fname .
+    ?fr snvoc:lastName ?lname .
+}
 order by desc(?sum) ?fr
 limit 20
