@@ -3,7 +3,7 @@ cd ..
 
 export GRAPHDB_CONTAINER_ROOT=`pwd`/scratch
 export GRAPHDB_DATA_DIR=${GRAPHDB_CONTAINER_ROOT}/data
-export GRAPHDB_IMPORT_TTL_DIR=`pwd`/test-data/
+export GRAPHDB_IMPORT_TTL_DIR=`pwd`/test-data/social_network
 export GRAPHDB_REPOSITORY_CONFIG_FILE=`pwd`/config/graphdb-repo-config.ttl
 export GRAPHDB_REPOSITORY_RULESET_FILE=`pwd`/config/rdfsPlus-snb-q5-bidir.pie
 export GRAPHDB_HEAP_SIZE=8g
