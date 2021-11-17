@@ -14,8 +14,8 @@ select
   (select array_agg(pe_email) from person_email where pe_personid = id group by pe_personid) as emails,
   (select array_agg(plang_language) from person_language where plang_personid = id group by plang_personid) as languages,
   p1.pl_name,
-  (select array_agg(ARRAY[o2.o_name, pu_classyear::text, p2.pl_name]) from person_university, organisation o2, place p2  where pu_personid = id and pu_organisationid = o2.o_organisationid and o2.o_placeid = p2.pl_placeid group by pu_personid) as university,
-       (select array_agg(ARRAY[o3.o_name, pc_workfrom::text, p3.pl_name]) from person_company, organisation o3, place p3 where pc_personid = id and pc_organisationid = o3.o_organisationid and o3.o_placeid = p3.pl_placeid group by pc_personid) as company
+  (select array_agg([o2.o_name, pu_classyear::text, p2.pl_name]) from person_university, organisation o2, place p2  where pu_personid = id and pu_organisationid = o2.o_organisationid and o2.o_placeid = p2.pl_placeid group by pu_personid) as university,
+       (select array_agg([o3.o_name, pc_workfrom::text, p3.pl_name]) from person_company, organisation o3, place p3 where pc_personid = id and pc_organisationid = o3.o_organisationid and o3.o_placeid = p3.pl_placeid group by pc_personid) as company
 from
     (
     select k_person2id as id, 1 as dist from knows, person where k_person1id = :personId and p_personid = k_person2id and p_firstname = :firstName
@@ -39,5 +39,6 @@ from
     p_personid = id and
     p_placeid = p1.pl_placeid
   group by id, p_lastname, p_birthday, p_creationdate, p_gender, p_browserused, p_locationip, p1.pl_name
-  order by dist, p_lastname, id LIMIT 20
+  order by dist, p_lastname, id
+  limit 20
 ;
