@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>postgres</artifactId>
-    <name>Cypher client</name>
+    <name>PostgreSQL client</name>
     <description>PostgreSQL implementation for the LDBC SNB driver</description>
 
     <dependencies>
