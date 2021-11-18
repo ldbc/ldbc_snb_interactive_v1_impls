@@ -47,9 +47,7 @@ jobs:
           command: |
             cd postgres
             export POSTGRES_CSV_DIR=`pwd`/test-data/
-            scripts/start.sh
-            scripts/create-db.sh
-            scripts/load.sh
+            scripts/load-in-one-step.sh
             cd ..
       - run:
           name: Tiny data set - Create validation parameters with the PostgreSQL project
