@@ -13,7 +13,7 @@ WHERE {
     				snvoc:creationDate ?repliedCommentCreationDate ;
         			snvoc:hasCreator ?replyAuthor .
                    OPTIONAL {
-                     ?messageAuthor snvoc:knows/snvoc:hasPerson ?replyAuthor .
+                     ?replyAuthor snvoc:directKnows ?messageAuthor .
                      BIND( "true"^^xsd:boolean AS ?isKnown ) .
                  }
                  BIND (IF((?replyAuthor != ?messageAuthor && COALESCE(?isKnown, false)), true, false) AS
