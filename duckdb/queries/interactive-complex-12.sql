@@ -8,7 +8,7 @@ with recursive extended_tags(s_subtagclassid,s_supertagclassid) as (
     select tc.tc_tagclassid, t.s_supertagclassid from tagclass tc, extended_tags t
         where tc.tc_subclassoftagclassid=t.s_subtagclassid
 )
-select p_personid, p_firstname, p_lastname, array_agg(distinct t_name), count(*)
+select p_personid, p_firstname, p_lastname, array_agg(distinct t_name), count(*) AS replyCount
 from person, message p1, knows, message p2, message_tag, 
     (select distinct t_tagid, t_name from tag where (t_tagclassid in (
           select distinct s_subtagclassid from extended_tags k, tagclass
@@ -23,6 +23,6 @@ where
   p2.m_messageid = mt_messageid and 
   mt_tagid = t_tagid
 group by p_personid, p_firstname, p_lastname
-order by 5 desc, 1
+order by replyCount desc, p_personid
 limit 20
 ;

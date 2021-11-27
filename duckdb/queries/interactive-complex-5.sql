@@ -2,7 +2,7 @@
 \set personId 6597069766734
 \set minDate '\'2010-11-01\''::date
  */
-select f_title, count(m_messageid)
+select f_title, count(m_messageid) AS postCount
 from (
 select f_title, f_forumid, f.k_person2id
 from forum, forum_person,
@@ -21,6 +21,6 @@ where f_forumid = fp_forumid and fp_personid = f.k_person2id and
 ) tmp left join message
 on tmp.f_forumid = m_ps_forumid and m_creatorid = tmp.k_person2id
 group by f_forumid, f_title
-order by 2 desc, f_forumid
+order by postCount desc, f_forumid asc
 limit 20
 ;

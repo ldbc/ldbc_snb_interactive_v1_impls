@@ -12,7 +12,7 @@ from
      m_messageid = l_messageid and
      m_creatorid = :personId
    group by l_personid
-   order by 2 desc
+   order by l_creationdate desc
    limit 20
   ) tmp, message, person, likes as l
 where
@@ -20,5 +20,5 @@ where
     tmp.l_personid = l.l_personid and
     tmp.l_creationdate = l.l_creationdate and
     l.l_messageid = m_messageid
-order by 4 desc, 1
+order by l_creationdate desc, p_personid asc
 ;

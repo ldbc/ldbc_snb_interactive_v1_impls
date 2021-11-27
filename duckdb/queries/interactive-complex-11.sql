@@ -22,6 +22,6 @@ where
     pc_workfrom < :workFromYear and
     o_placeid = pl_placeid and
     pl_name = :countryName
-order by pc_workfrom, p_personid, o_name desc
+order by pc_workfrom asc, p_personid asc, o_name desc
 limit 10
 ;

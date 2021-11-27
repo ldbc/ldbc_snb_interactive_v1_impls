@@ -5,7 +5,7 @@
 \set startDate '\'2010-06-01\''::date
 \set durationDays 28
  */
-select p_personid, p_firstname, p_lastname, ct1, ct2, total
+select p_personid, p_firstname, p_lastname, ct1, ct2, totalcount
 from
  ( select k_person2id
    from knows
@@ -16,9 +16,9 @@ from
    from knows k1, knows k2
    where
    k1.k_person1id = :personId and k1.k_person2id = k2.k_person1id and k2.k_person2id <> :personId
- ) f,  person, place p1, place p2,
+ ) f, person, place p1, place p2,
  (
-  select chn.m_c_creatorid, ct1, ct2, ct1 + ct2 as total
+  select chn.m_c_creatorid, ct1, ct2, ct1 + ct2 as totalcount
   from
    (
       select m_creatorid as m_c_creatorid, count(*) as ct1 from message, place
@@ -40,6 +40,6 @@ where
 f.k_person2id = p_personid and p_placeid = p1.pl_placeid and
 p1.pl_containerplaceid = p2.pl_placeid and p2.pl_name <> :countryXName and p2.pl_name <> :countryYName and
 f.k_person2id = cpc.m_c_creatorid
-order by 6 desc, 1
+order by totalcount desc, p_personid asc
 limit 20
 ;

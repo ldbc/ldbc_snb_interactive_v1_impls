@@ -2,7 +2,7 @@
 \set personId 4398046511333
 \set tagName '\'Carl_Gustaf_Emil_Mannerheim\''
  */
-select t_name, count(*)
+select t_name, count(*) as postCount
 from tag, message_tag, message,
  ( select k_person2id
    from knows
@@ -22,6 +22,6 @@ mt_tagid = t_tagid and
 t_name <> :tagName and
 exists (select * from tag, message_tag where mt_messageid = m_messageid and mt_tagid = t_tagid and t_name = :tagName)
 group by t_name
-order by 2 desc, t_name
+order by postCount desc, t_name asc
 limit 10
 ;
