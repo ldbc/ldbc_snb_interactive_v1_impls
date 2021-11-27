@@ -4,16 +4,16 @@
  */
 WITH RECURSIVE
     search_graph(link, level, path) AS (
-            (SELECT 59::int64, 0, ARRAY[]::int64[][])
+            (SELECT :person1Id::int64, 0, ARRAY[]::int64[][])
           UNION ALL
             (WITH sg(link, level) as (select * from search_graph)
-            SELECT distinct k_person2id, x.level + 1, path || ARRAY[[x.link, k_person2id]]
+            SELECT DISTINCT k_person2id, x.level + 1, array_append(path, [x.link, k_person2id])
             FROM knows, sg x
-            WHERE x.link = k_person1id and not exists(select * from sg y where y.link = 133::int64) and not exists(select * from sg y where y.link=k_person2id)
+            WHERE x.link = k_person1id and not exists(select * from sg y where y.link = :person2Id::int64) and not exists(select * from sg y where y.link=k_person2id)
             )
     ),
     paths(pid, path) AS (
-        SELECT row_number() OVER (), path FROM search_graph where link = 133::int64
+        SELECT row_number() OVER (), path FROM search_graph where link = :person2Id::int64
     ),
     edges AS (
          SELECT pid AS id, path[unnest(generate_series(0, len(path)-1))] as e
