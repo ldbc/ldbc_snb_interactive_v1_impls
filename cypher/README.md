@@ -39,30 +39,31 @@ An example configuration for scale factor 1 is given in the [`params-csv-composi
 Set the following environment variables based on your data source. The default values of these point to the example data set under the `test-data` directory:
 
 ```bash
-export NEO4J_POSTFIX=
+export NEO4J_CSV_POSTFIX=
 export NEO4J_VANILLA_CSV_DIR=
 export NEO4J_CONVERTED_CSV_DIR=
 ```
 #### Preprocessing
 
-1. The CSV files produced by Datagen require a bit of preprocessing:
+The CSV files produced by Datagen require a bit of preprocessing:
 
-    * headers should be replaced with Neo4j-compatible ones (e.g. `:START_ID(Person)|:END_ID(Comment)|creationDate:DATETIME`)
-    * the first letter of labels should be changed to uppercase (e.g. change `city` to `City`)
+* headers should be replaced with Neo4j-compatible ones (e.g. `:START_ID(Person)|:END_ID(Comment)|creationDate:DATETIME`)
+* the first letter of labels should be changed to uppercase (e.g. change `city` to `City`)
 
-    The following script performs these changes on the files in `$NEO4J_VANILLA_CSV_DIR` and places the resulting files in `$NEO4J_CONVERTED_CSV_DIR`:
+The following script performs these changes on the files in `$NEO4J_VANILLA_CSV_DIR` and places the resulting files in `$NEO4J_CONVERTED_CSV_DIR`:
 
-    ```bash
-    scripts/convert-csvs.sh
-    ```
+```bash
+scripts/convert-csvs.sh
+```
 
 #### Load the data set
 
-2. To load and index the data, run the following sequence of commands:
+2. To preprocess, load and index the data, run the following sequence of commands:
 
 :warning: Be careful -- this stops the currently running (containerized) Neo4j database and deletes all of its data.
 
 ```bash
+scripts/convert-csvs.sh
 scripts/stop-neo4j.sh
 scripts/delete-neo4j-database.sh
 scripts/import-to-neo4j.sh
