@@ -63,4 +63,15 @@
         </pluginManagement>
     </build>
 
+    <repositories>
+        <repository>
+            <id>snb-mvn</id>
+            <url>https://ldbcouncil.org/snb-mvn/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
 </project>

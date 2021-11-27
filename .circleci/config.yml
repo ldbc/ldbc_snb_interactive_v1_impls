@@ -15,15 +15,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Setup
+          name: Install PostgreSQL client
           command: |
-            export DEBIAN_FRONTEND=noninteractive
-            sudo apt update
-            # install dependencies
-            sudo apt install -y git
-            # clone, build, and install driver
-            git clone --depth 1 --branch 0.3.5 https://github.com/ldbc/ldbc_snb_driver && cd ldbc_snb_driver && mvn install -DskipTests && cd ..
-            # PostgreSQL
             pip3 install --user --progress-bar off psycopg2-binary
       - run:
           name: Build project
