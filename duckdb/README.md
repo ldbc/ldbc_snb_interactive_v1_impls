@@ -4,7 +4,11 @@
 
 ## Setup
 
-Grab DuckDB.
+Grab DuckDB:
+
+```bash
+scripts/get.sh
+```
 
 ## Generating and loading the data set
 
@@ -20,18 +24,20 @@ ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv
 
 ### Loading the data set
 
-```
+```bash
 DATA_DIR=`pwd`/../postgres/test-data
 
 rm -f scratch/ldbc.duckdb*
-cat ddl/schema.sql | duckdb scratch/ldbc.duckdb
-sed "s|PATHVAR|${DATA_DIR}|" ddl/snb-load.sql | duckdb scratch/ldbc.duckdb
-cat ddl/schema_constraints.sql | duckdb scratch/ldbc.duckdb
+cat ddl/schema.sql | scratch/duckdb scratch/ldbc.duckdb
+sed "s|PATHVAR|${DATA_DIR}|" ddl/snb-load.sql | scratch/duckdb scratch/ldbc.duckdb
+cat ddl/schema_constraints.sql | scratch/duckdb scratch/ldbc.duckdb
 ```
 
 
 ### Running the benchmark
 
+TODO.
 
+:warning: *Each scale factor has a different configuration. For benchmark runs, make sure you use the correct update interleave value and query frequencies provided in the [`sf-properties` directory](../sf-properties)*
 
-:warning: *Note that if the default workload contains updates which are persisted in the database. Therefore, the database needs to be re-loaded between steps – otherwise repeated updates would insert duplicate entries.*
+:warning: *Note that the default workload contains updates which are persisted in the database. Therefore, the database needs to be re-loaded between steps – otherwise repeated updates would insert duplicate entries.*
