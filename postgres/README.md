@@ -9,6 +9,7 @@ The recommended environment for executing this benchmark is as follows: the benc
 * Bash
 * Java 8
 * Docker 19+
+* the `psycopg2` Python library: `pip3 install --user --progress-bar off psycopg2-binary`
 * enough free space in the directory `$POSTGRES_DATABASE_DIR` (its default value is specified in `scripts/vars.sh`)
 
 The default configuration of the database (e.g. database name, user, password) is set in the `scripts/vars.sh` file.
