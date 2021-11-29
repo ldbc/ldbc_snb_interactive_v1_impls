@@ -9,6 +9,7 @@ The recommended environment for executing this benchmark is as follows: the benc
 * Bash
 * Java 8
 * Docker 19+
+* the `psycopg2` Python library: `pip3 install --user --progress-bar off psycopg2-binary`
 * enough free space in the directory `$POSTGRES_DATABASE_DIR` (its default value is specified in `scripts/vars.sh`)
 
 The default configuration of the database (e.g. database name, user, password) is set in the `scripts/vars.sh` file.
@@ -56,4 +57,6 @@ ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv
     driver/benchmark.sh
     ```
 
-:warning: *Note that if the default workload contains updates which are persisted in the database. Therefore, the database needs to be re-loaded between steps – otherwise repeated updates would insert duplicate entries.*
+:warning: SNB data sets of **different scale factors require different configurations** for the benchmark runs. Therefore, make sure you use the correct values (update_interleave and query frequencies) based on the files provided in the [`sf-properties` directory](sf-properties/).
+
+:warning: The default workload contains updates which are persisted in the database. Therefore, **the database needs to be reloaded or restored from backup before each run**. Otherwise, repeated updates would insert duplicate entries.
