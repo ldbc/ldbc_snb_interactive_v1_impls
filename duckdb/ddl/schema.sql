@@ -1,6 +1,3 @@
-drop view if exists country;
-drop view if exists message_tag;
-drop view if exists message;
 drop table if exists forum_person;
 drop table if exists forum_tag;
 drop table if exists person_email;

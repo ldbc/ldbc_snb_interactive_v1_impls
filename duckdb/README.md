@@ -14,7 +14,7 @@ scripts/get.sh
 
 ### Generating the data set
 
-The data sets need to be generated and preprocessed before loading it to the database. To generate such data sets, use the `CsvMergeForeignDynamicActivitySerializer` serializer classes of the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop):
+The data sets need to be generated before loading it to the database. No preprocessing is required. To generate such data sets, use the `CsvMergeForeignDynamicActivitySerializer` serializer classes of the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop):
 
 ```ini
 ldbc.snb.datagen.serializer.dynamicActivitySerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.activity.CsvMergeForeignDynamicActivitySerializer
@@ -25,12 +25,9 @@ ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv
 ### Loading the data set
 
 ```bash
-DATA_DIR=`pwd`/../postgres/test-data
-
-rm -f scratch/ldbc.duckdb*
-cat ddl/schema.sql | scratch/duckdb scratch/ldbc.duckdb
-sed "s|PATHVAR|${DATA_DIR}|" ddl/snb-load.sql | scratch/duckdb scratch/ldbc.duckdb
-cat ddl/schema_constraints.sql | scratch/duckdb scratch/ldbc.duckdb
+export DUCKDB_DATA_DIR=`pwd`/../postgres/test-data
+scripts/cleanup.sh
+scripts/load.sh
 ```
 
 

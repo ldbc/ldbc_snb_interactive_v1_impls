@@ -23,9 +23,6 @@ COPY comment_tag       FROM 'PATHVAR/dynamic/comment_hasTag_tag_0_0.csv'        
 COPY knows (k_person1id, k_person2id, k_creationdate) FROM 'PATHVAR/dynamic/person_knows_person_0_0.csv' (DELIMITER '|', HEADER, TIMESTAMPFORMAT '%Y-%m-%dT%H:%M:%S.%g+0000');
 COPY knows (k_person2id, k_person1id, k_creationdate) FROM 'PATHVAR/dynamic/person_knows_person_0_0.csv' (DELIMITER '|', HEADER, TIMESTAMPFORMAT '%Y-%m-%dT%H:%M:%S.%g+0000');
 
--- COPY message (m_messageid, m_ps_imagefile, m_creationdate, m_locationip, m_browserused, m_ps_language, m_content, m_length, m_creatorid, m_ps_forumid, m_locationid) FROM 'PATHVAR/dynamic/post_0_0.csv' WITH (DELIMITER '|', HEADER, FORMAT csv);
--- COPY message FROM 'PATHVAR/dynamic/comment_0_0-postgres.csv' WITH (DELIMITER '|', HEADER, FORMAT csv);
-
 CREATE TABLE country AS
     SELECT city.pl_placeid AS ctry_city, ctry.pl_name AS ctry_name
     FROM place city, place ctry
