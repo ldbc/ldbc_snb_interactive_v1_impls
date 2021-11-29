@@ -15,9 +15,9 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install PostgreSQL client
+          name: Install PostgreSQL dependencies
           command: |
-            pip3 install --user --progress-bar off psycopg2-binary
+            postgres/scripts/install-dependencies.sh
       - run:
           name: Build project
           command: ./build.sh
