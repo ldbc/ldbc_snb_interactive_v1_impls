@@ -12,7 +12,6 @@ import java.util.TimeZone;
 
 public class DuckDbConnectionState<TDbQueryStore extends QueryStore> extends BaseDbConnectionState<TDbQueryStore> {
 
-    protected String endPoint;
     protected Connection connection;
 
     public DuckDbConnectionState(Map<String, String> properties, TDbQueryStore store) throws ClassNotFoundException, SQLException {
