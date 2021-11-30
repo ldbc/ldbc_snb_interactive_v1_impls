@@ -80,8 +80,11 @@ public class DuckDbConverter extends Converter {
         return new_arr;
     }
 
-    public static long stringTimestampToEpoch(ResultSet r, int column) throws SQLException {
-        return r.getTimestamp(column, Calendar.getInstance(TimeZone.getTimeZone("GMT"))).getTime();
+    public static long timestampToEpoch(ResultSet r, int column) throws SQLException {
+        return r.getTimestamp(column).getTime();
     }
 
+    public static long dateToEpoch(ResultSet r, int column) throws SQLException {
+        return r.getDate(column).getTime();
+    }
 }

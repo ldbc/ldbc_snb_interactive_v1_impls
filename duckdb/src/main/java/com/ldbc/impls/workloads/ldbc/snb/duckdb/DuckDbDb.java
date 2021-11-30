@@ -92,8 +92,8 @@ public abstract class DuckDbDb extends BaseDb<QueryStore> {
                     result.getLong(1),
                     result.getString(2),
                     result.getInt(3),
-                    DuckDbConverter.stringTimestampToEpoch(result, 4),
-                    DuckDbConverter.stringTimestampToEpoch(result, 5),
+                    DuckDbConverter.dateToEpoch(result, 4),
+                    DuckDbConverter.timestampToEpoch(result, 5),
                     result.getString(6),
                     result.getString(7),
                     result.getString(8),
@@ -129,7 +129,7 @@ public abstract class DuckDbDb extends BaseDb<QueryStore> {
                     result.getString(3),
                     result.getLong(4),
                     result.getString(5),
-                    DuckDbConverter.stringTimestampToEpoch(result, 6));
+                    DuckDbConverter.timestampToEpoch(result, 6));
         }
 
     }
@@ -215,7 +215,7 @@ public abstract class DuckDbDb extends BaseDb<QueryStore> {
                     result.getLong(1),
                     result.getString(2),
                     result.getString(3),
-                    DuckDbConverter.stringTimestampToEpoch(result, 4),
+                    DuckDbConverter.timestampToEpoch(result, 4),
                     result.getLong(5),
                     result.getString(6),
                     result.getInt(7),
@@ -237,7 +237,7 @@ public abstract class DuckDbDb extends BaseDb<QueryStore> {
                     result.getLong(1),
                     result.getString(2),
                     result.getString(3),
-                    DuckDbConverter.stringTimestampToEpoch(result, 4),
+                    DuckDbConverter.timestampToEpoch(result, 4),
                     result.getLong(5),
                     result.getString(6));
         }
@@ -259,7 +259,7 @@ public abstract class DuckDbDb extends BaseDb<QueryStore> {
                     result.getString(3),
                     result.getLong(4),
                     result.getString(5),
-                    DuckDbConverter.stringTimestampToEpoch(result, 6));
+                    DuckDbConverter.timestampToEpoch(result, 6));
         }
 
     }
@@ -364,12 +364,12 @@ public abstract class DuckDbDb extends BaseDb<QueryStore> {
             return new LdbcShortQuery1PersonProfileResult(
                     result.getString(1),
                     result.getString(2),
-                    DuckDbConverter.stringTimestampToEpoch(result, 3),
+                    DuckDbConverter.dateToEpoch(result, 3),
                     result.getString(4),
                     result.getString(5),
                     result.getLong(6),
                     result.getString(7),
-                    DuckDbConverter.stringTimestampToEpoch(result, 8));
+                    DuckDbConverter.timestampToEpoch(result, 8));
         }
 
     }
@@ -386,7 +386,7 @@ public abstract class DuckDbDb extends BaseDb<QueryStore> {
             return new LdbcShortQuery2PersonPostsResult(
                     result.getLong(1),
                     result.getString(2),
-                    DuckDbConverter.stringTimestampToEpoch(result, 3),
+                    DuckDbConverter.timestampToEpoch(result, 3),
                     result.getLong(4),
                     result.getLong(5),
                     result.getString(6),
@@ -408,7 +408,7 @@ public abstract class DuckDbDb extends BaseDb<QueryStore> {
                     result.getLong(1),
                     result.getString(2),
                     result.getString(3),
-                    DuckDbConverter.stringTimestampToEpoch(result, 4));
+                    DuckDbConverter.timestampToEpoch(result, 4));
         }
 
     }
@@ -424,7 +424,7 @@ public abstract class DuckDbDb extends BaseDb<QueryStore> {
         public LdbcShortQuery4MessageContentResult convertSingleResult(ResultSet result) throws SQLException {
             return new LdbcShortQuery4MessageContentResult(
                     result.getString(1),
-                    DuckDbConverter.stringTimestampToEpoch(result, 2));
+                    DuckDbConverter.timestampToEpoch(result, 2));
         }
 
     }
@@ -477,7 +477,7 @@ public abstract class DuckDbDb extends BaseDb<QueryStore> {
             return new LdbcShortQuery7MessageRepliesResult(
                     result.getLong(1),
                     result.getString(2),
-                    DuckDbConverter.stringTimestampToEpoch(result, 3),
+                    DuckDbConverter.timestampToEpoch(result, 3),
                     result.getLong(4),
                     result.getString(5),
                     result.getString(6),
