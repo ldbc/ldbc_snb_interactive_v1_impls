@@ -10,4 +10,3 @@ scripts/cleanup.sh
 
 cat ddl/schema.sql | scratch/duckdb scratch/ldbc.duckdb
 sed "s|PATHVAR|${DUCKDB_DATA_DIR}|" ddl/snb-load.sql | scratch/duckdb scratch/ldbc.duckdb
-cat ddl/schema_constraints.sql | scratch/duckdb scratch/ldbc.duckdb
