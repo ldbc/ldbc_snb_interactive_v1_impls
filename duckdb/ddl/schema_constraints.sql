@@ -1,3 +1,10 @@
+CREATE UNIQUE INDEX forum_id_idx        ON forum       (f_forumid);
+CREATE UNIQUE INDEX organisation_id_idx ON organisation(o_organisationid);
+CREATE UNIQUE INDEX person_id_idx       ON person      (p_personid);
+CREATE UNIQUE INDEX place_id_idx        ON place       (pl_placeid);
+CREATE UNIQUE INDEX tagclass_id_idx     ON tagclass    (tc_tagclassid);
+CREATE UNIQUE INDEX tag_id_idx          ON tag         (t_tagid);
+
 CREATE INDEX forum_moderatorid ON forum (f_moderatorid);
 CREATE INDEX forum_person_forumid ON forum_person (fp_forumid);
 CREATE INDEX forum_person_personid ON forum_person (fp_personid);
