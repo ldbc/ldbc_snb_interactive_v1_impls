@@ -1,8 +1,3 @@
-/* Q4. New topics
-\set personId 10995116277918
-\set startDate '\'2010-10-01\''::date
-\set durationDays 31
- */
 select t_name, count(*) as postCount
 from tag, message, message_tag recent, knows
 where

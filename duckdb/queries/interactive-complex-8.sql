@@ -1,6 +1,3 @@
-/* Q8. Recent replies
-\set personId 143
- */
 select p1.m_creatorid, p_firstname, p_lastname, p1.m_creationdate, p1.m_messageid, p1.m_content
   from message p1, message p2, person
   where

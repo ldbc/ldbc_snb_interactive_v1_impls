@@ -1,7 +1,3 @@
-/* Q6. Tag co-occurrence
-\set personId 4398046511333
-\set tagName '\'Carl_Gustaf_Emil_Mannerheim\''
- */
 select t_name, count(*) as postCount
 from tag, message_tag, message,
  ( select k_person2id

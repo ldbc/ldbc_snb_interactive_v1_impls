@@ -1,7 +1,3 @@
-/* Q13. Single shortest path
-\set person1Id 8796093022390
-\set person2Id 8796093022357
- */
 WITH RECURSIVE
     search_graph(link, level, path) AS (
             SELECT :person1Id::int64, 0, [:person1Id::int64]

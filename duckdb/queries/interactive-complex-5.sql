@@ -1,7 +1,3 @@
-/* Q5 New groups
-\set personId 6597069766734
-\set minDate '\'2010-11-01\''::date
- */
 select f_title, count(m_messageid) AS postCount
 from (
 select f_title, f_forumid, f.k_person2id

@@ -1,7 +1,3 @@
-/* Q14. Trusted connection paths
-\set person1Id 8796093022357
-\set person2Id 8796093022390
- */
 WITH RECURSIVE
     search_graph(link, level, path) AS (
             (SELECT :person1Id::int64, 0, ARRAY[]::int64[][])
@@ -39,6 +35,11 @@ WITH RECURSIVE
     weightedpaths(path, score) as (
         select path, coalesce(sum(score), 0) from paths, edges left join weights on we=e where pid=id group by id, path
     )
-select path, score from weightedpaths
+select string_agg(e, ';'), score
+from (
+    select row_number() OVER () as rownum, unnest(path) as e, score
+    from weightedpaths
+)
+group by rownum, score
 order by score desc
 ;
