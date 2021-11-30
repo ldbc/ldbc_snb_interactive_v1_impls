@@ -1,7 +1,7 @@
 /* Q7. Recent likers
 \set personId 4398046511268
  */
- select p_personid, p_firstname, p_lastname, l.l_creationdate, m_messageid,
+select p_personid, p_firstname, p_lastname, l.l_creationdate, m_messageid,
     COALESCE(m_ps_imagefile, m_content),
     CAST(EXTRACT(EPOCH FROM (l.l_creationdate - m_creationdate)) AS INTEGER) / 60 as minutesLatency,
     (case when exists (select 1 from knows where k_person1id = :personId and k_person2id = p_personid) then 0 else 1 end) as isnew
