@@ -1,6 +1,3 @@
-/* IS7. Replies of a message
-\set messageId 206158432794
- */
 select p2.m_messageid, p2.m_content, p2.m_creationdate, p_personid, p_firstname, p_lastname,
     (case when exists (
                        select 1 from knows

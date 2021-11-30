@@ -1,6 +1,3 @@
-/* IS6. Forum of a message
-\set messageId 206158431836
- */
 WITH RECURSIVE chain(parent, child) as(
     SELECT m_c_replyof, m_messageid FROM message where m_messageid = :messageId
     UNION ALL

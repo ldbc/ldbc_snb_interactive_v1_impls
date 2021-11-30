@@ -1,6 +1,3 @@
-/* IS2. Recent messages of a person
-\set personId 10995116277795
- */
 with recursive cposts(m_messageid, m_content, m_ps_imagefile, m_creationdate, m_c_replyof, m_creatorid) AS (
       select m_messageid, m_content, m_ps_imagefile, m_creationdate, m_c_replyof, m_creatorid
       from message
