@@ -6,12 +6,7 @@ import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class DuckDbConverter extends Converter {
@@ -43,11 +38,11 @@ public class DuckDbConverter extends Converter {
 
 
     public static Iterable<String> arrayToStringArray(ResultSet r, int column) throws SQLException {
-        Array value = r.getArray(column);
+        String value = r.getString(column);
         if (value == null) {
             return new ArrayList<>();
         } else {
-            String[] strs = (String[]) value.getArray();
+            String[] strs = value.split(";");
             List<String> array = new ArrayList<>();
             for (int i = 0; i < strs.length; i++) {
                 array.add(strs[i]);
@@ -57,27 +52,30 @@ public class DuckDbConverter extends Converter {
     }
 
     public static Iterable<List<Object>> arrayToObjectArray(ResultSet r, int column) throws SQLException {
-        Array value = r.getArray(column);
+        String value = r.getString(column);
         if (value == null) {
             return new ArrayList<>();
         } else {
-            Object[][] strs = (Object[][]) value.getArray();
+            String[] strs = value.split(";");
             List<List<Object>> array = new ArrayList<>();
             for (int i = 0; i < strs.length; i++) {
-                array.add(new ArrayList(Arrays.asList(strs[i])));
+                String[] s = strs[i].split("\\|");
+                // the corresponding results of Interactive Q1 (field 12: universities, field 13: companies)
+                // both return <string, int32, string> tuples
+                array.add(Arrays.asList(s[0], Integer.valueOf(s[1]), s[2]));
             }
             return array;
         }
     }
 
-    public static Iterable<Long> convertLists(Iterable<List<Object>> arr) {
-        List<Long> new_arr = new ArrayList<>();
-        List<List<Object>> better_arr = (List<List<Object>>) arr;
-        for (List<Object> entry : better_arr) {
-            new_arr.add((Long) entry.get(0));
+    public static Iterable<Long> pathToList(ResultSet r, int column) throws SQLException {
+        String value = r.getString(column);
+        String[] strs = value.split(";");
+        List<Long> list = new ArrayList<>();
+        for (int i = 0; i < strs.length; i++) {
+            list.add(Long.valueOf(strs[i]));
         }
-        new_arr.add((Long) better_arr.get(better_arr.size() - 1).get(1));
-        return new_arr;
+        return list;
     }
 
     public static long timestampToEpoch(ResultSet r, int column) throws SQLException {

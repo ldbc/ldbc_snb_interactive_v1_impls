@@ -100,18 +100,11 @@ public abstract class DuckDbDb extends BaseDb<QueryStore> {
                     DuckDbConverter.arrayToStringArray(result, 9),
                     DuckDbConverter.arrayToStringArray(result, 10),
                     result.getString(11),
-                    convertLists(DuckDbConverter.arrayToObjectArray(result, 12)),
-                    convertLists(DuckDbConverter.arrayToObjectArray(result, 13)));
+                    DuckDbConverter.arrayToObjectArray(result, 12),
+                    DuckDbConverter.arrayToObjectArray(result, 13));
             return qr;
         }
 
-        @SuppressWarnings("unchecked")
-        public Iterable<List<Object>> convertLists(Iterable<List<Object>> arr) {
-            for (List<Object> entry : arr) {
-                entry.set(1, Integer.parseInt((String) entry.get(1)));
-            }
-            return arr;
-        }
     }
 
     public static class Query2 extends DuckDbListOperationHandler<LdbcQuery2, LdbcQuery2Result> {
@@ -346,7 +339,7 @@ public abstract class DuckDbDb extends BaseDb<QueryStore> {
         @Override
         public LdbcQuery14Result convertSingleResult(ResultSet result) throws SQLException {
             return new LdbcQuery14Result(
-                    DuckDbConverter.convertLists(DuckDbConverter.arrayToObjectArray(result, 1)),
+                    DuckDbConverter.pathToList(result, 1),
                     result.getDouble(2));
         }
 

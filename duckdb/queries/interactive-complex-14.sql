@@ -35,7 +35,7 @@ WITH RECURSIVE
     weightedpaths(path, score) as (
         select path, coalesce(sum(score), 0) from paths, edges left join weights on we=e where pid=id group by id, path
     )
-select string_agg(e, ';'), score
+select string_agg(e[0], ';') || ';' || :person2Id, score
 from (
     select row_number() OVER () as rownum, unnest(path) as e, score
     from weightedpaths
