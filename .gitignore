@@ -6,7 +6,7 @@ release.properties
 dependency-reduced-pom.xml
 .idea/
 *.iml
-validation_params.csv
+validation_params*.csv
 *.swp
 *-actual.json
 *-expected.json
