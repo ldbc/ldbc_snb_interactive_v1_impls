@@ -1,6 +1,6 @@
 WITH RECURSIVE
     search_graph(link, level, path) AS (
-            (SELECT :person1Id::int64, 0, ARRAY[]::int64[][])
+            (SELECT :person1Id::int64, 0, []::int64[][])
           UNION ALL
             (WITH sg(link, level) as (select * from search_graph)
             SELECT DISTINCT k_person2id, x.level + 1, array_append(path, [x.link, k_person2id])
@@ -35,11 +35,13 @@ WITH RECURSIVE
     weightedpaths(path, score) as (
         select path, coalesce(sum(score), 0) from paths, edges left join weights on we=e where pid=id group by id, path
     )
-select string_agg(e[0], ';') || ';' || :person2Id, score
+select personIdsInPath, score
 from (
-    select row_number() OVER () as rownum, unnest(path) as e, score
-    from weightedpaths
-)
-group by rownum, score
-order by score desc
-;
+    select path, string_agg(e[0], ';') || ';' || :person2Id::int64 as personIdsInPath, score
+    from (
+        select path, unnest(path) as e, score
+        from weightedpaths
+    )
+    group by path, score
+    order by score desc
+);
