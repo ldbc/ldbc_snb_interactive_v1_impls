@@ -7,6 +7,7 @@ import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -18,6 +19,8 @@ public class DuckDbConnectionState<TDbQueryStore extends QueryStore> extends Bas
         super(properties, store);
         TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
         connection = DriverManager.getConnection("jdbc:duckdb:scratch/ldbc.duckdb");
+        Statement statement = connection.createStatement();
+        statement.execute("PRAGMA threads=1;");
     }
 
     public Connection getConnection() throws DbException {
