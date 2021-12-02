@@ -19,8 +19,19 @@ jobs:
           command: |
             postgres/scripts/install-dependencies.sh
       - run:
+          name: Install DuckDB binary
+          command: |
+            duckdb/scripts/get.sh
+      - run:
           name: Build project
           command: ./build.sh
+      - run:
+          name: Tiny data set - Load DuckDB
+          command: |
+            cd duckdb
+            export DUCKDB_DATA_DIR=`pwd`/../postgres/test-data
+            scripts/load.sh
+            cd ..
       - run:
           name: Tiny data set - Load Cypher/Neo4j database (1st time)
           command: |
