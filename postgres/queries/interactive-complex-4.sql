@@ -3,7 +3,7 @@
 \set startDate '\'2010-10-01\''::date
 \set durationDays 31
  */
-select t_name, count(*)
+select t_name, count(*) as postCount
 from tag, message, message_tag recent, knows
 where
     m_messageid = mt_messageid and
@@ -23,6 +23,6 @@ where
         m_creationdate < :startDate) tags
   where  tags.mt_tagid = recent.mt_tagid)
 group by t_name
-order by 2 desc, t_name
+order by postCount desc, t_name asc
 limit 10
 ;

@@ -39,5 +39,6 @@ from
     p_personid = id and
     p_placeid = p1.pl_placeid
   group by id, p_lastname, p_birthday, p_creationdate, p_gender, p_browserused, p_locationip, p1.pl_name
-  order by dist, p_lastname, id LIMIT 20
+  order by dist, p_lastname, id
+  LIMIT 20
 ;

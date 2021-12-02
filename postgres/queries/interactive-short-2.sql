@@ -19,11 +19,11 @@ select p1.m_messageid, COALESCE(m_ps_imagefile, m_content, ''), p1.m_creationdat
 from 
      (select m_messageid, m_content, m_ps_imagefile, m_creationdate, m_c_replyof from cposts
      ) p1
-     left join
+left join
      (select orig_postid, postid as m_messageid, p_personid, p_firstname, p_lastname
       from parent, person
       where replyof is null and creator = p_personid
      )p2  
-     on p2.orig_postid = p1.m_messageid
-      order by m_creationdate desc, p2.m_messageid desc;
+on p2.orig_postid = p1.m_messageid
+order by m_creationdate desc, p2.m_messageid desc;
 ;
