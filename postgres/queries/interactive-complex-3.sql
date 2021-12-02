@@ -5,7 +5,7 @@
 \set startDate '\'2010-06-01\''::date
 \set durationDays 28
  */
-select p_personid, p_firstname, p_lastname, ct1, ct2, total
+select p_personid, p_firstname, p_lastname, ct1, ct2, total as totalcount
 from
  ( select k_person2id
    from knows
@@ -40,6 +40,6 @@ where
 f.k_person2id = p_personid and p_placeid = p1.pl_placeid and
 p1.pl_containerplaceid = p2.pl_placeid and p2.pl_name <> :countryXName and p2.pl_name <> :countryYName and
 f.k_person2id = cpc.m_c_creatorid
-order by 6 desc, 1
+order by totalcount desc, p_personid asc
 limit 20
 ;
