@@ -8,6 +8,11 @@ cd ..
 
 . scripts/vars.sh
 
+if [ ! -d "${POSTGRES_CSV_DIR}" ]; then
+    echo "Directory ${POSTGRES_CSV_DIR} does not exist."
+    exit 1
+fi
+
 POSTGRES_FORCE_REGENERATE=${POSTGRES_FORCE_REGENERATE:-no}
 
 # we regenerate PostgreSQL-specific CSV files for comments, if either
@@ -16,9 +21,9 @@ POSTGRES_FORCE_REGENERATE=${POSTGRES_FORCE_REGENERATE:-no}
 #  - we are forced to do so by environment variable POSTGRES_FORCE_REGENERATE=yes
 
 if [ ! -f ${POSTGRES_CSV_DIR}/dynamic/comment_0_0-postgres.csv -o ${POSTGRES_CSV_DIR}/dynamic/comment_0_0.csv -nt ${POSTGRES_CSV_DIR}/dynamic/comment_0_0-postgres.csv -o "${POSTGRES_FORCE_REGENERATE}x" = "yesx" ]; then
-  cat ${POSTGRES_CSV_DIR}/dynamic/comment_0_0.csv | \
-    awk -F '|' '{print $1"||"$2"|"$3"|"$4"||"$5"|"$6"|"$7"|"$8"||"$9 $10}' > \
-    ${POSTGRES_CSV_DIR}/dynamic/comment_0_0-postgres.csv
+    cat ${POSTGRES_CSV_DIR}/dynamic/comment_0_0.csv | \
+        awk -F '|' '{print $1"||"$2"|"$3"|"$4"||"$5"|"$6"|"$7"|"$8"||"$9 $10}' > \
+        ${POSTGRES_CSV_DIR}/dynamic/comment_0_0-postgres.csv
 fi
 
 python3 load.py

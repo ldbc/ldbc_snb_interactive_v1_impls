@@ -10,6 +10,17 @@ cd ..
 
 scripts/stop.sh
 
+if [ -v POSTGRES_CSV_DIR ]; then
+    if [ ! -d "${POSTGRES_CSV_DIR}" ]; then
+        echo "Directory ${POSTGRES_CSV_DIR} does not exist."
+        exit 1
+    fi
+    export MOUNT_CSV_DIR="--volume=${POSTGRES_CSV_DIR}:/data:z"
+else
+    export POSTGRES_CSV_DIR="<unspecified>"
+    export MOUNT_CSV_DIR=""
+fi
+
 echo "==============================================================================="
 echo "Starting Postgres container with the following parameters"
 echo "-------------------------------------------------------------------------------"
@@ -26,18 +37,13 @@ echo "POSTGRES_CSV_DIR (on the host machine):"
 echo "  ${POSTGRES_CSV_DIR}"
 echo "==============================================================================="
 
-if [ ! -d "${POSTGRES_CSV_DIR}" ]; then
-    echo "Directory ${POSTGRES_CSV_DIR} does not exist."
-    exit 1
-fi
-
 docker run --rm \
     --publish=${POSTGRES_PORT}:5432 \
     --name ${POSTGRES_CONTAINER_NAME} \
     --env POSTGRES_DATABASE=${POSTGRES_DATABASE} \
     --env POSTGRES_USER=${POSTGRES_USER} \
     --env POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
-    --volume=${POSTGRES_CSV_DIR}:/data:z \
+    ${MOUNT_CSV_DIR} \
     --volume=${POSTGRES_DATABASE_DIR}:/var/lib/postgresql/data:z \
     --detach \
     --shm-size=${POSTGRES_SHARED_MEMORY} \
