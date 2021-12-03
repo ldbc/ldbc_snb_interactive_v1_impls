@@ -29,34 +29,46 @@ For detailed instructions, consult the READMEs of the projects.
 
 ## User's guide
 
-1. Build the projects (skips running the tests which need live databases):
+### Building the project
 
-   ```bash
-   ./build.sh
-   ```
+To build the project, run:
 
-2. For each implementation, it is possible to perform to perform the run in one of three modes:
+```bash
+./build.sh
+```
 
-    a. Create validation parameters with the `driver/create-validation-parameters.sh` script.
+### Inputs
 
-      * **Input:** The query substitution parameters are taken from the value set in `ldbc.snb.interactive.parameters_dir` configuration property.
-      * **Output:** The results will be stored (by default) in the `validation_params.csv` file.
-      * **Parallelism:** The execution must be single-threaded to ensure a deterministic order of operations.
+The benchmark framework relies on the following inputs produced by the [SNB Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop/):
 
-    b. Validate against existing validation parameters with the `driver/validate.sh` script.
+* **Initial data set:** the SNB graph in CSV format (`social_network/{static,dynamic}`)
+* **Update streams:** the input for the update operations (`social_network/updateStream_*.csv`)
+* **Substitution parameters:** the input parameters for the complex queries. It is produced by the Datagen (`substitution_parameters/`)
 
-      * **Input:** The query substitution parameters are taken (by default) from the `validation_params.csv` file.
-      * **Output:** The results of the validation are printed to the console. If the valiation failed, the results are saved to the `validation_params-failed-expected.json` and `validation_params-failed-actual.json` files.
-      * **Parallelism:** The execution must be single-threaded to ensure a deterministic order of operations.
+### Driver modes
 
-    c. Run the benchmark with the `driver/benchmark.sh` script.
+For each implementation, it is possible to perform to perform the run in one of the SNB driver's three modes:
 
-      * **Inputs:**
-        * The query substitution parameters are taken from the value set in `ldbc.snb.interactive.parameters_dir` configuration property.
+1. Create validation parameters with the `driver/create-validation-parameters.sh` script.
+
+    * **Input:** The query substitution parameters are taken from the file set in `ldbc.snb.interactive.parameters_dir` configuration property.
+    * **Output:** The results will be stored (by default) in the `validation_params.csv` file.
+    * **Parallelism:** The execution must be single-threaded to ensure a deterministic order of operations.
+
+2. Validate against existing validation parameters with the `driver/validate.sh` script.
+
+    * **Input:** The query substitution parameters are taken (by default) from the `validation_params.csv` file.
+    * **Output:** The results of the validation are printed to the console. If the valiation failed, the results are saved to the `validation_params-failed-expected.json` and `validation_params-failed-actual.json` files.
+    * **Parallelism:** The execution must be single-threaded to ensure a deterministic order of operations.
+
+3. Run the benchmark with the `driver/benchmark.sh` script.
+
+    * **Inputs:**
+        * The query substitution parameters are taken from the file set in `ldbc.snb.interactive.parameters_dir` configuration property.
         * The goal of the benchmark is the achieve the best (lower possible) `time_compression_ratio` value while ensuring that the 95% on-time requirement is kept (i.e. 95% of the queries can be started within 1 second of their scheduled time).
         * Set the `warmup` and `operation_count` values so that the warmup and benchmark phases last for 30+ minutes and 2+ hours, respectively.
-      * **Output:** The results of the benchmark are printed to the console and saved in the `results/` directory.
-      * **Parallelism:** Multi-threaded execution is recommended to achieve the best result (set `thread_count` accordingly).
+    * **Output:** The results of the benchmark are printed to the console and saved in the `results/` directory.
+    * **Parallelism:** Multi-threaded execution is recommended to achieve the best result (for `thread_count=n`, and use the update stream files with `n` partitions).
 
 For all scripts, configure the parameters file (`driver/${MODE}.properties`) to match your setup and the [scale factor](sf-properties/) of the data set used.
 
