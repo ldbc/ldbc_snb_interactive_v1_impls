@@ -24,6 +24,7 @@ docker run --rm \
     ${NEO4J_ENV_VARS} \
     --volume=${NEO4J_DATA_DIR}:/data:z \
     --volume=${NEO4J_CONTAINER_ROOT}/logs:/logs:z \
+    --volume=${NEO4J_CONTAINER_ROOT}/plugins:/plugins:z \
     --env NEO4JLABS_PLUGINS='["apoc", "graph-data-science"]' \
     --env NEO4J_AUTH=none \
     --name ${NEO4J_CONTAINER_NAME} \

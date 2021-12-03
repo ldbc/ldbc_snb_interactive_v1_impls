@@ -90,7 +90,7 @@ jobs:
           command: |
             mv cypher/validation_params_cypher_tiny.csv postgres/validation_params.csv
             cd postgres
-            driver/restore-database.sh
+            scripts/restore-database.sh
             driver/validate.sh | tee validation-log.txt
             grep 'Validation Result: PASS' validation-log.txt
             cd ..
@@ -98,7 +98,7 @@ jobs:
           name: Tiny data set - Benchmark PostgreSQL
           command: |
             cd postgres
-            driver/restore-database.sh
+            scripts/restore-database.sh
             driver/benchmark.sh
             cd ..
       ## SF1 tests

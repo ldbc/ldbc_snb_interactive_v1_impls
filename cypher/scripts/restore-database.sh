@@ -8,5 +8,7 @@ cd ..
 
 scripts/stop-neo4j.sh
 sudo rm -rf scratch/data/
-sudo cp -r scratch/backup/ scratch/data/
+sudo cp -r scratch/backup-data/ scratch/data/
+sudo cp -r scratch/backup-plugins/ scratch/plugins/
+sudo chown -R ${USER}:${USER} scratch/{data,plugins}/
 scripts/start-neo4j.sh

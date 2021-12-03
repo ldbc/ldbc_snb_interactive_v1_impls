@@ -11,4 +11,5 @@ cd ..
 scripts/stop.sh
 sudo rm -rf scratch/data/
 sudo cp -r scratch/backup/ scratch/data/
+sudo chown -R ${USER}:${USER} scratch/data/
 scripts/start.sh
