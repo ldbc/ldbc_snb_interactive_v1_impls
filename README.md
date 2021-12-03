@@ -39,21 +39,24 @@ For detailed instructions, consult the READMEs of the projects.
 
     a. Create validation parameters with the `driver/create-validation-parameters.sh` script.
 
-      * The query substitution parameters are taken from the value set in `ldbc.snb.interactive.parameters_dir` configuration property.
-      * The results will be stored (by default) in the `validation_params.csv` file.
-      * :thread: Single-threaded execution is recommended for reproducibility.
+      * **Input:** The query substitution parameters are taken from the value set in `ldbc.snb.interactive.parameters_dir` configuration property.
+      * **Output:** The results will be stored (by default) in the `validation_params.csv` file.
+      * **Parallelism:** The execution must be single-threaded to ensure a deterministic order of operations.
 
     b. Validate against existing validation parameters with the `driver/validate.sh` script.
 
-      * The query substitution parameters are taken (by default) from the `validation_params.csv` file.
-      * The results of the validation are printed to the console and to `validation_params-failed-expected.json` / `validation_params-failed-actual.json` files.
-      * :thread: Single-threaded execution is recommended for reproducibility.
+      * **Input:** The query substitution parameters are taken (by default) from the `validation_params.csv` file.
+      * **Output:** The results of the validation are printed to the console. If the valiation failed, the results are saved to the `validation_params-failed-expected.json` and `validation_params-failed-actual.json` files.
+      * **Parallelism:** The execution must be single-threaded to ensure a deterministic order of operations.
 
     c. Run the benchmark with the `driver/benchmark.sh` script.
 
-      * The goal of the benchmark is the achieve the best (lower possible) `time_compression_ratio` value while ensuring that the 95% on-time requirement is kept (i.e. 95% of the queries can be started within 1 second of their scheduled time). Set this value.
-      * Set the `warmup` and `operation_count` values so that the warmup and benchmark phases last for 30+ minutes and 2+ hours, respectively.
-      * :thread: Multi-threaded execution is recommended to achieve the best result (set `thread_count` accordingly).
+      * **Inputs:**
+        * The query substitution parameters are taken from the value set in `ldbc.snb.interactive.parameters_dir` configuration property.
+        * The goal of the benchmark is the achieve the best (lower possible) `time_compression_ratio` value while ensuring that the 95% on-time requirement is kept (i.e. 95% of the queries can be started within 1 second of their scheduled time).
+        * Set the `warmup` and `operation_count` values so that the warmup and benchmark phases last for 30+ minutes and 2+ hours, respectively.
+      * **Output:** The results of the benchmark are printed to the console and saved in the `results/` directory.
+      * **Parallelism:** Multi-threaded execution is recommended to achieve the best result (set `thread_count` accordingly).
 
 For all scripts, configure the parameters file (`driver/${MODE}.properties`) to match your setup and the [scale factor](sf-properties/) of the data set used.
 
