@@ -37,8 +37,8 @@ docker run --rm \
     --env POSTGRES_DATABASE=${POSTGRES_DATABASE} \
     --env POSTGRES_USER=${POSTGRES_USER} \
     --env POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
-    --volume=${POSTGRES_CSV_DIR}:/data \
-    --volume=${POSTGRES_DATABASE_DIR}:/var/lib/postgresql/data \
+    --volume=${POSTGRES_CSV_DIR}:/data:z \
+    --volume=${POSTGRES_DATABASE_DIR}:/var/lib/postgresql/data:z \
     --detach \
     --shm-size=${POSTGRES_SHARED_MEMORY} \
     postgres:${POSTGRES_VERSION} || exit 1

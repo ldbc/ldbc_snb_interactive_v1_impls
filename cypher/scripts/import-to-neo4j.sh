@@ -23,11 +23,11 @@ docker run --rm \
     --user="$(id -u):$(id -g)" \
     --publish=7474:7474 \
     --publish=7687:7687 \
-    --volume=${NEO4J_DATA_DIR}:/data \
-    --volume=${NEO4J_CONVERTED_CSV_DIR}:/import \
-    --volume=${NEO4J_CONTAINER_ROOT}/logs:/logs \
-    --volume=${NEO4J_CONTAINER_ROOT}/import:/var/lib/neo4j/import \
-    --volume=${NEO4J_CONTAINER_ROOT}/plugins:/plugins \
+    --volume=${NEO4J_DATA_DIR}:/data:z \
+    --volume=${NEO4J_CONVERTED_CSV_DIR}:/import:z \
+    --volume=${NEO4J_CONTAINER_ROOT}/logs:/logs:z \
+    --volume=${NEO4J_CONTAINER_ROOT}/import:/var/lib/neo4j/import:z \
+    --volume=${NEO4J_CONTAINER_ROOT}/plugins:/plugins:z \
     ${NEO4J_ENV_VARS} \
     neo4j:${NEO4J_VERSION} \
     neo4j-admin import \
