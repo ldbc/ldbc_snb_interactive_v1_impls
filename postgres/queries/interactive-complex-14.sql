@@ -29,15 +29,15 @@ select * from (
     ),
     weights(we, score) as (
         select e, sum(score) from (
-            select e, pid1, pid2, max(score) as score from (
-                select e, 1 as score, p1.m_messageid as pid1, p2.m_messageid as pid2 from unique_edges, message p1, message p2 where (p1.m_creatorid=e[1] and p2.m_creatorid=e[2] and p2.m_c_replyof=p1.m_messageid and p1.m_c_replyof is null)
+            select e, mid1, mid2, max(score) as score from (
+                select e, 1 as score, p1.m_messageid as mid1, p2.m_messageid as mid2 from unique_edges, message p1, message p2 where (p1.m_creatorid=e[1] and p2.m_creatorid=e[2] and p2.m_c_replyof=p1.m_messageid and p1.m_c_replyof is null)
                 union all
-                select e, 1 as score, p1.m_messageid as pid1, p2.m_messageid as pid2 from unique_edges, message p1, message p2 where (p1.m_creatorid=e[2] and p2.m_creatorid=e[1] and p2.m_c_replyof=p1.m_messageid and p1.m_c_replyof is null)
+                select e, 1 as score, p1.m_messageid as mid1, p2.m_messageid as mid2 from unique_edges, message p1, message p2 where (p1.m_creatorid=e[2] and p2.m_creatorid=e[1] and p2.m_c_replyof=p1.m_messageid and p1.m_c_replyof is null)
                 union all
-                select e, 0.5 as score, p1.m_messageid as pid1, p2.m_messageid as pid2 from unique_edges, message p1, message p2 where (p1.m_creatorid=e[1] and p2.m_creatorid=e[2] and p2.m_c_replyof=p1.m_messageid and p1.m_c_replyof is not null)
+                select e, 0.5 as score, p1.m_messageid as mid1, p2.m_messageid as mid2 from unique_edges, message p1, message p2 where (p1.m_creatorid=e[1] and p2.m_creatorid=e[2] and p2.m_c_replyof=p1.m_messageid and p1.m_c_replyof is not null)
                 union all
-                select e, 0.5 as score, p1.m_messageid as pid1, p2.m_messageid as pid2  from unique_edges, message p1, message p2 where (p1.m_creatorid=e[2] and p2.m_creatorid=e[1] and p2.m_c_replyof=p1.m_messageid and p1.m_c_replyof is not null)
-            ) pps group by e, pid1, pid2
+                select e, 0.5 as score, p1.m_messageid as mid1, p2.m_messageid as mid2  from unique_edges, message p1, message p2 where (p1.m_creatorid=e[2] and p2.m_creatorid=e[1] and p2.m_c_replyof=p1.m_messageid and p1.m_c_replyof is not null)
+            ) pps group by e, mid1, mid2
         ) tmp
         group by e
     ),
