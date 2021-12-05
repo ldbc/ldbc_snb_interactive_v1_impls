@@ -49,8 +49,6 @@ def main(argv=None):
 
     print("Running Postgres / psycopg2")
 
-    print("Datagen / load initial data set using SQL")
-
     pg_con = psycopg2.connect(
         database=options.db,
         host=options.host,
@@ -60,10 +58,12 @@ def main(argv=None):
     )
     try:
         with pg_con.cursor() as con:
+            print("Loading initial data set")
             con.execute(load_script("ddl/schema.sql"))
             con.execute(load_script("ddl/snb-load.sql"))
             pg_con.commit()
 
+            print("Adding indexes and constraints")
             con.execute(load_script("ddl/schema_constraints.sql"))
             con.execute(load_script("ddl/schema_foreign_keys.sql"))
             pg_con.commit()
