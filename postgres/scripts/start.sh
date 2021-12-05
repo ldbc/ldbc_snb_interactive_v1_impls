@@ -22,7 +22,7 @@ else
 fi
 
 echo "==============================================================================="
-echo "Starting Postgres container with the following parameters"
+echo "Starting Postgres container"
 echo "-------------------------------------------------------------------------------"
 echo "POSTGRES_VERSION: ${POSTGRES_VERSION}"
 echo "POSTGRES_CONTAINER_NAME: ${POSTGRES_CONTAINER_NAME}"

@@ -5,18 +5,18 @@ set -o pipefail
 
 cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-echo ===============================================================================
-echo Loading the Neo4j database with the following parameters
-echo -------------------------------------------------------------------------------
-echo NEO4J_CONTAINER_ROOT: ${NEO4J_CONTAINER_ROOT}
-echo NEO4J_DATA_DIR: ${NEO4J_DATA_DIR}
-echo NEO4J_VANILLA_CSV_DIR: ${NEO4J_VANILLA_CSV_DIR}
-echo NEO4J_CONVERTED_CSV_DIR: ${NEO4J_CONVERTED_CSV_DIR}
-echo NEO4J_CSV_POSTFIX: ${NEO4J_CSV_POSTFIX}
-echo NEO4J_VERSION: ${NEO4J_VERSION}
-echo NEO4J_CONTAINER_NAME: ${NEO4J_CONTAINER_NAME}
-echo NEO4J_ENV_VARS: ${NEO4J_ENV_VARS}
-echo ===============================================================================
+echo "==============================================================================="
+echo "Loading the Neo4j database"
+echo "-------------------------------------------------------------------------------"
+echo "NEO4J_CONTAINER_ROOT: ${NEO4J_CONTAINER_ROOT}"
+echo "NEO4J_DATA_DIR: ${NEO4J_DATA_DIR}"
+echo "NEO4J_VANILLA_CSV_DIR: ${NEO4J_VANILLA_CSV_DIR}"
+echo "NEO4J_CONVERTED_CSV_DIR: ${NEO4J_CONVERTED_CSV_DIR}"
+echo "NEO4J_CSV_POSTFIX: ${NEO4J_CSV_POSTFIX}"
+echo "NEO4J_VERSION: ${NEO4J_VERSION}"
+echo "NEO4J_CONTAINER_NAME: ${NEO4J_CONTAINER_NAME}"
+echo "NEO4J_ENV_VARS: ${NEO4J_ENV_VARS}"
+echo "==============================================================================="
 
 : ${NEO4J_CONTAINER_ROOT:?"Environment variable NEO4J_CONTAINER_ROOT is unset or empty"}
 : ${NEO4J_DATA_DIR:?"Environment variable NEO4J_DATA_DIR is unset or empty"}
