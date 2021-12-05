@@ -13,7 +13,7 @@ To get started with the LDBC SNB benchmarks, check out our introductory presenta
 
 * SNB data sets of **different scale factors require different configurations** for the benchmark runs. Therefore, make sure you use the correct values (update_interleave and query frequencies) based on the files provided in the [`sf-properties` directory](sf-properties/).
 
-* The default workload contains updates which are persisted in the database. Therefore, **the database needs to be reloaded or restored from backup before each run**. Otherwise, repeated updates would insert duplicate entries.
+* The default workload contains updates which are persisted in the database. Therefore, **the database needs to be reloaded or restored from backup before each run**. Use the provided `scripts/backup-database.sh` and `scripts/restore-database.sh` scripts to achieve this.
 
 * We expect most systems-under-test to use multi-threaded execution for their benchmark runs. **To allow running the benchmark workload on multiple threads, the update stream files need to be partitioned accordingly by the generator.** We have pre-generated these for 16 frequent partition numbers (1, 2, ..., 1024 and 48, 96, ..., 768) and scale factors up to 1000 (their deployment is [in progress](#benchmark-data-sets)).
 
