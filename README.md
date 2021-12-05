@@ -15,7 +15,7 @@ To get started with the LDBC SNB benchmarks, check out our introductory presenta
 
 * The default workload contains updates which are persisted in the database. Therefore, **the database needs to be reloaded or restored from backup before each run**. Use the provided `scripts/backup-database.sh` and `scripts/restore-database.sh` scripts to achieve this.
 
-* We expect most systems-under-test to use multi-threaded execution for their benchmark runs. **To allow running the benchmark workload on multiple threads, the update stream files need to be partitioned accordingly by the generator.** We have pre-generated these for 16 frequent partition numbers (1, 2, ..., 1024 and 48, 96, ..., 768) and scale factors up to 1000 (their deployment is [in progress](#benchmark-data-sets)).
+* We expect most systems-under-test to use multi-threaded execution for their benchmark runs. **To allow running the benchmark workload on multiple threads, the update stream files need to be partitioned accordingly by the generator.** We have pre-generated these for frequent partition numbers (1, 2, ..., 1024 and 24, 48, 96, ..., 768) and scale factors up to 1000 (their deployment is [in progress](#benchmark-data-sets)).
 
 ## Implementations
 
@@ -77,9 +77,10 @@ All three should be started withe the initial data set loaded to the database.
         * Set the `warmup` and `operation_count` values so that the warmup and benchmark phases last for 30+ minutes and 2+ hours, respectively.
         * The update streams are the `updateStream_*_{forum,person}.csv` files from the location set in the `ldbc.snb.interactive.updates_dir` configuration property. For *n* threads, the framework requires *n* `updateStream_*_forum.csv` and *n* `updateStream_*_person.csv` files.
     * **Output:**
-        * The results of the benchmark are printed to the console and saved in the `results/` directory.
-        * The result contains whether the run passed or failed the "schedule audit" (the 95% on-time requirement).
-    * **Parallelism:** Multi-threaded execution is recommended to achieve the best result (for `thread_count=n`, and use the update stream files with `n` partitions).
+        * Passed or failed the "schedule audit" (the 95% on-time requirement).
+        * The throughput achieved in the run (operations/second).
+        * The detailed results of the benchmark are printed to the console and saved in the `results/` directory.
+    * **Parallelism:** Multi-threaded execution is recommended to achieve the best result.
 
 For all scripts, configure the parameters file (`driver/${MODE}.properties`) to match your setup and the [scale factor](sf-properties/) of the data set used.
 
