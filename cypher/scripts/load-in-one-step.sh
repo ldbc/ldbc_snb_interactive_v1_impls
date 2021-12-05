@@ -4,6 +4,9 @@ set -e
 set -o pipefail
 
 cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+cd ..
+
+. scripts/vars.sh
 
 echo "==============================================================================="
 echo "Loading the Neo4j database"
@@ -27,9 +30,9 @@ echo "==========================================================================
 : ${NEO4J_CONTAINER_NAME:?"Environment variable NEO4J_CONTAINER_NAME is unset or empty"}
 # ${NEO4J_ENV_VARS} can be empty, hence no check is required
 
-./convert-csvs.sh
-./stop-neo4j.sh
-./delete-neo4j-database.sh
-./import-to-neo4j.sh
-./start-neo4j.sh
-./create-indices.sh
+scripts/convert-csvs.sh
+scripts/stop-neo4j.sh
+scripts/delete-neo4j-database.sh
+scripts/import-to-neo4j.sh
+scripts/start-neo4j.sh
+scripts/create-indices.sh

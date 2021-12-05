@@ -36,13 +36,13 @@ An example configuration for scale factor 1 is given in the [`params-csv-composi
 
 ### Preprocessing and loading
 
-Set the following environment variables based on your data source. The default values of these point to the example data set under the `test-data` directory:
+Set the following environment variables based on your data source and where you would like to store the converted CSVs:
 
 ```bash
-export NEO4J_CSV_POSTFIX=
-export NEO4J_VANILLA_CSV_DIR=
-export NEO4J_CONVERTED_CSV_DIR=
+export NEO4J_VANILLA_CSV_DIR=`pwd`/test-data/vanilla
+export NEO4J_CONVERTED_CSV_DIR=`pwd`/test-data/converted
 ```
+
 #### Preprocessing
 
 The CSV files produced by Datagen require a bit of preprocessing:
@@ -89,4 +89,4 @@ driver/benchmark.sh
 
 :warning: SNB data sets of **different scale factors require different configurations** for the benchmark runs. Therefore, make sure you use the correct values (update_interleave and query frequencies) based on the files provided in the [`sf-properties` directory](sf-properties/).
 
-:warning: The default workload contains updates which are persisted in the database. Therefore, **the database needs to be reloaded or restored from backup before each run**. Otherwise, repeated updates would insert duplicate entries.
+* The default workload contains updates which are persisted in the database. Therefore, **the database needs to be reloaded or restored from backup before each run**. Use the provided `scripts/backup-database.sh` and `scripts/restore-database.sh` scripts to achieve this.
