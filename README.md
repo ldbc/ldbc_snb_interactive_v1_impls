@@ -47,27 +47,38 @@ The benchmark framework relies on the following inputs produced by the [SNB Data
 
 ### Driver modes
 
-For each implementation, it is possible to perform to perform the run in one of the SNB driver's three modes:
+For each implementation, it is possible to perform to perform the run in one of the SNB driver's three modes.
+All three should be started withe the initial data set loaded to the database.
 
 1. Create validation parameters with the `driver/create-validation-parameters.sh` script.
 
-    * **Input:** The query substitution parameters are taken from the file set in `ldbc.snb.interactive.parameters_dir` configuration property.
-    * **Output:** The results will be stored (by default) in the `validation_params.csv` file.
+    * **Inputs:**
+        * The query substitution parameters are taken from the directory set in `ldbc.snb.interactive.parameters_dir` configuration property.
+        * The update streams are the `updateStream_0_0_{forum,person}.csv` files from the location set in the `ldbc.snb.interactive.updates_dir` configuration property.
+    * **Output:** The results will be stored in the validation parameters file (e.g. `validation_params.csv`) file set in the `create_validation_parameters` configuration property.
     * **Parallelism:** The execution must be single-threaded to ensure a deterministic order of operations.
 
 2. Validate against existing validation parameters with the `driver/validate.sh` script.
 
-    * **Input:** The query substitution parameters are taken (by default) from the `validation_params.csv` file.
-    * **Output:** The results of the validation are printed to the console. If the valiation failed, the results are saved to the `validation_params-failed-expected.json` and `validation_params-failed-actual.json` files.
+    * **Input:**
+        * The query substitution parameters are taken from the validation parameters file (e.g. `validation_params.csv`) file set in the `validate_database` configuration property.
+        * The update operations are also based on the content of the validation parameters file.
+    * **Output:**
+        * The validation either passes of fails.
+        * The per query results of the validation are printed to the console.
+        * If the validation failed, the results are saved to the `validation_params-failed-expected.json` and `validation_params-failed-actual.json` files.
     * **Parallelism:** The execution must be single-threaded to ensure a deterministic order of operations.
 
 3. Run the benchmark with the `driver/benchmark.sh` script.
 
     * **Inputs:**
-        * The query substitution parameters are taken from the file set in `ldbc.snb.interactive.parameters_dir` configuration property.
-        * The goal of the benchmark is the achieve the best (lower possible) `time_compression_ratio` value while ensuring that the 95% on-time requirement is kept (i.e. 95% of the queries can be started within 1 second of their scheduled time).
+        * The query substitution parameters are taken from the directory set in `ldbc.snb.interactive.parameters_dir` configuration property.
+        * The goal of the benchmark is the achieve the best (lowest possible) `time_compression_ratio` value while ensuring that the 95% on-time requirement is kept (i.e. 95% of the queries can be started within 1 second of their scheduled time).
         * Set the `warmup` and `operation_count` values so that the warmup and benchmark phases last for 30+ minutes and 2+ hours, respectively.
-    * **Output:** The results of the benchmark are printed to the console and saved in the `results/` directory.
+        * The update streams are the `updateStream_*_{forum,person}.csv` files from the location set in the `ldbc.snb.interactive.updates_dir` configuration property. For *n* threads, the framework requires *n* `updateStream_*_forum.csv` and *n* `updateStream_*_person.csv` files.
+    * **Output:**
+        * The results of the benchmark are printed to the console and saved in the `results/` directory.
+        * The result contains whether the run passed or failed the "schedule audit" (the 95% on-time requirement).
     * **Parallelism:** Multi-threaded execution is recommended to achieve the best result (for `thread_count=n`, and use the update stream files with `n` partitions).
 
 For all scripts, configure the parameters file (`driver/${MODE}.properties`) to match your setup and the [scale factor](sf-properties/) of the data set used.
