@@ -21,6 +21,19 @@ else
     export MOUNT_CSV_DIR=""
 fi
 
+if [ -v POSTGRES_CUSTOM_CONFIGURATION ]; then
+    if [ ! -f "${POSTGRES_CUSTOM_CONFIGURATION}" ]; then
+        echo "Configuration file ${POSTGRES_CUSTOM_CONFIGURATION} does not exist."
+        exit 1
+    fi
+    export POSTGRES_CUSTOM_MOUNTS="--volume=${POSTGRES_CUSTOM_CONFIGURATION}:/etc/postgresql.conf:z"
+    export POSTGRES_CUSTOM_ARGS="--config_file=/etc/postgresql.conf"
+else
+    export POSTGRES_CUSTOM_CONFIGURATION="<unspecified>"
+    export POSTGRES_CUSTOM_MOUNTS=""
+    export POSTGRES_CUSTOM_ARGS=""
+fi
+
 echo "==============================================================================="
 echo "Starting Postgres container"
 echo "-------------------------------------------------------------------------------"
@@ -28,9 +41,9 @@ echo "POSTGRES_VERSION: ${POSTGRES_VERSION}"
 echo "POSTGRES_CONTAINER_NAME: ${POSTGRES_CONTAINER_NAME}"
 echo "POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}"
 echo "POSTGRES_DATABASE: ${POSTGRES_DATABASE}"
-echo "POSTGRES_SHARED_MEMORY: ${POSTGRES_SHARED_MEMORY}"
 echo "POSTGRES_USER: ${POSTGRES_USER}"
 echo "POSTGRES_PORT: ${POSTGRES_PORT}"
+echo "POSTGRES_CUSTOM_CONFIGURATION: ${POSTGRES_CUSTOM_CONFIGURATION}"
 echo "POSTGRES_DATABASE_DIR (on the host machine):"
 echo "  ${POSTGRES_DATABASE_DIR}"
 echo "POSTGRES_CSV_DIR (on the host machine):"
@@ -45,9 +58,10 @@ docker run --rm \
     --env POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
     ${MOUNT_CSV_DIR} \
     --volume=${POSTGRES_DATABASE_DIR}:/var/lib/postgresql/data:z \
+    ${POSTGRES_CUSTOM_MOUNTS} \
     --detach \
-    --shm-size=${POSTGRES_SHARED_MEMORY} \
-    postgres:${POSTGRES_VERSION} || exit 1
+    postgres:${POSTGRES_VERSION} \
+    ${POSTGRES_CUSTOM_ARGS}
 
 echo -n "Waiting for the database to start ."
 until python3 scripts/test-db-connection.py > /dev/null 2>&1; do
