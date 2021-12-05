@@ -6,6 +6,9 @@ set -o pipefail
 echo "Starting preprocessing CSV files"
 
 cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+cd ..
+
+. scripts/vars.sh
 
 : ${NEO4J_CSV_POSTFIX:?"Environment variable NEO4J_CSV_POSTFIX is unset or empty"}
 : ${NEO4J_VANILLA_CSV_DIR:?"Environment variable NEO4J_VANILLA_CSV_DIR is unset or empty"}
@@ -35,7 +38,7 @@ while read line; do
     exit 1
   fi
   echo ${HEADER} | ${SNB_CAT} - <(tail -n +2 ${NEO4J_VANILLA_CSV_DIR}/${FILENAME}${NEO4J_CSV_POSTFIX}) > ${NEO4J_CONVERTED_CSV_DIR}/${FILENAME}${NEO4J_CSV_POSTFIX}
-done < headers.txt
+done < scripts/headers.txt
 
 # replace labels with one starting with an uppercase letter
 sed -i.bkp "s/|city$/|City/" "${NEO4J_CONVERTED_CSV_DIR}/static/place${NEO4J_CSV_POSTFIX}"

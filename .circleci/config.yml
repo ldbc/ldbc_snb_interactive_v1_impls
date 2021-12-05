@@ -34,7 +34,8 @@ jobs:
           name: Tiny data set - Load Neo4j database and create a backup
           command: |
             cd cypher
-            . scripts/environment-variables-default.sh
+            export NEO4J_VANILLA_CSV_DIR=`pwd`/test-data/vanilla/
+            export NEO4J_CONVERTED_CSV_DIR=`pwd`/test-data/converted/
             scripts/load-in-one-step.sh
             scripts/backup-database.sh
             cd ..
@@ -71,7 +72,6 @@ jobs:
           command: |
             mv postgres/validation_params_postgres_tiny.csv cypher/validation_params.csv
             cd cypher
-            . scripts/environment-variables-default.sh
             scripts/restore-database.sh
             driver/validate.sh | tee validation-log.txt
             grep 'Validation Result: PASS' validation-log.txt
@@ -80,7 +80,6 @@ jobs:
           name: Tiny data set - Benchmark Neo4j
           command: |
             cd cypher
-            . scripts/environment-variables-default.sh
             scripts/restore-database.sh
             driver/benchmark.sh
             cd ..
@@ -114,8 +113,9 @@ jobs:
           name: SF1 data set - Load Neo4j database
           command: |
             cd cypher
-            . scripts/environment-variables-default.sh
             export NEO4J_VANILLA_CSV_DIR=`pwd`/../sf1/social_network-csv_composite
+            export NEO4J_CONVERTED_CSV_DIR=`pwd`/../sf1/social_network-csv_composite-converted
+            mkdir ${NEO4J_CONVERTED_CSV_DIR}
             scripts/load-in-one-step.sh
             cd ..
       - run:
