@@ -1,6 +1,8 @@
 ![LDBC logo](ldbc-logo.png)
 # LDBC SNB Interactive workload implementations
 
+[![Build Status](https://circleci.com/gh/ldbc/ldbc_snb_interactive.svg?style=svg)](https://circleci.com/gh/ldbc/ldbc_snb_interactive)
+
 Reference implementations of the LDBC Social Network Benchmark's Interactive workload ([paper](https://homepages.cwi.nl/~boncz/snb-challenge/snb-sigmod.pdf), [specification on GitHub pages](https://ldbcouncil.org/ldbc_snb_docs/), [specification on arXiv](https://arxiv.org/pdf/2001.02299.pdf)).
 
 To get started with the LDBC SNB benchmarks, check out our introductory presentation: [The LDBC Social Network Benchmark](https://docs.google.com/presentation/d/1p-nuHarSOKCldZ9iEz__6_V3sJ5kbGWlzZHusudW_Cc/).
