@@ -13,7 +13,7 @@ To get started with the LDBC SNB benchmarks, check out our introductory presenta
 
 * The goal of the implementations in this repository is to serve as **reference implementations** which other implementations can cross-validated against. Therefore, our primary objective was readability and not absolute performance when formulating the queries.
 
-* SNB data sets of **different scale factors require different configurations** for the benchmark runs. Therefore, make sure you use the correct values (update_interleave and query frequencies) based on the files provided in the [`sf-properties` directory](sf-properties/).
+* SNB data sets of **different scale factors require different configurations** for the benchmark runs. Therefore, make sure you use the correct properties (`update_interleave` value and query frequencies) based on the files provided in the [`sf-properties` directory](sf-properties/).
 
 * The default workload contains updates which are persisted in the database. Therefore, **the database needs to be reloaded or restored from backup before each run**. Use the provided `scripts/backup-database.sh` and `scripts/restore-database.sh` scripts to achieve this.
 
@@ -84,7 +84,7 @@ All three should be started withe the initial data set loaded to the database.
         * The detailed results of the benchmark are printed to the console and saved in the `results/` directory.
     * **Parallelism:** Multi-threaded execution is recommended to achieve the best result.
 
-For all scripts, configure the parameters file (`driver/${MODE}.properties`) to match your setup and the [scale factor](sf-properties/) of the data set used.
+For all scripts, configure the properties file (`driver/${MODE}.properties`) to match your setup and the [scale factor](sf-properties/) of the data set used.
 
 For more details on validating and benchmarking, visit the [driver wiki](https://github.com/ldbc/ldbc_snb_driver/wiki).
 
