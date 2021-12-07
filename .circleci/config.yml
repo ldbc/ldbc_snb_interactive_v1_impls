@@ -26,7 +26,7 @@ jobs:
           name: Tiny data set - Load DuckDB
           command: |
             cd duckdb
-            export DUCKDB_DATA_DIR=`pwd`/../postgres/test-data
+            export DUCKDB_CSV_DIR=`pwd`/../postgres/test-data
             scripts/load.sh
             cd ..
       ### Neo4j

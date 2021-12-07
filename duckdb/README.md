@@ -19,7 +19,7 @@ The data sets need to be generated before loading it to the database. No preproc
 ### Loading the data set
 
 ```bash
-export DUCKDB_DATA_DIR=`pwd`/../postgres/test-data
+export DUCKDB_CSV_DIR=`pwd`/../postgres/test-data
 scripts/load.sh
 ```
 
