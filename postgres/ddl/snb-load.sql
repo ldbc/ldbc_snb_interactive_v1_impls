@@ -56,8 +56,8 @@ CREATE TABLE country AS
       AND ctry.pl_type = 'country';
 
 -- Populate posts and comments tables, union them into message
-COPY post FROM '/data/dynamic/post_0_0.csv' WITH (DELIMITER '|', HEADER, FORMAT csv);
-COPY comment FROM '/data/dynamic/comment_0_0.csv' WITH (DELIMITER '|', HEADER, FORMAT csv);
+COPY post FROM '/data/dynamic/post_0_0.csv' WITH DELIMITER '|' CSV HEADER;
+COPY comment FROM '/data/dynamic/comment_0_0.csv' WITH DELIMITER '|' CSV HEADER;
 
 -- Note: to distinguish between "post" and "comment" records:
 --   - m_c_replyof IS NULL for all "post" records
