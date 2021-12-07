@@ -4,21 +4,16 @@ This directory contains the [Neo4j/Cypher](http://www.opencypher.org/) implement
 
 ## Setup
 
-The recommended environment for executing this benchmark is as follows: the benchmark scripts (Bash) and the LDBC driver (Java 8) run on the host machine, while the Neo4j database runs in a Docker container. Therefore, the requirements are as follows:
+The recommended environment is that the benchmark scripts (Bash) and the LDBC driver (Java 8) run on the host machine, while the Neo4j database runs in a Docker container. Therefore, the requirements are as follows:
 
 * Bash
 * Java 8
 * Docker 19+
-* enough free space in the directory `$NEO4J_CONTAINER_ROOT` (its default value is specified in `scripts/environment-variables-default.sh`)
+* enough free space in the directory `${NEO4J_CONTAINER_ROOT}` (its default value is specified in `scripts/vars.sh`)
 
-## Initializing environment variables
+## Configuration
 
-To set and list the default envinment variables, runs:
-
-```bash
-. scripts/environment-variables-default.sh
-env | grep ^NEO4J_
-```
+Set the environment variables to the desired values in `scripts/vars.sh`.
 
 ## Generating and loading the data set
 
@@ -87,6 +82,6 @@ driver/validate.sh
 driver/benchmark.sh
 ```
 
-:warning: SNB data sets of **different scale factors require different configurations** for the benchmark runs. Therefore, make sure you use the correct values (update_interleave and query frequencies) based on the files provided in the [`sf-properties` directory](sf-properties/).
+:warning: SNB data sets of **different scale factors require different configurations** for the benchmark runs. Therefore, make sure you use the correct values (update_interleave and query frequencies) based on the files provided in the [`sf-properties/` directory](sf-properties/).
 
 * The default workload contains updates which are persisted in the database. Therefore, **the database needs to be reloaded or restored from backup before each run**. Use the provided `scripts/backup-database.sh` and `scripts/restore-database.sh` scripts to achieve this.

@@ -4,15 +4,13 @@
 
 ## Setup
 
-The recommended environment for executing this benchmark is as follows: the benchmark scripts (Bash) and the LDBC driver (Java 8) run on the host machine, while the PostgreSQL database runs in a Docker container. Therefore, the requirements are as follows:
+The recommended environment is that the benchmark scripts (Bash) and the LDBC driver (Java 8) run on the host machine, while the PostgreSQL database runs in a Docker container. Therefore, the requirements are as follows:
 
 * Bash
 * Java 8
 * Docker 19+
 * the `psycopg2` Python library: `scripts/install-dependencies.sh`
-* enough free space in the directory `$POSTGRES_DATABASE_DIR` (its default value is specified in `scripts/vars.sh`)
-
-The default configuration of the database (e.g. database name, user, password) is set in the `scripts/vars.sh` file.
+* enough free space in the directory `${POSTGRES_DATABASE_DIR}` (its default value is specified in `scripts/vars.sh`)
 
 ## Generating and loading the data set
 
@@ -26,9 +24,13 @@ ldbc.snb.datagen.serializer.dynamicPersonSerializer:ldbc.snb.datagen.serializer.
 ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv.staticserializer.CsvMergeForeignStaticSerializer
 ```
 
+### Configuration
+
+The default configuration of the database (e.g. database name, user, password) is set in the `scripts/vars.sh` file.
+
 ### Loading the data set
 
-1. Set the `POSTGRES_CSV_DIR` environment variable to point to the data set, e.g.:
+1. Set the `${POSTGRES_CSV_DIR}` environment variable to point to the data set, e.g.:
 
     ```bash
     export POSTGRES_CSV_DIR=`pwd`/test-data/
@@ -42,11 +44,6 @@ ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv
     scripts/load.sh
     ```
 
-    Note that the `load.sh` (re)generates PostgreSQL-specific CSV files for comments (`-postgres.csv`), if either 
-    * they do no exist,
-    * the source CSV is newer than the generated one, or
-    * the user forces to do so by setting the environment variable `POSTGRES_FORCE_REGENERATE=yes`
-
 ### Running the benchmark
 
 3. To run the scripts of benchmark framework, edit the `driver/{create-validation-parameters,validate,benchmark}.properties` files, then run their script, one of:
@@ -57,6 +54,6 @@ ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv
     driver/benchmark.sh
     ```
 
-:warning: SNB data sets of **different scale factors require different configurations** for the benchmark runs. Therefore, make sure you use the correct values (update_interleave and query frequencies) based on the files provided in the [`sf-properties` directory](sf-properties/).
+:warning: SNB data sets of **different scale factors require different configurations** for the benchmark runs. Therefore, make sure you use the correct values (update_interleave and query frequencies) based on the files provided in the [`sf-properties/` directory](sf-properties/).
 
 * The default workload contains updates which are persisted in the database. Therefore, **the database needs to be reloaded or restored from backup before each run**. Use the provided `scripts/backup-database.sh` and `scripts/restore-database.sh` scripts to achieve this.
