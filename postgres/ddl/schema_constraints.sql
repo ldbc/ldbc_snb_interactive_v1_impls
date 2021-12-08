@@ -16,12 +16,6 @@ ALTER TABLE message_tag ADD PRIMARY KEY (mt_messageid, mt_tagid);
 ALTER TABLE tagclass ADD PRIMARY KEY (tc_tagclassid);
 ALTER TABLE tag ADD PRIMARY KEY (t_tagid);
 
--- Additional indexes (currently defined w/ Virtuoso syntax)
--- create index p_placeid on person (p_placeid) partition (p_placeid int);
--- create column index l_personid on likes (l_messageid) partition (l_messageid int (0hexffff00));
--- create index pl_containerplaceid on place (pl_containerplaceid) partition cluster REPLICATED;
--- create column index mt_tagid on message_tag (mt_tagid) partition (mt_tagid int (0hexffff00));
-
 -- create index on foreign keys
 CREATE INDEX forum_moderatorid ON forum (f_moderatorid);
 CREATE INDEX forum_person_forumid ON forum_person (fp_forumid);
