@@ -14,16 +14,13 @@ The recommended environment is that the benchmark scripts (Bash) and the LDBC dr
 
 The default configuration of the database (e.g. database name, user, password) is set in the `scripts/vars.sh` file.
 
-## Generating and loading the data set
+## Building the container
 
-### Generating the data set
+Set the `UMBRA_URL` environment variable and build the container:
 
-The data sets need to be generated and preprocessed before loading it to the database. To generate such data sets, use the `CsvMergeForeignDynamicActivitySerializer` serializer classes of the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop):
-
-```ini
-ldbc.snb.datagen.serializer.dynamicActivitySerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.activity.CsvMergeForeignDynamicActivitySerializer
-ldbc.snb.datagen.serializer.dynamicPersonSerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.person.CsvMergeForeignDynamicPersonSerializer
-ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv.staticserializer.CsvMergeForeignStaticSerializer
+```bash
+export UMBRA_URL=
+scripts/build.sh
 ```
 
 ### Loading the data set
