@@ -17,7 +17,7 @@ To get started with the LDBC SNB benchmarks, check out our introductory presenta
 
 * The default workload contains updates which are persisted in the database. Therefore, **the database needs to be reloaded or restored from backup before each run**. Use the provided `scripts/backup-database.sh` and `scripts/restore-database.sh` scripts to achieve this.
 
-* We expect most systems-under-test to use multi-threaded execution for their benchmark runs. **To allow running the benchmark workload on multiple threads, the update stream files need to be partitioned accordingly by the generator.** We have pre-generated these for frequent partition numbers (1, 2, ..., 1024 and 24, 48, 96, ..., 768) and scale factors up to 1000 (their deployment is [in progress](#benchmark-data-sets)).
+* We expect most systems-under-test to use multi-threaded execution for their benchmark runs. **To allow running the updates on multiple threads, the update stream files need to be partitioned accordingly by the generator.** We have pre-generated these for frequent partition numbers (1, 2, ..., 1024 and 24, 48, 96, ..., 768) and scale factors up to 1000 (their deployment is [in progress](#benchmark-data-sets)).
 
 ## Implementations
 
@@ -76,8 +76,9 @@ All three should be started withe the initial data set loaded to the database.
     * **Inputs:**
         * The query substitution parameters are taken from the directory set in `ldbc.snb.interactive.parameters_dir` configuration property.
         * The goal of the benchmark is the achieve the best (lowest possible) `time_compression_ratio` value while ensuring that the 95% on-time requirement is kept (i.e. 95% of the queries can be started within 1 second of their scheduled time).
-        * Set the `warmup` and `operation_count` values so that the warmup and benchmark phases last for 30+ minutes and 2+ hours, respectively.
-        * The update streams are the `updateStream_*_{forum,person}.csv` files from the location set in the `ldbc.snb.interactive.updates_dir` configuration property. For *n* threads, the framework requires *n* `updateStream_*_forum.csv` and *n* `updateStream_*_person.csv` files.
+        * Set the `warmup` and `operation_count` properties so that the warmup and benchmark phases last for 30+ minutes and 2+ hours, respectively.
+        * Set the `threads` property to the size of the thread pool for read operations.
+        * The update streams are the `updateStream_*_{forum,person}.csv` files from the location set in the `ldbc.snb.interactive.updates_dir` configuration property. To get *2n* write threads, the framework requires *n* `updateStream_*_forum.csv` and *n* `updateStream_*_person.csv` files (set `ldbc.snb.datagen.serializer.numUpdatePartitions` to *n* in the data generator to get produce these).
     * **Output:**
         * Passed or failed the "schedule audit" (the 95% on-time requirement).
         * The throughput achieved in the run (operations/second).
@@ -113,7 +114,7 @@ To generate the benchmark data sets, use the [Hadoop-based LDBC SNB Datagen](htt
 The key configurations are the following:
 
 * `ldbc.snb.datagen.generator.scaleFactor`: set this to `snb.interactive.${SCALE_FACTOR}` where `${SCALE_FACTOR}` is the desired scale factor
-* `ldbc.snb.datagen.serializer.numUpdatePartitions`: set this to the number of threads used in the benchmark runs
+* `ldbc.snb.datagen.serializer.numUpdatePartitions`: set this to the number of write threads used in the benchmark runs
 * serializers: set these to the required format, e.g. the ones starting with `CsvMergeForeign` or `CsvComposite`
   * `ldbc.snb.datagen.serializer.dynamicActivitySerializer`
   * `ldbc.snb.datagen.serializer.dynamicPersonSerializer`
