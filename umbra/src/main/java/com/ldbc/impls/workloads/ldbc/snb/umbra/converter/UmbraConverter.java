@@ -18,9 +18,9 @@ public class UmbraConverter extends Converter {
 
     @Override
     public String convertDateTime(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return "'" + sdf.format(date) + "'::timestamp";
+        return "timestamp with time zone '" + sdf.format(date) + "'";
     }
 
     public String convertDate(Date date) {
