@@ -16,9 +16,8 @@ docker exec \
     /scratch/ldbc.db
 
 echo -n "Waiting for the database to start ."
-until python3 scripts/test-db-connection.py 2>&1 /dev/vull; do
+until python3 scripts/test-db-connection.py > /dev/null 2>&1; do
     echo -n " ."
     sleep 1
 done
-echo
-echo "Database started"
+echo " database started"

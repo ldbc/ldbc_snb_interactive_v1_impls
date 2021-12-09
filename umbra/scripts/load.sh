@@ -10,7 +10,7 @@ cd ..
 
 cp ddl/*.sql scratch/
 
-time \
+echo -n "Loading database . . ."
 docker exec \
     --interactive \
     ${UMBRA_CONTAINER_NAME} \
@@ -20,3 +20,4 @@ docker exec \
     /scratch/schema.sql \
     /scratch/snb-load.sql \
     /scratch/schema_constraints.sql
+echo " database loaded"
