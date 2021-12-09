@@ -44,28 +44,28 @@ create table comment (
     m_replyof_comment bigint
 );
 
--- create table message (
---     /*
---      * m_ps_ denotes field specific to posts
---      * m_c_  denotes field specific to comments
---      * other m_ fields are common to posts and messages
---      * Note: to distinguish between "post" and "comment" records:
---      *   - m_c_replyof IS NULL for all "post" records
---      *   - m_c_replyof IS NOT NULL for all "comment" records
---      */
---     m_messageid bigint primary key,
---     m_ps_imagefile varchar,
---     m_creationdate timestamp with time zone not null,
---     m_locationip varchar not null,
---     m_browserused varchar not null,
---     m_ps_language varchar,
---     m_content text,
---     m_length int not null,
---     m_creatorid bigint not null,
---     m_locationid bigint not null,
---     m_ps_forumid bigint, -- null for comments
---     m_c_replyof bigint -- null for posts
--- );
+create table message (
+    /*
+     * m_ps_ denotes field specific to posts
+     * m_c_  denotes field specific to comments
+     * other m_ fields are common to posts and messages
+     * Note: to distinguish between "post" and "comment" records:
+     *   - m_c_replyof IS NULL for all "post" records
+     *   - m_c_replyof IS NOT NULL for all "comment" records
+     */
+    m_messageid bigint primary key,
+    m_ps_imagefile varchar,
+    m_creationdate timestamp with time zone not null,
+    m_locationip varchar not null,
+    m_browserused varchar not null,
+    m_ps_language varchar,
+    m_content text,
+    m_length int not null,
+    m_creatorid bigint not null,
+    m_locationid bigint not null,
+    m_ps_forumid bigint, -- null for comments
+    m_c_replyof bigint -- null for posts
+);
 
 create table forum (
    f_forumid bigint primary key,
