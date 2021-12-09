@@ -1,11 +1,12 @@
 #!/bin/bash
 
-set -e
+set -eu
 set -o pipefail
 
 cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+cd ..
 
-./stop.sh
-./start.sh
-./create-db.sh
-./load.sh
+. scripts/vars.sh
+
+scripts/start-container.sh
+scripts/start-db.sh

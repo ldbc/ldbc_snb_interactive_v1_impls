@@ -8,4 +8,7 @@ cd ..
 
 . scripts/vars.sh
 
-docker exec -it ${POSTGRES_CONTAINER_NAME} psql --username=${POSTGRES_USER} --dbname=${POSTGRES_DATABASE}
+scripts/stop.sh
+sudo rm -rf scratch/backup/
+sudo cp -r scratch/db/ scratch/backup/
+scripts/start.sh

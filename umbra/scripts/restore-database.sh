@@ -9,7 +9,7 @@ cd ..
 . scripts/vars.sh
 
 scripts/stop.sh
-sudo rm -rf scratch/data/
-sudo cp -r scratch/backup/ scratch/data/
-sudo chown -R ${USER}:${USER} scratch/data/
+sudo rm -rf scratch/db
+sudo cp -r scratch/backup/ scratch/db/
+sudo chown -R ${USER}:${USER} scratch/db/
 scripts/start.sh

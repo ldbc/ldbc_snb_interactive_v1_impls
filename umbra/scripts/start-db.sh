@@ -13,7 +13,7 @@ docker exec \
     ${UMBRA_CONTAINER_NAME} \
     /umbra/bin/server \
     --address 0.0.0.0 \
-    /scratch/ldbc.db
+    /scratch/db/ldbc.db
 
 echo -n "Waiting for the database to start ."
 until python3 scripts/test-db-connection.py > /dev/null 2>&1; do

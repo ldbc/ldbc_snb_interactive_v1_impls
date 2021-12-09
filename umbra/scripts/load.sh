@@ -8,16 +8,16 @@ cd ..
 
 . scripts/vars.sh
 
-cp ddl/*.sql scratch/
+rm -rf ${UMBRA_DATABASE_DIR}/*
 
 echo -n "Loading database . . ."
 docker exec \
     --interactive \
     ${UMBRA_CONTAINER_NAME} \
     /umbra/bin/sql \
-    --createdb /scratch/ldbc.db \
-    /scratch/create-role.sql \
-    /scratch/schema.sql \
-    /scratch/snb-load.sql \
-    /scratch/schema_constraints.sql
+    --createdb /scratch/db/ldbc.db \
+    /ddl/create-role.sql \
+    /ddl/schema.sql \
+    /ddl/snb-load.sql \
+    /ddl/schema_constraints.sql
 echo " database loaded"
