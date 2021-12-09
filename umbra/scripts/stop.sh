@@ -8,4 +8,4 @@ cd ..
 
 . scripts/vars.sh
 
-docker stop ${UMBRA_CONTAINER_NAME} || echo "No container ${UMBRA_CONTAINER_NAME} found"
+docker rm -f ${UMBRA_CONTAINER_NAME} || echo "No container ${UMBRA_CONTAINER_NAME} found"

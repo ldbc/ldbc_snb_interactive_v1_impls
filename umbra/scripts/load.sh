@@ -18,7 +18,5 @@ docker exec \
     --createdb /scratch/ldbc.db \
     /scratch/create-role.sql \
     /scratch/schema.sql \
-    /scratch/snb-load.sql
-    # \
-    # /scratch/schema_constraints.sql \
-    # /scratch/schema_foreign_keys.sql \
+    /scratch/snb-load.sql \
+    /scratch/schema_constraints.sql

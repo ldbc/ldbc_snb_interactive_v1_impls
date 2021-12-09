@@ -8,6 +8,8 @@ cd ..
 
 . scripts/vars.sh
 
+scripts/stop.sh
+
 docker run \
     --rm \
     --publish=5432:5432 \
