@@ -11,7 +11,7 @@ WHERE
 WITH DISTINCT friend
 MATCH (friend)<-[membership:HAS_MEMBER]-(forum)
 WHERE
-    membership.joinDate> $minDate
+    membership.joinDate > $minDate
 WITH
     forum,
     collect(friend) AS friends
