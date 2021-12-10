@@ -1,24 +1,54 @@
 package com.ldbc.impls.workloads.ldbc.snb.cypher;
 
-import com.google.common.collect.ImmutableMap;
-import com.ldbc.driver.DbException;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery3;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery4;
-import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
-import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
-import com.ldbc.impls.workloads.ldbc.snb.cypher.converter.CypherConverter;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.util.Calendar;
-import java.util.Date;
+public class CypherQueryStore
+{
+    private final String path;
+    private final String fileSuffix = ".cypher";
+    private final Map<String,String> queries = new HashMap<>();
 
-public class CypherQueryStore extends QueryStore {
-
-    public Converter getConverter() {
-        return new CypherConverter();
+    public CypherQueryStore( String path )
+    {
+        this.path = path;
     }
 
-    public CypherQueryStore(String path) throws DbException {
-        super(path, ".cypher");
+    public boolean addQuery( String operation )
+    {
+        final String query = loadQueryFromFile( operation );
+        if ( query != null )
+        {
+            queries.put( operation, query );
+        }
+        return query != null;
     }
 
+    public String getQuery( String operation )
+    {
+        return queries.get( operation );
+    }
+
+    public boolean hasQuery( String operation )
+    {
+        return queries.containsKey( operation );
+    }
+
+    private String loadQueryFromFile( String filename )
+    {
+        final String filePath = path + File.separator + filename + fileSuffix;
+        try
+        {
+            return new String( Files.readAllBytes( Paths.get( filePath ) ) );
+        }
+        catch ( IOException e )
+        {
+            System.err.printf( "Unable to load query from file: %s", filePath );
+        }
+        return null;
+    }
 }

@@ -1,15 +1,15 @@
-MATCH (c:City {id: $cityId})
+MATCH (c:City {id:$cityId})
 CREATE (p:Person {
     id: $personId,
     firstName: $personFirstName,
     lastName: $personLastName,
     gender: $gender,
-    birthday: date($birthday),
-    creationDate: datetime($creationDate),
+    birthday: $birthday,
+    creationDate: $creationDate,
     locationIP: $locationIP,
     browserUsed: $browserUsed,
-    speaks: $languages,
-    emails: $emails
+    languages: $languages,
+    email: $emails
   })-[:IS_LOCATED_IN]->(c)
 WITH p, count(*) AS dummy1
 UNWIND $tagIds AS tagId

@@ -14,6 +14,11 @@ jobs:
       image: ubuntu-2004:202008-01
     steps:
       - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            export DEBIAN_FRONTEND=noninteractive
+            sudo apt update && sudo apt install -y zstd
       ### DuckDB
       - run:
           name: Install DuckDB binary
@@ -104,16 +109,15 @@ jobs:
       - run:
           name: Download SF1 data set
           command: |
-            wget https://surfdrive.surf.nl/files/index.php/s/Ar7kacLw3LVzQaf/download --quiet --output-document=sf1.zip
-            unzip sf1.zip
+            curl -L https://surfdrive.surf.nl/files/index.php/s/Ng2eCg6m06ZNKKo/download | tar -xv -I unzstd
             # substitution parameters and updateStreams for Neo4j
             cp ./sf1/substitution_parameters/* ./cypher/test-data/substitution_parameters/
-            cp ./sf1/social_network-csv_composite/updateStream* ./cypher/test-data/update_streams/
+            cp ./sf1/social_network-csv_composite-longdateformatter/updateStream* ./cypher/test-data/update_streams/
       - run:
           name: SF1 data set - Load Neo4j database
           command: |
             cd cypher
-            export NEO4J_VANILLA_CSV_DIR=`pwd`/../sf1/social_network-csv_composite
+            export NEO4J_VANILLA_CSV_DIR=`pwd`/../sf1/social_network-csv_composite-longdateformatter
             export NEO4J_CONVERTED_CSV_DIR=`pwd`/../sf1/social_network-csv_composite-converted
             mkdir ${NEO4J_CONVERTED_CSV_DIR}
             scripts/load-in-one-step.sh

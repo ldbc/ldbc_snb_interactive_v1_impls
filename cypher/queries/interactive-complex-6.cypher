@@ -5,17 +5,26 @@
   "Carl_Gustaf_Emil_Mannerheim" AS tagName
 }
 */
-MATCH
-  (person:Person {id: $personId})-[:KNOWS*1..2]-(friend:Person),
-  (friend)<-[:HAS_CREATOR]-(friendPost:Post)-[:HAS_TAG]->(knownTag:Tag {name: $tagName})
-WHERE person <> friend
-MATCH (friendPost)-[:HAS_TAG]->(commonTag:Tag)
-WHERE commonTag <> knownTag
-WITH DISTINCT commonTag, knownTag, friend
-MATCH (commonTag)<-[:HAS_TAG]-(commonPost:Post)-[:HAS_TAG]->(knownTag)
-WHERE (commonPost)-[:HAS_CREATOR]->(friend)
+MATCH (knownTag:Tag { name: $tagName })
+WITH knownTag.id as knownTagId
+
+MATCH (person:Person { id: $personId })-[:KNOWS*1..2]-(friend)
+WHERE NOT person=friend
+WITH
+    knownTagId,
+    collect(distinct friend) as friends
+UNWIND friends as f
+    MATCH (f)<-[:HAS_CREATOR]-(post:Post),
+          (post)-[:HAS_TAG]->(t:Tag{id: knownTagId}),
+          (post)-[:HAS_TAG]->(tag:Tag)
+    WHERE NOT t = tag
+    WITH
+        tag.name as tagName,
+        count(post) as postCount
 RETURN
-  commonTag.name AS tagName,
-  count(commonPost) AS postCount
-ORDER BY postCount DESC, tagName ASC
-LIMIT 10
+    tagName,
+    postCount
+ORDER BY
+    postCount DESC,
+    tagName ASC
+LIMIT $limit
