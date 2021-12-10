@@ -1,7 +1,7 @@
 MATCH (author:Person {id: $authorPersonId}), (country:Country {id: $countryId}), (forum:Forum {id: $forumId})
 CREATE (author)<-[:HAS_CREATOR]-(p:Post:Message {
     id: $postId,
-    creationDate: datetime($creationDate),
+    creationDate: $creationDate,
     locationIP: $locationIP,
     browserUsed: $browserUsed,
     content: CASE $content WHEN '' THEN NULL ELSE $content END,

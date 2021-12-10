@@ -5,14 +5,16 @@
   '2010-10-16' AS maxDate
 }
 */
-MATCH (:Person {id: $personId})-[:KNOWS]-(friend:Person)<-[:HAS_CREATOR]-(message:Message)
-WHERE message.creationDate < datetime($maxDate)
-RETURN
-  friend.id AS personId,
-  friend.firstName AS personFirstName,
-  friend.lastName AS personLastName,
-  message.id AS messageId,
-  coalesce(message.content, message.imageFile) AS messageContent,
-  message.creationDate AS messageCreationDate
-ORDER BY messageCreationDate DESC, messageId ASC
-LIMIT 20
+MATCH (:Person {id: $personId })-[:KNOWS]-(friend:Person)<-[:HAS_CREATOR]-(message:Message)
+    WHERE message.creationDate <= $maxDate
+    RETURN
+        friend.id AS personId,
+        friend.firstName AS personFirstName,
+        friend.lastName AS personLastName,
+        message.id AS postOrCommentId,
+        coalesce(message.content,message.imageFile) AS postOrCommentContent,
+        message.creationDate AS postOrCommentCreationDate
+    ORDER BY
+        postOrCommentCreationDate DESC,
+        toInteger(postOrCommentId) ASC
+    LIMIT $limit

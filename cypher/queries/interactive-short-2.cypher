@@ -2,15 +2,21 @@
 /*
 :param personId: 10995116277795
  */
-MATCH (:Person {id: $personId})<-[:HAS_CREATOR]-(m:Message)-[:REPLY_OF*0..]->(p:Post)
-MATCH (p)-[:HAS_CREATOR]->(c)
+MATCH (:Person {id:$personId})<-[:HAS_CREATOR]-(message)
+WITH
+ message,
+ message.id AS messageId,
+ message.creationDate AS messageCreationDate
+ORDER BY messageCreationDate DESC, messageId ASC
+LIMIT $limit
+MATCH (message)-[:REPLY_OF*0..]->(post:Post),
+      (post)-[:HAS_CREATOR]->(person)
 RETURN
-  m.id AS messageId,
-  coalesce(m.content, m.imageFile) AS messageContent,
-  m.creationDate AS messageCreationDate,
-  p.id AS originalPostId,
-  c.id AS originalPostAuthorId,
-  c.firstName AS originalPostAuthorFirstName,
-  c.lastName AS originalPostAuthorLastName
-ORDER BY messageCreationDate DESC
-LIMIT 10
+ messageId,
+ coalesce(message.imageFile,message.content) AS messageContent,
+ messageCreationDate,
+ post.id AS postId,
+ person.id AS personId,
+ person.firstName AS personFirstName,
+ person.lastName AS personLastName
+ORDER BY messageCreationDate DESC, messageId ASC

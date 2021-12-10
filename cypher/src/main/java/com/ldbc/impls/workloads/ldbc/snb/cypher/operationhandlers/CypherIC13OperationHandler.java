@@ -1,8 +1,9 @@
 package com.ldbc.impls.workloads.ldbc.snb.cypher.operationhandlers;
 
 import com.ldbc.driver.DbException;
-import com.ldbc.driver.Operation;
 import com.ldbc.driver.ResultReporter;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery13;
+import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcQuery13Result;
 import com.ldbc.impls.workloads.ldbc.snb.cypher.CypherDbConnectionState;
 import com.ldbc.impls.workloads.ldbc.snb.operationhandlers.SingletonOperationHandler;
 
@@ -16,29 +17,30 @@ import org.neo4j.driver.Session;
 import org.neo4j.driver.SessionConfig;
 import org.neo4j.driver.summary.ResultSummary;
 
-public abstract class CypherSingletonOperationHandler<TOperation extends Operation<TOperationResult>, TOperationResult>
-        implements SingletonOperationHandler<TOperationResult,TOperation,CypherDbConnectionState>
+public abstract class CypherIC13OperationHandler
+        implements SingletonOperationHandler<LdbcQuery13Result,LdbcQuery13,CypherDbConnectionState>
 {
 
     @Override
-    public String getQueryString( CypherDbConnectionState state, TOperation operation )
+    public String getQueryString( CypherDbConnectionState state, LdbcQuery13 operation )
     {
         return null;
     }
 
     public abstract String getQueryFile();
 
-    public abstract TOperationResult toResult( Record record ) throws ParseException;
+    public abstract LdbcQuery13Result toResult( Record record ) throws ParseException;
 
-    public Map<String,Object> getParameters( TOperation operation )
+    public Map<String,Object> getParameters( LdbcQuery13 operation )
     {
         return operation.parameterMap();
     }
 
     @Override
-    public void executeOperation( TOperation operation, CypherDbConnectionState state,
+    public void executeOperation( LdbcQuery13 operation, CypherDbConnectionState state,
                                   ResultReporter resultReporter ) throws DbException
     {
+        // caches the query for future use
         final String queryFile = getQueryFile();
         if ( !state.hasQuery( queryFile ) )
         {
@@ -70,7 +72,7 @@ public abstract class CypherSingletonOperationHandler<TOperation extends Operati
             }
             else
             {
-                resultReporter.report( 0, null, operation );
+                resultReporter.report( 1, new LdbcQuery13Result( -1 ), operation );
             }
         }
     }

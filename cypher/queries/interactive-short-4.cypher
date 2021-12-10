@@ -2,7 +2,7 @@
 /*
 :param messageId: 206158431836
  */
-MATCH (m:Message {id: $messageId})
+MATCH (m:Message {id:  $messageId })
 RETURN
-  m.creationDate AS messageCreationDate,
-  coalesce(m.content, m.imageFile) AS messageContent
+    m.creationDate as messageCreationDate,
+    coalesce(m.content, m.imageFile) as messageContent

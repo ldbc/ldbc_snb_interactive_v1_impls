@@ -5,10 +5,12 @@
   8796093022357 AS person2Id
 }
 */
-MATCH (person1:Person {id: $person1Id}), (person2:Person {id: $person2Id})
-OPTIONAL MATCH path = shortestPath((person1)-[:KNOWS*]-(person2))
+MATCH
+    (person1:Person{id: $person1Id}),
+    (person2:Person{id: $person2Id}),
+    path = shortestPath((person1)-[:KNOWS*]-(person2))
 RETURN
-  CASE path IS NULL
-    WHEN true THEN -1
-    ELSE length(path)
-  END AS shortestPathLength
+    CASE path IS NULL
+        WHEN true THEN -1
+        ELSE length(path)
+    END AS shortestPathLength
