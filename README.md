@@ -77,7 +77,7 @@ All three should be started withe the initial data set loaded to the database.
         * The query substitution parameters are taken from the directory set in `ldbc.snb.interactive.parameters_dir` configuration property.
         * The goal of the benchmark is the achieve the best (lowest possible) `time_compression_ratio` value while ensuring that the 95% on-time requirement is kept (i.e. 95% of the queries can be started within 1 second of their scheduled time).
         * Set the `warmup` and `operation_count` properties so that the warmup and benchmark phases last for 30+ minutes and 2+ hours, respectively.
-        * Set the `threads` property to the size of the thread pool for read operations.
+        * Set the `thread_count` property to the size of the thread pool for read operations.
         * The update streams are the `updateStream_*_{forum,person}.csv` files from the location set in the `ldbc.snb.interactive.updates_dir` configuration property. To get *2n* write threads, the framework requires *n* `updateStream_*_forum.csv` and *n* `updateStream_*_person.csv` files (set `ldbc.snb.datagen.serializer.numUpdatePartitions` to *n* in the data generator to get produce these).
     * **Output:**
         * Passed or failed the "schedule audit" (the 95% on-time requirement).

@@ -16,7 +16,7 @@ The recommended environment is that the benchmark scripts (Bash) and the LDBC dr
 
 ### Generating the data set
 
-The data sets need to be generated and preprocessed before loading it to the database. To generate such data sets, use the `CsvMergeForeignDynamicActivitySerializer` serializer classes of the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop):
+The data sets need to be generated before loading it to the database. No preprocessing is required. To generate data sets for Postgres, use the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop)'s `CsvMergeForeign` serializer classes:
 
 ```ini
 ldbc.snb.datagen.serializer.dynamicActivitySerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.activity.CsvMergeForeignDynamicActivitySerializer
@@ -42,6 +42,12 @@ The default configuration of the database (e.g. database name, user, password) i
     scripts/start.sh
     scripts/create-db.sh
     scripts/load.sh
+    ```
+
+    Or, alternatively, simply use:
+
+    ```bash
+    scripts/load-in-one-step.sh
     ```
 
 ### Running the benchmark
