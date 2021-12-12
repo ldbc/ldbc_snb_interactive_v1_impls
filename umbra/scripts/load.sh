@@ -18,6 +18,6 @@ docker exec \
     --createdb /scratch/db/ldbc.db \
     /ddl/create-role.sql \
     /ddl/schema.sql \
-    /ddl/snb-load.sql \
+    /ddl/load.sql \
     /ddl/schema_constraints.sql
 echo " database loaded"
