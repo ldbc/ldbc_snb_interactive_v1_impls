@@ -34,6 +34,9 @@ else
     export POSTGRES_CUSTOM_ARGS=""
 fi
 
+# ensure that ${POSTGRES_DATABASE_DIR} exists
+mkdir -p "${POSTGRES_DATABASE_DIR}"
+
 echo "==============================================================================="
 echo "Starting Postgres container"
 echo "-------------------------------------------------------------------------------"
@@ -51,6 +54,7 @@ echo "  ${POSTGRES_CSV_DIR}"
 echo "==============================================================================="
 
 docker run --rm \
+    --user "$(id -u):$(id -g)" \
     --publish=${POSTGRES_PORT}:5432 \
     --name ${POSTGRES_CONTAINER_NAME} \
     --env POSTGRES_DATABASE=${POSTGRES_DATABASE} \

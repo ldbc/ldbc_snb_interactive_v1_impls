@@ -9,6 +9,6 @@ cd ..
 . scripts/vars.sh
 
 scripts/stop.sh
-sudo rm -rf scratch/backup/
-sudo cp -r scratch/data/ scratch/backup/
+rm -rf scratch/backup/
+cp -r scratch/data/ scratch/backup/
 scripts/start.sh
