@@ -14,7 +14,7 @@ scripts/get.sh
 
 ### Generating the data set
 
-The data sets need to be generated before loading it to the database. No preprocessing is required. To generate such data sets, use the same settings as for PostgreSQL (`CsvMergeForeignDynamicActivitySerializer` serializer classes of the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop).
+The data sets need to be generated before loading it to the database. No preprocessing is required. To generate the data sets for DuckDB, use the same settings as for PostgreSQL, i.e. the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop)'s `CsvMergeForeign` serializer classes.
 
 ### Loading the data set
 

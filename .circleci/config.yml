@@ -32,7 +32,7 @@ jobs:
           command: |
             cd duckdb
             export DUCKDB_CSV_DIR=`pwd`/../postgres/test-data
-            scripts/load.sh
+            scripts/load-in-one-step.sh
             cd ..
       ### Neo4j
       - run:
@@ -135,9 +135,7 @@ jobs:
             cd postgres
             export POSTGRES_CUSTOM_CONFIGURATION=`pwd`/config/postgresql.conf
             export POSTGRES_CSV_DIR=`pwd`/../sf1/social_network-csv_merge_foreign
-            scripts/start.sh
-            scripts/create-db.sh
-            scripts/load.sh
+            scripts/load-in-one-step.sh
             cd ..
       - run:
           name: SF1 data set - Cross-validate the PostgreSQL project based on the results from Neo4j
