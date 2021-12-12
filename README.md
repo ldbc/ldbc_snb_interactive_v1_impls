@@ -21,12 +21,12 @@ To get started with the LDBC SNB benchmarks, check out our introductory presenta
 
 ## Implementations
 
-We provide two reference implementations:
+We provide three reference implementations:
 
 * [Neo4j (Cypher) implementation](cypher/README.md)
 * [PostgreSQL (SQL) implementation](postgres/README.md)
+* [DuckDB (SQL) implementation](duckdb/README.md)
 
-For both, the database system is running in a Docker container to simplify the setup of the benchmark environment.
 For detailed instructions, consult the READMEs of the projects.
 
 ## User's guide
@@ -120,11 +120,11 @@ The key configurations are the following:
   * `ldbc.snb.datagen.serializer.dynamicPersonSerializer`
   * `ldbc.snb.datagen.serializer.staticSerializer`
 
-Producing large-scale (SF100+) data sets requires server-grade hardware with 64 GB+ memory and can be time-consuming. To mitigate this, we are working on making these data sets available in a central repository and expect to finish this in Q1 2022. In the meantime, if you require large data sets or update streams with a predefined number of partitions, reach out to the project maintainer, Gabor Szarnyas.
+Producing large-scale data sets requires memory and can be time-consuming (SF100 requires 24GB memory and takes about 4 hours to generate on a single machine). To mitigate this, we are working on making these data sets available in a central repository and expect to finish this in Q1 2022. In the meantime, if you require large data sets or update streams with a predefined number of partitions, reach out to the project maintainer, Gabor Szarnyas.
 
 ### Test data set
 
-The test data sets are placed in the `${IMPLEMENTATION}/test-data/` directories.
+The test data sets are placed in the `cypher/test-data/` directory for Neo4j and in the `postgres/test-data/` for the SQL systems.
 
 To generate a data set with the same characteristics, see the [documentation on generating the test data set](test-data.md).
 
@@ -139,7 +139,7 @@ The [Auditing Policies chapter](http://ldbcouncil.org/ldbc_snb_docs/ldbc-snb-spe
 2. Load the data set with `scripts/load-in-one-step.sh`.
 3. Create a backup with `scripts/backup-database.sh`.
 4. Run the `driver/determine-best-tcr.sh`.
-
+5. Once the "best TCR" value has been determined, test it with a full workload (at least 0.5h for warmup operation and at least 2h of benchmark time), and make further adjustments if necessary.
 
 ### Recommendations
 
