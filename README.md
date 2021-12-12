@@ -128,13 +128,18 @@ The test data sets are placed in the `${IMPLEMENTATION}/test-data/` directories.
 
 To generate a data set with the same characteristics, see the [documentation on generating the test data set](test-data.md).
 
-## Preparing for an audit
+## Preparing for an audited run
 
 Implementations of the Interactive workload can be audited by a certified LDBC auditor.
-
-### Process
-
 The [Auditing Policies chapter](http://ldbcouncil.org/ldbc_snb_docs/ldbc-snb-specification.pdf#chapter.7) of the specification describes the auditing process and the required artifacts.
+
+### Determining the best TCR
+
+1. Select a scale factor and configure the `driver/benchmark.properties` file as described in the [Driver modes](#driver-modes) section.
+2. Load the data set with `scripts/load-in-one-step.sh`.
+3. Create a backup with `scripts/backup-database.sh`.
+4. Run the `driver/determine-best-tcr.sh`.
+
 
 ### Recommendations
 
