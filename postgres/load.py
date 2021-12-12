@@ -60,7 +60,7 @@ def main(argv=None):
         with pg_con.cursor() as con:
             print("Loading initial data set")
             con.execute(load_script("ddl/schema.sql"))
-            con.execute(load_script("ddl/snb-load.sql"))
+            con.execute(load_script("ddl/load.sql"))
             pg_con.commit()
 
             print("Adding indexes and constraints")
