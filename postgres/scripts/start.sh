@@ -34,8 +34,8 @@ else
     export POSTGRES_CUSTOM_ARGS=""
 fi
 
-# ensure that ${POSTGRES_DATABASE_DIR} exists
-mkdir -p "${POSTGRES_DATABASE_DIR}"
+# ensure that ${POSTGRES_DATA_DIR} exists
+mkdir -p "${POSTGRES_DATA_DIR}"
 
 echo "==============================================================================="
 echo "Starting Postgres container"
@@ -47,8 +47,8 @@ echo "POSTGRES_DATABASE: ${POSTGRES_DATABASE}"
 echo "POSTGRES_USER: ${POSTGRES_USER}"
 echo "POSTGRES_PORT: ${POSTGRES_PORT}"
 echo "POSTGRES_CUSTOM_CONFIGURATION: ${POSTGRES_CUSTOM_CONFIGURATION}"
-echo "POSTGRES_DATABASE_DIR (on the host machine):"
-echo "  ${POSTGRES_DATABASE_DIR}"
+echo "POSTGRES_DATA_DIR (on the host machine):"
+echo "  ${POSTGRES_DATA_DIR}"
 echo "POSTGRES_CSV_DIR (on the host machine):"
 echo "  ${POSTGRES_CSV_DIR}"
 echo "==============================================================================="
@@ -61,7 +61,7 @@ docker run --rm \
     --env POSTGRES_USER=${POSTGRES_USER} \
     --env POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
     ${MOUNT_CSV_DIR} \
-    --volume=${POSTGRES_DATABASE_DIR}:/var/lib/postgresql/data:z \
+    --volume=${POSTGRES_DATA_DIR}:/var/lib/postgresql/data:z \
     ${POSTGRES_CUSTOM_MOUNTS} \
     --detach \
     postgres:${POSTGRES_VERSION} \

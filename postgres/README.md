@@ -10,7 +10,7 @@ The recommended environment is that the benchmark scripts (Bash) and the LDBC dr
 * Java 8
 * Docker 19+
 * the `psycopg2` Python library: `scripts/install-dependencies.sh`
-* enough free space in the directory `${POSTGRES_DATABASE_DIR}` (its default value is specified in `scripts/vars.sh`)
+* enough free space in the directory `${POSTGRES_DATA_DIR}` (its default value is specified in `scripts/vars.sh`)
 
 ## Generating and loading the data set
 
