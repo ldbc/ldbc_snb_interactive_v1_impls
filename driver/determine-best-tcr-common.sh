@@ -5,7 +5,7 @@
 #
 # Note that a lower TCR is better as it indicates better compression / higher throughput.
 
-set -e
+set -eu
 set -o pipefail
 
 BENCHMARK_PROPERTIES_FILE=${1:-driver/benchmark.properties}
