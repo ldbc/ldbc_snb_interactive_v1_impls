@@ -10,10 +10,6 @@ cd ..
 
 . scripts/vars.sh
 
-: ${NEO4J_CSV_POSTFIX:?"Environment variable NEO4J_CSV_POSTFIX is unset or empty"}
-: ${NEO4J_VANILLA_CSV_DIR:?"Environment variable NEO4J_VANILLA_CSV_DIR is unset or empty"}
-: ${NEO4J_CONVERTED_CSV_DIR:?"Environment variable NEO4J_CONVERTED_CSV_DIR is unset or empty"}
-
 # provide progressbar is available
 if command -v pv > /dev/null 2>&1; then
   SNB_CAT=pv

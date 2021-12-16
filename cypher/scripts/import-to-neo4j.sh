@@ -8,12 +8,6 @@ cd ..
 
 . scripts/vars.sh
 
-: ${NEO4J_CONTAINER_ROOT:?"Environment variable NEO4J_CONTAINER_ROOT is unset or empty"}
-: ${NEO4J_DATA_DIR:?"Environment variable NEO4J_DATA_DIR is unset or empty"}
-: ${NEO4J_CONVERTED_CSV_DIR:?"Environment variable NEO4J_CONVERTED_CSV_DIR is unset or empty"}
-: ${NEO4J_CSV_POSTFIX:?"Environment variable NEO4J_CSV_POSTFIX is unset or empty"}
-: ${NEO4J_VERSION:?"Environment variable NEO4J_VERSION is unset or empty"}
-
 # make sure directories exist
 mkdir -p ${NEO4J_CONTAINER_ROOT}/{logs,import,plugins}
 
