@@ -1,4 +1,4 @@
-# LDBC SNB Umbra implementation
+# LDBC SNB Interactive Umbra implementation
 
 [Umbra](https://umbra-db.com/) implementation of the [LDBC Social Network Benchmark's Interactive workload](https://github.com/ldbc/ldbc_snb_docs).
 
