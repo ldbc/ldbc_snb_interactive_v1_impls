@@ -1,4 +1,4 @@
-# LDBC SNB PostgreSQL implementation
+# LDBC SNB Interactive PostgreSQL implementation
 
 [PostgreSQL](https://www.postgresql.org/) implementation of the [LDBC Social Network Benchmark's Interactive workload](https://github.com/ldbc/ldbc_snb_docs).
 

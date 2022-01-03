@@ -1,4 +1,4 @@
-# LDBC SNB Neo4j/Cypher implementation
+# LDBC SNB Interactive Neo4j/Cypher implementation
 
 This directory contains the [Neo4j/Cypher](http://www.opencypher.org/) implementation of the Interactive workload of the [LDBC SNB benchmark](https://github.com/ldbc/ldbc_snb_docs).
 
