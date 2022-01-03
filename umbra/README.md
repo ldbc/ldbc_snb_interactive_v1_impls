@@ -34,7 +34,7 @@ scripts/build.sh
 2. To start the DBMS, create a database and load the data, run:
 
     ```bash
-    scripts/load-in-on-step.sh
+    scripts/load-in-one-step.sh
     ```
 
 ### Running the benchmark
