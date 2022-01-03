@@ -8,4 +8,6 @@ cd ..
 
 . scripts/vars.sh
 
-docker rm -f ${UMBRA_CONTAINER_NAME} || echo "No container ${UMBRA_CONTAINER_NAME} found"
+echo -n "Cleaning up running Umbra containers . . . "
+docker rm -f ${UMBRA_CONTAINER_NAME} > /dev/null 2>&1 || true
+echo "Cleanup completed."

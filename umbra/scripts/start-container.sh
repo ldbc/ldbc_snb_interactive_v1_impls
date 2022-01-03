@@ -21,5 +21,5 @@ docker run \
     --volume=${UMBRA_DDL_DIR}:/ddl/:z \
     --name ${UMBRA_CONTAINER_NAME} \
     --detach \
-    ${UMBRA_DOCKER_IMAGE}:latest
+    ${UMBRA_DOCKER_IMAGE}:latest > /dev/null
 echo "Container started."

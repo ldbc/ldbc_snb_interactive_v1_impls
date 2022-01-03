@@ -12,7 +12,6 @@ rm -rf ${UMBRA_DATABASE_DIR}/*
 
 echo -n "Loading database . . ."
 docker exec \
-    --interactive \
     ${UMBRA_CONTAINER_NAME} \
     /umbra/bin/sql \
     --createdb /scratch/db/ldbc.db \
@@ -20,4 +19,4 @@ docker exec \
     /ddl/schema.sql \
     /ddl/load.sql \
     /ddl/schema_constraints.sql
-echo " database loaded"
+echo " Database loaded."
