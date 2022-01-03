@@ -20,6 +20,7 @@
         <module>cypher</module>
         <module>duckdb</module>
         <module>postgres</module>
+        <module>umbra</module>
     </modules>
 
     <build>
