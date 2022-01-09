@@ -1,0 +1,35 @@
+CREATE OR REPLACE DISTRIBUTED QUERY interactiveShort6(STRING messageId) for graph LDBC_SNB SYNTAX v2 {
+
+  //Given a Message, retrieve the Forum that contains it and the Person that moderates that Forum.
+  //Since Comments are not directly contained in Forums, for Comments, return the Forum containing
+  //the original Post in the thread which the Comment is replying to
+  SumAccum<INT> @forumId;
+  SumAccum<STRING> @forumTitle;
+  SetAccum<STRING> @@seed;
+
+  @@seed += messageId;
+  vMessage = to_vertex_set(@@seed, "Comment");
+  IF vMessage.size() == 0 THEN
+    vMessage = to_vertex_set(@@seed, "Post");
+    vModerator =
+      SELECT p
+        FROM vMessage:s -(<CONTAINER_OF)- Forum:f -(HAS_MODERATOR>)-Person:p
+        PER(p,f)
+        ACCUM p.@forumId = f.id, p.@forumTitle = f.title;
+  ELSE
+
+    vModerator =
+      SELECT p
+        FROM vMessage:s -(REPLY_OF>*)- Post -(<CONTAINER_OF)- Forum:f -(HAS_MODERATOR>)-Person:p
+        PER(p,f)
+        ACCUM p.@forumId = f.id, p.@forumTitle = f.title;
+
+  END;
+
+  PRINT vModerator[
+      vModerator.@forumId AS forumId,
+      vModerator.@forumTitle AS forumTitle,
+      vModerator.id AS moderatorId,
+      vModerator.firstName AS moderatorFirstName,
+      vModerator.lastName AS moderatorLastName] as result;
+}

@@ -1,0 +1,52 @@
+CREATE OR REPLACE DISTRIBUTED QUERY interactiveComplex3(VERTEX<Person> personId, STRING countryXName, STRING countryYName, DATETIME startDate, INT durationDays) SYNTAX v2 {
+   TYPEDEF TUPLE<INT personId, STRING personFirstName, STRING personLastName, INT xCount, INT yCount, INT xyCount> msgStats;
+
+    HeapAccum<msgStats>(20, xCount DESC, personId ASC) @@result;
+    datetime endDate;
+    endDate = datetime_add(startDate, INTERVAL durationDays DAY);
+
+    vPerson = { personId };
+
+    vFriends =
+        SELECT p
+          FROM vPerson:s -(KNOWS*1..2)- Person:p
+         WHERE p != personId;
+    //PRINT vFriends.size();
+
+    SumAccum<STRING> @country;
+    vFromOtherCountries =
+        SELECT p
+          FROM Country:cp -(<IS_PART_OF.<IS_LOCATED_IN)- vFriends:p
+         WHERE cp.name != countryXName AND cp.name != countryYName //;
+               accum p.@country = cp.name;
+
+    //PRINT vFromOtherCountries.size(), vFromOtherCountries;
+
+    MapAccum<INT, SumAccum<INT>> @counter;
+    vCountedMessages =
+        SELECT p
+          FROM Country:cm -(<IS_LOCATED_IN)- (Post|Comment):m -(HAS_CREATOR>)- vFromOtherCountries:p
+         WHERE cm.name in (countryXName, countryYName) AND m.creationDate >= startDate AND m.creationDate < endDate
+  	           ACCUM
+			            CASE WHEN cm.name == countryXName THEN p.@counter += (1 -> 1) end,
+			            CASE WHEN cm.name == countryYName THEN p.@counter += (2 -> 1) end;
+    //PRINT countedMessages.size(), countedMessages;
+
+
+    //MapAccum<STRING, SumAccum<INT>> @counter2;
+    //countedMessages =
+    //    SELECT p
+    //        FROM Country:cm -(<IS_LOCATED_IN)- (Post|Comment):m -(HAS_CREATOR>)- vFromOtherCountries:p
+    //    WHERE /*cm.name in (countryXName, countryYName) AND */m.creationDate >= startDate AND m.creationDate < endDate
+  	//	      ACCUM p.@counter2 += (cm.name -> 1);
+    //PRINT countedMessages.size(), countedMessages;
+
+    P =
+        SELECT p
+          FROM vCountedMessages:p
+         WHERE p.@counter.get(1) != 0 and p.@counter.get(2) != 0
+         ACCUM @@result += msgStats(p.id, p.firstName, p.lastName, p.@counter.get(1), p.@counter.get(2), (p.@counter.get(1) + p.@counter.get(2)))
+         LIMIT 20;
+
+    PRINT @@result AS result;
+}

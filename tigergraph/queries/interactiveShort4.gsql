@@ -1,0 +1,30 @@
+CREATE OR REPLACE DISTRIBUTED QUERY interactiveShort4(STRING messageId) SYNTAX v2 {
+  SetAccum<STRING> @@seed;
+  SumAccum<STRING> @messageContent;
+
+  @@seed += messageId;
+  // from the docs:
+  // 'Running to_vertex() and to_vertex_set() requires real-time conversion of an external ID to a GSQL internal ID, which is a relatively slow process.'
+  vComments = to_vertex_set(@@seed, "Comment");
+
+  IF vComments.size() > 0 THEN
+    PRINT vComments[vComments.creationDate AS messageCreationDate, vComments.content AS messageContent] AS result;
+  ELSE
+    vPost = to_vertex_set(@@seed, "Post");
+    vPost =
+      SELECT v
+        FROM vPost:v
+        ACCUM
+          CASE WHEN v.content != "" THEN v.@messageContent += v.content ELSE v.@messageContent += v.imageFile END;
+
+    PRINT vPost[
+        vPost.creationDate AS messageCreationDate,
+        vPost.@messageContent AS messageContent] AS result;
+  END;
+}
+
+
+//RUN QUERY is4(1168231255724) -- comment
+//RUN QUERY is4(137439104673)  -- message
+//RUN QUERY is4(343597583247)  -- message with imageFile
+

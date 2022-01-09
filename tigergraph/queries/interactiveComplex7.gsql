@@ -1,0 +1,25 @@
+CREATE OR REPLACE DISTRIBUTED QUERY interactiveComplex7(VERTEX<Person> personId) SYNTAX v2 {
+    TYPEDEF tuple<INT personId, STRING personFirstName, STRING personLastName, DATETIME likeCreationDate,
+                INT messageId, STRING messageContent, INT minutesLatency, BOOL isNew> liker;
+    HeapAccum<liker>(20, likeCreationDate DESC, messageId ASC) @@result;
+    AndAccum<BOOL> @isNew;
+    S = { personId };
+    P =
+        SELECT p
+          FROM S-(KNOWS)-Person:p
+         ACCUM p.@isNew += FALSE;
+
+    P =
+        SELECT p
+            FROM S:s-(<HAS_CREATOR)- (Comment|Post):m -(<LIKES:e)-Person:p
+        PER(m,e,p)
+        ACCUM
+          IF m.type == "Comment" OR m.content != "" THEN
+            @@result += liker(p.id, p.firstName, p.lastName, e.creationDate, m.id,
+                                m.content, datetime_diff(e.creationDate, m.creationDate) / 60, p.@isNew)
+          ELSE
+            @@result += liker(p.id, p.firstName, p.lastName, e.creationDate, m.id,
+                                m.imageFile, datetime_diff(e.creationDate, m.creationDate) / 60, p.@isNew)
+          END;
+    PRINT @@result as result;
+}

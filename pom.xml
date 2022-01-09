@@ -21,6 +21,7 @@
         <module>duckdb</module>
         <module>postgres</module>
         <module>umbra</module>
+        <module>tigergraph</module>
     </modules>
 
     <build>

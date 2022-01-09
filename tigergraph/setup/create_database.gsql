@@ -1,0 +1,8 @@
+#########################################################
+#
+# Create the graph.
+#
+
+CREATE GRAPH LDBC_SNB (Comment, Post, Company, University, City, Country, Continent, Forum, Person, Tag, TagClass,
+           CONTAINER_OF, HAS_CREATOR, HAS_INTEREST, HAS_MEMBER, HAS_MODERATOR, HAS_TAG,
+           HAS_TYPE, IS_LOCATED_IN, IS_PART_OF, IS_SUBCLASS_OF, KNOWS, LIKES, REPLY_OF, STUDY_AT, WORK_AT, WEIGHT_DOUBLE)

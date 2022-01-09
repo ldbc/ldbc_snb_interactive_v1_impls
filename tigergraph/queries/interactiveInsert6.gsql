@@ -1,0 +1,24 @@
+    CREATE OR REPLACE QUERY interactiveInsert6(
+        UINT postId,
+        STRING imageFile,
+        DATETIME creationDate,
+        STRING locationIP,
+        STRING browserUsed,
+        STRING language,
+        STRING content,
+        UINT length,
+        UINT authorPersonId,
+        UINT forumId,
+        VERTEX<Country> countryId,
+        SET<VERTEX<Tag>> tagIds) {
+
+
+      INSERT INTO Post VALUES(postId, imageFile, creationDate, locationIP, browserUsed, language, content, length);
+      INSERT INTO HAS_CREATOR VALUES(postId Post, authorPersonId Person, creationDate);
+      INSERT INTO CONTAINER_OF VALUES(forumId Forum, postId Post, creationDate);
+      INSERT INTO IS_LOCATED_IN VALUES(postId Post, countryId);
+
+      tmp = {tagIds};
+      tmp = SELECT v FROM tmp:v
+        ACCUM INSERT INTO HAS_INTEREST (FROM, TO) VALUES(postId, v);
+    }
