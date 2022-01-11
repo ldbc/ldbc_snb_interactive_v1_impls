@@ -1,9 +1,10 @@
 // Q4. New topics
 /*
-:param [{ personId, startDate, durationDays }] => { RETURN
-  10995116277918 AS personId,
-  "2010-10-01" AS startDate,
-  31 AS durationDays
+:param [{ personId, startDate, endDate, limit }] => { RETURN
+  4398046511333 AS personId,
+  1275350400000 AS startDate,
+  1277856000000 AS endDate,
+  20 AS limit
 }
 */
 MATCH (person:Person {id: $personId })-[:KNOWS]-(friend:Person),
