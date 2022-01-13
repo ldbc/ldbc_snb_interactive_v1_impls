@@ -27,4 +27,4 @@ RETURN
 ORDER BY
     postCount DESC,
     tagName ASC
-LIMIT $limit
+LIMIT 10

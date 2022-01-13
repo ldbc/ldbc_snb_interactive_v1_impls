@@ -27,4 +27,4 @@ RETURN
 ORDER BY
     postCount DESC,
     forum.id ASC
-LIMIT $limit
+LIMIT 20

@@ -13,4 +13,4 @@ RETURN
 ORDER BY
     commentCreationDate DESC,
     commentId ASC
-LIMIT $limit
+LIMIT 20

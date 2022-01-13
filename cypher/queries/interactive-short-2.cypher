@@ -8,7 +8,7 @@ WITH
  message.id AS messageId,
  message.creationDate AS messageCreationDate
 ORDER BY messageCreationDate DESC, messageId ASC
-LIMIT $limit
+LIMIT 10
 MATCH (message)-[:REPLY_OF*0..]->(post:Post),
       (post)-[:HAS_CREATOR]->(person)
 RETURN

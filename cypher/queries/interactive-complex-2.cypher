@@ -17,4 +17,4 @@ MATCH (:Person {id: $personId })-[:KNOWS]-(friend:Person)<-[:HAS_CREATOR]-(messa
     ORDER BY
         postOrCommentCreationDate DESC,
         toInteger(postOrCommentId) ASC
-    LIMIT $limit
+    LIMIT 20

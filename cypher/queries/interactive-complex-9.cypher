@@ -21,4 +21,4 @@ RETURN
 ORDER BY
     commentOrPostCreationDate DESC,
     message.id ASC
-LIMIT $limit
+LIMIT 20

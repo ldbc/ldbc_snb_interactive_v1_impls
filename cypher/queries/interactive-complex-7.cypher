@@ -18,4 +18,4 @@ RETURN
 ORDER BY
     likeCreationDate DESC,
     toInteger(personId) ASC
-LIMIT $limit
+LIMIT 20

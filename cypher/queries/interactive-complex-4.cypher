@@ -3,8 +3,7 @@
 :param [{ personId, startDate, endDate, limit }] => { RETURN
   4398046511333 AS personId,
   1275350400000 AS startDate,
-  1277856000000 AS endDate,
-  20 AS limit
+  1277856000000 AS endDate
 }
 */
 MATCH (person:Person {id: $personId })-[:KNOWS]-(friend:Person),
@@ -23,4 +22,4 @@ WITH tag, sum(valid) AS postCount, sum(inValid) AS inValidPostCount
 WHERE postCount>0 AND inValidPostCount=0
 RETURN tag.name AS tagName, postCount
 ORDER BY postCount DESC, tagName ASC
-LIMIT $limit
+LIMIT 10

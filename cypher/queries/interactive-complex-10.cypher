@@ -26,4 +26,4 @@ RETURN friend.id AS personId,
        friend.gender AS personGender,
        city.name AS personCityName
 ORDER BY commonInterestScore DESC, personId ASC
-LIMIT $limit
+LIMIT 10

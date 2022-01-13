@@ -19,4 +19,4 @@ RETURN
 ORDER BY
     replyCount DESC,
     toInteger(personId) ASC
-LIMIT $limit
+LIMIT 20

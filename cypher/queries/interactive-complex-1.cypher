@@ -14,7 +14,7 @@ ORDER BY
     distance ASC,
     friend.lastName ASC,
     toInteger(friend.id) ASC
-LIMIT $limit
+LIMIT 20
 
 MATCH (friend)-[:IS_LOCATED_IN]->(friendCity:City)
 OPTIONAL MATCH (friend)-[studyAt:STUDY_AT]->(uni:University)-[:IS_LOCATED_IN]->(uniCity:City)
@@ -49,4 +49,4 @@ ORDER BY
     distanceFromPerson ASC,
     friendLastName ASC,
     toInteger(friendId) ASC
-LIMIT $limit
+LIMIT 20
