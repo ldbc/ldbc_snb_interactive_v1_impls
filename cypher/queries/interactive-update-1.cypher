@@ -1,4 +1,4 @@
-MATCH (c:City {id:$cityId})
+MATCH (c:City {id: $cityId})
 CREATE (p:Person {
     id: $personId,
     firstName: $personFirstName,

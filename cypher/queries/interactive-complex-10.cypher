@@ -5,7 +5,7 @@
   5 AS month
 }
 */
-MATCH (person:Person {id:$personId})-[:KNOWS*2..2]-(friend),
+MATCH (person:Person {id: $personId})-[:KNOWS*2..2]-(friend),
        (friend)-[:IS_LOCATED_IN]->(city:City)
 WHERE NOT friend=person AND
       NOT (friend)-[:KNOWS]-(person)

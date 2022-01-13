@@ -2,7 +2,7 @@
 /*
 :param personId: 10995116277795
  */
-MATCH (:Person {id:$personId})<-[:HAS_CREATOR]-(message)
+MATCH (:Person {id: $personId})<-[:HAS_CREATOR]-(message)
 WITH
  message,
  message.id AS messageId,
