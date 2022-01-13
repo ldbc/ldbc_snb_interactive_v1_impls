@@ -2,7 +2,7 @@
 /*
 :param [{ personId, maxDate }] => { RETURN
   10995116278009 AS personId,
-  '2010-10-16' AS maxDate
+  '2010-10-16' AS maxDate 
 }
 */
 MATCH (:Person {id: $personId })-[:KNOWS]-(friend:Person)<-[:HAS_CREATOR]-(message:Message)
