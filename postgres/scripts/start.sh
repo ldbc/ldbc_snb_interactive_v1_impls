@@ -10,7 +10,7 @@ cd ..
 
 scripts/stop.sh
 
-if [ -v POSTGRES_CSV_DIR ]; then
+if [ -n "${POSTGRES_CSV_DIR-}" ]; then
     if [ ! -d "${POSTGRES_CSV_DIR}" ]; then
         echo "Directory ${POSTGRES_CSV_DIR} does not exist."
         exit 1
@@ -21,7 +21,7 @@ else
     export MOUNT_CSV_DIR=""
 fi
 
-if [ -v POSTGRES_CUSTOM_CONFIGURATION ]; then
+if [ -n "${POSTGRES_CUSTOM_CONFIGURATION-}" ]; then
     if [ ! -f "${POSTGRES_CUSTOM_CONFIGURATION}" ]; then
         echo "Configuration file ${POSTGRES_CUSTOM_CONFIGURATION} does not exist."
         exit 1
