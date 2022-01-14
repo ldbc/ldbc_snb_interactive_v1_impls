@@ -2,7 +2,7 @@
 /*
 :param [{ personId, maxDate }] => { RETURN
   4398046511268 AS personId,
-  datetime('2010-11-16') AS maxDate
+  1289908800000 AS maxDate
 }
 */
 MATCH (root:Person {id: $personId })-[:KNOWS*1..2]-(friend:Person)

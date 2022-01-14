@@ -1,11 +1,11 @@
 // Q3. Friends and friends of friends that have been to given countries
 /*
-:param [{ personId, countryXName, countryYName, startDate, durationDays }] => { RETURN
+:param [{ personId, countryXName, countryYName, startDate, endDate }] => { RETURN
   6597069766734 AS personId,
-  "Sweden" AS countryXName,
-  "Kazakhstan" AS countryYName,
-  "2010-06-01" AS startDate,
-  28 AS durationDays
+  "Angola" AS countryXName,
+  "Colombia" AS countryYName,
+  1275393600000 AS startDate,
+  1277812800000 AS endDate
 }
 */
 MATCH (countryX:Country {name: $countryXName }),

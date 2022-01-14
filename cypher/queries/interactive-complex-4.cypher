@@ -1,6 +1,6 @@
 // Q4. New topics
 /*
-:param [{ personId, startDate, endDate, limit }] => { RETURN
+:param [{ personId, startDate, endDate }] => { RETURN
   4398046511333 AS personId,
   1275350400000 AS startDate,
   1277856000000 AS endDate
