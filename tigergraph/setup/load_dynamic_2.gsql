@@ -1,0 +1,13 @@
+CREATE LOADING JOB load_dynamic_2 {
+
+    DEFINE FILENAME person_speaks_language;
+    DEFINE FILENAME person_has_emailaddress;
+
+    LOAD person_speaks_language
+        TO VERTEX Person VALUES ($0, _, _, _, _, _, _, _, $1, _)
+    USING SEPARATOR="|", HEADER="true", EOL="\n";
+
+    LOAD person_has_emailaddress
+        TO VERTEX Person VALUES ($0, _, _, _, _, _, _, _, _, $1)
+    USING SEPARATOR="|", HEADER="true", EOL="\n";
+}

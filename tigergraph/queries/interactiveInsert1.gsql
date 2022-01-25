@@ -1,4 +1,4 @@
-CREATE OR REPLACE QUERY interactiveInsert1 syntax v2 (
+CREATE OR REPLACE QUERY interactiveInsert1  (
     UINT personId,
     STRING personFirstName,
     STRING personLastName,
@@ -7,13 +7,13 @@ CREATE OR REPLACE QUERY interactiveInsert1 syntax v2 (
     DATETIME creationDate,
     STRING locationIP,
     STRING browserUsed,
-    UINT cityId, // TODO XXX shouldn't this be a vertex param
+    UINT cityId, // TODO XXX shouldn't this be a vertex param?
     SET<STRING> languages,
     SET<STRING> emails,
     SET<VERTEX<Tag>> tagIds,
     STRING studyAt, // this is an array marshalled as vertex_id1,year1;vertex_id2,year2 string (, ;)
     STRING workAt // this is an array marshalled as vertex_id1,year1;vertex_id2,year2 string (, ;)
-  ) {
+  ) SYNTAX v2 {
 
     // persist the person and its location
     INSERT INTO Person VALUES(personId, personFirstName, personLastName, gender, birthday, creationDate, locationIP, browserUsed, languages, emails);

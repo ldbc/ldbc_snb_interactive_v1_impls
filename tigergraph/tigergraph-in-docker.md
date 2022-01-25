@@ -21,3 +21,9 @@ gadmin start all
 >    ```
 >    wsl hostname -I (from windows terminal)
 >    ```
+
+For convenience, there are the following scripts to manage TigerGraph in a Docker container for benchmarking purposes:
+* [start.sh](./scripts/start.sh) - start the container, mount data dir, scripts dir, queries dir, 
+                                   start TigerGraph services (uses configuration stored in [vars.sh](./scripts/vars.sh))
+* [stop.sh](./scripts/start.sh) - stop the container
+* [setup.sh](./scripts/setup.sh) - run the setup script to create the schema, database, queries, install the queries and load data

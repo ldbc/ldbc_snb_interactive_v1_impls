@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class ResultConverterTest extends TestCase {
+public class TigerGraphConverterTest extends TestCase {
 
     public void testParseDateTime() throws ParseException {
 
@@ -24,7 +24,7 @@ public class ResultConverterTest extends TestCase {
         conversions.forEach((key, expected) -> {
             Date result = null;
             try {
-                result = ResultConverter.parseDateTime(key);
+                result = TigerGraphConverter.parseDateTime(key);
                 assertEquals(result.toInstant(), expected.toInstant());
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -35,17 +35,11 @@ public class ResultConverterTest extends TestCase {
     }
 
     public void testToOrgList() {
-        List<Object> comps1 = Arrays.asList(
+        List<List> comps1 = Arrays.asList(
                 Arrays.asList("5142L", "2004", "dada"),
                 Arrays.asList("aaaaa", "2001", "papa")
         );
-        Iterable<List<Object>> universities1 = ResultConverter.toOrgList(comps1);
-        List<List> comps2 = Arrays.asList(
-                Arrays.asList("5142L", "2004", "dada"),
-                Arrays.asList("aaaaa", "2001", "papa")
-        );
-        Iterable<List<Object>> universities2 = ResultConverter.toOrgListNew(comps2);
-        assertEquals(universities1, universities2);
+        Iterable<List<Object>> universities1 = TigerGraphConverter.toOrgList(comps1);
     }
 
     public void testOrgsToString() {
@@ -53,7 +47,7 @@ public class ResultConverterTest extends TestCase {
                 new LdbcUpdate1AddPerson.Organization(112233L, 2004),
                 new LdbcUpdate1AddPerson.Organization(223344L, 2014)
         );
-        String result = ResultConverter.orgsToString(orgs);
+        String result = TigerGraphConverter.orgsToString(orgs);
         assertEquals(result, "112233,2004;223344,2014");
     }
 }

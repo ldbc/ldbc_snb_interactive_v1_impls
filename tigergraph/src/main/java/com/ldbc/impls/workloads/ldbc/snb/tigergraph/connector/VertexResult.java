@@ -5,6 +5,7 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /*
@@ -23,10 +24,8 @@ public class VertexResult {
     String vertexType;
     Map<String, Object> attributes;
 
-    /**
+    /*
      * Create vertex result object from a record read by TigerGraph REST++ client.
-     *
-     * @param record
      */
     public VertexResult(LinkedTreeMap<String, Object> record) {
         this.vertexId = (String) record.get("v_id");
@@ -87,17 +86,15 @@ public class VertexResult {
     public long getDateTimeAsEpoch(String attributeName) throws ParseException {
         String datetime = (String) this.attributes.get(attributeName);
 
-        return (Long) ResultConverter.parseDateTime(datetime).getTime();
+        return TigerGraphConverter.parseDateTime(datetime).getTime();
     }
 
     public Iterable<String> getStringList(String attributeName) {
-        ArrayList<String> result = new ArrayList<>();
-        result = (ArrayList<String>) this.attributes.get(attributeName);
-        return result;
+        return (ArrayList<String>) this.attributes.get(attributeName);
     }
 
-    public ArrayList<Object> getObjectList(String attributeName) {
-        return (ArrayList<Object>) this.attributes.get(attributeName);
+    public List<List> getObjectList(String attributeName) {
+        return (ArrayList<List>) this.attributes.get(attributeName);
     }
 
     public boolean getBoolean(String attributeName) {

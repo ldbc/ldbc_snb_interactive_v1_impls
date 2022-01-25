@@ -5,20 +5,22 @@ import io.github.karol_brejna_i.tigergraph.restppclient.api.QueryApi;
 import io.github.karol_brejna_i.tigergraph.restppclient.invoker.ApiClient;
 import io.github.karol_brejna_i.tigergraph.restppclient.invoker.Configuration;
 
-
 import java.io.IOException;
 import java.util.Map;
 
-public class TygrysekDbConnectionState extends BaseDbConnectionState<TygrysekQueryStore> {
+public class TigerGraphDbConnectionState extends BaseDbConnectionState<TigerGraphQueryStore> {
 
     protected final String endpoint;
     private final QueryApi apiInstance;
     private final String graphName;
+    private final boolean debug;
 
-    public TygrysekDbConnectionState(Map<String, String> properties, TygrysekQueryStore store) {
+    public TigerGraphDbConnectionState(Map<String, String> properties, TigerGraphQueryStore store) {
         super(properties, store);
         this.endpoint = properties.get("endpoint");
-        this.graphName = properties.get("name");
+        this.graphName = properties.get("databaseName");
+        String debugValue = properties.getOrDefault("debug", "false");
+        this.debug = Boolean.parseBoolean(debugValue);
 
         ApiClient defaultApiClient = Configuration.getDefaultApiClient();
         defaultApiClient.setBasePath(this.endpoint);
@@ -38,5 +40,13 @@ public class TygrysekDbConnectionState extends BaseDbConnectionState<TygrysekQue
 
     public String getGraphName() {
         return graphName;
+    }
+
+    public boolean isPrintNames() {
+        return printNames;
+    }
+
+    public boolean isDebug() {
+        return debug;
     }
 }

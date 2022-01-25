@@ -2,7 +2,7 @@ package com.ldbc.impls.workloads.ldbc.snb.tigergraph;
 
 import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
 import com.ldbc.impls.workloads.ldbc.snb.interactive.InteractiveTest;
-import com.ldbc.impls.workloads.ldbc.snb.tigergraph.interactive.TygrysekInteractiveDb;
+import com.ldbc.impls.workloads.ldbc.snb.tigergraph.interactive.TigerGraphInteractiveDb;
 import org.junit.Test;
 
 import java.text.DateFormat;
@@ -11,18 +11,22 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TygrysekInteractiveTest extends InteractiveTest {
+public class TigerGraphInteractiveTest extends InteractiveTest {
 
-    String endpoint = "http://172.31.56.14:9000";
-//    String endpoint = "http://192.168.0.105:9000";
     String databaseName = "LDBC_SNB";
     String queryDir = "queries";
 
-    public TygrysekInteractiveTest() {
-        super(new TygrysekInteractiveDb());
+    public TigerGraphInteractiveTest() {
+        super(new TigerGraphInteractiveDb());
     }
 
     public Map<String, String> getProperties() {
+
+        String endpoint = System.getenv("TIGERGRAPH_ENDPOINT");
+        if (endpoint == null) {
+            endpoint = "http://127.0.0.1:9000";
+        }
+
         HashMap<String, String> params = new HashMap<>();
         params.put("name", "LDBC_SNB");
         params.put("endpoint", endpoint);

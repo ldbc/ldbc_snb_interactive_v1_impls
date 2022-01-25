@@ -3,11 +3,11 @@ package com.ldbc.impls.workloads.ldbc.snb.tigergraph.interactive;
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.control.LoggingService;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
-import com.ldbc.impls.workloads.ldbc.snb.tigergraph.TygrysekDb;
+import com.ldbc.impls.workloads.ldbc.snb.tigergraph.TigerGraphDb;
 
 import java.util.Map;
 
-public class TygrysekInteractiveDb extends TygrysekDb {
+public class TigerGraphInteractiveDb extends TigerGraphDb {
 
     @Override
     protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {

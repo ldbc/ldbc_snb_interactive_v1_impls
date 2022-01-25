@@ -8,9 +8,9 @@
         <version>0.3.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>tygrysek</artifactId>
-    <name>Tygrysek client</name>
-    <description>Tygrysek implementation for the LDBC SNB driver</description>
+    <artifactId>tigergraph</artifactId>
+    <name>TigerGraph client</name>
+    <description>TigerGraph implementation for the LDBC SNB driver</description>
 
     <dependencies>
         <dependency>
