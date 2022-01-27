@@ -12,6 +12,14 @@ while TigerGraph database runs in a Docker container. Therefore, the requirement
 * Java 8
 * Docker 19+
 
+## Building the project
+In order to build the TigerGraph implementation, it is advised to use the [Maven](http://maven.apache.org/) build tool from [root directory of the project](../):
+```bash
+mvn package -DskipTests -U 
+```
+
+Please, note the `-U` flag. The project uses a snapshot version of TigerGraph client, and the switch helps to ensure that this artifact gets resolved properly.
+
 
 ## Configuration
 In order to run the benchmark, the following configuration steps need to be performed:
