@@ -21,13 +21,23 @@ To get started with the LDBC SNB benchmarks, check out our introductory presenta
 
 ## Implementations
 
-We provide three reference implementations:
+We provide two reference implementations:
 
 * [Neo4j (Cypher) implementation](cypher/README.md)
 * [PostgreSQL (SQL) implementation](postgres/README.md)
+
+There are additional implementations are avaiable but these are less well-tested:
+
 * [DuckDB (SQL) implementation](duckdb/README.md)
+* [Umbra (SQL) implementation](umbra/README.md)
 
 For detailed instructions, consult the READMEs of the projects.
+
+To build a subset of the projects, use Maven profiles, e.g. to build the reference implementations, run:
+
+```bash
+mvn package -DskipTests -Pcypher,postgres
+```
 
 ## User's guide
 
