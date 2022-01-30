@@ -52,7 +52,7 @@ ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv
 ```
 
     Please note, that the loading procedure assumes that person data about langages and emails are cobined into a person record.
-    Please, use serializers like in [the follwing example](https://github.com/ldbc/ldbc_snb_datagen_hadoop/blob/main/params-csv-composite-longdateformatter.ini).
+    Please, use serializers like in [the following example](https://github.com/ldbc/ldbc_snb_datagen_hadoop/blob/main/params-csv-composite.ini).
     Serializers like `CsvBasicDynamicPersonSerializer` produce separate files for persons' emails and languages.
 
 ### Preprocessing and loading
@@ -99,7 +99,7 @@ To set up the database, run the following [script](./scripts/setup.sh):
 ```
 ./scripts/setup.sh
 ```
-It leverages the fact, that the TigerGraph container has _scratch/data_, _setup_ and _queries_ directories mounted as volumes.
+It leverages the fact, that the TigerGraph container has the `scratch/data`, `setup` and `queries` directories mounted as volumes.
 (The configuration is stored in [vars.sh](./scripts/vars.sh).)
 
 This step may take a while (several minutes), as it is responsible for defining the queries, loading jobs, loading the data
