@@ -14,8 +14,9 @@ while TigerGraph database runs in a Docker container. Therefore, the requirement
 
 ## Building the project
 In order to build the TigerGraph implementation, it is advised to use the [Maven](http://maven.apache.org/) build tool from [root directory of the project](../):
+
 ```bash
-mvn package -DskipTests -U 
+mvn package -DskipTests -Ptigergraph -U
 ```
 
 Please, note the `-U` flag. The project uses a snapshot version of TigerGraph client, and the switch helps to ensure that this artifact gets resolved properly.
