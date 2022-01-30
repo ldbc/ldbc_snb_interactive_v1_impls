@@ -41,11 +41,9 @@ There are also some pre-generated data sets available in the [LDBC SNB benchmark
 
 ### Generating a dataset
 The data sets need to be generated and preprocessed before loading it to the database.
-To generate such data sets, use the [Hadoop-based Datagen's](https://github.com/ldbc/ldbc_snb_datagen_hadoop) `CsvComposite` serializer classes with the `LongDateFormatter` date formatter:
+To generate such data sets, use the [Hadoop-based Datagen's](https://github.com/ldbc/ldbc_snb_datagen_hadoop) `CsvComposite` serializer classes (with the default date formatter):
 
 ```ini
-ldbc.snb.datagen.serializer.dateFormatter:ldbc.snb.datagen.util.formatter.LongDateFormatter
-
 ldbc.snb.datagen.serializer.dynamicActivitySerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.activity.CsvCompositeDynamicActivitySerializer
 ldbc.snb.datagen.serializer.dynamicPersonSerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.person.CsvCompositeDynamicPersonSerializer
 ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv.staticserializer.CsvCompositeStaticSerializer
