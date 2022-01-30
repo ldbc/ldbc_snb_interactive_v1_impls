@@ -81,7 +81,7 @@ After that, `tigergraph/scratch/data/social_network` should hold `dynamic` and `
 
 To use the test data set, run:
 ```bash
-cp -r test-data/vanilla/ scratch/data/social_network/
+cp -r test-data/social_network/ scratch/data/
 ```
 
 #### Start the database
