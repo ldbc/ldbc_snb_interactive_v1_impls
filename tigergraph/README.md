@@ -79,6 +79,11 @@ The instruction assumes that you are starting in the `tigergraph` subfolder of t
 Generate or download the dataset. Place it under `./tigergraph/scratch/data` directory.
 After that, `tigergraph/scratch/data/social_network` should hold `dynamic` and `static` datasets.
 
+To use the test data set, run:
+```bash
+cp -r test-data/vanilla/ scratch/data/social_network/
+```
+
 #### Start the database
 To start the database, run the following [script](./scripts/start.sh):
 ```
