@@ -3,7 +3,7 @@ cd ..
 
 #export TIGERGRAPH_VERSION=3.4.0
 export TIGERGRAPH_VERSION=latest
-export TIGERGRAPH_CONTAINER_NAME=tigergraph
+export TIGERGRAPH_CONTAINER_NAME=snb-interactive-tigergraph
 export TIGERGRAPH_DATABASE=LDBC_SNB
 export TIGERGRAPH_DATA_DIR=`pwd`/scratch/data
 export TIGERGRAPH_SCRIPTS_DIR=`pwd`/setup
