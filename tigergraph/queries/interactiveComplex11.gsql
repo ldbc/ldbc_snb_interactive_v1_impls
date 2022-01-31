@@ -1,0 +1,20 @@
+CREATE OR REPLACE DISTRIBUTED QUERY interactiveComplex11(vertex<Person> personId, STRING countryName, int workFromYear) SYNTAX v2 {
+    TYPEDEF TUPLE<INT personId, STRING personFirstName, STRING personLastName, STRING organizationName, INT organizationWorkFromYear> friendInfo;
+    HeapAccum<friendInfo>(10, organizationWorkFromYear ASC, personId ASC, organizationName DESC) @@result;
+    OrAccum<BOOL> @selected;
+
+    C = {Country.*};
+    S = { personId };
+    companies =
+        SELECT org FROM Country:c -(<IS_LOCATED_IN)-Company:org
+         WHERE c.name == countryName
+         ACCUM org.@selected += TRUE;
+
+    P =
+        SELECT p
+          FROM S:s -(KNOWS*1..2)- Person:p -(WORK_AT>:e) - Company:c
+         WHERE p != personId AND c.@selected AND e.workFrom < workFromYear
+         ACCUM @@result += friendInfo(p.id, p.firstName, p.lastName, c.name, e.workFrom);
+
+    PRINT @@result as result;
+}

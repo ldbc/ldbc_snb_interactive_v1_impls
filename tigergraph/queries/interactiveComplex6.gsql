@@ -1,0 +1,23 @@
+CREATE OR REPLACE DISTRIBUTED QUERY interactiveComplex6(VERTEX<Person> personId, STRING tagName) SYNTAX v2 {
+  TYPEDEF tuple<STRING tagName, INT postCount> tagStats;
+  HeapAccum<tagStats>(10, postCount DESC, tagName ASC) @@result;
+  SumAccum<INT> @postCount;
+  S = { personId };
+  vFriend = SELECT p
+    FROM S:s -(KNOWS*1..2)-Person:p
+    WHERE p != personId;
+
+  vPost = SELECT m
+    FROM vFriend-(<HAS_CREATOR)-Post:m -(HAS_TAG>)-Tag:t
+    WHERE t.name == tagName
+    PER(m);
+
+  vTag =
+    SELECT t
+    FROM vPost-(HAS_TAG>)-Tag:t
+    WHERE t.name != tagName
+    ACCUM t.@postCount += 1
+    POST-ACCUM @@result += tagStats(t.name, t.@postCount);
+
+  PRINT @@result as result;
+}

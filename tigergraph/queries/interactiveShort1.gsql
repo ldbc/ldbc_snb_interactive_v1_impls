@@ -1,0 +1,18 @@
+CREATE OR REPLACE DISTRIBUTED QUERY interactiveShort1(VERTEX<Person> personId) for graph LDBC_SNB SYNTAX v2 {
+   TYPEDEF TUPLE<STRING firstName, STRING lastName, DATETIME birthday, STRING locationIP, STRING browserUsed, INT cityId, STRING gender, DATETIME creationDate> ProfileInfo;
+
+    ListAccum<ProfileInfo> @@result;
+    SumAccum<INT> @cityId;
+
+    P = { personId };
+    P =
+        SELECT s
+          FROM P:s-(IS_LOCATED_IN>)-City:t
+         ACCUM s.@cityId = t.id
+        POST-ACCUM @@result += ProfileInfo(s.firstName, s.lastName, s.birthday,s.locationIP,s.browserUsed,s.@cityId,s.gender,s.creationDate);
+
+    PRINT @@result.get(0) as result;
+
+}
+
+//RUN QUERY is1(19791209302561)

@@ -1,0 +1,8 @@
+CREATE OR REPLACE QUERY interactiveInsert4(UINT forumId, STRING forumTitle, UINT moderatorPersonId, DATETIME creationDate, SET<VERTEX<Tag>> tagIds) {
+    INSERT INTO Forum VALUES(forumId, forumTitle, creationDate);
+    INSERT INTO HAS_MODERATOR VALUES(forumId, moderatorPersonId Person, creationDate);
+    tmp = {tagIds};
+    tmp =
+        SELECT v FROM tmp:v
+            ACCUM INSERT INTO HAS_TAG (FROM, TO) VALUES(forumId Forum, v);
+}

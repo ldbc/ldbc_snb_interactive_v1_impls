@@ -1,0 +1,33 @@
+CREATE OR REPLACE DISTRIBUTED QUERY interactiveShort7(STRING messageId) for graph LDBC_SNB SYNTAX v2 {
+  TYPEDEF TUPLE<INT commentId, STRING commentContent, DATETIME commentCreationDate,
+    INT replyAuthorId, STRING replyAuthorFirstName,
+    STRING replyAuthorLastName, BOOL replyAuthorKnowsOriginalMessageAuthor> reply;
+
+  //Given a Message, retrieve the (1-hop) Comments that reply to it.
+  //In addition, return a boolean flag knows indicating if the author of the reply (replyAuthor) knows
+  //the author of the original message (messageAuthor). If author is same as original author, return
+  //False for knows flag.
+  SetAccum<STRING> @@seed;
+  SetAccum<vertex<Person>> @@knows;
+  HeapAccum<reply>(100, commentCreationDate DESC, replyAuthorId ASC) @@result;
+
+  @@seed += messageId;
+  vMessage = to_vertex_set(@@seed, "Comment");
+  IF vMessage.size() == 0 THEN
+    vMessage = to_vertex_set(@@seed, "Post");
+  END;
+
+  // XXX TODO: What if the creator knows nobody? will it still return something?
+  P =
+    SELECT p
+      FROM vMessage:s -(HAS_CREATOR>)- Person -(KNOWS)- Person:p
+      PER(p)
+      ACCUM @@knows += p;
+
+  // from the specs: Given a Message, retrieve the (1-hop) Comments that reply to it.
+  P =
+    SELECT p
+      FROM vMessage:s -(<REPLY_OF)- Comment:c -(HAS_CREATOR>)- Person:p
+      ACCUM @@result += reply(c.id, c.content, c.creationDate, p.id, p.firstName, p.lastName, p IN @@knows);
+  PRINT @@result as result;
+}
