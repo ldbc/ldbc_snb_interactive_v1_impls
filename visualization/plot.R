@@ -43,3 +43,21 @@ ggplot(aggregated, aes(x=op, y=execution_duration_MILLISECONDS)) +
   geom_point() +
   facet_wrap(~operation_category, ncol=1, scales="free") +
   theme_bw()
+
+ggplot(results, aes(x=op, y=execution_duration_MILLISECONDS)) +
+  geom_point(alpha=0.25) +
+  facet_wrap(~operation_category, ncol=1, scales="free") +
+  theme_bw()
+
+ggplot(results, aes(x=op, y=execution_duration_MILLISECONDS, fill=operation_category)) +
+  geom_violin(scale="width") +
+  scale_fill_brewer(palette="PuOr") +
+  scale_y_log10(
+    breaks=c( 0.0001,   0.001,   0.01,   0.1,   1,   10,   100,   1000,   10000,   100000),
+    labels=c("0.0001", "0.001", "0.01", "0.1", "1", "10", "100", "1000", "10000", "100000")
+  ) +
+  facet_wrap(~operation_category, ncol=1, scales="free") +
+  xlab("Operation number") +
+  ylab("Execution time [ms]") +
+  theme_bw()
+
