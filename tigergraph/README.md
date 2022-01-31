@@ -94,11 +94,16 @@ You can verify the readiness of TigerGraph by visiting it's console in the brows
 
 #### Load the data
 To set up the database, run the following [script](./scripts/setup.sh):
-```
+```bash
 ./scripts/setup.sh
 ```
 It leverages the fact, that the TigerGraph container has the `scratch/data`, `setup` and `queries` directories mounted as volumes.
 (The configuration is stored in [vars.sh](./scripts/vars.sh).)
+
+If you have your data located elsewhere, please update `vars.sh` or run the setup script with parameters:
+```bash
+./scripts/setup.sh <<dataset dir>> <<query dir>>
+```
 
 This step may take a while (several minutes), as it is responsible for defining the queries, loading jobs, loading the data
 and installing (optimizing and compiling on the server) the queries.
