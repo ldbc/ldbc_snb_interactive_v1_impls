@@ -1,4 +1,4 @@
-CREATE OR REPLACE DISTRIBUTED QUERY interactiveComplex12(vertex<Person> personId, string tagClassName) SYNTAX v2 {
+CREATE OR REPLACE QUERY interactiveComplex12(vertex<Person> personId, string tagClassName) SYNTAX v2 {
   SetAccum<vertex<Comment>> @replySet;
   SetAccum<string> @tagNames;
   SumAccum<int> @replyCount;

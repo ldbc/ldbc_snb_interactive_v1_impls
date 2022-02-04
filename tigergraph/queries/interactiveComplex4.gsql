@@ -1,4 +1,4 @@
-CREATE OR REPLACE DISTRIBUTED QUERY interactiveComplex4(VERTEX<Person> personId, DATETIME startDate, INT durationDays) SYNTAX v2 {
+CREATE OR REPLACE QUERY interactiveComplex4(VERTEX<Person> personId, DATETIME startDate, INT durationDays) SYNTAX v2 {
   TYPEDEF TUPLE<STRING tagName, INT postCount> topic;
   SumAccum<int> @postCount;
   SetAccum<VERTEX<Tag>> @@tagsFav, @@tagsExc;

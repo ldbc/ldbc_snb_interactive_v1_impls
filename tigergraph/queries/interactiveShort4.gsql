@@ -1,4 +1,4 @@
-CREATE OR REPLACE DISTRIBUTED QUERY interactiveShort4(STRING messageId) SYNTAX v2 {
+CREATE OR REPLACE QUERY interactiveShort4(STRING messageId) SYNTAX v2 {
   SetAccum<STRING> @@seed;
   SumAccum<STRING> @messageContent;
 

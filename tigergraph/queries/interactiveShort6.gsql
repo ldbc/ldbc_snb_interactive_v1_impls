@@ -1,4 +1,4 @@
-CREATE OR REPLACE DISTRIBUTED QUERY interactiveShort6(STRING messageId) for graph LDBC_SNB SYNTAX v2 {
+CREATE OR REPLACE QUERY interactiveShort6(STRING messageId) for graph LDBC_SNB SYNTAX v2 {
 
   //Given a Message, retrieve the Forum that contains it and the Person that moderates that Forum.
   //Since Comments are not directly contained in Forums, for Comments, return the Forum containing

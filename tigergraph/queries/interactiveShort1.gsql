@@ -1,4 +1,4 @@
-CREATE OR REPLACE DISTRIBUTED QUERY interactiveShort1(VERTEX<Person> personId) for graph LDBC_SNB SYNTAX v2 {
+CREATE OR REPLACE QUERY interactiveShort1(VERTEX<Person> personId) for graph LDBC_SNB SYNTAX v2 {
    TYPEDEF TUPLE<STRING firstName, STRING lastName, DATETIME birthday, STRING locationIP, STRING browserUsed, INT cityId, STRING gender, DATETIME creationDate> ProfileInfo;
 
     ListAccum<ProfileInfo> @@result;

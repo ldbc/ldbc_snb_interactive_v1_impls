@@ -1,4 +1,4 @@
-CREATE OR REPLACE DISTRIBUTED QUERY interactiveComplex6(VERTEX<Person> personId, STRING tagName) SYNTAX v2 {
+CREATE OR REPLACE QUERY interactiveComplex6(VERTEX<Person> personId, STRING tagName) SYNTAX v2 {
   TYPEDEF tuple<STRING tagName, INT postCount> tagStats;
   HeapAccum<tagStats>(10, postCount DESC, tagName ASC) @@result;
   SumAccum<INT> @postCount;

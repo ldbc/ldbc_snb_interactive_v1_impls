@@ -1,4 +1,4 @@
-CREATE OR REPLACE DISTRIBUTED QUERY interactiveShort2(VERTEX<Person> personId) SYNTAX v2 {
+CREATE OR REPLACE QUERY interactiveShort2(VERTEX<Person> personId) SYNTAX v2 {
   TYPEDEF TUPLE<INT messageId, STRING messageContent, DATETIME messageCreationDate, INT originalPostId, INT originalPostAuthorId, STRING originalPostAuthorFirstName, STRING originalPostAuthorLastName> ogPostInfo;
 
   SumAccum<INT> @postId, @authorOgId;

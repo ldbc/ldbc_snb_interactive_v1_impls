@@ -1,4 +1,4 @@
-CREATE OR REPLACE DISTRIBUTED QUERY interactiveComplex5(VERTEX<Person> personId, DATETIME minDate) SYNTAX v2 {
+CREATE OR REPLACE QUERY interactiveComplex5(VERTEX<Person> personId, DATETIME minDate) SYNTAX v2 {
   TYPEDEF TUPLE<STRING forumTitle, INT postCount, INT id> forumInfo;
 	HeapAccum<forumInfo>(20, postCount DESC, id ASC) @@result;
   SetAccum<VERTEX<Person>> @@friendAll;

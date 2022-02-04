@@ -1,4 +1,4 @@
-CREATE OR REPLACE DISTRIBUTED QUERY interactiveComplex8(VERTEX<Person> personId) SYNTAX v2 {
+CREATE OR REPLACE QUERY interactiveComplex8(VERTEX<Person> personId) SYNTAX v2 {
   TYPEDEF tuple<INT personId, STRING personFirstName, STRING personLastName, 
                 DATETIME commentCreationDate, INT commentId, STRING commentContent> replier;
   HeapAccum<replier>(20, commentCreationDate DESC, commentId ASC) @@result;

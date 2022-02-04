@@ -1,4 +1,4 @@
-CREATE OR REPLACE DISTRIBUTED QUERY interactiveComplex10(vertex<Person> personId, int month) SYNTAX v2 {
+CREATE OR REPLACE QUERY interactiveComplex10(vertex<Person> personId, int month) SYNTAX v2 {
   TYPEDEF TUPLE<INT personId, STRING personFirstName, STRING personLastName, INT commonInterestScore, STRING personGender, STRING personCityName> friendInfo;
   HeapAccum<friendInfo>(10, commonInterestScore DESC, personId ASC) @@result;
   SumAccum<int> @commonInterestScore;

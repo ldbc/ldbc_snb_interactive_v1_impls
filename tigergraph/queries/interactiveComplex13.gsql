@@ -1,4 +1,4 @@
-CREATE OR REPLACE DISTRIBUTED QUERY interactiveComplex13(VERTEX<Person> person1Id, VERTEX<Person> person2Id) SYNTAX v2 {
+CREATE OR REPLACE QUERY interactiveComplex13(VERTEX<Person> person1Id, VERTEX<Person> person2Id) SYNTAX v2 {
   SumAccum<INT> @dist1 = -1, @dist2 = -1;
   OrAccum @@found, @@next1=True, @@next2=True;
   MaxAccum<INT> @@result=-1;

@@ -1,4 +1,4 @@
-CREATE OR REPLACE DISTRIBUTED QUERY interactiveComplex3(VERTEX<Person> personId, STRING countryXName, STRING countryYName, DATETIME startDate, INT durationDays) SYNTAX v2 {
+CREATE OR REPLACE QUERY interactiveComplex3(VERTEX<Person> personId, STRING countryXName, STRING countryYName, DATETIME startDate, INT durationDays) SYNTAX v2 {
    TYPEDEF TUPLE<INT personId, STRING personFirstName, STRING personLastName, INT xCount, INT yCount, INT xyCount> msgStats;
 
     HeapAccum<msgStats>(20, xCount DESC, personId ASC) @@result;
