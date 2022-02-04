@@ -88,4 +88,4 @@ gsql --graph LDBC_SNB $QUERY_PATH/interactiveInsert6.gsql
 gsql --graph LDBC_SNB $QUERY_PATH/interactiveInsert7.gsql
 gsql --graph LDBC_SNB $QUERY_PATH/interactiveInsert8.gsql
 
-gsql --graph 'LDBC_SNB INSTALL QUERY *'
+gsql --graph LDBC_SNB 'INSTALL QUERY *'
