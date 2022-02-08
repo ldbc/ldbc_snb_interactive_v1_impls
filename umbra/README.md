@@ -25,7 +25,7 @@ scripts/build.sh
 
 ### Loading the data set
 
-Umbra uses the same format at PostgreSQL (`CsvMergeForeign`).
+Umbra uses the same data format at PostgreSQL (`CsvMergeForeign`).
 
 1. Set the `${UMBRA_CSV_DIR}` environment variable to point to the data set, e.g.:
 
