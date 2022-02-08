@@ -20,7 +20,7 @@ Set the `UMBRA_URL` environment variable and build the container:
 
 ```bash
 export UMBRA_URL=
-scripts/build.sh
+scripts/build-container.sh
 ```
 
 ### Loading the data set
