@@ -20,10 +20,12 @@ Set the `UMBRA_URL` environment variable and build the container:
 
 ```bash
 export UMBRA_URL=
-scripts/build.sh
+scripts/build-container.sh
 ```
 
 ### Loading the data set
+
+Umbra uses the same data format at PostgreSQL (`CsvMergeForeign`).
 
 1. Set the `${UMBRA_CSV_DIR}` environment variable to point to the data set, e.g.:
 
