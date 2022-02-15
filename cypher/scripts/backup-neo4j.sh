@@ -23,5 +23,6 @@ docker run --interactive --tty --rm \
     --volume="${NEO4J_CONTAINER_ROOT}/conf":/conf \
     --volume="${NEO4J_CONTAINER_ROOT}/backups":/backups \
     --name "${NEO4J_CONTAINER_NAME}" \
-    "neo4j:${NEO4J_VERSION}" \
+    ${NEO4J_DOCKER_PLATFORM_FLAG} \
+    neo4j:${NEO4J_VERSION} \
     neo4j-admin dump --database=neo4j --to="/backups/${DUMP_FILE}"
