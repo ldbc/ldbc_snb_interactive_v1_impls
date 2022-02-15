@@ -24,6 +24,7 @@ docker run --rm \
     --volume=${NEO4J_CONTAINER_ROOT}/plugins:/plugins:z \
     --env NEO4JLABS_PLUGINS='["apoc", "graph-data-science"]' \
     --env NEO4J_AUTH=none \
+    ${NEO4J_DOCKER_PLATFORM_FLAG} \
     --name ${NEO4J_CONTAINER_NAME} \
     neo4j:${NEO4J_VERSION}
 

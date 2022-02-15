@@ -25,6 +25,7 @@ docker run --rm \
     --volume=${NEO4J_CONTAINER_ROOT}/import:/var/lib/neo4j/import:z \
     --volume=${NEO4J_CONTAINER_ROOT}/plugins:/plugins:z \
     ${NEO4J_ENV_VARS} \
+    ${NEO4J_DOCKER_PLATFORM_FLAG} \
     neo4j:${NEO4J_VERSION} \
     neo4j-admin import \
     --id-type=INTEGER \
