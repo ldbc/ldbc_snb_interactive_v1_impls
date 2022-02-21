@@ -59,7 +59,7 @@ The benchmark framework relies on the following inputs produced by the [SNB Data
 
 ### Driver modes
 
-For each implementation, it is possible to perform to perform the run in one of the SNB driver's three modes.
+For each implementation, it is possible to perform to perform the run in one of the [SNB driver's](https://github.com/ldbc/ldbc_snb_interactive_driver) three modes.
 All three should be started withe the initial data set loaded to the database.
 
 1. Create validation parameters with the `driver/create-validation-parameters.sh` script.
@@ -97,7 +97,7 @@ All three should be started withe the initial data set loaded to the database.
 
 For all scripts, configure the properties file (`driver/${MODE}.properties`) to match your setup and the [scale factor](sf-properties/) of the data set used.
 
-For more details on validating and benchmarking, visit the [driver wiki](https://github.com/ldbc/ldbc_snb_driver/wiki).
+For more details on validating and benchmarking, visit the [driver wiki](https://github.com/ldbc/ldbc_snb_interactive_driver/wiki).
 
 ## Developer's guide
 
