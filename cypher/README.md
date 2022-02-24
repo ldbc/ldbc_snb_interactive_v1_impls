@@ -55,7 +55,7 @@ scripts/convert-csvs.sh
 
 #### Load the data set
 
-2. To preprocess, load and index the data, run the following sequence of commands:
+1. To preprocess, load and index the data, run the following sequence of commands:
 
 :warning: Be careful -- this stops the currently running (containerized) Neo4j database and deletes all of its data.
 
@@ -68,7 +68,7 @@ scripts/start-neo4j.sh
 scripts/create-indices.sh
 ```
 
-3. You can run all these scripts with a single command:
+1. You can run all these scripts with a single command:
 
 ```bash
 scripts/load-in-one-step.sh
@@ -76,7 +76,7 @@ scripts/load-in-one-step.sh
 
 ## Running the benchmark
 
-4. To run the scripts of benchmark framework, edit the `driver/{create-validation-parameters,validate,benchmark}.properties` files, then run their script, one of:
+To run the scripts of benchmark framework, edit the `driver/{create-validation-parameters,validate,benchmark}.properties` files, then run their script, one of:
 
 ```bash
 driver/create-validation-parameters.sh

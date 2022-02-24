@@ -73,7 +73,7 @@ They need to be uploaded there in advance (or mounted as a volume).
 ### Exemplary setup procedure
 This section explains how to set up the database for the benchmarking **using Docker** containers.
 
-The instruction assumes that you are starting in the `tigergraph` subfolder of the project root directory (`ldbc_snb_interactive/tigergraph`).
+The instruction assumes that you are starting in the `tigergraph` subfolder of the project root directory (`ldbc_snb_interactive_implementations/tigergraph`).
 
 #### Prepare the dataset
 Generate or download the dataset. Place it under `./tigergraph/scratch/data` directory.
