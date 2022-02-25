@@ -11,7 +11,7 @@ public class CypherQueryStore
 {
     private final String path;
     private final String fileSuffix = ".cypher";
-    private final Map<String,String> queries = new HashMap<>();
+    private final Map<String, String> queries = new HashMap<>();
 
     public CypherQueryStore( String path )
     {

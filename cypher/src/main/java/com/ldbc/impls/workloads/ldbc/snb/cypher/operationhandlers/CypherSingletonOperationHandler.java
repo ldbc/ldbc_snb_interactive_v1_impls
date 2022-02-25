@@ -30,7 +30,7 @@ public abstract class CypherSingletonOperationHandler<TOperation extends Operati
 
     public abstract TOperationResult toResult( Record record ) throws ParseException;
 
-    public Map<String,Object> getParameters( TOperation operation )
+    public Map<String, Object> getParameters( TOperation operation )
     {
         return operation.parameterMap();
     }
@@ -50,7 +50,7 @@ public abstract class CypherSingletonOperationHandler<TOperation extends Operati
         }
 
         final String query = state.getQuery( queryFile );
-        final Map<String,Object> parameters = getParameters( operation );
+        final Map<String, Object> parameters = getParameters( operation );
 
         final SessionConfig config = SessionConfig.builder().withDefaultAccessMode( AccessMode.READ ).build();
         try ( final Session session = state.getSession( config ) )

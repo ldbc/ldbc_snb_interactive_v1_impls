@@ -39,7 +39,7 @@ public class CypherInteractiveDb extends CypherDb
 {
 
     @Override
-    protected void onInit( Map<String,String> properties, LoggingService loggingService ) throws DbException
+    protected void onInit( Map<String, String> properties, LoggingService loggingService ) throws DbException
     {
         super.onInit( properties, loggingService );
 

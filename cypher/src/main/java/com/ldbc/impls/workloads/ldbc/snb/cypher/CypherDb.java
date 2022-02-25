@@ -98,7 +98,7 @@ public class CypherDb extends Db
     }
 
     @Override
-    protected void onInit( Map<String,String> properties, LoggingService loggingService ) throws DbException
+    protected void onInit( Map<String, String> properties, LoggingService loggingService ) throws DbException
     {
         final String endpointURI = properties.get( "endpoint" );
         final String username = properties.get( "user" );
@@ -210,9 +210,9 @@ public class CypherDb extends Db
         }
 
         @Override
-        public Map<String,Object> getParameters( LdbcQuery2 operation )
+        public Map<String, Object> getParameters( LdbcQuery2 operation )
         {
-            return ImmutableMap.<String,Object>builder()
+            return ImmutableMap.<String, Object>builder()
                                .put( LdbcQuery2.PERSON_ID, operation.personId() )
                                .put( LdbcQuery2.MAX_DATE, operation.maxDate().getTime() )
                                .put( LdbcQuery2.LIMIT, operation.limit() )
@@ -249,10 +249,10 @@ public class CypherDb extends Db
         }
 
         @Override
-        public Map<String,Object> getParameters( LdbcQuery3 operation )
+        public Map<String, Object> getParameters( LdbcQuery3 operation )
         {
             final Date endDate = addDays( operation.startDate(), operation.durationDays() );
-            return ImmutableMap.<String,Object>builder()
+            return ImmutableMap.<String, Object>builder()
                                .put( LdbcQuery3.PERSON_ID, operation.personId() )
                                .put( LdbcQuery3.COUNTRY_X_NAME, operation.countryXName() )
                                .put( LdbcQuery3.COUNTRY_Y_NAME, operation.countryYName() )
@@ -291,10 +291,10 @@ public class CypherDb extends Db
         }
 
         @Override
-        public Map<String,Object> getParameters( LdbcQuery4 operation )
+        public Map<String, Object> getParameters( LdbcQuery4 operation )
         {
             final Date endDate = addDays( operation.startDate(), operation.durationDays() );
-            return ImmutableMap.<String,Object>builder()
+            return ImmutableMap.<String, Object>builder()
                                .put( LdbcQuery4.PERSON_ID, operation.personId() )
                                .put( LdbcQuery4.START_DATE, operation.startDate().getTime() )
                                .put( "endDate", endDate.getTime() )
@@ -320,9 +320,9 @@ public class CypherDb extends Db
         }
 
         @Override
-        public Map<String,Object> getParameters( LdbcQuery5 operation )
+        public Map<String, Object> getParameters( LdbcQuery5 operation )
         {
-            return ImmutableMap.<String,Object>builder()
+            return ImmutableMap.<String, Object>builder()
                                .put( LdbcQuery5.PERSON_ID, operation.personId() )
                                .put( LdbcQuery5.MIN_DATE, operation.minDate().getTime() )
                                .put( LdbcQuery5.LIMIT, operation.limit() )
@@ -426,9 +426,9 @@ public class CypherDb extends Db
         }
 
         @Override
-        public Map<String,Object> getParameters( LdbcQuery9 operation )
+        public Map<String, Object> getParameters( LdbcQuery9 operation )
         {
-            return ImmutableMap.<String,Object>builder()
+            return ImmutableMap.<String, Object>builder()
                                .put( LdbcQuery9.PERSON_ID, operation.personId() )
                                .put( LdbcQuery9.MAX_DATE, operation.maxDate().getTime() )
                                .put( LdbcQuery9.LIMIT, operation.limit() )
@@ -776,14 +776,14 @@ public class CypherDb extends Db
         }
 
         @Override
-        public Map<String,Object> getParameters( LdbcUpdate1AddPerson operation )
+        public Map<String, Object> getParameters( LdbcUpdate1AddPerson operation )
         {
             final List<List<Long>> universities =
                     operation.studyAt().stream().map( u -> Arrays.asList( u.organizationId(), (long) u.year() ) ).collect( Collectors.toList() );
             final List<List<Long>> companies =
                     operation.workAt().stream().map( c -> Arrays.asList( c.organizationId(), (long) c.year() ) ).collect( Collectors.toList() );
 
-            return ImmutableMap.<String,Object>builder()
+            return ImmutableMap.<String, Object>builder()
                                .put( LdbcUpdate1AddPerson.PERSON_ID, operation.personId() )
                                .put( LdbcUpdate1AddPerson.PERSON_FIRST_NAME, operation.personFirstName() )
                                .put( LdbcUpdate1AddPerson.PERSON_LAST_NAME, operation.personLastName() )
@@ -812,9 +812,9 @@ public class CypherDb extends Db
         }
 
         @Override
-        public Map<String,Object> getParameters( LdbcUpdate2AddPostLike operation )
+        public Map<String, Object> getParameters( LdbcUpdate2AddPostLike operation )
         {
-            return ImmutableMap.<String,Object>builder()
+            return ImmutableMap.<String, Object>builder()
                                .put( LdbcUpdate2AddPostLike.PERSON_ID, operation.personId() )
                                .put( LdbcUpdate2AddPostLike.POST_ID, operation.postId() )
                                .put( LdbcUpdate2AddPostLike.CREATION_DATE, operation.creationDate().getTime() )
@@ -832,9 +832,9 @@ public class CypherDb extends Db
         }
 
         @Override
-        public Map<String,Object> getParameters( LdbcUpdate3AddCommentLike operation )
+        public Map<String, Object> getParameters( LdbcUpdate3AddCommentLike operation )
         {
-            return ImmutableMap.<String,Object>builder()
+            return ImmutableMap.<String, Object>builder()
                                .put( LdbcUpdate3AddCommentLike.PERSON_ID, operation.personId() )
                                .put( LdbcUpdate3AddCommentLike.COMMENT_ID, operation.commentId() )
                                .put( LdbcUpdate3AddCommentLike.CREATION_DATE, operation.creationDate().getTime() )
@@ -852,9 +852,9 @@ public class CypherDb extends Db
         }
 
         @Override
-        public Map<String,Object> getParameters( LdbcUpdate4AddForum operation )
+        public Map<String, Object> getParameters( LdbcUpdate4AddForum operation )
         {
-            return ImmutableMap.<String,Object>builder()
+            return ImmutableMap.<String, Object>builder()
                                .put( LdbcUpdate4AddForum.FORUM_ID, operation.forumId() )
                                .put( LdbcUpdate4AddForum.FORUM_TITLE, operation.forumTitle() )
                                .put( LdbcUpdate4AddForum.CREATION_DATE, operation.creationDate().getTime() )
@@ -874,9 +874,9 @@ public class CypherDb extends Db
         }
 
         @Override
-        public Map<String,Object> getParameters( LdbcUpdate5AddForumMembership operation )
+        public Map<String, Object> getParameters( LdbcUpdate5AddForumMembership operation )
         {
-            return ImmutableMap.<String,Object>builder()
+            return ImmutableMap.<String, Object>builder()
                                .put( LdbcUpdate5AddForumMembership.FORUM_ID, operation.forumId() )
                                .put( LdbcUpdate5AddForumMembership.PERSON_ID, operation.personId() )
                                .put( LdbcUpdate5AddForumMembership.JOIN_DATE, operation.joinDate().getTime() )
@@ -894,9 +894,9 @@ public class CypherDb extends Db
         }
 
         @Override
-        public Map<String,Object> getParameters( LdbcUpdate6AddPost operation )
+        public Map<String, Object> getParameters( LdbcUpdate6AddPost operation )
         {
-            return ImmutableMap.<String,Object>builder()
+            return ImmutableMap.<String, Object>builder()
                                .put( LdbcUpdate6AddPost.POST_ID, operation.postId() )
                                .put( LdbcUpdate6AddPost.IMAGE_FILE, operation.imageFile() )
                                .put( LdbcUpdate6AddPost.CREATION_DATE, operation.creationDate().getTime() )
@@ -923,9 +923,9 @@ public class CypherDb extends Db
         }
 
         @Override
-        public Map<String,Object> getParameters( LdbcUpdate7AddComment operation )
+        public Map<String, Object> getParameters( LdbcUpdate7AddComment operation )
         {
-            return ImmutableMap.<String,Object>builder()
+            return ImmutableMap.<String, Object>builder()
                                .put( LdbcUpdate7AddComment.COMMENT_ID, operation.commentId() )
                                .put( LdbcUpdate7AddComment.CREATION_DATE, operation.creationDate().getTime() )
                                .put( LdbcUpdate7AddComment.LOCATION_IP, operation.locationIp() )
@@ -951,9 +951,9 @@ public class CypherDb extends Db
         }
 
         @Override
-        public Map<String,Object> getParameters( LdbcUpdate8AddFriendship operation )
+        public Map<String, Object> getParameters( LdbcUpdate8AddFriendship operation )
         {
-            return ImmutableMap.<String,Object>builder()
+            return ImmutableMap.<String, Object>builder()
                                .put( LdbcUpdate8AddFriendship.PERSON1_ID, operation.person1Id() )
                                .put( LdbcUpdate8AddFriendship.PERSON2_ID, operation.person2Id() )
                                .put( LdbcUpdate8AddFriendship.CREATION_DATE, operation.creationDate().getTime() )
