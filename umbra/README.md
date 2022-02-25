@@ -23,7 +23,7 @@ export UMBRA_URL=
 scripts/build-container.sh
 ```
 
-### Loading the data set
+## Loading the data set
 
 Umbra uses the same data format at PostgreSQL (`CsvMergeForeign`).
 
@@ -39,7 +39,7 @@ Umbra uses the same data format at PostgreSQL (`CsvMergeForeign`).
     scripts/load-in-one-step.sh
     ```
 
-### Running the benchmark
+## Running the benchmark
 
 3. To run the scripts of benchmark framework, edit the `driver/{create-validation-parameters,validate,benchmark}.properties` files, then run their script, one of:
 
