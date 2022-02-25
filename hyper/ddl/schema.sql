@@ -18,7 +18,7 @@ drop table if exists person;
 drop table if exists place;
 
 create table post (
-    m_messageid bigint not null,
+    m_messageid bigint primary key,
     m_ps_imagefile varchar,
     m_creationdate timestamp with time zone not null,
     m_locationip varchar not null,
@@ -32,7 +32,7 @@ create table post (
 );
 
 create table comment (
-    m_messageid bigint not null,
+    m_messageid bigint primary key,
     m_creationdate timestamp with time zone not null,
     m_locationip varchar not null,
     m_browserused varchar not null,
@@ -45,7 +45,7 @@ create table comment (
 );
 
 create table forum (
-   f_forumid bigint not null,
+   f_forumid bigint primary key,
    f_title varchar not null,
    f_creationdate timestamp with time zone not null,
    f_moderatorid bigint not null
@@ -63,7 +63,7 @@ create table forum_tag (
 );
 
 create table organisation (
-   o_organisationid bigint not null,
+   o_organisationid bigint primary key,
    o_type varchar not null,
    o_name varchar not null,
    o_url varchar not null,
@@ -71,7 +71,7 @@ create table organisation (
 );
 
 create table person (
-   p_personid bigint not null,
+   p_personid bigint primary key,
    p_firstname varchar not null,
    p_lastname varchar not null,
    p_gender varchar not null,
@@ -106,7 +106,7 @@ create table likes (
 );
 
 create table person_language (
-   plang_personid bigint not null,
+   plang_personid bigint primary key,
    plang_language varchar not null
 );
 
@@ -123,7 +123,7 @@ create table person_company (
 );
 
 create table place (
-   pl_placeid bigint not null,
+   pl_placeid bigint primary key,
    pl_name varchar not null,
    pl_url varchar not null,
    pl_type varchar not null,
@@ -136,14 +136,14 @@ create table message_tag (
 );
 
 create table tagclass (
-   tc_tagclassid bigint not null,
+   tc_tagclassid bigint primary key,
    tc_name varchar not null,
    tc_url varchar not null,
    tc_subclassoftagclassid bigint -- null for the root tagclass (Thing)
 );
 
 create table tag (
-   t_tagid bigint not null,
+   t_tagid bigint primary key,
    t_name varchar not null,
    t_url varchar not null,
    t_tagclassid bigint not null
