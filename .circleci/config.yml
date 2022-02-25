@@ -26,7 +26,7 @@ jobs:
             duckdb/scripts/get.sh
       - run:
           name: Build project
-          command: ./build.sh
+          command: scripts/build.sh
       - run:
           name: Tiny data set - Load DuckDB
           command: |

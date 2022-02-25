@@ -46,7 +46,7 @@ mvn package -DskipTests -Pcypher,postgres
 To build the project, run:
 
 ```bash
-./build.sh
+scripts/build.sh
 ```
 
 ### Inputs
