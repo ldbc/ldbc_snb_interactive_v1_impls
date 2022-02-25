@@ -73,7 +73,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
     @Override
     protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
         try {
-            dcs = new PostgresDbConnectionState<>(properties, new PostgresQueryStore(properties.get("queryDir")));
+            dcs = new PostgresDbConnectionState(properties, new PostgresQueryStore(properties.get("queryDir")));
         } catch (ClassNotFoundException e) {
             throw new DbException(e);
         }
