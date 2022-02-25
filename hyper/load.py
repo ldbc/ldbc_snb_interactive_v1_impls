@@ -21,29 +21,29 @@ def main(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--db",
-        default=os.environ.get("POSTGRES_DATABASE", "ldbcsnb"),
-        help="PostgreSQL database",
+        default=os.environ.get("HYPER_DATABASE", "ldbcsnb"),
+        help="HyPer database",
     )
     parser.add_argument(
         "--host",
-        default=os.environ.get("POSTGRES_HOST", "localhost"),
-        help="PostgreSQL host",
+        default=os.environ.get("HYPER_HOST", "localhost"),
+        help="HyPer host",
     )
     parser.add_argument(
         "--port",
         type=int,
-        default=int(os.environ.get("POSTGRES_PORT", 7484)),
-        help="PostgreSQL port",
+        default=int(os.environ.get("HYPER_PORT", 7484)),
+        help="HyPer port",
     )
     parser.add_argument(
         "--user",
-        default=os.environ.get("POSTGRES_USER", "ldbcsnb"),
-        help="PostgreSQL user name",
+        default=os.environ.get("HYPER_USER", "ldbcsnb"),
+        help="HyPer user name",
     )
     parser.add_argument(
         "--password",
-        default=os.environ.get("POSTGRES_PASSWORD", ""),
-        help="PostgreSQL user password",
+        default=os.environ.get("HYPER_PASSWORD", ""),
+        help="HyPer user password",
     )
     options = parser.parse_args(argv)
 

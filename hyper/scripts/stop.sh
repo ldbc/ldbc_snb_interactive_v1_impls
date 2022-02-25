@@ -8,4 +8,4 @@ cd ..
 
 . scripts/vars.sh
 
-docker rm -f ${POSTGRES_CONTAINER_NAME} || echo "No container ${POSTGRES_CONTAINER_NAME} found"
+docker rm -f ${HYPER_CONTAINER_NAME} || echo "No container ${HYPER_CONTAINER_NAME} found"

@@ -12,66 +12,66 @@ python3 -c 'import psycopg2' || (echo "psycopg2 Python package is missing or bro
 
 scripts/stop.sh
 
-if [ -n "${POSTGRES_CSV_DIR-}" ]; then
-    if [ ! -d "${POSTGRES_CSV_DIR}" ]; then
-        echo "Directory ${POSTGRES_CSV_DIR} does not exist."
+if [ -n "${HYPER_CSV_DIR-}" ]; then
+    if [ ! -d "${HYPER_CSV_DIR}" ]; then
+        echo "Directory ${HYPER_CSV_DIR} does not exist."
         exit 1
     fi
-    export MOUNT_CSV_DIR="--volume=${POSTGRES_CSV_DIR}:/data:z"
+    export MOUNT_CSV_DIR="--volume=${HYPER_CSV_DIR}:/data:z"
 else
-    export POSTGRES_CSV_DIR="<unspecified>"
+    export HYPER_CSV_DIR="<unspecified>"
     export MOUNT_CSV_DIR=""
 fi
 
-if [ -n "${POSTGRES_CUSTOM_CONFIGURATION-}" ]; then
-    if [ ! -f "${POSTGRES_CUSTOM_CONFIGURATION}" ]; then
-        echo "Configuration file ${POSTGRES_CUSTOM_CONFIGURATION} does not exist."
+if [ -n "${HYPER_CUSTOM_CONFIGURATION-}" ]; then
+    if [ ! -f "${HYPER_CUSTOM_CONFIGURATION}" ]; then
+        echo "Configuration file ${HYPER_CUSTOM_CONFIGURATION} does not exist."
         exit 1
     fi
-    export POSTGRES_CUSTOM_MOUNTS="--volume=${POSTGRES_CUSTOM_CONFIGURATION}:/etc/postgresql.conf:z"
-    export POSTGRES_CUSTOM_ARGS="--config_file=/etc/postgresql.conf"
+    export HYPER_CUSTOM_MOUNTS="--volume=${HYPER_CUSTOM_CONFIGURATION}:/etc/postgresql.conf:z"
+    export HYPER_CUSTOM_ARGS="--config_file=/etc/postgresql.conf"
 else
-    export POSTGRES_CUSTOM_CONFIGURATION="<unspecified>"
-    export POSTGRES_CUSTOM_MOUNTS=""
-    export POSTGRES_CUSTOM_ARGS=""
+    export HYPER_CUSTOM_CONFIGURATION="<unspecified>"
+    export HYPER_CUSTOM_MOUNTS=""
+    export HYPER_CUSTOM_ARGS=""
 fi
 
-# ensure that ${POSTGRES_DATA_DIR} exists
-mkdir -p "${POSTGRES_DATA_DIR}"
+# ensure that ${HYPER_DATA_DIR} exists
+mkdir -p "${HYPER_DATA_DIR}"
 
 echo "==============================================================================="
 echo "Starting Postgres container"
 echo "-------------------------------------------------------------------------------"
-echo "POSTGRES_VERSION: ${POSTGRES_VERSION}"
-echo "POSTGRES_CONTAINER_NAME: ${POSTGRES_CONTAINER_NAME}"
-echo "POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}"
-echo "POSTGRES_DATABASE: ${POSTGRES_DATABASE}"
-echo "POSTGRES_USER: ${POSTGRES_USER}"
-echo "POSTGRES_PORT: ${POSTGRES_PORT}"
-echo "POSTGRES_CUSTOM_CONFIGURATION: ${POSTGRES_CUSTOM_CONFIGURATION}"
-echo "POSTGRES_DATA_DIR (on the host machine):"
-echo "  ${POSTGRES_DATA_DIR}"
-echo "POSTGRES_CSV_DIR (on the host machine):"
-echo "  ${POSTGRES_CSV_DIR}"
+echo "HYPER_VERSION: ${HYPER_VERSION}"
+echo "HYPER_CONTAINER_NAME: ${HYPER_CONTAINER_NAME}"
+echo "HYPER_PASSWORD: ${HYPER_PASSWORD}"
+echo "HYPER_DATABASE: ${HYPER_DATABASE}"
+echo "HYPER_USER: ${HYPER_USER}"
+echo "HYPER_PORT: ${HYPER_PORT}"
+echo "HYPER_CUSTOM_CONFIGURATION: ${HYPER_CUSTOM_CONFIGURATION}"
+echo "HYPER_DATA_DIR (on the host machine):"
+echo "  ${HYPER_DATA_DIR}"
+echo "HYPER_CSV_DIR (on the host machine):"
+echo "  ${HYPER_CSV_DIR}"
 echo "==============================================================================="
 
 docker run --rm \
     --user "$(id -u):$(id -g)" \
-    --publish=${POSTGRES_PORT}:5432 \
-    --name ${POSTGRES_CONTAINER_NAME} \
-    --env POSTGRES_DATABASE=${POSTGRES_DATABASE} \
-    --env POSTGRES_USER=${POSTGRES_USER} \
-    --env POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
+    --publish=${HYPER_PORT}:5432 \
+    --name ${HYPER_CONTAINER_NAME} \
+    --env HYPER_DATABASE=${HYPER_DATABASE} \
+    --env HYPER_USER=${HYPER_USER} \
+    --env HYPER_PASSWORD=${HYPER_PASSWORD} \
     ${MOUNT_CSV_DIR} \
-    --volume=${POSTGRES_DATA_DIR}:/var/lib/postgresql/data:z \
-    ${POSTGRES_CUSTOM_MOUNTS} \
+    --volume=${HYPER_DATA_DIR}:/var/lib/postgresql/data:z \
+    ${HYPER_CUSTOM_MOUNTS} \
     --detach \
-    postgres:${POSTGRES_VERSION} \
-    ${POSTGRES_CUSTOM_ARGS}
+    postgres:${HYPER_VERSION} \
+    ${HYPER_CUSTOM_ARGS}
 
 echo -n "Waiting for the database to start ."
 until python3 scripts/test-db-connection.py > /dev/null 2>&1; do
-    docker ps | grep ${POSTGRES_CONTAINER_NAME} 1>/dev/null 2>&1 || (
+    docker ps | grep ${HYPER_CONTAINER_NAME} 1>/dev/null 2>&1 || (
         echo
         echo "Container lost."
         exit 1

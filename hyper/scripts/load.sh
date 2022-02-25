@@ -8,8 +8,8 @@ cd ..
 
 . scripts/vars.sh
 
-if [ ! -d "${POSTGRES_CSV_DIR}" ]; then
-    echo "Directory ${POSTGRES_CSV_DIR} does not exist."
+if [ ! -d "${HYPER_CSV_DIR}" ]; then
+    echo "Directory ${HYPER_CSV_DIR} does not exist."
     exit 1
 fi
 

@@ -8,5 +8,5 @@ cd ..
 
 . scripts/vars.sh
 
-docker exec -i ${POSTGRES_CONTAINER_NAME} dropdb --if-exists ${POSTGRES_DATABASE} --username=${POSTGRES_USER}
-docker exec -i ${POSTGRES_CONTAINER_NAME} createdb ${POSTGRES_DATABASE} --username=${POSTGRES_USER} --template template0 --locale "POSIX"
+docker exec -i ${HYPER_CONTAINER_NAME} dropdb --if-exists ${HYPER_DATABASE} --username=${HYPER_USER}
+docker exec -i ${HYPER_CONTAINER_NAME} createdb ${HYPER_DATABASE} --username=${HYPER_USER} --template template0 --locale "POSIX"

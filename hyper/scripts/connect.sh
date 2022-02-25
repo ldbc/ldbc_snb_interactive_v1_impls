@@ -8,4 +8,4 @@ cd ..
 
 . scripts/vars.sh
 
-docker exec -it ${POSTGRES_CONTAINER_NAME} psql --username=${POSTGRES_USER} --dbname=${POSTGRES_DATABASE}
+docker exec -it ${HYPER_CONTAINER_NAME} psql --username=${HYPER_USER} --dbname=${HYPER_DATABASE}
