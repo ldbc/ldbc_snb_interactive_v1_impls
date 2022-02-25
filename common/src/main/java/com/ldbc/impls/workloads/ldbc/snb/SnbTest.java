@@ -40,7 +40,7 @@ public abstract class SnbTest<D extends Db>
         workload.close();
     }
 
-    protected abstract Map<String,String> getProperties();
+    protected abstract Map<String, String> getProperties();
 
     public Object runOperation( D db, Operation<?> op ) throws DbException
     {
