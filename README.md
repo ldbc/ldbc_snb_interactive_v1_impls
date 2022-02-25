@@ -106,13 +106,9 @@ To create a new implementation, it is recommended to use one of the existing one
 The implementation process looks roughly as follows:
 
 1. Create a bulk loader which loads the initial data set to the database.
-
 2. Implement the complex and short reads queries (22 in total).
-
 3. Implement the 7 update queries.
-
 4. Test the implementation against the reference implementations using various scale factors.
-
 5. Optimize the implementation.
 
 ## Data sets
