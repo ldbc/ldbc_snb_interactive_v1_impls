@@ -32,17 +32,17 @@ def main(argv=None):
     parser.add_argument(
         "--port",
         type=int,
-        default=int(os.environ.get("POSTGRES_PORT", 5432)),
+        default=int(os.environ.get("POSTGRES_PORT", 7484)),
         help="PostgreSQL port",
     )
     parser.add_argument(
         "--user",
-        default=os.environ.get("POSTGRES_USER", "postgres"),
+        default=os.environ.get("POSTGRES_USER", "ldbcsnb"),
         help="PostgreSQL user name",
     )
     parser.add_argument(
         "--password",
-        default=os.environ.get("POSTGRES_PASSWORD", "mysecretpassword"),
+        default=os.environ.get("POSTGRES_PASSWORD", ""),
         help="PostgreSQL user password",
     )
     options = parser.parse_args(argv)
@@ -65,7 +65,6 @@ def main(argv=None):
 
             print("Adding indexes and constraints")
             con.execute(load_script("ddl/schema_constraints.sql"))
-            con.execute(load_script("ddl/schema_foreign_keys.sql"))
             pg_con.commit()
 
             print("Vacuuming")
