@@ -6,14 +6,12 @@ import com.ldbc.driver.ResultReporter;
 import com.ldbc.impls.workloads.ldbc.snb.operationhandlers.ListOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDbConnectionState;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class PostgresListOperationHandler<TOperation extends Operation<List<TOperationResult>>, TOperationResult>
+        extends PostgresOperationHandler
         implements ListOperationHandler<TOperationResult, TOperation, PostgresDbConnectionState> {
 
     @Override
@@ -25,10 +23,12 @@ public abstract class PostgresListOperationHandler<TOperation extends Operation<
         results.clear();
 
         String queryString = getQueryString(state, operation);
-        try (final Statement stmt = conn.createStatement()) {
+        replaceParameterNamesWithQuestionMarks(operation, queryString);
+
+        try (final PreparedStatement stmt = prepareSnbStatement(operation, conn)) {
             state.logQuery(operation.getClass().getSimpleName(), queryString);
 
-            ResultSet result = stmt.executeQuery(queryString);
+            ResultSet result = stmt.executeQuery();
             while (result.next()) {
                 resultCount++;
 

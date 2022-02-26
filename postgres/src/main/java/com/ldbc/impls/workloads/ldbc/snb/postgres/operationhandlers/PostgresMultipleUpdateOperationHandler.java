@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.util.List;
 
 public abstract class PostgresMultipleUpdateOperationHandler<TOperation extends Operation<LdbcNoResult>>
+        extends PostgresOperationHandler
         implements MultipleUpdateOperationHandler<TOperation, PostgresDbConnectionState> {
 
     @Override

@@ -55,6 +55,10 @@ public abstract class QueryStore {
         return querySpecification;
     }
 
+    public String getParameterizedQuery(QueryType queryType) {
+        return queries.get(queryType);
+    }
+
     public enum QueryType {
 
         // interactive complex queries

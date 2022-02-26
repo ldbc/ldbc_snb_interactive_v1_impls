@@ -24,14 +24,14 @@ from
       select m_creatorid as m_c_creatorid, count(*) as ct1 from message, place
       where
         m_locationid = pl_placeid and pl_name = :countryXName and
-        m_creationdate >= :startDate and  m_creationdate < (:startDate + INTERVAL '1 days' * :durationDays)
+        m_creationdate >= :startDate and  m_creationdate < :startDate
       group by m_c_creatorid
    ) chn,
    (
       select m_creatorid as m_c_creatorid, count(*) as ct2 from message, place
       where
         m_locationid = pl_placeid and pl_name = :countryYName and
-        m_creationdate >= :startDate and  m_creationdate < (:startDate + INTERVAL '1 days' * :durationDays)
+        m_creationdate >= :startDate and  m_creationdate < :startDate
       group by m_creatorid --m_c_creatorid
    ) ind
   where CHN.m_c_creatorid = IND.m_c_creatorid

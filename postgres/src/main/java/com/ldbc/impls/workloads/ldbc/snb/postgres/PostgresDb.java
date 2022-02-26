@@ -53,6 +53,7 @@ import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate5AddForumMembers
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate6AddPost;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate7AddComment;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcUpdate8AddFriendship;
+import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
 import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.converter.PostgresConverter;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.operationhandlers.PostgresListOperationHandler;
@@ -85,7 +86,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState state, LdbcQuery1 operation) {
-            return state.getQueryStore().getQuery1(operation);
+            return state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveComplexQuery1);
         }
 
         @Override
@@ -120,7 +121,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState state, LdbcQuery2 operation) {
-            return state.getQueryStore().getQuery2(operation);
+            return state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveComplexQuery2);
         }
 
         @Override
@@ -140,7 +141,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState state, LdbcQuery3 operation) {
-            return state.getQueryStore().getQuery3(operation);
+            return state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveComplexQuery3);
         }
 
         @Override
@@ -160,7 +161,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState state, LdbcQuery4 operation) {
-            return state.getQueryStore().getQuery4(operation);
+            return state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveComplexQuery4);
         }
 
         @Override
@@ -176,7 +177,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState state, LdbcQuery5 operation) {
-            return state.getQueryStore().getQuery5(operation);
+            return state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveComplexQuery5);
         }
 
         @Override
@@ -192,7 +193,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState state, LdbcQuery6 operation) {
-            return state.getQueryStore().getQuery6(operation);
+            return state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveComplexQuery6);
         }
 
         @Override
@@ -208,7 +209,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState state, LdbcQuery7 operation) {
-            return state.getQueryStore().getQuery7(operation);
+            return state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveComplexQuery7);
         }
 
         @Override
@@ -230,7 +231,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState state, LdbcQuery8 operation) {
-            return state.getQueryStore().getQuery8(operation);
+            return state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveComplexQuery8);
         }
 
         @Override
@@ -250,7 +251,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState state, LdbcQuery9 operation) {
-            return state.getQueryStore().getQuery9(operation);
+            return state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveComplexQuery9);
         }
 
         @Override
@@ -270,7 +271,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState state, LdbcQuery10 operation) {
-            return state.getQueryStore().getQuery10(operation);
+            return state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveComplexQuery10);
         }
 
         @Override
@@ -290,7 +291,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState state, LdbcQuery11 operation) {
-            return state.getQueryStore().getQuery11(operation);
+            return state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveComplexQuery11);
         }
 
         @Override
@@ -309,7 +310,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState state, LdbcQuery12 operation) {
-            return state.getQueryStore().getQuery12(operation);
+            return state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveComplexQuery12);
         }
 
         @Override
@@ -328,7 +329,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState state, LdbcQuery13 operation) {
-            return state.getQueryStore().getQuery13(operation);
+            return state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveComplexQuery13);
         }
 
         @Override
@@ -342,7 +343,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState state, LdbcQuery14 operation) {
-            return state.getQueryStore().getQuery14(operation);
+            return state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveComplexQuery14);
         }
 
         @Override
@@ -358,7 +359,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState state, LdbcShortQuery1PersonProfile operation) {
-            return state.getQueryStore().getShortQuery1PersonProfile(operation);
+            return state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveShortQuery1);
         }
 
         @Override
@@ -380,7 +381,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState state, LdbcShortQuery2PersonPosts operation) {
-            return state.getQueryStore().getShortQuery2PersonPosts(operation);
+            return state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveShortQuery2);
         }
 
         @Override
@@ -401,7 +402,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState state, LdbcShortQuery3PersonFriends operation) {
-            return state.getQueryStore().getShortQuery3PersonFriends(operation);
+            return state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveShortQuery3);
         }
 
         @Override
@@ -419,7 +420,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState state, LdbcShortQuery4MessageContent operation) {
-            return state.getQueryStore().getShortQuery4MessageContent(operation);
+            return state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveShortQuery4);
         }
 
         @Override
@@ -435,7 +436,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState state, LdbcShortQuery5MessageCreator operation) {
-            return state.getQueryStore().getShortQuery5MessageCreator(operation);
+            return state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveShortQuery5);
         }
 
         @Override
@@ -452,7 +453,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState state, LdbcShortQuery6MessageForum operation) {
-            return state.getQueryStore().getShortQuery6MessageForum(operation);
+            return state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveShortQuery6);
         }
 
         @Override
@@ -471,7 +472,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public String getQueryString(PostgresDbConnectionState state, LdbcShortQuery7MessageReplies operation) {
-            return state.getQueryStore().getShortQuery7MessageReplies(operation);
+            return state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveShortQuery7);
         }
 
         @Override
