@@ -39,8 +39,8 @@ public abstract class QueryStore {
         try {
             return new String(Files.readAllBytes(Paths.get(filePath)));
         } catch (IOException e) {
-            //throw new DbException("Could not load query: " + filePath);
-            return "";
+            System.err.printf("Unable to load query from file: %s", filePath);
+            return null;
         }
     }
 
