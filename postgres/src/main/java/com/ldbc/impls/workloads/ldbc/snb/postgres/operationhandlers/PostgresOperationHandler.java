@@ -33,8 +33,6 @@ public class PostgresOperationHandler {
         Map<String, Object> parameters = operation.parameterMap();
         String paramMatchingRegex = String.format(":(%s)", parameters.keySet().stream().collect(Collectors.joining("|")));
 
-        System.out.println("paramMatchingRegex: " + paramMatchingRegex);
-
         Matcher matcher = Pattern.compile(paramMatchingRegex).matcher(queryString);
 
         positions = HashMultimap.create();
@@ -46,10 +44,7 @@ public class PostgresOperationHandler {
             pos++;
         }
 
-        System.out.println("Query param positions: " + positions);
         queryStringWithQuestionMarks = queryString.replaceAll(paramMatchingRegex, "?");
-
-        System.out.println("Query with question marks: " + queryStringWithQuestionMarks);
         return queryStringWithQuestionMarks;
     }
 
