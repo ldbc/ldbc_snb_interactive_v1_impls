@@ -16,20 +16,8 @@ public abstract class PostgresUpdateOperationHandler<TOperation extends Operatio
         implements UpdateOperationHandler<TOperation, PostgresDbConnectionState> {
 
     @Override
-    public void executeOperation(TOperation operation, PostgresDbConnectionState state,
-                                 ResultReporter resultReporter) throws DbException {
-        Connection conn = state.getConnection();
-
-        String queryString = getQueryString(state, operation);
-        replaceParameterNamesWithQuestionMarks(operation, queryString);
-
-        try (final PreparedStatement stmt = prepareSnbStatement(operation, conn)) {
-            state.logQuery(operation.getClass().getSimpleName(), queryString);
-            stmt.executeUpdate();
-        } catch (Exception e) {
-            throw new DbException(e);
-        }
-        resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
+    public String getQueryString(PostgresDbConnectionState state, TOperation operation) {
+        throw new IllegalStateException();
     }
 
 }

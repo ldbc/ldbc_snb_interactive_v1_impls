@@ -1,16 +1,18 @@
 package com.ldbc.impls.workloads.ldbc.snb.postgres;
 
 import com.ldbc.driver.DbException;
+import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.control.LoggingService;
 import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
 import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
 import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.converter.PostgresConverter;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.operationhandlers.PostgresListOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.operationhandlers.PostgresMultipleUpdateOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.operationhandlers.PostgresSingletonOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.operationhandlers.PostgresUpdateOperationHandler;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -436,11 +438,89 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
     }
 
-    public static class Update1AddPerson extends PostgresMultipleUpdateOperationHandler<LdbcUpdate1AddPerson> {
+    public static class Update1AddPerson extends PostgresUpdateOperationHandler<LdbcUpdate1AddPerson> {
 
         @Override
-        public List<String> getQueryString(PostgresDbConnectionState state, LdbcUpdate1AddPerson operation) {
-            return state.getQueryStore().getUpdate1Multiple(operation);
+        public void executeOperation(LdbcUpdate1AddPerson operation, PostgresDbConnectionState state, ResultReporter resultReporter) throws DbException {
+            Connection conn = state.getConnection();
+
+            try {
+                // InteractiveUpdate1AddPerson
+                String queryStringAddPerson = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate1AddPerson);
+                replaceParameterNamesWithQuestionMarks(operation, queryStringAddPerson);
+                try (final PreparedStatement stmt = prepareSnbStatement(operation, conn)) {
+                    state.logQuery(operation.getClass().getSimpleName(), queryStringAddPerson);
+                    stmt.executeUpdate();
+                }
+
+                // InteractiveUpdate1AddPersonCompanies
+                String queryStringAddPersonCompanies = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate1AddPersonCompanies);
+                String paramQueryStringAddPersonCompanies = replaceParameterNamesWithQuestionMarks(operation, queryStringAddPersonCompanies);
+                try (final PreparedStatement stmt = conn.prepareStatement(paramQueryStringAddPersonCompanies)) {
+                    state.logQuery(operation.getClass().getSimpleName(), paramQueryStringAddPersonCompanies);
+                    stmt.setLong(1, operation.personId());
+                    for (LdbcUpdate1AddPerson.Organization o : operation.workAt()) {
+                        stmt.setLong(2, o.organizationId());
+                        stmt.setInt(3, o.year());
+                        stmt.executeUpdate();
+                    }
+                }
+
+                // InteractiveUpdate1AddPersonEmails
+                String queryStringAddPersonEmails = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate1AddPersonEmails);
+                String paramQueryStringAddPersonEmails = replaceParameterNamesWithQuestionMarks(operation, queryStringAddPersonEmails);
+                try (final PreparedStatement stmt = conn.prepareStatement(paramQueryStringAddPersonEmails)) {
+                    state.logQuery(operation.getClass().getSimpleName(), paramQueryStringAddPersonEmails);
+                    stmt.setLong(1, operation.personId());
+                    for (String email : operation.emails()) {
+                        stmt.setString(2, email);
+                        stmt.executeUpdate();
+                    }
+                    stmt.executeUpdate();
+                }
+
+                // InteractiveUpdate1AddPersonLanguages
+                String queryStringAddPersonLanguages = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate1AddPersonLanguages);
+                String paramQueryStringAddPersonLanguages = replaceParameterNamesWithQuestionMarks(operation, queryStringAddPersonLanguages);
+                try (final PreparedStatement stmt = conn.prepareStatement(paramQueryStringAddPersonLanguages)) {
+                    state.logQuery(operation.getClass().getSimpleName(), paramQueryStringAddPersonLanguages);
+                    stmt.setLong(1, operation.personId());
+                    for (String language : operation.languages()) {
+                        stmt.setString(2, language);
+                        stmt.executeUpdate();
+                    }
+                    stmt.executeUpdate();
+                }
+
+                // InteractiveUpdate1AddPersonTags
+                String queryStringAddPersonTags = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate1AddPersonTags);
+                String paramQueryStringAddPersonTags = replaceParameterNamesWithQuestionMarks(operation, queryStringAddPersonTags);
+                try (final PreparedStatement stmt = conn.prepareStatement(paramQueryStringAddPersonTags)) {
+                    state.logQuery(operation.getClass().getSimpleName(), paramQueryStringAddPersonTags);
+                    stmt.setLong(1, operation.personId());
+                    for (long tagId : operation.tagIds()) {
+                        stmt.setLong(2, tagId);
+                        stmt.executeUpdate();
+                    }
+                    stmt.executeUpdate();
+                }
+
+                // InteractiveUpdate1AddPersonUniversities
+                String queryStringAddPersonUniversities = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate1AddPersonUniversities);
+                String paramQueryStringAddPersonUniversities = replaceParameterNamesWithQuestionMarks(operation, queryStringAddPersonUniversities);
+                try (final PreparedStatement stmt = conn.prepareStatement(paramQueryStringAddPersonUniversities)) {
+                    state.logQuery(operation.getClass().getSimpleName(), paramQueryStringAddPersonUniversities);
+                    stmt.setLong(1, operation.personId());
+                    for (LdbcUpdate1AddPerson.Organization o : operation.studyAt()) {
+                        stmt.setLong(2, o.organizationId());
+                        stmt.setInt(3, o.year());
+                        stmt.executeUpdate();
+                    }
+                }
+            } catch (Exception e) {
+                throw new DbException(e);
+            }
+            resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
 
     }
@@ -448,8 +528,20 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
     public static class Update2AddPostLike extends PostgresUpdateOperationHandler<LdbcUpdate2AddPostLike> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState state, LdbcUpdate2AddPostLike operation) {
-            return state.getQueryStore().getUpdate2(operation);
+        public void executeOperation(LdbcUpdate2AddPostLike operation, PostgresDbConnectionState state, ResultReporter resultReporter) throws DbException {
+            Connection conn = state.getConnection();
+
+            try {
+                String queryString = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate2);
+                replaceParameterNamesWithQuestionMarks(operation, queryString);
+                try (final PreparedStatement stmt = prepareSnbStatement(operation, conn)) {
+                    state.logQuery(operation.getClass().getSimpleName(), queryString);
+                    stmt.executeUpdate();
+                }
+            } catch (Exception e) {
+                throw new DbException(e);
+            }
+            resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
 
     }
@@ -457,40 +549,142 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
     public static class Update3AddCommentLike extends PostgresUpdateOperationHandler<LdbcUpdate3AddCommentLike> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState state, LdbcUpdate3AddCommentLike operation) {
-            return state.getQueryStore().getUpdate3(operation);
+        public void executeOperation(LdbcUpdate3AddCommentLike operation, PostgresDbConnectionState state, ResultReporter resultReporter) throws DbException {
+            Connection conn = state.getConnection();
+
+            try {
+                String queryString = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate3);
+                replaceParameterNamesWithQuestionMarks(operation, queryString);
+                try (final PreparedStatement stmt = prepareSnbStatement(operation, conn)) {
+                    state.logQuery(operation.getClass().getSimpleName(), queryString);
+                    stmt.executeUpdate();
+                }
+            } catch (Exception e) {
+                throw new DbException(e);
+            }
+            resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
+
     }
 
-    public static class Update4AddForum extends PostgresMultipleUpdateOperationHandler<LdbcUpdate4AddForum> {
+    public static class Update4AddForum extends PostgresUpdateOperationHandler<LdbcUpdate4AddForum> {
 
         @Override
-        public List<String> getQueryString(PostgresDbConnectionState state, LdbcUpdate4AddForum operation) {
-            return state.getQueryStore().getUpdate4Multiple(operation);
+        public void executeOperation(LdbcUpdate4AddForum operation, PostgresDbConnectionState state, ResultReporter resultReporter) throws DbException {
+            Connection conn = state.getConnection();
+
+            try {
+                // InteractiveUpdate4AddForum
+                String queryStringAddForum = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate4AddForum);
+                replaceParameterNamesWithQuestionMarks(operation, queryStringAddForum);
+                try (final PreparedStatement stmt = prepareSnbStatement(operation, conn)) {
+                    state.logQuery(operation.getClass().getSimpleName(), queryStringAddForum);
+                    stmt.executeUpdate();
+                }
+                // InteractiveUpdate4AddForumTags
+                String queryStringAddForumTags = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate4AddForumTags);
+                String paramQueryStringAddForumTags = replaceParameterNamesWithQuestionMarks(operation, queryStringAddForumTags);
+                try (final PreparedStatement stmt = conn.prepareStatement(paramQueryStringAddForumTags)) {
+                    state.logQuery(operation.getClass().getSimpleName(), paramQueryStringAddForumTags);
+                    stmt.setLong(1, operation.forumId());
+                    for (long tagId: operation.tagIds()) {
+                        stmt.setLong(2, tagId);
+                        stmt.executeUpdate();
+                    }
+                }
+            } catch (Exception e) {
+                throw new DbException(e);
+            }
+            resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
+
     }
 
     public static class Update5AddForumMembership extends PostgresUpdateOperationHandler<LdbcUpdate5AddForumMembership> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState state, LdbcUpdate5AddForumMembership operation) {
-            return state.getQueryStore().getUpdate5(operation);
+        public void executeOperation(LdbcUpdate5AddForumMembership operation, PostgresDbConnectionState state, ResultReporter resultReporter) throws DbException {
+            Connection conn = state.getConnection();
+
+            try {
+                String queryString = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate5);
+                replaceParameterNamesWithQuestionMarks(operation, queryString);
+                try (final PreparedStatement stmt = prepareSnbStatement(operation, conn)) {
+                    state.logQuery(operation.getClass().getSimpleName(), queryString);
+                    stmt.executeUpdate();
+                }
+            } catch (Exception e) {
+                throw new DbException(e);
+            }
+            resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
+
     }
 
-    public static class Update6AddPost extends PostgresMultipleUpdateOperationHandler<LdbcUpdate6AddPost> {
+    public static class Update6AddPost extends PostgresUpdateOperationHandler<LdbcUpdate6AddPost> {
 
         @Override
-        public List<String> getQueryString(PostgresDbConnectionState state, LdbcUpdate6AddPost operation) {
-            return state.getQueryStore().getUpdate6Multiple(operation);
+        public void executeOperation(LdbcUpdate6AddPost operation, PostgresDbConnectionState state, ResultReporter resultReporter) throws DbException {
+            Connection conn = state.getConnection();
+
+            try {
+                // InteractiveUpdate6AddPost
+                String queryStringAddPost = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate6AddPost);
+                replaceParameterNamesWithQuestionMarks(operation, queryStringAddPost);
+                try (final PreparedStatement stmt = prepareSnbStatement(operation, conn)) {
+                    state.logQuery(operation.getClass().getSimpleName(), queryStringAddPost);
+                    stmt.executeUpdate();
+                }
+
+                // InteractiveUpdate6AddPostTags
+                String queryStringAddPostTags = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate6AddPostTags);
+                String paramQueryStringAddPostTags = replaceParameterNamesWithQuestionMarks(operation, queryStringAddPostTags);
+                try (final PreparedStatement stmt = conn.prepareStatement(paramQueryStringAddPostTags)) {
+                    state.logQuery(operation.getClass().getSimpleName(), paramQueryStringAddPostTags);
+                    stmt.setLong(1, operation.postId());
+                    for (long tagId: operation.tagIds()) {
+                        stmt.setLong(2, tagId);
+                        stmt.executeUpdate();
+                    }
+                }
+            } catch (Exception e) {
+                throw new DbException(e);
+            }
+            resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
+
     }
 
-    public static class Update7AddComment extends PostgresMultipleUpdateOperationHandler<LdbcUpdate7AddComment> {
+    public static class Update7AddComment extends PostgresUpdateOperationHandler<LdbcUpdate7AddComment> {
 
         @Override
-        public List<String> getQueryString(PostgresDbConnectionState state, LdbcUpdate7AddComment operation) {
-            return state.getQueryStore().getUpdate7Multiple(operation);
+        public void executeOperation(LdbcUpdate7AddComment operation, PostgresDbConnectionState state, ResultReporter resultReporter) throws DbException {
+            Connection conn = state.getConnection();
+
+            try {
+                // InteractiveUpdate7AddComment
+                String queryStringAddComment = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate7AddComment);
+                replaceParameterNamesWithQuestionMarks(operation, queryStringAddComment);
+                try (final PreparedStatement stmt = prepareSnbStatement(operation, conn)) {
+                    state.logQuery(operation.getClass().getSimpleName(), queryStringAddComment);
+                    stmt.executeUpdate();
+                }
+
+                // InteractiveUpdate7AddCommentTags
+                String queryStringAddCommentTags = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate7AddCommentTags);
+                String paramQueryStringAddCommentTags = replaceParameterNamesWithQuestionMarks(operation, queryStringAddCommentTags);
+                try (final PreparedStatement stmt = conn.prepareStatement(paramQueryStringAddCommentTags)) {
+                    state.logQuery(operation.getClass().getSimpleName(), paramQueryStringAddCommentTags);
+                    stmt.setLong(1, operation.commentId());
+                    for (long tagId: operation.tagIds()) {
+                        stmt.setLong(2, tagId);
+                        stmt.executeUpdate();
+                    }
+                }
+            } catch (Exception e) {
+                throw new DbException(e);
+            }
+            resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
 
     }
@@ -498,8 +692,20 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
     public static class Update8AddFriendship extends PostgresUpdateOperationHandler<LdbcUpdate8AddFriendship> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState state, LdbcUpdate8AddFriendship operation) {
-            return state.getQueryStore().getUpdate8(operation);
+        public void executeOperation(LdbcUpdate8AddFriendship operation, PostgresDbConnectionState state, ResultReporter resultReporter) throws DbException {
+            Connection conn = state.getConnection();
+
+            try {
+                String queryString = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate8);
+                replaceParameterNamesWithQuestionMarks(operation, queryString);
+                try (final PreparedStatement stmt = prepareSnbStatement(operation, conn)) {
+                    state.logQuery(operation.getClass().getSimpleName(), queryString);
+                    stmt.executeUpdate();
+                }
+            } catch (Exception e) {
+                throw new DbException(e);
+            }
+            resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
 
     }

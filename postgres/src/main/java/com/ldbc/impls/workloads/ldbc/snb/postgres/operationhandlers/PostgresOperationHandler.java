@@ -2,17 +2,16 @@ package com.ldbc.impls.workloads.ldbc.snb.postgres.operationhandlers;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.ldbc.driver.DbException;
 import com.ldbc.driver.Operation;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -67,17 +66,20 @@ public class PostgresOperationHandler {
                     stmt.setLong(parameterIndex, (Long) value);
                 } else if (value instanceof String) {
                     stmt.setString(parameterIndex, (String) value);
-                } else if (value instanceof java.util.Date) {
-                    // Date parameters are converted to ZonedDateTime values
-                    Instant instant = ((Date) value).toInstant();
-                    ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, ZoneId.of("GMT"));
-                    stmt.setObject(parameterIndex, zdt.toOffsetDateTime());
+                } else if (value instanceof Date) {
+                    stmt.setObject(parameterIndex, convertDate((Date) value));
                 } else {
-                    throw new RuntimeException("fallthrough reached");
+                    throw new RuntimeException("Type not supported: " + value.getClass().getName());
                 }
             }
         }
         return stmt;
+    }
+
+    public OffsetDateTime convertDate(Date date) {
+        Instant instant = date.toInstant();
+        ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, ZoneId.of("GMT"));
+        return zdt.toOffsetDateTime();
     }
 
 }

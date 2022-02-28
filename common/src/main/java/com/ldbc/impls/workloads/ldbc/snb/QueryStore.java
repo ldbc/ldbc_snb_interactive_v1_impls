@@ -106,10 +106,13 @@ public abstract class QueryStore {
         InteractiveUpdate1AddPersonLanguages   ("interactive-update-1-add-person-languages"),
         InteractiveUpdate1AddPersonTags        ("interactive-update-1-add-person-tags"),
         InteractiveUpdate1AddPersonUniversities("interactive-update-1-add-person-universities"),
+
         InteractiveUpdate4AddForum             ("interactive-update-4-add-forum"),
         InteractiveUpdate4AddForumTags         ("interactive-update-4-add-forum-tags"),
+
         InteractiveUpdate6AddPost              ("interactive-update-6-add-post"),
         InteractiveUpdate6AddPostTags          ("interactive-update-6-add-post-tags"),
+
         InteractiveUpdate7AddComment           ("interactive-update-7-add-comment"),
         InteractiveUpdate7AddCommentTags       ("interactive-update-7-add-comment-tags"),
 
