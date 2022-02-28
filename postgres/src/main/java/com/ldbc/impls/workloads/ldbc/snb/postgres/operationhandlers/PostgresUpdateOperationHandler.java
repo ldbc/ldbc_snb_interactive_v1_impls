@@ -8,6 +8,7 @@ import com.ldbc.impls.workloads.ldbc.snb.operationhandlers.UpdateOperationHandle
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDbConnectionState;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 
 public abstract class PostgresUpdateOperationHandler<TOperation extends Operation<LdbcNoResult>>
@@ -18,10 +19,13 @@ public abstract class PostgresUpdateOperationHandler<TOperation extends Operatio
     public void executeOperation(TOperation operation, PostgresDbConnectionState state,
                                  ResultReporter resultReporter) throws DbException {
         Connection conn = state.getConnection();
+
         String queryString = getQueryString(state, operation);
-        try (final Statement stmt = conn.createStatement()) {
+        replaceParameterNamesWithQuestionMarks(operation, queryString);
+
+        try (final PreparedStatement stmt = prepareSnbStatement(operation, conn)) {
             state.logQuery(operation.getClass().getSimpleName(), queryString);
-            stmt.execute(queryString);
+            stmt.executeUpdate();
         } catch (Exception e) {
             throw new DbException(e);
         }

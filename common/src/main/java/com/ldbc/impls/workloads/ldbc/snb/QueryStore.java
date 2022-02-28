@@ -465,7 +465,7 @@ public abstract class QueryStore {
                     QueryType.InteractiveUpdate1AddPersonTags,
                     ImmutableMap.of(
                             LdbcUpdate1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.personId()),
-                            "tagId", getConverter().convertId(tagId))
+                            "tagIds", getConverter().convertId(tagId))
                     )
             );
         }
@@ -499,7 +499,7 @@ public abstract class QueryStore {
                     QueryType.InteractiveUpdate4AddForumTags,
                     ImmutableMap.of(
                             LdbcUpdate4AddForum.FORUM_ID, getConverter().convertIdForInsertion(operation.forumId()),
-                            "tagId", getConverter().convertId(tagId))
+                            "tagIds", getConverter().convertId(tagId))
                     )
             );
         }
@@ -530,7 +530,7 @@ public abstract class QueryStore {
                     QueryType.InteractiveUpdate6AddPostTags,
                     ImmutableMap.of(
                             LdbcUpdate6AddPost.POST_ID, getConverter().convertIdForInsertion(operation.postId()),
-                            "tagId", getConverter().convertId(tagId))
+                            "tagIds", getConverter().convertId(tagId))
                     )
             );
         }
@@ -561,7 +561,7 @@ public abstract class QueryStore {
                     QueryType.InteractiveUpdate6AddPostTags,
                     ImmutableMap.of(
                             LdbcUpdate6AddPost.POST_ID, getConverter().convertIdForInsertion(operation.postId()),
-                            "tagId", getConverter().convertId(tagId))
+                            "tagIds", getConverter().convertId(tagId))
                     )
             );
         }
@@ -604,7 +604,7 @@ public abstract class QueryStore {
                     QueryType.InteractiveUpdate7AddCommentTags,
                     ImmutableMap.of(
                             LdbcUpdate7AddComment.COMMENT_ID, getConverter().convertIdForInsertion(operation.commentId()),
-                            "tagId", getConverter().convertId(tagId))
+                            "tagIds", getConverter().convertId(tagId))
                     )
             );
         }

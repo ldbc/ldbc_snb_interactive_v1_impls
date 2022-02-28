@@ -8,7 +8,7 @@ import com.ldbc.impls.workloads.ldbc.snb.operationhandlers.MultipleUpdateOperati
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDbConnectionState;
 
 import java.sql.Connection;
-import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.util.List;
 
 public abstract class PostgresMultipleUpdateOperationHandler<TOperation extends Operation<LdbcNoResult>>
@@ -22,10 +22,11 @@ public abstract class PostgresMultipleUpdateOperationHandler<TOperation extends 
         try {
             List<String> queryStrings = getQueryString(state, operation);
             for (String queryString : queryStrings) {
-                Statement stmt = conn.createStatement();
-                state.logQuery(operation.getClass().getSimpleName(), queryString);
-                stmt.execute(queryString);
-                stmt.close();
+                replaceParameterNamesWithQuestionMarks(operation, queryString);
+                try (final PreparedStatement stmt = prepareSnbStatement(operation, conn)) {
+                    state.logQuery(operation.getClass().getSimpleName(), queryString);
+                    stmt.executeUpdate();
+                }
             }
         } catch (Exception e) {
             throw new DbException(e);
