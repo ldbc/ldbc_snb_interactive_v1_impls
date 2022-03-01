@@ -13,7 +13,6 @@ echo "QUERY_PATH: ${QUERY_PATH}"
 echo "==============================================================================="
 
 gsql create_schema.gsql
-gsql create_database.gsql
 
 gsql --graph LDBC_SNB load_static_1.gsql
 gsql --graph LDBC_SNB load_static_2.gsql
