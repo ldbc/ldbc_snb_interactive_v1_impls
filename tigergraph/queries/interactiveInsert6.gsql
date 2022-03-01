@@ -14,8 +14,8 @@
 
 
       INSERT INTO Post VALUES(postId, imageFile, creationDate, locationIP, browserUsed, language, content, length);
-      INSERT INTO HAS_CREATOR VALUES(postId Post, authorPersonId Person, creationDate);
-      INSERT INTO CONTAINER_OF VALUES(forumId Forum, postId Post, creationDate);
+      INSERT INTO HAS_CREATOR VALUES(postId Post, authorPersonId Person);
+      INSERT INTO CONTAINER_OF VALUES(forumId Forum, postId Post);
       INSERT INTO IS_LOCATED_IN VALUES(postId Post, countryId);
 
       tmp = {tagIds};
