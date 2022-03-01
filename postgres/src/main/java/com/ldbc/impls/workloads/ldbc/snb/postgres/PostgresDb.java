@@ -1,5 +1,6 @@
 package com.ldbc.impls.workloads.ldbc.snb.postgres;
 
+import com.google.common.collect.ImmutableList;
 import com.ldbc.driver.DbException;
 import com.ldbc.driver.ResultReporter;
 import com.ldbc.driver.control.LoggingService;
@@ -455,7 +456,8 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
                 // InteractiveUpdate1AddPersonCompanies
                 String queryStringAddPersonCompanies = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate1AddPersonCompanies);
-                String paramQueryStringAddPersonCompanies = replaceParameterNamesWithQuestionMarks(operation, queryStringAddPersonCompanies);
+                String paramQueryStringAddPersonCompanies = replaceParameterNamesWithQuestionMarks(operation, queryStringAddPersonCompanies,
+                        ImmutableList.of("organizationId", "worksFromYear"));
                 try (final PreparedStatement stmt = conn.prepareStatement(paramQueryStringAddPersonCompanies)) {
                     state.logQuery(operation.getClass().getSimpleName(), paramQueryStringAddPersonCompanies);
                     stmt.setLong(1, operation.personId());
@@ -468,7 +470,8 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
                 // InteractiveUpdate1AddPersonEmails
                 String queryStringAddPersonEmails = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate1AddPersonEmails);
-                String paramQueryStringAddPersonEmails = replaceParameterNamesWithQuestionMarks(operation, queryStringAddPersonEmails);
+                String paramQueryStringAddPersonEmails = replaceParameterNamesWithQuestionMarks(operation, queryStringAddPersonEmails,
+                        ImmutableList.of("email"));
                 try (final PreparedStatement stmt = conn.prepareStatement(paramQueryStringAddPersonEmails)) {
                     state.logQuery(operation.getClass().getSimpleName(), paramQueryStringAddPersonEmails);
                     stmt.setLong(1, operation.personId());
@@ -480,7 +483,8 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
                 // InteractiveUpdate1AddPersonLanguages
                 String queryStringAddPersonLanguages = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate1AddPersonLanguages);
-                String paramQueryStringAddPersonLanguages = replaceParameterNamesWithQuestionMarks(operation, queryStringAddPersonLanguages);
+                String paramQueryStringAddPersonLanguages = replaceParameterNamesWithQuestionMarks(operation, queryStringAddPersonLanguages,
+                        ImmutableList.of("language"));
                 try (final PreparedStatement stmt = conn.prepareStatement(paramQueryStringAddPersonLanguages)) {
                     state.logQuery(operation.getClass().getSimpleName(), paramQueryStringAddPersonLanguages);
                     stmt.setLong(1, operation.personId());
@@ -500,12 +504,12 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                         stmt.setLong(2, tagId);
                         stmt.executeUpdate();
                     }
-                    stmt.executeUpdate();
                 }
 
                 // InteractiveUpdate1AddPersonUniversities
                 String queryStringAddPersonUniversities = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate1AddPersonUniversities);
-                String paramQueryStringAddPersonUniversities = replaceParameterNamesWithQuestionMarks(operation, queryStringAddPersonUniversities);
+                String paramQueryStringAddPersonUniversities = replaceParameterNamesWithQuestionMarks(operation, queryStringAddPersonUniversities,
+                        ImmutableList.of("organizationId", "studiesFromYear"));
                 try (final PreparedStatement stmt = conn.prepareStatement(paramQueryStringAddPersonUniversities)) {
                     state.logQuery(operation.getClass().getSimpleName(), paramQueryStringAddPersonUniversities);
                     stmt.setLong(1, operation.personId());
