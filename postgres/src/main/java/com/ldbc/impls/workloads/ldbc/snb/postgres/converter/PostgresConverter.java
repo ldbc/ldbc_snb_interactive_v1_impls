@@ -6,6 +6,10 @@ import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -82,6 +86,12 @@ public class PostgresConverter extends Converter {
 
     public static long stringTimestampToEpoch(ResultSet r, int column) throws SQLException {
         return r.getTimestamp(column, Calendar.getInstance(TimeZone.getTimeZone("GMT"))).getTime();
+    }
+
+    public static OffsetDateTime convertDateToOffsetDateTime(Date date) {
+        Instant instant = date.toInstant();
+        ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, ZoneId.of("GMT"));
+        return zdt.toOffsetDateTime();
     }
 
 }

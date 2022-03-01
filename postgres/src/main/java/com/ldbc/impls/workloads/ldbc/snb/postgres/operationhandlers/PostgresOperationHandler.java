@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
 import com.ldbc.driver.Operation;
+import com.ldbc.impls.workloads.ldbc.snb.postgres.converter.PostgresConverter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -77,19 +78,13 @@ public class PostgresOperationHandler {
                 } else if (value instanceof String) {
                     stmt.setString(parameterIndex, (String) value);
                 } else if (value instanceof Date) {
-                    stmt.setObject(parameterIndex, convertDate((Date) value));
+                    stmt.setObject(parameterIndex, PostgresConverter.convertDateToOffsetDateTime((Date) value));
                 } else {
                     throw new RuntimeException("Type not supported: " + value.getClass().getName());
                 }
             }
         }
         return stmt;
-    }
-
-    public OffsetDateTime convertDate(Date date) {
-        Instant instant = date.toInstant();
-        ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, ZoneId.of("GMT"));
-        return zdt.toOffsetDateTime();
     }
 
 }
