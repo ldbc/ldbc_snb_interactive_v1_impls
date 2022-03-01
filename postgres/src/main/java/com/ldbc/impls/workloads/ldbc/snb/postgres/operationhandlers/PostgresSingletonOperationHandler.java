@@ -6,12 +6,10 @@ import com.ldbc.driver.ResultReporter;
 import com.ldbc.impls.workloads.ldbc.snb.operationhandlers.SingletonOperationHandler;
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDbConnectionState;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public abstract class PostgresSingletonOperationHandler<TOperation extends Operation<TOperationResult>, TOperationResult>
+        extends PostgresOperationHandler
         implements SingletonOperationHandler<TOperationResult, TOperation, PostgresDbConnectionState> {
 
     @Override
@@ -20,17 +18,22 @@ public abstract class PostgresSingletonOperationHandler<TOperation extends Opera
         Connection conn = state.getConnection();
         TOperationResult tuple = null;
         int resultCount = 0;
+
         String queryString = getQueryString(state, operation);
-        try (final Statement stmt = conn.createStatement()) {
+        replaceParameterNamesWithQuestionMarks(operation, queryString);
+
+        try {
+            final PreparedStatement stmt = prepareAndSetParametersInPreparedStatement(operation, queryString, conn);
             state.logQuery(operation.getClass().getSimpleName(), queryString);
 
-            ResultSet result = stmt.executeQuery(queryString);
+            ResultSet result = stmt.executeQuery();
             if (result.next()) {
                 resultCount++;
 
                 tuple = convertSingleResult(result);
-                if (state.isPrintResults())
+                if (state.isPrintResults()) {
                     System.out.println(tuple.toString());
+                }
             }
         } catch (Exception e) {
             throw new DbException(e);

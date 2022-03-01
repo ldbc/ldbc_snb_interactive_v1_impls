@@ -39,8 +39,8 @@ public abstract class QueryStore {
         try {
             return new String(Files.readAllBytes(Paths.get(filePath)));
         } catch (IOException e) {
-            //throw new DbException("Could not load query: " + filePath);
-            return "";
+            System.err.printf("Unable to load query from file: %s", filePath);
+            return null;
         }
     }
 
@@ -53,6 +53,10 @@ public abstract class QueryStore {
             );
         }
         return querySpecification;
+    }
+
+    public String getParameterizedQuery(QueryType queryType) {
+        return queries.get(queryType);
     }
 
     public enum QueryType {
@@ -102,10 +106,13 @@ public abstract class QueryStore {
         InteractiveUpdate1AddPersonLanguages   ("interactive-update-1-add-person-languages"),
         InteractiveUpdate1AddPersonTags        ("interactive-update-1-add-person-tags"),
         InteractiveUpdate1AddPersonUniversities("interactive-update-1-add-person-universities"),
+
         InteractiveUpdate4AddForum             ("interactive-update-4-add-forum"),
         InteractiveUpdate4AddForumTags         ("interactive-update-4-add-forum-tags"),
+
         InteractiveUpdate6AddPost              ("interactive-update-6-add-post"),
         InteractiveUpdate6AddPostTags          ("interactive-update-6-add-post-tags"),
+
         InteractiveUpdate7AddComment           ("interactive-update-7-add-comment"),
         InteractiveUpdate7AddCommentTags       ("interactive-update-7-add-comment-tags"),
 

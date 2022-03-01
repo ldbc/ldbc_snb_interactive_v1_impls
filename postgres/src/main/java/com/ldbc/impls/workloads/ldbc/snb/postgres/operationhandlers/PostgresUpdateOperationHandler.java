@@ -8,23 +8,16 @@ import com.ldbc.impls.workloads.ldbc.snb.operationhandlers.UpdateOperationHandle
 import com.ldbc.impls.workloads.ldbc.snb.postgres.PostgresDbConnectionState;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 
 public abstract class PostgresUpdateOperationHandler<TOperation extends Operation<LdbcNoResult>>
+        extends PostgresOperationHandler
         implements UpdateOperationHandler<TOperation, PostgresDbConnectionState> {
 
     @Override
-    public void executeOperation(TOperation operation, PostgresDbConnectionState state,
-                                 ResultReporter resultReporter) throws DbException {
-        Connection conn = state.getConnection();
-        String queryString = getQueryString(state, operation);
-        try (final Statement stmt = conn.createStatement()) {
-            state.logQuery(operation.getClass().getSimpleName(), queryString);
-            stmt.execute(queryString);
-        } catch (Exception e) {
-            throw new DbException(e);
-        }
-        resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
+    public String getQueryString(PostgresDbConnectionState state, TOperation operation) {
+        throw new IllegalStateException();
     }
 
 }
