@@ -25,7 +25,8 @@ public abstract class PostgresListOperationHandler<TOperation extends Operation<
         String queryString = getQueryString(state, operation);
         replaceParameterNamesWithQuestionMarks(operation, queryString);
 
-        try (final PreparedStatement stmt = prepareSnbStatement(operation, conn)) {
+        try {
+            final PreparedStatement stmt = prepareAndSetParametersInPreparedStatement(operation, queryString, conn);
             state.logQuery(operation.getClass().getSimpleName(), queryString);
 
             ResultSet result = stmt.executeQuery();

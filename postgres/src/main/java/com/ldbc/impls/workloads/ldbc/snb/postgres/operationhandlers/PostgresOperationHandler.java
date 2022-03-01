@@ -9,11 +9,8 @@ import com.ldbc.impls.workloads.ldbc.snb.postgres.converter.PostgresConverter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.time.Instant;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -22,10 +19,9 @@ import java.util.stream.Collectors;
 
 public class PostgresOperationHandler {
 
-    private String queryStringWithQuestionMarks;
-    private Multimap<String, Integer> positions;
-
-    // TODO: cache resulting query/parameter multimap
+    private Map<String, String> queryStringWithQuestionMarksCache  = new HashMap<>();
+    private Map<String, Multimap<String, Integer>> positionsCache = new HashMap<>();
+    private Map<String, PreparedStatement> stmtCache = new HashMap<>();
 
     /**
      * Replaces parameters with question marks (e.g. ":personId" -> "?").
@@ -34,12 +30,16 @@ public class PostgresOperationHandler {
      * Therefore, queries with parameters in comments are likely to break.
      */
     public String replaceParameterNamesWithQuestionMarks(Operation operation, String queryString, List<String> extraParameterNames) {
+        if (queryStringWithQuestionMarksCache.containsKey(operation)) {
+            return queryStringWithQuestionMarksCache.get(operation);
+        }
+
         Map<String, Object> parameters = operation.parameterMap();
         String paramMatchingRegex = String.format(":(%s)", parameters.keySet().stream().collect(Collectors.joining("|")));
 
         Matcher matcher = Pattern.compile(paramMatchingRegex).matcher(queryString);
 
-        positions = HashMultimap.create();
+        Multimap<String, Integer> positions = HashMultimap.create();
         // JDBC parameters use 1-based indexing
         int pos = 1;
         while (matcher.find()) {
@@ -49,7 +49,7 @@ public class PostgresOperationHandler {
         }
 
         // change parameters to question mark
-        queryStringWithQuestionMarks = queryString.replaceAll(paramMatchingRegex, "?");
+        String queryStringWithQuestionMarks = queryString.replaceAll(paramMatchingRegex, "?");
 
         // change extra parameters to question mark
         if (!extraParameterNames.isEmpty()) {
@@ -57,6 +57,8 @@ public class PostgresOperationHandler {
             queryStringWithQuestionMarks = queryStringWithQuestionMarks.replaceAll(extraParameterMatchingRegex, "?");
         }
 
+        queryStringWithQuestionMarksCache.put(queryString, queryStringWithQuestionMarks);
+        positionsCache.put(queryString, positions);
         return queryStringWithQuestionMarks;
     }
 
@@ -64,8 +66,10 @@ public class PostgresOperationHandler {
         return replaceParameterNamesWithQuestionMarks(operation, queryString, ImmutableList.of());
     }
 
-    public PreparedStatement prepareSnbStatement(Operation operation, Connection conn) throws SQLException {
-        PreparedStatement stmt = conn.prepareStatement(queryStringWithQuestionMarks);
+    public PreparedStatement setParametersInPreparedStatement(Operation operation, String queryString) throws SQLException {
+        PreparedStatement stmt = stmtCache.get(queryString);
+        Multimap<String, Integer> positions = positionsCache.get(queryString);
+
         Map<String, Object> parameterMap = operation.parameterMap();
         for (Map.Entry<String, Object> parameter : parameterMap.entrySet()) {
             for (Integer parameterIndex : positions.get(parameter.getKey())) {
@@ -85,6 +89,22 @@ public class PostgresOperationHandler {
             }
         }
         return stmt;
+    }
+
+    public PreparedStatement prepareSnbStatement(String queryString, Connection conn) throws SQLException {
+        if (stmtCache.containsKey(queryString)) {
+            return stmtCache.get(queryString);
+        }
+
+        String queryStringWithQuestionMarks = queryStringWithQuestionMarksCache.get(queryString);
+        PreparedStatement stmt = conn.prepareStatement(queryStringWithQuestionMarks);
+        stmtCache.put(queryString, stmt);
+        return stmt;
+    }
+
+    public PreparedStatement prepareAndSetParametersInPreparedStatement(Operation operation, String queryString, Connection conn) throws SQLException {
+        prepareSnbStatement(queryString, conn);
+        return setParametersInPreparedStatement(operation, queryString);
     }
 
 }
