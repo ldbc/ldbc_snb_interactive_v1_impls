@@ -49,15 +49,15 @@ CREATE LOADING JOB load_dynamic_1 {
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
     LOAD forum_containerOf_post
-        TO EDGE CONTAINER_OF VALUES ($0, $1, _)
+        TO EDGE CONTAINER_OF VALUES ($0, $1)
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
     LOAD post_isLocatedIn_place
-        TO EDGE IS_LOCATED_IN VALUES ($0 Post, $1 Country)
+        TO EDGE MESG_LOCATED_IN VALUES ($0 Post, $1 Country)
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
     LOAD comment_isLocatedIn_place
-        TO EDGE IS_LOCATED_IN VALUES ($0 Comment, $1 Country)
+        TO EDGE MESG_LOCATED_IN VALUES ($0 Comment, $1 Country)
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
     LOAD person_isLocatedIn_place
@@ -65,7 +65,7 @@ CREATE LOADING JOB load_dynamic_1 {
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
     LOAD post_hasCreator_person
-        TO EDGE HAS_CREATOR VALUES ($0 Post, $1 Person, _)
+        TO EDGE HAS_CREATOR VALUES ($0 Post, $1 Person)
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
     LOAD person_knows_person
@@ -73,11 +73,11 @@ CREATE LOADING JOB load_dynamic_1 {
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
     LOAD comment_hasCreator_person
-        TO EDGE HAS_CREATOR VALUES ($0 Comment, $1 Person, _)
+        TO EDGE HAS_CREATOR VALUES ($0 Comment, $1 Person)
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
     LOAD person_hasInterest_tag
-        TO EDGE HAS_INTEREST VALUES ($0 Person, $1 Tag, _)
+        TO EDGE HAS_INTEREST VALUES ($0 Person, $1 Tag)
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
     LOAD person_likes_comment
@@ -85,11 +85,11 @@ CREATE LOADING JOB load_dynamic_1 {
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
     LOAD person_studyAt_organisation
-        TO EDGE STUDY_AT VALUES ($0 Person, $1 University, $2, _)
+        TO EDGE STUDY_AT VALUES ($0 Person, $1 University, $2)
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
     LOAD person_workAt_organisation
-        TO EDGE WORK_AT VALUES ($0 Person, $1 Company, $2, _)
+        TO EDGE WORK_AT VALUES ($0 Person, $1 Company, $2)
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
     LOAD forum_hasMember_person
@@ -97,19 +97,19 @@ CREATE LOADING JOB load_dynamic_1 {
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
      LOAD forum_hasModerator_person
-        TO EDGE HAS_MODERATOR VALUES ($0, $1, _)
+        TO EDGE HAS_MODERATOR VALUES ($0, $1)
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
     LOAD comment_hasTag_tag
-        TO EDGE HAS_TAG VALUES ($0 Comment, $1 Tag, _)
+        TO EDGE HAS_TAG VALUES ($0 Comment, $1 Tag)
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
     LOAD post_hasTag_tag
-        TO EDGE HAS_TAG VALUES ($0 Post, $1 Tag, _)
+        TO EDGE HAS_TAG VALUES ($0 Post, $1 Tag)
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
     LOAD forum_hasTag_tag
-        TO EDGE HAS_TAG VALUES ($0 Forum, $1 Tag, _)
+        TO EDGE HAS_TAG VALUES ($0 Forum, $1 Tag)
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
     LOAD person_likes_post
@@ -117,11 +117,11 @@ CREATE LOADING JOB load_dynamic_1 {
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
     LOAD comment_replyOf_comment
-        TO EDGE REPLY_OF VALUES ($0 Comment, $1 Comment, _)
+        TO EDGE REPLY_OF VALUES ($0 Comment, $1 Comment)
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
     LOAD comment_replyOf_post
-        TO EDGE REPLY_OF VALUES ($0 Comment,$1 Post, _)
+        TO EDGE REPLY_OF VALUES ($0 Comment,$1 Post)
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
 }
