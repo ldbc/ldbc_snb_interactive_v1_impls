@@ -58,6 +58,7 @@ echo "==========================================================================
 docker run --rm \
     --user "$(id -u):$(id -g)" \
     --publish=${POSTGRES_PORT}:5432 \
+    ${POSTGRES_DOCKER_PLATFORM_FLAG} \
     --name ${POSTGRES_CONTAINER_NAME} \
     --env POSTGRES_DATABASE=${POSTGRES_DATABASE} \
     --env POSTGRES_USER=${POSTGRES_USER} \
