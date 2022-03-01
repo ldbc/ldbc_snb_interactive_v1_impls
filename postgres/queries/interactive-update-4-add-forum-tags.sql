@@ -5,5 +5,5 @@ insert into forum_tag (
 values
 (
     :forumId
-  , :tagIds
+  , :tagId
 );

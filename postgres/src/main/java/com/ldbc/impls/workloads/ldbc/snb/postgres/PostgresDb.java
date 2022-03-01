@@ -496,7 +496,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
                 // InteractiveUpdate1AddPersonTags
                 String queryStringAddPersonTags = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate1AddPersonTags);
-                String paramQueryStringAddPersonTags = replaceParameterNamesWithQuestionMarks(operation, queryStringAddPersonTags);
+                String paramQueryStringAddPersonTags = replaceParameterNamesWithQuestionMarks(operation, queryStringAddPersonTags, ImmutableList.of("tagId"));
                 try (final PreparedStatement stmt = conn.prepareStatement(paramQueryStringAddPersonTags)) {
                     state.logQuery(operation.getClass().getSimpleName(), paramQueryStringAddPersonTags);
                     stmt.setLong(1, operation.personId());
@@ -585,7 +585,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                 }
                 // InteractiveUpdate4AddForumTags
                 String queryStringAddForumTags = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate4AddForumTags);
-                String paramQueryStringAddForumTags = replaceParameterNamesWithQuestionMarks(operation, queryStringAddForumTags);
+                String paramQueryStringAddForumTags = replaceParameterNamesWithQuestionMarks(operation, queryStringAddForumTags, ImmutableList.of("tagId"));
                 try (final PreparedStatement stmt = conn.prepareStatement(paramQueryStringAddForumTags)) {
                     state.logQuery(operation.getClass().getSimpleName(), paramQueryStringAddForumTags);
                     stmt.setLong(1, operation.forumId());
@@ -640,7 +640,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
                 // InteractiveUpdate6AddPostTags
                 String queryStringAddPostTags = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate6AddPostTags);
-                String paramQueryStringAddPostTags = replaceParameterNamesWithQuestionMarks(operation, queryStringAddPostTags);
+                String paramQueryStringAddPostTags = replaceParameterNamesWithQuestionMarks(operation, queryStringAddPostTags, ImmutableList.of("tagId"));
                 try (final PreparedStatement stmt = conn.prepareStatement(paramQueryStringAddPostTags)) {
                     state.logQuery(operation.getClass().getSimpleName(), paramQueryStringAddPostTags);
                     stmt.setLong(1, operation.postId());
@@ -674,7 +674,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
                 // InteractiveUpdate7AddCommentTags
                 String queryStringAddCommentTags = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate7AddCommentTags);
-                String paramQueryStringAddCommentTags = replaceParameterNamesWithQuestionMarks(operation, queryStringAddCommentTags);
+                String paramQueryStringAddCommentTags = replaceParameterNamesWithQuestionMarks(operation, queryStringAddCommentTags, ImmutableList.of("tagId"));
                 try (final PreparedStatement stmt = conn.prepareStatement(paramQueryStringAddCommentTags)) {
                     state.logQuery(operation.getClass().getSimpleName(), paramQueryStringAddCommentTags);
                     stmt.setLong(1, operation.commentId());

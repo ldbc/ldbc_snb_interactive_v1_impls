@@ -5,5 +5,5 @@ insert into message_tag (
 values
 (
     :commentId
-  , :tagIds
+  , :tagId
 );

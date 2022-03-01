@@ -5,5 +5,5 @@ insert into person_tag (
 values
 (
     :personId
-  , :tagIds
+  , :tagId
 );

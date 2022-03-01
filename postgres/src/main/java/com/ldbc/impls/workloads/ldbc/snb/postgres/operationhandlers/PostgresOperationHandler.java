@@ -28,7 +28,7 @@ public class PostgresOperationHandler {
 
     /**
      * Replaces parameters with question marks (e.g. ":personId" -> "?").
-     * 
+     *
      * Note that this is done with a simple regex which also performs the replacement in comments.
      * Therefore, queries with parameters in comments are likely to break.
      */
