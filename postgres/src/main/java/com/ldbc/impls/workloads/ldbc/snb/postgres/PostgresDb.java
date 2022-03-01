@@ -476,7 +476,6 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                         stmt.setString(2, email);
                         stmt.executeUpdate();
                     }
-                    stmt.executeUpdate();
                 }
 
                 // InteractiveUpdate1AddPersonLanguages
@@ -489,7 +488,6 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                         stmt.setString(2, language);
                         stmt.executeUpdate();
                     }
-                    stmt.executeUpdate();
                 }
 
                 // InteractiveUpdate1AddPersonTags
