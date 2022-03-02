@@ -11,7 +11,8 @@ where
     m_creatorid = k_person2id and
     m_c_replyof IS NULL and -- post, not comment
     k_person1id = :personId and
-    m_creationdate >= :startDate and  m_creationdate < (:startDate + INTERVAL '1 days' * :durationDays) and
+    m_creationdate >= :startDate and
+    m_creationdate < (:startDate + INTERVAL '1 days' * :durationDays) and
     not exists (
         select * from
   (select distinct mt_tagid from message, message_tag, knows

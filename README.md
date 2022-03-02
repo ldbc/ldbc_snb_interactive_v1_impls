@@ -1,7 +1,7 @@
 ![LDBC logo](ldbc-logo.png)
 # LDBC SNB Interactive workload implementations
 
-[![Build Status](https://circleci.com/gh/ldbc/ldbc_snb_interactive_implementations.svg?style=svg)](https://circleci.com/gh/ldbc/ldbc_snb_interactive_implementations)
+[![Build Status](https://circleci.com/gh/ldbc/ldbc_snb_interactive_impls.svg?style=svg)](https://circleci.com/gh/ldbc/ldbc_snb_interactive_impls)
 
 Reference implementations of the LDBC Social Network Benchmark's Interactive workload ([paper](https://homepages.cwi.nl/~boncz/snb-challenge/snb-sigmod.pdf), [specification on GitHub pages](https://ldbcouncil.org/ldbc_snb_docs/), [specification on arXiv](https://arxiv.org/pdf/2001.02299.pdf)).
 
@@ -46,7 +46,7 @@ mvn package -DskipTests -Pcypher,postgres
 To build the project, run:
 
 ```bash
-./build.sh
+scripts/build.sh
 ```
 
 ### Inputs
