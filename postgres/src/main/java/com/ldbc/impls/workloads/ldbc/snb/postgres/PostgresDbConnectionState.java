@@ -2,7 +2,6 @@ package com.ldbc.impls.workloads.ldbc.snb.postgres;
 
 import com.ldbc.driver.DbException;
 import com.ldbc.impls.workloads.ldbc.snb.BaseDbConnectionState;
-import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
 import org.postgresql.ds.PGConnectionPoolDataSource;
 
 import java.sql.Connection;
@@ -10,13 +9,13 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.TimeZone;
 
-public class PostgresDbConnectionState<TDbQueryStore extends QueryStore> extends BaseDbConnectionState<TDbQueryStore> {
+public class PostgresDbConnectionState extends BaseDbConnectionState<PostgresQueryStore> {
 
     protected String endPoint;
     protected PGConnectionPoolDataSource ds;
     protected Connection connection;
 
-    public PostgresDbConnectionState(Map<String, String> properties, TDbQueryStore store) throws ClassNotFoundException {
+    public PostgresDbConnectionState(Map<String, String> properties, PostgresQueryStore store) throws ClassNotFoundException {
         super(properties, store);
 
         endPoint = properties.get("endpoint");
