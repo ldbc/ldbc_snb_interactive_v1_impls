@@ -48,26 +48,3 @@ COPY tagclass FROM '/data/static/tagclass_0_0.csv' WITH DELIMITER '|' CSV HEADER
 
 -- Populate tag table
 COPY tag FROM '/data/static/tag_0_0.csv' WITH DELIMITER '|' CSV HEADER;
-
-CREATE TABLE country AS
-    SELECT city.pl_placeid AS ctry_city, ctry.pl_name AS ctry_name
-    FROM place city, place ctry
-    WHERE city.pl_containerplaceid = ctry.pl_placeid
-      AND ctry.pl_type = 'country';
-
--- Populate posts and comments tables, union them into message
-COPY post FROM '/data/dynamic/post_0_0.csv' WITH DELIMITER '|' CSV HEADER;
-COPY comment FROM '/data/dynamic/comment_0_0.csv' WITH DELIMITER '|' CSV HEADER;
-
--- Note: to distinguish between "post" and "comment" records:
---   - m_c_replyof IS NULL for all "post" records
---   - m_c_replyof IS NOT NULL for all "comment" records
-CREATE TABLE message AS
-    SELECT m_messageid, m_ps_imagefile, m_creationdate, m_locationip, m_browserused, m_ps_language, m_content, m_length, m_creatorid, m_locationid, m_ps_forumid, NULL AS m_c_replyof
-    FROM post
-    UNION ALL
-    SELECT m_messageid, NULL, m_creationdate, m_locationip, m_browserused, NULL, m_content, m_length, m_creatorid, m_locationid, NULl, coalesce(m_replyof_post, m_replyof_comment)
-    FROM comment;
-
-DROP TABLE post;
-DROP TABLE comment;

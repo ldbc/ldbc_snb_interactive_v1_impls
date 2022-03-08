@@ -16,6 +16,22 @@ def load_script(filename):
     with open(filename, "r") as f:
         return f.read()
 
+def execute_load_script(filename, con):
+    csv_dir = os.environ.get("HYPER_CSV_DIR", "")
+    print(csv_dir)
+    if not csv_dir:
+        raise ValueError("No HYPER_CSV_DIR defined.")
+
+    with open(filename, "r") as f:
+        contents = f.read()
+        contents = contents.replace("/data", csv_dir)
+
+    queries = contents.split(";")
+    for query in queries:
+        if query.isspace():
+            continue
+        print(query)
+        con.execute(query)
 
 def main(argv=None):
     parser = argparse.ArgumentParser()
@@ -37,35 +53,38 @@ def main(argv=None):
     )
     parser.add_argument(
         "--user",
-        default=os.environ.get("HYPER_USER", "ldbcsnb"),
+        default=os.environ.get("HYPER_USER", "ldbcuser"),
         help="HyPer user name",
     )
     parser.add_argument(
         "--password",
-        default=os.environ.get("HYPER_PASSWORD", ""),
+        default=os.environ.get("HYPER_PASSWORD", None),
         help="HyPer user password",
     )
     options = parser.parse_args(argv)
 
     print("Running Postgres / psycopg2")
-
+    print(options)
     pg_con = psycopg2.connect(
-        database=options.db,
         host=options.host,
         user=options.user,
-        password=options.password,
         port=options.port,
     )
     try:
         with pg_con.cursor() as con:
             print("Loading initial data set")
             con.execute(load_script("ddl/schema.sql"))
-            con.execute(load_script("ddl/load.sql"))
+            execute_load_script("ddl/load.sql", con)
             pg_con.commit()
-
+            execute_load_script("ddl/load_2.sql", con)
+            pg_con.commit()
+            execute_load_script("ddl/load_3.sql", con)
+            pg_con.commit()
+            execute_load_script("ddl/load_4.sql", con)
+            pg_con.commit()
+            execute_load_script("ddl/load_5.sql", con)
+            pg_con.commit()
             print("Adding indexes and constraints")
-            con.execute(load_script("ddl/schema_constraints.sql"))
-            pg_con.commit()
 
             print("Vacuuming")
             vacuum(pg_con)
