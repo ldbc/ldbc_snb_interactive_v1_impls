@@ -24,7 +24,6 @@ public class PostgresDbConnectionState<TDbQueryStore extends QueryStore> extends
         ds.setDatabaseName(properties.get("databaseName"));
         ds.setServerName(endPoint);
         ds.setUser(properties.get("user"));
-        ds.setPassword(properties.get("password"));
     }
 
     public Connection getConnection() throws DbException {
