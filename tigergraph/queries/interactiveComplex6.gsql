@@ -1,4 +1,4 @@
-CREATE OR REPLACE QUERY interactiveComplex6(VERTEX<Person> personId, STRING tagName) SYNTAX v2 {
+CREATE OR REPLACE QUERY interactiveComplex6(VERTEX<Person> personId, STRING tagName) SYNTAX _v2 {
   TYPEDEF tuple<STRING tagName, INT postCount> tagStats;
   HeapAccum<tagStats>(10, postCount DESC, tagName ASC) @@result;
   SumAccum<INT> @postCount;
@@ -8,9 +8,11 @@ CREATE OR REPLACE QUERY interactiveComplex6(VERTEX<Person> personId, STRING tagN
     WHERE p != personId;
 
   vPost = SELECT m
-    FROM vFriend-(<HAS_CREATOR)-Post:m -(HAS_TAG>)-Tag:t
-    WHERE t.name == tagName
-    PER(m);
+    FROM vFriend-(<HAS_CREATOR)-Post:m;
+    
+  vPost = SELECT p
+    FROM vPost:p-(HAS_TAG>)-Tag:t
+    WHERE t.name == tagName;
 
   vTag =
     SELECT t
@@ -19,5 +21,5 @@ CREATE OR REPLACE QUERY interactiveComplex6(VERTEX<Person> personId, STRING tagN
     ACCUM t.@postCount += 1
     POST-ACCUM @@result += tagStats(t.name, t.@postCount);
 
-  PRINT @@result as result;
+  PRINT @@result;
 }
