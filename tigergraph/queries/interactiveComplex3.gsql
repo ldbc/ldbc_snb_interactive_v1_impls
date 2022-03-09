@@ -1,10 +1,10 @@
-CREATE OR REPLACE QUERY InteractiveComplex3(VERTEX<Person> personId, STRING country1, STRING country2, DATETIME startDate, INT duration) SYNTAX v2 {
+CREATE OR REPLACE QUERY interactiveComplex3(VERTEX<Person> personId, STRING countryXName, STRING countryYName, DATETIME startDate, INT durationDays) SYNTAX v2 {
   TYPEDEF TUPLE<INT personId, STRING personFirstName, STRING personLastName, INT xCount, INT yCount, INT xyCount> msgStats; 
   HeapAccum<msgStats>(20, xCount DESC, personId ASC) @@result;
   SumAccum<UINT> @xCount, @yCount;
   OrAccum<BOOL> @selected, @selected2;
   datetime endDate;
-  endDate = datetime_add(startDate, INTERVAL duration DAY);
+  endDate = datetime_add(startDate, INTERVAL durationDays DAY);
 
   S = { personId };
   P = SELECT p
@@ -13,7 +13,7 @@ CREATE OR REPLACE QUERY InteractiveComplex3(VERTEX<Person> personId, STRING coun
 
   PersonCity = SELECT c
     FROM Country:cn -(<IS_PART_OF)- City:c
-    WHERE cn.name != country1 AND cn.name != country2
+    WHERE cn.name != countryXName AND cn.name != countryYName
     ACCUM c.@selected += true;
 
   P = SELECT p FROM P:p -(IS_LOCATED_IN>)- City:c
@@ -25,10 +25,10 @@ CREATE OR REPLACE QUERY InteractiveComplex3(VERTEX<Person> personId, STRING coun
 
   Messages = SELECT m 
     FROM  M:m -(MESG_LOCATED_IN>)- Country:cn
-    WHERE (cn.name == country1 OR cn.name == country2) 
+    WHERE (cn.name == countryXName OR cn.name == countryYName) 
     ACCUM 
-      m.@selected += (cn.name == country1),
-      m.@selected2 += (cn.name == country2)
+      m.@selected += (cn.name == countryXName),
+      m.@selected2 += (cn.name == countryYName)
     HAVING m.@selected OR m.@selected2;
 
   P = SELECT p
