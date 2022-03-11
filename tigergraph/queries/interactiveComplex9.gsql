@@ -1,12 +1,11 @@
-CREATE OR REPLACE QUERY interactiveComplex9(VERTEX<Person> personId, DATETIME maxDate) SYNTAX _v2 {
+CREATE OR REPLACE QUERY interactiveComplex9(VERTEX<Person> personId, DATETIME maxDate) SYNTAX v2 {
   TYPEDEF tuple<INT personId, STRING personFirstName, STRING personLastName, 
                 INT messageId, STRING messageContent, DATETIME messageCreationDate> msgInfo;
   
   HeapAccum<msgInfo>(20, messageCreationDate DESC, messageId ASC) @@result;
 
   S = { personId };
-  P = SELECT p FROM S:s -(KNOWS*1..2)- Person:p;
-  P = P MINUS S;
+  P = SELECT p FROM S:s -(KNOWS*1..2)- Person:p WHERE p != personId;
   M = SELECT m FROM P:p -(<HAS_CREATOR)- (Comment|Post):m 
     WHERE m.creationDate < maxDate
     ORDER BY m.creationDate DESC, m.id ASC 

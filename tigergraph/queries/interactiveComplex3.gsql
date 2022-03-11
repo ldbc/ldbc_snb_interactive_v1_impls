@@ -8,9 +8,7 @@ CREATE OR REPLACE QUERY interactiveComplex3(VERTEX<Person> personId, STRING coun
   endDate = datetime_add(startDate, INTERVAL durationDays DAY);
 
   S = { personId };
-  P = SELECT p
-    FROM S:s -(KNOWS*1..2)- Person:p
-    WHERE p != personId;
+  P = SELECT p FROM S:s -(KNOWS*1..2)- Person:p WHERE p != personId;
 
   country1 = SELECT cn
      FROM Country:cn -(<IS_PART_OF)- City:c

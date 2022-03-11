@@ -7,9 +7,7 @@ CREATE OR REPLACE QUERY interactiveComplex5(VERTEX<Person> personId, DATETIME mi
   OrAccum @selected;
 
   S = { personId };
-  P1 = SELECT p FROM S:s-(KNOWS)-Person:p;
-  P2 = SELECT p FROM P1-(KNOWS)-Person:p;
-  vFriend = P1 UNION P2 MINUS S;
+  P = SELECT p FROM S:s -(KNOWS*1..2)- Person:p WHERE p != personId;
   vFriend = SELECT p
     FROM vFriend:p -(<HAS_MEMBER:e)-Forum:t
     WHERE e.creationDate > minDate
