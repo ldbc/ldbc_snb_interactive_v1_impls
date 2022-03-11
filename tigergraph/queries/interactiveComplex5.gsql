@@ -1,30 +1,28 @@
 CREATE OR REPLACE QUERY interactiveComplex5(VERTEX<Person> personId, DATETIME minDate) SYNTAX v2 {
   TYPEDEF TUPLE<STRING forumTitle, INT postCount, INT id> forumInfo;
 	HeapAccum<forumInfo>(20, postCount DESC, id ASC) @@result;
-  SetAccum<VERTEX<Person>> @@friendAll;
-  SetAccum<INT> @memberIds;
+  SetAccum<VERTEX<Person>> @memberIds;
   SumAccum<INT> @postCount;
-  MinAccum<UINT> @creatorId;
+  MinAccum<VERTEX<Person>> @creatorId;
   OrAccum @selected;
 
   S = { personId };
-  vFriend = SELECT p
-    FROM S:s-(KNOWS*1..2)-Person:p
-    WHERE p != personId;
-
+  P1 = SELECT p FROM S:s-(KNOWS)-Person:p;
+  P2 = SELECT p FROM P1-(KNOWS)-Person:p;
+  vFriend = P1 UNION P2 MINUS S;
   vFriend = SELECT p
     FROM vFriend:p -(<HAS_MEMBER:e)-Forum:t
     WHERE e.creationDate > minDate
-    ACCUM t.@memberIds += p.id, t.@selected += true;
+    ACCUM t.@memberIds += p;
 
   vPost = SELECT p
     FROM vFriend:s-(<HAS_CREATOR)-Post:p
-    ACCUM p.@creatorId += s.id;
+    ACCUM p.@creatorId += s;
 
   vForum = SELECT t
     FROM vPost:p-(<CONTAINER_OF)-Forum:t
-    WHERE t.@selected
-    ACCUM CASE WHEN p.@creatorId IN t.@memberIds THEN t.@postCount += 1 END
+    WHERE p.@creatorId IN t.@memberIds
+    ACCUM t.@postCount += 1
     POST-ACCUM @@result += forumInfo(t.title, t.@postCount, t.id);
 
   PRINT @@result as result;
