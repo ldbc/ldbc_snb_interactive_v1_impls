@@ -2,6 +2,7 @@ CREATE OR REPLACE QUERY interactiveComplex3(VERTEX<Person> personId, STRING coun
   TYPEDEF TUPLE<INT personId, STRING personFirstName, STRING personLastName, INT xCount, INT yCount, INT xyCount> msgStats; 
   HeapAccum<msgStats>(20, xCount DESC, personId ASC) @@result;
   SumAccum<UINT> @xCount, @yCount;
+  MaxAccum<UINT> @@countryId1, @@countryId2;
   OrAccum<BOOL> @selected, @selected2;
   datetime endDate;
   endDate = datetime_add(startDate, INTERVAL durationDays DAY);
@@ -11,35 +12,30 @@ CREATE OR REPLACE QUERY interactiveComplex3(VERTEX<Person> personId, STRING coun
     FROM S:s -(KNOWS*1..2)- Person:p
     WHERE p != personId;
 
-  PersonCity = SELECT c
-    FROM Country:cn -(<IS_PART_OF)- City:c
-    WHERE cn.name != countryXName AND cn.name != countryYName
-    ACCUM c.@selected += true;
+  country1 = SELECT cn
+     FROM Country:cn -(<IS_PART_OF)- City:c
+    WHERE cn.name == countryXName 
+     ACCUM c.@selected += true 
+     POST-ACCUM @@countryId1 += cn.id;
 
-  P = SELECT p FROM P:p -(IS_LOCATED_IN>)- City:c
-    WHERE c.@selected;
+  country2 = SELECT cn
+     FROM Country:cn -(<IS_PART_OF)- City:c
+     WHERE cn.name == countryYName 
+     ACCUM c.@selected += true 
+     POST-ACCUM @@countryId2 += cn.id;
 
-  M = SELECT m
+  P = SELECT p FROM P:p -(IS_LOCATED_IN>)- City:c WHERE NOT c.@selected;
+
+    P = SELECT p
     FROM P:p -(<HAS_CREATOR)- (Post|Comment):m
-    WHERE m.creationDate >= startDate AND m.creationDate < endDate;
-
-  Messages = SELECT m 
-    FROM  M:m -(MESG_LOCATED_IN>)- Country:cn
-    WHERE (cn.name == countryXName OR cn.name == countryYName) 
+    WHERE m.creationDate >= startDate AND m.creationDate < endDate
     ACCUM 
-      m.@selected += (cn.name == countryXName),
-      m.@selected2 += (cn.name == countryYName)
-    HAVING m.@selected OR m.@selected2;
-
-  P = SELECT p
-    FROM M:m-(HAS_CREATOR>)-Person:p
-    ACCUM 
-      IF m.@selected THEN p.@xCount += 1 END,
-      IF m.@selected2 THEN p.@yCount += 1 END
-    HAVING p.@xCount > 0 AND p.@yCount > 0;   
-
+      IF m.countryId == @@countryId1 THEN p.@xCount += 1 END,
+      IF m.countryId == @@countryId2 THEN p.@yCount += 1 END
+    HAVING p.@xCount > 0 AND p.@yCount > 0;
+  
   P = SELECT p 
     FROM P:p
     ACCUM @@result += msgStats(p.id, p.firstName, p.lastName, p.@xCount, p.@yCount, (p.@xCount + p.@yCount));
-  PRINT @@result;
+  PRINT @@result as result;
 }

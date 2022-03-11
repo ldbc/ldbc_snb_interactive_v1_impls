@@ -32,11 +32,11 @@ CREATE LOADING JOB load_dynamic_1 {
 
 
     LOAD comment
-        TO VERTEX Comment VALUES($0, $1, $2, $3, $4, $5)
+        TO VERTEX Comment VALUES($0, $1, $2, $3, $4, $5, _)
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
     LOAD post
-        TO VERTEX Post VALUES ($0, $1, $2, $3, $4, $5, $6, $7)
+        TO VERTEX Post VALUES ($0, $1, $2, $3, $4, $5, $6, $7, _)
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
     LOAD forum
@@ -53,11 +53,11 @@ CREATE LOADING JOB load_dynamic_1 {
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
     LOAD post_isLocatedIn_place
-        TO EDGE MESG_LOCATED_IN VALUES ($0 Post, $1 Country)
+        TO VERTEX Post VALUES ($0, _, _, _, _, _, _, _, $1)
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
     LOAD comment_isLocatedIn_place
-        TO EDGE MESG_LOCATED_IN VALUES ($0 Comment, $1 Country)
+        TO VERTEX Comment VALUES ($0, _, _, _, _, _, $1)
     USING SEPARATOR="|", HEADER="true", EOL="\n";
 
     LOAD person_isLocatedIn_place

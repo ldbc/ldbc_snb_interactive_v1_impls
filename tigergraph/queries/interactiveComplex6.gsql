@@ -21,5 +21,5 @@ CREATE OR REPLACE QUERY interactiveComplex6(VERTEX<Person> personId, STRING tagN
     ACCUM t.@postCount += 1
     POST-ACCUM @@result += tagStats(t.name, t.@postCount);
 
-  PRINT @@result;
+  PRINT @@result as result;
 }

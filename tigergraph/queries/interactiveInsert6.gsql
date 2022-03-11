@@ -9,14 +9,13 @@
         UINT length,
         UINT authorPersonId,
         UINT forumId,
-        VERTEX<Country> countryId,
+        UINT countryId,
         SET<VERTEX<Tag>> tagIds) {
 
 
-      INSERT INTO Post VALUES(postId, imageFile, creationDate, locationIP, browserUsed, language, content, length);
+      INSERT INTO Post VALUES(postId, imageFile, creationDate, locationIP, browserUsed, language, content, length, countryId);
       INSERT INTO HAS_CREATOR VALUES(postId Post, authorPersonId Person);
       INSERT INTO CONTAINER_OF VALUES(forumId Forum, postId Post);
-      INSERT INTO MESG_LOCATED_IN VALUES(postId Post, countryId);
 
       tmp = {tagIds};
       tmp = SELECT v FROM tmp:v

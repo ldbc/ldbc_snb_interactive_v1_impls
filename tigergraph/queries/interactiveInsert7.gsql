@@ -6,14 +6,13 @@ CREATE OR REPLACE QUERY interactiveInsert7(
         STRING content,
         UINT length,
         UINT authorPersonId,
-        VERTEX<Country> countryId,
+        UINT countryId,
         INT replyToPostId,
         INT replyToCommentId,
         SET<VERTEX<Tag>> tagIds) {
 
-    INSERT INTO Comment VALUES(commentId, creationDate, locationIP, browserUsed, content, length);
+    INSERT INTO Comment VALUES(commentId, creationDate, locationIP, browserUsed, content, length, countryId);
     INSERT INTO HAS_CREATOR VALUES(commentId Comment, authorPersonId Person);
-    INSERT INTO MESG_LOCATED_IN VALUES(commentId Comment, countryId);
     IF replyToPostId > 0 THEN
         INSERT INTO REPLY_OF (FROM, TO) VALUES(commentId, replyToPostId Post);
     END;
