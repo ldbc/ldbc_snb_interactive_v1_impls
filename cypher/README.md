@@ -13,7 +13,7 @@ The recommended environment is that the benchmark scripts (Bash) and the LDBC dr
 
 ## Configuration
 
-Set the environment variables to the desired values in `scripts/vars.sh`.
+The default environment variables (e.g. Neo4j version, container name, etc.) are stored in `scripts/vars.sh`. Adjust these as you see fit.
 
 ## Generating and loading the data set
 
