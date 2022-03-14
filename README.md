@@ -67,7 +67,7 @@ All three should be started withe the initial data set loaded to the database.
     * **Inputs:**
         * The query substitution parameters are taken from the directory set in `ldbc.snb.interactive.parameters_dir` configuration property.
         * The update streams are the `updateStream_0_0_{forum,person}.csv` files from the location set in the `ldbc.snb.interactive.updates_dir` configuration property.
-        * Different scale factors require different configurations for the `ldbc.snb.interactive.update_interleave` value and the query frequencies. Make sure you use the correct properties based on the files provided in the [`sf-properties/` directory](sf-properties/). (If you omit this step, the validation will still work but will test a different mix of queries.)
+        * For this mode, the query frequencies are set to a uniform `1` value to ensure the best average test coverage.
     * **Output:** The results will be stored in the validation parameters file (e.g. `validation_params.csv`) file set in the `create_validation_parameters` configuration property.
     * **Parallelism:** The execution must be single-threaded to ensure a deterministic order of operations.
 
