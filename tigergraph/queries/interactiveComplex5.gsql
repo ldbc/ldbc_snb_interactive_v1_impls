@@ -8,13 +8,13 @@ CREATE OR REPLACE QUERY interactiveComplex5(VERTEX<Person> personId, DATETIME mi
 
   S = { personId };
   P = SELECT p FROM S:s -(KNOWS*1..2)- Person:p WHERE p != personId;
-  vFriend = SELECT p
-    FROM vFriend:p -(<HAS_MEMBER:e)-Forum:t
+  P = SELECT p
+    FROM P:p -(<HAS_MEMBER:e)-Forum:t
     WHERE e.creationDate > minDate
     ACCUM t.@memberIds += p;
 
   vPost = SELECT p
-    FROM vFriend:s-(<HAS_CREATOR)-Post:p
+    FROM P:s-(<HAS_CREATOR)-Post:p
     ACCUM p.@creatorId += s;
 
   vForum = SELECT t
