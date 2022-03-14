@@ -67,6 +67,7 @@ All three should be started withe the initial data set loaded to the database.
     * **Inputs:**
         * The query substitution parameters are taken from the directory set in `ldbc.snb.interactive.parameters_dir` configuration property.
         * The update streams are the `updateStream_0_0_{forum,person}.csv` files from the location set in the `ldbc.snb.interactive.updates_dir` configuration property.
+        * Different scale factors require different configurations for the `ldbc.snb.interactive.update_interleave` value and the query frequencies. Make sure you use the correct properties based on the files provided in the [`sf-properties/` directory](sf-properties/). (If you omit this step, the validation will still work but will test a different mix of queries.)
     * **Output:** The results will be stored in the validation parameters file (e.g. `validation_params.csv`) file set in the `create_validation_parameters` configuration property.
     * **Parallelism:** The execution must be single-threaded to ensure a deterministic order of operations.
 
@@ -89,6 +90,7 @@ All three should be started withe the initial data set loaded to the database.
         * Set the `warmup` and `operation_count` properties so that the warmup and benchmark phases last for 30+ minutes and 2+ hours, respectively.
         * Set the `thread_count` property to the size of the thread pool for read operations.
         * The update streams are the `updateStream_*_{forum,person}.csv` files from the location set in the `ldbc.snb.interactive.updates_dir` configuration property. To get *2n* write threads, the framework requires *n* `updateStream_*_forum.csv` and *n* `updateStream_*_person.csv` files (set `ldbc.snb.datagen.serializer.numUpdatePartitions` to *n* in the data generator to get produce these).
+        * Different scale factors require different configurations for the `ldbc.snb.interactive.update_interleave` value and the query frequencies. Make sure you use the correct properties based on the files provided in the [`sf-properties/` directory](sf-properties/).
     * **Output:**
         * Passed or failed the "schedule audit" (the 95% on-time requirement).
         * The throughput achieved in the run (operations/second).
