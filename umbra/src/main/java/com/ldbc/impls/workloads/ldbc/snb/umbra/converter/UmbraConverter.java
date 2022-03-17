@@ -75,7 +75,10 @@ public class UmbraConverter extends Converter {
 
     public static Iterable<Long> pathToList(ResultSet r, int column) throws SQLException {
         String value = r.getString(column);
-        String[] strs = value.split(";");
+        // drop '{' and '}'
+        value = value.substring(1, value.length() - 1);
+        // split
+        String[] strs = value.split(",");
         List<Long> list = new ArrayList<>();
         for (int i = 0; i < strs.length; i++) {
             list.add(Long.valueOf(strs[i]));
