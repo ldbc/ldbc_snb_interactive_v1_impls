@@ -153,8 +153,8 @@ The [Auditing Policies chapter](http://ldbcouncil.org/ldbc_snb_docs/ldbc-snb-spe
 
 ### Recommendations
 
-We have a few recommendations for creating audited implementations. However, implementations are allowed to deviate from these:
+We have a few recommendations for creating audited implementations. (These are not requirements – implementations are allowed to deviate from these recommendations.)
 
-* The implementation should target a popular Linux distribution (e.g. Ubuntu LTS, Fedora).
+* The implementation should target a popular Linux distribution (e.g. Ubuntu LTS, CentOS, Fedora).
 * Use a containerized setup, where the DBMS is running in a Docker container.
-* Instead of a specific hardware, target a cloud virtual machine instance (e.g. AWS `m5.4xlarge`). Both bare-metal and regular instances can be used for audited runs.
+* Instead of a specific hardware, target a cloud virtual machine instance (e.g. AWS `r5d.12xlarge`). Both bare-metal and regular instances can be used for audited runs.

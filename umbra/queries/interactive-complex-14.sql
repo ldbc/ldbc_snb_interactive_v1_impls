@@ -1,47 +1,36 @@
 WITH RECURSIVE
-    search_graph(link, level, path) AS (
-            (SELECT :person1Id::bigint, 0, array[]::bigint[][])
-          UNION ALL
-            (WITH sg(link, level) as (select link, level, path from search_graph)
-            SELECT DISTINCT k_person2id, x.level + 1, array_append(path, array[x.link, k_person2id])
-            FROM knows, sg x
-            WHERE x.link = k_person1id and not exists(select link, level, path from sg y where y.link = :person2Id::bigint) and not exists(select link, level, path from sg y where y.link=k_person2id)
-            )
+    Paths(dst, path) AS (
+            SELECT k_person2id, ARRAY[k_person1id, k_person2id] FROM knows WHERE k_person1id = :person1Id
+            UNION ALL
+            SELECT t.k_person2id, array_append(path, t.k_person2id)
+            FROM (SELECT * FROM Paths WHERE NOT EXISTS (SELECT * FROM Paths s2 WHERE s2.dst = :person2Id)) s, knows t
+            WHERE s.dst = t.k_person1id
     ),
-    paths(pid, path) AS (
-        SELECT row_number() OVER (), path FROM search_graph where link = :person2Id::bigint
+    SelectedPaths(dst, path) AS (
+            SELECT dst, path
+            FROM Paths
+            WHERE dst = :person2Id
     ),
-    edges AS (
-         SELECT pid AS id, path[unnest(generate_series(0, len(path)-1))] as e
-         FROM paths
+    Iterator(i) AS (
+            SELECT i FROM (SELECT array_length(path, 1) v FROM SelectedPaths LIMIT 1) l(v), generate_series(1, l.v) t(i)
     ),
-    unique_edges(e) AS (
-        SELECT DISTINCT e from edges
-    ),
-    weights(we, score) as (
-        select e, sum(score) from (
-            select e, mid1, mid2, max(score) as score from (
-                select e, 1 as score, p1.m_messageid as mid1, p2.m_messageid as mid2 from unique_edges, message p1, message p2 where (p1.m_creatorid=e[0] and p2.m_creatorid=e[1] and p2.m_c_replyof=p1.m_messageid and p1.m_c_replyof is null)
-                union all
-                select e, 1 as score, p1.m_messageid as mid1, p2.m_messageid as mid2 from unique_edges, message p1, message p2 where (p1.m_creatorid=e[1] and p2.m_creatorid=e[0] and p2.m_c_replyof=p1.m_messageid and p1.m_c_replyof is null)
-                union all
-                select e, 0.5 as score, p1.m_messageid as mid1, p2.m_messageid as mid2 from unique_edges, message p1, message p2 where (p1.m_creatorid=e[0] and p2.m_creatorid=e[1] and p2.m_c_replyof=p1.m_messageid and p1.m_c_replyof is not null)
-                union all
-                select e, 0.5 as score, p1.m_messageid as mid1, p2.m_messageid as mid2  from unique_edges, message p1, message p2 where (p1.m_creatorid=e[1] and p2.m_creatorid=e[0] and p2.m_c_replyof=p1.m_messageid and p1.m_c_replyof is not null)
-            ) pps group by e, mid1, mid2
-        ) tmp
-        group by e
-    ),
-    weightedpaths(path, score) as (
-        select path, coalesce(sum(score), 0) from paths, edges left join weights on we=e where pid=id group by id, path
+    PathWeights(dst, path, Score) AS (
+            SELECT p.dst, p.path, SUM(Score)
+            FROM SelectedPaths p, Iterator it, (
+                    SELECT (case when msg.m_c_replyof IS NULL then 1.0 else 0.5 end) AS Score
+                    FROM Message msg, Message reply
+                    WHERE reply.m_c_replyof = msg.m_messageid
+                      AND msg.m_creatorid = p.path[i]
+                      AND reply.m_creatorid = p.path[i+1]
+                    UNION ALL
+                    SELECT (case when msg.m_c_replyof IS NULL then 1.0 else 0.5 end) AS Score
+                    FROM Message msg, Message reply
+                    WHERE reply.m_c_replyof = msg.m_messageid
+                      AND msg.m_creatorid = p.path[i+1]
+                      AND reply.m_creatorid = p.path[i]
+            ) t
+            GROUP BY p.dst, p.path
     )
-select personIdsInPath, score
-from (
-    select path, string_agg(e[0], ';') || ';' || :person2Id::bigint as personIdsInPath, score
-    from (
-        select path, unnest(path) as e, score
-        from weightedpaths
-    )
-    group by path, score
-    order by score desc
-);
+SELECT path, Score as Weights
+FROM PathWeights
+ORDER BY Weights DESC, path;
