@@ -12,6 +12,7 @@ import io.github.karol_brejna_i.tigergraph.restppclient.model.QueryResponse;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
+import java.io.*;
 
 public abstract class TigerGraphSingletonOperationHandler<TOperation extends Operation<TOperationResult>, TOperationResult>
         implements SingletonOperationHandler<TOperationResult, TOperation, TigerGraphDbConnectionState> {
@@ -49,7 +50,8 @@ public abstract class TigerGraphSingletonOperationHandler<TOperation extends Ope
             try {
                 resultReporter.report(1, toResult(record), operation);
             } catch (ParseException|IndexOutOfBoundsException e) {
-                resultReporter.report(0, null, operation);
+                //resultReporter.report(0, null, operation);
+                System.err.println("Empty results for " + queryName + ", paramters: " + mapToString(params));
             }
         } else {
 //            throw new DbException("Cannot serialize null result.");
@@ -58,6 +60,15 @@ public abstract class TigerGraphSingletonOperationHandler<TOperation extends Ope
 //            //resultReporter.report(0, null, operation);
         }
 
+    }
+
+    public String mapToString(Map<String, String> map) {
+        StringBuilder mapAsString = new StringBuilder("{");
+        for (String key : map.keySet()) {
+            mapAsString.append(key + ":" + map.get(key) + ", ");
+        }
+        mapAsString.delete(mapAsString.length()-2, mapAsString.length()).append("}");
+        return mapAsString.toString();
     }
 
     protected abstract Map<String, String> constructParams(TOperation o);

@@ -75,7 +75,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
             String friendLocationIp = vertexResult.getString("friendLocationIp");
             String friendCityName = vertexResult.getString("friendCityName");
             Iterable<String> friendEmails = vertexResult.getStringList("friendEmails");
-            Iterable<String> friendLanguages = vertexResult.getStringList("friendEmails");
+            Iterable<String> friendLanguages = vertexResult.getStringList("friendSpeaks");
             List<List> univs = vertexResult.getObjectList("friendUniversities");
             Iterable<List<Object>> universities = TigerGraphConverter.toOrgList(univs);
             List<List> comps = vertexResult.getObjectList("friendCompanies");
@@ -775,7 +775,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         @Override
         protected Map<String, String> constructParams(LdbcUpdate6AddPost o) {
             ImmutableMap.Builder<String, String> builder = ImmutableMap.<String, String>builder()
-                    .put(LdbcUpdate6AddPost.POST_ID, Long.toString(o.forumId()))
+                    .put(LdbcUpdate6AddPost.POST_ID, Long.toString(o.postId()))
                     .put(LdbcUpdate6AddPost.IMAGE_FILE, o.imageFile())
                     .put(LdbcUpdate6AddPost.CREATION_DATE, Long.toString(o.creationDate().getTime()))
                     .put(LdbcUpdate6AddPost.LOCATION_IP, o.locationIp())

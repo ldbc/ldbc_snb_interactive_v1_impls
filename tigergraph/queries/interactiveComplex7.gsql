@@ -1,25 +1,22 @@
 CREATE OR REPLACE QUERY interactiveComplex7(VERTEX<Person> personId) SYNTAX v2 {
     TYPEDEF tuple<INT personId, STRING personFirstName, STRING personLastName, INT likeCreationDate,
                 INT messageId, STRING messageContent, INT minutesLatency, BOOL isNew> liker;
+    TYPEDEF tuple<INT messageId, BOOL isComment, STRING content, INT likeDate, INT latency> msg;
+    HeapAccum<liker>(1, likeCreationDate DESC, messageId DESC) @mostRecentLike;
     HeapAccum<liker>(20, likeCreationDate DESC, messageId ASC) @@result;
     AndAccum<BOOL> @isNew;
     S = { personId };
-    P =
-        SELECT p
-          FROM S-(KNOWS)-Person:p
-         ACCUM p.@isNew += FALSE;
+    P = SELECT p FROM S-(KNOWS)-Person:p
+      ACCUM p.@isNew += FALSE;
 
-    P =
-        SELECT p
-            FROM S:s-(<HAS_CREATOR)- (Comment|Post):m -(<LIKES:e)-Person:p
-        PER(m,e,p)
-        ACCUM
-          IF m.type == "Comment" OR m.content != "" THEN
-            @@result += liker(p.id, p.firstName, p.lastName, e.creationDate, m.id,
-                                m.content, (e.creationDate - m.creationDate) / 60, p.@isNew)
-          ELSE
-            @@result += liker(p.id, p.firstName, p.lastName, e.creationDate, m.id,
-                                m.imageFile, (e.creationDate - m.creationDate) / 60, p.@isNew)
-          END;
+    M = SELECT m FROM S:s-(<HAS_CREATOR)- (Comment|Post):m;
+    vLiker = SELECT t FROM M:m-(<LIKES:e)-Person:t
+      ACCUM INT latency = (e.creationDate - m.creationDate) / 60 / 1000,
+      IF m.content != "" THEN
+          t.@mostRecentLike += liker(t.id, t.firstName, t.lastName, e.creationDate, m.id, m.content, latency, t.@isNew)
+        ELSE
+          t.@mostRecentLike += liker(t.id, t.firstName, t.lastName, e.creationDate, m.id, m.imageFile, latency, t.@isNew)
+      END
+    POST-ACCUM @@result += t.@mostRecentLike.pop();
     PRINT @@result as result;
 }
