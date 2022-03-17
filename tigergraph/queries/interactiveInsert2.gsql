@@ -1,3 +1,5 @@
-CREATE OR REPLACE QUERY interactiveInsert2(UINT personId, UINT postId, DATETIME creationDate) {
+CREATE OR REPLACE QUERY interactiveInsert2(UINT personId, UINT postId, INT creationDate) {
+    INSERT INTO Person (PRIMARY_ID) VALUES (personId);
+    INSERT INTO Comment (PRIMARY_ID) VALUES (postId);
     INSERT INTO LIKES (FROM, TO, creationDate) VALUES (personId Person, postId Post, creationDate);
 }

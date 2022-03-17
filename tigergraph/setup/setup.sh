@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PARAM1=$1
-DATA_PATH=${PARAM1:="/data/social_network"}
+DATA_PATH=${PARAM1:="/data"}
 PARAM2=$2
 QUERY_PATH=${PARAM2:="/queries"}
 

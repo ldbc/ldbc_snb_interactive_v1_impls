@@ -1,5 +1,5 @@
 CREATE OR REPLACE QUERY interactiveShort7(STRING messageId) for graph LDBC_SNB SYNTAX v2 {
-  TYPEDEF TUPLE<INT commentId, STRING commentContent, DATETIME commentCreationDate,
+  TYPEDEF TUPLE<INT commentId, STRING commentContent, INT commentCreationDate,
     INT replyAuthorId, STRING replyAuthorFirstName,
     STRING replyAuthorLastName, BOOL replyAuthorKnowsOriginalMessageAuthor> reply;
 

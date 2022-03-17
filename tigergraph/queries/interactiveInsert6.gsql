@@ -1,7 +1,7 @@
     CREATE OR REPLACE QUERY interactiveInsert6(
         UINT postId,
         STRING imageFile,
-        DATETIME creationDate,
+        INT creationDate,
         STRING locationIP,
         STRING browserUsed,
         STRING language,

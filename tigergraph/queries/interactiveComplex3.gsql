@@ -1,11 +1,11 @@
-CREATE OR REPLACE QUERY interactiveComplex3(VERTEX<Person> personId, STRING countryXName, STRING countryYName, DATETIME startDate, INT durationDays) SYNTAX v2 {
+CREATE OR REPLACE QUERY interactiveComplex3(VERTEX<Person> personId, STRING countryXName, STRING countryYName, INT startDate, INT durationDays) SYNTAX v2 {
   TYPEDEF TUPLE<INT personId, STRING personFirstName, STRING personLastName, INT xCount, INT yCount, INT xyCount> msgStats; 
   HeapAccum<msgStats>(20, xCount DESC, personId ASC) @@result;
   SumAccum<UINT> @xCount, @yCount;
   MaxAccum<UINT> @@countryId1, @@countryId2;
   OrAccum<BOOL> @selected, @selected2;
-  datetime endDate;
-  endDate = datetime_add(startDate, INTERVAL durationDays DAY);
+  INT endDate;
+  endDate = startDate + durationDays * 24*60*60*1000; # number of milliseconds in a day
 
   S = { personId };
   P = SELECT p FROM S:s -(KNOWS*1..2)- Person:p WHERE p != personId;
@@ -26,7 +26,7 @@ CREATE OR REPLACE QUERY interactiveComplex3(VERTEX<Person> personId, STRING coun
 
     P = SELECT p
     FROM P:p -(<HAS_CREATOR)- (Post|Comment):m
-    WHERE m.creationDate >= startDate AND m.creationDate < endDate
+    WHERE m.creationDate between startDate AND endDate
     ACCUM 
       IF m.countryId == @@countryId1 THEN p.@xCount += 1 END,
       IF m.countryId == @@countryId2 THEN p.@yCount += 1 END

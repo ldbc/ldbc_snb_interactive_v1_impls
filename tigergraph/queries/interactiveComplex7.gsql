@@ -1,5 +1,5 @@
 CREATE OR REPLACE QUERY interactiveComplex7(VERTEX<Person> personId) SYNTAX v2 {
-    TYPEDEF tuple<INT personId, STRING personFirstName, STRING personLastName, DATETIME likeCreationDate,
+    TYPEDEF tuple<INT personId, STRING personFirstName, STRING personLastName, INT likeCreationDate,
                 INT messageId, STRING messageContent, INT minutesLatency, BOOL isNew> liker;
     HeapAccum<liker>(20, likeCreationDate DESC, messageId ASC) @@result;
     AndAccum<BOOL> @isNew;
@@ -16,10 +16,10 @@ CREATE OR REPLACE QUERY interactiveComplex7(VERTEX<Person> personId) SYNTAX v2 {
         ACCUM
           IF m.type == "Comment" OR m.content != "" THEN
             @@result += liker(p.id, p.firstName, p.lastName, e.creationDate, m.id,
-                                m.content, datetime_diff(e.creationDate, m.creationDate) / 60, p.@isNew)
+                                m.content, (e.creationDate - m.creationDate) / 60, p.@isNew)
           ELSE
             @@result += liker(p.id, p.firstName, p.lastName, e.creationDate, m.id,
-                                m.imageFile, datetime_diff(e.creationDate, m.creationDate) / 60, p.@isNew)
+                                m.imageFile, (e.creationDate - m.creationDate) / 60, p.@isNew)
           END;
     PRINT @@result as result;
 }

@@ -48,7 +48,7 @@ public abstract class TigerGraphSingletonOperationHandler<TOperation extends Ope
         if (record != null) {
             try {
                 resultReporter.report(1, toResult(record), operation);
-            } catch (ParseException e) {
+            } catch (ParseException|IndexOutOfBoundsException e) {
                 resultReporter.report(0, null, operation);
             }
         } else {

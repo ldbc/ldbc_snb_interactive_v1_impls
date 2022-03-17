@@ -5,11 +5,11 @@ CREATE OR REPLACE QUERY interactiveShort3(VERTEX<Person> personId) SYNTAX v2 {
   P =
     SELECT t
       FROM S:s-(KNOWS:e)-Person:t
-      ACCUM t.@creationDate += datetime_to_epoch(e.creationDate)
+      ACCUM t.@creationDate += e.creationDate
       ORDER BY t.@creationDate DESC, t.id ASC;
 
   PRINT P[
-      P.id AS personId, P.firstName AS firstName, P.lastName AS lastName, epoch_to_datetime(P.@creationDate) AS friendshipCreationDate] as result;
+      P.id AS personId, P.firstName AS firstName, P.lastName AS lastName, P.@creationDate AS friendshipCreationDate] as result;
 }
 
 //RUN QUERY is2(19791209302561)

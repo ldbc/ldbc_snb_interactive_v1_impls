@@ -1,11 +1,10 @@
-CREATE OR REPLACE QUERY interactiveComplex4(VERTEX<Person> personId, DATETIME startDate, INT durationDays) SYNTAX v2 {
+CREATE OR REPLACE QUERY interactiveComplex4(VERTEX<Person> personId, INT startDate, INT durationDays) SYNTAX v2 {
   TYPEDEF TUPLE<STRING tagName, INT postCount> topic;
   SumAccum<int> @postCount;
   SetAccum<VERTEX<Tag>> @@tagsFav, @@tagsExc;
   HeapAccum<topic>(10, postCount DESC, tagName ASC) @@result;
-
-  DATETIME endDate;
-  endDate = DATETIME_add(startDate, INTERVAL durationDays DAY);
+  INT endDate;
+  endDate = startDate + durationDays * 24*60*60*1000; # number of milliseconds in a Day
 
   S = { personId };
   // find tags of posts created by the Person's friends in the given timeframe

@@ -1,6 +1,6 @@
-CREATE OR REPLACE QUERY interactiveComplex9(VERTEX<Person> personId, DATETIME maxDate) SYNTAX v2 {
+CREATE OR REPLACE QUERY interactiveComplex9(VERTEX<Person> personId, INT maxDate) SYNTAX v2 {
   TYPEDEF tuple<INT personId, STRING personFirstName, STRING personLastName, 
-                INT messageId, STRING messageContent, DATETIME messageCreationDate> msgInfo;
+                INT messageId, STRING messageContent, INT messageCreationDate> msgInfo;
   
   HeapAccum<msgInfo>(20, messageCreationDate DESC, messageId ASC) @@result;
 

@@ -1,5 +1,5 @@
 CREATE OR REPLACE QUERY interactiveShort2(VERTEX<Person> personId) SYNTAX v2 {
-  TYPEDEF TUPLE<INT messageId, STRING messageContent, DATETIME messageCreationDate, INT originalPostId, INT originalPostAuthorId, STRING originalPostAuthorFirstName, STRING originalPostAuthorLastName> ogPostInfo;
+  TYPEDEF TUPLE<INT messageId, STRING messageContent, INT messageCreationDate, INT originalPostId, INT originalPostAuthorId, STRING originalPostAuthorFirstName, STRING originalPostAuthorLastName> ogPostInfo;
 
   SumAccum<INT> @postId, @authorOgId;
   SumAccum<STRING> @messageContent, @authorOgFN, @authorOgLN;
