@@ -8,4 +8,5 @@ cd ..
 
 . scripts/vars.sh
 
-python3 scripts/load.py ${UMBRA_CSV_DIR}
+# to follow the logs (a'la "tail -f") use: "logs.sh -f"
+docker logs $@ ${UMBRA_CONTAINER_NAME}
