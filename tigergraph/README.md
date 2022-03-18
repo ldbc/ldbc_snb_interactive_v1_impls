@@ -2,9 +2,6 @@
 
 This directory contains the [TigerGraph/GSQL](https://www.tigergraph.com/) implementation of the Interactive workload of the [LDBC SNB benchmark](https://github.com/ldbc/ldbc_snb_docs).
 
-## Recommandation
-Please always use non-distributed queries.
-
 ## Setup
 
 The recommended environment is that the benchmark scripts (Bash) and the LDBC driver (Java 8) run on the host machine, 
@@ -121,7 +118,7 @@ driver/validate.sh
 driver/benchmark.sh
 ```
 
-:warning: Our DateTime library does not support dateTime precision to milliseconds. We'll implement this in the future. **TODO: Once we implement this, remove this lane.
+:warning: Our DateTime library does not support dateTime precision to milliseconds. We use INT for datatime right now.
 :warning: SNB data sets of **different scale factors require different configurations** for the benchmark runs. Therefore, make sure you use the correct values (update_interleave and query frequencies) based on the files provided in the [`sf-properties/` directory](../sf-properties).
 
 > **Warning:** Note that if the default workload contains updates which are persisted in the database. Therefore, the database needs to be re-loaded between steps – otherwise repeated updates would insert duplicate entries.*
