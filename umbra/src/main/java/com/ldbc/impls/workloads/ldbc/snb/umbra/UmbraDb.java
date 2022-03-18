@@ -21,7 +21,7 @@ public abstract class UmbraDb extends BaseDb<UmbraQueryStore> {
     protected void onInit(Map<String, String> properties, LoggingService loggingService) throws DbException {
         try {
             dcs = new UmbraDbConnectionState<>(properties, new UmbraQueryStore(properties.get("queryDir")));
-        } catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new DbException(e);
         }
     }

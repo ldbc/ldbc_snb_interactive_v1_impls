@@ -17,7 +17,7 @@ public class UmbraDbConnectionState<TDbQueryStore extends QueryStore> extends Ba
     protected PGConnectionPoolDataSource ds;
     protected Connection connection;
 
-    public UmbraDbConnectionState(Map<String, String> properties, TDbQueryStore store) throws ClassNotFoundException {
+    public UmbraDbConnectionState(Map<String, String> properties, TDbQueryStore store) throws ClassNotFoundException, SQLException {
         super(properties, store);
 
         endPoint = properties.get("endpoint");
@@ -26,8 +26,8 @@ public class UmbraDbConnectionState<TDbQueryStore extends QueryStore> extends Ba
         ds.setServerName(endPoint);
         ds.setUser(properties.get("user"));
         ds.setPassword(properties.get("password"));
-        ds.setPreferQueryMode(PreferQueryMode.SIMPLE);
-        ds.setAssumeMinServerVersion("9.0");
+        ds.setProperty("preferQueryMode", "simple");
+        ds.setProperty("assumeMinServerVersion", "9.0");
         ds.setSsl(false);
     }
 
