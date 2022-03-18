@@ -26,9 +26,10 @@ We provide two reference implementations:
 * [Neo4j (Cypher) implementation](cypher/README.md)
 * [PostgreSQL (SQL) implementation](postgres/README.md)
 
-There are additional implementations are avaiable but these are less well-tested:
+Additional implementations:
 
 * [DuckDB (SQL) implementation](duckdb/README.md)
+* [TigerGraph (GSQL) implementation](tigergraph/README.md)
 * [Umbra (SQL) implementation](umbra/README.md)
 
 For detailed instructions, consult the READMEs of the projects.
