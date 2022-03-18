@@ -1,17 +1,12 @@
 CREATE OR REPLACE QUERY interactiveShort5(STRING messageId) SYNTAX v2 {
   SetAccum<STRING> @@seed;
 
-  // from the docs:
-  // 'Running to_vertex() and to_vertex_set() requires real-time conversion of an external ID to a GSQL internal ID, which is a relatively slow process.'
   @@seed += messageId;
-  vComments = to_vertex_set(@@seed, "Comment");
-
-  IF vComments.size() > 0 THEN
-    P = SELECT t FROM vComments:s-(HAS_CREATOR>)-Person:t;
-  ELSE
-    vPost = to_vertex_set(@@seed, "Post");
-    P = SELECT t FROM vPost:s-(HAS_CREATOR>)-Person:t;
+  vMessage = to_vertex_set(@@seed, "Comment");
+  IF vMessage.size() == 0 THEN
+    vMessage = to_vertex_set(@@seed, "Post");
   END;
+  P = SELECT t FROM vMessage:s-(HAS_CREATOR>)-Person:t;
 
   PRINT P[
       P.id AS personId,

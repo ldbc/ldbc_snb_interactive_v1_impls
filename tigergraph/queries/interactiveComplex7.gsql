@@ -9,8 +9,8 @@ CREATE OR REPLACE QUERY interactiveComplex7(VERTEX<Person> personId) SYNTAX v2 {
     P = SELECT p FROM S-(KNOWS)-Person:p
       ACCUM p.@isNew += FALSE;
 
-    M = SELECT m FROM S:s-(<HAS_CREATOR)- (Comment|Post):m;
-    vLiker = SELECT t FROM M:m-(<LIKES:e)-Person:t
+    vLiker = SELECT t FROM S:s-(<HAS_CREATOR)- (Comment|Post):m-(<LIKES:e)-Person:t
+      PER(m,e,t)
       ACCUM INT latency = (e.creationDate - m.creationDate) / 60 / 1000,
       IF m.content != "" THEN
           t.@mostRecentLike += liker(t.id, t.firstName, t.lastName, e.creationDate, m.id, m.content, latency, t.@isNew)

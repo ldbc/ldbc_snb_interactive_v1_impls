@@ -1,4 +1,4 @@
-CREATE OR REPLACE QUERY interactiveComplex11(vertex<Person> personId, STRING countryName, int workFromYear) SYNTAX _v2 {
+CREATE OR REPLACE QUERY interactiveComplex11(vertex<Person> personId, STRING countryName, int workFromYear) SYNTAX v2 {
     TYPEDEF TUPLE<INT personId, STRING personFirstName, STRING personLastName, STRING organizationName, INT organizationWorkFromYear> friendInfo;
     HeapAccum<friendInfo>(10, organizationWorkFromYear ASC, personId ASC, organizationName DESC) @@result;
     OrAccum<BOOL> @selected;
@@ -9,9 +9,9 @@ CREATE OR REPLACE QUERY interactiveComplex11(vertex<Person> personId, STRING cou
         WHERE c.name == countryName
         ACCUM org.@selected += TRUE;
 
-    P = SELECT p FROM S:s -(KNOWS*1..2)- Person:p WHERE p != personId;
-    P = SELECT p FROM P:p -(WORK_AT>:e) - Company:c
-        WHERE c.@selected AND e.workFrom < workFromYear
+    tmp = SELECT c FROM S:s -(KNOWS*1..2)- Person:p -(WORK_AT>:e) - Company:c
+        WHERE p != personId AND c.@selected AND e.workFrom < workFromYear
+        PER(p,e,c)
         ACCUM @@result += friendInfo(p.id, p.firstName, p.lastName, c.name, e.workFrom);
 
     PRINT @@result as result;

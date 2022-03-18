@@ -11,13 +11,18 @@ echo "--------------------------------------------------------------------------
 echo "DATA_PATH: ${DATA_PATH}"
 echo "QUERY_PATH: ${QUERY_PATH}"
 echo "==============================================================================="
-
+t0=$SECONDS
 gsql create_schema.gsql
 
 gsql --graph LDBC_SNB load_static_1.gsql
 gsql --graph LDBC_SNB load_static_2.gsql
 gsql --graph LDBC_SNB load_dynamic_1.gsql
 gsql --graph LDBC_SNB load_dynamic_2.gsql
+
+echo "==============================================================================="
+echo "Loading Data"
+echo "-------------------------------------------------------------------------------"
+t1=$SECONDS
 
 gsql --graph LDBC_SNB "RUN LOADING JOB load_static_1 USING \
   organisation=\"$DATA_PATH/static/organisation_0_0.csv\", \
@@ -55,6 +60,11 @@ gsql --graph LDBC_SNB "RUN LOADING JOB load_dynamic_1 USING \
   post_hasTag_tag=\"$DATA_PATH/dynamic/post_hasTag_tag_0_0.csv\", \
   post_isLocatedIn_place=\"$DATA_PATH/dynamic/post_isLocatedIn_place_0_0.csv\""
 
+
+echo "==============================================================================="
+echo "Parsing and compiling queries"
+echo "-------------------------------------------------------------------------------"
+t2=$SECONDS
 gsql --graph LDBC_SNB PUT ExprFunctions FROM \"$QUERY_PATH/ExprFunctions.hpp\"
 
 gsql --graph LDBC_SNB $QUERY_PATH/interactiveShort1.gsql
@@ -88,3 +98,18 @@ gsql --graph LDBC_SNB $QUERY_PATH/interactiveInsert7.gsql
 gsql --graph LDBC_SNB $QUERY_PATH/interactiveInsert8.gsql
 
 gsql --graph LDBC_SNB 'INSTALL QUERY *'
+t3=$SECONDS
+
+echo "Vertex statistics:"
+curl -X POST "http://127.0.0.1:9000/builtins/LDBC_SNB" -d  '{"function":"stat_vertex_number","type":"*"}'
+echo
+echo
+echo "Edge statistics:"
+curl -X POST "http://127.0.0.1:9000/builtins/LDBC_SNB" -d  '{"function":"stat_edge_number","type":"*"}'
+echo
+echo "====================================================================================="
+echo "TigerGraph database is ready for benchmark"
+echo "Schema setup:     $((t1-t0)) s"
+echo "Loading:          $((t2-t1)) s"
+echo "Query installing: $((t3-t2)) s"
+echo "====================================================================================="
