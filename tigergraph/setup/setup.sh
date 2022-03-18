@@ -100,12 +100,12 @@ gsql --graph LDBC_SNB $QUERY_PATH/interactiveInsert8.gsql
 gsql --graph LDBC_SNB 'INSTALL QUERY *'
 t3=$SECONDS
 
-echo "Vertex statistics:"
-curl -X POST "http://127.0.0.1:9000/builtins/LDBC_SNB" -d  '{"function":"stat_vertex_number","type":"*"}'
-echo
-echo
-echo "Edge statistics:"
-curl -X POST "http://127.0.0.1:9000/builtins/LDBC_SNB" -d  '{"function":"stat_edge_number","type":"*"}'
+#echo "Vertex statistics:"
+#curl -X POST "http://127.0.0.1:9000/builtins/LDBC_SNB" -d  '{"function":"stat_vertex_number","type":"*"}'
+#echo
+#echo
+#echo "Edge statistics:"
+#curl -X POST "http://127.0.0.1:9000/builtins/LDBC_SNB" -d  '{"function":"stat_edge_number","type":"*"}'
 echo
 echo "====================================================================================="
 echo "TigerGraph database is ready for benchmark"
