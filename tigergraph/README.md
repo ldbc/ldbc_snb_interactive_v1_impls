@@ -43,14 +43,14 @@ The data sets need to be generated and preprocessed before loading it to the dat
 To generate such data sets, use the [Hadoop-based Datagen's](https://github.com/ldbc/ldbc_snb_datagen_hadoop) `CsvComposite` serializer classes (with the default date formatter):
 
 ```ini
+ldbc.snb.datagen.serializer.dateFormatter:ldbc.snb.datagen.util.formatter.LongDateFormatter
 ldbc.snb.datagen.serializer.dynamicActivitySerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.activity.CsvCompositeDynamicActivitySerializer
 ldbc.snb.datagen.serializer.dynamicPersonSerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.person.CsvCompositeDynamicPersonSerializer
 ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv.staticserializer.CsvCompositeStaticSerializer
 ```
 
     Please note, that the loading procedure assumes that person data about langages and emails are cobined into a person record.
-    Please, use serializers like in [the following example](https://github.com/ldbc/ldbc_snb_datagen_hadoop/blob/main/params-csv-composite.ini).
-    Serializers like `CsvBasicDynamicPersonSerializer` produce separate files for persons' emails and languages.
+    An example configuration for scale factor 1 is given in the [`params-csv-composite-longdateformatter.ini`](https://github.com/ldbc/ldbc_snb_datagen_hadoop/blob/main/params-csv-composite-longdateformatter.ini) file of the Datagen repository.
 
 ### Preprocessing and loading
 TigerGraph uses a mechanism called "loading jobs" for data import.
