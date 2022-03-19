@@ -18,6 +18,10 @@ public class TigerGraphConverter {
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
+    public static Date parseDateTime(String representation) throws ParseException {
+        return sdf.parse(representation);
+    }
+
     public static long parseDateTimeToEpoch(String representation) throws ParseException {
         return dateToEpoch(sdf.parse(representation));
     }
