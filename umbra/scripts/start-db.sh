@@ -17,7 +17,6 @@ docker run \
     --volume=${UMBRA_CSV_DIR}:/data/:z \
     --volume=${UMBRA_DATABASE_DIR}:/var/db/:z \
     --volume=${UMBRA_DDL_DIR}:/ddl/:z \
-    --volume=${UMBRA_LOG_DIR}:/var/log/:z \
     --publish=5432:5432 \
     ${UMBRA_DOCKER_IMAGE} \
     umbra_server \
