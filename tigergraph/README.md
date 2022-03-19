@@ -49,7 +49,7 @@ ldbc.snb.datagen.serializer.dynamicPersonSerializer:ldbc.snb.datagen.serializer.
 ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv.staticserializer.CsvCompositeStaticSerializer
 ```
 
-    Please note, that the loading procedure assumes that person data about langages and emails are cobined into a person record.
+    Please note, that the loading procedure assumes that person data about languages and emails are combined into a person record.
     An example configuration for scale factor 1 is given in the [`params-csv-composite-longdateformatter.ini`](https://github.com/ldbc/ldbc_snb_datagen_hadoop/blob/main/params-csv-composite-longdateformatter.ini) file of the Datagen repository.
 
 ### Preprocessing and loading
@@ -118,7 +118,7 @@ driver/validate.sh
 driver/benchmark.sh
 ```
 
-:warning: Our DateTime library does not support dateTime precision to milliseconds. We use INT for datatime right now.
+:warning: Our DateTime library does not support dateTime precision to milliseconds. We use INT for datetime right now.
 :warning: SNB data sets of **different scale factors require different configurations** for the benchmark runs. Therefore, make sure you use the correct values (update_interleave and query frequencies) based on the files provided in the [`sf-properties/` directory](../sf-properties).
 
 > **Warning:** Note that if the default workload contains updates which are persisted in the database. Therefore, the database needs to be re-loaded between steps – otherwise repeated updates would insert duplicate entries.*
