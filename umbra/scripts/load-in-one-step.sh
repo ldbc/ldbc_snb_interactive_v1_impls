@@ -19,6 +19,5 @@ echo "UMBRA_CSV_DIR: ${UMBRA_CSV_DIR}"
 echo "==============================================================================="
 scripts/stop.sh
 scripts/create-db.sh
-scripts/start-container.sh
+scripts/start.sh
 scripts/load.sh
-# scripts/start-db.sh
