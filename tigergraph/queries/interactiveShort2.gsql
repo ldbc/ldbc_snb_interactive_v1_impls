@@ -1,34 +1,22 @@
-CREATE OR REPLACE DISTRIBUTED QUERY interactiveShort2(VERTEX<Person> personId) SYNTAX v2 {
-  TYPEDEF TUPLE<INT messageId, STRING messageContent, DATETIME messageCreationDate, INT originalPostId, INT originalPostAuthorId, STRING originalPostAuthorFirstName, STRING originalPostAuthorLastName> ogPostInfo;
-
-  SumAccum<INT> @postId, @authorOgId;
-  SumAccum<STRING> @messageContent, @authorOgFN, @authorOgLN;
+CREATE OR REPLACE QUERY interactiveShort2(VERTEX<Person> personId) SYNTAX v2 {
+  TYPEDEF TUPLE<INT messageId, STRING messageContent, INT messageCreationDate, INT originalPostId, INT originalPostAuthorId, STRING originalPostAuthorFirstName, STRING originalPostAuthorLastName> ogPostInfo;
   HeapAccum<ogPostInfo>(10, messageCreationDate DESC, messageId DESC) @@result;
-
   vPerson = { personId };
-  vMessage =
-    SELECT t
+  M = SELECT t
       FROM vPerson:s-(<HAS_CREATOR)-(Comment|Post):t
       ORDER BY t.creationDate DESC, t.id DESC
       LIMIT 10;
 
-  accMessage =
-    SELECT s
-      FROM vMessage:s -(REPLY_OF>*)-Post:t1 -(HAS_CREATOR>)-Person:t2
-        PER(s,t1,t2)
-        ACCUM
-          IF s.type == "Comment" OR s.content != "" THEN
-            s.@messageContent = s.content
-          ELSE
-            s.@messageContent = t1.imageFile
-          END,
-          s.@postId = t1.id,
-          s.@authorOgId = t2.id,
-          s.@authorOgFN = t2.firstName,
-          s.@authorOgLN = t2.lastName
-        POST-ACCUM @@result += ogPostInfo(s.id, s.@messageContent,
-          s.creationDate, s.@postId, s.@authorOgId, s.@authorOgFN, s.@authorOgLN);
-
+  tmp = SELECT p FROM M:m -(REPLY_OF>*)- Post:s -(HAS_CREATOR>)-Person:p 
+    PER(m,s,p)
+    ACCUM
+      STRING content = "",
+      IF m.content != "" THEN
+        content = m.content
+      ELSE
+        content = s.imageFile
+      END,
+      @@result += ogPostInfo(m.id, content, m.creationDate, s.id, p.id, p.firstName, p.lastName);
   PRINT @@result as result;
 }
 

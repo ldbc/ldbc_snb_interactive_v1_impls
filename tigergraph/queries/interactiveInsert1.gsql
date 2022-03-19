@@ -3,8 +3,8 @@ CREATE OR REPLACE QUERY interactiveInsert1  (
     STRING personFirstName,
     STRING personLastName,
     STRING gender,
-    DATETIME birthday,
-    DATETIME creationDate,
+    INT birthday,
+    INT creationDate,
     STRING locationIP,
     STRING browserUsed,
     UINT cityId, // TODO XXX shouldn't this be a vertex param?

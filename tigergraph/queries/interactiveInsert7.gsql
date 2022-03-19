@@ -1,19 +1,18 @@
 CREATE OR REPLACE QUERY interactiveInsert7(
         UINT commentId,
-        DATETIME creationDate,
+        INT creationDate,
         STRING locationIP,
         STRING browserUsed,
         STRING content,
         UINT length,
         UINT authorPersonId,
-        VERTEX<Country> countryId,
+        UINT countryId,
         INT replyToPostId,
         INT replyToCommentId,
         SET<VERTEX<Tag>> tagIds) {
 
-    INSERT INTO Comment VALUES(commentId, creationDate, locationIP, browserUsed, content, length);
-    INSERT INTO HAS_CREATOR VALUES(commentId Comment, authorPersonId Person, creationDate);
-    INSERT INTO IS_LOCATED_IN VALUES(commentId Comment, countryId);
+    INSERT INTO Comment VALUES(commentId, creationDate, locationIP, browserUsed, content, length, countryId);
+    INSERT INTO HAS_CREATOR VALUES(commentId Comment, authorPersonId Person);
     IF replyToPostId > 0 THEN
         INSERT INTO REPLY_OF (FROM, TO) VALUES(commentId, replyToPostId Post);
     END;

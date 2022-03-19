@@ -1,4 +1,4 @@
-CREATE OR REPLACE DISTRIBUTED QUERY interactiveComplex1(vertex<Person> personId, STRING firstName) for graph LDBC_SNB SYNTAX v2 {
+CREATE OR REPLACE QUERY interactiveComplex1(vertex<Person> personId, STRING firstName) for graph LDBC_SNB SYNTAX v2 {
     TYPEDEF TUPLE<VERTEX<Person> v, INT distance, STRING lastName, INT id> friendInfo;
 
     HeapAccum<friendInfo>(20, distance ASC, lastName ASC, id ASC) @@friendInfoTop;

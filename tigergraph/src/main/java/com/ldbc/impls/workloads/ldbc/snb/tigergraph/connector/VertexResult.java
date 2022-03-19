@@ -86,7 +86,7 @@ public class VertexResult {
     public long getDateTimeAsEpoch(String attributeName) throws ParseException {
         String datetime = (String) this.attributes.get(attributeName);
 
-        return TigerGraphConverter.parseDateTime(datetime).getTime();
+        return TigerGraphConverter.parseDateTimeToEpoch(datetime);
     }
 
     public Iterable<String> getStringList(String attributeName) {
