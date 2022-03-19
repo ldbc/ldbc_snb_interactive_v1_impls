@@ -73,12 +73,11 @@ This section explains how to set up the database for the benchmarking **using Do
 The instruction assumes that you are starting in the `tigergraph` subfolder of the project root directory (`ldbc_snb_interactive_impls/tigergraph`).
 
 #### Prepare the dataset
-Generate or download the dataset. Place it under `./tigergraph/scratch/data` directory.
-After that, `tigergraph/scratch/data/social_network` should hold `dynamic` and `static` datasets.
+Set the following environment variables based on your data source:
 
-To use the test data set, run:
+To use the test data set SF-0.003, run:
 ```bash
-cp -r test-data/social_network/ scratch/data/
+export TIGERGRAPH_DATA_DIR=`pwd`/test-data/social_network
 ```
 
 #### Start the database
@@ -96,7 +95,7 @@ To set up the database, run the following [script](./scripts/setup.sh):
 ```bash
 ./scripts/setup.sh
 ```
-It leverages the fact, that the TigerGraph container has the `scratch/data`, `setup` and `queries` directories mounted as volumes.
+It leverages the fact, that the TigerGraph container has the `$TIGERGRAPH_DATA_DIR`, `setup` and `queries` directories mounted as volumes.
 (The configuration is stored in [vars.sh](./scripts/vars.sh).)
 
 If you have your data located elsewhere, please update `vars.sh` or run the setup script with parameters:
