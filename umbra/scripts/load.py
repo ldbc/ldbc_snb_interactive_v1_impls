@@ -1,6 +1,7 @@
 import psycopg2
 import sys
 import os
+import re
 import time
 
 # def vacuum(con):
@@ -27,7 +28,10 @@ def run_script(con, filename):
         for query in queries:
             if query.isspace():
                 continue
-            print(f"{query}")
+
+            sql_statement = re.findall(r"^((CREATE|INSERT|DROP|DELETE|SELECT|COPY) [A-Za-z0-9_ ]*)", query, re.MULTILINE)
+            print(f"{sql_statement[0][0].strip()} ...")
+
             start = time.time()
             con.execute(query)
             end = time.time()
