@@ -1,9 +1,14 @@
 #!/bin/bash
 
-set -e
+set -eu
 set -o pipefail
 
 cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ..
 
-java -cp target/tigergraph-0.3.6-SNAPSHOT.jar com.ldbc.driver.Client -P driver/benchmark.properties
+. scripts/vars.sh
+
+scripts/stop.sh
+sleep 4
+scripts/start.sh
+scripts/setup.sh

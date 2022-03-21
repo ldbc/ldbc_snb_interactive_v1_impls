@@ -1,4 +1,4 @@
-CREATE OR REPLACE DISTRIBUTED QUERY interactiveComplex14(VERTEX<Person> person1Id, VERTEX<Person> person2Id) SYNTAX v2 {
+CREATE OR REPLACE QUERY interactiveComplex14(VERTEX<Person> person1Id, VERTEX<Person> person2Id) SYNTAX v2 {
   TYPEDEF tuple<JSONARRAY personIdsInPath, DOUBLE pathWeight> RESULT;
 
   OrAccum @visited1, @visited2;

@@ -16,7 +16,6 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
-
 public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
 
     private static void addStringArrayParam(List<String> items, ImmutableMap.Builder<String, String> builder, String key) {
@@ -69,14 +68,14 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
             long friendId = Long.parseLong(vertexResult.getVertexId()); // "others" use Long, TG uses "string". wouldn't longs be more efficient?
             String friendLastName = vertexResult.getString("friendLastName");
             int distanceFromPerson = vertexResult.getInt("distanceFromPerson");
-            long friendBirthday = vertexResult.getDateTimeAsEpoch("friendBirthday");
-            long friendCreationDate = vertexResult.getDateTimeAsEpoch("friendCreationDate");
+            long friendBirthday = vertexResult.getLong("friendBirthday");
+            long friendCreationDate = vertexResult.getLong("friendCreationDate");
             String friendGender = vertexResult.getString("friendGender");
             String friendBrowserUsed = vertexResult.getString("friendBrowserUsed");
             String friendLocationIp = vertexResult.getString("friendLocationIp");
             String friendCityName = vertexResult.getString("friendCityName");
             Iterable<String> friendEmails = vertexResult.getStringList("friendEmails");
-            Iterable<String> friendLanguages = vertexResult.getStringList("friendEmails");
+            Iterable<String> friendLanguages = vertexResult.getStringList("friendSpeaks");
             List<List> univs = vertexResult.getObjectList("friendUniversities");
             Iterable<List<Object>> universities = TigerGraphConverter.toOrgList(univs);
             List<List> comps = vertexResult.getObjectList("friendCompanies");
@@ -96,9 +95,9 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
 
         @Override
         protected Map<String, String> constructParams(LdbcQuery2 o) {
-            String maxDate = TigerGraphConverter.dateToEpochString(o.maxDate());
             return ImmutableMap.<String, String>builder()
-                    .put(LdbcQuery2.PERSON_ID, Long.toString(o.personId())).put(LdbcQuery2.MAX_DATE, maxDate)
+                    .put(LdbcQuery2.PERSON_ID, Long.toString(o.personId()))
+                    .put(LdbcQuery2.MAX_DATE,  Long.toString(o.maxDate().getTime()))
                     .build();
         }
 
@@ -108,12 +107,11 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
             Long messageId = (Long) record.get("messageId");
 
             String personFirstName = (String) record.get("personFirstName");
-            String messageCreationDate = (String) record.get("messageCreationDate");
+            Long messageCreationDate = (Long) record.get("messageCreationDate");
             String personLastName = (String) record.get("personLastName");
             String messageContent = (String) record.get("messageContent");
 
-            long timestamp = TigerGraphConverter.parseDateTimeToEpoch(messageCreationDate);
-            return new LdbcQuery2Result(personId, personFirstName, personLastName, messageId, messageContent, timestamp);
+            return new LdbcQuery2Result(personId, personFirstName, personLastName, messageId, messageContent, messageCreationDate);
         }
     }
 
@@ -126,13 +124,11 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
 
         @Override
         protected Map<String, String> constructParams(LdbcQuery3 o) {
-            String startDate = TigerGraphConverter.dateToEpochString(o.startDate());
-
             return ImmutableMap.<String, String>builder()
                     .put(LdbcQuery3.PERSON_ID, Long.toString(o.personId()))
                     .put(LdbcQuery3.COUNTRY_X_NAME, o.countryXName())
                     .put(LdbcQuery3.COUNTRY_Y_NAME, o.countryYName())
-                    .put(LdbcQuery3.START_DATE, startDate)
+                    .put(LdbcQuery3.START_DATE, Long.toString(o.startDate().getTime()))
                     .put(LdbcQuery3.DURATION_DAYS, Integer.toString(o.durationDays()))
                     .build();
         }
@@ -159,11 +155,9 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
 
         @Override
         protected Map<String, String> constructParams(LdbcQuery4 o) {
-            String startDate =TigerGraphConverter.dateToEpochString(o.startDate());
-
             return ImmutableMap.<String, String>builder()
                     .put(LdbcQuery3.PERSON_ID, Long.toString(o.personId()))
-                    .put(LdbcQuery3.START_DATE, startDate)
+                    .put(LdbcQuery3.START_DATE, Long.toString(o.startDate().getTime()))
                     .put(LdbcQuery3.DURATION_DAYS, Integer.toString(o.durationDays()))
                     .build();
         }
@@ -188,7 +182,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         protected Map<String, String> constructParams(LdbcQuery5 o) {
             return ImmutableMap.<String, String>builder()
                     .put(LdbcQuery5.PERSON_ID, Long.toString(o.personId()))
-                    .put(LdbcQuery5.MIN_DATE, TigerGraphConverter.dateToEpochString(o.minDate()))
+                    .put(LdbcQuery5.MIN_DATE, Long.toString(o.minDate().getTime()))
                     .build();
         }
 
@@ -240,14 +234,13 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
             Long personId = (Long) record.get("personId");
             String personFirstName = (String) record.get("personFirstName");
             String personLastName = (String) record.get("personLastName");
-            String likeCreationDate = (String) record.get("likeCreationDate");
+            Long likeCreationDate = (Long) record.get("likeCreationDate");
             Long messageId = (Long) record.get("messageId");
             String messageContent = (String) record.get("messageContent");
             int minutesLatency = Math.toIntExact((Long) record.get("minutesLatency"));
             boolean isNew = (boolean) record.get("isNew");
 
-            long timestamp = TigerGraphConverter.parseDateTimeToEpoch(likeCreationDate);
-            return new LdbcQuery7Result(personId, personFirstName, personLastName, timestamp, messageId, messageContent, minutesLatency, isNew);
+            return new LdbcQuery7Result(personId, personFirstName, personLastName, likeCreationDate, messageId, messageContent, minutesLatency, isNew);
         }
     }
 
@@ -270,10 +263,9 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
             String personLastName = (String) record.get("personLastName");
             Long commentId = (Long) record.get("commentId");
             String commentContent = (String) record.get("commentContent");
-            String commentCreationDate = (String) record.get("commentCreationDate");
+            Long commentCreationDate = (Long) record.get("commentCreationDate");
 
-            long timestamp = TigerGraphConverter.parseDateTimeToEpoch(commentCreationDate);
-            return new LdbcQuery8Result(personId, personFirstName, personLastName, timestamp, commentId, commentContent);
+            return new LdbcQuery8Result(personId, personFirstName, personLastName, commentCreationDate, commentId, commentContent);
         }
     }
 
@@ -288,7 +280,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         protected Map<String, String> constructParams(LdbcQuery9 o) {
             return ImmutableMap.<String, String>builder()
                     .put(LdbcQuery9.PERSON_ID, Long.toString(o.personId()))
-                    .put(LdbcQuery9.MAX_DATE, TigerGraphConverter.dateToEpochString(o.maxDate()))
+                    .put(LdbcQuery9.MAX_DATE, Long.toString(o.maxDate().getTime()))
                     .build();
         }
 
@@ -298,12 +290,11 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
             Long messageId = (Long) record.get("messageId");
 
             String personFirstName = (String) record.get("personFirstName");
-            String messageCreationDate = (String) record.get("messageCreationDate");
+            Long messageCreationDate = (Long) record.get("messageCreationDate");
             String personLastName = (String) record.get("personLastName");
             String messageContent = (String) record.get("messageContent");
 
-            long timestamp = TigerGraphConverter.parseDateTimeToEpoch(messageCreationDate);
-            return new LdbcQuery9Result(personId, personFirstName, personLastName, messageId, messageContent, timestamp);
+            return new LdbcQuery9Result(personId, personFirstName, personLastName, messageId, messageContent, messageCreationDate);
         }
     }
 
@@ -461,11 +452,11 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
             record = (LinkedTreeMap<String, Object>) record.get("result");
             String firstName = (String) record.get("firstName");
             String lastName = (String) record.get("lastName");
-            String birthday = (String) record.get("birthday");
+            Long birthday = (Long) record.get("birthday");
             String locationIP = (String) record.get("locationIP");
             String browserUsed = (String) record.get("browserUsed");
             String gender = (String) record.get("gender");
-            String creationDate = (String) record.get("creationDate");
+            Long creationDate = (Long) record.get("creationDate");
             Long cityId = (Long) record.get("cityId");
 
             return new LdbcShortQuery1PersonProfileResult(firstName, lastName, TigerGraphConverter.parseDateTimeToEpoch(birthday),
@@ -493,7 +484,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
             Long messageId = (Long) record.get("messageId");
 
             String messageContent = (String) record.get("messageContent");
-            String messageCreationDate = (String) record.get("messageCreationDate");
+            Long messageCreationDate = (Long) record.get("messageCreationDate");
             Long originalPostId = (Long) record.get("originalPostId");
             Long originalPostAuthorId = (Long) record.get("originalPostAuthorId");
             String originalPostAuthorFirstName = (String) record.get("originalPostAuthorFirstName");
@@ -526,7 +517,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
             long personId = vertexResult.getLong("personId");
             String firstName = vertexResult.getString("firstName");
             String lastName = vertexResult.getString("lastName");
-            long friendshipCreationDate = vertexResult.getDateTimeAsEpoch("friendshipCreationDate");
+            long friendshipCreationDate = vertexResult.getLong("friendshipCreationDate");
             return new LdbcShortQuery3PersonFriendsResult(personId, firstName, lastName, friendshipCreationDate);
         }
     }
@@ -550,7 +541,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         public LdbcShortQuery4MessageContentResult toResult(LinkedTreeMap<String, Object> record) throws ParseException {
             record = (LinkedTreeMap<String, Object>) ((List) record.get("result")).get(0);
             VertexResult vertexResult = new VertexResult(record);
-            long messageCreationDate = vertexResult.getDateTimeAsEpoch("messageCreationDate");
+            long messageCreationDate = vertexResult.getLong("messageCreationDate");
             String messageContent = vertexResult.getString("messageContent");
 
             return new LdbcShortQuery4MessageContentResult(messageContent, messageCreationDate);
@@ -637,7 +628,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
             long replyAuthorId = (Long) record.get("replyAuthorId");
             String replyAuthorFirstName = (String) record.get("replyAuthorFirstName");
             String replyAuthorLastName = (String) record.get("replyAuthorLastName");
-            String commentCreationDate = (String) record.get("commentCreationDate");
+            Long commentCreationDate = (Long) record.get("commentCreationDate");
             boolean replyAuthorKnowsOriginalMessageAuthor = (boolean) record.get("replyAuthorKnowsOriginalMessageAuthor");
 
 
@@ -666,8 +657,8 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
                     .put(LdbcUpdate1AddPerson.PERSON_FIRST_NAME, o.personFirstName())
                     .put(LdbcUpdate1AddPerson.PERSON_LAST_NAME, o.personLastName())
                     .put(LdbcUpdate1AddPerson.GENDER, o.gender())
-                    .put(LdbcUpdate1AddPerson.BIRTHDAY, TigerGraphConverter.dateToEpochString(o.birthday()))
-                    .put(LdbcUpdate1AddPerson.CREATION_DATE, TigerGraphConverter.dateToEpochString(o.creationDate()))
+                    .put(LdbcUpdate1AddPerson.BIRTHDAY, Long.toString(o.birthday().getTime()))
+                    .put(LdbcUpdate1AddPerson.CREATION_DATE, Long.toString(o.creationDate().getTime()))
                     .put(LdbcUpdate1AddPerson.LOCATION_IP, o.locationIp())
                     .put(LdbcUpdate1AddPerson.BROWSER_USED, o.browserUsed())
                     .put(LdbcUpdate1AddPerson.CITY_ID, Long.toString(o.cityId()));
@@ -700,7 +691,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
             return ImmutableMap.<String, String>builder()
                     .put(LdbcUpdate2AddPostLike.PERSON_ID, Long.toString(o.personId()))
                     .put(LdbcUpdate2AddPostLike.POST_ID, Long.toString(o.postId()))
-                    .put(LdbcUpdate2AddPostLike.CREATION_DATE, TigerGraphConverter.dateToEpochString(o.creationDate()))
+                    .put(LdbcUpdate2AddPostLike.CREATION_DATE, Long.toString(o.creationDate().getTime()))
                     .build();
         }
     }
@@ -721,7 +712,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
             return ImmutableMap.<String, String>builder()
                     .put(LdbcUpdate3AddCommentLike.PERSON_ID, Long.toString(o.personId()))
                     .put(LdbcUpdate3AddCommentLike.COMMENT_ID, Long.toString(o.commentId()))
-                    .put(LdbcUpdate3AddCommentLike.CREATION_DATE, TigerGraphConverter.dateToEpochString(o.creationDate()))
+                    .put(LdbcUpdate3AddCommentLike.CREATION_DATE, Long.toString(o.creationDate().getTime()))
                     .build();
         }
     }
@@ -742,7 +733,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
             ImmutableMap.Builder<String, String> builder = ImmutableMap.<String, String>builder()
                     .put(LdbcUpdate4AddForum.FORUM_ID, Long.toString(o.forumId()))
                     .put(LdbcUpdate4AddForum.FORUM_TITLE, o.forumTitle())
-                    .put(LdbcUpdate4AddForum.CREATION_DATE, TigerGraphConverter.dateToEpochString(o.creationDate()))
+                    .put(LdbcUpdate4AddForum.CREATION_DATE, Long.toString(o.creationDate().getTime()))
                     .put(LdbcUpdate4AddForum.MODERATOR_PERSON_ID, Long.toString(o.moderatorPersonId()));
             addLongArrayParam(o.tagIds(), builder, LdbcUpdate4AddForum.TAG_IDS);
             return builder.build();
@@ -765,7 +756,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
             return ImmutableMap.<String, String>builder()
                     .put(LdbcUpdate5AddForumMembership.FORUM_ID, Long.toString(o.forumId()))
                     .put(LdbcUpdate5AddForumMembership.PERSON_ID, Long.toString(o.personId()))
-                    .put(LdbcUpdate5AddForumMembership.JOIN_DATE, TigerGraphConverter.dateToEpochString(o.joinDate()))
+                    .put(LdbcUpdate5AddForumMembership.JOIN_DATE, Long.toString(o.joinDate().getTime()))
                     .build();
         }
     }
@@ -784,9 +775,9 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         @Override
         protected Map<String, String> constructParams(LdbcUpdate6AddPost o) {
             ImmutableMap.Builder<String, String> builder = ImmutableMap.<String, String>builder()
-                    .put(LdbcUpdate6AddPost.POST_ID, Long.toString(o.forumId()))
+                    .put(LdbcUpdate6AddPost.POST_ID, Long.toString(o.postId()))
                     .put(LdbcUpdate6AddPost.IMAGE_FILE, o.imageFile())
-                    .put(LdbcUpdate6AddPost.CREATION_DATE, TigerGraphConverter.dateToEpochString(o.creationDate()))
+                    .put(LdbcUpdate6AddPost.CREATION_DATE, Long.toString(o.creationDate().getTime()))
                     .put(LdbcUpdate6AddPost.LOCATION_IP, o.locationIp())
                     .put(LdbcUpdate6AddPost.BROWSER_USED, o.browserUsed())
                     .put(LdbcUpdate6AddPost.LANGUAGE, o.language())
@@ -816,7 +807,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         protected Map<String, String> constructParams(LdbcUpdate7AddComment o) {
             ImmutableMap.Builder<String, String> builder = ImmutableMap.<String, String>builder()
                     .put(LdbcUpdate7AddComment.COMMENT_ID, Long.toString(o.commentId()))
-                    .put(LdbcUpdate7AddComment.CREATION_DATE, TigerGraphConverter.dateToEpochString(o.creationDate()))
+                    .put(LdbcUpdate7AddComment.CREATION_DATE, Long.toString(o.creationDate().getTime()))
                     .put(LdbcUpdate7AddComment.LOCATION_IP, o.locationIp())
                     .put(LdbcUpdate7AddComment.BROWSER_USED, o.browserUsed())
                     .put(LdbcUpdate7AddComment.CONTENT, o.content())
@@ -847,7 +838,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
             return ImmutableMap.<String, String>builder()
                     .put(LdbcUpdate8AddFriendship.PERSON1_ID, Long.toString(o.person1Id()))
                     .put(LdbcUpdate8AddFriendship.PERSON2_ID, Long.toString(o.person2Id()))
-                    .put(LdbcUpdate8AddFriendship.CREATION_DATE, TigerGraphConverter.dateToEpochString(o.creationDate()))
+                    .put(LdbcUpdate8AddFriendship.CREATION_DATE, Long.toString(o.creationDate().getTime()))
                     .build();
         }
     }

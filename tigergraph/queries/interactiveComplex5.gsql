@@ -1,31 +1,28 @@
-CREATE OR REPLACE DISTRIBUTED QUERY interactiveComplex5(VERTEX<Person> personId, DATETIME minDate) SYNTAX v2 {
+CREATE OR REPLACE QUERY interactiveComplex5(VERTEX<Person> personId, INT minDate) SYNTAX v2 {
   TYPEDEF TUPLE<STRING forumTitle, INT postCount, INT id> forumInfo;
 	HeapAccum<forumInfo>(20, postCount DESC, id ASC) @@result;
-  SetAccum<VERTEX<Person>> @@friendAll;
-  SetAccum<INT> @memberIds;
+  SetAccum<VERTEX<Person>> @memberIds;
+  MinAccum<VERTEX<Person>> @creatorId;
   SumAccum<INT> @postCount;
-  MinAccum<UINT> @creatorId;
   OrAccum @selected;
 
   S = { personId };
-  vFriend = SELECT p
-    FROM S:s-(KNOWS*1..2)-Person:p
-    WHERE p != personId;
-
-  vFriend = SELECT p
-    FROM vFriend:p -(<HAS_MEMBER:e)-Forum:t
+  P = SELECT p FROM S:s -(KNOWS*1..2)- Person:p WHERE p != personId;
+  vForum = SELECT t
+    FROM P:p -(<HAS_MEMBER:e)-Forum:t
     WHERE e.creationDate > minDate
-    ACCUM t.@memberIds += p.id, t.@selected += true;
+    ACCUM t.@memberIds += p, p.@selected += True;
 
   vPost = SELECT p
-    FROM vFriend:s-(<HAS_CREATOR)-Post:p
-    ACCUM p.@creatorId += s.id;
+    FROM P:s-(<HAS_CREATOR)-Post:p
+    WHERE s.@selected
+    ACCUM p.@creatorId += s;
 
-  vForum = SELECT t
+  vPost = SELECT p
     FROM vPost:p-(<CONTAINER_OF)-Forum:t
-    WHERE t.@selected
-    ACCUM CASE WHEN p.@creatorId IN t.@memberIds THEN t.@postCount += 1 END
-    POST-ACCUM @@result += forumInfo(t.title, t.@postCount, t.id);
-
+    WHERE p.@creatorId IN t.@memberIds
+    ACCUM t.@postCount += 1;
+  
+  vForum = SELECT t FROM vForum:t ACCUM @@result += forumInfo(t.title, t.@postCount, t.id);
   PRINT @@result as result;
 }

@@ -26,6 +26,10 @@ public class TigerGraphConverter {
         return dateToEpoch(sdf.parse(representation));
     }
 
+    public static long parseDateTimeToEpoch(long representation) throws ParseException {
+        return representation;
+    }
+
     public static long dateToEpoch(Date date) {
         return date.toInstant().getEpochSecond();
     }

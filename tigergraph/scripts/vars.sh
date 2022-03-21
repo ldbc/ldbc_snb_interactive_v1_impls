@@ -5,7 +5,7 @@ cd ..
 export TIGERGRAPH_VERSION=latest
 export TIGERGRAPH_CONTAINER_NAME=snb-interactive-tigergraph
 export TIGERGRAPH_DATABASE=LDBC_SNB
-export TIGERGRAPH_DATA_DIR=`pwd`/scratch/data
+#export TIGERGRAPH_DATA_DIR=`pwd`/test-data
 export TIGERGRAPH_SCRIPTS_DIR=`pwd`/setup
 export TIGERGRAPH_QUERIES_DIR=`pwd`/queries
 export TIGERGRAPH_REST_PORT=9000

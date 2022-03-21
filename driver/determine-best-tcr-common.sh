@@ -13,9 +13,9 @@ BENCHMARK_PROPERTIES_FILE=${1:-driver/benchmark.properties}
 # make sure that:
 # - you have invoked scripts/backup-database.sh
 
-TCR_MIN=0.05
-TCR_MAX=0.30
-TCR_STEPS=4
+TCR_MIN=${2:-0.05}
+TCR_MAX=${3:-0.30}
+TCR_STEPS=${4:-4}
 
 TCR_CURRENT=${TCR_MIN}
 
