@@ -131,7 +131,15 @@ The key configurations are the following:
   * `ldbc.snb.datagen.serializer.dynamicPersonSerializer`
   * `ldbc.snb.datagen.serializer.staticSerializer`
 
-Producing large-scale data sets requires memory and can be time-consuming (SF100 requires 24GB memory and takes about 4 hours to generate on a single machine). To mitigate this, we are working on making these data sets available in a central repository and expect to finish this in Q1 2022. In the meantime, if you require large data sets or update streams with a predefined number of partitions, reach out to the project maintainer, Gabor Szarnyas.
+### Pre-generated data sets
+
+Producing large-scale data sets requires non-trivial amounts of memory and computing resources (e.g. SF100 requires 24GB memory and takes about 4 hours to generate on a single machine).
+To mitigate this, we have pregenerated data sets using 9 different serializers and the update streams using 17 different partition numbers:
+
+* Serializers: csv_basic, csv_basic-longdateformatter, csv_composite, csv_composite-longdateformatter, csv_composite_merge_foreign, csv_composite_merge_foreign-longdateformatter, csv_merge_foreign, csv_merge_foreign-longdateformatter, ttl
+* Partition numbers: 2^k (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024) and 6×2^k (24, 48, 96, 192, 384, 768).
+
+The data sets are available at the SURFsara data repository: <https://repository.surfsara.nl/datasets/cwi/snb>.
 
 ### Test data set
 
