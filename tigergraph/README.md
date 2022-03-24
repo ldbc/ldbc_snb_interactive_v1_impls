@@ -36,7 +36,7 @@ and some helper scripts in [scripts](./scripts) to manage TigerGraph in a Docker
 In this section, we will describe how to obtain the data set and load it into the database.
 
 The data can be generated using the data generator tool or downloaded from the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop).
-There are also some pre-generated data sets available in the [LDBC SNB benchmark data repository]() **TODO: add link.
+There are also some pre-generated data sets available in the [SURF/CWI data repository](https://repository.surfsara.nl/datasets/cwi/snb).
 
 ### Generating a dataset
 The data sets need to be generated and preprocessed before loading it to the database.
