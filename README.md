@@ -139,7 +139,7 @@ To mitigate this, we have pregenerated data sets using 9 different serializers a
 * Serializers: csv_basic, csv_basic-longdateformatter, csv_composite, csv_composite-longdateformatter, csv_composite_merge_foreign, csv_composite_merge_foreign-longdateformatter, csv_merge_foreign, csv_merge_foreign-longdateformatter, ttl
 * Partition numbers: 2^k (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024) and 6×2^k (24, 48, 96, 192, 384, 768).
 
-The data sets are available at the [SURF/CWI data repository](https://repository.surfsara.nl/datasets/cwi/snb).
+The data sets are available at the [SURF/CWI data repository](https://hdl.handle.net/11112/e6e00558-a2c3-9214-473e-04a16de09bf8).
 
 ### Test data set
 
