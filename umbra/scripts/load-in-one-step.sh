@@ -17,7 +17,7 @@ echo "UMBRA_CONTAINER_NAME: ${UMBRA_CONTAINER_NAME}"
 echo "UMBRA_DOCKER_IMAGE: ${UMBRA_DOCKER_IMAGE}"
 echo "UMBRA_CSV_DIR: ${UMBRA_CSV_DIR}"
 echo "==============================================================================="
-
-scripts/start-container.sh
+scripts/stop.sh
+scripts/create-db.sh
+scripts/start.sh
 scripts/load.sh
-scripts/start-db.sh

@@ -10,14 +10,20 @@ cd ..
 
 python3 -c 'import psycopg2' || (echo "psycopg2 Python package is missing or broken" && exit 1)
 
-docker exec \
+echo -n "Starting the database . "
+docker run \
+    --name ${UMBRA_CONTAINER_NAME} \
     --detach \
-    ${UMBRA_CONTAINER_NAME} \
-    /umbra/bin/server \
-    --address 0.0.0.0 \
-    /scratch/db/ldbc.db
+    --volume=${UMBRA_CSV_DIR}:/data/:z \
+    --volume=${UMBRA_DATABASE_DIR}:/var/db/:z \
+    --volume=${UMBRA_DDL_DIR}:/ddl/:z \
+    --publish=5432:5432 \
+    ${UMBRA_DOCKER_IMAGE} \
+    umbra_server \
+        --address 0.0.0.0 \
+        /var/db/ldbc.db \
+    >/dev/null
 
-echo -n "Waiting for the database to start . "
 until python3 scripts/test-db-connection.py > /dev/null 2>&1; do
     echo -n ". "
     sleep 1
