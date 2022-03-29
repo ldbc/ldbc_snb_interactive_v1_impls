@@ -12,12 +12,14 @@
         UINT countryId,
         SET<VERTEX<Tag>> tagIds) {
 
-
-      INSERT INTO Post VALUES(postId, imageFile, creationDate, locationIP, browserUsed, language, content, length, countryId);
+      //IS_LOCATED_IN country is inserted as an attribute
+      INSERT INTO Post VALUES(postId, imageFile, creationDate, locationIP, browserUsed, language, content, length, countryId); 
+      INSERT INTO Person (PRIMARY_ID) VALUES(authorPersonId);
+      INSERT INTO Forum (PRIMARY_ID) VALUES(forumId);
       INSERT INTO HAS_CREATOR VALUES(postId Post, authorPersonId Person);
       INSERT INTO CONTAINER_OF VALUES(forumId Forum, postId Post);
 
       tmp = {tagIds};
       tmp = SELECT v FROM tmp:v
-        ACCUM INSERT INTO HAS_INTEREST (FROM, TO) VALUES(postId, v);
+        ACCUM INSERT INTO HAS_TAG (FROM, TO) VALUES(postId, v);
     }
