@@ -73,43 +73,38 @@ This section explains how to set up the database for the benchmarking **using Do
 The instruction assumes that you are starting in the `tigergraph` subfolder of the project root directory (`ldbc_snb_interactive_impls/tigergraph`).
 
 #### Prepare the dataset
-Set the following environment variables based on your data source:
-
-To use the test data set SF-0.003, run:
+Set the following environment variables based on your data source (the example below uses the test data set SF-0.003):
 ```bash
 export TIGERGRAPH_DATA_DIR=`pwd`/test-data/social_network
 ```
+#### Start database and load data
+:warning: Be careful -- this stops the currently running (containerized) TigerGraph database and deletes all of its data.
 
-#### Start the database
 To start the database, run the following [script](./scripts/start.sh):
-```
+```bash
+./scripts/stop.sh # if you have an existing TG database
+# wait several seconds for docker to reset 
 ./scripts/start.sh
 ```
 
-It will start a single node TigerGraph database and all required services.
+It will start a single node TigerGraph database and all required services. Note the license in the container is a trial license supporting at most 100GB data. For benchmarks on SF-100 and larger, you need to obtain a license after running `start.sh`. We have an example command in the end of `start.sh`.
 
-You can verify the readiness of TigerGraph by visiting it's console in the browser: `http://localhost:14240/`
-
-#### Load the data
 To set up the database, run the following [script](./scripts/setup.sh):
 ```bash
 ./scripts/setup.sh
 ```
-It leverages the fact, that the TigerGraph container has the `$TIGERGRAPH_DATA_DIR`, `setup` and `queries` directories mounted as volumes.
-(The configuration is stored in [vars.sh](./scripts/vars.sh).)
+This step may take a while (several minutes), as it is responsible for defining the queries, loading jobs, loading the data and installing the queries. After the data is ready, you can explore the graph using TigerGraph GraphStudio in the browser: `http://localhost:14240/`
 
-If you have your data located elsewhere, please update `vars.sh` or run the setup script with parameters:
+The above scripts can be executed with a single command:
 ```bash
-./scripts/setup.sh <<dataset dir>> <<query dir>>
+scripts/load-in-one-step.sh
 ```
-
-This step may take a while (several minutes), as it is responsible for defining the queries, loading jobs, loading the data
-and installing (optimizing and compiling on the server) the queries.
 
 ## Running the benchmark
 
-To run the scripts of benchmark framework, edit the `driver/{create-validation-parameters,validate,benchmark}.properties` files,
-then run their script, one of:
+To run the scripts of benchmark framework, edit the `driver/{create-validation-parameters,validate,benchmark}.properties` files, 
+
+then run their script, one of: 
 
 ```bash
 driver/create-validation-parameters.sh
@@ -117,8 +112,6 @@ driver/validate.sh
 driver/benchmark.sh
 ```
 
-:warning: Our DateTime library does not support dateTime precision to milliseconds. We use INT for datetime right now.
-:warning: SNB data sets of **different scale factors require different configurations** for the benchmark runs. Therefore, make sure you use the correct values (update_interleave and query frequencies) based on the files provided in the [`sf-properties/` directory](../sf-properties).
+SNB data sets of **different scale factors require different configurations** for the benchmark runs. Therefore, make sure you use the correct values (update_interleave and query frequencies) based on the files provided in the [`sf-properties/` directory](../sf-properties).
 
-> **Warning:** Note that if the default workload contains updates which are persisted in the database. Therefore, the database needs to be re-loaded between steps – otherwise repeated updates would insert duplicate entries.*
-
+* The default workload contains updates which are persisted in the database. Therefore, **the database needs to be reloaded or restored from backup before each run**. Use the provided `scripts/backup-database.sh` and `scripts/restore-database.sh` scripts to achieve this.

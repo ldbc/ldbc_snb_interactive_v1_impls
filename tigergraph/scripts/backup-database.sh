@@ -9,7 +9,7 @@ cd ..
 . scripts/vars.sh
 
 echo "==============================================================================="
-echo "Restore the TIGERGRAPH database"
+echo "Backup the TIGERGRAPH database"
 echo "-------------------------------------------------------------------------------"
 echo "TIGERGRAPH_VERSION: ${TIGERGRAPH_VERSION}"
 echo "TIGERGRAPH_CONTAINER_NAME: ${TIGERGRAPH_CONTAINER_NAME}"
@@ -17,7 +17,9 @@ echo "==========================================================================
 
 docker exec --user tigergraph --interactive --tty ${TIGERGRAPH_CONTAINER_NAME} bash -c \
   "export PATH=/home/tigergraph/tigergraph/app/cmd:\$PATH; \
+  gadmin config set System.Backup.Local.Enable true; \
+  gadmin config set System.Backup.Local.Path /home/tigergraph/backup; \
+  gadmin config apply -y; 
   export GSQL_USERNAME=tigergraph; \
   export GSQL_PASSWORD=tigergraph; \
-  export tag=\$(gbar list | grep snb-backup | cut -d' ' -f1);
-  gbar restore \$tag -y"
+  gbar backup -t snb-backup"
