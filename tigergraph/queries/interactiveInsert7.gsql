@@ -12,11 +12,14 @@ CREATE OR REPLACE QUERY interactiveInsert7(
         SET<VERTEX<Tag>> tagIds) {
 
     INSERT INTO Comment VALUES(commentId, creationDate, locationIP, browserUsed, content, length, countryId);
+    INSERT INTO Person (PRIMARY_ID) VAlUES (authorPersonId);
     INSERT INTO HAS_CREATOR VALUES(commentId Comment, authorPersonId Person);
     IF replyToPostId > 0 THEN
+        INSERT INTO Post (PRIMARY_ID) VALUES(replyToPostId);
         INSERT INTO REPLY_OF (FROM, TO) VALUES(commentId, replyToPostId Post);
     END;
     IF replyToCommentId > 0 THEN
+        INSERT INTO Comment (PRIMARY_ID) VALUES(replyToCommentId);
         INSERT INTO REPLY_OF (FROM, TO) VALUES(commentId, replyToCommentId Comment);
     END;
     tmp = {tagIds};
