@@ -102,9 +102,7 @@ scripts/load-in-one-step.sh
 
 ## Running the benchmark
 
-To run the scripts of benchmark framework, edit the `driver/{create-validation-parameters,validate,benchmark}.properties` files, 
-
-then run their script, one of: 
+To run the scripts of benchmark framework, edit the `driver/{create-validation-parameters,validate,benchmark}.properties` files, then run their script, one of: 
 
 ```bash
 driver/create-validation-parameters.sh
