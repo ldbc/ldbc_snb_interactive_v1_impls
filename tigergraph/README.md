@@ -93,7 +93,7 @@ To set up the database, run the following [script](./scripts/setup.sh):
 ```bash
 ./scripts/setup.sh
 ```
-This step may take a while (several minutes), as it is responsible for defining the queries, loading jobs, loading the data and installing the queries. After the data is ready, you can explore the graph using TigerGraph GraphStudio in the browser: `http://localhost:14240/`
+This step may take a while (several minutes), as it is responsible for defining the queries, loading jobs, loading the data and installing the queries. After the data is ready, you can explore the graph using TigerGraph GraphStudio in the browser: `http://localhost:14240/`. By default, the docker terminal can be accessed via `ssh tigergraph@localhost -p 14022` using password tigergraph.
 
 The above scripts can be executed with a single command:
 ```bash

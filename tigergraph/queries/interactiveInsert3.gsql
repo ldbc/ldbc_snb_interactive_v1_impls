@@ -1,5 +1,5 @@
 CREATE OR REPLACE QUERY interactiveInsert3(UINT personId, UINT commentId, INT creationDate) {
-    INSERT INTO Person (PRIMARY_ID) VALUES (personId);
-    INSERT INTO Comment (PRIMARY_ID) VALUES (commentId);
+    INSERT INTO Person (id) VALUES (personId);
+    INSERT INTO Comment (id) VALUES (commentId);
     INSERT INTO LIKES (FROM, TO, creationDate) VALUES(personId Person, commentId Comment, creationDate);
 }
