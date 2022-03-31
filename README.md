@@ -120,7 +120,7 @@ The implementation process looks roughly as follows:
 
 ### Benchmark data sets
 
-To generate the benchmark data sets, use the [Hadoop-based LDBC SNB Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop/releases/tag/v0.3.6).
+To generate the benchmark data sets, use the [Hadoop-based LDBC SNB Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop/releases/tag/v0.3.7-SNAPSHOT).
 
 The key configurations are the following:
 
