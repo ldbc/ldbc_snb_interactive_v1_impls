@@ -8,4 +8,4 @@ cd ..
 
 BENCHMARK_PROPERTIES_FILE=${1:-driver/benchmark.properties}
 
-java -cp target/umbra-0.3.6-SNAPSHOT.jar com.ldbc.driver.Client -P ${BENCHMARK_PROPERTIES_FILE}
+java -cp target/umbra-0.3.6.jar com.ldbc.driver.Client -P ${BENCHMARK_PROPERTIES_FILE}

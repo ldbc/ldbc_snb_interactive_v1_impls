@@ -8,4 +8,4 @@ cd ..
 
 VALIDATE_PROPERTIES_FILE=${1:-driver/validate.properties}
 
-java -cp target/umbra-0.3.6-SNAPSHOT.jar com.ldbc.driver.Client -P ${VALIDATE_PROPERTIES_FILE}
+java -cp target/umbra-0.3.6.jar com.ldbc.driver.Client -P ${VALIDATE_PROPERTIES_FILE}

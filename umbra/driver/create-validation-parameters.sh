@@ -8,4 +8,4 @@ cd ..
 
 CREATE_VALIDATION_PARAMETERS_PROPERTIES_FILE=${1:-driver/create-validation-parameters.properties}
 
-java -cp target/umbra-0.3.6-SNAPSHOT.jar com.ldbc.driver.Client -P ${CREATE_VALIDATION_PARAMETERS_PROPERTIES_FILE}
+java -cp target/umbra-0.3.6.jar com.ldbc.driver.Client -P ${CREATE_VALIDATION_PARAMETERS_PROPERTIES_FILE}
