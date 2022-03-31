@@ -10,22 +10,22 @@
 #   For Comment, Post, Forum, Person, the order of attributes is different.
 
 ## Message
-CREATE VERTEX Comment (PRIMARY_ID id UINT, creationDate INT, locationIP STRING, browserUsed STRING, content STRING, length UINT, countryId UINT) WITH primary_id_as_attribute="TRUE"
-CREATE VERTEX Post (PRIMARY_ID id UINT, imageFile STRING, creationDate INT, locationIP STRING, browserUsed STRING, language STRING, content STRING, length UINT, countryId UINT) WITH primary_id_as_attribute="TRUE"
+CREATE VERTEX Comment (id UINT PRIMARY KEY, creationDate INT, locationIP STRING, browserUsed STRING, content STRING, length UINT, countryId UINT)
+CREATE VERTEX Post (id UINT PRIMARY KEY, imageFile STRING, creationDate INT, locationIP STRING, browserUsed STRING, language STRING, content STRING, length UINT, countryId UINT)
 
 ## Organisation
-CREATE VERTEX Company (PRIMARY_ID id UINT, name STRING, url STRING) WITH primary_id_as_attribute="TRUE"
-CREATE VERTEX University (PRIMARY_ID id UINT, name STRING, url STRING) WITH primary_id_as_attribute="TRUE"
+CREATE VERTEX Company (id UINT PRIMARY KEY, name STRING, url STRING)
+CREATE VERTEX University (id UINT PRIMARY KEY, name STRING, url STRING)
 
 ## Place
-CREATE VERTEX City (PRIMARY_ID id UINT, name STRING, url STRING) WITH primary_id_as_attribute="TRUE"
-CREATE VERTEX Country (PRIMARY_ID id UINT, name STRING, url STRING) WITH primary_id_as_attribute="TRUE"
-CREATE VERTEX Continent (PRIMARY_ID id UINT, name STRING, url STRING) WITH primary_id_as_attribute="TRUE"
+CREATE VERTEX City (id UINT PRIMARY KEY, name STRING, url STRING)
+CREATE VERTEX Country (id UINT PRIMARY KEY, name STRING, url STRING)
+CREATE VERTEX Continent (id UINT PRIMARY KEY, name STRING, url STRING)
 
-CREATE VERTEX Forum (PRIMARY_ID id UINT, title STRING, creationDate INT) WITH primary_id_as_attribute="TRUE"
-CREATE VERTEX Person (PRIMARY_ID id UINT, firstName STRING, lastName STRING, gender STRING, birthday INT, creationDate INT, locationIP STRING, browserUsed STRING, speaks SET<STRING>, email SET<STRING>) WITH primary_id_as_attribute="TRUE"
-CREATE VERTEX Tag (PRIMARY_ID id UINT, name STRING, url STRING) WITH primary_id_as_attribute="TRUE"
-CREATE VERTEX TagClass (PRIMARY_ID id UINT, name STRING, url STRING) WITH primary_id_as_attribute="TRUE"
+CREATE VERTEX Forum (id UINT PRIMARY KEY, title STRING, creationDate INT)
+CREATE VERTEX Person (id UINT PRIMARY KEY, firstName STRING, lastName STRING, gender STRING, birthday INT, creationDate INT, locationIP STRING, browserUsed STRING, speaks SET<STRING>, email SET<STRING>)
+CREATE VERTEX Tag (id UINT PRIMARY KEY, name STRING, url STRING)
+CREATE VERTEX TagClass (id UINT PRIMARY KEY, name STRING, url STRING)
 
 # Edges
 CREATE DIRECTED EDGE CONTAINER_OF (FROM Forum, TO Post) WITH REVERSE_EDGE="CONTAINER_OF_REVERSE"
