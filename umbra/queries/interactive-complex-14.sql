@@ -1,19 +1,26 @@
 WITH RECURSIVE
-    Paths(dst, path) AS (
-            SELECT k_person2id, ARRAY[k_person1id, k_person2id] FROM knows WHERE k_person1id = :person1Id
-            UNION ALL
-            SELECT t.k_person2id, array_append(path, t.k_person2id)
-            FROM (SELECT *
-                  FROM Paths
-                  WHERE NOT EXISTS (SELECT * FROM Paths s2 WHERE s2.dst = :person2Id)
-                ) s,
-                knows t
-            WHERE s.dst = t.k_person1id
+    Paths(dst, path, endReached) AS (
+            SELECT
+                k_person2id AS dst,
+                ARRAY[k_person1id, k_person2id] AS path,
+                0 AS endReached
+            FROM knows
+            WHERE k_person1id = :person1Id::bigint
+        UNION ALL
+            SELECT
+                t.k_person2id AS dst,
+                array_append(path, t.k_person2id) AS path,
+                max(CASE WHEN t.k_person2id = :person2Id::bigint THEN 1 ELSE 0 END) OVER (ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS endReached
+            FROM knows t
+            JOIN Paths s
+              ON s.dst = t.k_person1id
+            WHERE s.endReached = 0
+              AND NOT EXISTS (SELECT * FROM Paths s2 WHERE s2.dst = :person2Id::bigint)
     ),
     SelectedPaths(dst, path) AS (
             SELECT dst, path
             FROM Paths
-            WHERE dst = :person2Id
+            WHERE dst = :person2Id::bigint
     ),
     Iterator(i) AS (
             SELECT i
