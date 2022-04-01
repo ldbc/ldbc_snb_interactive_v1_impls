@@ -1,20 +1,31 @@
 WITH RECURSIVE
-    search_graph(link, level, path) AS (
-            SELECT :person1Id::bigint, 0, array[:person1Id::bigint]
+    search_graph(endNode, level, path, endReached) AS (
+            SELECT
+                :person1Id::bigint AS endNode,
+                0 AS level,
+                array[:person1Id::bigint] AS path,
+                0 as endReached
         UNION ALL
-            (WITH sg(link, level) as (select link, level, path from search_graph) -- Note: sg is only the diff produced in the previous iteration
-            SELECT DISTINCT k_person2id, x.level + 1, array_append(path, k_person2id)
-            FROM knows, sg x
-            WHERE 1=1
-            and x.link = k_person1id
+            SELECT
+                k_person2id AS endNode,
+                sgx.level + 1 AS level,
+                array_append(path, k_person2id) AS path,
+                max(CASE WHEN k_person2id = :person2Id::bigint THEN 1 ELSE 0 END) OVER (ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS endReached
+            FROM knows
+            JOIN search_graph sgx
+            ON sgx.endNode = k_person1id
             -- stop if we have reached person2 in the previous iteration
-            and not exists(select * from sg y where y.link = :person2Id::bigint)
+            WHERE sgx.endReached = 0
             -- skip reaching persons reached in the previous iteration
-            and not exists(select * from sg y where y.link = k_person2id)
-          )
+              AND NOT EXISTS (select * from search_graph sgy where sgy.endNode = k_person2id)
+            -- an alternative solution would be something like:
+            -- NOT EXISTS (SELECT * FROM search_graph sgy WHERE k_person2id = ANY(sgy.path))
+            -- but this results in the error "quantified expressions over arrays not implemented yet"
 )
 select max(depth) AS shortestPathLength from (
     select level as depth
     from search_graph
-    where link = :person2Id::bigint
-    union select -1) tmp;
+    where endNode = :person2Id::bigint
+    union all
+    select -1 as depth
+);
