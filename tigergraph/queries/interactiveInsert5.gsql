@@ -1,5 +1,5 @@
 CREATE OR REPLACE QUERY interactiveInsert5(UINT personId, UINT forumId, INT joinDate) {
-    INSERT INTO Forum (PRIMARY_ID) VALUES (forumId);
-    INSERT INTO Person (PRIMARY_ID) VALUES (personId);
+    INSERT INTO Forum (id) VALUES (forumId);
+    INSERT INTO Person (id) VALUES (personId);
     INSERT INTO HAS_MEMBER VALUES(forumId Forum, personId Person, joinDate);
 }

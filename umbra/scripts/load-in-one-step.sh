@@ -17,6 +17,12 @@ echo "UMBRA_CONTAINER_NAME: ${UMBRA_CONTAINER_NAME}"
 echo "UMBRA_DOCKER_IMAGE: ${UMBRA_DOCKER_IMAGE}"
 echo "UMBRA_CSV_DIR: ${UMBRA_CSV_DIR}"
 echo "==============================================================================="
+
+if [ ! -d "${UMBRA_CSV_DIR}" ]; then
+    echo "Directory ${UMBRA_CSV_DIR} does not exist."
+    exit 1
+fi
+
 scripts/stop.sh
 scripts/create-db.sh
 scripts/start.sh

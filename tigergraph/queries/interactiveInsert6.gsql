@@ -14,8 +14,8 @@
 
       //IS_LOCATED_IN country is inserted as an attribute
       INSERT INTO Post VALUES(postId, imageFile, creationDate, locationIP, browserUsed, language, content, length, countryId); 
-      INSERT INTO Person (PRIMARY_ID) VALUES(authorPersonId);
-      INSERT INTO Forum (PRIMARY_ID) VALUES(forumId);
+      INSERT INTO Person (id) VALUES(authorPersonId);
+      INSERT INTO Forum (id) VALUES(forumId);
       INSERT INTO HAS_CREATOR VALUES(postId Post, authorPersonId Person);
       INSERT INTO CONTAINER_OF VALUES(forumId Forum, postId Post);
 
