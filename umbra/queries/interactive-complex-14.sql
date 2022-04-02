@@ -31,7 +31,7 @@ WITH RECURSIVE
     PathWeights(dst, path, Score) AS (
             SELECT p.dst, p.path, SUM(Score)
             FROM SelectedPaths p, Iterator it, (
-                    SELECT 0 AS Score
+                    SELECT 0.0 AS Score
                     UNION ALL
                     SELECT (case when msg.m_c_replyof IS NULL then 1.0 else 0.5 end) AS Score
                     FROM Message msg, Message reply
