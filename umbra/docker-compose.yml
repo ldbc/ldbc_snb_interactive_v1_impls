@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  db:
+    image: ${UMBRA_DOCKER_IMAGE}
+    container_name: snb-interactive-umbra
+    ports:
+      - "5432:5432"
+    volumes:
+      - type: bind
+        source: ${UMBRA_CSV_DIR}
+        target: /data/
+      - type: bind
+        source: ${UMBRA_DDL_DIR}
+        target: /ddl/
+      - type: bind
+        source: ${UMBRA_DATABASE_DIR}
+        target: /var/db/
+
+    command: [
+      "/bin/sh",
+      "-c",
+      "echo Cleanup commence \
+       && rm -rf /var/db/* /var/log/* \
+       && echo Cleanup done \
+       && umbra_sql --createdb /var/db/ldbc.db /ddl/create-role.sql /ddl/schema.sql \
+       && echo Database created \
+       && umbra_sql /var/db/ldbc.db /ddl/load.sql /ddl/schema_constraints.sql \
+       && echo Database loaded \
+       && umbra_server --address 0.0.0.0 /var/db/ldbc.db >/dev/null"
+    ]
