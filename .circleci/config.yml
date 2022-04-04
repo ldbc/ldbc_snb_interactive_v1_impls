@@ -35,6 +35,13 @@ jobs:
             export DUCKDB_CSV_DIR=`pwd`/../postgres/test-data
             scripts/load-in-one-step.sh
             cd ..
+      ### Umbra
+      - run:
+          name: Load Umbra Docker image
+          command: |
+            . umbra/scripts/vars.sh
+            # ${UMBRA_URL_PREFIX} should be set as a sercet variable
+            curl -s ${UMBRA_URL_PREFIX}${UMBRA_VERSION}.tar.gz | docker load
       ### Neo4j
       - run:
           name: Tiny data set - Load Neo4j database and create a backup
