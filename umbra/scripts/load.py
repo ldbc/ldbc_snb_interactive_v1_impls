@@ -1,6 +1,7 @@
 import psycopg2
 import sys
 import re
+import os
 import time
 
 if len(sys.argv) < 2:
@@ -10,8 +11,8 @@ if len(sys.argv) < 2:
 
 data_dir = sys.argv[1]
 local = len(sys.argv) == 3 and sys.argv[2] == "--local"
-
-pg_con = psycopg2.connect(host="localhost", user="postgres", password="mysecretpassword", port=5432)
+pg_host = os.getenv("UMBRA_HOST", default="localhost")
+pg_con = psycopg2.connect(host=pg_host, user="postgres", password="mysecretpassword", port=5432)
 con = pg_con.cursor()
 
 def run_script(con, filename):
