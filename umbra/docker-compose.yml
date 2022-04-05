@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  db:
+  umbra-db:
     image: ${UMBRA_DOCKER_IMAGE}
     container_name: snb-interactive-umbra
     ports:
@@ -25,7 +25,23 @@ services:
        && echo Cleanup done \
        && umbra_sql --createdb /var/db/ldbc.db /ddl/create-role.sql /ddl/schema.sql \
        && echo Database created \
-       && umbra_sql /var/db/ldbc.db /ddl/load.sql /ddl/schema_constraints.sql \
-       && echo Database loaded \
        && umbra_server --address 0.0.0.0 /var/db/ldbc.db >/dev/null"
     ]
+
+  db-load:
+    build: ./scripts
+    image: "umbra-db-loader:latest"
+    container_name: umbra-db-loader
+    volumes:
+      - type: bind
+        source: ${UMBRA_DDL_DIR}
+        target: /ddl/
+    depends_on:
+      - umbra-db
+    command: sh -c "/wait && python3 -u home/load.py ${UMBRA_CSV_DIR}"
+    environment:
+      - UMBRA_HOST=umbra-db
+      - WAIT_HOSTS=umbra-db:5432
+      - WAIT_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=5
+      - WAIT_HOST_CONNECT_TIMEOUT=30
