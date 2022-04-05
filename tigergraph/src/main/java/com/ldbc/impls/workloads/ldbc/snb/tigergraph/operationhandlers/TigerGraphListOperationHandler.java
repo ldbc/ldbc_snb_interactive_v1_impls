@@ -17,10 +17,11 @@ import java.util.Map;
 public abstract class TigerGraphListOperationHandler<TOperation extends Operation<List<TOperationResult>>, TOperationResult>
         implements ListOperationHandler<TOperationResult, TOperation, TigerGraphDbConnectionState> {
 
-
     @Override
     public String getQueryString(TigerGraphDbConnectionState state, TOperation operation) {
-        return null;
+        final String queryName = getQueryName();
+        Map<String, String> params = constructParams(operation);
+        return queryName + ":" + TigerGraphDbConnectionState.mapToString(params);
     }
 
     public abstract String getQueryName();

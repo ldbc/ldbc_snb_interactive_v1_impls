@@ -14,6 +14,13 @@ import java.util.Map;
 
 public abstract class TigerGraphUpdateOperationHandler<TOperation extends Operation<LdbcNoResult>>
         implements UpdateOperationHandler<TOperation, TigerGraphDbConnectionState> {
+    
+    @Override
+    public String getQueryString(TigerGraphDbConnectionState state, TOperation operation) {
+        final String queryName = getQueryName();
+        Map<String, String> params = constructParams(operation);
+        return queryName + ":" + TigerGraphDbConnectionState.mapToString(params);
+    }
 
     @Override
     public void executeOperation(TOperation operation, TigerGraphDbConnectionState state,
