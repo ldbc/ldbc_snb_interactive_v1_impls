@@ -38,7 +38,7 @@ services:
         target: /ddl/
     depends_on:
       - umbra-db
-    command: sh -c "/wait && python3 home/load.py ${UMBRA_CSV_DIR}"
+    command: sh -c "/wait && python3 -u home/load.py ${UMBRA_CSV_DIR}"
     environment:
       - UMBRA_HOST=umbra-db
       - WAIT_HOSTS=umbra-db:5432
