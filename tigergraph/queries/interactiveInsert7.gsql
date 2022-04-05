@@ -25,5 +25,5 @@ CREATE OR REPLACE QUERY interactiveInsert7(
     tmp = {tagIds};
     tmp =
         SELECT v FROM tmp:v
-            ACCUM INSERT INTO HAS_TAG (FROM, TO) VALUES(commentId, v);
+            ACCUM INSERT INTO HAS_TAG (FROM, TO) VALUES(commentId Comment, v);
 }
