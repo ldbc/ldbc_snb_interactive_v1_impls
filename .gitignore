@@ -18,3 +18,4 @@ tcr.log
 *.priv
 *.priv.*
 umbra/.dev.env
+mssql/.dev.env
