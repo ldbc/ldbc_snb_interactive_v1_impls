@@ -8,9 +8,4 @@ cd ..
 
 . scripts/vars.sh
 
-cd umbra-container/
-wget ${UMBRA_URL}
-tar xf umbra*.tar.xz
-rm umbra*.tar.xz
-
-docker build . --tag ${UMBRA_DOCKER_IMAGE}
+sar -r 1 | tee output/memory.log

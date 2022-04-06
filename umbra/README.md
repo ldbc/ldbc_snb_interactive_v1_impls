@@ -14,13 +14,12 @@ The recommended environment is that the benchmark scripts (Bash) and the LDBC dr
 
 The default configuration of the database (e.g. database name, user, password) is set in the `scripts/vars.sh` file.
 
-## Building the container
+## Get the container
 
-Set the `UMBRA_URL` environment variable and build the container:
+The Umbra container is available upon request from TU Munich's Database group. Load it to Docker as follows:
 
 ```bash
-export UMBRA_URL=
-scripts/build-container.sh
+curl ... | docker load
 ```
 
 ### Loading the data set
