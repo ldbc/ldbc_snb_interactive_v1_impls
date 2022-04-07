@@ -19,7 +19,9 @@ public abstract class TigerGraphSingletonOperationHandler<TOperation extends Ope
 
     @Override
     public String getQueryString(TigerGraphDbConnectionState state, TOperation operation) {
-        return null;
+        final String queryName = getQueryName();
+        Map<String, String> params = constructParams(operation);
+        return queryName + ":" + TigerGraphDbConnectionState.mapToString(params);
     }
 
     public LinkedTreeMap<String, Object> getRecord(QueryResponse queryResponse) {
@@ -51,7 +53,7 @@ public abstract class TigerGraphSingletonOperationHandler<TOperation extends Ope
                 resultReporter.report(1, toResult(record), operation);
             } catch (ParseException|IndexOutOfBoundsException e) {
                 //resultReporter.report(0, null, operation);
-                System.err.println("Empty results for " + queryName + ", paramters: " + mapToString(params));
+                System.err.println("Empty results for " + queryName + ", paramters: " + TigerGraphDbConnectionState.mapToString(params));
             }
         } else {
 //            throw new DbException("Cannot serialize null result.");
@@ -60,15 +62,6 @@ public abstract class TigerGraphSingletonOperationHandler<TOperation extends Ope
 //            //resultReporter.report(0, null, operation);
         }
 
-    }
-
-    public String mapToString(Map<String, String> map) {
-        StringBuilder mapAsString = new StringBuilder("{");
-        for (String key : map.keySet()) {
-            mapAsString.append(key + ":" + map.get(key) + ", ");
-        }
-        mapAsString.delete(mapAsString.length()-2, mapAsString.length()).append("}");
-        return mapAsString.toString();
     }
 
     protected abstract Map<String, String> constructParams(TOperation o);
