@@ -8,7 +8,7 @@ SELECT TOP(10) p_personid, p_firstname, p_lastname,(
    WHERE m_creatorid = p_personid 
      AND m_c_replyof IS NULL
      AND m_messageid = mt_messageid 
-     AND exists (
+     AND EXISTS (
        SELECT * 
          FROM person_tag
         WHERE pt_personid = :personId 
@@ -44,11 +44,11 @@ WHERE (
   p_placeid = pl_placeid
   AND p_personid = f.k_person2id
   AND MONTH(p_birthday) = :month
-  AND 1 = CASE WHEN DAY(p_birthday) >= 21 THEN 1 ELSE 0 END
+  AND DAY(p_birthday) >= 21
 OR 
   p_placeid = pl_placeid 
   AND p_personid = f.k_person2id 
   AND MONTH(p_birthday) = (:month % 12 + 1) 
-  AND 1 = case when DAY(p_birthday) <  22 THEN 1 ELSE 0 END
+  AND DAY(p_birthday) <  22
 )
 ORDER BY score DESC, p_personid;
