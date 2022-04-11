@@ -30,15 +30,19 @@ public abstract class SQLServerListOperationHandler<TOperation extends Operation
             state.logQuery(operation.getClass().getSimpleName(), queryString);
 
             ResultSet result = stmt.executeQuery();
-            while (result.next()) {
-                resultCount++;
-
-                TOperationResult tuple = convertSingleResult(result);
-                if (state.isPrintResults()) {
-                    System.out.println(tuple.toString());
+            if (result != null){
+                while (result.next()) {
+                    resultCount++;
+    
+                    TOperationResult tuple = convertSingleResult(result);
+                    if (state.isPrintResults()) {
+                        System.out.println(tuple.toString());
+                    }
+                    results.add(tuple);
                 }
-                results.add(tuple);
             }
+
+
         } catch (Exception e) {
             throw new DbException(e);
         }
