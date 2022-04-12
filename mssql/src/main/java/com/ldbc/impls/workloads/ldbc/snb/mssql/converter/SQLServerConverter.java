@@ -47,11 +47,11 @@ public class SQLServerConverter extends Converter {
 
 
     public static Iterable<String> arrayToStringArray(ResultSet r, int column) throws SQLException {
-        Array value = r.getArray(column);
+        String value = r.getString(column);
         if (value == null) {
             return new ArrayList<>();
         } else {
-            String[] strs = (String[]) value.getArray();
+            String[] strs = value.split(";");
             List<String> array = new ArrayList<>();
             for (int i = 0; i < strs.length; i++) {
                 array.add(strs[i]);
@@ -61,18 +61,22 @@ public class SQLServerConverter extends Converter {
     }
 
     public static Iterable<List<Object>> arrayToObjectArray(ResultSet r, int column) throws SQLException {
-        Array value = r.getArray(column);
+        String value = r.getString(column);
         if (value == null) {
             return new ArrayList<>();
         } else {
-            Object[][] strs = (Object[][]) value.getArray();
+            String[] strs = value.split(";");
             List<List<Object>> array = new ArrayList<>();
             for (int i = 0; i < strs.length; i++) {
-                array.add(new ArrayList(Arrays.asList(strs[i])));
+                String[] s = strs[i].split("\\|");
+                // the corresponding results of Interactive Q1 (field 12: universities, field 13: companies)
+                // both return <string, int32, string> tuples
+                array.add(Arrays.asList(s[0], Integer.valueOf(s[1]), s[2]));
             }
             return array;
         }
     }
+
 
     public static Iterable<Long> convertLists(Iterable<List<Object>> arr) {
         List<Long> new_arr = new ArrayList<>();
