@@ -1,14 +1,10 @@
-/* Q12. Expert search
-\set personId 10995116278009
-\set tagClassName '\'Monarch\''
- */
 with extended_tags(s_subtagclassid,s_supertagclassid) as (
     select tc_tagclassid, tc_tagclassid from tagclass
     UNION
     select tc.tc_tagclassid, t.s_supertagclassid from tagclass tc, extended_tags t
         where tc.tc_subclassoftagclassid=t.s_subtagclassid
 )
-select TOP(20) p_personid, p_firstname, p_lastname, array_agg(distinct t_name), count(*) as replyCount
+select top(20) p_personid, p_firstname, p_lastname, string_agg(distinct t_name, ';'), count(*) AS replyCount
 from person, message p1, knows, message p2, message_tag, 
     (select distinct t_tagid, t_name from tag where (t_tagclassid in (
           select distinct s_subtagclassid from extended_tags k, tagclass
@@ -23,5 +19,5 @@ where
   p2.m_messageid = mt_messageid and 
   mt_tagid = t_tagid
 group by p_personid, p_firstname, p_lastname
-order by replyCount desc, p_personid asc
+order by replyCount desc, p_personid
 ;
