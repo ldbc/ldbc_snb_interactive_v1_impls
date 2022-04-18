@@ -127,6 +127,7 @@ jobs:
             export UMBRA_CSV_DIR=`pwd`/../postgres/test-data/
             scripts/restore-database.sh
             driver/benchmark.sh
+            scripts/stop.sh
             cd ..
       ### PostgreSQL
       - run:
