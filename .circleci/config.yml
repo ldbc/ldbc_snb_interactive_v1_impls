@@ -115,6 +115,7 @@ jobs:
           command: |
             mv cypher/validation_params_cypher_tiny.csv umbra/validation_params.csv
             cd umbra
+            export UMBRA_CSV_DIR=`pwd`/../postgres/test-data/
             scripts/restore-database.sh
             driver/validate.sh | tee validation-log.txt
             grep 'Validation Result: PASS' validation-log.txt
@@ -122,7 +123,8 @@ jobs:
       - run:
           name: Tiny data set - Benchmark Umbra
           command: |
-            cd postgres
+            cd umbra
+            export UMBRA_CSV_DIR=`pwd`/../postgres/test-data/
             scripts/restore-database.sh
             driver/benchmark.sh
             cd ..
