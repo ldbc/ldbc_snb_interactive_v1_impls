@@ -73,6 +73,7 @@ jobs:
             cd umbra
             driver/create-validation-parameters.sh
             mv validation_params.csv validation_params_umbra_tiny.csv
+            scripts/stop.sh
             cd ..
       ### PostgreSQL
       - run:
@@ -88,6 +89,7 @@ jobs:
           command: |
             cd postgres
             driver/create-validation-parameters.sh
+            scripts/stop.sh
             mv validation_params.csv validation_params_postgres_tiny.csv
             cd ..
       ### Neo4j
@@ -140,6 +142,7 @@ jobs:
             cd postgres
             scripts/restore-database.sh
             driver/benchmark.sh
+            scripts/stop.sh
             cd ..
       ## SF1 tests
       - run:
@@ -180,6 +183,7 @@ jobs:
             mv cypher/validation_params_cypher_sf1.csv umbra/validation_params.csv
             cd umbra
             driver/validate.sh | tee validation-log.txt
+            scripts/stop.sh
             grep 'Validation Result: PASS' validation-log.txt
             cd ..
       ## PostgreSQL
@@ -197,6 +201,7 @@ jobs:
             mv cypher/validation_params_cypher_sf1.csv postgres/validation_params.csv
             cd postgres
             driver/validate.sh | tee validation-log.txt
+            scripts/stop.sh
             grep 'Validation Result: PASS' validation-log.txt
             cd ..
       - slack/status
