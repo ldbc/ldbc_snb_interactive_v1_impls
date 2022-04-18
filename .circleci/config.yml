@@ -9,7 +9,6 @@ workflows:
 
 jobs:
   test:
-    resource_class: large
     machine:
       image: ubuntu-2004:202008-01
     steps:
