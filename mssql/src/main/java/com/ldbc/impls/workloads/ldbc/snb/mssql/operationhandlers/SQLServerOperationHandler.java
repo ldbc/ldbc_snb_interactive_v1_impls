@@ -21,7 +21,6 @@ public class SQLServerOperationHandler {
 
     private Map<String, String> queryStringWithQuestionMarksCache  = new HashMap<>();
     private Map<String, Multimap<String, Integer>> positionsCache = new HashMap<>();
-    private Map<String, PreparedStatement> stmtCache = new HashMap<>();
 
     /**
      * Replaces parameters with question marks (e.g. ":personId" -> "?").
@@ -66,8 +65,7 @@ public class SQLServerOperationHandler {
         return replaceParameterNamesWithQuestionMarks(operation, queryString, ImmutableList.of());
     }
 
-    public PreparedStatement setParametersInPreparedStatement(Operation operation, String queryString) throws SQLException {
-        PreparedStatement stmt = stmtCache.get(queryString);
+    public PreparedStatement setParametersInPreparedStatement(Operation operation, String queryString, PreparedStatement stmt) throws SQLException {
         Multimap<String, Integer> positions = positionsCache.get(queryString);
 
         Map<String, Object> parameterMap = operation.parameterMap();
@@ -92,19 +90,14 @@ public class SQLServerOperationHandler {
     }
 
     public PreparedStatement prepareSnbStatement(String queryString, Connection conn) throws SQLException {
-        if (stmtCache.containsKey(queryString)) {
-            return stmtCache.get(queryString);
-        }
-
         String queryStringWithQuestionMarks = queryStringWithQuestionMarksCache.get(queryString);
         PreparedStatement stmt = conn.prepareStatement(queryStringWithQuestionMarks);
-        stmtCache.put(queryString, stmt);
         return stmt;
     }
 
     public PreparedStatement prepareAndSetParametersInPreparedStatement(Operation operation, String queryString, Connection conn) throws SQLException {
-        prepareSnbStatement(queryString, conn);
-        return setParametersInPreparedStatement(operation, queryString);
+        PreparedStatement stmt = prepareSnbStatement(queryString, conn);
+        return setParametersInPreparedStatement(operation, queryString, stmt);
     }
 
 }

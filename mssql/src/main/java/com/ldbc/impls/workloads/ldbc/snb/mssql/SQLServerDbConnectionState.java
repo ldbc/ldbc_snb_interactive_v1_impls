@@ -16,7 +16,6 @@ import java.util.TimeZone;
 public class SQLServerDbConnectionState extends BaseDbConnectionState<SQLServerQueryStore> {
 
     protected String endPoint;
-    protected Connection connection;
     protected HikariDataSource ds;
 
     public SQLServerDbConnectionState(Map<String, String> properties, SQLServerQueryStore store) throws ClassNotFoundException {
@@ -26,21 +25,20 @@ public class SQLServerDbConnectionState extends BaseDbConnectionState<SQLServerQ
         endPoint = properties.get("endpoint");
         props.setProperty("dataSource.databaseName", properties.get("databaseName"));
         props.setProperty("dataSource.encrypt", "false");
-
         HikariConfig config = new HikariConfig(props);
         config.setPassword(properties.get("password"));
         config.setUsername(properties.get("user"));
         config.setJdbcUrl(endPoint);
+        config.setDataSourceClassName("com.microsoft.sqlserver.jdbc.SQLServerDataSource");
+
         ds = new HikariDataSource(config);
-        // ds.setDataSourceClassName("com.microsoft.sqlserver.jdbc.SQLServerDataSource");
     }
 
     public Connection getConnection() throws DbException {
+        Connection connection = null;
         try {
-            if (connection == null) {
-                TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
-                connection = ds.getConnection();
-            }
+            // TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
+            connection = ds.getConnection();
         } catch (SQLException e) {
             throw new DbException(e);
         }
@@ -49,12 +47,8 @@ public class SQLServerDbConnectionState extends BaseDbConnectionState<SQLServerQ
 
     @Override
     public void close() {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+        if (ds != null) {
+            ds.close();
         }
     }
 }
