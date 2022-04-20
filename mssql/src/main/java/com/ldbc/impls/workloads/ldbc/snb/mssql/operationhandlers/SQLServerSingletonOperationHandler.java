@@ -27,17 +27,14 @@ public abstract class SQLServerSingletonOperationHandler<TOperation extends Oper
             state.logQuery(operation.getClass().getSimpleName(), queryString);
 
             ResultSet result = stmt.executeQuery();
-            if (result != null){
-                if (result.next()) {
-                    resultCount++;
-    
-                    tuple = convertSingleResult(result);
-                    if (state.isPrintResults()) {
-                        System.out.println(tuple.toString());
-                    }
+            if (result.next()) {
+                resultCount++;
+
+                tuple = convertSingleResult(result);
+                if (state.isPrintResults()) {
+                    System.out.println(tuple.toString());
                 }
             }
-
         } catch (Exception e) {
             throw new DbException(e);
         }
