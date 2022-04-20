@@ -63,6 +63,9 @@ run_script(cursor, "ddl/load.sql")
 
 print("Creating materialized views . . . ")
 run_script(cursor, "ddl/schema_constraints.sql")
+
+print("Create user ldbc . . . ")
+run_script(cursor, "ddl/create_user.sql")
 con.commit()
 print("Done.")
 
