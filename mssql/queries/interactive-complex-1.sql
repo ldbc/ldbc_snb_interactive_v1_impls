@@ -10,11 +10,11 @@ select TOP(20)
   (select string_agg(pe_email, ';') from person_email where pe_personid = id group by pe_personid) as emails,
   (select string_agg(plang_language, ';') from person_language where plang_personid = id group by plang_personid) as languages,
   p1.pl_name,
-  (select string_agg(o2.o_name || '|' || pu_classyear::text || '|' || p2.pl_name, ';')
+  (select string_agg(CONCAT(o2.o_name , '|' , CONVERT(VARCHAR(max), pu_classyear), '|' , p2.pl_name), ';')
      from person_university, organisation o2, place p2
     where pu_personid = id and pu_organisationid = o2.o_organisationid and o2.o_placeid = p2.pl_placeid
     group by pu_personid) as university,
-  (select string_agg(o3.o_name || '|' || pc_workfrom::text  || '|' || p3.pl_name, ';')
+  (select string_agg(CONCAT(o3.o_name , '|' , CONVERT(VARCHAR(max), pc_workfrom), '|' , p3.pl_name), ';')
      from person_company, organisation o3, place p3
     where pc_personid = id and pc_organisationid = o3.o_organisationid and o3.o_placeid = p3.pl_placeid
     group by pc_personid) as company

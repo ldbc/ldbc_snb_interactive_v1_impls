@@ -61,7 +61,7 @@ public abstract class SQLServerDb extends BaseDb<SQLServerQueryStore> {
         @SuppressWarnings("unchecked")
         public Iterable<List<Object>> convertLists(Iterable<List<Object>> arr) {
             for (List<Object> entry : arr) {
-                entry.set(1, Integer.parseInt((String) entry.get(1)));
+                entry.set(1, entry.get(1));
             }
             return arr;
         }
@@ -253,7 +253,6 @@ public abstract class SQLServerDb extends BaseDb<SQLServerQueryStore> {
                     result.getString(4),
                     result.getInt(5));
         }
-
     }
 
     public static class Query12 extends SQLServerListOperationHandler<LdbcQuery12, LdbcQuery12Result> {
