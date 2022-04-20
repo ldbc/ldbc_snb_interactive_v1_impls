@@ -37,7 +37,7 @@ For detailed instructions, consult the READMEs of the projects.
 To build a subset of the projects, use Maven profiles, e.g. to build the reference implementations, run:
 
 ```bash
-mvn package -DskipTests -Pcypher,postgres
+mvn clean package -DskipTests -Pcypher,postgres
 ```
 
 ## User's guide
