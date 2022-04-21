@@ -1,10 +1,10 @@
 with extended_tags(s_subtagclassid,s_supertagclassid) as (
     select tc_tagclassid, tc_tagclassid from tagclass
-    UNION
+    UNION ALL
     select tc.tc_tagclassid, t.s_supertagclassid from tagclass tc, extended_tags t
         where tc.tc_subclassoftagclassid=t.s_subtagclassid
 )
-select top(20) p_personid, p_firstname, p_lastname, string_agg(distinct t_name, ';'), count(*) AS replyCount
+select top(20) p_personid, p_firstname, p_lastname, string_agg(t_name, ';'), count(*) AS replyCount
 from person, message p1, knows, message p2, message_tag, 
     (select distinct t_tagid, t_name from tag where (t_tagclassid in (
           select distinct s_subtagclassid from extended_tags k, tagclass
