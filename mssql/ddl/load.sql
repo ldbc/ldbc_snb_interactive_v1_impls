@@ -10,7 +10,7 @@ BULK INSERT dbo.forum_tag FROM '/data/dynamic/forum_hasTag_tag_0_0.csv' WITH ( F
 BULK INSERT dbo.organisation FROM '/data/static/organisation_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
 
 -- Populate person table
-BULK INSERT dbo.person FROM '/data/dynamic/person_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
+-- BULK INSERT dbo.person FROM '/data/dynamic/person_0_0.csv' WITH (FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
 
 -- Populate person_email table
 BULK INSERT dbo.person_email FROM '/data/dynamic/person_email_emailaddress_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
@@ -18,9 +18,9 @@ BULK INSERT dbo.person_email FROM '/data/dynamic/person_email_emailaddress_0_0.c
 -- Populate person_tag table
 BULK INSERT dbo.person_tag FROM '/data/dynamic/person_hasInterest_tag_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
 
--- Populate knows table
-BULK INSERT dbo.knows FROM '/data/dynamic/person_knows_person_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
-INSERT INTO dbo.knows ( k_person1id, k_person2id, k_creationdate) SELECT k_person2id, k_person1id, k_creationdate FROM dbo.knows;
+-- -- Populate knows table
+-- BULK INSERT dbo.knows FROM '/data/dynamic/person_knows_person_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='0x0a',FIRSTROW=2);
+-- INSERT INTO dbo.knows ( k_person1id, k_person2id, k_creationdate) SELECT k_person2id, k_person1id, k_creationdate FROM dbo.knows;
 
 -- Populate likes table
 BULK INSERT dbo.likes FROM '/data/dynamic/person_likes_post_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);

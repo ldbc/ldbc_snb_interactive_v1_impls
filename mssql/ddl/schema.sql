@@ -101,11 +101,11 @@ create table person (
    p_lastname varchar(255) not null,
    p_gender varchar(255) not null,
    p_birthday date not null,
-   p_creationdate Datetime,
+   p_creationdate datetime2,
    p_locationip varchar(255) not null,
    p_browserused varchar(255) not null,
    p_placeid bigint not null
-);
+) AS NODE;
 
 create table person_email (
    pe_personid bigint not null,
@@ -122,7 +122,7 @@ create table knows (
    k_person1id bigint not null,
    k_person2id bigint not null,
    k_creationdate Datetime
-);
+) AS EDGE;
 
 create table likes (
    l_personid bigint not null,
