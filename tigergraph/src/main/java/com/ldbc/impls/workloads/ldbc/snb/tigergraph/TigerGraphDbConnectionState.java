@@ -29,6 +29,15 @@ public class TigerGraphDbConnectionState extends BaseDbConnectionState<TigerGrap
         this.apiInstance = new QueryApi();
     }
 
+    public static String mapToString(Map<String, String> map) {
+        StringBuilder mapAsString = new StringBuilder("{");
+        for (String key : map.keySet()) {
+            mapAsString.append(key + ":" + map.get(key) + ", ");
+        }
+        mapAsString.delete(mapAsString.length()-2, mapAsString.length()).append("}");
+        return mapAsString.toString();
+    }
+    
     @Override
     public void close() throws IOException {
         // no-op
