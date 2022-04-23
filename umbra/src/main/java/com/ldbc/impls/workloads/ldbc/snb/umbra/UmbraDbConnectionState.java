@@ -16,7 +16,6 @@ public class UmbraDbConnectionState<TDbQueryStore extends QueryStore> extends Ba
 
     protected String endPoint;
     protected HikariDataSource ds;
-    protected Connection connection;
 
     public UmbraDbConnectionState(Map<String, String> properties, TDbQueryStore store) throws ClassNotFoundException {
         super(properties, store);
@@ -37,11 +36,10 @@ public class UmbraDbConnectionState<TDbQueryStore extends QueryStore> extends Ba
     }
 
     public Connection getConnection() throws DbException {
+        Connection connection = null;
         try {
-            if (connection == null) {
-                TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
-                connection = ds.getConnection();
-            }
+            TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
+            connection = ds.getConnection();
         } catch (SQLException e) {
             throw new DbException(e);
         }
@@ -50,12 +48,8 @@ public class UmbraDbConnectionState<TDbQueryStore extends QueryStore> extends Ba
 
     @Override
     public void close() {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+        if (ds != null) {
+            ds.close();
         }
     }
 }

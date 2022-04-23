@@ -8,6 +8,7 @@ import com.ldbc.impls.workloads.ldbc.snb.operationhandlers.UpdateOperationHandle
 import com.ldbc.impls.workloads.ldbc.snb.umbra.UmbraDbConnectionState;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public abstract class UmbraUpdateOperationHandler<TOperation extends Operation<LdbcNoResult>>
@@ -16,15 +17,22 @@ public abstract class UmbraUpdateOperationHandler<TOperation extends Operation<L
     @Override
     public void executeOperation(TOperation operation, UmbraDbConnectionState state,
                                  ResultReporter resultReporter) throws DbException {
-        Connection conn = state.getConnection();
-        String queryString = getQueryString(state, operation);
-        try (final Statement stmt = conn.createStatement()) {
-            state.logQuery(operation.getClass().getSimpleName(), queryString);
-            stmt.execute(queryString);
-        } catch (Exception e) {
+        try {
+            Connection conn = state.getConnection();
+            String queryString = getQueryString(state, operation);
+                try (final Statement stmt = conn.createStatement()) {
+                    state.logQuery(operation.getClass().getSimpleName(), queryString);
+                    stmt.execute(queryString);
+                } catch (Exception e) {
+                    throw new DbException(e);
+                }
+                finally {
+                    conn.close();
+                }
+                resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
+        }
+        catch (SQLException e) {
             throw new DbException(e);
         }
-        resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
     }
-
 }

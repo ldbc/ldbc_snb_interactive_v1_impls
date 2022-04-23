@@ -19,30 +19,41 @@ public abstract class UmbraListOperationHandler<TOperation extends Operation<Lis
     @Override
     public void executeOperation(TOperation operation, UmbraDbConnectionState state,
                                  ResultReporter resultReporter) throws DbException {
-        Connection conn = state.getConnection();
-        List<TOperationResult> results = new ArrayList<>();
-        int resultCount = 0;
-        results.clear();
+        try {
+            ResultSet result = null;
+            Connection conn = state.getConnection();
+            List<TOperationResult> results = new ArrayList<>();
+            int resultCount = 0;
 
-        String queryString = getQueryString(state, operation);
-        try (final Statement stmt = conn.createStatement()) {
-            state.logQuery(operation.getClass().getSimpleName(), queryString);
+            String queryString = getQueryString(state, operation);
+            try (final Statement stmt = conn.createStatement()) {
+                state.logQuery(operation.getClass().getSimpleName(), queryString);
 
-            ResultSet result = stmt.executeQuery(queryString);
-            while (result.next()) {
-                resultCount++;
+                result = stmt.executeQuery(queryString);
+                while (result.next()) {
+                    resultCount++;
 
-                TOperationResult tuple = convertSingleResult(result);
-                if (state.isPrintResults()) {
-                    System.out.println(tuple.toString());
+                    TOperationResult tuple = convertSingleResult(result);
+                    if (state.isPrintResults()) {
+                        System.out.println(tuple.toString());
+                    }
+                    results.add(tuple);
                 }
-                results.add(tuple);
-            }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             throw new DbException(e);
+        }
+        finally{
+            if (result != null){
+                result.close();
+            }
+            conn.close();
         }
         resultReporter.report(resultCount, results, operation);
     }
+    catch (SQLException e) {
+        throw new DbException(e);
+    }
+}
 
     public abstract TOperationResult convertSingleResult(ResultSet result) throws SQLException;
 
