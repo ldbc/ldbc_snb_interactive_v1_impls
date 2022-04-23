@@ -17,25 +17,35 @@ public abstract class UmbraSingletonOperationHandler<TOperation extends Operatio
     @Override
     public void executeOperation(TOperation operation, UmbraDbConnectionState state,
                                  ResultReporter resultReporter) throws DbException {
-        Connection conn = state.getConnection();
-        TOperationResult tuple = null;
-        int resultCount = 0;
-        String queryString = getQueryString(state, operation);
-        try (final Statement stmt = conn.createStatement()) {
-            state.logQuery(operation.getClass().getSimpleName(), queryString);
+        try {
+            TOperationResult tuple = null;
+            Connection conn = state.getConnection();
+            int resultCount = 0;
+            String queryString = getQueryString(state, operation);
 
-            ResultSet result = stmt.executeQuery(queryString);
-            if (result.next()) {
-                resultCount++;
-
-                tuple = convertSingleResult(result);
-                if (state.isPrintResults())
-                    System.out.println(tuple.toString());
+            try (final Statement stmt = conn.createStatement()) {
+                state.logQuery(operation.getClass().getSimpleName(), queryString);
+    
+                ResultSet result = stmt.executeQuery(queryString);
+                if (result.next()) {
+                    resultCount++;
+    
+                    tuple = convertSingleResult(result);
+                    if (state.isPrintResults())
+                        System.out.println(tuple.toString());
+                }
             }
-        } catch (Exception e) {
+            catch (Exception e) {
+                throw new DbException(e);
+            }
+            finally {
+                conn.close();
+            }
+            resultReporter.report(resultCount, tuple, operation);
+        }
+        catch (SQLException e){
             throw new DbException(e);
         }
-        resultReporter.report(resultCount, tuple, operation);
     }
 
     public abstract TOperationResult convertSingleResult(ResultSet result) throws SQLException;
