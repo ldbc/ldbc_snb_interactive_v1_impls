@@ -33,6 +33,9 @@ services:
       - type: bind
         source: ${MSSQL_DDL_DIR}
         target: /ddl/
+      - type: bind
+        source: ${MSSQL_CSV_DIR}
+        target: /data/
     depends_on:
       - mssql-db
     command: sh -c "/home/wait && python3 -u home/load.py ${MSSQL_CSV_DIR}"
