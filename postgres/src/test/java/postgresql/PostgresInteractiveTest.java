@@ -1,7 +1,7 @@
 package postgresql;
 
-import com.ldbc.impls.workloads.ldbc.snb.interactive.InteractiveTest;
-import com.ldbc.impls.workloads.ldbc.snb.postgres.interactive.PostgresInteractiveDb;
+import org.ldbcouncil.impls.workloads.ldbc.snb.interactive.InteractiveTest;
+import org.ldbcouncil.impls.workloads.ldbc.snb.postgres.interactive.PostgresInteractiveDb;
 
 import java.util.HashMap;
 import java.util.Map;

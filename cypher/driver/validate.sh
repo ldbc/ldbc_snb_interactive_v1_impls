@@ -8,4 +8,4 @@ cd ..
 
 VALIDATE_PROPERTIES_FILE=${1:-driver/validate.properties}
 
-java -cp target/cypher-0.3.7-SNAPSHOT.jar com.ldbc.driver.Client -P ${VALIDATE_PROPERTIES_FILE}
+java -cp target/cypher-0.3.7-SNAPSHOT.jar org.ldbcouncil.driver.Client -P ${VALIDATE_PROPERTIES_FILE}

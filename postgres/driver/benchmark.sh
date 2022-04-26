@@ -8,4 +8,4 @@ cd ..
 
 BENCHMARK_PROPERTIES_FILE=${1:-driver/benchmark.properties}
 
-java -cp target/postgres-0.3.7-SNAPSHOT.jar com.ldbc.driver.Client -P ${BENCHMARK_PROPERTIES_FILE}
+java -cp target/postgres-0.3.7-SNAPSHOT.jar org.ldbcouncil.driver.Client -P ${BENCHMARK_PROPERTIES_FILE}
