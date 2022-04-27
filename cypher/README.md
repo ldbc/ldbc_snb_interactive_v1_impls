@@ -40,39 +40,15 @@ export NEO4J_VANILLA_CSV_DIR=`pwd`/test-data/vanilla
 export NEO4J_CONVERTED_CSV_DIR=`pwd`/test-data/converted
 ```
 
-#### Preprocessing
+#### Loading the data set
 
-The CSV files produced by Datagen require a bit of preprocessing:
-
-* headers should be replaced with Neo4j-compatible ones (e.g. `:START_ID(Person)|:END_ID(Comment)|creationDate:DATETIME`)
-* the first letter of labels should be changed to uppercase (e.g. change `city` to `City`)
-
-The following script performs these changes on the files in `$NEO4J_VANILLA_CSV_DIR` and places the resulting files in `$NEO4J_CONVERTED_CSV_DIR`:
-
-```bash
-scripts/convert-csvs.sh
-```
-
-#### Load the data set
-
-1. To preprocess, load and index the data, run the following sequence of commands:
-
-:warning: Be careful -- this stops the currently running (containerized) Neo4j database and deletes all of its data.
-
-```bash
-scripts/convert-csvs.sh
-scripts/stop-neo4j.sh
-scripts/delete-neo4j-database.sh
-scripts/import-to-neo4j.sh
-scripts/start-neo4j.sh
-scripts/create-indices.sh
-```
-
-1. You can run all these scripts with a single command:
+To load the data sets, run the following script:
 
 ```bash
 scripts/load-in-one-step.sh
 ```
+
+This preprocesses the CSVs in `${NEO4J_VANILLA_CSV_DIR}` and places the resulting CSVs in `${NEO4J_CONVERTED_CSV_DIR}`, stops any running Neo4j database instances, loads the database and starts it.
 
 ## Running the benchmark
 
