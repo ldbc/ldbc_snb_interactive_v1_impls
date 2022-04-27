@@ -1,7 +1,7 @@
 package duckdb;
 
-import org.ldbcouncil.impls.workloads.ldbc.snb.duckdb.interactive.DuckDbInteractiveDb;
-import org.ldbcouncil.impls.workloads.ldbc.snb.interactive.InteractiveTest;
+import org.ldbcouncil.snb.impls.workloads.ldbc.snb.duckdb.interactive.DuckDbInteractiveDb;
+import org.ldbcouncil.snb.impls.workloads.ldbc.snb.interactive.InteractiveTest;
 
 import java.util.HashMap;
 import java.util.Map;
