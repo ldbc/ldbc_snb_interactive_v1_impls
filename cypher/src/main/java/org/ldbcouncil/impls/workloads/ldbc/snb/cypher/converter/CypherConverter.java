@@ -1,6 +1,6 @@
 package org.ldbcouncil.impls.workloads.ldbc.snb.cypher.converter;
 
-import org.ldbcouncil.driver.workloads.ldbc.snb.interactive.LdbcUpdate1AddPerson;
+import org.ldbcouncil.snb.driver.workloads.interactive.LdbcUpdate1AddPerson;
 import org.ldbcouncil.impls.workloads.ldbc.snb.converter.Converter;
 
 import java.text.ParseException;

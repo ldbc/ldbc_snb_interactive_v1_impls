@@ -1,7 +1,7 @@
 package org.ldbcouncil.impls.workloads.ldbc.snb.tigergraph.connector;
 
 import com.google.common.collect.ImmutableList;
-import org.ldbcouncil.driver.workloads.ldbc.snb.interactive.LdbcUpdate1AddPerson;
+import org.ldbcouncil.snb.driver.workloads.interactive.LdbcUpdate1AddPerson;
 import junit.framework.TestCase;
 
 import java.text.ParseException;

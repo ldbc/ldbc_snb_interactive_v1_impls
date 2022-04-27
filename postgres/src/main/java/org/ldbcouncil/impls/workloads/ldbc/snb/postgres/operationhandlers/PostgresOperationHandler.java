@@ -3,7 +3,7 @@ package org.ldbcouncil.impls.workloads.ldbc.snb.postgres.operationhandlers;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
-import org.ldbcouncil.driver.Operation;
+import org.ldbcouncil.snb.driver.Operation;
 import org.ldbcouncil.impls.workloads.ldbc.snb.postgres.converter.PostgresConverter;
 
 import java.sql.Connection;

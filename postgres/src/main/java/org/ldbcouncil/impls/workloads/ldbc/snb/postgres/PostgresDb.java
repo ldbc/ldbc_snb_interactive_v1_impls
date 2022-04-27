@@ -1,10 +1,10 @@
 package org.ldbcouncil.impls.workloads.ldbc.snb.postgres;
 
 import com.google.common.collect.ImmutableList;
-import org.ldbcouncil.driver.DbException;
-import org.ldbcouncil.driver.ResultReporter;
-import org.ldbcouncil.driver.control.LoggingService;
-import org.ldbcouncil.driver.workloads.ldbc.snb.interactive.*;
+import org.ldbcouncil.snb.driver.DbException;
+import org.ldbcouncil.snb.driver.ResultReporter;
+import org.ldbcouncil.snb.driver.control.LoggingService;
+import org.ldbcouncil.snb.driver.workloads.interactive.*;
 import org.ldbcouncil.impls.workloads.ldbc.snb.QueryStore;
 import org.ldbcouncil.impls.workloads.ldbc.snb.db.BaseDb;
 import org.ldbcouncil.impls.workloads.ldbc.snb.postgres.converter.PostgresConverter;

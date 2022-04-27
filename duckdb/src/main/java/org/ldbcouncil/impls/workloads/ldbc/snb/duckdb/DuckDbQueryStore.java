@@ -1,6 +1,6 @@
 package org.ldbcouncil.impls.workloads.ldbc.snb.duckdb;
 
-import org.ldbcouncil.driver.DbException;
+import org.ldbcouncil.snb.driver.DbException;
 import org.ldbcouncil.impls.workloads.ldbc.snb.QueryStore;
 import org.ldbcouncil.impls.workloads.ldbc.snb.converter.Converter;
 import org.ldbcouncil.impls.workloads.ldbc.snb.duckdb.converter.DuckDbConverter;

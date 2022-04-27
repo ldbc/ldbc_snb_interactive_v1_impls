@@ -1,9 +1,9 @@
 package org.ldbcouncil.impls.workloads.ldbc.snb.tigergraph.operationhandlers;
 
 import com.google.gson.internal.LinkedTreeMap;
-import org.ldbcouncil.driver.DbException;
-import org.ldbcouncil.driver.Operation;
-import org.ldbcouncil.driver.ResultReporter;
+import org.ldbcouncil.snb.driver.DbException;
+import org.ldbcouncil.snb.driver.Operation;
+import org.ldbcouncil.snb.driver.ResultReporter;
 import org.ldbcouncil.impls.workloads.ldbc.snb.operationhandlers.SingletonOperationHandler;
 import org.ldbcouncil.impls.workloads.ldbc.snb.tigergraph.TigerGraphDbConnectionState;
 import org.ldbcouncil.impls.workloads.ldbc.snb.tigergraph.connector.QueryRunner;
@@ -58,7 +58,7 @@ public abstract class TigerGraphSingletonOperationHandler<TOperation extends Ope
         } else {
 //            throw new DbException("Cannot serialize null result.");
 //            // TODO XXX with the following construct, we get `Caused by: java.lang.NullPointerException
-//            //	at org.ldbcouncil.driver.workloads.ldbc.snb.interactive.LdbcQuery13.serializeResult(LdbcQuery13.java:111)`
+//            //	at org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery13.serializeResult(LdbcQuery13.java:111)`
 //            //resultReporter.report(0, null, operation);
         }
 

@@ -1,8 +1,8 @@
 package org.ldbcouncil.impls.workloads.ldbc.snb;
 
 import com.google.common.collect.ImmutableMap;
-import org.ldbcouncil.driver.DbException;
-import org.ldbcouncil.driver.workloads.ldbc.snb.interactive.*;
+import org.ldbcouncil.snb.driver.DbException;
+import org.ldbcouncil.snb.driver.workloads.interactive.*;
 import org.ldbcouncil.impls.workloads.ldbc.snb.converter.Converter;
 
 import java.io.File;
@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * Superclass of query stores.
  *
- * Note: we deliberately do not use the {@link org.ldbcouncil.driver.Operation#parameterMap()} method, because
+ * Note: we deliberately do not use the {@link org.ldbcouncil.snb.driver.Operation#parameterMap()} method, because
  *
  * <ol>
  *   <li>some formats necessitate to handle ids differently from simple longs</li>

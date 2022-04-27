@@ -2,9 +2,9 @@ package org.ldbcouncil.impls.workloads.ldbc.snb.tigergraph;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.internal.LinkedTreeMap;
-import org.ldbcouncil.driver.DbException;
-import org.ldbcouncil.driver.control.LoggingService;
-import org.ldbcouncil.driver.workloads.ldbc.snb.interactive.*;
+import org.ldbcouncil.snb.driver.DbException;
+import org.ldbcouncil.snb.driver.control.LoggingService;
+import org.ldbcouncil.snb.driver.workloads.interactive.*;
 import org.ldbcouncil.impls.workloads.ldbc.snb.db.BaseDb;
 import org.ldbcouncil.impls.workloads.ldbc.snb.tigergraph.connector.TigerGraphConverter;
 import org.ldbcouncil.impls.workloads.ldbc.snb.tigergraph.connector.VertexResult;

@@ -1,6 +1,6 @@
 package org.ldbcouncil.impls.workloads.ldbc.snb.postgres;
 
-import org.ldbcouncil.driver.DbException;
+import org.ldbcouncil.snb.driver.DbException;
 import org.ldbcouncil.impls.workloads.ldbc.snb.BaseDbConnectionState;
 import org.postgresql.ds.PGConnectionPoolDataSource;
 

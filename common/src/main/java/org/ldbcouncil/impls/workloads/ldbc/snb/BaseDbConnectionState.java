@@ -1,6 +1,6 @@
 package org.ldbcouncil.impls.workloads.ldbc.snb;
 
-import org.ldbcouncil.driver.DbConnectionState;
+import org.ldbcouncil.snb.driver.DbConnectionState;
 
 import java.util.Map;
 

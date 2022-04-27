@@ -1,7 +1,7 @@
 package org.ldbcouncil.impls.workloads.ldbc.snb.tigergraph;
 
 import org.ldbcouncil.impls.workloads.ldbc.snb.QueryStore;
-import org.ldbcouncil.driver.DbException;
+import org.ldbcouncil.snb.driver.DbException;
 
 public class TigerGraphQueryStore extends QueryStore {
 

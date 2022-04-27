@@ -1,6 +1,6 @@
 package org.ldbcouncil.impls.workloads.ldbc.snb.cypher;
 
-import org.ldbcouncil.driver.DbConnectionState;
+import org.ldbcouncil.snb.driver.DbConnectionState;
 
 import java.io.IOException;
 

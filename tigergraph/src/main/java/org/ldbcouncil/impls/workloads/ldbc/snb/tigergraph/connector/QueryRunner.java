@@ -1,6 +1,6 @@
 package org.ldbcouncil.impls.workloads.ldbc.snb.tigergraph.connector;
 
-import org.ldbcouncil.driver.DbException;
+import org.ldbcouncil.snb.driver.DbException;
 import org.ldbcouncil.impls.workloads.ldbc.snb.tigergraph.TigerGraphDbConnectionState;
 import io.github.karol_brejna_i.tigergraph.restppclient.api.QueryApi;
 import io.github.karol_brejna_i.tigergraph.restppclient.invoker.ApiException;

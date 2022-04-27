@@ -1,6 +1,6 @@
 package org.ldbcouncil.impls.workloads.ldbc.snb.tigergraph;
 
-import org.ldbcouncil.driver.workloads.ldbc.snb.interactive.*;
+import org.ldbcouncil.snb.driver.workloads.interactive.*;
 import org.ldbcouncil.impls.workloads.ldbc.snb.interactive.InteractiveTest;
 import org.ldbcouncil.impls.workloads.ldbc.snb.tigergraph.interactive.TigerGraphInteractiveDb;
 import org.junit.Test;

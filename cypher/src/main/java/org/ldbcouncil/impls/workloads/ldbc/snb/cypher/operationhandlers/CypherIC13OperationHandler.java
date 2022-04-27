@@ -1,9 +1,9 @@
 package org.ldbcouncil.impls.workloads.ldbc.snb.cypher.operationhandlers;
 
-import org.ldbcouncil.driver.DbException;
-import org.ldbcouncil.driver.ResultReporter;
-import org.ldbcouncil.driver.workloads.ldbc.snb.interactive.LdbcQuery13;
-import org.ldbcouncil.driver.workloads.ldbc.snb.interactive.LdbcQuery13Result;
+import org.ldbcouncil.snb.driver.DbException;
+import org.ldbcouncil.snb.driver.ResultReporter;
+import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery13;
+import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery13Result;
 import org.ldbcouncil.impls.workloads.ldbc.snb.cypher.CypherDbConnectionState;
 import org.ldbcouncil.impls.workloads.ldbc.snb.operationhandlers.SingletonOperationHandler;
 

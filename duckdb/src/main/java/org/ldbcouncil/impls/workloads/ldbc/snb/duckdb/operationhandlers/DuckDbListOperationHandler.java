@@ -1,8 +1,8 @@
 package org.ldbcouncil.impls.workloads.ldbc.snb.duckdb.operationhandlers;
 
-import org.ldbcouncil.driver.DbException;
-import org.ldbcouncil.driver.Operation;
-import org.ldbcouncil.driver.ResultReporter;
+import org.ldbcouncil.snb.driver.DbException;
+import org.ldbcouncil.snb.driver.Operation;
+import org.ldbcouncil.snb.driver.ResultReporter;
 import org.ldbcouncil.impls.workloads.ldbc.snb.operationhandlers.ListOperationHandler;
 import org.ldbcouncil.impls.workloads.ldbc.snb.duckdb.DuckDbConnectionState;
 

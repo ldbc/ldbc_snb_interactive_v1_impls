@@ -8,4 +8,4 @@ cd ..
 
 CREATE_VALIDATION_PARAMETERS_PROPERTIES_FILE=${1:-driver/create-validation-parameters.properties}
 
-java -cp target/duckdb-0.3.7-SNAPSHOT.jar org.ldbcouncil.driver.Client -P ${CREATE_VALIDATION_PARAMETERS_PROPERTIES_FILE}
+java -cp target/duckdb-0.3.7-SNAPSHOT.jar org.ldbcouncil.snb.driver.Client -P ${CREATE_VALIDATION_PARAMETERS_PROPERTIES_FILE}

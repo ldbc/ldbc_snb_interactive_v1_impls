@@ -1,6 +1,6 @@
 package org.ldbcouncil.impls.workloads.ldbc.snb.converter;
 
-import org.ldbcouncil.driver.workloads.ldbc.snb.interactive.LdbcUpdate1AddPerson;
+import org.ldbcouncil.snb.driver.workloads.interactive.LdbcUpdate1AddPerson;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

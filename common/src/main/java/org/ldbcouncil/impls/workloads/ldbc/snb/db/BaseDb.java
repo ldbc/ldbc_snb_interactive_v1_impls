@@ -1,6 +1,6 @@
 package org.ldbcouncil.impls.workloads.ldbc.snb.db;
 
-import org.ldbcouncil.driver.Db;
+import org.ldbcouncil.snb.driver.Db;
 import org.ldbcouncil.impls.workloads.ldbc.snb.BaseDbConnectionState;
 import org.ldbcouncil.impls.workloads.ldbc.snb.QueryStore;
 

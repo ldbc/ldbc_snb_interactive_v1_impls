@@ -1,11 +1,11 @@
 package org.ldbcouncil.impls.workloads.ldbc.snb;
 
-import org.ldbcouncil.driver.Db;
-import org.ldbcouncil.driver.DbException;
-import org.ldbcouncil.driver.Operation;
-import org.ldbcouncil.driver.OperationHandlerRunnableContext;
-import org.ldbcouncil.driver.ResultReporter;
-import org.ldbcouncil.driver.Workload;
+import org.ldbcouncil.snb.driver.Db;
+import org.ldbcouncil.snb.driver.DbException;
+import org.ldbcouncil.snb.driver.Operation;
+import org.ldbcouncil.snb.driver.OperationHandlerRunnableContext;
+import org.ldbcouncil.snb.driver.ResultReporter;
+import org.ldbcouncil.snb.driver.Workload;
 import org.junit.After;
 import org.junit.Before;
 
