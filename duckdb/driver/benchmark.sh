@@ -8,4 +8,4 @@ cd ..
 
 BENCHMARK_PROPERTIES_FILE=${1:-driver/benchmark.properties}
 
-java -cp target/duckdb-0.3.7-SNAPSHOT.jar org.ldbcouncil.snb.driver.Client -P ${BENCHMARK_PROPERTIES_FILE}
+java -cp target/duckdb-2.0.0-SNAPSHOT.jar org.ldbcouncil.snb.driver.Client -P ${BENCHMARK_PROPERTIES_FILE}
