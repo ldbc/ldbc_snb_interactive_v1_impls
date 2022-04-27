@@ -9,7 +9,7 @@ ldbc.snb.datagen.generator.scaleFactor:snb.interactive.1
 ldbc.snb.datagen.generator.numPersons:250
 ldbc.snb.datagen.generator.numYears:1
 
-ldbc.snb.datagen.serializer.personSerializer:ldbc.snb.datagen.serializer.snb.interactive.<SerializerType>PersonSerializer
-ldbc.snb.datagen.serializer.invariantSerializer:ldbc.snb.datagen.serializer.snb.interactive.<SerializerType>InvariantSerializer
-ldbc.snb.datagen.serializer.personActivitySerializer:ldbc.snb.datagen.serializer.snb.interactive.<SerializerType>PersonActivitySerializer
+ldbc.snb.datagen.serializer.dynamicActivitySerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.activity.<SerializerType>DynamicActivitySerializer
+ldbc.snb.datagen.serializer.dynamicPersonSerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.person.<SerializerType>DynamicPersonSerializer
+ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv.staticserializer.<SerializerType>StaticSerializer
 ```
