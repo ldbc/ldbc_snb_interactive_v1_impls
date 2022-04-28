@@ -1,9 +1,9 @@
-package com.ldbc.impls.workloads.ldbc.snb.mssql;
+package org.ldbcouncil.snb.impls.workloads.mssql;
 
-import com.ldbc.driver.DbException;
-import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
-import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
-import com.ldbc.impls.workloads.ldbc.snb.mssql.converter.SQLServerConverter;
+import org.ldbcouncil.snb.driver.DbException;
+import org.ldbcouncil.snb.impls.workloads.QueryStore;
+import org.ldbcouncil.snb.impls.workloads.converter.Converter;
+import org.ldbcouncil.snb.impls.workloads.mssql.converter.SQLServerConverter;
 
 import java.util.HashMap;
 import java.util.Map;

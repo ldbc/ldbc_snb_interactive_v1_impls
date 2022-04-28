@@ -1,16 +1,16 @@
-package com.ldbc.impls.workloads.ldbc.snb.mssql;
+package org.ldbcouncil.snb.impls.workloads.mssql;
 
 import com.google.common.collect.ImmutableList;
-import com.ldbc.driver.DbException;
-import com.ldbc.driver.ResultReporter;
-import com.ldbc.driver.control.LoggingService;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
-import com.ldbc.impls.workloads.ldbc.snb.QueryStore;
-import com.ldbc.impls.workloads.ldbc.snb.db.BaseDb;
-import com.ldbc.impls.workloads.ldbc.snb.mssql.converter.SQLServerConverter;
-import com.ldbc.impls.workloads.ldbc.snb.mssql.operationhandlers.SQLServerListOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.mssql.operationhandlers.SQLServerSingletonOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.mssql.operationhandlers.SQLServerUpdateOperationHandler;
+import org.ldbcouncil.snb.driver.DbException;
+import org.ldbcouncil.snb.driver.ResultReporter;
+import org.ldbcouncil.snb.driver.control.LoggingService;
+import org.ldbcouncil.snb.driver.workloads.interactive.*;
+import org.ldbcouncil.snb.impls.workloads.QueryStore;
+import org.ldbcouncil.snb.impls.workloads.db.BaseDb;
+import org.ldbcouncil.snb.impls.workloads.mssql.converter.SQLServerConverter;
+import org.ldbcouncil.snb.impls.workloads.mssql.operationhandlers.SQLServerListOperationHandler;
+import org.ldbcouncil.snb.impls.workloads.mssql.operationhandlers.SQLServerSingletonOperationHandler;
+import org.ldbcouncil.snb.impls.workloads.mssql.operationhandlers.SQLServerUpdateOperationHandler;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

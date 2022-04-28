@@ -1,11 +1,11 @@
-package com.ldbc.impls.workloads.ldbc.snb.mssql.operationhandlers;
+package org.ldbcouncil.snb.impls.workloads.mssql.operationhandlers;
 
-import com.ldbc.driver.DbException;
-import com.ldbc.driver.Operation;
-import com.ldbc.driver.ResultReporter;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcNoResult;
-import com.ldbc.impls.workloads.ldbc.snb.operationhandlers.UpdateOperationHandler;
-import com.ldbc.impls.workloads.ldbc.snb.mssql.SQLServerDbConnectionState;
+import org.ldbcouncil.snb.driver.DbException;
+import org.ldbcouncil.snb.driver.Operation;
+import org.ldbcouncil.snb.driver.ResultReporter;
+import org.ldbcouncil.snb.driver.workloads.interactive.LdbcNoResult;
+import org.ldbcouncil.snb.impls.workloads.operationhandlers.UpdateOperationHandler;
+import org.ldbcouncil.snb.impls.workloads.mssql.SQLServerDbConnectionState;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

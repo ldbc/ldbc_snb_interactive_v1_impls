@@ -1,10 +1,10 @@
-package com.ldbc.impls.workloads.ldbc.snb.mssql.operationhandlers;
+package org.ldbcouncil.snb.impls.workloads.mssql.operationhandlers;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
-import com.ldbc.driver.Operation;
-import com.ldbc.impls.workloads.ldbc.snb.mssql.converter.SQLServerConverter;
+import org.ldbcouncil.snb.driver.Operation;
+import org.ldbcouncil.snb.impls.workloads.mssql.converter.SQLServerConverter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

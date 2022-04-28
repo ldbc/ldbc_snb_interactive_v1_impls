@@ -1,8 +1,8 @@
-package com.ldbc.impls.workloads.ldbc.snb.mssql;
+package org.ldbcouncil.snb.impls.workloads.mssql;
 
-import com.ldbc.driver.DbException;
-import com.ldbc.impls.workloads.ldbc.snb.BaseDbConnectionState;
-
+import org.ldbcouncil.snb.driver.DbException;
+import org.ldbcouncil.snb.impls.workloads.BaseDbConnectionState;
+import org.ldbcouncil.snb.impls.workloads.QueryStore;
 import java.sql.Connection;
 import java.sql.SQLException;
 

@@ -1,6 +1,6 @@
-package com.ldbc.impls.workloads.ldbc.snb.mssql.converter;
+package org.ldbcouncil.snb.impls.workloads.mssql.converter;
 
-import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
+import org.ldbcouncil.snb.impls.workloads.converter.Converter;
 
 import java.sql.Array;
 import java.sql.ResultSet;
