@@ -155,7 +155,9 @@ jobs:
             curl -L https://surfdrive.surf.nl/files/index.php/s/Ng2eCg6m06ZNKKo/download | tar -xv --use-compress-program=zstd
             # substitution parameters and updateStreams for Neo4j
             cp ./sf1/substitution_parameters/* ./cypher/test-data/substitution_parameters/
+            cp ./sf1/substitution_parameters/* ./postgres/test-data/substitution_parameters/
             cp ./sf1/social_network-csv_composite-longdateformatter/updateStream* ./cypher/test-data/update_streams/
+            cp ./sf1/social_network-csv_composite-longdateformatter/updateStream* ./postgres/test-data/update_streams/
       ## Neo4j
       - run:
           name: SF1 data set - Load Neo4j database

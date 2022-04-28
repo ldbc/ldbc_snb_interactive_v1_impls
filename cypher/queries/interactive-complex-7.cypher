@@ -13,7 +13,7 @@ RETURN
     latestLike.likeTime AS likeCreationDate,
     latestLike.msg.id AS commentOrPostId,
     coalesce(latestLike.msg.content, latestLike.msg.imageFile) AS commentOrPostContent,
-    toInteger(round(toFloat(latestLike.likeTime - latestLike.msg.creationDate)/1000.0)/60.0) AS minutesLatency,
+    toInteger(floor(toFloat(latestLike.likeTime - latestLike.msg.creationDate)/1000.0)/60.0) AS minutesLatency,
     not((liker)-[:KNOWS]-(person)) AS isNew
 ORDER BY
     likeCreationDate DESC,
