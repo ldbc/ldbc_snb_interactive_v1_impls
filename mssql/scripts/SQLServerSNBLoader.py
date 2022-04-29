@@ -22,30 +22,54 @@ class SQLServerSNBLoader:
         dask_df = dd.read_csv(filepath, sep='|')
         return dask_df
 
-    def insert_person(self, p_personid, p_firstname, p_lastname, p_gender, p_birthday, p_creationdate, p_locationip, p_browserused, p_placeid):
-        """
-        """
-        stmt = "INSERT INTO dbo.person VALUES (?, ?,?,?,?,?,?,?,?);"
+    # def insert():
+    #     """
+    #     Execute SQL statement inserting data
+
+    #     Parameters
+    #     ----------
+    #     table : pandas.io.sql.SQLTable
+    #     conn : sqlalchemy.engine.Engine or sqlalchemy.engine.Connection
+    #     keys : list of str
+    #         Column names
+    #     data_iter : Iterable that iterates the values to be inserted
+    #     """
+
+
+    # def insert_person(self, table, conn, keys, data_iter):#, p_personid, p_firstname, p_lastname, p_gender, p_birthday, p_creationdate, p_locationip, p_browserused, p_placeid):
+    #     """
+    #     """
+    #     stmt = "INSERT INTO dbo.person VALUES (?, ?,?,?,?,?,?,?,?);"
+    #     # gets a DBAPI connection that can provide a cursor
+    #     # https://pandas.pydata.org/pandas-docs/stable/user_guide/io.html#io-sql-method
+    #     dbapi_conn = conn.connection
+    #     with dbapi_conn.cursor() as cur:
+
+
 
         con.execute(stmt, (p_personid, p_firstname, p_lastname, p_gender, datetime.strptime(p_birthday, '%Y-%m-%d'), datetime.strptime(p_creationdate, '%Y-%m-%dT%H:%M:%S.%f%z'), p_locationip, p_browserused, p_placeid))
 
-    def insert_persons_sql_graph(self):
+    def insert_persons_sql_graph(self, db_endpoint, table_name='dbo.person'):
         """
         Inserts all the persons in the SQL Server database in a 
         'node' table.
         """
-        dask_df = self.load_person_data
-        dask_df.apply(lambda row : self.insert_person(
-            row['id'],
-            row['firstName'],
-            row['lastName'],
-            row['gender'],
-            row['birthday'],
-            row['creationDate'],
-            row['locationIP'],
-            row['browserUsed'],
-            row['place'],
-        ), axis = 1)
+        dask_df = self.load_person_data()
+
+        # We append the data since 
+        dask_df.to_sql(name=table_name, uri=db_endpoint, if_exists='append', method=self.insert_person)
+
+        # dask_df.apply(lambda row : self.insert_person(
+        #     row['id'],
+        #     row['firstName'],
+        #     row['lastName'],
+        #     row['gender'],
+        #     row['birthday'],
+        #     row['creationDate'],
+        #     row['locationIP'],
+        #     row['browserUsed'],
+        #     row['place'],
+        # ), axis = 1)
 
     def insert_knows(self, person1id, person2id, creationdate):
         # print((person1id, person2id, creationdate))
