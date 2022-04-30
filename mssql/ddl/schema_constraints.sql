@@ -1,3 +1,5 @@
+USE ldbc;
+
 -- create index on foreign keys
 CREATE INDEX forum_moderatorid ON forum (f_moderatorid);
 CREATE INDEX forum_person_forumid ON forum_person (fp_forumid);
