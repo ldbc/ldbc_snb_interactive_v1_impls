@@ -1,3 +1,4 @@
+USE ldbc;
 -- Populate forum table
 BULK INSERT dbo.forum FROM '/data/dynamic/forum_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
 -- Populate forum_person table
