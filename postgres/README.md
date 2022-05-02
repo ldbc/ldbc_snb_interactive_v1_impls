@@ -39,14 +39,6 @@ The default configuration of the database (e.g. database name, user, password) i
 2. To start the DBMS, create a database and load the data, run:
 
     ```bash
-    scripts/start.sh
-    scripts/create-db.sh
-    scripts/load.sh
-    ```
-
-    Or, alternatively, simply use:
-
-    ```bash
     scripts/load-in-one-step.sh
     ```
 
