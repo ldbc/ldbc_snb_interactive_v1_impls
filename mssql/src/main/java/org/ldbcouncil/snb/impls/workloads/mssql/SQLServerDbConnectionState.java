@@ -11,14 +11,13 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import java.util.Properties;
 import java.util.Map;
-import java.util.TimeZone;
 
-public class SQLServerDbConnectionState extends BaseDbConnectionState<SQLServerQueryStore> {
+public class SQLServerDbConnectionState<TDbQueryStore extends QueryStore> extends BaseDbConnectionState<TDbQueryStore> {
 
     protected String endPoint;
     protected HikariDataSource ds;
 
-    public SQLServerDbConnectionState(Map<String, String> properties, SQLServerQueryStore store) throws ClassNotFoundException {
+    public SQLServerDbConnectionState(Map<String, String> properties, TDbQueryStore store) throws ClassNotFoundException {
         super(properties, store);
 
         Properties props = new Properties();
@@ -30,14 +29,14 @@ public class SQLServerDbConnectionState extends BaseDbConnectionState<SQLServerQ
         config.setUsername(properties.get("user"));
         config.setJdbcUrl(endPoint);
         config.setDataSourceClassName("com.microsoft.sqlserver.jdbc.SQLServerDataSource");
-
+        config.setConnectionTimeout(300000);
+        config.setLeakDetectionThreshold(300000);
         ds = new HikariDataSource(config);
     }
 
     public Connection getConnection() throws DbException {
         Connection connection = null;
         try {
-            // TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
             connection = ds.getConnection();
         } catch (SQLException e) {
             throw new DbException(e);

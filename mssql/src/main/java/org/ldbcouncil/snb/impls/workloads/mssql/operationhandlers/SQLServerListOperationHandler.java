@@ -27,10 +27,9 @@ public abstract class SQLServerListOperationHandler<TOperation extends Operation
     
             String queryString = getQueryString(state, operation);
             replaceParameterNamesWithQuestionMarks(operation, queryString);
-    
+            final PreparedStatement stmt = prepareAndSetParametersInPreparedStatement(operation, queryString, conn);
+            state.logQuery(operation.getClass().getSimpleName(), queryString);
             try {
-                final PreparedStatement stmt = prepareAndSetParametersInPreparedStatement(operation, queryString, conn);
-                state.logQuery(operation.getClass().getSimpleName(), queryString);
     
                 result = stmt.executeQuery();
                 if (result != null){
@@ -51,9 +50,9 @@ public abstract class SQLServerListOperationHandler<TOperation extends Operation
                 if (result != null){
                     result.close();
                 }
-                // if (stmt != null){
-                //     stmt.close();
-                // }
+                if (stmt != null){
+                    stmt.close();
+                }
                 conn.close();
             }
             resultReporter.report(resultCount, results, operation);
