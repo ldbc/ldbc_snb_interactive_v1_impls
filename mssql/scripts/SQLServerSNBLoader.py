@@ -37,6 +37,8 @@ class SQLServerSNBLoader:
         'node' table.
         """
         df = self.__get_df_from_csv("dynamic/person_0_0.csv")
+        df['firstName'] = df['firstName'].str.replace("'", "''")
+        df['lastName'] = df['lastName'].str.replace("'", "''")
         self.__insert_asynchronous(df, self.insert_person)
 
     def insert_knows_sql_graph(self) -> None:
@@ -62,6 +64,7 @@ class SQLServerSNBLoader:
                 "type":str,
                 "isPartOf":str
         })
+        df['name'] = df['name'].str.replace("'", "''")
         self.__insert_asynchronous(df, self.insert_place)
 
     def insert_tag_to_sql(self) -> None:
@@ -76,6 +79,7 @@ class SQLServerSNBLoader:
                 "url":str,
                 "hasType":str,
         })
+        df['name'] = df['name'].str.replace("'", "''")
         self.__insert_asynchronous(df, self.insert_tag)
 
     def insert_tagclass_to_sql(self) -> None:
@@ -90,6 +94,7 @@ class SQLServerSNBLoader:
                 "url":str,
                 "isSubclassOf":str,
         })
+        df['name'] = df['name'].str.replace("'", "''")
         self.__insert_asynchronous(df, self.insert_tagclass)
 
     def insert_post_to_sql(self) -> None:
@@ -111,6 +116,7 @@ class SQLServerSNBLoader:
                 "Forum.id":str, # can be null
                 "place":int 
         })
+        df['content'] = df['content'].str.replace("'", "''")
         self.__insert_asynchronous(df, self.insert_post)
 
     def insert_comment_to_sql(self) -> None:
@@ -130,7 +136,64 @@ class SQLServerSNBLoader:
                 "replyOfPost":str,
                 "replyOfComment":str 
         })
+        df['content'] = df['content'].str.replace("'", "''")
         self.__insert_asynchronous(df, self.insert_comment)
+
+    def insert_organisation_to_sql(self) -> None:
+        """
+        Insert comment to sql (unicode workaround)
+        """
+        df = self.__get_df_from_csv(
+            "static/organisation_0_0.csv",
+            types= {
+                "id":int,
+                "type":str,
+                "name":str,
+                "url":str,
+                "place":str
+        })
+        df['name'] = df['name'].str.replace("'", "''")
+        self.__insert_asynchronous(df, self.insert_organisation)
+
+    def insert_forum_to_sql(self) -> None:
+        df = self.__get_df_from_csv(
+            "dynamic/forum_0_0.csv",
+            types= {
+                "id":int,
+                "title":str,
+                "creationDate":str,
+                "moderator":str
+        })
+        self.__insert_asynchronous(df, self.insert_forum)
+
+    def insert_forum_person_to_sql(self) -> None:
+        df = self.__get_df_from_csv(
+            "dynamic/forum_hasMember_person_0_0.csv",
+            types= {
+                "Forum.id":int,
+                "Person.id":str,
+                "joinDate":str
+        })
+        self.__insert_asynchronous(df, self.insert_forum_person)
+
+    def insert_likes_to_sql(self) -> None:
+        df = self.__get_df_from_csv(
+            "dynamic/person_likes_post_0_0.csv",
+            types= {
+                "Person.id":int,
+                "Post.id":int,
+                "creationDate":str
+        })
+        self.__insert_asynchronous(df, self.insert_likes)
+        df = self.__get_df_from_csv(
+            "dynamic/person_likes_comment_0_0.csv",
+            types= {
+                "Person.id":int,
+                "Forum.id":int,
+                "creationDate":str
+        })
+        self.__insert_asynchronous(df, self.insert_likes)
+
 
     def insert_person(self, p_personid, p_firstname, p_lastname, p_gender,
         p_birthday, p_creationdate, p_locationip, p_browserused, p_placeid, 
@@ -149,12 +212,10 @@ class SQLServerSNBLoader:
             - p_browserused (str): Browser
             - p_placeid (str): Place ID
         """
-        stmt = u"USE ldbc; INSERT INTO person VALUES (?, ?,?,?,?,?,?,?,?);"
+        stmt = "USE ldbc; INSERT INTO person VALUES (?, N'"+p_firstname+"',N'"+p_lastname+"',?,?,?,?,?,?)"
         con.execute(stmt,
             (
                 p_personid,
-                p_firstname,
-                p_lastname,
                 p_gender,
                 datetime.strptime(p_birthday, '%Y-%m-%d'),
                 datetime.strptime(p_creationdate, '%Y-%m-%dT%H:%M:%S.%f%z'),
@@ -190,9 +251,6 @@ class SQLServerSNBLoader:
             - pl_containerplaceid (str):
             - con (object): Connection object
         """
-        # This part is to insert unicode characters correctly into SQL Server. 
-        # TODO: An alternative is to use FreeTDS driver, future research
-        pl_name = pl_name.replace("'", "''")
         stmt = "USE ldbc; INSERT INTO place VALUES (?, N'" + pl_name + "', ?, ?, ?)"
         if pl_containerplaceid == '':
             pl_containerplaceid = None
@@ -214,7 +272,6 @@ class SQLServerSNBLoader:
             - t_tagclassid (str):
             - con (object): Connection object
         """
-        t_name = t_name.replace("'", "''")
         stmt = "USE ldbc; INSERT INTO tag VALUES (?, N'" + t_name + "', ?, ?)"
         con.execute(stmt, 
             (
@@ -234,9 +291,6 @@ class SQLServerSNBLoader:
             - tc_subclassoftagclassid (str):
             - con (object): Connection object
         """
-        # This part is to insert unicode characters correctly into SQL Server. 
-        # TODO: An alternative is to use FreeTDS driver, future research
-        tc_name = tc_name.replace("'", "''")
         stmt = "USE ldbc; INSERT INTO tagclass VALUES (?, N'" + tc_name + "', ?, ?)"
         if tc_subclassoftagclassid == '':
             tc_subclassoftagclassid = None
@@ -268,12 +322,9 @@ class SQLServerSNBLoader:
         Args:
             - con (object): Connection object
         """
-        m_content = m_content.replace("'", "''")
         stmt = "USE ldbc; INSERT INTO post VALUES (?, ?, ?, ?, ?, ?, N'" + m_content + "', ?, ?, ?, ?)"
-        # pstmt = f"USE ldbc; INSERT INTO post VALUES ({m_messageid}, {m_ps_imagefile}, {datetime.strptime(m_creationdate, '%Y-%m-%dT%H:%M:%S.%f%z')}, {m_locationip}, {m_browserused}, {m_ps_language} N'" + m_content + f"', {m_length}, {m_creatorid}, {m_ps_forumid}, {m_locationid})"
         if m_ps_forumid == '':
             m_ps_forumid = None
-        # print(pstmt)
         con.execute(stmt, 
             (
                 m_messageid,
@@ -310,7 +361,6 @@ class SQLServerSNBLoader:
         Args:
             - con (object): Connection object
         """
-        m_content = m_content.replace("'", "''")
         stmt = "USE ldbc; INSERT INTO comment VALUES (?,?,?,?, N'" + m_content + "',?,?,?,?,?)"
         if m_replyof_post == '':
             m_replyof_post = None
@@ -327,6 +377,103 @@ class SQLServerSNBLoader:
                 m_locationid,
                 m_replyof_post,
                 m_replyof_comment
+            )
+        )
+
+    def insert_forum(
+        self,
+        f_forumid,# bigint primary key,
+        f_title,# nvarchar(MAX) not null,
+        f_creationdate,# datetime2,
+        f_moderatorid,# bigint not null
+        con
+    ):
+        """
+        Insert dynamic forum information. This function is to ensure the datetime
+        are inserted correctly (which is as of 4-5-2022 not possible using BULK INSERT in
+        Linux containers).
+        Args:
+            - con (object): Connection object
+        """
+        stmt = "USE ldbc; INSERT INTO forum VALUES (?,?,?,?)"
+        con.execute(stmt, 
+            (
+                f_forumid,
+                f_title,
+                datetime.strptime(f_creationdate, '%Y-%m-%dT%H:%M:%S.%f%z'),
+                f_moderatorid,
+            )
+        )
+
+    def insert_forum_person(
+        self,
+        fp_forumid,# bigint not null,
+        fp_personid,# bigint not null,
+        fp_joindate,# datetime2
+        con
+    ):
+        """
+        Insert dynamic forum information. This function is to ensure the datetime
+        are inserted correctly (which is as of 4-5-2022 not possible using BULK INSERT in
+        Linux containers).
+        Args:
+            - con (object): Connection object
+        """
+        stmt = "USE ldbc; INSERT INTO forum_person VALUES (?,?,?)"
+        con.execute(stmt, 
+            (
+                fp_forumid,
+                fp_personid,
+                datetime.strptime(fp_joindate, '%Y-%m-%dT%H:%M:%S.%f%z')
+            )
+        )
+
+    def insert_likes(
+        self,
+        l_personid,# bigint not null,
+        l_messageid,# bigint not null,
+        l_creationdate,# datetime2
+        con
+    ):
+        """
+        Insert dynamic forum information. This function is to ensure the datetime
+        are inserted correctly (which is as of 4-5-2022 not possible using BULK INSERT in
+        Linux containers).
+        Args:
+            - con (object): Connection object
+        """
+        stmt = "USE ldbc; INSERT INTO likes VALUES (?,?,?)"
+        con.execute(stmt, 
+            (
+                l_personid,
+                l_messageid,
+                datetime.strptime(l_creationdate, '%Y-%m-%dT%H:%M:%S.%f%z')
+            )
+        )
+
+    def insert_organisation(
+        self,
+        o_organisationid,# bigint primary key,
+        o_type,# varchar(MAX) not null,
+        o_name,# nvarchar(MAX) not null,
+        o_url,# varchar(MAX) not null,
+        o_placeid,# bigint not null
+        con
+    ):
+        """
+        Insert dynamic forum information. This function is to ensure the datetime
+        are inserted correctly (which is as of 4-5-2022 not possible using BULK INSERT in
+        Linux containers).
+        Args:
+            - con (object): Connection object
+        """
+        stmt = "USE ldbc; INSERT INTO organisation VALUES (?, ?, N'"+o_name+"', ?, ?)"
+        con.execute(stmt, 
+            (
+                o_organisationid,
+                o_type,
+                o_url,
+                o_placeid
             )
         )
 

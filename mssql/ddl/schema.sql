@@ -57,7 +57,7 @@ create table message (
      */
     m_messageid bigint primary key,
     m_ps_imagefile varchar(MAX),
-    m_creationdate Datetime,
+    m_creationdate datetime2,
     m_locationip varchar(MAX) not null,
     m_browserused varchar(MAX) not null,
     m_ps_language varchar(MAX),
@@ -72,14 +72,14 @@ create table message (
 create table forum (
    f_forumid bigint primary key,
    f_title nvarchar(MAX) not null,
-   f_creationdate Datetime,
+   f_creationdate datetime2,
    f_moderatorid bigint not null
 );
 
 create table forum_person (
    fp_forumid bigint not null,
    fp_personid bigint not null,
-   fp_joindate Datetime
+   fp_joindate datetime2
 );
 
 create table forum_tag (
@@ -89,7 +89,7 @@ create table forum_tag (
 
 create table organisation (
    o_organisationid bigint primary key,
-   o_type nvarchar(MAX) not null,
+   o_type varchar(MAX) not null,
    o_name nvarchar(MAX) not null,
    o_url varchar(MAX) not null,
    o_placeid bigint not null
@@ -126,7 +126,7 @@ create table knows (
 create table likes (
    l_personid bigint not null,
    l_messageid bigint not null,
-   l_creationdate Datetime
+   l_creationdate datetime2
 );
 
 create table person_language (
