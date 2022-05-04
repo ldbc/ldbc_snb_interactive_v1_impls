@@ -21,12 +21,12 @@ drop table if exists place;
 
 create table post (
     m_messageid bigint primary key,
-    m_ps_imagefile varchar(255),
-    m_creationdate Datetime,
-    m_locationip varchar(255) not null,
-    m_browserused varchar(255) not null,
-    m_ps_language varchar(255),
-    m_content text,
+    m_ps_imagefile varchar(MAX),
+    m_creationdate datetime2,
+    m_locationip varchar(MAX) not null,
+    m_browserused varchar(MAX) not null,
+    m_ps_language varchar(MAX),
+    m_content ntext,
     m_length int not null,
     m_creatorid bigint not null,
     m_ps_forumid bigint,
@@ -35,10 +35,10 @@ create table post (
 
 create table comment (
     m_messageid bigint primary key,
-    m_creationdate Datetime,
-    m_locationip varchar(255) not null,
-    m_browserused varchar(255) not null,
-    m_content text,
+    m_creationdate datetime2,
+    m_locationip varchar(MAX) not null,
+    m_browserused varchar(MAX) not null,
+    m_content ntext,
     m_length int not null,
     m_creatorid bigint not null,
     m_locationid bigint not null,
@@ -56,12 +56,12 @@ create table message (
      *   - m_c_replyof IS NOT NULL for all "comment" records
      */
     m_messageid bigint primary key,
-    m_ps_imagefile varchar(255),
+    m_ps_imagefile varchar(MAX),
     m_creationdate Datetime,
-    m_locationip varchar(255) not null,
-    m_browserused varchar(255) not null,
-    m_ps_language varchar(255),
-    m_content text,
+    m_locationip varchar(MAX) not null,
+    m_browserused varchar(MAX) not null,
+    m_ps_language varchar(MAX),
+    m_content ntext,
     m_length int not null,
     m_creatorid bigint not null,
     m_locationid bigint not null,
@@ -71,7 +71,7 @@ create table message (
 
 create table forum (
    f_forumid bigint primary key,
-   f_title varchar(255) not null,
+   f_title nvarchar(MAX) not null,
    f_creationdate Datetime,
    f_moderatorid bigint not null
 );
@@ -89,29 +89,28 @@ create table forum_tag (
 
 create table organisation (
    o_organisationid bigint primary key,
-   o_type varchar(255) not null,
-   o_name varchar(255) not null,
-   o_url varchar(255) not null,
+   o_type nvarchar(MAX) not null,
+   o_name nvarchar(MAX) not null,
+   o_url varchar(MAX) not null,
    o_placeid bigint not null
 );
 
 create table person (
    p_personid bigint primary key,
-   p_firstname varchar(255) not null,
-   p_lastname varchar(255) not null,
-   p_gender varchar(255) not null,
+   p_firstname nvarchar(MAX) not null,
+   p_lastname nvarchar(MAX) not null,
+   p_gender varchar(MAX) not null,
    p_birthday date not null,
    p_creationdate datetime2,
-   p_locationip varchar(255) not null,
-   p_browserused varchar(255) not null,
+   p_locationip varchar(MAX) not null,
+   p_browserused varchar(MAX) not null,
    p_placeid bigint not null
 ) AS NODE;
 
 create table person_email (
    pe_personid bigint not null,
-   pe_email varchar(255) not null
+   pe_email varchar(MAX) not null
 );
-
 
 create table person_tag (
    pt_personid bigint not null,
@@ -121,7 +120,7 @@ create table person_tag (
 create table knows (
    k_person1id bigint not null,
    k_person2id bigint not null,
-   k_creationdate Datetime
+   k_creationdate datetime2
 ) AS EDGE;
 
 create table likes (
@@ -149,9 +148,9 @@ create table person_company (
 
 create table place (
    pl_placeid bigint primary key,
-   pl_name varchar(255) not null,
-   pl_url varchar(255) not null,
-   pl_type varchar(255) not null,
+   pl_name nvarchar(MAX) not null,
+   pl_url nvarchar(MAX) not null,
+   pl_type nvarchar(MAX) not null,
    pl_containerplaceid bigint -- null for continents
 );
 
@@ -162,14 +161,14 @@ create table message_tag (
 
 create table tagclass (
    tc_tagclassid bigint primary key,
-   tc_name varchar(255) not null,
-   tc_url varchar(255) not null,
+   tc_name nvarchar(MAX) not null,
+   tc_url varchar(MAX) not null,
    tc_subclassoftagclassid bigint -- null for the root tagclass (Thing)
 );
 
 create table tag (
    t_tagid bigint primary key,
-   t_name varchar(255) not null,
-   t_url varchar(255) not null,
+   t_name nvarchar(MAX) not null,
+   t_url varchar(MAX) not null,
    t_tagclassid bigint not null
 );
