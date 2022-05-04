@@ -4,21 +4,24 @@ import os
 from SQLServerSNBLoader import SQLServerSNBLoader
 from DBLoader import DBLoader
 
-def load_sql_graph_data(DBL):
-    snb_loader = SQLServerSNBLoader('/data/dynamic/', DBL)
-    print("Load person table")
+def __execute_load(func, table_name):
+    print(f"Load {table_name} table")
     start = time.time()
-    snb_loader.insert_persons_sql_graph()
+    func()
     end = time.time()
     duration = end - start
     print(f"-> {duration:.4f} seconds")
 
-    print("Load Knows table")
-    start = time.time()
-    snb_loader.insert_knows_sql_graph()
-    end = time.time()
-    duration = end - start
-    print(f"-> {duration:.4f} seconds")
+def load_sql_graph_data(DBL):
+    snb_loader = SQLServerSNBLoader('/data/', DBL)
+
+    __execute_load(snb_loader.insert_tag_to_sql, "tag")
+    __execute_load(snb_loader.insert_tagclass_to_sql, "tagclass")
+    __execute_load(snb_loader.insert_places_to_sql, "places")
+    __execute_load(snb_loader.insert_comment_to_sql, "comment")
+    __execute_load(snb_loader.insert_post_to_sql, "post")
+    __execute_load(snb_loader.insert_persons_sql_graph, "person")
+    __execute_load(snb_loader.insert_knows_sql_graph, "knows")
     return
 
 if __name__ == "__main__":

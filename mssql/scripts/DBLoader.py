@@ -22,16 +22,19 @@ class DBLoader:
         self.driver = driver
 
     def get_connection(self):
-        return pyodbc.connect(f'Driver={self.driver};'
+        conn =  pyodbc.connect(f'Driver={self.driver};'
                       f'Server={self.server},{self.port};'
                       f'Database=master;'
                       f'uid={self.user};'
                       f'pwd={self.password};'
                       'Trusted_Connection=no;'
                       'encrypt=no;'
-                      'sslverify=0;'
-                      'Option=3;',
+                      'sslverify=0;',
                       autocommit=True)
+        conn.setdecoding(pyodbc.SQL_CHAR, encoding='utf8')
+        conn.setdecoding(pyodbc.SQL_WCHAR, encoding='utf8')
+        conn.setencoding(encoding='utf8')
+        return conn
 
     def check_and_create_database(self, db_name, recreate):
         """
