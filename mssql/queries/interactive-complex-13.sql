@@ -1,9 +1,9 @@
 
-SELECT PersonId, Friends, levels
+SELECT levels, PersonId, Friends
 FROM (
 	SELECT
 		Person1.p_personid AS PersonId,
-		STRING_AGG(Person2.p_personid, '->') WITHIN GROUP (GRAPH PATH) AS Friends,
+		STRING_AGG(Person2.p_personid, ';') WITHIN GROUP (GRAPH PATH) AS Friends,
 		LAST_VALUE(Person2.p_personid) WITHIN GROUP (GRAPH PATH) AS LastNode,
 		COUNT(Person2.p_personid) WITHIN GROUP (GRAPH PATH) AS levels
 	FROM
