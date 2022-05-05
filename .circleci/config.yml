@@ -225,6 +225,6 @@ jobs:
           command: |
             cd duckdb
             export DUCKDB_CSV_DIR=`pwd`/../sf1/social_network-csv_merge_foreign
-            time scripts/load-in-one-step.sh
+            scripts/load-in-one-step.sh
             cd ..
       - slack/status
