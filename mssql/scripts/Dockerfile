@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y curl gnupg2 build-essential \
 && apt-get update && ACCEPT_EULA=Y apt-get install -y \
   msodbcsql18 \
   unixodbc-dev \
-&& pip install --no-cache-dir pyodbc pandas
-ADD load.py /home/load.py
+&& pip install --no-cache-dir pyodbc pandas numpy
+ADD . /home/.
 # Add docker-compose-wait tool -------------------
 CMD ["python3 /home/load.py ${MSSQL_CSV_DIR}"]

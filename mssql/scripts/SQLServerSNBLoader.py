@@ -1,95 +1,505 @@
-# Work in Progress
-import dask.dataframe as dd
-from datetime import datetime
+import pandas as pd
+from multiprocessing import Pool
 import os 
+import numpy as np
+from datetime import datetime
 
 class SQLServerSNBLoader:
 
-    def __init__(self, path_to_data):
+    def __init__(self, path_to_data, db_datasource):
         """
         Args:
             - path_to_data (str): Path where the data is stored.
+            - db_datasource (DBLoader): A DBLoader object containing a
+                                        get_connection() function with an
+                                        implemented connection pool.
         """
         self.data_path = path_to_data
+        self.db_datasource = db_datasource
 
-    def load_person_data(self):
-        filepath = os.path.join(self.path_to_data, "person_0_0.csv").replace("\\","/")
-        dask_df = dd.read_csv(filepath, sep='|')
-        return dask_df
+    def __get_df_from_csv(self, csv_file, types=None) -> pd.DataFrame:
+        """
+        Load dataframe from csv
+        Args:
+            - csv_file (str): csv-filename
+        """
+        filepath = os.path.join(self.data_path, csv_file).replace("\\","/")
+        chunksize = 10 ** 6
+        df_list = []
+        with pd.read_csv(filepath, chunksize=chunksize, sep='|', converters=types) as reader:
+            for chunk in reader:
+                df_list.append(chunk)
+        return pd.concat(df_list)
 
-    def load_knows_data(self):
-        filepath = os.path.join(self.path_to_data, "person_knows_person_0_0.csv").replace("\\","/")
-        dask_df = dd.read_csv(filepath, sep='|')
-        return dask_df
-
-    # def insert():
-    #     """
-    #     Execute SQL statement inserting data
-
-    #     Parameters
-    #     ----------
-    #     table : pandas.io.sql.SQLTable
-    #     conn : sqlalchemy.engine.Engine or sqlalchemy.engine.Connection
-    #     keys : list of str
-    #         Column names
-    #     data_iter : Iterable that iterates the values to be inserted
-    #     """
-
-
-    # def insert_person(self, table, conn, keys, data_iter):#, p_personid, p_firstname, p_lastname, p_gender, p_birthday, p_creationdate, p_locationip, p_browserused, p_placeid):
-    #     """
-    #     """
-    #     stmt = "INSERT INTO dbo.person VALUES (?, ?,?,?,?,?,?,?,?);"
-    #     # gets a DBAPI connection that can provide a cursor
-    #     # https://pandas.pydata.org/pandas-docs/stable/user_guide/io.html#io-sql-method
-    #     dbapi_conn = conn.connection
-    #     with dbapi_conn.cursor() as cur:
-
-
-
-        con.execute(stmt, (p_personid, p_firstname, p_lastname, p_gender, datetime.strptime(p_birthday, '%Y-%m-%d'), datetime.strptime(p_creationdate, '%Y-%m-%dT%H:%M:%S.%f%z'), p_locationip, p_browserused, p_placeid))
-
-    def insert_persons_sql_graph(self, db_endpoint, table_name='dbo.person'):
+    def insert_persons_sql_graph(self) -> None:
         """
         Inserts all the persons in the SQL Server database in a 
         'node' table.
         """
-        dask_df = self.load_person_data()
+        df = self.__get_df_from_csv("dynamic/person_0_0.csv")
+        df['firstName'] = df['firstName'].str.replace("'", "''")
+        df['lastName'] = df['lastName'].str.replace("'", "''")
+        self.__insert_asynchronous(df, self.insert_person)
 
-        # We append the data since 
-        dask_df.to_sql(name=table_name, uri=db_endpoint, if_exists='append', method=self.insert_person)
+    def insert_knows_sql_graph(self) -> None:
+        """
+        Inserts all the knows relations in the SQL Server database in an
+        'edge' table.
+        """
+        df = self.__get_df_from_csv("dynamic/person_knows_person_0_0.csv")
+        self.__insert_asynchronous(df, self.insert_knows)
 
-        # dask_df.apply(lambda row : self.insert_person(
-        #     row['id'],
-        #     row['firstName'],
-        #     row['lastName'],
-        #     row['gender'],
-        #     row['birthday'],
-        #     row['creationDate'],
-        #     row['locationIP'],
-        #     row['browserUsed'],
-        #     row['place'],
-        # ), axis = 1)
+    def insert_places_to_sql(self) -> None:
+        """
+        Inserts all the places in the SQL Server database UTF-8.
+        Types is set since 'isPartOf' is a nullable integer, creating errors
+        when Pandas tries to infer the datatype.
+        """
+        df = self.__get_df_from_csv(
+            "static/place_0_0.csv",
+            types={
+                "id":int,
+                "name":str,
+                "url":str,
+                "type":str,
+                "isPartOf":str
+        })
+        df['name'] = df['name'].str.replace("'", "''")
+        self.__insert_asynchronous(df, self.insert_place)
 
-    def insert_knows(self, person1id, person2id, creationdate):
-        # print((person1id, person2id, creationdate))
-        stmt = "INSERT INTO dbo.knows VALUES ((SELECT $node_id FROM dbo.person WHERE p_personid = ?),(SELECT $node_id FROM dbo.person WHERE p_personid = ?),?, ?, ?);"
-        con.execute(stmt, (person1id, person2id,person1id, person2id, datetime.strptime(creationdate, '%Y-%m-%dT%H:%M:%S.%f%z')))
+    def insert_tag_to_sql(self) -> None:
+        """
+        Insert tag to sql (unicode workaround)
+        """
+        df = self.__get_df_from_csv(
+            "static/tag_0_0.csv",
+            types={
+                "id":int,
+                "name":str,
+                "url":str,
+                "hasType":str,
+        })
+        df['name'] = df['name'].str.replace("'", "''")
+        self.__insert_asynchronous(df, self.insert_tag)
+
+    def insert_tagclass_to_sql(self) -> None:
+        """
+        Insert tagclass to sql (unicode workaround)
+        """
+        df = self.__get_df_from_csv(
+            "static/tagclass_0_0.csv",
+            types= {
+                "id":int,
+                "name":str,
+                "url":str,
+                "isSubclassOf":str,
+        })
+        df['name'] = df['name'].str.replace("'", "''")
+        self.__insert_asynchronous(df, self.insert_tagclass)
+
+    def insert_post_to_sql(self) -> None:
+        """
+        Insert post to sql (unicode workaround)
+        """
+        df = self.__get_df_from_csv(
+            "dynamic/post_0_0.csv",
+            types= {
+                "id":int,
+                "imageFile":str,
+                "creationDate":str,
+                "locationIP":str,
+                "browserUsed":str,
+                "language":str,
+                "content":str, #unicode sensitive
+                "length":int,
+                "creator":int,
+                "Forum.id":str, # can be null
+                "place":int 
+        })
+        df['content'] = df['content'].str.replace("'", "''")
+        self.__insert_asynchronous(df, self.insert_post)
+
+    def insert_comment_to_sql(self) -> None:
+        """
+        Insert comment to sql (unicode workaround)
+        """
+        df = self.__get_df_from_csv(
+            "dynamic/comment_0_0.csv",
+            types= {
+                "id":int,
+                "creationDate":str,
+                "locationIP":str,
+                "browserUsed":str,
+                "content":str, #unicode sensitive
+                "length":int,
+                "creator":int,
+                "replyOfPost":str,
+                "replyOfComment":str 
+        })
+        df['content'] = df['content'].str.replace("'", "''")
+        self.__insert_asynchronous(df, self.insert_comment)
+
+    def insert_organisation_to_sql(self) -> None:
+        """
+        Insert comment to sql (unicode workaround)
+        """
+        df = self.__get_df_from_csv(
+            "static/organisation_0_0.csv",
+            types= {
+                "id":int,
+                "type":str,
+                "name":str,
+                "url":str,
+                "place":str
+        })
+        df['name'] = df['name'].str.replace("'", "''")
+        self.__insert_asynchronous(df, self.insert_organisation)
+
+    def insert_forum_to_sql(self) -> None:
+        df = self.__get_df_from_csv(
+            "dynamic/forum_0_0.csv",
+            types= {
+                "id":int,
+                "title":str,
+                "creationDate":str,
+                "moderator":str
+        })
+        self.__insert_asynchronous(df, self.insert_forum)
+
+    def insert_forum_person_to_sql(self) -> None:
+        df = self.__get_df_from_csv(
+            "dynamic/forum_hasMember_person_0_0.csv",
+            types= {
+                "Forum.id":int,
+                "Person.id":str,
+                "joinDate":str
+        })
+        self.__insert_asynchronous(df, self.insert_forum_person)
+
+    def insert_likes_to_sql(self) -> None:
+        df = self.__get_df_from_csv(
+            "dynamic/person_likes_post_0_0.csv",
+            types= {
+                "Person.id":int,
+                "Post.id":int,
+                "creationDate":str
+        })
+        self.__insert_asynchronous(df, self.insert_likes)
+        df = self.__get_df_from_csv(
+            "dynamic/person_likes_comment_0_0.csv",
+            types= {
+                "Person.id":int,
+                "Forum.id":int,
+                "creationDate":str
+        })
+        self.__insert_asynchronous(df, self.insert_likes)
+
+
+    def insert_person(self, p_personid, p_firstname, p_lastname, p_gender,
+        p_birthday, p_creationdate, p_locationip, p_browserused, p_placeid, 
+        con
+        ) -> None:
+        """
+        Insert person node in person table.
+        Args:
+            - p_personid (str): ID of the person
+            - p_firstname (str): Firstname of the person
+            - p_lastname (str): Lastname of the person
+            - p_gender (str): Gender
+            - p_birthday (str): Birthday
+            - p_creationdate (str): Creationdate
+            - p_locationip (str): Location IP Address
+            - p_browserused (str): Browser
+            - p_placeid (str): Place ID
+        """
+        stmt = "USE ldbc; INSERT INTO person VALUES (?, N'"+p_firstname+"',N'"+p_lastname+"',?,?,?,?,?,?)"
+        con.execute(stmt,
+            (
+                p_personid,
+                p_gender,
+                datetime.strptime(p_birthday, '%Y-%m-%d'),
+                datetime.strptime(p_creationdate, '%Y-%m-%dT%H:%M:%S.%f%z'),
+                p_locationip,
+                p_browserused,
+                p_placeid
+            )
+        )
+
+    def insert_knows(self, person1id, person2id, creationdate, con):
+        """
+        Insert friendship relation between two persons.
+        Args:
+            - person1id (str): ID of person 1
+            - person2id (str): ID of person 2
+            - creationdate (str): Date of creation of the relation
+            - con (object): Connection object
+        """
+        stmt = "USE ldbc; INSERT INTO knows VALUES ((SELECT $node_id FROM person WHERE p_personid = ?),(SELECT $node_id FROM person WHERE p_personid = ?),?, ?, ?);"
+        con.execute(stmt,(person1id, person2id,person1id, person2id, datetime.strptime(creationdate, '%Y-%m-%dT%H:%M:%S.%f%z')))
         con.execute(stmt, (person2id, person1id,person2id, person1id, datetime.strptime(creationdate, '%Y-%m-%dT%H:%M:%S.%f%z')))
 
-    def insert_knows_sql_graph(self, internal_csv_path):
+    def insert_place(self, pl_placeid, pl_name, pl_url, pl_type, pl_containerplaceid, con):
         """
-        Inserts all the knows in the SQL Server database in a 
-        'edge' table.
+        Insert static place information. This function is to ensure the unicode characters
+        are inserted correctly (which is as of 4-5-2022 not possible using BULK INSERT in
+        Linux containers).
         Args:
-            internal_csv_path (str): 
+            - pl_placeid (int):
+            - pl_name (str):
+            - pl_url (str):
+            - pl_type (str):
+            - pl_containerplaceid (str):
+            - con (object): Connection object
         """
-        chunksize = 10 ** 6
-        with pd.read_csv(internal_csv_path, chunksize=chunksize, sep='|') as reader:
-            for chunk in reader:
-                chunk.apply(lambda row : self.insert_knows(
-                    row[0],
-                    row[1],
-                    row[2],
-                ), axis = 1)
+        stmt = "USE ldbc; INSERT INTO place VALUES (?, N'" + pl_name + "', ?, ?, ?)"
+        if pl_containerplaceid == '':
+            pl_containerplaceid = None
+        con.execute(stmt, 
+            (
+                pl_placeid, pl_url, pl_type, pl_containerplaceid
+            )
+        )
 
+    def insert_tag(self, t_tagid, t_name, t_url, t_tagclassid, con):
+        """
+        Insert static tag information. This function is to ensure the unicode characters
+        are inserted correctly (which is as of 4-5-2022 not possible using BULK INSERT in
+        Linux containers).
+        Args:
+            - t_tagid (int):
+            - t_name (str):
+            - t_url (str):
+            - t_tagclassid (str):
+            - con (object): Connection object
+        """
+        stmt = "USE ldbc; INSERT INTO tag VALUES (?, N'" + t_name + "', ?, ?)"
+        con.execute(stmt, 
+            (
+                t_tagid, t_url, t_tagclassid
+            )
+        )
+
+    def insert_tagclass(self, tc_tagclassid, tc_name, tc_url, tc_subclassoftagclassid, con):
+        """
+        Insert static tagclass information. This function is to ensure the unicode characters
+        are inserted correctly (which is as of 4-5-2022 not possible using BULK INSERT in
+        Linux containers).
+        Args:
+            - tc_tagclassid (int):
+            - tc_name (str):
+            - tc_url (str):
+            - tc_subclassoftagclassid (str):
+            - con (object): Connection object
+        """
+        stmt = "USE ldbc; INSERT INTO tagclass VALUES (?, N'" + tc_name + "', ?, ?)"
+        if tc_subclassoftagclassid == '':
+            tc_subclassoftagclassid = None
+        con.execute(stmt, 
+            (
+                tc_tagclassid, tc_url, tc_subclassoftagclassid
+            )
+        )
+
+    def insert_post(
+        self,
+        m_messageid,
+        m_ps_imagefile,
+        m_creationdate,
+        m_locationip,
+        m_browserused,
+        m_ps_language,
+        m_content, #unicode sensitive
+        m_length,
+        m_creatorid,
+        m_ps_forumid,
+        m_locationid,
+        con
+    ):
+        """
+        Insert static tagclass information. This function is to ensure the unicode characters
+        are inserted correctly (which is as of 4-5-2022 not possible using BULK INSERT in
+        Linux containers).
+        Args:
+            - con (object): Connection object
+        """
+        stmt = "USE ldbc; INSERT INTO post VALUES (?, ?, ?, ?, ?, ?, N'" + m_content + "', ?, ?, ?, ?)"
+        if m_ps_forumid == '':
+            m_ps_forumid = None
+        con.execute(stmt, 
+            (
+                m_messageid,
+                m_ps_imagefile,
+                datetime.strptime(m_creationdate, '%Y-%m-%dT%H:%M:%S.%f%z'),
+                m_locationip,
+                m_browserused,
+                m_ps_language,
+                m_length,
+                m_creatorid,
+                m_ps_forumid,
+                m_locationid,
+            )
+        )
+
+    def insert_comment(
+        self,
+        m_messageid,# bigint primary key,
+        m_creationdate,# datetime2,
+        m_locationip,# varchar(MAX) not null,
+        m_browserused,# varchar(MAX) not null,
+        m_content,# ntext,
+        m_length,# int not null,
+        m_creatorid,# bigint not null,
+        m_locationid,# bigint not null,
+        m_replyof_post,# bigint,
+        m_replyof_comment,# bigint
+        con
+    ):
+        """
+        Insert static tagclass information. This function is to ensure the unicode characters
+        are inserted correctly (which is as of 4-5-2022 not possible using BULK INSERT in
+        Linux containers).
+        Args:
+            - con (object): Connection object
+        """
+        stmt = "USE ldbc; INSERT INTO comment VALUES (?,?,?,?, N'" + m_content + "',?,?,?,?,?)"
+        if m_replyof_post == '':
+            m_replyof_post = None
+        if m_replyof_comment == '':
+            m_replyof_comment = None
+        con.execute(stmt, 
+            (
+                m_messageid,
+                datetime.strptime(m_creationdate, '%Y-%m-%dT%H:%M:%S.%f%z'),
+                m_locationip,
+                m_browserused,
+                m_length,
+                m_creatorid,
+                m_locationid,
+                m_replyof_post,
+                m_replyof_comment
+            )
+        )
+
+    def insert_forum(
+        self,
+        f_forumid,# bigint primary key,
+        f_title,# nvarchar(MAX) not null,
+        f_creationdate,# datetime2,
+        f_moderatorid,# bigint not null
+        con
+    ):
+        """
+        Insert dynamic forum information. This function is to ensure the datetime
+        are inserted correctly (which is as of 4-5-2022 not possible using BULK INSERT in
+        Linux containers).
+        Args:
+            - con (object): Connection object
+        """
+        stmt = "USE ldbc; INSERT INTO forum VALUES (?,?,?,?)"
+        con.execute(stmt, 
+            (
+                f_forumid,
+                f_title,
+                datetime.strptime(f_creationdate, '%Y-%m-%dT%H:%M:%S.%f%z'),
+                f_moderatorid,
+            )
+        )
+
+    def insert_forum_person(
+        self,
+        fp_forumid,# bigint not null,
+        fp_personid,# bigint not null,
+        fp_joindate,# datetime2
+        con
+    ):
+        """
+        Insert dynamic forum information. This function is to ensure the datetime
+        are inserted correctly (which is as of 4-5-2022 not possible using BULK INSERT in
+        Linux containers).
+        Args:
+            - con (object): Connection object
+        """
+        stmt = "USE ldbc; INSERT INTO forum_person VALUES (?,?,?)"
+        con.execute(stmt, 
+            (
+                fp_forumid,
+                fp_personid,
+                datetime.strptime(fp_joindate, '%Y-%m-%dT%H:%M:%S.%f%z')
+            )
+        )
+
+    def insert_likes(
+        self,
+        l_personid,# bigint not null,
+        l_messageid,# bigint not null,
+        l_creationdate,# datetime2
+        con
+    ):
+        """
+        Insert dynamic forum information. This function is to ensure the datetime
+        are inserted correctly (which is as of 4-5-2022 not possible using BULK INSERT in
+        Linux containers).
+        Args:
+            - con (object): Connection object
+        """
+        stmt = "USE ldbc; INSERT INTO likes VALUES (?,?,?)"
+        con.execute(stmt, 
+            (
+                l_personid,
+                l_messageid,
+                datetime.strptime(l_creationdate, '%Y-%m-%dT%H:%M:%S.%f%z')
+            )
+        )
+
+    def insert_organisation(
+        self,
+        o_organisationid,# bigint primary key,
+        o_type,# varchar(MAX) not null,
+        o_name,# nvarchar(MAX) not null,
+        o_url,# varchar(MAX) not null,
+        o_placeid,# bigint not null
+        con
+    ):
+        """
+        Insert dynamic forum information. This function is to ensure the datetime
+        are inserted correctly (which is as of 4-5-2022 not possible using BULK INSERT in
+        Linux containers).
+        Args:
+            - con (object): Connection object
+        """
+        stmt = "USE ldbc; INSERT INTO organisation VALUES (?, ?, N'"+o_name+"', ?, ?)"
+        con.execute(stmt, 
+            (
+                o_organisationid,
+                o_type,
+                o_url,
+                o_placeid
+            )
+        )
+
+    def handle_df(self, df, insert_func):
+        """
+        Helper function to pass row values to insert function.
+        It handles the connection per thread (which is from the
+        pyodbc connectionpool)
+        Args:
+            - df (pd.DataFrame): The dataframe to insert in the database
+            - insert_function (func): Pointer to the insert function
+        """
+        con = self.db_datasource.get_connection()
+        df.apply(lambda row : insert_func(*row.values, con), axis = 1)
+        con.close()
+
+    def __insert_asynchronous(self, df, insert_function) -> None:
+        """
+        Inserts dataframe data using multiprocessing. Splits the
+        pd.DataFrame to the number of cpu threads available.
+        Args:
+            - df (pd.DataFrame): The dataframe to insert in the database
+            - insert_function (func): Pointer to the insert function
+        """
+        df_list = np.array_split(df, os.cpu_count())
+        uow = [(df_part, insert_function) for df_part in df_list]
+
+        with Pool(os.cpu_count()) as p:
+            p.starmap(self.handle_df, uow)
