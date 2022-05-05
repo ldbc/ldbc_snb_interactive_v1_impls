@@ -65,6 +65,7 @@ class SQLServerSNBLoader:
                 "isPartOf":str
         })
         df['name'] = df['name'].str.replace("'", "''")
+        df['isPartOf'] = np.where((df.isPartOf == ''),None, df.isPartOf)
         self.__insert_asynchronous(df, self.insert_place)
 
     def insert_tag_to_sql(self) -> None:
@@ -95,6 +96,7 @@ class SQLServerSNBLoader:
                 "isSubclassOf":str,
         })
         df['name'] = df['name'].str.replace("'", "''")
+        df['isSubclassOf'] = np.where((df.isSubclassOf == ''),None, df.isSubclassOf)
         self.__insert_asynchronous(df, self.insert_tagclass)
 
     def insert_post_to_sql(self) -> None:
@@ -117,6 +119,8 @@ class SQLServerSNBLoader:
                 "place":int 
         })
         df['content'] = df['content'].str.replace("'", "''")
+        df['imageFile'] = np.where((df.imageFile == ''),None, df.imageFile)
+        df['Forum.id'] = np.where((df['Forum.id'] == ''),None, df['Forum.id'])
         self.__insert_asynchronous(df, self.insert_post)
 
     def insert_comment_to_sql(self) -> None:
@@ -136,6 +140,8 @@ class SQLServerSNBLoader:
                 "replyOfPost":str,
                 "replyOfComment":str 
         })
+        df['replyOfPost'] = np.where((df.replyOfPost == ''),None, df.replyOfPost)
+        df['replyOfComment'] = np.where((df.replyOfComment == ''),None, df.replyOfComment)
         df['content'] = df['content'].str.replace("'", "''")
         self.__insert_asynchronous(df, self.insert_comment)
 
@@ -164,6 +170,7 @@ class SQLServerSNBLoader:
                 "creationDate":str,
                 "moderator":str
         })
+        df['title'] = df['title'].str.replace("'", "''")
         self.__insert_asynchronous(df, self.insert_forum)
 
     def insert_forum_person_to_sql(self) -> None:
@@ -252,8 +259,6 @@ class SQLServerSNBLoader:
             - con (object): Connection object
         """
         stmt = "USE ldbc; INSERT INTO place VALUES (?, N'" + pl_name + "', ?, ?, ?)"
-        if pl_containerplaceid == '':
-            pl_containerplaceid = None
         con.execute(stmt, 
             (
                 pl_placeid, pl_url, pl_type, pl_containerplaceid
@@ -292,8 +297,6 @@ class SQLServerSNBLoader:
             - con (object): Connection object
         """
         stmt = "USE ldbc; INSERT INTO tagclass VALUES (?, N'" + tc_name + "', ?, ?)"
-        if tc_subclassoftagclassid == '':
-            tc_subclassoftagclassid = None
         con.execute(stmt, 
             (
                 tc_tagclassid, tc_url, tc_subclassoftagclassid
@@ -308,7 +311,7 @@ class SQLServerSNBLoader:
         m_locationip,
         m_browserused,
         m_ps_language,
-        m_content, #unicode sensitive
+        m_content,
         m_length,
         m_creatorid,
         m_ps_forumid,
@@ -323,8 +326,6 @@ class SQLServerSNBLoader:
             - con (object): Connection object
         """
         stmt = "USE ldbc; INSERT INTO post VALUES (?, ?, ?, ?, ?, ?, N'" + m_content + "', ?, ?, ?, ?)"
-        if m_ps_forumid == '':
-            m_ps_forumid = None
         con.execute(stmt, 
             (
                 m_messageid,
@@ -362,10 +363,6 @@ class SQLServerSNBLoader:
             - con (object): Connection object
         """
         stmt = "USE ldbc; INSERT INTO comment VALUES (?,?,?,?, N'" + m_content + "',?,?,?,?,?)"
-        if m_replyof_post == '':
-            m_replyof_post = None
-        if m_replyof_comment == '':
-            m_replyof_comment = None
         con.execute(stmt, 
             (
                 m_messageid,
@@ -395,11 +392,10 @@ class SQLServerSNBLoader:
         Args:
             - con (object): Connection object
         """
-        stmt = "USE ldbc; INSERT INTO forum VALUES (?,?,?,?)"
+        stmt = "USE ldbc; INSERT INTO forum VALUES (?,N'" + f_title + "',?,?)"
         con.execute(stmt, 
             (
                 f_forumid,
-                f_title,
                 datetime.strptime(f_creationdate, '%Y-%m-%dT%H:%M:%S.%f%z'),
                 f_moderatorid,
             )
@@ -503,3 +499,8 @@ class SQLServerSNBLoader:
 
         with Pool(os.cpu_count()) as p:
             p.starmap(self.handle_df, uow)
+
+
+if __name__ == "__main__":
+    SNB = SQLServerSNBLoader("/home/gladap/repos/ldbc-data/social_network-csv_merge_foreign-sf1", None)
+    SNB.insert_post_to_sql()

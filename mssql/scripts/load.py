@@ -40,25 +40,25 @@ if __name__ == "__main__":
 
     DBL = DBLoader(SERVER_NAME, DB_NAME, DB_USER, DB_PASS, DB_PORT, DB_DRIVER)
     DBL.check_and_create_database(DB_NAME, RECREATE)
+    if (RECREATE):
+        print("Create tables")
+        DBL.run_ddl_scripts("ddl/schema.sql")
 
-    print("Create tables")
-    DBL.run_ddl_scripts("ddl/schema.sql")
+        print("Load data for SQL Graph")
+        load_sql_graph_data(DBL)
 
-    print("Load data for SQL Graph")
-    load_sql_graph_data(DBL)
+        print("Load initial snapshot")
+        DBL.run_ddl_scripts("ddl/load.sql")
 
-    print("Load initial snapshot")
-    DBL.run_ddl_scripts("ddl/load.sql")
+        print("Creating materialized views . . . ")
+        DBL.run_ddl_scripts("ddl/schema_constraints.sql")
 
-    print("Creating materialized views . . . ")
-    DBL.run_ddl_scripts("ddl/schema_constraints.sql")
-
-    try:
-        print("Create user")
-        DBL.run_ddl_scripts("ddl/create_user.sql")
-    except Exception as e:
-        print("Error creating user:", e, file=sys.stderr, )
-    end_total = time.time()
+        try:
+            print("Create user")
+            DBL.run_ddl_scripts("ddl/create_user.sql")
+        except Exception as e:
+            print("Error creating user:", e, file=sys.stderr, )
+        end_total = time.time()
     duration_total = end_total - start_total
     print("Loaded initial snapshot to SQL Server.")
     print(f"-> {duration_total:.4f} seconds")
