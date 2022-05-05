@@ -158,7 +158,7 @@ jobs:
             cp ./sf1/substitution_parameters/* ./postgres/test-data/substitution_parameters/
             cp ./sf1/social_network-csv_composite-longdateformatter/updateStream* ./cypher/test-data/update_streams/
             cp ./sf1/social_network-csv_composite-longdateformatter/updateStream* ./postgres/test-data/update_streams/
-      ## Neo4j
+      ### Neo4j
       - run:
           name: SF1 data set - Load Neo4j database
           command: |
@@ -175,7 +175,7 @@ jobs:
             driver/create-validation-parameters.sh
             cp validation_params.csv validation_params_cypher_sf1.csv
             cd ..
-      ## Umbra
+      ### Umbra
       - run:
           name: SF1 data set - Load Umbra database
           command: |
@@ -192,7 +192,7 @@ jobs:
             scripts/stop.sh
             grep 'Validation Result: PASS' validation-log.txt
             cd ..
-      ## PostgreSQL
+      ### PostgreSQL
       - run:
           name: SF1 data set - Load PostgreSQL database
           command: |
