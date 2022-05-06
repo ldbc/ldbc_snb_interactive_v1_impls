@@ -11,6 +11,8 @@ The recommended environment is that the benchmark scripts (Bash) and the LDBC dr
 * Docker 19+
 * enough free space in the directory `${MSSQL_DATA_DIR}`
 
+To build, use the script: `scripts/build.sh`
+
 ## Generating and loading the data set
 
 ### Generating the data set
