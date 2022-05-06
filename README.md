@@ -29,6 +29,7 @@ We provide two reference implementations:
 Additional implementations:
 
 * [DuckDB (SQL) implementation](duckdb/README.md)
+* [Microsoft SQL Server (Transact-SQL) implementation](mssql/README.md)
 * [TigerGraph (GSQL) implementation](tigergraph/README.md)
 * [Umbra (SQL) implementation](umbra/README.md)
 
