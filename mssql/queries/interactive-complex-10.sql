@@ -1,7 +1,3 @@
-/* Q10. Friend recommendation
-\set personId 4398046511333
-\set month 5
- */
 SELECT TOP(10) p_personid, p_firstname, p_lastname,( 
   SELECT count(DISTINCT m_messageid)
     FROM message, message_tag pt1

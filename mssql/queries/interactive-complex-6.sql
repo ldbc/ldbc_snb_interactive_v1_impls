@@ -1,26 +1,31 @@
-/* Q6. Tag co-occurrence
-\set personId 4398046511333
-\set tagName '\'Carl_Gustaf_Emil_Mannerheim\''
- */
-select TOP(10) t_name, count(*) as postcount
-from tag, message_tag, message,
- ( select k_person2id
-   from knows
-   where
-   k_person1id = :personId
-   union
-   select k2.k_person2id
-   from knows k1, knows k2
-   where
-   k1.k_person1id = :personId and k1.k_person2id = k2.k_person1id and k2.k_person2id <> :personId
- ) f
-where
-m_creatorid = f.k_person2id and
-m_c_replyof IS NULL and -- post, not comment
-m_messageid = mt_messageid and
-mt_tagid = t_tagid and
-t_name <> :tagName and
-exists (select * from tag, message_tag where mt_messageid = m_messageid and mt_tagid = t_tagid and t_name = :tagName)
-group by t_name
-order by postCount desc, t_name asc
+SELECT TOP(10) t_name
+             , count(*) AS postcount
+          FROM tag
+             , message_tag
+             , message
+             , (SELECT k_person2id
+                  FROM knows
+                 WHERE k_person1id = :personId
+                 UNION
+                SELECT k2.k_person2id
+                  FROM knows k1
+                     , knows k2
+                 WHERE k1.k_person1id = :personId
+                   AND k1.k_person2id = k2.k_person1id
+                   AND k2.k_person2id <> :personId
+               ) f
+         WHERE m_creatorid = f.k_person2id
+           AND m_c_replyof IS NULL
+           AND m_messageid = mt_messageid
+           AND mt_tagid = t_tagid
+           AND t_name <> :tagName
+           AND EXISTS (SELECT * 
+                         FROM tag
+                            , message_tag
+                        WHERE mt_messageid = m_messageid
+                          AND mt_tagid = t_tagid
+                          AND t_name = :tagName
+                      )
+      GROUP BY t_name
+      ORDER BY postCount DESC, t_name ASC
 ;

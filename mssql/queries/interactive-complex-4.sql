@@ -1,28 +1,29 @@
-/* Q4. New topics
-\set personId 10995116277918
-\set startDate '\'2010-10-01\''::date
-\set durationDays 31
- */
-select TOP(10) t_name, count(*) as postCount
-from tag, message, message_tag recent, knows
-where
-    m_messageid = mt_messageid and
-    mt_tagid = t_tagid and
-    m_creatorid = k_person2id and
-    m_c_replyof IS NULL and -- post, not comment
-    k_person1id = :personId and
-    m_creationdate >= :startDate and
-    m_creationdate < DATEADD(day, :durationDays, :startDate) and
-    not exists (
-        select * from
-  (select distinct mt_tagid from message, message_tag, knows
-        where
-    k_person1id = :personId and
-        k_person2id = m_creatorid and
-        m_c_replyof IS NULL and -- post, not comment
-        mt_messageid = m_messageid and
-        m_creationdate < :startDate) tags
-  where  tags.mt_tagid = recent.mt_tagid)
-group by t_name
-order by postCount desc, t_name asc
+SELECT TOP(10) t_name
+             , count(*) AS postCount
+          FROM tag
+             , message
+             , message_tag recent
+             , knows
+         WHERE m_messageid = mt_messageid
+           AND mt_tagid = t_tagid
+           AND m_creatorid = k_person2id
+           AND m_c_replyof IS NULL
+           AND k_person1id = :personId
+           AND m_creationdate >= :startDate
+           AND m_creationdate < DATEADD(day, :durationDays, :startDate)
+           AND NOT EXISTS (
+                SELECT *
+                  FROM (SELECT DISTINCT mt_tagid
+                          FROM message
+                             , message_tag
+                             , knows
+                         WHERE k_person1id = :personId
+                          AND k_person2id = m_creatorid
+                          AND m_c_replyof IS NULL
+                          AND mt_messageid = m_messageid
+                          AND m_creationdate < :startDate
+                            ) tags
+                WHERE tags.mt_tagid = recent.mt_tagid)
+      GROUP BY t_name
+      ORDER BY postCount DESC, t_name ASC
 ;
