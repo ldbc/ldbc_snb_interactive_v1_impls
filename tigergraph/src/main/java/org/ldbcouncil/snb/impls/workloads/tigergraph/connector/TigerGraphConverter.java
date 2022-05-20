@@ -46,7 +46,7 @@ public class TigerGraphConverter {
     public static String orgsToString(List<LdbcUpdate1AddPerson.Organization> organizations) {
         return organizations
                 .stream()
-                .map(v -> v.organizationId() + "," + v.year())
+                .map(v -> v.getOrganizationId() + "," + v.getYear())
                 .collect(Collectors.joining(";"));
     }
 }

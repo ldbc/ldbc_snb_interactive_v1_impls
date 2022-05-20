@@ -458,10 +458,10 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                 replaceParameterNamesWithQuestionMarks(operation, queryStringAddPersonCompanies, ImmutableList.of("organizationId", "worksFromYear"));
                 final PreparedStatement stmt2 = prepareSnbStatement(queryStringAddPersonCompanies, conn);
                 state.logQuery(operation.getClass().getSimpleName(), queryStringAddPersonCompanies);
-                stmt2.setLong(1, operation.personId());
-                for (LdbcUpdate1AddPerson.Organization o : operation.workAt()) {
-                    stmt2.setLong(2, o.organizationId());
-                    stmt2.setInt(3, o.year());
+                stmt2.setLong(1, operation.getPersonId());
+                for (LdbcUpdate1AddPerson.Organization o : operation.getWorkAt()) {
+                    stmt2.setLong(2, o.getOrganizationId());
+                    stmt2.setInt(3, o.getYear());
                     stmt2.executeUpdate();
                 }
 
@@ -470,8 +470,8 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                 replaceParameterNamesWithQuestionMarks(operation, queryStringAddPersonEmails, ImmutableList.of("email"));
                 final PreparedStatement stmt3 = prepareSnbStatement(queryStringAddPersonEmails, conn);
                 state.logQuery(operation.getClass().getSimpleName(), queryStringAddPersonEmails);
-                stmt3.setLong(1, operation.personId());
-                for (String email : operation.emails()) {
+                stmt3.setLong(1, operation.getPersonId());
+                for (String email : operation.getEmails()) {
                     stmt3.setString(2, email);
                     stmt3.executeUpdate();
                 }
@@ -482,8 +482,8 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                         ImmutableList.of("language"));
                 final PreparedStatement stmt4 = prepareSnbStatement(queryStringAddPersonLanguages, conn);
                 state.logQuery(operation.getClass().getSimpleName(), queryStringAddPersonLanguages);
-                stmt4.setLong(1, operation.personId());
-                for (String language : operation.languages()) {
+                stmt4.setLong(1, operation.getPersonId());
+                for (String language : operation.getLanguages()) {
                     stmt4.setString(2, language);
                     stmt4.executeUpdate();
                 }
@@ -493,8 +493,8 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                 replaceParameterNamesWithQuestionMarks(operation, queryStringAddPersonTags, ImmutableList.of("tagId"));
                 final PreparedStatement stmt5 = prepareSnbStatement(queryStringAddPersonTags, conn);
                 state.logQuery(operation.getClass().getSimpleName(), queryStringAddPersonTags);
-                stmt5.setLong(1, operation.personId());
-                for (long tagId : operation.tagIds()) {
+                stmt5.setLong(1, operation.getPersonId());
+                for (long tagId : operation.getTagIds()) {
                     stmt5.setLong(2, tagId);
                     stmt5.executeUpdate();
                 }
@@ -504,10 +504,10 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                 replaceParameterNamesWithQuestionMarks(operation, queryStringAddPersonUniversities, ImmutableList.of("organizationId", "studiesFromYear"));
                 final PreparedStatement stmt6 = prepareSnbStatement(queryStringAddPersonUniversities, conn);
                 state.logQuery(operation.getClass().getSimpleName(), queryStringAddPersonUniversities);
-                stmt6.setLong(1, operation.personId());
-                for (LdbcUpdate1AddPerson.Organization o : operation.studyAt()) {
-                    stmt6.setLong(2, o.organizationId());
-                    stmt6.setInt(3, o.year());
+                stmt6.setLong(1, operation.getPersonId());
+                for (LdbcUpdate1AddPerson.Organization o : operation.getStudyAt()) {
+                    stmt6.setLong(2, o.getOrganizationId());
+                    stmt6.setInt(3, o.getYear());
                     stmt6.executeUpdate();
                 }
             } catch (Exception e) {
@@ -579,8 +579,8 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                 replaceParameterNamesWithQuestionMarks(operation, queryStringAddForumTags, ImmutableList.of("tagId"));
                 final PreparedStatement stmt2 = prepareSnbStatement(queryStringAddForumTags, conn);
                 state.logQuery(operation.getClass().getSimpleName(), queryStringAddForumTags);
-                stmt2.setLong(1, operation.forumId());
-                for (long tagId: operation.tagIds()) {
+                stmt2.setLong(1, operation.getForumId());
+                for (long tagId: operation.getTagIds()) {
                     stmt2.setLong(2, tagId);
                     stmt2.executeUpdate();
                 }
@@ -633,8 +633,8 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                 replaceParameterNamesWithQuestionMarks(operation, queryStringAddPostTags, ImmutableList.of("tagId"));
                 final PreparedStatement stmt2 = prepareSnbStatement(queryStringAddPostTags, conn);
                 state.logQuery(operation.getClass().getSimpleName(), queryStringAddPostTags);
-                stmt2.setLong(1, operation.postId());
-                for (long tagId: operation.tagIds()) {
+                stmt2.setLong(1, operation.getPostId());
+                for (long tagId: operation.getTagIds()) {
                     stmt2.setLong(2, tagId);
                     stmt2.executeUpdate();
                 }
@@ -665,8 +665,8 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                 replaceParameterNamesWithQuestionMarks(operation, queryStringAddCommentTags, ImmutableList.of("tagId"));
                 final PreparedStatement stmt2 = prepareSnbStatement(queryStringAddCommentTags, conn);
                 state.logQuery(operation.getClass().getSimpleName(), queryStringAddCommentTags);
-                stmt2.setLong(1, operation.commentId());
-                for (long tagId: operation.tagIds()) {
+                stmt2.setLong(1, operation.getCommentId());
+                for (long tagId: operation.getTagIds()) {
                     stmt2.setLong(2, tagId);
                     stmt2.executeUpdate();
                 }

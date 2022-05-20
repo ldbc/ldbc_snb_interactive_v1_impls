@@ -213,9 +213,9 @@ public class CypherDb extends Db
         public Map<String, Object> getParameters( LdbcQuery2 operation )
         {
             return ImmutableMap.<String, Object>builder()
-                               .put( LdbcQuery2.PERSON_ID, operation.personId() )
-                               .put( LdbcQuery2.MAX_DATE, operation.maxDate().getTime() )
-                               .put( LdbcQuery2.LIMIT, operation.limit() )
+                               .put( LdbcQuery2.PERSON_ID, operation.getPersonIdQ2() )
+                               .put( LdbcQuery2.MAX_DATE, operation.getMaxDate().getTime() )
+                               .put( LdbcQuery2.LIMIT, operation.getLimit() )
                                .build();
         }
 
@@ -251,14 +251,14 @@ public class CypherDb extends Db
         @Override
         public Map<String, Object> getParameters( LdbcQuery3 operation )
         {
-            final Date endDate = addDays( operation.startDate(), operation.durationDays() );
+            final Date endDate = addDays( operation.getStartDate(), operation.getDurationDays() );
             return ImmutableMap.<String, Object>builder()
-                               .put( LdbcQuery3.PERSON_ID, operation.personId() )
-                               .put( LdbcQuery3.COUNTRY_X_NAME, operation.countryXName() )
-                               .put( LdbcQuery3.COUNTRY_Y_NAME, operation.countryYName() )
-                               .put( LdbcQuery3.START_DATE, operation.startDate().getTime() )
+                               .put( LdbcQuery3.PERSON_ID, operation.getPersonIdQ3() )
+                               .put( LdbcQuery3.COUNTRY_X_NAME, operation.getCountryXName() )
+                               .put( LdbcQuery3.COUNTRY_Y_NAME, operation.getCountryYName() )
+                               .put( LdbcQuery3.START_DATE, operation.getStartDate().getTime() )
                                .put( "endDate", endDate.getTime() )
-                               .put( LdbcQuery3.LIMIT, operation.limit() )
+                               .put( LdbcQuery3.LIMIT, operation.getLimit() )
                                .build();
         }
 
@@ -293,12 +293,12 @@ public class CypherDb extends Db
         @Override
         public Map<String, Object> getParameters( LdbcQuery4 operation )
         {
-            final Date endDate = addDays( operation.startDate(), operation.durationDays() );
+            final Date endDate = addDays( operation.getStartDate(), operation.getDurationDays() );
             return ImmutableMap.<String, Object>builder()
-                               .put( LdbcQuery4.PERSON_ID, operation.personId() )
-                               .put( LdbcQuery4.START_DATE, operation.startDate().getTime() )
+                               .put( LdbcQuery4.PERSON_ID, operation.getPersonIdQ4() )
+                               .put( LdbcQuery4.START_DATE, operation.getStartDate().getTime() )
                                .put( "endDate", endDate.getTime() )
-                               .put( LdbcQuery4.LIMIT, operation.limit() )
+                               .put( LdbcQuery4.LIMIT, operation.getLimit() )
                                .build();
         }
 
@@ -323,9 +323,9 @@ public class CypherDb extends Db
         public Map<String, Object> getParameters( LdbcQuery5 operation )
         {
             return ImmutableMap.<String, Object>builder()
-                               .put( LdbcQuery5.PERSON_ID, operation.personId() )
-                               .put( LdbcQuery5.MIN_DATE, operation.minDate().getTime() )
-                               .put( LdbcQuery5.LIMIT, operation.limit() )
+                               .put( LdbcQuery5.PERSON_ID, operation.getPersonIdQ5() )
+                               .put( LdbcQuery5.MIN_DATE, operation.getMinDate().getTime() )
+                               .put( LdbcQuery5.LIMIT, operation.getLimit() )
                                .build();
         }
 
@@ -429,9 +429,9 @@ public class CypherDb extends Db
         public Map<String, Object> getParameters( LdbcQuery9 operation )
         {
             return ImmutableMap.<String, Object>builder()
-                               .put( LdbcQuery9.PERSON_ID, operation.personId() )
-                               .put( LdbcQuery9.MAX_DATE, operation.maxDate().getTime() )
-                               .put( LdbcQuery9.LIMIT, operation.limit() )
+                               .put( LdbcQuery9.PERSON_ID, operation.getPersonIdQ9() )
+                               .put( LdbcQuery9.MAX_DATE, operation.getMaxDate().getTime() )
+                               .put( LdbcQuery9.LIMIT, operation.getLimit() )
                                .build();
         }
 
@@ -779,23 +779,23 @@ public class CypherDb extends Db
         public Map<String, Object> getParameters( LdbcUpdate1AddPerson operation )
         {
             final List<List<Long>> universities =
-                    operation.studyAt().stream().map( u -> Arrays.asList( u.organizationId(), (long) u.year() ) ).collect( Collectors.toList() );
+                    operation.getStudyAt().stream().map( u -> Arrays.asList( u.getOrganizationId(), (long) u.getYear() ) ).collect( Collectors.toList() );
             final List<List<Long>> companies =
-                    operation.workAt().stream().map( c -> Arrays.asList( c.organizationId(), (long) c.year() ) ).collect( Collectors.toList() );
+                    operation.getWorkAt().stream().map( c -> Arrays.asList( c.getOrganizationId(), (long) c.getYear() ) ).collect( Collectors.toList() );
 
             return ImmutableMap.<String, Object>builder()
-                               .put( LdbcUpdate1AddPerson.PERSON_ID, operation.personId() )
-                               .put( LdbcUpdate1AddPerson.PERSON_FIRST_NAME, operation.personFirstName() )
-                               .put( LdbcUpdate1AddPerson.PERSON_LAST_NAME, operation.personLastName() )
-                               .put( LdbcUpdate1AddPerson.GENDER, operation.gender() )
-                               .put( LdbcUpdate1AddPerson.BIRTHDAY, operation.birthday().getTime() )
-                               .put( LdbcUpdate1AddPerson.CREATION_DATE, operation.creationDate().getTime() )
-                               .put( LdbcUpdate1AddPerson.LOCATION_IP, operation.locationIp() )
-                               .put( LdbcUpdate1AddPerson.BROWSER_USED, operation.browserUsed() )
-                               .put( LdbcUpdate1AddPerson.CITY_ID, operation.cityId() )
-                               .put( LdbcUpdate1AddPerson.LANGUAGES, operation.languages() )
-                               .put( LdbcUpdate1AddPerson.EMAILS, operation.emails() )
-                               .put( LdbcUpdate1AddPerson.TAG_IDS, operation.tagIds() )
+                               .put( LdbcUpdate1AddPerson.PERSON_ID, operation.getPersonId() )
+                               .put( LdbcUpdate1AddPerson.PERSON_FIRST_NAME, operation.getPersonFirstName() )
+                               .put( LdbcUpdate1AddPerson.PERSON_LAST_NAME, operation.getPersonLastName() )
+                               .put( LdbcUpdate1AddPerson.GENDER, operation.getGender() )
+                               .put( LdbcUpdate1AddPerson.BIRTHDAY, operation.getBirthday().getTime() )
+                               .put( LdbcUpdate1AddPerson.CREATION_DATE, operation.getCreationDate().getTime() )
+                               .put( LdbcUpdate1AddPerson.LOCATION_IP, operation.getLocationIp() )
+                               .put( LdbcUpdate1AddPerson.BROWSER_USED, operation.getBrowserUsed() )
+                               .put( LdbcUpdate1AddPerson.CITY_ID, operation.getCityId() )
+                               .put( LdbcUpdate1AddPerson.LANGUAGES, operation.getLanguages() )
+                               .put( LdbcUpdate1AddPerson.EMAILS, operation.getEmails() )
+                               .put( LdbcUpdate1AddPerson.TAG_IDS, operation.getTagIds() )
                                .put( LdbcUpdate1AddPerson.STUDY_AT, universities )
                                .put( LdbcUpdate1AddPerson.WORK_AT, companies )
                                .build();
@@ -815,9 +815,9 @@ public class CypherDb extends Db
         public Map<String, Object> getParameters( LdbcUpdate2AddPostLike operation )
         {
             return ImmutableMap.<String, Object>builder()
-                               .put( LdbcUpdate2AddPostLike.PERSON_ID, operation.personId() )
-                               .put( LdbcUpdate2AddPostLike.POST_ID, operation.postId() )
-                               .put( LdbcUpdate2AddPostLike.CREATION_DATE, operation.creationDate().getTime() )
+                               .put( LdbcUpdate2AddPostLike.PERSON_ID, operation.getPersonId() )
+                               .put( LdbcUpdate2AddPostLike.POST_ID, operation.getPostId() )
+                               .put( LdbcUpdate2AddPostLike.CREATION_DATE, operation.getCreationDate().getTime() )
                                .build();
         }
     }
@@ -835,9 +835,9 @@ public class CypherDb extends Db
         public Map<String, Object> getParameters( LdbcUpdate3AddCommentLike operation )
         {
             return ImmutableMap.<String, Object>builder()
-                               .put( LdbcUpdate3AddCommentLike.PERSON_ID, operation.personId() )
-                               .put( LdbcUpdate3AddCommentLike.COMMENT_ID, operation.commentId() )
-                               .put( LdbcUpdate3AddCommentLike.CREATION_DATE, operation.creationDate().getTime() )
+                               .put( LdbcUpdate3AddCommentLike.PERSON_ID, operation.getPersonId() )
+                               .put( LdbcUpdate3AddCommentLike.COMMENT_ID, operation.getCommentId() )
+                               .put( LdbcUpdate3AddCommentLike.CREATION_DATE, operation.getCreationDate().getTime() )
                                .build();
         }
     }
@@ -855,11 +855,11 @@ public class CypherDb extends Db
         public Map<String, Object> getParameters( LdbcUpdate4AddForum operation )
         {
             return ImmutableMap.<String, Object>builder()
-                               .put( LdbcUpdate4AddForum.FORUM_ID, operation.forumId() )
-                               .put( LdbcUpdate4AddForum.FORUM_TITLE, operation.forumTitle() )
-                               .put( LdbcUpdate4AddForum.CREATION_DATE, operation.creationDate().getTime() )
-                               .put( LdbcUpdate4AddForum.MODERATOR_PERSON_ID, operation.moderatorPersonId() )
-                               .put( LdbcUpdate4AddForum.TAG_IDS, operation.tagIds() )
+                               .put( LdbcUpdate4AddForum.FORUM_ID, operation.getForumId() )
+                               .put( LdbcUpdate4AddForum.FORUM_TITLE, operation.getForumTitle() )
+                               .put( LdbcUpdate4AddForum.CREATION_DATE, operation.getCreationDate().getTime() )
+                               .put( LdbcUpdate4AddForum.MODERATOR_PERSON_ID, operation.getModeratorPersonId() )
+                               .put( LdbcUpdate4AddForum.TAG_IDS, operation.getTagIds() )
                                .build();
         }
     }
@@ -877,9 +877,9 @@ public class CypherDb extends Db
         public Map<String, Object> getParameters( LdbcUpdate5AddForumMembership operation )
         {
             return ImmutableMap.<String, Object>builder()
-                               .put( LdbcUpdate5AddForumMembership.FORUM_ID, operation.forumId() )
-                               .put( LdbcUpdate5AddForumMembership.PERSON_ID, operation.personId() )
-                               .put( LdbcUpdate5AddForumMembership.JOIN_DATE, operation.joinDate().getTime() )
+                               .put( LdbcUpdate5AddForumMembership.FORUM_ID, operation.getForumId() )
+                               .put( LdbcUpdate5AddForumMembership.PERSON_ID, operation.getPersonId() )
+                               .put( LdbcUpdate5AddForumMembership.JOIN_DATE, operation.getJoinDate().getTime() )
                                .build();
         }
     }
@@ -897,18 +897,18 @@ public class CypherDb extends Db
         public Map<String, Object> getParameters( LdbcUpdate6AddPost operation )
         {
             return ImmutableMap.<String, Object>builder()
-                               .put( LdbcUpdate6AddPost.POST_ID, operation.postId() )
-                               .put( LdbcUpdate6AddPost.IMAGE_FILE, operation.imageFile() )
-                               .put( LdbcUpdate6AddPost.CREATION_DATE, operation.creationDate().getTime() )
-                               .put( LdbcUpdate6AddPost.LOCATION_IP, operation.locationIp() )
-                               .put( LdbcUpdate6AddPost.BROWSER_USED, operation.browserUsed() )
-                               .put( LdbcUpdate6AddPost.LANGUAGE, operation.language() )
-                               .put( LdbcUpdate6AddPost.CONTENT, operation.content() )
-                               .put( LdbcUpdate6AddPost.LENGTH, operation.length() )
-                               .put( LdbcUpdate6AddPost.AUTHOR_PERSON_ID, operation.authorPersonId() )
-                               .put( LdbcUpdate6AddPost.FORUM_ID, operation.forumId() )
-                               .put( LdbcUpdate6AddPost.COUNTRY_ID, operation.countryId() )
-                               .put( LdbcUpdate6AddPost.TAG_IDS, operation.tagIds() )
+                               .put( LdbcUpdate6AddPost.POST_ID, operation.getPostId() )
+                               .put( LdbcUpdate6AddPost.IMAGE_FILE, operation.getImageFile() )
+                               .put( LdbcUpdate6AddPost.CREATION_DATE, operation.getCreationDate().getTime() )
+                               .put( LdbcUpdate6AddPost.LOCATION_IP, operation.getLocationIp() )
+                               .put( LdbcUpdate6AddPost.BROWSER_USED, operation.getBrowserUsed() )
+                               .put( LdbcUpdate6AddPost.LANGUAGE, operation.getLanguage() )
+                               .put( LdbcUpdate6AddPost.CONTENT, operation.getContent() )
+                               .put( LdbcUpdate6AddPost.LENGTH, operation.getLength() )
+                               .put( LdbcUpdate6AddPost.AUTHOR_PERSON_ID, operation.getAuthorPersonId() )
+                               .put( LdbcUpdate6AddPost.FORUM_ID, operation.getForumId() )
+                               .put( LdbcUpdate6AddPost.COUNTRY_ID, operation.getCountryId() )
+                               .put( LdbcUpdate6AddPost.TAG_IDS, operation.getTagIds() )
                                .build();
         }
     }
@@ -926,17 +926,17 @@ public class CypherDb extends Db
         public Map<String, Object> getParameters( LdbcUpdate7AddComment operation )
         {
             return ImmutableMap.<String, Object>builder()
-                               .put( LdbcUpdate7AddComment.COMMENT_ID, operation.commentId() )
-                               .put( LdbcUpdate7AddComment.CREATION_DATE, operation.creationDate().getTime() )
-                               .put( LdbcUpdate7AddComment.LOCATION_IP, operation.locationIp() )
-                               .put( LdbcUpdate7AddComment.BROWSER_USED, operation.browserUsed() )
-                               .put( LdbcUpdate7AddComment.CONTENT, operation.content() )
-                               .put( LdbcUpdate7AddComment.LENGTH, operation.length() )
-                               .put( LdbcUpdate7AddComment.AUTHOR_PERSON_ID, operation.authorPersonId() )
-                               .put( LdbcUpdate7AddComment.COUNTRY_ID, operation.countryId() )
-                               .put( LdbcUpdate7AddComment.REPLY_TO_POST_ID, operation.replyToPostId() )
-                               .put( LdbcUpdate7AddComment.REPLY_TO_COMMENT_ID, operation.replyToCommentId() )
-                               .put( LdbcUpdate7AddComment.TAG_IDS, operation.tagIds() )
+                               .put( LdbcUpdate7AddComment.COMMENT_ID, operation.getCommentId() )
+                               .put( LdbcUpdate7AddComment.CREATION_DATE, operation.getCreationDate().getTime() )
+                               .put( LdbcUpdate7AddComment.LOCATION_IP, operation.getLocationIp() )
+                               .put( LdbcUpdate7AddComment.BROWSER_USED, operation.getBrowserUsed() )
+                               .put( LdbcUpdate7AddComment.CONTENT, operation.getContent() )
+                               .put( LdbcUpdate7AddComment.LENGTH, operation.getLength() )
+                               .put( LdbcUpdate7AddComment.AUTHOR_PERSON_ID, operation.getAuthorPersonId() )
+                               .put( LdbcUpdate7AddComment.COUNTRY_ID, operation.getCountryId() )
+                               .put( LdbcUpdate7AddComment.REPLY_TO_POST_ID, operation.getReplyToPostId() )
+                               .put( LdbcUpdate7AddComment.REPLY_TO_COMMENT_ID, operation.getReplyToCommentId() )
+                               .put( LdbcUpdate7AddComment.TAG_IDS, operation.getTagIds() )
                                .build();
         }
     }
@@ -954,9 +954,9 @@ public class CypherDb extends Db
         public Map<String, Object> getParameters( LdbcUpdate8AddFriendship operation )
         {
             return ImmutableMap.<String, Object>builder()
-                               .put( LdbcUpdate8AddFriendship.PERSON1_ID, operation.person1Id() )
-                               .put( LdbcUpdate8AddFriendship.PERSON2_ID, operation.person2Id() )
-                               .put( LdbcUpdate8AddFriendship.CREATION_DATE, operation.creationDate().getTime() )
+                               .put( LdbcUpdate8AddFriendship.PERSON1_ID, operation.getPerson1Id() )
+                               .put( LdbcUpdate8AddFriendship.PERSON2_ID, operation.getPerson2Id() )
+                               .put( LdbcUpdate8AddFriendship.CREATION_DATE, operation.getCreationDate().getTime() )
                                .build();
         }
     }
