@@ -54,6 +54,7 @@ import org.ldbcouncil.snb.driver.workloads.interactive.LdbcUpdate5AddForumMember
 import org.ldbcouncil.snb.driver.workloads.interactive.LdbcUpdate6AddPost;
 import org.ldbcouncil.snb.driver.workloads.interactive.LdbcUpdate7AddComment;
 import org.ldbcouncil.snb.driver.workloads.interactive.LdbcUpdate8AddFriendship;
+import org.ldbcouncil.snb.impls.workloads.cypher.converter.CypherConverter;
 import org.ldbcouncil.snb.impls.workloads.cypher.operationhandlers.CypherIC13OperationHandler;
 import org.ldbcouncil.snb.impls.workloads.cypher.operationhandlers.CypherListOperationHandler;
 import org.ldbcouncil.snb.impls.workloads.cypher.operationhandlers.CypherSingletonOperationHandler;
@@ -155,20 +156,20 @@ public class CypherDb extends Db
                 languages = new ArrayList<>();
             }
 
-            List<List<Object>> universities;
+            List<LdbcQuery1Result.Organization> universities;
             if ( !record.get( 11 ).isNull() )
             {
-                universities = record.get( 11 ).asList( Value::asList );
+                universities = CypherConverter.asOrganization(record.get( 11 ).asList( Value::asList ));
             }
             else
             {
                 universities = new ArrayList<>();
             }
 
-            List<List<Object>> companies;
+            List<LdbcQuery1Result.Organization> companies;
             if ( !record.get( 12 ).isNull() )
             {
-                companies = record.get( 12 ).asList( Value::asList );
+                companies = CypherConverter.asOrganization(record.get( 12 ).asList( Value::asList ));
             }
             else
             {

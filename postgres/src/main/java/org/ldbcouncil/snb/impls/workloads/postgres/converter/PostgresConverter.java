@@ -1,5 +1,6 @@
 package org.ldbcouncil.snb.impls.workloads.postgres.converter;
 
+import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery1Result;
 import org.ldbcouncil.snb.impls.workloads.converter.Converter;
 
 import java.sql.Array;
@@ -69,6 +70,20 @@ public class PostgresConverter extends Converter {
             List<List<Object>> array = new ArrayList<>();
             for (int i = 0; i < strs.length; i++) {
                 array.add(new ArrayList(Arrays.asList(strs[i])));
+            }
+            return array;
+        }
+    }
+
+    public static Iterable<LdbcQuery1Result.Organization> arrayToOrganizationArray(ResultSet r, int column) throws SQLException {
+        Array value = r.getArray(column);
+        if (value == null) {
+            return new ArrayList<>();
+        } else {
+            Object[][] strs = (Object[][]) value.getArray();
+            List<LdbcQuery1Result.Organization> array = new ArrayList<>();
+            for (int i = 0; i < strs.length; i++) {
+                array.add(new LdbcQuery1Result.Organization((String) strs[i][0],Integer.parseInt((String) strs[i][1]), (String) strs[i][2]));
             }
             return array;
         }

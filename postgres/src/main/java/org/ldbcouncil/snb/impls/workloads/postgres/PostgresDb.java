@@ -53,17 +53,9 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                     PostgresConverter.arrayToStringArray(result, 9),
                     PostgresConverter.arrayToStringArray(result, 10),
                     result.getString(11),
-                    convertLists(PostgresConverter.arrayToObjectArray(result, 12)),
-                    convertLists(PostgresConverter.arrayToObjectArray(result, 13)));
+                    PostgresConverter.arrayToOrganizationArray(result, 12),
+                    PostgresConverter.arrayToOrganizationArray(result, 13));
             return qr;
-        }
-
-        @SuppressWarnings("unchecked")
-        public Iterable<List<Object>> convertLists(Iterable<List<Object>> arr) {
-            for (List<Object> entry : arr) {
-                entry.set(1, Integer.parseInt((String) entry.get(1)));
-            }
-            return arr;
         }
     }
 

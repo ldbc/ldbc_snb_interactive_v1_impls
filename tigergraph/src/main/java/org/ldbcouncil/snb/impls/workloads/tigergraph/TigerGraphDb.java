@@ -77,9 +77,9 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
             Iterable<String> friendEmails = vertexResult.getStringList("friendEmails");
             Iterable<String> friendLanguages = vertexResult.getStringList("friendSpeaks");
             List<List> univs = vertexResult.getObjectList("friendUniversities");
-            Iterable<List<Object>> universities = TigerGraphConverter.toOrgList(univs);
+            Iterable<LdbcQuery1Result.Organization> universities = TigerGraphConverter.toOrgList(univs);
             List<List> comps = vertexResult.getObjectList("friendCompanies");
-            Iterable<List<Object>> companies = TigerGraphConverter.toOrgList(comps);
+            Iterable<LdbcQuery1Result.Organization> companies = TigerGraphConverter.toOrgList(comps);
 
             return new LdbcQuery1Result(friendId, friendLastName, distanceFromPerson, friendBirthday, friendCreationDate,
                     friendGender, friendBrowserUsed, friendLocationIp, friendEmails, friendLanguages, friendCityName, universities, companies);

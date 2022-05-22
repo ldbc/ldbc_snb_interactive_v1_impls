@@ -100,8 +100,8 @@ public abstract class DuckDbDb extends BaseDb<QueryStore> {
                     DuckDbConverter.arrayToStringArray(result, 9),
                     DuckDbConverter.arrayToStringArray(result, 10),
                     result.getString(11),
-                    DuckDbConverter.arrayToObjectArray(result, 12),
-                    DuckDbConverter.arrayToObjectArray(result, 13));
+                    DuckDbConverter.arrayToOrganizationArray(result, 12),
+                    DuckDbConverter.arrayToOrganizationArray(result, 13));
             return qr;
         }
 

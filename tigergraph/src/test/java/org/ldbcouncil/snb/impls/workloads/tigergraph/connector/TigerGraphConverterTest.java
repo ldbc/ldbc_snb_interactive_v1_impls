@@ -1,6 +1,8 @@
 package org.ldbcouncil.snb.impls.workloads.tigergraph.connector;
 
 import com.google.common.collect.ImmutableList;
+
+import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery1Result;
 import org.ldbcouncil.snb.driver.workloads.interactive.LdbcUpdate1AddPerson;
 import junit.framework.TestCase;
 
@@ -39,7 +41,7 @@ public class TigerGraphConverterTest extends TestCase {
                 Arrays.asList("5142L", "2004", "dada"),
                 Arrays.asList("aaaaa", "2001", "papa")
         );
-        Iterable<List<Object>> universities1 = TigerGraphConverter.toOrgList(comps1);
+        Iterable<LdbcQuery1Result.Organization> universities1 = TigerGraphConverter.toOrgList(comps1);
     }
 
     public void testOrgsToString() {

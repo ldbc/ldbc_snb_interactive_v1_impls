@@ -1,5 +1,6 @@
 package org.ldbcouncil.snb.impls.workloads.duckdb.converter;
 
+import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery1Result;
 import org.ldbcouncil.snb.impls.workloads.converter.Converter;
 
 import java.sql.Array;
@@ -51,18 +52,18 @@ public class DuckDbConverter extends Converter {
         }
     }
 
-    public static Iterable<List<Object>> arrayToObjectArray(ResultSet r, int column) throws SQLException {
+    public static Iterable<LdbcQuery1Result.Organization> arrayToOrganizationArray(ResultSet r, int column) throws SQLException {
         String value = r.getString(column);
         if (value == null) {
             return new ArrayList<>();
         } else {
             String[] strs = value.split(";");
-            List<List<Object>> array = new ArrayList<>();
+            List<LdbcQuery1Result.Organization> array = new ArrayList<>();
             for (int i = 0; i < strs.length; i++) {
                 String[] s = strs[i].split("\\|");
                 // the corresponding results of Interactive Q1 (field 12: universities, field 13: companies)
                 // both return <string, int32, string> tuples
-                array.add(Arrays.asList(s[0], Integer.valueOf(s[1]), s[2]));
+                array.add(new LdbcQuery1Result.Organization((String) s[0],Integer.parseInt((String) s[1]), (String) s[2]));
             }
             return array;
         }
