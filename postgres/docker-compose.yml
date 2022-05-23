@@ -1,0 +1,54 @@
+version: "3.9"
+
+services:
+  postgres-db:
+    image: ${POSTGRES_DOCKER_IMAGE}
+    container_name: snb-interactive-postgres
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    volumes:
+      - type: bind
+        source: ${POSTGRES_CSV_DIR}
+        target: /data/
+      - type: bind
+        source: ${POSTGRES_CUSTOM_CONFIGURATION}
+        target: /etc/postgresql.conf
+      - type: bind
+        source: ${POSTGRES_DATA_DIR}
+        target: /var/lib/postgresql/data
+      - type: bind
+        source: ${POSTGRES_SCRIPTS_DIR}/create-postgresdb.sh
+        target: /docker-entrypoint-initdb.d/init-user-db.sh
+    environment:
+      - POSTGRES_DB=${POSTGRES_DATABASE}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DOCKER_PLATFORM_FLAG=${POSTGRES_DOCKER_PLATFORM_FLAG}
+    command: [
+      "postgres",
+      "-c",
+      "${POSTGRES_CUSTOM_ARGS}"
+    ]
+
+
+  db-load:
+    build: ./scripts
+    image: "postgres-db-loader:latest"
+    container_name: postgres-db-loader
+    volumes:
+      - type: bind
+        source: ${POSTGRES_DDL_DIR}
+        target: /ddl/
+    depends_on:
+      - postgres-db
+    command: sh -c "/wait && python3 -u home/load.py"
+    environment:
+      - POSTGRES_HOST=postgres-db
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - WAIT_HOSTS=postgres-db:${POSTGRES_PORT}
+      - WAIT_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=5
+      - WAIT_HOST_CONNECT_TIMEOUT=30
