@@ -13,14 +13,15 @@ services:
       - type: bind
         source: ${POSTGRES_CUSTOM_CONFIGURATION}
         target: /etc/postgresql.conf
-      - type: bind
-        source: ${POSTGRES_DATA_DIR}
-        target: /var/lib/postgresql/data
+      # Uncomment to persist data
+      # - type: bind
+      #   source: ${POSTGRES_DATA_DIR}
+      #   target: /var/lib/postgresql/data
       - type: bind
         source: ${POSTGRES_SCRIPTS_DIR}/create-postgresdb.sh
         target: /docker-entrypoint-initdb.d/init-user-db.sh
     environment:
-      - POSTGRES_DB=${POSTGRES_DATABASE}
+      - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DOCKER_PLATFORM_FLAG=${POSTGRES_DOCKER_PLATFORM_FLAG}
