@@ -1,10 +1,10 @@
 package org.ldbcouncil.snb.impls.workloads.tigergraph.connector;
 
+import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery1Result;
 import org.ldbcouncil.snb.driver.workloads.interactive.LdbcUpdate1AddPerson;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -37,16 +37,16 @@ public class TigerGraphConverter {
         return Long.toString(dateToEpoch(date));
     }
 
-    public static Iterable<List<Object>> toOrgList(List<List> values) {
+    public static Iterable<LdbcQuery1Result.Organization> toOrgList(List<List> values) {
         return values.stream()
-                .map(v -> Arrays.asList(v.get(0), Integer.parseInt((String) v.get(1)), v.get(2)))
+                .map(v -> new LdbcQuery1Result.Organization((String) v.get(0), Integer.parseInt((String) v.get(1)), (String) v.get(2)))
                 .collect(Collectors.toList());
     }
 
     public static String orgsToString(List<LdbcUpdate1AddPerson.Organization> organizations) {
         return organizations
                 .stream()
-                .map(v -> v.organizationId() + "," + v.year())
+                .map(v -> v.getOrganizationId() + "," + v.getYear())
                 .collect(Collectors.joining(";"));
     }
 }

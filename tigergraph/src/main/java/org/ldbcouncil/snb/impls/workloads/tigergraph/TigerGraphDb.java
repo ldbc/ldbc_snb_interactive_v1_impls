@@ -56,8 +56,8 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         protected Map<String, String> constructParams(LdbcQuery1 o) {
 
             return ImmutableMap.<String, String>builder()
-                    .put(LdbcQuery1.PERSON_ID, Long.toString(o.personId()))
-                    .put(LdbcQuery1.FIRST_NAME, o.firstName())
+                    .put(LdbcQuery1.PERSON_ID, Long.toString(o.getPersonIdQ1()))
+                    .put(LdbcQuery1.FIRST_NAME, o.getFirstName())
                     .build();
         }
 
@@ -77,9 +77,9 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
             Iterable<String> friendEmails = vertexResult.getStringList("friendEmails");
             Iterable<String> friendLanguages = vertexResult.getStringList("friendSpeaks");
             List<List> univs = vertexResult.getObjectList("friendUniversities");
-            Iterable<List<Object>> universities = TigerGraphConverter.toOrgList(univs);
+            Iterable<LdbcQuery1Result.Organization> universities = TigerGraphConverter.toOrgList(univs);
             List<List> comps = vertexResult.getObjectList("friendCompanies");
-            Iterable<List<Object>> companies = TigerGraphConverter.toOrgList(comps);
+            Iterable<LdbcQuery1Result.Organization> companies = TigerGraphConverter.toOrgList(comps);
 
             return new LdbcQuery1Result(friendId, friendLastName, distanceFromPerson, friendBirthday, friendCreationDate,
                     friendGender, friendBrowserUsed, friendLocationIp, friendEmails, friendLanguages, friendCityName, universities, companies);
@@ -96,8 +96,8 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         @Override
         protected Map<String, String> constructParams(LdbcQuery2 o) {
             return ImmutableMap.<String, String>builder()
-                    .put(LdbcQuery2.PERSON_ID, Long.toString(o.personId()))
-                    .put(LdbcQuery2.MAX_DATE,  Long.toString(o.maxDate().getTime()))
+                    .put(LdbcQuery2.PERSON_ID, Long.toString(o.getPersonIdQ2()))
+                    .put(LdbcQuery2.MAX_DATE,  Long.toString(o.getMaxDate().getTime()))
                     .build();
         }
 
@@ -125,11 +125,11 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         @Override
         protected Map<String, String> constructParams(LdbcQuery3 o) {
             return ImmutableMap.<String, String>builder()
-                    .put(LdbcQuery3.PERSON_ID, Long.toString(o.personId()))
-                    .put(LdbcQuery3.COUNTRY_X_NAME, o.countryXName())
-                    .put(LdbcQuery3.COUNTRY_Y_NAME, o.countryYName())
-                    .put(LdbcQuery3.START_DATE, Long.toString(o.startDate().getTime()))
-                    .put(LdbcQuery3.DURATION_DAYS, Integer.toString(o.durationDays()))
+                    .put(LdbcQuery3.PERSON_ID, Long.toString(o.getPersonIdQ3()))
+                    .put(LdbcQuery3.COUNTRY_X_NAME, o.getCountryXName())
+                    .put(LdbcQuery3.COUNTRY_Y_NAME, o.getCountryYName())
+                    .put(LdbcQuery3.START_DATE, Long.toString(o.getStartDate().getTime()))
+                    .put(LdbcQuery3.DURATION_DAYS, Integer.toString(o.getDurationDays()))
                     .build();
         }
 
@@ -156,9 +156,9 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         @Override
         protected Map<String, String> constructParams(LdbcQuery4 o) {
             return ImmutableMap.<String, String>builder()
-                    .put(LdbcQuery3.PERSON_ID, Long.toString(o.personId()))
-                    .put(LdbcQuery3.START_DATE, Long.toString(o.startDate().getTime()))
-                    .put(LdbcQuery3.DURATION_DAYS, Integer.toString(o.durationDays()))
+                    .put(LdbcQuery3.PERSON_ID, Long.toString(o.getPersonIdQ4()))
+                    .put(LdbcQuery3.START_DATE, Long.toString(o.getStartDate().getTime()))
+                    .put(LdbcQuery3.DURATION_DAYS, Integer.toString(o.getDurationDays()))
                     .build();
         }
 
@@ -181,8 +181,8 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         @Override
         protected Map<String, String> constructParams(LdbcQuery5 o) {
             return ImmutableMap.<String, String>builder()
-                    .put(LdbcQuery5.PERSON_ID, Long.toString(o.personId()))
-                    .put(LdbcQuery5.MIN_DATE, Long.toString(o.minDate().getTime()))
+                    .put(LdbcQuery5.PERSON_ID, Long.toString(o.getPersonIdQ5()))
+                    .put(LdbcQuery5.MIN_DATE, Long.toString(o.getMinDate().getTime()))
                     .build();
         }
 
@@ -203,8 +203,8 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         @Override
         protected Map<String, String> constructParams(LdbcQuery6 o) {
             return ImmutableMap.<String, String>builder()
-                    .put(LdbcQuery6.PERSON_ID, Long.toString(o.personId()))
-                    .put(LdbcQuery6.TAG_NAME, o.tagName())
+                    .put(LdbcQuery6.PERSON_ID, Long.toString(o.getPersonIdQ6()))
+                    .put(LdbcQuery6.TAG_NAME, o.getTagName())
                     .build();
         }
 
@@ -226,7 +226,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
 
         @Override
         protected Map<String, String> constructParams(LdbcQuery7 o) {
-            return ImmutableMap.<String, String>builder().put(LdbcQuery7.PERSON_ID, Long.toString(o.personId())).build();
+            return ImmutableMap.<String, String>builder().put(LdbcQuery7.PERSON_ID, Long.toString(o.getPersonIdQ7())).build();
         }
 
         @Override
@@ -253,7 +253,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
 
         @Override
         protected Map<String, String> constructParams(LdbcQuery8 o) {
-            return ImmutableMap.<String, String>builder().put(LdbcQuery8.PERSON_ID, Long.toString(o.personId())).build();
+            return ImmutableMap.<String, String>builder().put(LdbcQuery8.PERSON_ID, Long.toString(o.getPersonIdQ8())).build();
         }
 
         @Override
@@ -279,8 +279,8 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         @Override
         protected Map<String, String> constructParams(LdbcQuery9 o) {
             return ImmutableMap.<String, String>builder()
-                    .put(LdbcQuery9.PERSON_ID, Long.toString(o.personId()))
-                    .put(LdbcQuery9.MAX_DATE, Long.toString(o.maxDate().getTime()))
+                    .put(LdbcQuery9.PERSON_ID, Long.toString(o.getPersonIdQ9()))
+                    .put(LdbcQuery9.MAX_DATE, Long.toString(o.getMaxDate().getTime()))
                     .build();
         }
 
@@ -307,7 +307,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
 
         @Override
         protected Map<String, String> constructParams(LdbcQuery10 o) {
-            return ImmutableMap.<String, String>builder().put(LdbcQuery10.PERSON_ID, Long.toString(o.personId())).put(LdbcQuery10.MONTH, Integer.toString(o.month())).build();
+            return ImmutableMap.<String, String>builder().put(LdbcQuery10.PERSON_ID, Long.toString(o.getPersonIdQ10())).put(LdbcQuery10.MONTH, Integer.toString(o.getMonth())).build();
         }
 
         @Override
@@ -332,7 +332,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
 
         @Override
         protected Map<String, String> constructParams(LdbcQuery11 o) {
-            return ImmutableMap.<String, String>builder().put(LdbcQuery11.PERSON_ID, Long.toString(o.personId())).put(LdbcQuery11.COUNTRY_NAME, o.countryName()).put(LdbcQuery11.WORK_FROM_YEAR, Integer.toString(o.workFromYear())).build();
+            return ImmutableMap.<String, String>builder().put(LdbcQuery11.PERSON_ID, Long.toString(o.getPersonIdQ11())).put(LdbcQuery11.COUNTRY_NAME, o.getCountryName()).put(LdbcQuery11.WORK_FROM_YEAR, Integer.toString(o.getWorkFromYear())).build();
         }
 
         @Override
@@ -357,8 +357,8 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         @Override
         protected Map<String, String> constructParams(LdbcQuery12 o) {
             return ImmutableMap.<String, String>builder()
-                    .put(LdbcQuery12.PERSON_ID, Long.toString(o.personId()))
-                    .put(LdbcQuery12.TAG_CLASS_NAME, o.tagClassName())
+                    .put(LdbcQuery12.PERSON_ID, Long.toString(o.getPersonIdQ12()))
+                    .put(LdbcQuery12.TAG_CLASS_NAME, o.getTagClassName())
                     .build();
         }
 
@@ -385,7 +385,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
 
         @Override
         protected Map<String, String> constructParams(LdbcQuery13 o) {
-            return ImmutableMap.<String, String>builder().put(LdbcQuery13.PERSON1_ID, Long.toString(o.person1Id())).put(LdbcQuery13.PERSON2_ID, Long.toString(o.person2Id())).build();
+            return ImmutableMap.<String, String>builder().put(LdbcQuery13.PERSON1_ID, Long.toString(o.getPerson1IdQ13StartNode())).put(LdbcQuery13.PERSON2_ID, Long.toString(o.getPerson2IdQ13EndNode())).build();
         }
 
         @Override
@@ -410,8 +410,8 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         @Override
         protected Map<String, String> constructParams(LdbcQuery14 o) {
             return ImmutableMap.<String, String>builder()
-                    .put(LdbcQuery14.PERSON1_ID, Long.toString(o.person1Id()))
-                    .put(LdbcQuery14.PERSON2_ID, Long.toString(o.person2Id())).build();
+                    .put(LdbcQuery14.PERSON1_ID, Long.toString(o.getPerson1IdQ14StartNode()))
+                    .put(LdbcQuery14.PERSON2_ID, Long.toString(o.getPerson2IdQ14EndNode())).build();
         }
 
         @Override
@@ -441,7 +441,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         protected Map<String, String> constructParams(LdbcShortQuery1PersonProfile o) {
 
             return ImmutableMap.<String, String>builder()
-                    .put(LdbcQuery1.PERSON_ID, Long.toString(o.personId()))
+                    .put(LdbcQuery1.PERSON_ID, Long.toString(o.getPersonIdSQ1()))
                     .build();
         }
 
@@ -475,7 +475,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         protected Map<String, String> constructParams(LdbcShortQuery2PersonPosts o) {
 
             return ImmutableMap.<String, String>builder()
-                    .put(LdbcQuery2.PERSON_ID, Long.toString(o.personId()))
+                    .put(LdbcQuery2.PERSON_ID, Long.toString(o.getPersonIdSQ2()))
                     .build();
         }
 
@@ -507,7 +507,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         protected Map<String, String> constructParams(LdbcShortQuery3PersonFriends o) {
 
             return ImmutableMap.<String, String>builder()
-                    .put(LdbcShortQuery3PersonFriends.PERSON_ID, Long.toString(o.personId()))
+                    .put(LdbcShortQuery3PersonFriends.PERSON_ID, Long.toString(o.getPersonIdSQ3()))
                     .build();
         }
 
@@ -533,7 +533,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         protected Map<String, String> constructParams(LdbcShortQuery4MessageContent o) {
 
             return ImmutableMap.<String, String>builder()
-                    .put(LdbcShortQuery4MessageContent.MESSAGE_ID, Long.toString(o.messageId()))
+                    .put(LdbcShortQuery4MessageContent.MESSAGE_ID, Long.toString(o.getMessageIdContent()))
                     .build();
         }
 
@@ -559,7 +559,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         protected Map<String, String> constructParams(LdbcShortQuery5MessageCreator o) {
 
             return ImmutableMap.<String, String>builder()
-                    .put(LdbcShortQuery5MessageCreator.MESSAGE_ID, Long.toString(o.messageId()))
+                    .put(LdbcShortQuery5MessageCreator.MESSAGE_ID, Long.toString(o.getMessageIdCreator()))
                     .build();
         }
 
@@ -589,7 +589,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         protected Map<String, String> constructParams(LdbcShortQuery6MessageForum o) {
 
             return ImmutableMap.<String, String>builder()
-                    .put(LdbcShortQuery5MessageCreator.MESSAGE_ID, Long.toString(o.messageId()))
+                    .put(LdbcShortQuery5MessageCreator.MESSAGE_ID, Long.toString(o.getMessageForumId()))
                     .build();
         }
 
@@ -617,7 +617,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         protected Map<String, String> constructParams(LdbcShortQuery7MessageReplies o) {
 
             return ImmutableMap.<String, String>builder()
-                    .put(LdbcShortQuery7MessageReplies.MESSAGE_ID, Long.toString(o.messageId()))
+                    .put(LdbcShortQuery7MessageReplies.MESSAGE_ID, Long.toString(o.getMessageRepliesId()))
                     .build();
         }
 
@@ -653,22 +653,22 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
 
         protected Map<String, String> constructParams(LdbcUpdate1AddPerson o) {
             ImmutableMap.Builder<String, String> builder = ImmutableMap.<String, String>builder()
-                    .put(LdbcUpdate1AddPerson.PERSON_ID, Long.toString(o.personId()))
-                    .put(LdbcUpdate1AddPerson.PERSON_FIRST_NAME, o.personFirstName())
-                    .put(LdbcUpdate1AddPerson.PERSON_LAST_NAME, o.personLastName())
-                    .put(LdbcUpdate1AddPerson.GENDER, o.gender())
-                    .put(LdbcUpdate1AddPerson.BIRTHDAY, Long.toString(o.birthday().getTime()))
-                    .put(LdbcUpdate1AddPerson.CREATION_DATE, Long.toString(o.creationDate().getTime()))
-                    .put(LdbcUpdate1AddPerson.LOCATION_IP, o.locationIp())
-                    .put(LdbcUpdate1AddPerson.BROWSER_USED, o.browserUsed())
-                    .put(LdbcUpdate1AddPerson.CITY_ID, Long.toString(o.cityId()));
+                    .put(LdbcUpdate1AddPerson.PERSON_ID, Long.toString(o.getPersonId()))
+                    .put(LdbcUpdate1AddPerson.PERSON_FIRST_NAME, o.getPersonFirstName())
+                    .put(LdbcUpdate1AddPerson.PERSON_LAST_NAME, o.getPersonLastName())
+                    .put(LdbcUpdate1AddPerson.GENDER, o.getGender())
+                    .put(LdbcUpdate1AddPerson.BIRTHDAY, Long.toString(o.getBirthday().getTime()))
+                    .put(LdbcUpdate1AddPerson.CREATION_DATE, Long.toString(o.getCreationDate().getTime()))
+                    .put(LdbcUpdate1AddPerson.LOCATION_IP, o.getLocationIp())
+                    .put(LdbcUpdate1AddPerson.BROWSER_USED, o.getBrowserUsed())
+                    .put(LdbcUpdate1AddPerson.CITY_ID, Long.toString(o.getCityId()));
 
-            addOrgsParam(builder, o.studyAt(), LdbcUpdate1AddPerson.STUDY_AT);
-            addOrgsParam(builder, o.workAt(), LdbcUpdate1AddPerson.WORK_AT);
+            addOrgsParam(builder, o.getStudyAt(), LdbcUpdate1AddPerson.STUDY_AT);
+            addOrgsParam(builder, o.getWorkAt(), LdbcUpdate1AddPerson.WORK_AT);
 
-            addStringArrayParam(o.languages(), builder, LdbcUpdate1AddPerson.LANGUAGES);
-            addStringArrayParam(o.emails(), builder, LdbcUpdate1AddPerson.EMAILS);
-            addLongArrayParam(o.tagIds(), builder, LdbcUpdate1AddPerson.TAG_IDS);
+            addStringArrayParam(o.getLanguages(), builder, LdbcUpdate1AddPerson.LANGUAGES);
+            addStringArrayParam(o.getEmails(), builder, LdbcUpdate1AddPerson.EMAILS);
+            addLongArrayParam(o.getTagIds(), builder, LdbcUpdate1AddPerson.TAG_IDS);
 
             return builder.build();
 
@@ -689,9 +689,9 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         @Override
         protected Map<String, String> constructParams(LdbcUpdate2AddPostLike o) {
             return ImmutableMap.<String, String>builder()
-                    .put(LdbcUpdate2AddPostLike.PERSON_ID, Long.toString(o.personId()))
-                    .put(LdbcUpdate2AddPostLike.POST_ID, Long.toString(o.postId()))
-                    .put(LdbcUpdate2AddPostLike.CREATION_DATE, Long.toString(o.creationDate().getTime()))
+                    .put(LdbcUpdate2AddPostLike.PERSON_ID, Long.toString(o.getPersonId()))
+                    .put(LdbcUpdate2AddPostLike.POST_ID, Long.toString(o.getPostId()))
+                    .put(LdbcUpdate2AddPostLike.CREATION_DATE, Long.toString(o.getCreationDate().getTime()))
                     .build();
         }
     }
@@ -710,9 +710,9 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         @Override
         protected Map<String, String> constructParams(LdbcUpdate3AddCommentLike o) {
             return ImmutableMap.<String, String>builder()
-                    .put(LdbcUpdate3AddCommentLike.PERSON_ID, Long.toString(o.personId()))
-                    .put(LdbcUpdate3AddCommentLike.COMMENT_ID, Long.toString(o.commentId()))
-                    .put(LdbcUpdate3AddCommentLike.CREATION_DATE, Long.toString(o.creationDate().getTime()))
+                    .put(LdbcUpdate3AddCommentLike.PERSON_ID, Long.toString(o.getPersonId()))
+                    .put(LdbcUpdate3AddCommentLike.COMMENT_ID, Long.toString(o.getCommentId()))
+                    .put(LdbcUpdate3AddCommentLike.CREATION_DATE, Long.toString(o.getCreationDate().getTime()))
                     .build();
         }
     }
@@ -731,11 +731,11 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         @Override
         protected Map<String, String> constructParams(LdbcUpdate4AddForum o) {
             ImmutableMap.Builder<String, String> builder = ImmutableMap.<String, String>builder()
-                    .put(LdbcUpdate4AddForum.FORUM_ID, Long.toString(o.forumId()))
-                    .put(LdbcUpdate4AddForum.FORUM_TITLE, o.forumTitle())
-                    .put(LdbcUpdate4AddForum.CREATION_DATE, Long.toString(o.creationDate().getTime()))
-                    .put(LdbcUpdate4AddForum.MODERATOR_PERSON_ID, Long.toString(o.moderatorPersonId()));
-            addLongArrayParam(o.tagIds(), builder, LdbcUpdate4AddForum.TAG_IDS);
+                    .put(LdbcUpdate4AddForum.FORUM_ID, Long.toString(o.getForumId()))
+                    .put(LdbcUpdate4AddForum.FORUM_TITLE, o.getForumTitle())
+                    .put(LdbcUpdate4AddForum.CREATION_DATE, Long.toString(o.getCreationDate().getTime()))
+                    .put(LdbcUpdate4AddForum.MODERATOR_PERSON_ID, Long.toString(o.getModeratorPersonId()));
+            addLongArrayParam(o.getTagIds(), builder, LdbcUpdate4AddForum.TAG_IDS);
             return builder.build();
         }
     }
@@ -754,9 +754,9 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         @Override
         protected Map<String, String> constructParams(LdbcUpdate5AddForumMembership o) {
             return ImmutableMap.<String, String>builder()
-                    .put(LdbcUpdate5AddForumMembership.FORUM_ID, Long.toString(o.forumId()))
-                    .put(LdbcUpdate5AddForumMembership.PERSON_ID, Long.toString(o.personId()))
-                    .put(LdbcUpdate5AddForumMembership.JOIN_DATE, Long.toString(o.joinDate().getTime()))
+                    .put(LdbcUpdate5AddForumMembership.FORUM_ID, Long.toString(o.getForumId()))
+                    .put(LdbcUpdate5AddForumMembership.PERSON_ID, Long.toString(o.getPersonId()))
+                    .put(LdbcUpdate5AddForumMembership.JOIN_DATE, Long.toString(o.getJoinDate().getTime()))
                     .build();
         }
     }
@@ -775,19 +775,19 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         @Override
         protected Map<String, String> constructParams(LdbcUpdate6AddPost o) {
             ImmutableMap.Builder<String, String> builder = ImmutableMap.<String, String>builder()
-                    .put(LdbcUpdate6AddPost.POST_ID, Long.toString(o.postId()))
-                    .put(LdbcUpdate6AddPost.IMAGE_FILE, o.imageFile())
-                    .put(LdbcUpdate6AddPost.CREATION_DATE, Long.toString(o.creationDate().getTime()))
-                    .put(LdbcUpdate6AddPost.LOCATION_IP, o.locationIp())
-                    .put(LdbcUpdate6AddPost.BROWSER_USED, o.browserUsed())
-                    .put(LdbcUpdate6AddPost.LANGUAGE, o.language())
-                    .put(LdbcUpdate6AddPost.CONTENT, o.content())
-                    .put(LdbcUpdate6AddPost.LENGTH, Integer.toString(o.length()))
-                    .put(LdbcUpdate6AddPost.AUTHOR_PERSON_ID, Long.toString(o.authorPersonId()))
-                    .put(LdbcUpdate6AddPost.FORUM_ID, Long.toString(o.forumId()))
-                    .put(LdbcUpdate6AddPost.COUNTRY_ID, Long.toString(o.countryId()));
+                    .put(LdbcUpdate6AddPost.POST_ID, Long.toString(o.getPostId()))
+                    .put(LdbcUpdate6AddPost.IMAGE_FILE, o.getImageFile())
+                    .put(LdbcUpdate6AddPost.CREATION_DATE, Long.toString(o.getCreationDate().getTime()))
+                    .put(LdbcUpdate6AddPost.LOCATION_IP, o.getLocationIp())
+                    .put(LdbcUpdate6AddPost.BROWSER_USED, o.getBrowserUsed())
+                    .put(LdbcUpdate6AddPost.LANGUAGE, o.getLanguage())
+                    .put(LdbcUpdate6AddPost.CONTENT, o.getContent())
+                    .put(LdbcUpdate6AddPost.LENGTH, Integer.toString(o.getLength()))
+                    .put(LdbcUpdate6AddPost.AUTHOR_PERSON_ID, Long.toString(o.getAuthorPersonId()))
+                    .put(LdbcUpdate6AddPost.FORUM_ID, Long.toString(o.getForumId()))
+                    .put(LdbcUpdate6AddPost.COUNTRY_ID, Long.toString(o.getCountryId()));
 
-            addLongArrayParam(o.tagIds(), builder, LdbcUpdate6AddPost.TAG_IDS);
+            addLongArrayParam(o.getTagIds(), builder, LdbcUpdate6AddPost.TAG_IDS);
             return builder.build();
         }
     }
@@ -806,18 +806,18 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         @Override
         protected Map<String, String> constructParams(LdbcUpdate7AddComment o) {
             ImmutableMap.Builder<String, String> builder = ImmutableMap.<String, String>builder()
-                    .put(LdbcUpdate7AddComment.COMMENT_ID, Long.toString(o.commentId()))
-                    .put(LdbcUpdate7AddComment.CREATION_DATE, Long.toString(o.creationDate().getTime()))
-                    .put(LdbcUpdate7AddComment.LOCATION_IP, o.locationIp())
-                    .put(LdbcUpdate7AddComment.BROWSER_USED, o.browserUsed())
-                    .put(LdbcUpdate7AddComment.CONTENT, o.content())
-                    .put(LdbcUpdate7AddComment.LENGTH, Integer.toString(o.length()))
-                    .put(LdbcUpdate7AddComment.AUTHOR_PERSON_ID, Long.toString(o.authorPersonId()))
-                    .put(LdbcUpdate7AddComment.COUNTRY_ID, Long.toString(o.countryId()))
-                    .put(LdbcUpdate7AddComment.REPLY_TO_POST_ID, Long.toString(o.replyToPostId()))
-                    .put(LdbcUpdate7AddComment.REPLY_TO_COMMENT_ID, Long.toString(o.replyToCommentId()));
+                    .put(LdbcUpdate7AddComment.COMMENT_ID, Long.toString(o.getCommentId()))
+                    .put(LdbcUpdate7AddComment.CREATION_DATE, Long.toString(o.getCreationDate().getTime()))
+                    .put(LdbcUpdate7AddComment.LOCATION_IP, o.getLocationIp())
+                    .put(LdbcUpdate7AddComment.BROWSER_USED, o.getBrowserUsed())
+                    .put(LdbcUpdate7AddComment.CONTENT, o.getContent())
+                    .put(LdbcUpdate7AddComment.LENGTH, Integer.toString(o.getLength()))
+                    .put(LdbcUpdate7AddComment.AUTHOR_PERSON_ID, Long.toString(o.getAuthorPersonId()))
+                    .put(LdbcUpdate7AddComment.COUNTRY_ID, Long.toString(o.getCountryId()))
+                    .put(LdbcUpdate7AddComment.REPLY_TO_POST_ID, Long.toString(o.getReplyToPostId()))
+                    .put(LdbcUpdate7AddComment.REPLY_TO_COMMENT_ID, Long.toString(o.getReplyToCommentId()));
 
-            addLongArrayParam(o.tagIds(), builder, LdbcUpdate6AddPost.TAG_IDS);
+            addLongArrayParam(o.getTagIds(), builder, LdbcUpdate6AddPost.TAG_IDS);
             return builder.build();
         }
     }
@@ -836,9 +836,9 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
         @Override
         protected Map<String, String> constructParams(LdbcUpdate8AddFriendship o) {
             return ImmutableMap.<String, String>builder()
-                    .put(LdbcUpdate8AddFriendship.PERSON1_ID, Long.toString(o.person1Id()))
-                    .put(LdbcUpdate8AddFriendship.PERSON2_ID, Long.toString(o.person2Id()))
-                    .put(LdbcUpdate8AddFriendship.CREATION_DATE, Long.toString(o.creationDate().getTime()))
+                    .put(LdbcUpdate8AddFriendship.PERSON1_ID, Long.toString(o.getPerson1Id()))
+                    .put(LdbcUpdate8AddFriendship.PERSON2_ID, Long.toString(o.getPerson2Id()))
+                    .put(LdbcUpdate8AddFriendship.CREATION_DATE, Long.toString(o.getCreationDate().getTime()))
                     .build();
         }
     }
