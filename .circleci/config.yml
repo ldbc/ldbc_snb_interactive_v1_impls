@@ -35,13 +35,6 @@ jobs:
             export DUCKDB_CSV_DIR=`pwd`/../postgres/test-data
             scripts/load-in-one-step.sh
             cd ..
-      ### Umbra
-      - run:
-          name: Load Umbra Docker image
-          command: |
-            . umbra/scripts/vars.sh
-            # ${UMBRA_URL_PREFIX} should be set as a sercet variable
-            curl -s ${UMBRA_URL_PREFIX}${UMBRA_VERSION}.tar.gz | docker load
       ### Neo4j
       - run:
           name: Tiny data set - Load Neo4j database and create a backup
@@ -59,6 +52,13 @@ jobs:
             driver/create-validation-parameters.sh
             cp validation_params.csv validation_params_cypher_tiny.csv
             cd ..
+      ### Umbra
+      - run:
+          name: Load Umbra Docker image
+          command: |
+            . umbra/scripts/vars.sh
+            # ${UMBRA_URL_PREFIX} should be set as a sercet variable
+            curl -s ${UMBRA_URL_PREFIX}${UMBRA_VERSION}.tar.gz | docker load
       ### Umbra
       - run:
           name: Tiny data set - Load Umbra database and create a backup
