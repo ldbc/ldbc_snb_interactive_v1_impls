@@ -20,6 +20,13 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             sudo apt update && sudo apt install -y zstd
             scripts/install-dependencies.sh
+      - run:
+          name: Install old driver (temporary)
+          command: |
+            git clone https://github.com/ldbc/ldbc_snb_interactive_driver
+            cd ldbc_snb_interactive_driver
+            git checkout 6e063583c55fa744a1ae712208f9fcc0849f26c2
+            mvn clean install -DskipTests
       ### DuckDB
       - run:
           name: Install DuckDB binary
