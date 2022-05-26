@@ -3,7 +3,6 @@ package org.ldbcouncil.snb.impls.workloads.postgres;
 import org.ldbcouncil.snb.driver.DbException;
 import org.ldbcouncil.snb.driver.control.LoggingService;
 import org.ldbcouncil.snb.driver.workloads.interactive.*;
-import org.ldbcouncil.snb.impls.workloads.QueryStore;
 import org.ldbcouncil.snb.impls.workloads.db.BaseDb;
 import org.ldbcouncil.snb.impls.workloads.postgres.converter.PostgresConverter;
 import org.ldbcouncil.snb.impls.workloads.postgres.operationhandlers.PostgresDbMultipleUpdateOperationHandler;
@@ -42,8 +41,8 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                     result.getLong(1),
                     result.getString(2),
                     result.getInt(3),
-                    PostgresConverter.stringTimestampToEpoch(result, 4),
-                    PostgresConverter.stringTimestampToEpoch(result, 5),
+                    PostgresConverter.dateToEpoch(result, 4),
+                    PostgresConverter.timestampToEpoch(result, 5),
                     result.getString(6),
                     result.getString(7),
                     result.getString(8),
@@ -71,7 +70,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                     result.getString(3),
                     result.getLong(4),
                     result.getString(5),
-                    PostgresConverter.stringTimestampToEpoch(result, 6));
+                    PostgresConverter.timestampToEpoch(result, 6));
         }
 
     }
@@ -157,7 +156,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                     result.getLong(1),
                     result.getString(2),
                     result.getString(3),
-                    PostgresConverter.stringTimestampToEpoch(result, 4),
+                    PostgresConverter.timestampToEpoch(result, 4),
                     result.getLong(5),
                     result.getString(6),
                     result.getInt(7),
@@ -179,7 +178,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                     result.getLong(1),
                     result.getString(2),
                     result.getString(3),
-                    PostgresConverter.stringTimestampToEpoch(result, 4),
+                    PostgresConverter.timestampToEpoch(result, 4),
                     result.getLong(5),
                     result.getString(6));
         }
@@ -201,7 +200,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                     result.getString(3),
                     result.getLong(4),
                     result.getString(5),
-                    PostgresConverter.stringTimestampToEpoch(result, 6));
+                    PostgresConverter.timestampToEpoch(result, 6));
         }
 
     }
@@ -306,12 +305,12 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
             return new LdbcShortQuery1PersonProfileResult(
                     result.getString(1),
                     result.getString(2),
-                    PostgresConverter.stringTimestampToEpoch(result, 3),
+                    PostgresConverter.dateToEpoch(result, 3),
                     result.getString(4),
                     result.getString(5),
                     result.getLong(6),
                     result.getString(7),
-                    PostgresConverter.stringTimestampToEpoch(result, 8));
+                    PostgresConverter.timestampToEpoch(result, 8));
         }
 
     }
@@ -328,7 +327,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
             return new LdbcShortQuery2PersonPostsResult(
                     result.getLong(1),
                     result.getString(2),
-                    PostgresConverter.stringTimestampToEpoch(result, 3),
+                    PostgresConverter.timestampToEpoch(result, 3),
                     result.getLong(4),
                     result.getLong(5),
                     result.getString(6),
@@ -350,7 +349,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                     result.getLong(1),
                     result.getString(2),
                     result.getString(3),
-                    PostgresConverter.stringTimestampToEpoch(result, 4));
+                    PostgresConverter.timestampToEpoch(result, 4));
         }
 
     }
@@ -366,7 +365,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
         public LdbcShortQuery4MessageContentResult convertSingleResult(ResultSet result) throws SQLException {
             return new LdbcShortQuery4MessageContentResult(
                     result.getString(1),
-                    PostgresConverter.stringTimestampToEpoch(result, 2));
+                    PostgresConverter.timestampToEpoch(result, 2));
         }
 
     }
@@ -419,7 +418,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
             return new LdbcShortQuery7MessageRepliesResult(
                     result.getLong(1),
                     result.getString(2),
-                    PostgresConverter.stringTimestampToEpoch(result, 3),
+                    PostgresConverter.timestampToEpoch(result, 3),
                     result.getLong(4),
                     result.getString(5),
                     result.getString(6),

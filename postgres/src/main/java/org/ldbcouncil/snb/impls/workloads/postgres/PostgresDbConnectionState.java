@@ -2,6 +2,9 @@ package org.ldbcouncil.snb.impls.workloads.postgres;
 
 import org.ldbcouncil.snb.driver.DbException;
 import org.ldbcouncil.snb.impls.workloads.BaseDbConnectionState;
+import org.ldbcouncil.snb.impls.workloads.QueryStore;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -9,20 +12,18 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-
-public class PostgresDbConnectionState extends BaseDbConnectionState<PostgresQueryStore> {
+public class PostgresDbConnectionState<TDbQueryStore extends QueryStore> extends BaseDbConnectionState<TDbQueryStore> {
 
     protected String endPoint;
     protected HikariDataSource ds;
 
-    public PostgresDbConnectionState(Map<String, String> properties, PostgresQueryStore store) throws ClassNotFoundException {
+    public PostgresDbConnectionState(Map<String, String> properties, TDbQueryStore store) throws ClassNotFoundException {
         super(properties, store);
         endPoint = properties.get("endpoint");
 
         Properties props = new Properties();
         endPoint = properties.get("endpoint");
+        props.setProperty("jdbcUrl", endPoint);
         props.setProperty("dataSource.databaseName", properties.get("databaseName"));
         props.setProperty("dataSource.assumeMinServerVersion", "9.0");
         props.setProperty("dataSource.ssl", "false");
