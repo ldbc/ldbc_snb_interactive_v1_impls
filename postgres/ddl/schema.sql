@@ -1,4 +1,4 @@
-drop view if exists country;
+drop table if exists country;
 drop table if exists forum_person;
 drop table if exists forum_tag;
 drop table if exists person_email;
