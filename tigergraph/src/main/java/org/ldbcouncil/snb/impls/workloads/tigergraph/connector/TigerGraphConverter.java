@@ -15,7 +15,7 @@ public class TigerGraphConverter {
     final static String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     final static SimpleDateFormat sdf = new SimpleDateFormat(DATETIME_FORMAT);
     static {
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        sdf.setTimeZone(TimeZone.getTimeZone("Etc/GMT+0"));
     }
 
     public static Date parseDateTime(String representation) throws ParseException {

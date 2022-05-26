@@ -18,7 +18,7 @@ public class UmbraConverter extends Converter {
     @Override
     public String convertDateTime(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        sdf.setTimeZone(TimeZone.getTimeZone("Etc/GMT+0"));
         return "timestamp with time zone '" + sdf.format(date) + "'";
     }
 
@@ -86,7 +86,7 @@ public class UmbraConverter extends Converter {
     }
 
     public static long stringTimestampToEpoch(ResultSet r, int column) throws SQLException {
-        return r.getTimestamp(column, Calendar.getInstance(TimeZone.getTimeZone("GMT"))).getTime();
+        return r.getTimestamp(column, Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+0"))).getTime();
     }
 
 

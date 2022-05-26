@@ -17,7 +17,7 @@ services:
         source: ${UMBRA_DATABASE_DIR}
         target: /var/db/
     environment:
-      - tz=GMT
+      - tz=Etc/GMT+0
     command: [
       "/bin/sh",
       "-c",
@@ -46,3 +46,4 @@ services:
       - WAIT_TIMEOUT=300
       - WAIT_SLEEP_INTERVAL=5
       - WAIT_HOST_CONNECT_TIMEOUT=30
+      - tz=Etc/GMT+0

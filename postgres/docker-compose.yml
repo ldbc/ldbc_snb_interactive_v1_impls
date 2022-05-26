@@ -25,13 +25,12 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DOCKER_PLATFORM_FLAG=${POSTGRES_DOCKER_PLATFORM_FLAG}
-      - tz=GMT
+      - tz=Etc/GMT+0
     command: [
       "postgres",
       "-c",
       "${POSTGRES_CUSTOM_ARGS}"
     ]
-
 
   db-load:
     build: ./scripts
@@ -54,3 +53,4 @@ services:
       - WAIT_TIMEOUT=300
       - WAIT_SLEEP_INTERVAL=5
       - WAIT_HOST_CONNECT_TIMEOUT=30
+      - tz=Etc/GMT+0
