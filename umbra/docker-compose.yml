@@ -16,7 +16,8 @@ services:
       - type: bind
         source: ${UMBRA_DATABASE_DIR}
         target: /var/db/
-
+    environment:
+      - tz=GMT
     command: [
       "/bin/sh",
       "-c",
