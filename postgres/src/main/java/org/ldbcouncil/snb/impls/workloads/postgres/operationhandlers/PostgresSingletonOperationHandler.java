@@ -9,6 +9,7 @@ import org.ldbcouncil.snb.impls.workloads.postgres.PostgresDbConnectionState;
 import java.sql.*;
 
 public abstract class PostgresSingletonOperationHandler<TOperation extends Operation<TOperationResult>, TOperationResult>
+        extends PostgresOperationHandler
         implements SingletonOperationHandler<TOperationResult, TOperation, PostgresDbConnectionState> {
 
     @Override
@@ -18,12 +19,15 @@ public abstract class PostgresSingletonOperationHandler<TOperation extends Opera
             TOperationResult tuple = null;
             Connection conn = state.getConnection();
             int resultCount = 0;
+
             String queryString = getQueryString(state, operation);
+            replaceParameterNamesWithQuestionMarks(operation, queryString);
+            final PreparedStatement stmt = prepareAndSetParametersInPreparedStatement(operation, queryString, conn);
+            state.logQuery(operation.getClass().getSimpleName(), queryString);
 
-            try (final Statement stmt = conn.createStatement()) {
-                state.logQuery(operation.getClass().getSimpleName(), queryString);
+            try {
+                ResultSet result = stmt.executeQuery();
 
-                ResultSet result = stmt.executeQuery(queryString);
                 if (result.next()) {
                     resultCount++;
 
@@ -36,6 +40,7 @@ public abstract class PostgresSingletonOperationHandler<TOperation extends Opera
                 throw new DbException(e);
             }
             finally {
+                stmt.close();
                 conn.close();
             }
             resultReporter.report(resultCount, tuple, operation);
