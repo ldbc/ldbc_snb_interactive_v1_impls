@@ -213,7 +213,6 @@ jobs:
           name: SF1 data set - Load PostgreSQL database
           command: |
             cd postgres
-            export POSTGRES_CUSTOM_CONFIGURATION=`pwd`/config/postgresql.conf
             export POSTGRES_CSV_DIR=`pwd`/../sf1/social_network-csv_merge_foreign
             scripts/load-in-one-step.sh
             cd ..

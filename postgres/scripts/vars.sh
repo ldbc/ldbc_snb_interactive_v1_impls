@@ -8,6 +8,7 @@ export POSTGRES_DATABASE=ldbcsnb
 export POSTGRES_USER=postgres
 export POSTGRES_DATA_DIR=`pwd`/scratch/data
 export POSTGRES_PORT=5432
+export POSTGRES_CUSTOM_CONFIGURATION=`pwd`/config/postgresql.conf
 
 if [[ `uname -m` == "arm64" ]]; then
     export POSTGRES_DOCKER_PLATFORM_FLAG="--platform linux/arm64"
