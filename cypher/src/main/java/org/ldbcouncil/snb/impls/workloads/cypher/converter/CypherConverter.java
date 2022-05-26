@@ -22,7 +22,7 @@ public class CypherConverter extends Converter {
     public static List<LdbcQuery1Result.Organization> asOrganization(List<List<Object>> value){
         List<LdbcQuery1Result.Organization> orgs = new ArrayList<>();
         for (List<Object> list : value) {
-            orgs.add(new LdbcQuery1Result.Organization((String)list.get(0), Integer.parseInt((String)list.get(1)), (String)list.get(2)));
+            orgs.add(new LdbcQuery1Result.Organization((String)list.get(0), (int) list.get(1), (String)list.get(2)));
         }
         return orgs;
     }
