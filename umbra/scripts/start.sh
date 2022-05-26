@@ -18,6 +18,7 @@ docker run \
     --volume=${UMBRA_DATABASE_DIR}:/var/db/:z \
     --volume=${UMBRA_DDL_DIR}:/ddl/:z \
     --publish=5432:5432 \
+    --env 'tz=Etc/GMT+0' \
     ${UMBRA_DOCKER_IMAGE} \
     umbra_server \
         --address 0.0.0.0 \
