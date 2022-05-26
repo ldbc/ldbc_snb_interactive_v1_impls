@@ -20,21 +20,9 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             sudo apt update && sudo apt install -y zstd
             scripts/install-dependencies.sh
-      ### DuckDB
-      - run:
-          name: Install DuckDB binary
-          command: |
-            duckdb/scripts/get.sh
       - run:
           name: Build project
           command: scripts/build.sh
-      - run:
-          name: Tiny data set - Load DuckDB
-          command: |
-            cd duckdb
-            export DUCKDB_CSV_DIR=`pwd`/../postgres/test-data
-            scripts/load-in-one-step.sh
-            cd ..
       ### Neo4j
       - run:
           name: Tiny data set - Load Neo4j database and create a backup
@@ -51,30 +39,6 @@ jobs:
             cd cypher
             driver/create-validation-parameters.sh
             cp validation_params.csv validation_params_cypher_tiny.csv
-            cd ..
-      ### Umbra
-      - run:
-          name: Load Umbra Docker image
-          command: |
-            . umbra/scripts/vars.sh
-            # ${UMBRA_URL_PREFIX} should be set as a sercet variable
-            curl -s ${UMBRA_URL_PREFIX}${UMBRA_VERSION}.tar.gz | docker load
-      ### Umbra
-      - run:
-          name: Tiny data set - Load Umbra database and create a backup
-          command: |
-            cd umbra
-            export UMBRA_CSV_DIR=`pwd`/../postgres/test-data/
-            scripts/load-in-one-step.sh
-            scripts/backup-database.sh
-            cd ..
-      - run:
-          name: Tiny data set - Create validation parameters with Umbra
-          command: |
-            cd umbra
-            driver/create-validation-parameters.sh
-            cp validation_params.csv validation_params_umbra_tiny.csv
-            scripts/stop.sh
             cd ..
       ### PostgreSQL
       - run:
@@ -110,25 +74,18 @@ jobs:
             scripts/restore-database.sh
             driver/benchmark.sh
             cd ..
-      ### Umbra
+      ### DuckDB
       - run:
-          name: Tiny data set - Cross-validate the Umbra project based on the results from Neo4j
+          name: Install DuckDB binary
           command: |
-            cp cypher/validation_params_cypher_tiny.csv umbra/validation_params.csv
-            cd umbra
-            export UMBRA_CSV_DIR=`pwd`/../postgres/test-data/
-            scripts/restore-database.sh
-            driver/validate.sh | tee validation-log.txt
-            grep 'Validation Result: PASS' validation-log.txt
-            cd ..
+            duckdb/scripts/get.sh
       - run:
-          name: Tiny data set - Benchmark Umbra
+          name: Tiny data set - Load DuckDB database
           command: |
-            cd umbra
-            export UMBRA_CSV_DIR=`pwd`/../postgres/test-data/
-            scripts/restore-database.sh
-            driver/benchmark.sh
-            scripts/stop.sh
+            cd duckdb
+            export DUCKDB_CSV_DIR=`pwd`/../postgres/test-data/
+            scripts/load-in-one-step.sh
+            scripts/backup-database.sh
             cd ..
       ### PostgreSQL
       - run:
@@ -148,14 +105,47 @@ jobs:
             driver/benchmark.sh
             scripts/stop.sh
             cd ..
-      ### DuckDB
+      ### Umbra
       - run:
-          name: Tiny data set - Load DuckDB database
+          name: Load Umbra Docker image
           command: |
-            cd duckdb
-            export DUCKDB_CSV_DIR=`pwd`/../postgres/test-data/
+            . umbra/scripts/vars.sh
+            # ${UMBRA_URL_PREFIX} should be set as a sercet variable
+            curl -s ${UMBRA_URL_PREFIX}${UMBRA_VERSION}.tar.gz | docker load
+      - run:
+          name: Tiny data set - Load Umbra database and create a backup
+          command: |
+            cd umbra
+            export UMBRA_CSV_DIR=`pwd`/../postgres/test-data/
             scripts/load-in-one-step.sh
             scripts/backup-database.sh
+            cd ..
+      - run:
+          name: Tiny data set - Create validation parameters with Umbra
+          command: |
+            cd umbra
+            driver/create-validation-parameters.sh
+            cp validation_params.csv validation_params_umbra_tiny.csv
+            scripts/stop.sh
+            cd ..
+      - run:
+          name: Tiny data set - Cross-validate the Umbra project based on the results from Neo4j
+          command: |
+            cp cypher/validation_params_cypher_tiny.csv umbra/validation_params.csv
+            cd umbra
+            export UMBRA_CSV_DIR=`pwd`/../postgres/test-data/
+            scripts/restore-database.sh
+            driver/validate.sh | tee validation-log.txt
+            grep 'Validation Result: PASS' validation-log.txt
+            cd ..
+      - run:
+          name: Tiny data set - Benchmark Umbra
+          command: |
+            cd umbra
+            export UMBRA_CSV_DIR=`pwd`/../postgres/test-data/
+            scripts/restore-database.sh
+            driver/benchmark.sh
+            scripts/stop.sh
             cd ..
       ## SF1 tests
       - run:
@@ -184,22 +174,13 @@ jobs:
             driver/create-validation-parameters.sh
             cp validation_params.csv validation_params_cypher_sf1.csv
             cd ..
-      ### Umbra
+      ### DuckDB
       - run:
-          name: SF1 data set - Load Umbra database
+          name: SF1 data set - Load DuckDB database
           command: |
-            cd umbra
-            export UMBRA_CSV_DIR=`pwd`/../sf1/social_network-csv_merge_foreign
+            cd duckdb
+            export DUCKDB_CSV_DIR=`pwd`/../sf1/social_network-csv_merge_foreign
             scripts/load-in-one-step.sh
-            cd ..
-      - run:
-          name: SF1 data set - Cross-validate the Umbra project based on the results from Neo4j
-          command: |
-            cp cypher/validation_params_cypher_sf1.csv umbra/validation_params.csv
-            cd umbra
-            driver/validate.sh | tee validation-log.txt
-            scripts/stop.sh
-            grep 'Validation Result: PASS' validation-log.txt
             cd ..
       ### PostgreSQL
       - run:
@@ -219,12 +200,21 @@ jobs:
             scripts/stop.sh
             grep 'Validation Result: PASS' validation-log.txt
             cd ..
-      ### DuckDB
+      ### Umbra
       - run:
-          name: SF1 data set - Load DuckDB database
+          name: SF1 data set - Load Umbra database
           command: |
-            cd duckdb
-            export DUCKDB_CSV_DIR=`pwd`/../sf1/social_network-csv_merge_foreign
+            cd umbra
+            export UMBRA_CSV_DIR=`pwd`/../sf1/social_network-csv_merge_foreign
             scripts/load-in-one-step.sh
+            cd ..
+      - run:
+          name: SF1 data set - Cross-validate the Umbra project based on the results from Neo4j
+          command: |
+            cp cypher/validation_params_cypher_sf1.csv umbra/validation_params.csv
+            cd umbra
+            driver/validate.sh | tee validation-log.txt
+            scripts/stop.sh
+            grep 'Validation Result: PASS' validation-log.txt
             cd ..
       - slack/status
