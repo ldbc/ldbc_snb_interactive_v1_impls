@@ -17,7 +17,7 @@ public class DuckDbConnectionState<TDbQueryStore extends QueryStore> extends Bas
 
     public DuckDbConnectionState(Map<String, String> properties, TDbQueryStore store) throws ClassNotFoundException, SQLException {
         super(properties, store);
-        TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
+        TimeZone.setDefault(TimeZone.getTimeZone("Etc/GMT+0"));
         connection = DriverManager.getConnection("jdbc:duckdb:scratch/ldbc.duckdb");
         Statement statement = connection.createStatement();
         statement.execute("PRAGMA threads=1;");

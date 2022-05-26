@@ -103,4 +103,4 @@ path1(v, path, l) as (
 finalPaths(path, w) as (
     select path, w from path1 where l = -1
 )
-select distinct * from finalPaths;
+select distinct * from finalPaths order by w DESC;

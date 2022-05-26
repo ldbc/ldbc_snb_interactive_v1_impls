@@ -16,13 +16,13 @@ public class Converter {
 
     public String convertDateTime(Date date) {
         final SimpleDateFormat sdf = new SimpleDateFormat(DATETIME_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        sdf.setTimeZone(TimeZone.getTimeZone("Etc/GMT+0"));
         return "'" + sdf.format(date) + "'";
     }
 
     public String convertDate(Date date) {
         final SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        sdf.setTimeZone(TimeZone.getTimeZone("Etc/GMT+0"));
         return "'" + sdf.format(date) + "'";
     }
 
