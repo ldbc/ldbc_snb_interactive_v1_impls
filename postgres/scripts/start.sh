@@ -8,7 +8,7 @@ cd ..
 
 . scripts/vars.sh
 
-python3 -c 'import psycopg2' || (echo "psycopg2 Python package is missing or broken" && exit 1)
+python3 -c 'import psycopg' || (echo "psycopg Python package is missing or broken" && exit 1)
 
 scripts/stop.sh
 
@@ -54,6 +54,7 @@ echo "  ${POSTGRES_DATA_DIR}"
 echo "POSTGRES_CSV_DIR (on the host machine):"
 echo "  ${POSTGRES_CSV_DIR}"
 echo "==============================================================================="
+docker pull postgres:${POSTGRES_VERSION}
 
 docker run --rm \
     --user "$(id -u):$(id -g)" \
@@ -71,7 +72,7 @@ docker run --rm \
     ${POSTGRES_CUSTOM_ARGS}
 
 echo -n "Waiting for the database to start ."
-until python3 scripts/test-db-connection.py > /dev/null 2>&1; do
+until python3 scripts/test-db-connection.py; do
     docker ps | grep ${POSTGRES_CONTAINER_NAME} 1>/dev/null 2>&1 || (
         echo
         echo "Container lost."
