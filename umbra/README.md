@@ -9,10 +9,27 @@ The recommended environment is that the benchmark scripts (Bash) and the LDBC dr
 * Bash
 * Java 8
 * Docker 19+
-* the `psycopg2` Python library: `scripts/install-dependencies.sh`
+* `libpg5`
+* the `psycopg` Python library: `scripts/install-dependencies.sh`
 * enough free space in the directory `${UMBRA_DATABASE_DIR}` (its default value is specified in `scripts/vars.sh`)
 
 The default configuration of the database (e.g. database name, user, password) is set in the `scripts/vars.sh` file.
+
+### docker-compose
+
+Alternatively, a docker-compose available to start the Umbra container and a container loading the data. This requires `docker-compose` installed on the host machine. Running Umbra and loading the data can be done by executing:
+
+```bash
+docker-compose build && docker-compose up
+```
+
+The default environment variables are loaded from `.env`. Change the `UMBRA_CSV_DIR` to point to point to the data set, e.g.
+
+```bash
+UMBRA_CSV_DIR=`pwd`/test-data/
+```
+
+
 
 ## Get the container
 

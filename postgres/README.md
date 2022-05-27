@@ -9,8 +9,33 @@ The recommended environment is that the benchmark scripts (Bash) and the LDBC dr
 * Bash
 * Java 8
 * Docker 19+
-* the `psycopg2` Python library: `scripts/install-dependencies.sh`
+* `libpq5` 
+* the `psycopg` Python library: `scripts/install-dependencies.sh`
 * enough free space in the directory `${POSTGRES_DATA_DIR}` (its default value is specified in `scripts/vars.sh`)
+
+### docker-compose
+
+Alternatively, a docker-compose available to start the PostgreSQL container and a container loading the data. This requires `docker-compose` installed on the host machine. Running Postgres and loading the data can be done by executing:
+
+```bash
+docker-compose build && docker-compose up
+```
+
+The default environment variables are loaded from `.env`. Change the `POSTGRES_CSV_DIR` to point to point to the data set, e.g.
+
+```bash
+POSTGRES_CSV_DIR=`pwd`/test-data/
+```
+
+To persist the data by storing the database outside a Docker volume, uncomment the following lines in the `docker-compose.yml` file:
+
+```yaml
+- type: bind
+  source: ${POSTGRES_DATA_DIR}
+  target: /var/lib/postgresql/data
+```
+
+
 
 ## Generating and loading the data set
 
