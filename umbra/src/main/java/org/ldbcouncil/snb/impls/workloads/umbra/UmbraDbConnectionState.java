@@ -38,7 +38,7 @@ public class UmbraDbConnectionState<TDbQueryStore extends QueryStore> extends Ba
     public Connection getConnection() throws DbException {
         Connection connection = null;
         try {
-            TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
+            TimeZone.setDefault(TimeZone.getTimeZone("Etc/GMT+0"));
             connection = ds.getConnection();
         } catch (SQLException e) {
             throw new DbException(e);

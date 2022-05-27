@@ -1,6 +1,5 @@
 package org.ldbcouncil.snb.impls.workloads.postgres;
 
-import com.google.common.collect.ImmutableList;
 import org.ldbcouncil.snb.driver.DbException;
 import org.ldbcouncil.snb.driver.ResultReporter;
 import org.ldbcouncil.snb.driver.control.LoggingService;
@@ -16,8 +15,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Map;
+
+import com.google.common.collect.ImmutableList;
 
 public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
@@ -53,17 +53,9 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                     PostgresConverter.arrayToStringArray(result, 9),
                     PostgresConverter.arrayToStringArray(result, 10),
                     result.getString(11),
-                    convertLists(PostgresConverter.arrayToObjectArray(result, 12)),
-                    convertLists(PostgresConverter.arrayToObjectArray(result, 13)));
+                    PostgresConverter.arrayToOrganizationArray(result, 12),
+                    PostgresConverter.arrayToOrganizationArray(result, 13));
             return qr;
-        }
-
-        @SuppressWarnings("unchecked")
-        public Iterable<List<Object>> convertLists(Iterable<List<Object>> arr) {
-            for (List<Object> entry : arr) {
-                entry.set(1, Integer.parseInt((String) entry.get(1)));
-            }
-            return arr;
         }
     }
 
@@ -443,7 +435,8 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public void executeOperation(LdbcUpdate1AddPerson operation, PostgresDbConnectionState state, ResultReporter resultReporter) throws DbException {
-            Connection conn = state.getConnection();
+            try {
+                Connection conn = state.getConnection();
 
             try {
                 // InteractiveUpdate1AddPerson
@@ -458,10 +451,10 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                 replaceParameterNamesWithQuestionMarks(operation, queryStringAddPersonCompanies, ImmutableList.of("organizationId", "worksFromYear"));
                 final PreparedStatement stmt2 = prepareSnbStatement(queryStringAddPersonCompanies, conn);
                 state.logQuery(operation.getClass().getSimpleName(), queryStringAddPersonCompanies);
-                stmt2.setLong(1, operation.personId());
-                for (LdbcUpdate1AddPerson.Organization o : operation.workAt()) {
-                    stmt2.setLong(2, o.organizationId());
-                    stmt2.setInt(3, o.year());
+                stmt2.setLong(1, operation.getPersonId());
+                for (LdbcUpdate1AddPerson.Organization o : operation.getWorkAt()) {
+                    stmt2.setLong(2, o.getOrganizationId());
+                    stmt2.setInt(3, o.getYear());
                     stmt2.executeUpdate();
                 }
 
@@ -470,8 +463,8 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                 replaceParameterNamesWithQuestionMarks(operation, queryStringAddPersonEmails, ImmutableList.of("email"));
                 final PreparedStatement stmt3 = prepareSnbStatement(queryStringAddPersonEmails, conn);
                 state.logQuery(operation.getClass().getSimpleName(), queryStringAddPersonEmails);
-                stmt3.setLong(1, operation.personId());
-                for (String email : operation.emails()) {
+                stmt3.setLong(1, operation.getPersonId());
+                for (String email : operation.getEmails()) {
                     stmt3.setString(2, email);
                     stmt3.executeUpdate();
                 }
@@ -482,8 +475,8 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                         ImmutableList.of("language"));
                 final PreparedStatement stmt4 = prepareSnbStatement(queryStringAddPersonLanguages, conn);
                 state.logQuery(operation.getClass().getSimpleName(), queryStringAddPersonLanguages);
-                stmt4.setLong(1, operation.personId());
-                for (String language : operation.languages()) {
+                stmt4.setLong(1, operation.getPersonId());
+                for (String language : operation.getLanguages()) {
                     stmt4.setString(2, language);
                     stmt4.executeUpdate();
                 }
@@ -493,8 +486,8 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                 replaceParameterNamesWithQuestionMarks(operation, queryStringAddPersonTags, ImmutableList.of("tagId"));
                 final PreparedStatement stmt5 = prepareSnbStatement(queryStringAddPersonTags, conn);
                 state.logQuery(operation.getClass().getSimpleName(), queryStringAddPersonTags);
-                stmt5.setLong(1, operation.personId());
-                for (long tagId : operation.tagIds()) {
+                stmt5.setLong(1, operation.getPersonId());
+                for (long tagId : operation.getTagIds()) {
                     stmt5.setLong(2, tagId);
                     stmt5.executeUpdate();
                 }
@@ -504,15 +497,21 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                 replaceParameterNamesWithQuestionMarks(operation, queryStringAddPersonUniversities, ImmutableList.of("organizationId", "studiesFromYear"));
                 final PreparedStatement stmt6 = prepareSnbStatement(queryStringAddPersonUniversities, conn);
                 state.logQuery(operation.getClass().getSimpleName(), queryStringAddPersonUniversities);
-                stmt6.setLong(1, operation.personId());
-                for (LdbcUpdate1AddPerson.Organization o : operation.studyAt()) {
-                    stmt6.setLong(2, o.organizationId());
-                    stmt6.setInt(3, o.year());
+                stmt6.setLong(1, operation.getPersonId());
+                for (LdbcUpdate1AddPerson.Organization o : operation.getStudyAt()) {
+                    stmt6.setLong(2, o.getOrganizationId());
+                    stmt6.setInt(3, o.getYear());
                     stmt6.executeUpdate();
                 }
-            } catch (Exception e) {
+        } catch (Exception e) {
                 throw new DbException(e);
-            }
+        }
+        finally{
+            conn.close();
+        }
+    } catch (Exception e) {
+        throw new DbException(e);
+}
             resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
 
@@ -522,7 +521,8 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public void executeOperation(LdbcUpdate2AddPostLike operation, PostgresDbConnectionState state, ResultReporter resultReporter) throws DbException {
-            Connection conn = state.getConnection();
+            try {
+                Connection conn = state.getConnection();
 
             try {
                 String queryString = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate2);
@@ -532,7 +532,13 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                 stmt.executeUpdate();
             } catch (Exception e) {
                 throw new DbException(e);
-            }
+        }
+        finally{
+            conn.close();
+        }
+    } catch (Exception e) {
+        throw new DbException(e);
+}
             resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
 
@@ -542,8 +548,9 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public void executeOperation(LdbcUpdate3AddCommentLike operation, PostgresDbConnectionState state, ResultReporter resultReporter) throws DbException {
-            Connection conn = state.getConnection();
 
+            try {
+            Connection conn = state.getConnection();
             try {
                 String queryString = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate3);
                 replaceParameterNamesWithQuestionMarks(operation, queryString);
@@ -551,9 +558,15 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                 final PreparedStatement stmt = prepareAndSetParametersInPreparedStatement(operation, queryString, conn);
                 state.logQuery(operation.getClass().getSimpleName(), queryString);
                 stmt.executeUpdate();
-            } catch (Exception e) {
+        } catch (Exception e) {
                 throw new DbException(e);
             }
+            finally{
+                conn.close();
+            }
+        } catch (Exception e) {
+            throw new DbException(e);
+    }
             resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
 
@@ -563,30 +576,49 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public void executeOperation(LdbcUpdate4AddForum operation, PostgresDbConnectionState state, ResultReporter resultReporter) throws DbException {
-            Connection conn = state.getConnection();
-
             try {
+                Connection conn = state.getConnection();
                 // InteractiveUpdate4AddForum
                 String queryStringAddForum = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate4AddForum);
                 replaceParameterNamesWithQuestionMarks(operation, queryStringAddForum);
 
                 final PreparedStatement stmt1 = prepareAndSetParametersInPreparedStatement(operation, queryStringAddForum, conn);
                 state.logQuery(operation.getClass().getSimpleName(), queryStringAddForum);
+            try {
+
                 stmt1.executeUpdate();
 
-                // InteractiveUpdate4AddForumTags
-                String queryStringAddForumTags = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate4AddForumTags);
-                replaceParameterNamesWithQuestionMarks(operation, queryStringAddForumTags, ImmutableList.of("tagId"));
-                final PreparedStatement stmt2 = prepareSnbStatement(queryStringAddForumTags, conn);
-                state.logQuery(operation.getClass().getSimpleName(), queryStringAddForumTags);
-                stmt2.setLong(1, operation.forumId());
-                for (long tagId: operation.tagIds()) {
+            } catch (Exception e) {
+                throw new DbException(e);
+            }
+            finally{
+                stmt1.close();
+            }
+
+            // InteractiveUpdate4AddForumTags
+            String queryStringAddForumTags = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate4AddForumTags);
+            replaceParameterNamesWithQuestionMarks(operation, queryStringAddForumTags, ImmutableList.of("tagId"));
+            final PreparedStatement stmt2 = prepareSnbStatement(queryStringAddForumTags, conn);
+            state.logQuery(operation.getClass().getSimpleName(), queryStringAddForumTags);
+            stmt2.setLong(1, operation.getForumId());
+
+            try {
+
+
+                for (long tagId: operation.getTagIds()) {
                     stmt2.setLong(2, tagId);
                     stmt2.executeUpdate();
                 }
             } catch (Exception e) {
                 throw new DbException(e);
             }
+            finally{
+                stmt2.close();
+                conn.close();
+            }
+        } catch (Exception e) {
+            throw new DbException(e);
+        }
             resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
 
@@ -596,51 +628,74 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public void executeOperation(LdbcUpdate5AddForumMembership operation, PostgresDbConnectionState state, ResultReporter resultReporter) throws DbException {
-            Connection conn = state.getConnection();
-
             try {
+                Connection conn = state.getConnection();
                 String queryString = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate5);
                 replaceParameterNamesWithQuestionMarks(operation, queryString);
 
                 final PreparedStatement stmt = prepareAndSetParametersInPreparedStatement(operation, queryString, conn);
                 state.logQuery(operation.getClass().getSimpleName(), queryString);
+            try {
+
                 stmt.executeUpdate();
             } catch (Exception e) {
                 throw new DbException(e);
             }
+            finally{
+                stmt.close();
+                conn.close();
+            }
+        } catch (Exception e) {
+            throw new DbException(e);
+        }
             resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
-
     }
 
     public static class Update6AddPost extends PostgresUpdateOperationHandler<LdbcUpdate6AddPost> {
 
         @Override
         public void executeOperation(LdbcUpdate6AddPost operation, PostgresDbConnectionState state, ResultReporter resultReporter) throws DbException {
-            Connection conn = state.getConnection();
-
             try {
-                // InteractiveUpdate6AddPost
+                Connection conn = state.getConnection();
                 String queryStringAddPost = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate6AddPost);
                 replaceParameterNamesWithQuestionMarks(operation, queryStringAddPost);
 
                 final PreparedStatement stmt1 = prepareAndSetParametersInPreparedStatement(operation, queryStringAddPost, conn);
                 state.logQuery(operation.getClass().getSimpleName(), queryStringAddPost);
-                stmt1.executeUpdate();
+                try {
+                    // InteractiveUpdate6AddPost
+                    stmt1.executeUpdate();
+                } catch (Exception e) {
+                    throw new DbException(e);
+                }
+                finally{
+                    stmt1.close();
+                }
 
                 // InteractiveUpdate6AddPostTags
                 String queryStringAddPostTags = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate6AddPostTags);
                 replaceParameterNamesWithQuestionMarks(operation, queryStringAddPostTags, ImmutableList.of("tagId"));
                 final PreparedStatement stmt2 = prepareSnbStatement(queryStringAddPostTags, conn);
                 state.logQuery(operation.getClass().getSimpleName(), queryStringAddPostTags);
-                stmt2.setLong(1, operation.postId());
-                for (long tagId: operation.tagIds()) {
-                    stmt2.setLong(2, tagId);
-                    stmt2.executeUpdate();
+                stmt2.setLong(1, operation.getPostId());
+
+                try{
+
+                    for (long tagId: operation.getTagIds()) {
+                        stmt2.setLong(2, tagId);
+                        stmt2.executeUpdate();
+                    }
+                } catch (Exception e) {
+                    throw new DbException(e);
                 }
-            } catch (Exception e) {
-                throw new DbException(e);
-            }
+                finally{
+                    stmt2.close();
+                    conn.close();
+                }
+        } catch (Exception e) {
+            throw new DbException(e);
+        }
             resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
 
@@ -650,29 +705,44 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public void executeOperation(LdbcUpdate7AddComment operation, PostgresDbConnectionState state, ResultReporter resultReporter) throws DbException {
-            Connection conn = state.getConnection();
-
             try {
+                Connection conn = state.getConnection();
                 // InteractiveUpdate7AddComment
                 String queryStringAddComment = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate7AddComment);
                 replaceParameterNamesWithQuestionMarks(operation, queryStringAddComment);
                 final PreparedStatement stmt1 = prepareAndSetParametersInPreparedStatement(operation, queryStringAddComment, conn);
                 state.logQuery(operation.getClass().getSimpleName(), queryStringAddComment);
-                stmt1.executeUpdate();
+            try {
 
-                // InteractiveUpdate7AddCommentTags
-                String queryStringAddCommentTags = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate7AddCommentTags);
-                replaceParameterNamesWithQuestionMarks(operation, queryStringAddCommentTags, ImmutableList.of("tagId"));
-                final PreparedStatement stmt2 = prepareSnbStatement(queryStringAddCommentTags, conn);
-                state.logQuery(operation.getClass().getSimpleName(), queryStringAddCommentTags);
-                stmt2.setLong(1, operation.commentId());
-                for (long tagId: operation.tagIds()) {
+                stmt1.executeUpdate();
+            } catch (Exception e) {
+                throw new DbException(e);
+            }
+            finally{
+                stmt1.close();
+            }
+            // InteractiveUpdate7AddCommentTags
+            String queryStringAddCommentTags = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate7AddCommentTags);
+            replaceParameterNamesWithQuestionMarks(operation, queryStringAddCommentTags, ImmutableList.of("tagId"));
+            final PreparedStatement stmt2 = prepareSnbStatement(queryStringAddCommentTags, conn);
+            state.logQuery(operation.getClass().getSimpleName(), queryStringAddCommentTags);
+            stmt2.setLong(1, operation.getCommentId());
+            try{
+
+                for (long tagId: operation.getTagIds()) {
                     stmt2.setLong(2, tagId);
                     stmt2.executeUpdate();
                 }
             } catch (Exception e) {
                 throw new DbException(e);
             }
+            finally{
+                stmt2.close();
+                conn.close();
+            }
+        } catch (Exception e) {
+            throw new DbException(e);
+        }
             resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
 
@@ -682,20 +752,26 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public void executeOperation(LdbcUpdate8AddFriendship operation, PostgresDbConnectionState state, ResultReporter resultReporter) throws DbException {
-            Connection conn = state.getConnection();
-
             try {
+                Connection conn = state.getConnection();
                 String queryString = state.getQueryStore().getParameterizedQuery(QueryStore.QueryType.InteractiveUpdate8);
                 replaceParameterNamesWithQuestionMarks(operation, queryString);
                 final PreparedStatement stmt = prepareAndSetParametersInPreparedStatement(operation, queryString, conn);
                 state.logQuery(operation.getClass().getSimpleName(), queryString);
-                stmt.executeUpdate();
+                try {
+                    stmt.executeUpdate();
+                } catch (Exception e) {
+                    throw new DbException(e);
+                }
+                finally{
+                    stmt.close();
+                    conn.close();
+                }
             } catch (Exception e) {
                 throw new DbException(e);
             }
-            resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
+                resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
+            }
         }
-
-    }
 
 }

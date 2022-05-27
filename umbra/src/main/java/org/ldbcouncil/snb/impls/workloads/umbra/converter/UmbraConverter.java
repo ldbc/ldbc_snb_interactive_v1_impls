@@ -1,13 +1,12 @@
 package org.ldbcouncil.snb.impls.workloads.umbra.converter;
 
+import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery1Result;
 import org.ldbcouncil.snb.impls.workloads.converter.Converter;
 
-import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +18,7 @@ public class UmbraConverter extends Converter {
     @Override
     public String convertDateTime(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        sdf.setTimeZone(TimeZone.getTimeZone("Etc/GMT+0"));
         return "timestamp with time zone '" + sdf.format(date) + "'";
     }
 
@@ -56,18 +55,18 @@ public class UmbraConverter extends Converter {
         }
     }
 
-    public static Iterable<List<Object>> arrayToObjectArray(ResultSet r, int column) throws SQLException {
+    public static Iterable<LdbcQuery1Result.Organization> arrayToObjectArray(ResultSet r, int column) throws SQLException {
         String value = r.getString(column);
         if (value == null) {
             return new ArrayList<>();
         } else {
             String[] strs = value.split(";");
-            List<List<Object>> array = new ArrayList<>();
+            List<LdbcQuery1Result.Organization> array = new ArrayList<>();
             for (int i = 0; i < strs.length; i++) {
                 String[] s = strs[i].split("\\|");
                 // the corresponding results of Interactive Q1 (field 12: universities, field 13: companies)
                 // both return <string, int32, string> tuples
-                array.add(Arrays.asList(s[0], Integer.valueOf(s[1]), s[2]));
+                array.add(new LdbcQuery1Result.Organization((String) s[0],Integer.parseInt((String) s[1]), (String) s[2]));
             }
             return array;
         }
@@ -87,7 +86,7 @@ public class UmbraConverter extends Converter {
     }
 
     public static long stringTimestampToEpoch(ResultSet r, int column) throws SQLException {
-        return r.getTimestamp(column, Calendar.getInstance(TimeZone.getTimeZone("GMT"))).getTime();
+        return r.getTimestamp(column, Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+0"))).getTime();
     }
 
 

@@ -21,7 +21,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--db",
-        default=os.environ.get("POSTGRES_DATABASE", "ldbcsnb"),
+        default=os.environ.get("POSTGRES_DB", "ldbcsnb"),
         help="PostgreSQL database",
     )
     parser.add_argument(
