@@ -18,7 +18,7 @@ jobs:
           name: Install dependencies
           command: |
             export DEBIAN_FRONTEND=noninteractive
-            sudo apt update && sudo apt install -y zstd
+            sudo apt update && sudo apt install -y zstd libpq5
             scripts/install-dependencies.sh
       - run:
           name: Build project
