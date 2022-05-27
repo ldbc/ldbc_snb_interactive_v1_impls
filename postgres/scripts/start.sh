@@ -54,6 +54,7 @@ echo "  ${POSTGRES_DATA_DIR}"
 echo "POSTGRES_CSV_DIR (on the host machine):"
 echo "  ${POSTGRES_CSV_DIR}"
 echo "==============================================================================="
+docker pull postgres:${POSTGRES_VERSION}
 
 docker run --rm \
     --user "$(id -u):$(id -g)" \
