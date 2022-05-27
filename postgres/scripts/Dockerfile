@@ -8,4 +8,4 @@ ADD https://github.com/ufoscout/docker-compose-wait/releases/download/$WAIT_VERS
 RUN chmod +x /wait
 # Add loading scripts
 ADD load.py /home/load.py
-CMD ["python3 /home/load.py ${POSTGRES_CSV_DIR}"]
+CMD ["python3 /home/load.py"]
