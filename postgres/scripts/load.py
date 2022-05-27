@@ -1,80 +1,51 @@
 #!/usr/bin/env python3
 
-import argparse
 import os
-import psycopg2
+import psycopg
 
+class PostgresDbLoader():
 
-def vacuum(pg_con):
-    old_isolation_level = pg_con.isolation_level
-    pg_con.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
-    pg_con.cursor().execute("ANALYZE")
-    pg_con.set_isolation_level(old_isolation_level)
+    def __init__(self):
+        self.database = os.environ.get("POSTGRES_DB", "ldbcsnb")
+        self.endpoint = os.environ.get("POSTGRES_HOST", "localhost")
+        self.port = int(os.environ.get("POSTGRES_PORT", 5432))
+        self.user = os.environ.get("POSTGRES_USER", "postgres")
+        self.password = os.environ.get("POSTGRES_PASSWORD", "mysecretpassword")
 
+    def vacuum(self, conn):
+        conn.autocommit=True
+        conn.cursor().execute("ANALYZE")
+        conn.autocommit=False
 
-def load_script(filename):
-    with open(filename, "r") as f:
-        return f.read()
+    def main(self):
+        with psycopg.connect(
+            dbname=self.database,
+            host=self.endpoint,
+            user=self.user,
+            password=self.password,
+            port=self.port
+        ) as conn:
+            with conn.cursor() as cur:
+                print("Loading initial data set")
+                cur.execute(self.load_script("ddl/schema.sql"))
+                cur.execute(self.load_script("ddl/load.sql"))
+                conn.commit()
 
+                print("Adding indexes and constraints")
+                cur.execute(self.load_script("ddl/schema_constraints.sql"))
+                cur.execute(self.load_script("ddl/schema_foreign_keys.sql"))
+                conn.commit()
 
-def main(argv=None):
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--db",
-        default=os.environ.get("POSTGRES_DB", "ldbcsnb"),
-        help="PostgreSQL database",
-    )
-    parser.add_argument(
-        "--host",
-        default=os.environ.get("POSTGRES_HOST", "localhost"),
-        help="PostgreSQL host",
-    )
-    parser.add_argument(
-        "--port",
-        type=int,
-        default=int(os.environ.get("POSTGRES_PORT", 5432)),
-        help="PostgreSQL port",
-    )
-    parser.add_argument(
-        "--user",
-        default=os.environ.get("POSTGRES_USER", "postgres"),
-        help="PostgreSQL user name",
-    )
-    parser.add_argument(
-        "--password",
-        default=os.environ.get("POSTGRES_PASSWORD", "mysecretpassword"),
-        help="PostgreSQL user password",
-    )
-    options = parser.parse_args(argv)
+                print("Vacuuming")
+                self.vacuum(conn)
+            conn.commit()
+        print("Loaded initial snapshot")
 
-    print("Running Postgres / psycopg2")
-
-    pg_con = psycopg2.connect(
-        database=options.db,
-        host=options.host,
-        user=options.user,
-        password=options.password,
-        port=options.port,
-    )
-    try:
-        with pg_con.cursor() as con:
-            print("Loading initial data set")
-            con.execute(load_script("ddl/schema.sql"))
-            con.execute(load_script("ddl/load.sql"))
-            pg_con.commit()
-
-            print("Adding indexes and constraints")
-            con.execute(load_script("ddl/schema_constraints.sql"))
-            con.execute(load_script("ddl/schema_foreign_keys.sql"))
-            pg_con.commit()
-
-            print("Vacuuming")
-            vacuum(pg_con)
-    finally:
-        pg_con.close()
-
-    print("Loaded initial snapshot")
+    def load_script(self, filename):
+        with open(filename, "r") as f:
+            return f.read()
 
 
 if __name__ == "__main__":
-    main()
+    PGLoader = PostgresDbLoader()
+    PGLoader.main()
