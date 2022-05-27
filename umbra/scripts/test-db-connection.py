@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
 import os
-import psycopg2
+import psycopg
 
-con = psycopg2.connect(
-    host=os.environ.get("POSTGRES_HOST", "localhost"),
-    user=os.environ.get("POSTGRES_USER", "postgres"),
-    password=os.environ.get("POSTGRES_PASSWORD", "mysecretpassword"),
-    port=int(os.environ.get("POSTGRES_PORT", 5432)),
-)
-con.close()
+conn = psycopg.connect(
+        host=os.environ.get("UMBRA_HOST", "localhost"),
+        user=os.environ.get("UMBRA_USER", "postgres"),
+        password=os.environ.get("UMBRA_PASSWORD", "mysecretpassword"),
+        port=int(os.environ.get("UMBRA_PORT", 5432))
+    )
+conn.close()

@@ -8,4 +8,4 @@ cd ..
 
 . scripts/vars.sh
 
-python3 scripts/load.py ${UMBRA_CSV_DIR}
+python3 scripts/load.py
