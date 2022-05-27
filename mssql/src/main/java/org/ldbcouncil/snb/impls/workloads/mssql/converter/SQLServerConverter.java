@@ -1,5 +1,6 @@
 package org.ldbcouncil.snb.impls.workloads.mssql.converter;
 
+import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery1Result;
 import org.ldbcouncil.snb.impls.workloads.converter.Converter;
 
 import java.sql.Array;
@@ -55,6 +56,23 @@ public class SQLServerConverter extends Converter {
             List<String> array = new ArrayList<>();
             for (int i = 0; i < strs.length; i++) {
                 array.add(strs[i]);
+            }
+            return array;
+        }
+    }
+
+    public static Iterable<LdbcQuery1Result.Organization> arrayToOrganizationArray(ResultSet r, int column) throws SQLException {
+        String value = r.getString(column);
+        if (value == null) {
+            return new ArrayList<>();
+        } else {
+            String[] strs = value.split(";");
+            List<LdbcQuery1Result.Organization> array = new ArrayList<>();
+            for (int i = 0; i < strs.length; i++) {
+                String[] s = strs[i].split("\\|");
+                // the corresponding results of Interactive Q1 (field 12: universities, field 13: companies)
+                // both return <string, int32, string> tuples
+                array.add(new LdbcQuery1Result.Organization((String) s[0],Integer.parseInt((String) s[1]), (String) s[2]));
             }
             return array;
         }
