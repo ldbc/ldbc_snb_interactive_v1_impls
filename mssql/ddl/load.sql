@@ -13,7 +13,10 @@ BULK INSERT dbo.forum_tag FROM '/data/dynamic/forum_hasTag_tag_0_0.csv' WITH ( F
 BULK INSERT dbo.organisation FROM '/data/static/organisation_0_0.csv_encoded.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
 
 -- Populate person table
-BULK INSERT dbo.person FROM '/data/dynamic/person_0_0.csv_encoded.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
+BULK INSERT dbo.person_temp FROM '/data/dynamic/person_0_0.csv_encoded.csv' WITH ( DATAFILETYPE = 'char', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
+INSERT INTO dbo.person ( p_personid, p_firstname, p_lastname, p_gender, p_birthday, p_creationdate, p_locationip, p_browserused, p_placeid) SELECT p_personid, p_firstname, p_lastname, p_gender, p_birthday, p_creationdate, p_locationip, p_browserused, p_placeid FROM dbo.person_temp;
+
+drop table dbo.person_temp;
 
 -- Populate person_email table
 BULK INSERT dbo.person_email FROM '/data/dynamic/person_email_emailaddress_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
@@ -22,8 +25,18 @@ BULK INSERT dbo.person_email FROM '/data/dynamic/person_email_emailaddress_0_0.c
 BULK INSERT dbo.person_tag FROM '/data/dynamic/person_hasInterest_tag_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
 
 -- Populate knows table
-BULK INSERT dbo.knows FROM '/data/dynamic/person_knows_person_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
-INSERT INTO dbo.knows ( k_person1id, k_person2id, k_creationdate) SELECT k_person2id, k_person1id, k_creationdate FROM dbo.knows;
+BULK INSERT dbo.knows_temp FROM '/data/dynamic/person_knows_person_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
+INSERT INTO dbo.knows_temp ( k_person1id, k_person2id, k_creationdate) SELECT k_person2id, k_person1id, k_creationdate FROM dbo.knows_temp;
+
+-- Populate knows edge table (SQL Graph)
+INSERT INTO dbo.knows($from_id, $to_id, k_person1id, k_person2id, k_creationdate)
+SELECT 
+    (SELECT $node_id FROM dbo.person WHERE k_person1id = p_personid),
+    (SELECT $node_id FROM dbo.person WHERE k_person2id = p_personid),
+k_person1id, k_person2id, k_creationdate FROM dbo.knows_temp;
+
+drop table dbo.knows_temp;
+
 -- Populate likes table
 BULK INSERT dbo.likes FROM '/data/dynamic/person_likes_post_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
 BULK INSERT dbo.likes FROM '/data/dynamic/person_likes_comment_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
