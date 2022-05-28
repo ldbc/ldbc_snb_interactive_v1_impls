@@ -8,16 +8,31 @@ import org.ldbcouncil.snb.impls.workloads.operationhandlers.UpdateOperationHandl
 import org.ldbcouncil.snb.impls.workloads.mssql.SQLServerDbConnectionState;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public abstract class SQLServerUpdateOperationHandler<TOperation extends Operation<LdbcNoResult>>
-        extends SQLServerOperationHandler
-        implements UpdateOperationHandler<TOperation, SQLServerDbConnectionState> {
+    implements UpdateOperationHandler<TOperation, SQLServerDbConnectionState> {
 
     @Override
-    public String getQueryString(SQLServerDbConnectionState state, TOperation operation) {
-        throw new IllegalStateException();
+    public void executeOperation(TOperation operation, SQLServerDbConnectionState state,
+                                    ResultReporter resultReporter) throws DbException {
+        try {
+            Connection conn = state.getConnection();
+            String queryString = getQueryString(state, operation);
+                try (final Statement stmt = conn.createStatement()) {
+                    state.logQuery(operation.getClass().getSimpleName(), queryString);
+                    stmt.execute(queryString);
+                } catch (Exception e) {
+                    throw new DbException(e);
+                }
+                finally {
+                    conn.close();
+                }
+                resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
+        }
+        catch (SQLException e) {
+            throw new DbException(e);
+        }
     }
-
 }

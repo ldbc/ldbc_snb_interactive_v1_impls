@@ -3,7 +3,6 @@ package org.ldbcouncil.snb.impls.workloads.mssql.converter;
 import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery1Result;
 import org.ldbcouncil.snb.impls.workloads.converter.Converter;
 
-import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -23,13 +22,13 @@ public class SQLServerConverter extends Converter {
 
     @Override
     public String convertDateTime(Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'+00:00'");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return "'" + sdf.format(date) + "'::timestamp";
+        return "'" + sdf.format(date) + "'";
     }
 
     public String convertDate(Date date) {
-        return super.convertDate(date) + "::date";
+        return super.convertDate(date) + "";
     }
 
     @Override
