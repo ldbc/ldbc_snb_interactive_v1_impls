@@ -22,8 +22,6 @@ def get_df_from_csv(csv_file) -> pd.DataFrame:
 def convert_to_base64(csv_file, columns):
     df = get_df_from_csv(csv_file)
 
-    print(df[columns].head())
-
     for column in columns:
         df.fillna('', inplace=True)
         # We need to replace these characters since we use XML conversion in the server
@@ -72,7 +70,11 @@ if __name__ == "__main__":
         DBL.run_ddl_scripts("ddl/schema.sql")
 
         print("Encode UTF-8 columns to Base64")
+        start_encode = time.time()
         encode_columns()
+        end_encode = time.time()
+        duration = end_encode - start_encode
+        print(f"-> {duration:.4f} seconds")
 
         print("Load initial snapshot")
         DBL.run_ddl_scripts("ddl/load.sql")
