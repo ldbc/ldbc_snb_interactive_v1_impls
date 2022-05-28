@@ -1,31 +1,58 @@
 import time
-import sys
+import pandas as pd
+import base64
 import os
-from SQLServerSNBLoader import SQLServerSNBLoader
 from DBLoader import DBLoader
 
-def __execute_load(func, table_name):
-    print(f"Load {table_name} table")
-    start = time.time()
-    func()
-    end = time.time()
-    duration = end - start
-    print(f"-> {duration:.4f} seconds")
+def get_df_from_csv(csv_file) -> pd.DataFrame:
+    """
+    Load dataframe from csv
+    Args:
+        - csv_file (str): csv-filename
+    """
+    filepath = os.path.join('/data/', csv_file).replace("\\","/")
+    chunksize = 10 ** 6
+    df_list = []
+    with pd.read_csv(filepath, chunksize=chunksize, sep='|', dtype=str, na_filter=False) as reader:
+        for chunk in reader:
+            df_list.append(chunk)
+    return pd.concat(df_list)
 
-def load_sql_graph_data(DBL):
-    snb_loader = SQLServerSNBLoader('/data/', DBL)
-    __execute_load(snb_loader.insert_organisation_to_sql, "organisation")
-    __execute_load(snb_loader.insert_persons_sql_graph, "person")
-    __execute_load(snb_loader.insert_likes_to_sql, "likes")
-    __execute_load(snb_loader.insert_forum_person_to_sql, "forum_person")
-    __execute_load(snb_loader.insert_forum_to_sql, "forum")
-    __execute_load(snb_loader.insert_tag_to_sql, "tag")
-    __execute_load(snb_loader.insert_tagclass_to_sql, "tagclass")
-    __execute_load(snb_loader.insert_places_to_sql, "places")
-    __execute_load(snb_loader.insert_comment_to_sql, "comment")
-    __execute_load(snb_loader.insert_post_to_sql, "post")
-    __execute_load(snb_loader.insert_knows_sql_graph, "knows")
-    return
+
+def convert_to_base64(csv_file, columns):
+    df = get_df_from_csv(csv_file)
+
+    print(df[columns].head())
+
+    for column in columns:
+        df.fillna('', inplace=True)
+        # We need to replace these characters since we use XML conversion in the server
+        df[column] = df[column].str.replace("&", "&amp;")
+        df[column] = df[column].str.replace("<", "&lt;")
+        df[column] = df[column].str.replace(">", "&gt;")
+        df[column] = df[column].str.replace('"', "&quot;")
+        df[column] = df[column].str.replace("'", "&apos;")
+        df[column] = df[column].str.encode('utf-8', 'strict').apply(base64.b64encode)
+        df[column] = df[column].str.decode('ascii')# to remove the b''
+
+    filepath_new = os.path.join('/data/', csv_file + "_encoded.csv").replace("\\","/")
+    df.to_csv(filepath_new, sep='|', index=False)
+
+
+def encode_columns():
+    csv_dict = {
+        "dynamic/post_0_0.csv":['content'],
+        "dynamic/comment_0_0.csv":['content'],
+        "dynamic/forum_0_0.csv":['title'],
+        "static/organisation_0_0.csv":['name'],
+        "dynamic/person_0_0.csv":['firstName','lastName'],
+        "static/place_0_0.csv":['name'],
+        "static/tagclass_0_0.csv":['name'],
+        "static/tag_0_0.csv":['name']
+    }
+
+    for filename, columns in csv_dict.items():
+        convert_to_base64(filename, columns)
 
 if __name__ == "__main__":
     # Fetch the env variables.
@@ -44,21 +71,19 @@ if __name__ == "__main__":
         print("Create tables")
         DBL.run_ddl_scripts("ddl/schema.sql")
 
-        print("Load data for SQL Graph")
-        load_sql_graph_data(DBL)
+        print("Encode UTF-8 columns to Base64")
+        encode_columns()
 
         print("Load initial snapshot")
         DBL.run_ddl_scripts("ddl/load.sql")
 
+        print("Convert UTF-8")
+        DBL.run_ddl_scripts("ddl/unicode.sql")
+
         print("Creating materialized views . . . ")
         DBL.run_ddl_scripts("ddl/schema_constraints.sql")
 
-        try:
-            print("Create user")
-            DBL.run_ddl_scripts("ddl/create_user.sql")
-        except Exception as e:
-            print("Error creating user:", e, file=sys.stderr, )
-        end_total = time.time()
+    end_total = time.time()
     duration_total = end_total - start_total
     print("Loaded initial snapshot to SQL Server.")
     print(f"-> {duration_total:.4f} seconds")

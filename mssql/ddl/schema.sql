@@ -22,11 +22,11 @@ drop table if exists place;
 create table post (
     m_messageid bigint primary key,
     m_ps_imagefile varchar(MAX),
-    m_creationdate datetime2,
+    m_creationdate varchar(MAX),
     m_locationip varchar(MAX) not null,
     m_browserused varchar(MAX) not null,
     m_ps_language varchar(MAX),
-    m_content ntext,
+    m_content nvarchar(MAX),
     m_length int not null,
     m_creatorid bigint not null,
     m_ps_forumid bigint,
@@ -35,10 +35,10 @@ create table post (
 
 create table comment (
     m_messageid bigint primary key,
-    m_creationdate datetime2,
+    m_creationdate varchar(MAX),
     m_locationip varchar(MAX) not null,
     m_browserused varchar(MAX) not null,
-    m_content ntext,
+    m_content nvarchar(MAX),
     m_length int not null,
     m_creatorid bigint not null,
     m_locationid bigint not null,
@@ -57,11 +57,11 @@ create table message (
      */
     m_messageid bigint primary key,
     m_ps_imagefile varchar(MAX),
-    m_creationdate datetime2,
+    m_creationdate varchar(MAX),
     m_locationip varchar(MAX) not null,
     m_browserused varchar(MAX) not null,
     m_ps_language varchar(MAX),
-    m_content ntext,
+    m_content nvarchar(MAX),
     m_length int not null,
     m_creatorid bigint not null,
     m_locationid bigint not null,
@@ -72,14 +72,14 @@ create table message (
 create table forum (
    f_forumid bigint primary key,
    f_title nvarchar(MAX) not null,
-   f_creationdate datetime2,
+   f_creationdate varchar(MAX),
    f_moderatorid bigint not null
 );
 
 create table forum_person (
    fp_forumid bigint not null,
    fp_personid bigint not null,
-   fp_joindate datetime2
+   fp_joindate varchar(MAX)
 );
 
 create table forum_tag (
@@ -101,11 +101,11 @@ create table person (
    p_lastname nvarchar(MAX) not null,
    p_gender varchar(MAX) not null,
    p_birthday date not null,
-   p_creationdate datetime2,
+   p_creationdate varchar(MAX),
    p_locationip varchar(MAX) not null,
    p_browserused varchar(MAX) not null,
    p_placeid bigint not null
-) AS NODE;
+);-- AS NODE;
 
 create table person_email (
    pe_personid bigint not null,
@@ -120,13 +120,13 @@ create table person_tag (
 create table knows (
    k_person1id bigint not null,
    k_person2id bigint not null,
-   k_creationdate datetime2
-) AS EDGE;
+   k_creationdate varchar(MAX)
+);-- AS EDGE;
 
 create table likes (
    l_personid bigint not null,
    l_messageid bigint not null,
-   l_creationdate datetime2
+   l_creationdate varchar(MAX)
 );
 
 create table person_language (

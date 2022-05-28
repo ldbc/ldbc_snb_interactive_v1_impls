@@ -31,9 +31,6 @@ class DBLoader:
                       'encrypt=no;'
                       'sslverify=0;',
                       autocommit=True)
-        conn.setdecoding(pyodbc.SQL_CHAR, encoding='utf8')
-        conn.setdecoding(pyodbc.SQL_WCHAR, encoding='utf8')
-        conn.setencoding(encoding='utf8')
         return conn
 
     def check_and_create_database(self, db_name, recreate):
