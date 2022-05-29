@@ -24,29 +24,16 @@ public abstract class CypherUpdateOperationHandler<TOperation extends Operation<
         return null;
     }
 
-    public abstract String getQueryFile();
-
     public Map<String, Object> getParameters( TOperation operation )
     {
-        return operation.parameterMap();
+        throw new IllegalStateException();
     }
 
     @Override
     public void executeOperation( TOperation operation, CypherDbConnectionState state,
                                   ResultReporter resultReporter ) throws DbException
     {
-        // caches the query for future use
-        final String queryFile = getQueryFile();
-        if ( !state.hasQuery( queryFile ) )
-        {
-            final boolean successful = state.addQuery( queryFile );
-            if ( !successful )
-            {
-                throw new DbException( String.format( "Unable to load query for operation: %s", operation.toString() ) );
-            }
-        }
-
-        final String query = state.getQuery( queryFile );
+        String query = getQueryString(state, operation);
         final Map<String, Object> parameters = getParameters( operation );
 
         final SessionConfig config = SessionConfig.builder().withDefaultAccessMode( AccessMode.WRITE ).build();

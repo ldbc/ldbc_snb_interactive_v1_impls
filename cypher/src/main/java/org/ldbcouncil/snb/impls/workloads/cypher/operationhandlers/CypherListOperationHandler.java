@@ -21,44 +21,19 @@ public abstract class CypherListOperationHandler<TOperation extends Operation<Li
         implements ListOperationHandler<TOperationResult,TOperation,CypherDbConnectionState>
 {
 
-    @Override
-    public String getQueryString( CypherDbConnectionState state, TOperation operation )
-    {
-        return null;
-    }
-
-    public abstract String getQueryFile();
-
-    public Map<String, Object> getParameters( TOperation operation )
-    {
-        return operation.parameterMap();
-    }
-
     public abstract TOperationResult toResult( Record record ) throws ParseException;
 
     @Override
     public void executeOperation( TOperation operation, CypherDbConnectionState state,
                                   ResultReporter resultReporter ) throws DbException
     {
-        // caches the query for future use
-        final String queryFile = getQueryFile();
-        if ( !state.hasQuery( queryFile ) )
-        {
-            final boolean successful = state.addQuery( queryFile );
-            if ( !successful )
-            {
-                throw new DbException( String.format( "Unable to load query for operation: %s", operation.toString() ) );
-            }
-        }
-
-        final String query = state.getQuery( queryFile );
-        final Map<String, Object> parameters = getParameters( operation );
+        String query = getQueryString(state, operation);
 
         final SessionConfig config = SessionConfig.builder().withDefaultAccessMode( AccessMode.READ ).build();
         try ( final Session session = state.getSession( config ) )
         {
             final List<TOperationResult> results = new ArrayList<>();
-            final Result result = session.run( query, parameters );
+            final Result result = session.run( query );
             for ( Record record : result.list() )
             {
                 try

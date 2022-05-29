@@ -16,6 +16,7 @@ import java.util.Map;
 
 /**
  * Superclass of query stores.
+ * TODO: Move this class to the driver.
  *
  * Note: we deliberately do not use the {@link org.ldbcouncil.snb.driver.Operation#parameterMap()} method, because
  *
@@ -141,155 +142,232 @@ public abstract class QueryStore {
     // Interactive complex reads
 
     public String getQuery1(LdbcQuery1 operation) {
-        return prepare(QueryType.InteractiveComplexQuery1, new ImmutableMap.Builder<String, String>()
+        return prepare(QueryType.InteractiveComplexQuery1, getQuery1Map(operation));
+    }
+
+    public Map<String, String> getQuery1Map(LdbcQuery1 operation) {
+        return new ImmutableMap.Builder<String, String>()
                 .put(LdbcQuery1.PERSON_ID, getConverter().convertId(operation.getPersonIdQ1()))
                 .put(LdbcQuery1.FIRST_NAME, getConverter().convertString(operation.getFirstName()))
-                .build());
+                .build();
     }
 
     public String getQuery2(LdbcQuery2 operation) {
-        return prepare(QueryType.InteractiveComplexQuery2, new ImmutableMap.Builder<String, String>()
-                .put(LdbcQuery2.PERSON_ID, getConverter().convertId(operation.getPersonIdQ2()))
-                .put(LdbcQuery2.MAX_DATE, getConverter().convertDate(operation.getMaxDate()))
-                .build());
+        return prepare(QueryType.InteractiveComplexQuery2, getQuery2Map(operation));
+    }
+
+    public Map<String, String> getQuery2Map(LdbcQuery2 operation) {
+        return new ImmutableMap.Builder<String, String>()
+        .put(LdbcQuery2.PERSON_ID, getConverter().convertId(operation.getPersonIdQ2()))
+        .put(LdbcQuery2.MAX_DATE, getConverter().convertDate(operation.getMaxDate()))
+        .build();
     }
 
     public String getQuery3(LdbcQuery3 operation) {
-        return prepare(QueryType.InteractiveComplexQuery3, new ImmutableMap.Builder<String, String>()
-                .put(LdbcQuery3.PERSON_ID, getConverter().convertId(operation.getPersonIdQ3()))
-                .put(LdbcQuery3.COUNTRY_X_NAME, getConverter().convertString(operation.getCountryXName()))
-                .put(LdbcQuery3.COUNTRY_Y_NAME, getConverter().convertString(operation.getCountryYName()))
-                .put(LdbcQuery3.START_DATE, getConverter().convertDate(operation.getStartDate()))
-                .put(LdbcQuery3.DURATION_DAYS, getConverter().convertInteger(operation.getDurationDays()))
-                .build());
+        return prepare(QueryType.InteractiveComplexQuery3, getQuery3Map(operation));
+    }
+
+    public Map<String, String> getQuery3Map(LdbcQuery3 operation) {
+        return new ImmutableMap.Builder<String, String>()
+        .put(LdbcQuery3.PERSON_ID, getConverter().convertId(operation.getPersonIdQ3()))
+        .put(LdbcQuery3.COUNTRY_X_NAME, getConverter().convertString(operation.getCountryXName()))
+        .put(LdbcQuery3.COUNTRY_Y_NAME, getConverter().convertString(operation.getCountryYName()))
+        .put(LdbcQuery3.START_DATE, getConverter().convertDate(operation.getStartDate()))
+        .put(LdbcQuery3.DURATION_DAYS, getConverter().convertInteger(operation.getDurationDays()))
+        .build();
     }
 
     public String getQuery4(LdbcQuery4 operation) {
-        return prepare(QueryType.InteractiveComplexQuery4, new ImmutableMap.Builder<String, String>()
-                .put(LdbcQuery4.PERSON_ID, getConverter().convertId(operation.getPersonIdQ4()))
-                .put(LdbcQuery4.START_DATE, getConverter().convertDate(operation.getStartDate()))
-                .put(LdbcQuery4.DURATION_DAYS, getConverter().convertInteger(operation.getDurationDays()))
-                .build());
+        return prepare(QueryType.InteractiveComplexQuery4, getQuery4Map(operation));
+    }
+
+    public Map<String, String> getQuery4Map(LdbcQuery4 operation) {
+        return new ImmutableMap.Builder<String, String>()
+        .put(LdbcQuery4.PERSON_ID, getConverter().convertId(operation.getPersonIdQ4()))
+        .put(LdbcQuery4.START_DATE, getConverter().convertDate(operation.getStartDate()))
+        .put(LdbcQuery4.DURATION_DAYS, getConverter().convertInteger(operation.getDurationDays()))
+        .build();
     }
 
     public String getQuery5(LdbcQuery5 operation) {
-        return prepare(QueryType.InteractiveComplexQuery5, new ImmutableMap.Builder<String, String>()
-                .put(LdbcQuery5.PERSON_ID, getConverter().convertId(operation.getPersonIdQ5()))
-                .put(LdbcQuery5.MIN_DATE, getConverter().convertDate(operation.getMinDate()))
-                .build());
+        return prepare(QueryType.InteractiveComplexQuery5, getQuery5Map(operation));
+    }
+
+    public Map<String, String> getQuery5Map(LdbcQuery5 operation) {
+        return new ImmutableMap.Builder<String, String>()
+        .put(LdbcQuery5.PERSON_ID, getConverter().convertId(operation.getPersonIdQ5()))
+        .put(LdbcQuery5.MIN_DATE, getConverter().convertDate(operation.getMinDate()))
+        .build();
     }
 
     public String getQuery6(LdbcQuery6 operation) {
-        return prepare(QueryType.InteractiveComplexQuery6, new ImmutableMap.Builder<String, String>()
-                .put(LdbcQuery6.PERSON_ID, getConverter().convertId(operation.getPersonIdQ6()))
-                .put(LdbcQuery6.TAG_NAME, getConverter().convertString(operation.getTagName()))
-                .build());
+        return prepare(QueryType.InteractiveComplexQuery6, getQuery6Map(operation));
+    }
+
+    public Map<String, String> getQuery6Map(LdbcQuery6 operation) {
+        return new ImmutableMap.Builder<String, String>()
+        .put(LdbcQuery6.PERSON_ID, getConverter().convertId(operation.getPersonIdQ6()))
+        .put(LdbcQuery6.TAG_NAME, getConverter().convertString(operation.getTagName()))
+        .build();
     }
 
     public String getQuery7(LdbcQuery7 operation) {
-        return prepare(QueryType.InteractiveComplexQuery7, new ImmutableMap.Builder<String, String>()
-                .put(LdbcQuery7.PERSON_ID, getConverter().convertId(operation.getPersonIdQ7()))
-                .build());
+        return prepare(QueryType.InteractiveComplexQuery7, getQuery7Map(operation));
+    }
+    public Map<String, String> getQuery7Map(LdbcQuery7 operation) {
+        return new ImmutableMap.Builder<String, String>()
+        .put(LdbcQuery7.PERSON_ID, getConverter().convertId(operation.getPersonIdQ7()))
+        .build();
     }
 
     public String getQuery8(LdbcQuery8 operation) {
-        return prepare(QueryType.InteractiveComplexQuery8, new ImmutableMap.Builder<String, String>()
-                .put(LdbcQuery8.PERSON_ID, getConverter().convertId(operation.getPersonIdQ8()))
-                .build());
+        return prepare(QueryType.InteractiveComplexQuery8, getQuery8Map(operation));
+    }
+
+    public Map<String, String> getQuery8Map(LdbcQuery8 operation) {
+        return new ImmutableMap.Builder<String, String>()
+        .put(LdbcQuery8.PERSON_ID, getConverter().convertId(operation.getPersonIdQ8()))
+        .build();
     }
 
     public String getQuery9(LdbcQuery9 operation) {
-        return prepare(QueryType.InteractiveComplexQuery9, new ImmutableMap.Builder<String, String>()
-                .put(LdbcQuery9.PERSON_ID, getConverter().convertId(operation.getPersonIdQ9()))
-                .put(LdbcQuery9.MAX_DATE, getConverter().convertDate(operation.getMaxDate()))
-                .build());
+        return prepare(QueryType.InteractiveComplexQuery9, getQuery9Map(operation));
+    }
+
+    public Map<String, String> getQuery9Map(LdbcQuery9 operation) {
+        return new ImmutableMap.Builder<String, String>()
+        .put(LdbcQuery9.PERSON_ID, getConverter().convertId(operation.getPersonIdQ9()))
+        .put(LdbcQuery9.MAX_DATE, getConverter().convertDate(operation.getMaxDate()))
+        .build();
     }
 
     public String getQuery10(LdbcQuery10 operation) {
-        return prepare(QueryType.InteractiveComplexQuery10, new ImmutableMap.Builder<String, String>()
-                .put(LdbcQuery10.PERSON_ID, getConverter().convertId(operation.getPersonIdQ10()))
-                .put(LdbcQuery10.MONTH, getConverter().convertInteger(operation.getMonth()))
-                .build());
+        return prepare(QueryType.InteractiveComplexQuery10, getQuery10Map(operation));
+    }
+
+    public Map<String, String> getQuery10Map(LdbcQuery10 operation) {
+        return new ImmutableMap.Builder<String, String>()
+        .put(LdbcQuery10.PERSON_ID, getConverter().convertId(operation.getPersonIdQ10()))
+        .put(LdbcQuery10.MONTH, getConverter().convertInteger(operation.getMonth()))
+        .build();
     }
 
     public String getQuery11(LdbcQuery11 operation) {
-        return prepare(QueryType.InteractiveComplexQuery11, new ImmutableMap.Builder<String, String>()
-                .put(LdbcQuery11.PERSON_ID, getConverter().convertId(operation.getPersonIdQ11()))
-                .put(LdbcQuery11.COUNTRY_NAME, getConverter().convertString(operation.getCountryName()))
-                .put(LdbcQuery11.WORK_FROM_YEAR, getConverter().convertInteger(operation.getWorkFromYear()))
-                .build());
+        return prepare(QueryType.InteractiveComplexQuery11, getQuery11Map(operation));
+    }
+
+    public Map<String, String> getQuery11Map(LdbcQuery11 operation) {
+        return new ImmutableMap.Builder<String, String>()
+        .put(LdbcQuery11.PERSON_ID, getConverter().convertId(operation.getPersonIdQ11()))
+        .put(LdbcQuery11.COUNTRY_NAME, getConverter().convertString(operation.getCountryName()))
+        .put(LdbcQuery11.WORK_FROM_YEAR, getConverter().convertInteger(operation.getWorkFromYear()))
+        .build();
     }
 
     public String getQuery12(LdbcQuery12 operation) {
-        return prepare(QueryType.InteractiveComplexQuery12, new ImmutableMap.Builder<String, String>()
-                .put(LdbcQuery12.PERSON_ID, getConverter().convertId(operation.getPersonIdQ12()))
-                .put(LdbcQuery12.TAG_CLASS_NAME, getConverter().convertString(operation.getTagClassName()))
-                .build());
+        return prepare(QueryType.InteractiveComplexQuery12, getQuery12Map(operation));
+    }
+
+    public Map<String, String> getQuery12Map(LdbcQuery12 operation) {
+        return new ImmutableMap.Builder<String, String>()
+        .put(LdbcQuery12.PERSON_ID, getConverter().convertId(operation.getPersonIdQ12()))
+        .put(LdbcQuery12.TAG_CLASS_NAME, getConverter().convertString(operation.getTagClassName()))
+        .build();
     }
 
     public String getQuery13(LdbcQuery13 operation) {
-        return prepare(QueryType.InteractiveComplexQuery13, new ImmutableMap.Builder<String, String>()
-                .put(LdbcQuery13.PERSON1_ID, getConverter().convertId(operation.getPerson1IdQ13StartNode()))
-                .put(LdbcQuery13.PERSON2_ID, getConverter().convertId(operation.getPerson2IdQ13EndNode()))
-                .build());
+        return prepare(QueryType.InteractiveComplexQuery13, getQuery13Map(operation));
+    }
+
+    public Map<String,String> getQuery13Map (LdbcQuery13 operation) {
+        return new ImmutableMap.Builder<String, String>()
+        .put(LdbcQuery13.PERSON1_ID, getConverter().convertId(operation.getPerson1IdQ13StartNode()))
+        .put(LdbcQuery13.PERSON2_ID, getConverter().convertId(operation.getPerson2IdQ13EndNode()))
+        .build();
     }
 
     public String getQuery14(LdbcQuery14 operation) {
-        return prepare(QueryType.InteractiveComplexQuery14, new ImmutableMap.Builder<String, String>()
-                .put(LdbcQuery14.PERSON1_ID, getConverter().convertId(operation.getPerson1IdQ14StartNode()))
-                .put(LdbcQuery14.PERSON2_ID, getConverter().convertId(operation.getPerson2IdQ14EndNode()))
-                .build());
+        return prepare(QueryType.InteractiveComplexQuery14, getQuery14Map(operation));
+    }
+
+    public Map<String, String> getQuery14Map (LdbcQuery14 operation) {
+        return new ImmutableMap.Builder<String, String>()
+        .put(LdbcQuery14.PERSON1_ID, getConverter().convertId(operation.getPerson1IdQ14StartNode()))
+        .put(LdbcQuery14.PERSON2_ID, getConverter().convertId(operation.getPerson2IdQ14EndNode()))
+        .build();
     }
 
     // Interactive short reads
 
     public String getShortQuery1PersonProfile(LdbcShortQuery1PersonProfile operation) {
         return prepare(
-                QueryType.InteractiveShortQuery1,
-                ImmutableMap.of(LdbcShortQuery1PersonProfile.PERSON_ID, getConverter().convertId(operation.getPersonIdSQ1()))
+                QueryType.InteractiveShortQuery1,getShortQuery1PersonProfileMap(operation)
         );
+    }
+
+    public Map<String, String> getShortQuery1PersonProfileMap(LdbcShortQuery1PersonProfile operation) {
+        return ImmutableMap.of(LdbcShortQuery1PersonProfile.PERSON_ID, getConverter().convertId(operation.getPersonIdSQ1()));
+        
     }
 
     public String getShortQuery2PersonPosts(LdbcShortQuery2PersonPosts operation) {
         return prepare(
-                QueryType.InteractiveShortQuery2,
-                ImmutableMap.of(LdbcShortQuery2PersonPosts.PERSON_ID, getConverter().convertId(operation.getPersonIdSQ2()))
+                QueryType.InteractiveShortQuery2, getShortQuery2PersonPostsMap(operation)
         );
+    }
+
+    public Map<String, String> getShortQuery2PersonPostsMap(LdbcShortQuery2PersonPosts operation) {
+        return ImmutableMap.of(LdbcShortQuery2PersonPosts.PERSON_ID, getConverter().convertId(operation.getPersonIdSQ2()));
     }
 
     public String getShortQuery3PersonFriends(LdbcShortQuery3PersonFriends operation) {
         return prepare(
-                QueryType.InteractiveShortQuery3,
-                ImmutableMap.of(LdbcShortQuery3PersonFriends.PERSON_ID, getConverter().convertId(operation.getPersonIdSQ3()))
+                QueryType.InteractiveShortQuery3, getShortQuery3PersonFriendsMap(operation)
         );
+    }
+
+    public Map<String, String> getShortQuery3PersonFriendsMap(LdbcShortQuery3PersonFriends operation) {
+        return ImmutableMap.of(LdbcShortQuery3PersonFriends.PERSON_ID, getConverter().convertId(operation.getPersonIdSQ3()));
     }
 
     public String getShortQuery4MessageContent(LdbcShortQuery4MessageContent operation) {
         return prepare(
-                QueryType.InteractiveShortQuery4,
-                ImmutableMap.of(LdbcShortQuery4MessageContent.MESSAGE_ID, getConverter().convertId(operation.getMessageIdContent()))
+                QueryType.InteractiveShortQuery4, getShortQuery4MessageContentMap(operation)
         );
+    }
+
+    public Map<String, String> getShortQuery4MessageContentMap(LdbcShortQuery4MessageContent operation) {
+        return ImmutableMap.of(LdbcShortQuery4MessageContent.MESSAGE_ID, getConverter().convertId(operation.getMessageIdContent()));
     }
 
     public String getShortQuery5MessageCreator(LdbcShortQuery5MessageCreator operation) {
         return prepare(
-                QueryType.InteractiveShortQuery5,
-                ImmutableMap.of(LdbcShortQuery5MessageCreator.MESSAGE_ID, getConverter().convertId(operation.getMessageIdCreator()))
+                QueryType.InteractiveShortQuery5, getShortQuery5MessageCreatorMap(operation)
         );
+    }
+
+    public Map<String, String> getShortQuery5MessageCreatorMap(LdbcShortQuery5MessageCreator operation) {
+        return ImmutableMap.of(LdbcShortQuery5MessageCreator.MESSAGE_ID, getConverter().convertId(operation.getMessageIdCreator()));
     }
 
     public String getShortQuery6MessageForum(LdbcShortQuery6MessageForum operation) {
         return prepare(
-                QueryType.InteractiveShortQuery6,
-                ImmutableMap.of(LdbcShortQuery6MessageForum.MESSAGE_ID, getConverter().convertId(operation.getMessageForumId()))
+                QueryType.InteractiveShortQuery6, getShortQuery6MessageForumMap(operation)
         );
+    }
+
+    public Map<String, String> getShortQuery6MessageForumMap(LdbcShortQuery6MessageForum operation) {
+        return ImmutableMap.of(LdbcShortQuery6MessageForum.MESSAGE_ID, getConverter().convertId(operation.getMessageForumId()));
     }
 
     public String getShortQuery7MessageReplies(LdbcShortQuery7MessageReplies operation) {
         return prepare(
-                QueryType.InteractiveShortQuery7,
-                ImmutableMap.of(LdbcShortQuery7MessageReplies.MESSAGE_ID, getConverter().convertId(operation.getMessageRepliesId()))
+                QueryType.InteractiveShortQuery7, getShortQuery7MessageRepliesMap(operation)
         );
+    }
+
+    public Map<String, String> getShortQuery7MessageRepliesMap(LdbcShortQuery7MessageReplies operation) {
+        return ImmutableMap.of(LdbcShortQuery7MessageReplies.MESSAGE_ID, getConverter().convertId(operation.getMessageRepliesId()));
     }
 
     // Interactive updates

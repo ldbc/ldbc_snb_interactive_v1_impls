@@ -19,6 +19,7 @@ public class CypherConverter extends Converter {
         res += "]";
         return res;
     }
+
     public static List<LdbcQuery1Result.Organization> asOrganization(List<List<Object>> value){
         List<LdbcQuery1Result.Organization> orgs = new ArrayList<>();
         for (List<Object> list : value) {
