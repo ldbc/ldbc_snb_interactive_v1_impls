@@ -7,6 +7,7 @@ import org.ldbcouncil.snb.impls.workloads.cypher.CypherDbConnectionState;
 import org.ldbcouncil.snb.impls.workloads.operationhandlers.SingletonOperationHandler;
 
 import java.text.ParseException;
+import java.util.Map;
 
 import org.neo4j.driver.AccessMode;
 import org.neo4j.driver.Record;
@@ -20,16 +21,19 @@ public abstract class CypherSingletonOperationHandler<TOperation extends Operati
 {
     public abstract TOperationResult toResult( Record record ) throws ParseException;
 
+    public abstract Map<String, Object> getParameters(CypherDbConnectionState state, TOperation operation );
+
     @Override
     public void executeOperation( TOperation operation, CypherDbConnectionState state,
                                   ResultReporter resultReporter ) throws DbException
     {
         String query = getQueryString(state, operation);
+        final Map<String, Object> parameters = getParameters(state, operation );
 
         final SessionConfig config = SessionConfig.builder().withDefaultAccessMode( AccessMode.READ ).build();
         try ( final Session session = state.getSession( config ) )
         {
-            final Result result = session.run( query );
+            final Result result = session.run( query, parameters );
             if ( result.hasNext() )
             {
                 try

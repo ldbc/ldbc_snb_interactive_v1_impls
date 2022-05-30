@@ -17,17 +17,14 @@ import org.neo4j.driver.SessionConfig;
 public abstract class CypherUpdateOperationHandler<TOperation extends Operation<LdbcNoResult>>
         implements UpdateOperationHandler<TOperation,CypherDbConnectionState>
 {
-
     @Override
     public String getQueryString( CypherDbConnectionState state, TOperation operation )
     {
         return null;
     }
 
-    public Map<String, Object> getParameters( TOperation operation )
-    {
-        throw new IllegalStateException();
-    }
+    public abstract Map<String, Object> getParameters(TOperation operation );
+
 
     @Override
     public void executeOperation( TOperation operation, CypherDbConnectionState state,

@@ -23,17 +23,20 @@ public abstract class CypherListOperationHandler<TOperation extends Operation<Li
 
     public abstract TOperationResult toResult( Record record ) throws ParseException;
 
+    public abstract Map<String, Object> getParameters(CypherDbConnectionState state, TOperation operation );
+
     @Override
     public void executeOperation( TOperation operation, CypherDbConnectionState state,
                                   ResultReporter resultReporter ) throws DbException
     {
         String query = getQueryString(state, operation);
+        final Map<String, Object> parameters = getParameters(state, operation );
 
         final SessionConfig config = SessionConfig.builder().withDefaultAccessMode( AccessMode.READ ).build();
         try ( final Session session = state.getSession( config ) )
         {
             final List<TOperationResult> results = new ArrayList<>();
-            final Result result = session.run( query );
+            final Result result = session.run( query, parameters );
             for ( Record record : result.list() )
             {
                 try
