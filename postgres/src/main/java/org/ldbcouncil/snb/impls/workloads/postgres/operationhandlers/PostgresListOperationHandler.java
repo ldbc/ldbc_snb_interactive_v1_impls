@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class PostgresListOperationHandler<TOperation extends Operation<List<TOperationResult>>, TOperationResult>
-    extends PostgresOperationHandler
-    implements ListOperationHandler<TOperationResult, TOperation, PostgresDbConnectionState> {
+        extends PostgresOperationHandler
+        implements ListOperationHandler<TOperationResult, TOperation, PostgresDbConnectionState> {
 
     @Override
     public void executeOperation(TOperation operation, PostgresDbConnectionState state,
@@ -28,13 +28,12 @@ public abstract class PostgresListOperationHandler<TOperation extends Operation<
             replaceParameterNamesWithQuestionMarks(operation, queryString);
             final PreparedStatement stmt = prepareAndSetParametersInPreparedStatement(operation, queryString, conn);
             state.logQuery(operation.getClass().getSimpleName(), queryString);
-
+            
             try {
-
                 result = stmt.executeQuery();
                 while (result.next()) {
                     resultCount++;
-    
+
                     TOperationResult tuple = convertSingleResult(result);
                     if (state.isPrintResults()) {
                         System.out.println(tuple.toString());
@@ -51,7 +50,9 @@ public abstract class PostgresListOperationHandler<TOperation extends Operation<
                 stmt.close();
                 conn.close();
             }
+
             resultReporter.report(resultCount, results, operation);
+
         }
         catch (SQLException e) {
             throw new DbException(e);
@@ -59,5 +60,4 @@ public abstract class PostgresListOperationHandler<TOperation extends Operation<
     }
 
     public abstract TOperationResult convertSingleResult(ResultSet result) throws SQLException;
-
 }
