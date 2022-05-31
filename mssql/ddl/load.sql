@@ -4,7 +4,7 @@ USE ldbc;
 BULK INSERT dbo.forum FROM '/data/dynamic/forum_0_0.csv_encoded.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
 
 -- Populate forum_person table
-BULK INSERT dbo.forum_person FROM '/data/dynamic/forum_hasMember_person_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
+BULK INSERT dbo.forum_person FROM '/data/dynamic/forum_hasMember_person_0_0.csv_encoded.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
 
 -- Populate forum_tag table
 BULK INSERT dbo.forum_tag FROM '/data/dynamic/forum_hasTag_tag_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
@@ -25,7 +25,7 @@ BULK INSERT dbo.person_email FROM '/data/dynamic/person_email_emailaddress_0_0.c
 BULK INSERT dbo.person_tag FROM '/data/dynamic/person_hasInterest_tag_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
 
 -- Populate knows table
-BULK INSERT dbo.knows_temp FROM '/data/dynamic/person_knows_person_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
+BULK INSERT dbo.knows_temp FROM '/data/dynamic/person_knows_person_0_0.csv_encoded.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
 INSERT INTO dbo.knows_temp ( k_person1id, k_person2id, k_creationdate) SELECT k_person2id, k_person1id, k_creationdate FROM dbo.knows_temp;
 
 -- Populate knows edge table (SQL Graph)
@@ -38,8 +38,8 @@ k_person1id, k_person2id, k_creationdate FROM dbo.knows_temp;
 drop table dbo.knows_temp;
 
 -- Populate likes table
-BULK INSERT dbo.likes FROM '/data/dynamic/person_likes_post_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
-BULK INSERT dbo.likes FROM '/data/dynamic/person_likes_comment_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
+BULK INSERT dbo.likes FROM '/data/dynamic/person_likes_post_0_0.csv_encoded.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
+BULK INSERT dbo.likes FROM '/data/dynamic/person_likes_comment_0_0.csv_encoded.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
 
 -- Populate person_language table
 BULK INSERT dbo.person_language FROM '/data/dynamic/person_speaks_language_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);

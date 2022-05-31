@@ -22,7 +22,7 @@ drop table if exists place;
 create table post (
     m_messageid bigint primary key,
     m_ps_imagefile varchar(MAX),
-    m_creationdate varchar(MAX),
+    m_creationdate datetimeoffset,
     m_locationip varchar(MAX) not null,
     m_browserused varchar(MAX) not null,
     m_ps_language varchar(MAX),
@@ -35,7 +35,7 @@ create table post (
 
 create table comment (
     m_messageid bigint primary key,
-    m_creationdate varchar(MAX),
+    m_creationdate datetimeoffset,
     m_locationip varchar(MAX) not null,
     m_browserused varchar(MAX) not null,
     m_content nvarchar(MAX),
@@ -57,7 +57,7 @@ create table message (
      */
     m_messageid bigint primary key,
     m_ps_imagefile varchar(MAX),
-    m_creationdate varchar(MAX),
+    m_creationdate datetimeoffset,
     m_locationip varchar(MAX) not null,
     m_browserused varchar(MAX) not null,
     m_ps_language varchar(MAX),
@@ -79,7 +79,7 @@ create table forum (
 create table forum_person (
    fp_forumid bigint not null,
    fp_personid bigint not null,
-   fp_joindate varchar(MAX)
+   fp_joindate datetimeoffset
 );
 
 create table forum_tag (
@@ -101,7 +101,7 @@ create table person_temp (
    p_lastname nvarchar(MAX) not null,
    p_gender varchar(MAX) not null,
    p_birthday date not null,
-   p_creationdate varchar(MAX),
+   p_creationdate datetimeoffset,
    p_locationip varchar(MAX) not null,
    p_browserused varchar(MAX) not null,
    p_placeid bigint not null
@@ -113,7 +113,7 @@ create table person (
    p_lastname nvarchar(MAX) not null,
    p_gender varchar(MAX) not null,
    p_birthday date not null,
-   p_creationdate varchar(MAX),
+   p_creationdate datetimeoffset,
    p_locationip varchar(MAX) not null,
    p_browserused varchar(MAX) not null,
    p_placeid bigint not null
@@ -132,19 +132,19 @@ create table person_tag (
 create table knows_temp (
    k_person1id bigint not null,
    k_person2id bigint not null,
-   k_creationdate varchar(MAX)
+   k_creationdate datetimeoffset
 );
 
 create table knows (
    k_person1id bigint not null,
    k_person2id bigint not null,
-   k_creationdate varchar(MAX)
+   k_creationdate datetimeoffset
 ) AS EDGE;
 
 create table likes (
    l_personid bigint not null,
    l_messageid bigint not null,
-   l_creationdate varchar(MAX)
+   l_creationdate datetimeoffset
 );
 
 create table person_language (
