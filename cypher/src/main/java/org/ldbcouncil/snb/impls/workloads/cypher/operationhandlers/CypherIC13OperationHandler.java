@@ -1,5 +1,11 @@
 package org.ldbcouncil.snb.impls.workloads.cypher.operationhandlers;
-
+/**
+ * CypherIC13OperationHandler.java
+ * 
+ * This class handles LdbcQuery13 operation and result. It is almost the same as the
+ * @see @link {CypherSingletonOperationHandler}, but the result in case of zero 
+ * results is different: instead of null it returns an object with an result -1.
+ */
 import org.ldbcouncil.snb.driver.DbException;
 import org.ldbcouncil.snb.driver.ResultReporter;
 import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery13;
@@ -18,41 +24,18 @@ import org.neo4j.driver.SessionConfig;
 import org.neo4j.driver.summary.ResultSummary;
 
 public abstract class CypherIC13OperationHandler
-        implements SingletonOperationHandler<LdbcQuery13Result,LdbcQuery13,CypherDbConnectionState>
+        implements SingletonOperationHandler<LdbcQuery13Result, LdbcQuery13, CypherDbConnectionState>
 {
-
-    @Override
-    public String getQueryString( CypherDbConnectionState state, LdbcQuery13 operation )
-    {
-        return null;
-    }
-
-    public abstract String getQueryFile();
-
     public abstract LdbcQuery13Result toResult( Record record ) throws ParseException;
 
-    public Map<String, Object> getParameters( LdbcQuery13 operation )
-    {
-        return operation.parameterMap();
-    }
+    public abstract Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery13 operation );
 
     @Override
     public void executeOperation( LdbcQuery13 operation, CypherDbConnectionState state,
                                   ResultReporter resultReporter ) throws DbException
     {
-        // caches the query for future use
-        final String queryFile = getQueryFile();
-        if ( !state.hasQuery( queryFile ) )
-        {
-            final boolean successful = state.addQuery( queryFile );
-            if ( !successful )
-            {
-                throw new DbException( String.format( "Unable to load query for operation: %s", operation.toString() ) );
-            }
-        }
-
-        final String query = state.getQuery( queryFile );
-        final Map<String, Object> parameters = getParameters( operation );
+        String query = getQueryString(state, operation);
+        final Map<String, Object> parameters = getParameters(state, operation );
 
         final SessionConfig config = SessionConfig.builder().withDefaultAccessMode( AccessMode.READ ).build();
         try ( final Session session = state.getSession( config ) )
