@@ -2,7 +2,7 @@ package org.ldbcouncil.snb.impls.workloads.tigergraph.interactive;
 
 import org.ldbcouncil.snb.driver.DbException;
 import org.ldbcouncil.snb.driver.control.LoggingService;
-import org.ldbcouncil.snb.driver.workloads.interactive.*;
+import org.ldbcouncil.snb.driver.workloads.interactive.queries.*;
 import org.ldbcouncil.snb.impls.workloads.tigergraph.TigerGraphDb;
 
 import java.util.Map;

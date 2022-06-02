@@ -3,7 +3,7 @@ package org.ldbcouncil.snb.impls.workloads.umbra.operationhandlers;
 import org.ldbcouncil.snb.driver.DbException;
 import org.ldbcouncil.snb.driver.Operation;
 import org.ldbcouncil.snb.driver.ResultReporter;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcNoResult;
+import org.ldbcouncil.snb.driver.workloads.interactive.queries.LdbcNoResult;
 import org.ldbcouncil.snb.impls.workloads.operationhandlers.MultipleUpdateOperationHandler;
 import org.ldbcouncil.snb.impls.workloads.umbra.UmbraDbConnectionState;
 
