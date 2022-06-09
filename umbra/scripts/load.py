@@ -16,7 +16,8 @@ class UmbraDbLoader():
             host=self.endpoint,
             user=self.user,
             password=self.password,
-            port=self.port
+            port=self.port,
+            autocommit=True
         ) as pg_con:
 
             print("Load initial snapshot")
