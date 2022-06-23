@@ -3,7 +3,7 @@ package org.ldbcouncil.snb.impls.workloads.postgres;
 import org.ldbcouncil.snb.driver.DbException;
 import org.ldbcouncil.snb.driver.ResultReporter;
 import org.ldbcouncil.snb.driver.control.LoggingService;
-import org.ldbcouncil.snb.driver.workloads.interactive.*;
+import org.ldbcouncil.snb.driver.workloads.interactive.queries.*;
 import org.ldbcouncil.snb.impls.workloads.QueryType;
 import org.ldbcouncil.snb.impls.workloads.db.BaseDb;
 import org.ldbcouncil.snb.impls.workloads.postgres.converter.PostgresConverter;

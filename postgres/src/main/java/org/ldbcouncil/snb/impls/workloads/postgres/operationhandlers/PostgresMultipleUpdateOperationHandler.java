@@ -1,7 +1,7 @@
 package org.ldbcouncil.snb.impls.workloads.postgres.operationhandlers;
 
 import org.ldbcouncil.snb.driver.Operation;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcNoResult;
+import org.ldbcouncil.snb.driver.workloads.interactive.queries.LdbcNoResult;
 import org.ldbcouncil.snb.impls.workloads.operationhandlers.MultipleUpdateOperationHandler;
 import org.ldbcouncil.snb.impls.workloads.postgres.PostgresDbConnectionState;
 

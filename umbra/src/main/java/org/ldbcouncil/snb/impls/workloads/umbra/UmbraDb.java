@@ -2,7 +2,7 @@ package org.ldbcouncil.snb.impls.workloads.umbra;
 
 import org.ldbcouncil.snb.driver.DbException;
 import org.ldbcouncil.snb.driver.control.LoggingService;
-import org.ldbcouncil.snb.driver.workloads.interactive.*;
+import org.ldbcouncil.snb.driver.workloads.interactive.queries.*;
 import org.ldbcouncil.snb.impls.workloads.db.BaseDb;
 import org.ldbcouncil.snb.impls.workloads.umbra.converter.UmbraConverter;
 import org.ldbcouncil.snb.impls.workloads.umbra.operationhandlers.UmbraListOperationHandler;

@@ -7,7 +7,7 @@ import java.util.Map;
 import com.google.common.collect.ImmutableMap;
 
 import org.ldbcouncil.snb.driver.DbException;
-import org.ldbcouncil.snb.driver.workloads.interactive.*;
+import org.ldbcouncil.snb.driver.workloads.interactive.queries.*;
 import org.ldbcouncil.snb.impls.workloads.QueryStore;
 import org.ldbcouncil.snb.impls.workloads.converter.Converter;
 import org.ldbcouncil.snb.impls.workloads.cypher.converter.CypherConverter;

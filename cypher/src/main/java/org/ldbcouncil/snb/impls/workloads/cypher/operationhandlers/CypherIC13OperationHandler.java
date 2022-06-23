@@ -8,8 +8,8 @@ package org.ldbcouncil.snb.impls.workloads.cypher.operationhandlers;
  */
 import org.ldbcouncil.snb.driver.DbException;
 import org.ldbcouncil.snb.driver.ResultReporter;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery13;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery13Result;
+import org.ldbcouncil.snb.driver.workloads.interactive.queries.LdbcQuery13;
+import org.ldbcouncil.snb.driver.workloads.interactive.queries.LdbcQuery13Result;
 import org.ldbcouncil.snb.impls.workloads.cypher.CypherDbConnectionState;
 import org.ldbcouncil.snb.impls.workloads.operationhandlers.SingletonOperationHandler;
 

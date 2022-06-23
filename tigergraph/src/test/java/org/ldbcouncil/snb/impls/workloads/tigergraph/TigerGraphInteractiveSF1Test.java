@@ -1,10 +1,10 @@
 package org.ldbcouncil.snb.impls.workloads.tigergraph;
 
 import com.google.common.collect.ImmutableList;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery14;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcShortQuery6MessageForum;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcShortQuery7MessageReplies;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcUpdate1AddPerson;
+import org.ldbcouncil.snb.driver.workloads.interactive.queries.LdbcQuery14;
+import org.ldbcouncil.snb.driver.workloads.interactive.queries.LdbcShortQuery6MessageForum;
+import org.ldbcouncil.snb.driver.workloads.interactive.queries.LdbcShortQuery7MessageReplies;
+import org.ldbcouncil.snb.driver.workloads.interactive.queries.LdbcUpdate1AddPerson;
 import org.ldbcouncil.snb.impls.workloads.interactive.InteractiveTest;
 import org.ldbcouncil.snb.impls.workloads.tigergraph.interactive.TigerGraphInteractiveDb;
 import org.junit.Test;

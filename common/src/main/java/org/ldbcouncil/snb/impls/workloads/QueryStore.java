@@ -14,7 +14,7 @@ package org.ldbcouncil.snb.impls.workloads;
  */
 import com.google.common.collect.ImmutableMap;
 import org.ldbcouncil.snb.driver.DbException;
-import org.ldbcouncil.snb.driver.workloads.interactive.*;
+import org.ldbcouncil.snb.driver.workloads.interactive.queries.*;
 import org.ldbcouncil.snb.impls.workloads.converter.Converter;
 
 import java.io.File;
