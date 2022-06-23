@@ -1,7 +1,7 @@
 package org.ldbcouncil.snb.impls.workloads.cypher.converter;
 
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery1Result;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcUpdate1AddPerson;
+import org.ldbcouncil.snb.driver.workloads.interactive.queries.LdbcQuery1Result;
+import org.ldbcouncil.snb.driver.workloads.interactive.queries.LdbcUpdate1AddPerson;
 import org.ldbcouncil.snb.impls.workloads.converter.Converter;
 
 import java.util.ArrayList;
@@ -19,6 +19,7 @@ public class CypherConverter extends Converter {
         res += "]";
         return res;
     }
+
     public static List<LdbcQuery1Result.Organization> asOrganization(List<List<Object>> value){
         List<LdbcQuery1Result.Organization> orgs = new ArrayList<>();
         for (List<Object> list : value) {

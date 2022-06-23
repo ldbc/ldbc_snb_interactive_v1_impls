@@ -15,7 +15,7 @@ To get started with the LDBC SNB benchmarks, check out our introductory presenta
 
 * The default workload contains updates which are persisted in the database. Therefore, **the database needs to be reloaded or restored from backup before each run**. Use the provided `scripts/backup-database.sh` and `scripts/restore-database.sh` scripts to achieve this.
 
-* We expect most systems-under-test to use multi-threaded execution for their benchmark runs. **To allow running the updates on multiple threads, the update stream files need to be partitioned accordingly by the generator.** We have pre-generated these for frequent partition numbers (1, 2, ..., 1024 and 24, 48, 96, ..., 768) and scale factors up to 1000 (their deployment is [in progress](#benchmark-data-sets)).
+* We expect most systems-under-test to use multi-threaded execution for their benchmark runs. **To allow running the updates on multiple threads, the update stream files need to be partitioned accordingly by the generator.** We have [pre-generated](#benchmark-data-sets) these for frequent partition numbers (1, 2, ..., 1024 and 24, 48, 96, ..., 768) and scale factors up to 1000.
 
 ## Implementations
 
@@ -135,7 +135,7 @@ To mitigate this, we have pregenerated data sets using 9 different serializers a
 * Serializers: csv_basic, csv_basic-longdateformatter, csv_composite, csv_composite-longdateformatter, csv_composite_merge_foreign, csv_composite_merge_foreign-longdateformatter, csv_merge_foreign, csv_merge_foreign-longdateformatter, ttl
 * Partition numbers: 2^k (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024) and 6×2^k (24, 48, 96, 192, 384, 768).
 
-The data sets are available at the [SURF/CWI data repository](https://hdl.handle.net/11112/e6e00558-a2c3-9214-473e-04a16de09bf8).
+The data sets are available at the [SURF/CWI data repository](https://hdl.handle.net/11112/e6e00558-a2c3-9214-473e-04a16de09bf8). We also provide [direct links and download scripts](https://github.com/ldbc/data-sets-surf-repository).
 
 ### Test data set
 

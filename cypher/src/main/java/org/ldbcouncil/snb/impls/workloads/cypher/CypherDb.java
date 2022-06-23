@@ -1,66 +1,17 @@
 package org.ldbcouncil.snb.impls.workloads.cypher;
 
 import com.google.common.collect.ImmutableMap;
-import org.ldbcouncil.snb.driver.Db;
-import org.ldbcouncil.snb.driver.DbConnectionState;
 import org.ldbcouncil.snb.driver.DbException;
 import org.ldbcouncil.snb.driver.control.LoggingService;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery1;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery10;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery10Result;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery11;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery11Result;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery12;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery12Result;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery13Result;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery14;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery14Result;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery1Result;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery2;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery2Result;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery3;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery3Result;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery4;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery4Result;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery5;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery5Result;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery6;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery6Result;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery7;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery7Result;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery8;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery8Result;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery9;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery9Result;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcShortQuery1PersonProfile;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcShortQuery1PersonProfileResult;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcShortQuery2PersonPosts;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcShortQuery2PersonPostsResult;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcShortQuery3PersonFriends;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcShortQuery3PersonFriendsResult;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcShortQuery4MessageContent;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcShortQuery4MessageContentResult;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcShortQuery5MessageCreator;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcShortQuery5MessageCreatorResult;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcShortQuery6MessageForum;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcShortQuery6MessageForumResult;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcShortQuery7MessageReplies;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcShortQuery7MessageRepliesResult;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcUpdate1AddPerson;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcUpdate2AddPostLike;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcUpdate3AddCommentLike;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcUpdate4AddForum;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcUpdate5AddForumMembership;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcUpdate6AddPost;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcUpdate7AddComment;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcUpdate8AddFriendship;
+import org.ldbcouncil.snb.driver.workloads.interactive.queries.*;
+import org.ldbcouncil.snb.impls.workloads.QueryType;
 import org.ldbcouncil.snb.impls.workloads.cypher.converter.CypherConverter;
 import org.ldbcouncil.snb.impls.workloads.cypher.operationhandlers.CypherIC13OperationHandler;
 import org.ldbcouncil.snb.impls.workloads.cypher.operationhandlers.CypherListOperationHandler;
 import org.ldbcouncil.snb.impls.workloads.cypher.operationhandlers.CypherSingletonOperationHandler;
 import org.ldbcouncil.snb.impls.workloads.cypher.operationhandlers.CypherUpdateOperationHandler;
+import org.ldbcouncil.snb.impls.workloads.db.BaseDb;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,13 +21,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Driver;
-import org.neo4j.driver.GraphDatabase;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Value;
 
-public class CypherDb extends Db
+public class CypherDb extends BaseDb<CypherQueryStore>
 {
 
     Driver driver;
@@ -101,24 +50,9 @@ public class CypherDb extends Db
     @Override
     protected void onInit( Map<String, String> properties, LoggingService loggingService ) throws DbException
     {
-        final String endpointURI = properties.get( "endpoint" );
-        final String username = properties.get( "user" );
-        final String password = properties.get( "password" );
 
-        driver = GraphDatabase.driver( endpointURI, AuthTokens.basic( username, password ) );
+        dcs = new CypherDbConnectionState<>(properties, new CypherQueryStore(properties.get("queryDir")));
         queryStore = new CypherQueryStore( properties.get( "queryDir" ) );
-    }
-
-    @Override
-    protected void onClose() throws IOException
-    {
-        driver.close();
-    }
-
-    @Override
-    protected DbConnectionState getConnectionState() throws DbException
-    {
-        return new CypherDbConnectionState( driver, queryStore );
     }
 
     // Interactive complex reads
@@ -127,9 +61,13 @@ public class CypherDb extends Db
     {
 
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-complex-1";
+        public String getQueryString(CypherDbConnectionState state, LdbcQuery1 operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery1);
+        }
+
+        @Override
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery1 operation) {
+            return state.getQueryStore().getQuery1Map(operation);
         }
 
         @Override
@@ -205,19 +143,13 @@ public class CypherDb extends Db
     public static class InteractiveQuery2 extends CypherListOperationHandler<LdbcQuery2,LdbcQuery2Result>
     {
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-complex-2";
+        public String getQueryString(CypherDbConnectionState state, LdbcQuery2 operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery2);
         }
 
         @Override
-        public Map<String, Object> getParameters( LdbcQuery2 operation )
-        {
-            return ImmutableMap.<String, Object>builder()
-                               .put( LdbcQuery2.PERSON_ID, operation.getPersonIdQ2() )
-                               .put( LdbcQuery2.MAX_DATE, operation.getMaxDate().getTime() )
-                               .put( LdbcQuery2.LIMIT, operation.getLimit() )
-                               .build();
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery2 operation) {
+            return state.getQueryStore().getQuery2Map(operation);
         }
 
         @Override
@@ -242,25 +174,14 @@ public class CypherDb extends Db
 
     public static class InteractiveQuery3 extends CypherListOperationHandler<LdbcQuery3,LdbcQuery3Result>
     {
-
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-complex-3";
+        public String getQueryString(CypherDbConnectionState state, LdbcQuery3 operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery3);
         }
 
         @Override
-        public Map<String, Object> getParameters( LdbcQuery3 operation )
-        {
-            final Date endDate = addDays( operation.getStartDate(), operation.getDurationDays() );
-            return ImmutableMap.<String, Object>builder()
-                               .put( LdbcQuery3.PERSON_ID, operation.getPersonIdQ3() )
-                               .put( LdbcQuery3.COUNTRY_X_NAME, operation.getCountryXName() )
-                               .put( LdbcQuery3.COUNTRY_Y_NAME, operation.getCountryYName() )
-                               .put( LdbcQuery3.START_DATE, operation.getStartDate().getTime() )
-                               .put( "endDate", endDate.getTime() )
-                               .put( LdbcQuery3.LIMIT, operation.getLimit() )
-                               .build();
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery3 operation) {
+            return state.getQueryStore().getQuery3Map(operation);
         }
 
         @Override
@@ -284,23 +205,14 @@ public class CypherDb extends Db
 
     public static class InteractiveQuery4 extends CypherListOperationHandler<LdbcQuery4,LdbcQuery4Result>
     {
-
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-complex-4";
+        public String getQueryString(CypherDbConnectionState state, LdbcQuery4 operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery4);
         }
 
         @Override
-        public Map<String, Object> getParameters( LdbcQuery4 operation )
-        {
-            final Date endDate = addDays( operation.getStartDate(), operation.getDurationDays() );
-            return ImmutableMap.<String, Object>builder()
-                               .put( LdbcQuery4.PERSON_ID, operation.getPersonIdQ4() )
-                               .put( LdbcQuery4.START_DATE, operation.getStartDate().getTime() )
-                               .put( "endDate", endDate.getTime() )
-                               .put( LdbcQuery4.LIMIT, operation.getLimit() )
-                               .build();
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery4 operation) {
+            return state.getQueryStore().getQuery4Map(operation);
         }
 
         @Override
@@ -315,19 +227,13 @@ public class CypherDb extends Db
     public static class InteractiveQuery5 extends CypherListOperationHandler<LdbcQuery5,LdbcQuery5Result>
     {
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-complex-5";
+        public String getQueryString(CypherDbConnectionState state, LdbcQuery5 operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery5);
         }
 
         @Override
-        public Map<String, Object> getParameters( LdbcQuery5 operation )
-        {
-            return ImmutableMap.<String, Object>builder()
-                               .put( LdbcQuery5.PERSON_ID, operation.getPersonIdQ5() )
-                               .put( LdbcQuery5.MIN_DATE, operation.getMinDate().getTime() )
-                               .put( LdbcQuery5.LIMIT, operation.getLimit() )
-                               .build();
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery5 operation) {
+            return state.getQueryStore().getQuery5Map(operation);
         }
 
         @Override
@@ -341,11 +247,14 @@ public class CypherDb extends Db
 
     public static class InteractiveQuery6 extends CypherListOperationHandler<LdbcQuery6,LdbcQuery6Result>
     {
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcQuery6 operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery6);
+        }
 
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-complex-6";
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery6 operation) {
+            return state.getQueryStore().getQuery6Map(operation);
         }
 
         @Override
@@ -359,11 +268,14 @@ public class CypherDb extends Db
 
     public static class InteractiveQuery7 extends CypherListOperationHandler<LdbcQuery7,LdbcQuery7Result>
     {
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcQuery7 operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery7);
+        }
 
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-complex-7";
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery7 operation) {
+            return state.getQueryStore().getQuery7Map(operation);
         }
 
         @Override
@@ -391,11 +303,14 @@ public class CypherDb extends Db
 
     public static class InteractiveQuery8 extends CypherListOperationHandler<LdbcQuery8,LdbcQuery8Result>
     {
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcQuery8 operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery8);
+        }
 
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-complex-8";
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery8 operation) {
+            return state.getQueryStore().getQuery8Map(operation);
         }
 
         @Override
@@ -419,21 +334,14 @@ public class CypherDb extends Db
 
     public static class InteractiveQuery9 extends CypherListOperationHandler<LdbcQuery9,LdbcQuery9Result>
     {
-
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-complex-9";
+        public String getQueryString(CypherDbConnectionState state, LdbcQuery9 operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery9);
         }
 
         @Override
-        public Map<String, Object> getParameters( LdbcQuery9 operation )
-        {
-            return ImmutableMap.<String, Object>builder()
-                               .put( LdbcQuery9.PERSON_ID, operation.getPersonIdQ9() )
-                               .put( LdbcQuery9.MAX_DATE, operation.getMaxDate().getTime() )
-                               .put( LdbcQuery9.LIMIT, operation.getLimit() )
-                               .build();
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery9 operation) {
+            return state.getQueryStore().getQuery9Map(operation);
         }
 
         @Override
@@ -458,9 +366,13 @@ public class CypherDb extends Db
     public static class InteractiveQuery10 extends CypherListOperationHandler<LdbcQuery10,LdbcQuery10Result>
     {
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-complex-10";
+        public String getQueryString(CypherDbConnectionState state, LdbcQuery10 operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery10);
+        }
+
+        @Override
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery10 operation) {
+            return state.getQueryStore().getQuery10Map(operation);
         }
 
         @Override
@@ -484,11 +396,14 @@ public class CypherDb extends Db
 
     public static class InteractiveQuery11 extends CypherListOperationHandler<LdbcQuery11,LdbcQuery11Result>
     {
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcQuery11 operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery11);
+        }
 
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-complex-11";
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery11 operation) {
+            return state.getQueryStore().getQuery11Map(operation);
         }
 
         @Override
@@ -510,11 +425,14 @@ public class CypherDb extends Db
 
     public static class InteractiveQuery12 extends CypherListOperationHandler<LdbcQuery12,LdbcQuery12Result>
     {
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcQuery12 operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery12);
+        }
 
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-complex-12";
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery12 operation) {
+            return state.getQueryStore().getQuery12Map(operation);
         }
 
         @Override
@@ -540,11 +458,14 @@ public class CypherDb extends Db
 
     public static class InteractiveQuery13 extends CypherIC13OperationHandler
     {
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcQuery13 operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery13);
+        }
 
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-complex-13";
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery13 operation) {
+            return state.getQueryStore().getQuery13Map(operation);
         }
 
         @Override
@@ -556,11 +477,14 @@ public class CypherDb extends Db
 
     public static class InteractiveQuery14 extends CypherListOperationHandler<LdbcQuery14,LdbcQuery14Result>
     {
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcQuery14 operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery14);
+        }
 
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-complex-14";
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery14 operation) {
+            return state.getQueryStore().getQuery14Map(operation);
         }
 
         @Override
@@ -579,14 +503,16 @@ public class CypherDb extends Db
     }
 
     // Interactive short reads
-
     public static class ShortQuery1PersonProfile extends CypherSingletonOperationHandler<LdbcShortQuery1PersonProfile,LdbcShortQuery1PersonProfileResult>
     {
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcShortQuery1PersonProfile operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveShortQuery1);
+        }
 
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-short-1";
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcShortQuery1PersonProfile operation) {
+            return state.getQueryStore().getShortQuery1PersonProfileMap(operation);
         }
 
         @Override
@@ -614,11 +540,14 @@ public class CypherDb extends Db
 
     public static class ShortQuery2PersonPosts extends CypherListOperationHandler<LdbcShortQuery2PersonPosts,LdbcShortQuery2PersonPostsResult>
     {
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcShortQuery2PersonPosts operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveShortQuery2);
+        }
 
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-short-2";
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcShortQuery2PersonPosts operation) {
+            return state.getQueryStore().getShortQuery2PersonPostsMap(operation);
         }
 
         @Override
@@ -644,11 +573,14 @@ public class CypherDb extends Db
 
     public static class ShortQuery3PersonFriends extends CypherListOperationHandler<LdbcShortQuery3PersonFriends,LdbcShortQuery3PersonFriendsResult>
     {
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcShortQuery3PersonFriends operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveShortQuery3);
+        }
 
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-short-3";
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcShortQuery3PersonFriends operation) {
+            return state.getQueryStore().getShortQuery3PersonFriendsMap(operation);
         }
 
         @Override
@@ -668,11 +600,14 @@ public class CypherDb extends Db
 
     public static class ShortQuery4MessageContent extends CypherSingletonOperationHandler<LdbcShortQuery4MessageContent,LdbcShortQuery4MessageContentResult>
     {
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcShortQuery4MessageContent operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveShortQuery4);
+        }
 
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-short-4";
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcShortQuery4MessageContent operation) {
+            return state.getQueryStore().getShortQuery4MessageContentMap(operation);
         }
 
         @Override
@@ -689,11 +624,14 @@ public class CypherDb extends Db
 
     public static class ShortQuery5MessageCreator extends CypherSingletonOperationHandler<LdbcShortQuery5MessageCreator,LdbcShortQuery5MessageCreatorResult>
     {
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcShortQuery5MessageCreator operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveShortQuery5);
+        }
 
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-short-5";
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcShortQuery5MessageCreator operation) {
+            return state.getQueryStore().getShortQuery5MessageCreatorMap(operation);
         }
 
         @Override
@@ -711,11 +649,14 @@ public class CypherDb extends Db
 
     public static class ShortQuery6MessageForum extends CypherSingletonOperationHandler<LdbcShortQuery6MessageForum,LdbcShortQuery6MessageForumResult>
     {
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcShortQuery6MessageForum operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveShortQuery6);
+        }
 
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-short-6";
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcShortQuery6MessageForum operation) {
+            return state.getQueryStore().getShortQuery6MessageForumMap(operation);
         }
 
         @Override
@@ -737,11 +678,14 @@ public class CypherDb extends Db
 
     public static class ShortQuery7MessageReplies extends CypherListOperationHandler<LdbcShortQuery7MessageReplies,LdbcShortQuery7MessageRepliesResult>
     {
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcShortQuery7MessageReplies operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveShortQuery7);
+        }
 
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-short-7";
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcShortQuery7MessageReplies operation) {
+            return state.getQueryStore().getShortQuery7MessageRepliesMap(operation);
         }
 
         @Override
@@ -769,11 +713,9 @@ public class CypherDb extends Db
 
     public static class Update1AddPerson extends CypherUpdateOperationHandler<LdbcUpdate1AddPerson>
     {
-
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-update-1";
+        public String getQueryString(CypherDbConnectionState state, LdbcUpdate1AddPerson operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveUpdate1);
         }
 
         @Override
@@ -805,11 +747,9 @@ public class CypherDb extends Db
 
     public static class Update2AddPostLike extends CypherUpdateOperationHandler<LdbcUpdate2AddPostLike>
     {
-
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-update-2";
+        public String getQueryString(CypherDbConnectionState state, LdbcUpdate2AddPostLike operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveUpdate2);
         }
 
         @Override
@@ -825,11 +765,9 @@ public class CypherDb extends Db
 
     public static class Update3AddCommentLike extends CypherUpdateOperationHandler<LdbcUpdate3AddCommentLike>
     {
-
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-update-3";
+        public String getQueryString(CypherDbConnectionState state, LdbcUpdate3AddCommentLike operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveUpdate3);
         }
 
         @Override
@@ -845,11 +783,9 @@ public class CypherDb extends Db
 
     public static class Update4AddForum extends CypherUpdateOperationHandler<LdbcUpdate4AddForum>
     {
-
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-update-4";
+        public String getQueryString(CypherDbConnectionState state, LdbcUpdate4AddForum operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveUpdate4);
         }
 
         @Override
@@ -867,11 +803,9 @@ public class CypherDb extends Db
 
     public static class Update5AddForumMembership extends CypherUpdateOperationHandler<LdbcUpdate5AddForumMembership>
     {
-
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-update-5";
+        public String getQueryString(CypherDbConnectionState state, LdbcUpdate5AddForumMembership operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveUpdate5);
         }
 
         @Override
@@ -887,11 +821,9 @@ public class CypherDb extends Db
 
     public static class Update6AddPost extends CypherUpdateOperationHandler<LdbcUpdate6AddPost>
     {
-
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-update-6";
+        public String getQueryString(CypherDbConnectionState state, LdbcUpdate6AddPost operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveUpdate6);
         }
 
         @Override
@@ -916,11 +848,9 @@ public class CypherDb extends Db
 
     public static class Update7AddComment extends CypherUpdateOperationHandler<LdbcUpdate7AddComment>
     {
-
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-update-7";
+        public String getQueryString(CypherDbConnectionState state, LdbcUpdate7AddComment operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveUpdate7);
         }
 
         @Override
@@ -944,11 +874,9 @@ public class CypherDb extends Db
 
     public static class Update8AddFriendship extends CypherUpdateOperationHandler<LdbcUpdate8AddFriendship>
     {
-
         @Override
-        public String getQueryFile()
-        {
-            return "interactive-update-8";
+        public String getQueryString(CypherDbConnectionState state, LdbcUpdate8AddFriendship operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveUpdate8);
         }
 
         @Override

@@ -1,8 +1,7 @@
 package org.ldbcouncil.snb.impls.workloads.converter;
 
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcUpdate1AddPerson;
+import org.ldbcouncil.snb.driver.workloads.interactive.queries.LdbcUpdate1AddPerson;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -98,6 +97,18 @@ public class Converter {
     public String convertId(long value) {
         return Long.toString(value);
     }
+
+    /**
+     * Some implementations, e.g. the (deprecated) SPARQL one, will not work with a simple toString and require some tinkering,
+     * e.g. padding the id with '0' characters.
+     *
+     * @param value
+     * @return
+     */
+    public String convertLong(long value) {
+        return Long.toString(value);
+    }
+
 
     /**
      * Some implementation, e.g. the (deprecated) SPARQL one, require a different id for updates:

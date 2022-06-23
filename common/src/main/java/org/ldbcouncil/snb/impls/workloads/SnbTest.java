@@ -37,7 +37,6 @@ public abstract class SnbTest<D extends Db>
     public void cleanup() throws IOException
     {
         db.close();
-        workload.close();
     }
 
     protected abstract Map<String, String> getProperties();

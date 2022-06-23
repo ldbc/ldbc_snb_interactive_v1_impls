@@ -3,7 +3,7 @@ package org.ldbcouncil.snb.impls.workloads.cypher.operationhandlers;
 import org.ldbcouncil.snb.driver.DbException;
 import org.ldbcouncil.snb.driver.Operation;
 import org.ldbcouncil.snb.driver.ResultReporter;
-import org.ldbcouncil.snb.driver.workloads.interactive.LdbcNoResult;
+import org.ldbcouncil.snb.driver.workloads.interactive.queries.LdbcNoResult;
 import org.ldbcouncil.snb.impls.workloads.cypher.CypherDbConnectionState;
 import org.ldbcouncil.snb.impls.workloads.operationhandlers.UpdateOperationHandler;
 
@@ -17,36 +17,20 @@ import org.neo4j.driver.SessionConfig;
 public abstract class CypherUpdateOperationHandler<TOperation extends Operation<LdbcNoResult>>
         implements UpdateOperationHandler<TOperation,CypherDbConnectionState>
 {
-
     @Override
     public String getQueryString( CypherDbConnectionState state, TOperation operation )
     {
         return null;
     }
 
-    public abstract String getQueryFile();
+    public abstract Map<String, Object> getParameters(TOperation operation );
 
-    public Map<String, Object> getParameters( TOperation operation )
-    {
-        return operation.parameterMap();
-    }
 
     @Override
     public void executeOperation( TOperation operation, CypherDbConnectionState state,
                                   ResultReporter resultReporter ) throws DbException
     {
-        // caches the query for future use
-        final String queryFile = getQueryFile();
-        if ( !state.hasQuery( queryFile ) )
-        {
-            final boolean successful = state.addQuery( queryFile );
-            if ( !successful )
-            {
-                throw new DbException( String.format( "Unable to load query for operation: %s", operation.toString() ) );
-            }
-        }
-
-        final String query = state.getQuery( queryFile );
+        String query = getQueryString(state, operation);
         final Map<String, Object> parameters = getParameters( operation );
 
         final SessionConfig config = SessionConfig.builder().withDefaultAccessMode( AccessMode.WRITE ).build();
