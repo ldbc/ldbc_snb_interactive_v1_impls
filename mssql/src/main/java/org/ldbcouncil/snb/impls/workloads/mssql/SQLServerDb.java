@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import org.ldbcouncil.snb.driver.DbException;
 import org.ldbcouncil.snb.driver.ResultReporter;
 import org.ldbcouncil.snb.driver.control.LoggingService;
-import org.ldbcouncil.snb.driver.workloads.interactive.*;
+import org.ldbcouncil.snb.driver.workloads.interactive.queries.*;
 import org.ldbcouncil.snb.impls.workloads.QueryStore;
 import org.ldbcouncil.snb.impls.workloads.db.BaseDb;
 import org.ldbcouncil.snb.impls.workloads.mssql.converter.SQLServerConverter;
@@ -494,6 +494,9 @@ public abstract class SQLServerDb extends BaseDb<SQLServerQueryStore> {
         public String getQueryString(SQLServerDbConnectionState state, LdbcUpdate8AddFriendship operation) {
             return state.getQueryStore().getUpdate8(operation);
         }
-
     }
+
+    
+
+
 }
