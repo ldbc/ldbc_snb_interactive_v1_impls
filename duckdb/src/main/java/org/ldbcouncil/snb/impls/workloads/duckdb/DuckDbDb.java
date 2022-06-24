@@ -495,7 +495,70 @@ public abstract class DuckDbDb extends BaseDb<QueryStore> {
         public String getQueryString(DuckDbConnectionState state, LdbcUpdate8AddFriendship operation) {
             return state.getQueryStore().getUpdate8(operation);
         }
-
     }
 
+    // Deletions
+    public static class Delete1RemovePerson extends DuckDbUpdateOperationHandler<LdbcDelete1RemovePerson> {
+
+        @Override
+        public String getQueryString(DuckDbConnectionState state, LdbcDelete1RemovePerson operation) {
+            return state.getQueryStore().getDelete1(operation);
+        }
+    }
+
+    public static class Delete2RemovePostLike extends DuckDbUpdateOperationHandler<LdbcDelete2RemovePostLike> {
+
+        @Override
+        public String getQueryString(DuckDbConnectionState state, LdbcDelete2RemovePostLike operation) {
+            return state.getQueryStore().getDelete2(operation);
+        }
+    }
+
+    public static class Delete3RemoveCommentLike extends DuckDbUpdateOperationHandler<LdbcDelete3RemoveCommentLike> {
+
+        @Override
+        public String getQueryString(DuckDbConnectionState state, LdbcDelete3RemoveCommentLike operation) {
+            return state.getQueryStore().getDelete3(operation);
+        }
+    }
+
+    public static class Delete4RemoveForum extends DuckDbUpdateOperationHandler<LdbcDelete4RemoveForum> {
+
+        @Override
+        public String getQueryString(DuckDbConnectionState state, LdbcDelete4RemoveForum operation) {
+            return state.getQueryStore().getDelete4(operation);
+        }
+    }
+
+    public static class Delete5RemoveForumMembership extends DuckDbUpdateOperationHandler<LdbcDelete5RemoveForumMembership> {
+
+        @Override
+        public String getQueryString(DuckDbConnectionState state, LdbcDelete5RemoveForumMembership operation) {
+            return state.getQueryStore().getDelete5(operation);
+        }
+    }
+
+    public static class Delete6RemovePostThread extends DuckDbUpdateOperationHandler<LdbcDelete6RemovePostThread> {
+
+        @Override
+        public String getQueryString(DuckDbConnectionState state, LdbcDelete6RemovePostThread operation) {
+            return state.getQueryStore().getDelete6(operation);
+        }
+    }
+
+    public static class Delete7RemoveCommentSubthread extends DuckDbUpdateOperationHandler<LdbcDelete7RemoveCommentSubthread> {
+
+        @Override
+        public String getQueryString(DuckDbConnectionState state, LdbcDelete7RemoveCommentSubthread operation) {
+            return state.getQueryStore().getDelete7(operation);
+        }
+    }
+
+    public static class Delete8RemoveFriendship extends DuckDbUpdateOperationHandler<LdbcDelete8RemoveFriendship> {
+
+        @Override
+        public String getQueryString(DuckDbConnectionState state, LdbcDelete8RemoveFriendship operation) {
+            return state.getQueryStore().getDelete8(operation);
+        }
+    }
 }
