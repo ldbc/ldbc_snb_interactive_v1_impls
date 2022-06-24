@@ -496,7 +496,68 @@ public abstract class SQLServerDb extends BaseDb<SQLServerQueryStore> {
         }
     }
 
-    
+    // Deletions
+    public static class Delete1RemovePerson extends SQLServerUpdateOperationHandler<LdbcDelete1RemovePerson> {
 
+        @Override
+        public String getQueryString(SQLServerDbConnectionState state, LdbcDelete1RemovePerson operation) {
+            return state.getQueryStore().getDelete1(operation);
+        }
+    }
 
+    public static class Delete2RemovePostLike extends SQLServerUpdateOperationHandler<LdbcDelete2RemovePostLike> {
+
+        @Override
+        public String getQueryString(SQLServerDbConnectionState state, LdbcDelete2RemovePostLike operation) {
+            return state.getQueryStore().getDelete2(operation);
+        }
+    }
+
+    public static class Delete3RemoveCommentLike extends SQLServerUpdateOperationHandler<LdbcDelete3RemoveCommentLike> {
+
+        @Override
+        public String getQueryString(SQLServerDbConnectionState state, LdbcDelete3RemoveCommentLike operation) {
+            return state.getQueryStore().getDelete3(operation);
+        }
+    }
+
+    public static class Delete4RemoveForum extends SQLServerUpdateOperationHandler<LdbcDelete4RemoveForum> {
+
+        @Override
+        public String getQueryString(SQLServerDbConnectionState state, LdbcDelete4RemoveForum operation) {
+            return state.getQueryStore().getDelete4(operation);
+        }
+    }
+
+    public static class Delete5RemoveForumMembership extends SQLServerUpdateOperationHandler<LdbcDelete5RemoveForumMembership> {
+
+        @Override
+        public String getQueryString(SQLServerDbConnectionState state, LdbcDelete5RemoveForumMembership operation) {
+            return state.getQueryStore().getDelete5(operation);
+        }
+    }
+
+    public static class Delete6RemovePostThread extends SQLServerUpdateOperationHandler<LdbcDelete6RemovePostThread> {
+
+        @Override
+        public String getQueryString(SQLServerDbConnectionState state, LdbcDelete6RemovePostThread operation) {
+            return state.getQueryStore().getDelete6(operation);
+        }
+    }
+
+    public static class Delete7RemoveCommentSubthread extends SQLServerUpdateOperationHandler<LdbcDelete7RemoveCommentSubthread> {
+
+        @Override
+        public String getQueryString(SQLServerDbConnectionState state, LdbcDelete7RemoveCommentSubthread operation) {
+            return state.getQueryStore().getDelete7(operation);
+        }
+    }
+
+    public static class Delete8RemoveFriendship extends SQLServerUpdateOperationHandler<LdbcDelete8RemoveFriendship> {
+
+        @Override
+        public String getQueryString(SQLServerDbConnectionState state, LdbcDelete8RemoveFriendship operation) {
+            return state.getQueryStore().getDelete8(operation);
+        }
+    }
 }

@@ -44,6 +44,15 @@ public class SQLServerInteractiveDb extends SQLServerDb {
         registerOperationHandler(LdbcUpdate6AddPost.class, Update6AddPost.class);
         registerOperationHandler(LdbcUpdate7AddComment.class, Update7AddComment.class);
         registerOperationHandler(LdbcUpdate8AddFriendship.class, Update8AddFriendship.class);
+
+        registerOperationHandler(LdbcDelete1RemovePerson.class, Delete1RemovePerson.class);
+        registerOperationHandler(LdbcDelete2RemovePostLike.class, Delete2RemovePostLike.class);
+        registerOperationHandler(LdbcDelete3RemoveCommentLike.class, Delete3RemoveCommentLike.class);
+        registerOperationHandler(LdbcDelete4RemoveForum.class, Delete4RemoveForum.class);
+        registerOperationHandler(LdbcDelete5RemoveForumMembership.class, Delete5RemoveForumMembership.class);
+        registerOperationHandler(LdbcDelete6RemovePostThread.class, Delete6RemovePostThread.class);
+        registerOperationHandler(LdbcDelete7RemoveCommentSubthread.class,Delete7RemoveCommentSubthread.class);
+        registerOperationHandler(LdbcDelete8RemoveFriendship.class, Delete8RemoveFriendship.class);
     }
 
 }
