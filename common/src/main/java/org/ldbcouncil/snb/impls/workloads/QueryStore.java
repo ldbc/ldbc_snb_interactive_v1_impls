@@ -946,4 +946,186 @@ public abstract class QueryStore {
         }
         return list;
     }
+
+    // Deletions
+    /**
+     * Get prepared DeleteQuery1 string
+     * @param operation LdbcDelete1RemovePerson operation containing parameter values
+     * @return Prepared DeleteQuery1 string
+     */
+    public String getDelete1(LdbcDelete1RemovePerson operation) {
+        return prepare(
+                QueryType.InteractiveDelete1, getDelete1Map(operation)
+        );
+    }
+
+    /**
+     * Get DeleteQuery1 Map. This map contain the name of the parameter and the value as string.
+     * @param operation LdbcDelete1RemovePerson operation containing parameter values
+     * @return Map with parameters and values as string.
+     */
+    public Map<String, Object> getDelete1Map(LdbcDelete1RemovePerson operation) {
+        return ImmutableMap.of(
+            LdbcDelete1RemovePerson.PERSON_ID, getConverter().convertId(operation.getremovePersonIdD1())
+        );
+    }
+
+    /**
+     * Get prepared DeleteQuery2 string
+     * @param operation LdbcDelete2RemovePostLike operation containing parameter values
+     * @return Prepared DeleteQuery2 string
+     */
+    public String getDelete2(LdbcDelete2RemovePostLike operation) {
+        return prepare(
+                QueryType.InteractiveDelete2, getDelete2Map(operation)
+        );
+    }
+
+    /**
+     * Get DeleteQuery2 Map. This map contain the name of the parameter and the value as string.
+     * @param operation LdbcDelete2RemovePostLike operation containing parameter values
+     * @return Map with parameters and values as string.
+     */
+    public Map<String, Object> getDelete2Map(LdbcDelete2RemovePostLike operation) {
+        return ImmutableMap.of(
+            LdbcDelete2RemovePostLike.PERSON_ID, getConverter().convertId(operation.getremovePersonIdD2()),
+            LdbcDelete2RemovePostLike.POST_ID, getConverter().convertId(operation.getremovePostIdD2())
+        );
+    }
+
+    /**
+     * Get prepared DeleteQuery3 string
+     * @param operation LdbcDelete3RemoveCommentLike operation containing parameter values
+     * @return Prepared DeleteQuery3 string
+     */
+    public String getDelete3(LdbcDelete3RemoveCommentLike operation) {
+        return prepare(
+                QueryType.InteractiveDelete3, getDelete3Map(operation)
+        );
+    }
+
+    /**
+     * Get DeleteQuery3 Map. This map contain the name of the parameter and the value as string.
+     * @param operation LdbcDelete3RemoveCommentLike operation containing parameter values
+     * @return Map with parameters and values as string.
+     */
+    public Map<String, Object> getDelete3Map(LdbcDelete3RemoveCommentLike operation) {
+        return ImmutableMap.of(
+            LdbcDelete3RemoveCommentLike.PERSON_ID, getConverter().convertId(operation.getremovePersonIdD3()),
+            LdbcDelete3RemoveCommentLike.COMMENT_ID, getConverter().convertId(operation.getremoveCommentIdD3())
+        );
+    }
+
+    /**
+     * Get prepared DeleteQuery4 string
+     * @param operation LdbcDelete4RemoveForum operation containing parameter values
+     * @return Prepared DeleteQuery4 string
+     */
+    public String getDelete4(LdbcDelete4RemoveForum operation) {
+        return prepare(
+                QueryType.InteractiveDelete4, getDelete4Map(operation)
+        );
+    }
+
+    /**
+     * Get DeleteQuery4 Map. This map contain the name of the parameter and the value as string.
+     * @param operation LdbcDelete4RemoveForum operation containing parameter values
+     * @return Map with parameters and values as string.
+     */
+    public Map<String, Object> getDelete4Map(LdbcDelete4RemoveForum operation) {
+        return ImmutableMap.of(
+            LdbcDelete4RemoveForum.FORUM_ID, getConverter().convertId(operation.getremoveForumIdD4())
+        );
+    }
+
+    /**
+     * Get prepared DeleteQuery5 string
+     * @param operation LdbcDelete5RemoveForumMembership operation containing parameter values
+     * @return Prepared DeleteQuery5 string
+     */
+    public String getDelete5(LdbcDelete5RemoveForumMembership operation) {
+        return prepare(
+                QueryType.InteractiveDelete5, getDelete5Map(operation)
+        );
+    }
+
+    /**
+     * Get DeleteQuery5 Map. This map contain the name of the parameter and the value as string.
+     * @param operation LdbcDelete5RemoveForumMembership operation containing parameter values
+     * @return Map with parameters and values as string.
+     */
+    public Map<String, Object> getDelete5Map(LdbcDelete5RemoveForumMembership operation) {
+        return ImmutableMap.of(
+            LdbcDelete5RemoveForumMembership.FORUM_ID, getConverter().convertId(operation.getremoveForumIdD5()),
+            LdbcDelete5RemoveForumMembership.PERSON_ID, getConverter().convertId(operation.getremovePersonIdD5())
+        );
+    }
+
+    /**
+     * Get prepared DeleteQuery6 string
+     * @param operation LdbcDelete6RemovePostThread operation containing parameter values
+     * @return Prepared DeleteQuery6 string
+     */
+    public String getDelete6(LdbcDelete6RemovePostThread operation) {
+        return prepare(
+                QueryType.InteractiveDelete6, getDelete6Map(operation)
+        );
+    }
+
+    /**
+     * Get DeleteQuery6 Map. This map contain the name of the parameter and the value as string.
+     * @param operation LdbcDelete6RemovePostThread operation containing parameter values
+     * @return Map with parameters and values as string.
+     */
+    public Map<String, Object> getDelete6Map(LdbcDelete6RemovePostThread operation) {
+        return ImmutableMap.of(
+            LdbcDelete6RemovePostThread.POST_ID, getConverter().convertId(operation.getremovePostIdD6())
+        );
+    }
+
+    /**
+     * Get prepared DeleteQuery7 string
+     * @param operation LdbcDelete7RemoveCommentSubthread operation containing parameter values
+     * @return Prepared DeleteQuery7 string
+     */
+    public String getDelete7(LdbcDelete7RemoveCommentSubthread operation) {
+        return prepare(
+                QueryType.InteractiveDelete7, getDelete7Map(operation)
+        );
+    }
+
+    /**
+     * Get DeleteQuery7 Map. This map contain the name of the parameter and the value as string.
+     * @param operation LdbcDelete7RemoveCommentSubthread operation containing parameter values
+     * @return Map with parameters and values as string.
+     */
+    public Map<String, Object> getDelete7Map(LdbcDelete7RemoveCommentSubthread operation) {
+        return ImmutableMap.of(
+            LdbcDelete7RemoveCommentSubthread.COMMENT_ID, getConverter().convertId(operation.getremoveCommentIdD7())
+        );
+    }
+
+    /**
+     * Get prepared DeleteQuery8 string
+     * @param operation LdbcDelete8RemoveFriendship operation containing parameter values
+     * @return Prepared DeleteQuery8 string
+     */
+    public String getDelete8(LdbcDelete8RemoveFriendship operation) {
+        return prepare(
+                QueryType.InteractiveDelete8, getDelete8Map(operation)
+        );
+    }
+
+    /**
+     * Get DeleteQuery8 Map. This map contain the name of the parameter and the value as string.
+     * @param operation LdbcDelete8RemoveFriendship operation containing parameter values
+     * @return Map with parameters and values as string.
+     */
+    public Map<String, Object> getDelete8Map(LdbcDelete8RemoveFriendship operation) {
+        return ImmutableMap.of(
+            LdbcDelete8RemoveFriendship.PERSON1_ID, getConverter().convertId(operation.getremovePerson1Id()),
+            LdbcDelete8RemoveFriendship.PERSON2_ID, getConverter().convertId(operation.getremovePerson2Id())
+        );
+    }
+
 }
