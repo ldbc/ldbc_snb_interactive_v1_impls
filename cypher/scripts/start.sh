@@ -3,7 +3,7 @@
 set -eu
 set -o pipefail
 
-cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+cd "$( cd "$( dirname "${BASH_SOURCE[0]:-${(%):-%x}}" )" >/dev/null 2>&1 && pwd )"
 cd ..
 
 . scripts/vars.sh
@@ -21,12 +21,13 @@ docker run --rm \
     --ulimit nofile=40000:40000 \
     ${NEO4J_ENV_VARS} \
     --volume=${NEO4J_DATA_DIR}:/data:z \
+    --volume=${NEO4J_CSV_DIR}:/import \
     --volume=${NEO4J_CONTAINER_ROOT}/logs:/logs:z \
     --volume=${NEO4J_CONTAINER_ROOT}/plugins:/plugins:z \
     --env NEO4JLABS_PLUGINS='["apoc", "graph-data-science"]' \
     --env NEO4J_AUTH=none \
-    ${NEO4J_DOCKER_PLATFORM_FLAG} \
     --name ${NEO4J_CONTAINER_NAME} \
+    ${NEO4J_DOCKER_PLATFORM_FLAG} \
     neo4j:${NEO4J_VERSION}
 
 echo -n "Waiting for the database to start ."

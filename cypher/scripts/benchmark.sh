@@ -6,6 +6,11 @@ set -o pipefail
 cd "$( cd "$( dirname "${BASH_SOURCE[0]:-${(%):-%x}}" )" >/dev/null 2>&1 && pwd )"
 cd ..
 
+if [ ! -d "${NEO4J_CSV_DIR}" ]; then
+    echo "Directory ${NEO4J_CSV_DIR} does not exist."
+    exit 1
+fi
+
 . scripts/vars.sh
 
-rm -rf ${NEO4J_DATA_DIR}
+python3 benchmark.py $@

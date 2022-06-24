@@ -8,6 +8,5 @@ cd ..
 
 . scripts/vars.sh
 
-NEO4J_PACKAGE_VERSION=$(sed -E 's/[^.0-9]//g' <<< ${NEO4J_VERSION})
-
-pip3 install --user neo4j==${NEO4J_PACKAGE_VERSION} python-dateutil
+scripts/stop.sh
+scripts/start.sh
