@@ -496,4 +496,69 @@ public abstract class UmbraDb extends BaseDb<UmbraQueryStore> {
 
     }
 
+    // Deletions
+    public static class Delete1RemovePerson extends UmbraUpdateOperationHandler<LdbcDelete1RemovePerson> {
+
+        @Override
+        public String getQueryString(UmbraDbConnectionState state, LdbcDelete1RemovePerson operation) {
+            return state.getQueryStore().getDelete1(operation);
+        }
+    }
+
+    public static class Delete2RemovePostLike extends UmbraUpdateOperationHandler<LdbcDelete2RemovePostLike> {
+
+        @Override
+        public String getQueryString(UmbraDbConnectionState state, LdbcDelete2RemovePostLike operation) {
+            return state.getQueryStore().getDelete2(operation);
+        }
+    }
+
+    public static class Delete3RemoveCommentLike extends UmbraUpdateOperationHandler<LdbcDelete3RemoveCommentLike> {
+
+        @Override
+        public String getQueryString(UmbraDbConnectionState state, LdbcDelete3RemoveCommentLike operation) {
+            return state.getQueryStore().getDelete3(operation);
+        }
+    }
+
+    public static class Delete4RemoveForum extends UmbraUpdateOperationHandler<LdbcDelete4RemoveForum> {
+
+        @Override
+        public String getQueryString(UmbraDbConnectionState state, LdbcDelete4RemoveForum operation) {
+            return state.getQueryStore().getDelete4(operation);
+        }
+    }
+
+    public static class Delete5RemoveForumMembership extends UmbraUpdateOperationHandler<LdbcDelete5RemoveForumMembership> {
+
+        @Override
+        public String getQueryString(UmbraDbConnectionState state, LdbcDelete5RemoveForumMembership operation) {
+            return state.getQueryStore().getDelete5(operation);
+        }
+    }
+
+    public static class Delete6RemovePostThread extends UmbraUpdateOperationHandler<LdbcDelete6RemovePostThread> {
+
+        @Override
+        public String getQueryString(UmbraDbConnectionState state, LdbcDelete6RemovePostThread operation) {
+            return state.getQueryStore().getDelete6(operation);
+        }
+    }
+
+    public static class Delete7RemoveCommentSubthread extends UmbraUpdateOperationHandler<LdbcDelete7RemoveCommentSubthread> {
+
+        @Override
+        public String getQueryString(UmbraDbConnectionState state, LdbcDelete7RemoveCommentSubthread operation) {
+            return state.getQueryStore().getDelete7(operation);
+        }
+    }
+
+    public static class Delete8RemoveFriendship extends UmbraUpdateOperationHandler<LdbcDelete8RemoveFriendship> {
+
+        @Override
+        public String getQueryString(UmbraDbConnectionState state, LdbcDelete8RemoveFriendship operation) {
+            return state.getQueryStore().getDelete8(operation);
+        }
+    }
+
 }
