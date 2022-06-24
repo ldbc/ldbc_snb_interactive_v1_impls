@@ -525,7 +525,6 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
         public String getQueryString(PostgresDbConnectionState state, LdbcUpdate2AddPostLike operation) {
             return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveUpdate2);
         }
-
     }
 
     public static class Update3AddCommentLike extends PostgresUpdateOperationHandler<LdbcUpdate3AddCommentLike> {
@@ -695,6 +694,70 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
         public String getQueryString(PostgresDbConnectionState state, LdbcUpdate8AddFriendship operation) {
             return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveUpdate8);
         }
+    }
 
+    // Deletions
+    public static class Delete1RemovePerson extends PostgresUpdateOperationHandler<LdbcDelete1RemovePerson> {
+
+        @Override
+        public String getQueryString(PostgresDbConnectionState state, LdbcDelete1RemovePerson operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveDelete1);
+        }
+    }
+
+    public static class Delete2RemovePostLike extends PostgresUpdateOperationHandler<LdbcDelete2RemovePostLike> {
+
+        @Override
+        public String getQueryString(PostgresDbConnectionState state, LdbcDelete2RemovePostLike operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveDelete2);
+        }
+    }
+
+    public static class Delete3RemoveCommentLike extends PostgresUpdateOperationHandler<LdbcDelete3RemoveCommentLike> {
+
+        @Override
+        public String getQueryString(PostgresDbConnectionState state, LdbcDelete3RemoveCommentLike operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveDelete3);
+        }
+    }
+
+    public static class Delete4RemoveForum extends PostgresUpdateOperationHandler<LdbcDelete4RemoveForum> {
+
+        @Override
+        public String getQueryString(PostgresDbConnectionState state, LdbcDelete4RemoveForum operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveDelete4);
+        }
+    }
+
+    public static class Delete5RemoveForumMembership extends PostgresUpdateOperationHandler<LdbcDelete5RemoveForumMembership> {
+
+        @Override
+        public String getQueryString(PostgresDbConnectionState state, LdbcDelete5RemoveForumMembership operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveDelete5);
+        }
+    }
+
+    public static class Delete6RemovePostThread extends PostgresUpdateOperationHandler<LdbcDelete6RemovePostThread> {
+
+        @Override
+        public String getQueryString(PostgresDbConnectionState state, LdbcDelete6RemovePostThread operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveDelete6);
+        }
+    }
+
+    public static class Delete7RemoveCommentSubthread extends PostgresUpdateOperationHandler<LdbcDelete7RemoveCommentSubthread> {
+
+        @Override
+        public String getQueryString(PostgresDbConnectionState state, LdbcDelete7RemoveCommentSubthread operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveDelete7);
+        }
+    }
+
+    public static class Delete8RemoveFriendship extends PostgresUpdateOperationHandler<LdbcDelete8RemoveFriendship> {
+
+        @Override
+        public String getQueryString(PostgresDbConnectionState state, LdbcDelete8RemoveFriendship operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveDelete8);
+        }
     }
 }
