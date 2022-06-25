@@ -1,7 +1,7 @@
 SELECT
     personId AS 'personId:ID',
     countryName AS 'countryName:STRING',
-    1995 + salt * 37 % 10 AS 'workFromYear:INT'
+    1998 + salt * 37 % 15 AS 'workFromYear:INT' -- 1998..2013
 FROM
     (SELECT
         personId,
