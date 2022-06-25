@@ -1,17 +1,18 @@
 SELECT
-    strftime(
-        creationDay::timestamp + INTERVAL ( epoch(creationDay) / 37 % 24) HOUR
-            + INTERVAL ( epoch(creationDay) / 37 % 60) MINUTE
-            + INTERVAL ( epoch(creationDay) / 31 % 60) SECOND,
-        '%Y-%m-%dT%H:%M:%S.%g+00:00'
-        ) AS 'datetime:DATETIME'
-FROM (
+    personId AS 'personId:ID',
+    firstName AS 'firstName:STRING'
+FROM
     (SELECT
-        creationDay,
-        frequency AS freq,
-        abs(frequency - (SELECT percentile_disc(0.15) WITHIN GROUP (ORDER BY frequency) FROM creationDayNumMessages)) AS diff
-    FROM creationDayNumMessages
-    ORDER BY diff, creationDay
-    LIMIT 40)
-)
-ORDER BY md5(creationDay)
+        personId,
+        abs(frequency - (SELECT percentile_disc(0.55) WITHIN GROUP (ORDER BY frequency) FROM personNumFriends)) AS diff
+    FROM personNumFriends
+    ORDER BY diff, md5(personId)
+    ),
+    (SELECT
+        firstName,
+        abs(frequency - (SELECT percentile_disc(0.65) WITHIN GROUP (ORDER BY frequency) FROM personFirstNames)) AS diff
+    FROM personFirstNames
+    ORDER BY diff, md5(firstName)
+    )
+ORDER BY md5(concat(personId, firstName))
+LIMIT 500

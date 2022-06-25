@@ -38,7 +38,7 @@ CREATE TABLE countryNumMessages(countryId bigint not null, countryName varchar n
 CREATE TABLE countryNumPersons(countryId bigint not null, countryName varchar not null, frequency bigint not null);
 CREATE TABLE countryPairsNumFriends(country1Id bigint not null, country2Id bigint not null, country1Name varchar not null, country2Name varchar not null, frequency bigint not null);
 CREATE TABLE creationDayAndLengthCategoryNumMessages(creationDay date not null, lengthCategory int not null, frequency bigint not null);
-CREATE TABLE creationDayAndTagClassNumMessages(creationDay date not null, tagclassId bigint not null, tagClassName varchar not null, frequency bigint not null);
+CREATE TABLE creationDayAndTagClassNumMessages(creationDay date not null, tagClassId bigint not null, tagClassName varchar not null, frequency bigint not null);
 CREATE TABLE creationDayAndTagNumMessages(creationDay date not null, tagId bigint not null, tagName varchar not null, frequency bigint not null);
 CREATE TABLE creationDayNumMessages(creationDay date not null, frequency bigint not null);
 CREATE TABLE languageNumPosts(language varchar not null, frequency bigint not null);
@@ -48,8 +48,8 @@ CREATE TABLE people4Hops(person1id bigint not null, person2id bigint not null, p
 CREATE TABLE personDisjointEmployerPairs(person2id bigint not null, companyName varchar not null, companyId bigint not null, person2creationDate date not null, person2deletionDate date not null);
 CREATE TABLE personFirstNames(firstName string not null, frequency bigint not null);
 CREATE TABLE personNumFriends(personId bigint not null, personCreationDate date not null, personDeletionDate date not null, frequency bigint not null);
-CREATE TABLE tagClassNumMessages(tagclassId bigint not null, tagclassName varchar not null, frequency bigint not null);
-CREATE TABLE tagClassNumTags(tagclassId bigint not null, tagclassName varchar not null, frequency bigint not null);
+CREATE TABLE tagClassNumMessages(tagClassId bigint not null, tagClassName varchar not null, frequency bigint not null);
+CREATE TABLE tagClassNumTags(tagClassId bigint not null, tagClassName varchar not null, frequency bigint not null);
 CREATE TABLE tagNumMessages(tagId bigint not null, tagName varchar not null, frequency bigint not null);
 CREATE TABLE tagNumPersons(tagId bigint not null, tagName varchar not null, frequency bigint not null);
 
