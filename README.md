@@ -3,6 +3,12 @@
 
 [![Build Status](https://circleci.com/gh/ldbc/ldbc_snb_interactive_impls.svg?style=svg)](https://circleci.com/gh/ldbc/ldbc_snb_interactive_impls)
 
+:warning:
+The Interactive workload is currently being renewed to accommodate new features such as deletions and larger scale factors.
+If you are looking for a stable, auditable version, use one of the old versions:
+[v0.3.6](https://github.com/ldbc/ldbc_snb_interactive_impls/releases/tag/0.3.6) or
+[v1.0.0](https://github.com/ldbc/ldbc_snb_interactive_impls/releases/tag/1.0.0).
+
 Reference implementations of the LDBC Social Network Benchmark's Interactive workload ([paper](https://homepages.cwi.nl/~boncz/snb-challenge/snb-sigmod.pdf), [specification on GitHub pages](https://ldbcouncil.org/ldbc_snb_docs/), [specification on arXiv](https://arxiv.org/pdf/2001.02299.pdf)).
 
 To get started with the LDBC SNB benchmarks, check out our introductory presentation: [The LDBC Social Network Benchmark](https://docs.google.com/presentation/d/1p-nuHarSOKCldZ9iEz__6_V3sJ5kbGWlzZHusudW_Cc/) ([PDF](https://ldbcouncil.org/docs/presentations/ldbc-snb-2021-12.pdf)).
