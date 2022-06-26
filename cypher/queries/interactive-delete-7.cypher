@@ -1,5 +1,4 @@
-LOAD CSV FROM 'file:///deletes/dynamic/Comment/' + $batch + '/' + $csv_file AS row FIELDTERMINATOR '|'
-WITH toInteger(row[1]) AS id
-MATCH (:Comment {id: id})<-[:REPLY_OF*0..]-(comment:Comment)
+// DEL7. Remove comment subthread
+MATCH (:Comment {id: $commentId})<-[:REPLY_OF*0..]-(comment:Comment)
 DETACH DELETE comment
 RETURN count(*)

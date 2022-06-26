@@ -1,6 +1,5 @@
-LOAD CSV FROM 'file:///deletes/dynamic/Person/' + $batch + '/' + $csv_file AS row FIELDTERMINATOR '|'
-WITH toInteger(row[1]) AS id
-MATCH (person:Person {id: id})
+// Remove person and its personal forums and message (sub)threads
+MATCH (person:Person {id: $personId})
 // DEL 6/7: Post/Comment
 OPTIONAL MATCH (person)<-[:HAS_CREATOR]-(:Message)<-[:REPLY_OF*0..]-(message1:Message)
 // DEL 4: Forum
