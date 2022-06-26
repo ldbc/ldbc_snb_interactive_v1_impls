@@ -39,3 +39,4 @@ FROM
     (SELECT unnest(generate_series(1, 20)) AS salt)
 WHERE countryXName != countryYName
 ORDER BY md5(concat(personId, countryXName, countryYName, creationDay, salt))
+LIMIT 500
