@@ -1,3 +1,0 @@
-personId|tagName
-4398046511333|Carl_Gustaf_Emil_Mannerheim
-10995116277918|Joseph_Smith
