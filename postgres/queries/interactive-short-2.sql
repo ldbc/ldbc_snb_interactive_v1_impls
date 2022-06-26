@@ -1,29 +1,29 @@
 /* IS2. Recent messages of a person
-\set personId 10995116277795
+\set personId 17592186044461
  */
-with recursive cposts(m_messageid, m_content, m_ps_imagefile, m_creationdate, m_c_replyof, m_creatorid) AS (
-      select m_messageid, m_content, m_ps_imagefile, m_creationdate, m_c_replyof, m_creatorid
+with recursive cposts(messageid, content, imagefile, creationdate, replyof, CreatorPersonId) AS (
+      select messageid, content, imagefile, creationdate, replyof, CreatorPersonId
       from message
-      where m_creatorid = :personId
-      order by m_creationdate desc
+      where CreatorPersonId = :personId
+      order by creationdate desc
       limit 10
 ), parent(postid,replyof,orig_postid,creator) AS (
-      select m_messageid, m_c_replyof, m_messageid, m_creatorid from cposts
+      select messageid, replyof, messageid, CreatorPersonId from cposts
     UNION ALL
-      select m_messageid, m_c_replyof, orig_postid, m_creatorid
+      select messageid, replyof, orig_postid, CreatorPersonId
       from message,parent
-      where m_messageid=replyof
+      where messageid=replyof
 )
-select p1.m_messageid, COALESCE(m_ps_imagefile, m_content, ''), p1.m_creationdate,
-       p2.m_messageid, p2.p_personid, p2.p_firstname, p2.p_lastname
+select p1.messageid, COALESCE(imagefile, content, ''), p1.creationdate,
+       p2.messageid, p2.personid, p2.firstname, p2.lastname
 from 
-     (select m_messageid, m_content, m_ps_imagefile, m_creationdate, m_c_replyof from cposts
+     (select messageid, content, imagefile, creationdate, replyof from cposts
      ) p1
 left join
-     (select orig_postid, postid as m_messageid, p_personid, p_firstname, p_lastname
+     (select orig_postid, postid as messageid, personid, firstname, lastname
       from parent, person
-      where replyof is null and creator = p_personid
+      where replyof is null and creator = personid
      )p2  
-on p2.orig_postid = p1.m_messageid
-order by m_creationdate desc, p2.m_messageid desc;
+on p2.orig_postid = p1.messageid
+order by creationdate desc, p2.messageid desc;
 ;

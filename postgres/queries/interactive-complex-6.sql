@@ -1,27 +1,26 @@
 /* Q6. Tag co-occurrence
-\set personId 4398046511333
+\set personId 17592186044461
 \set tagName '\'Carl_Gustaf_Emil_Mannerheim\''
  */
-select t_name, count(*) as postcount
-from tag, message_tag, message,
- ( select k_person2id
-   from knows
-   where
-   k_person1id = :personId
+select name, count(*) as postcount
+from Tag, Message_hasTag_Tag, Message,
+ ( select person2id
+   from Person_knows_Person
+   where person1id = :personId
    union
-   select k2.k_person2id
-   from knows k1, knows k2
-   where
-   k1.k_person1id = :personId and k1.k_person2id = k2.k_person1id and k2.k_person2id <> :personId
+   select k2.person2id
+   from Person_knows_Person k1, Person_knows_Person k2
+   where k1.person1id = :personId
+     and k1.person2id = k2.person1id
+     and k2.person2id <> :personId
  ) f
-where
-m_creatorid = f.k_person2id and
-m_c_replyof IS NULL and -- post, not comment
-m_messageid = mt_messageid and
-mt_tagid = t_tagid and
-t_name <> :tagName and
-exists (select * from tag, message_tag where mt_messageid = m_messageid and mt_tagid = t_tagid and t_name = :tagName)
-group by t_name
-order by postCount desc, t_name asc
+where CreatorPersonId = f.person2id
+  and ParentMessageId IS NULL -- post, not comment
+  and Message.MessageId = Message_hasTag_Tag.MessageId
+  and Message_hasTag_Tag.TagId = Tag.id
+  and name <> :tagName
+  and exists (select * from Tag, Message_hasTag_Tag where Message.MessageId = Message_hasTag_Tag.MessageId and Message_hasTag_Tag.TagId = Tag.id and Tag.name = :tagName)
+group by name
+order by postCount desc, name asc
 limit 10
 ;

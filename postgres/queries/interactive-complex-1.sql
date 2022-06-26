@@ -1,44 +1,49 @@
 /* Q1. Transitive friends with certain name
-\set personId 4398046511333
+\set personId 17592186044461
 \set firstName '\'Jose\''
  */
 select
-  id,
-  p_lastname,
-  min (dist) as dist,
-  p_birthday,
-  p_creationdate,
-  p_gender,
-  p_browserused,
-  p_locationip,
-  (select array_agg(pe_email) from person_email where pe_personid = id group by pe_personid) as emails,
-  (select array_agg(plang_language) from person_language where plang_personid = id group by plang_personid) as languages,
-  p1.pl_name,
-  (select array_agg(ARRAY[o2.o_name, pu_classyear::text, p2.pl_name]) from person_university, organisation o2, place p2  where pu_personid = id and pu_organisationid = o2.o_organisationid and o2.o_placeid = p2.pl_placeid group by pu_personid) as university,
-  (select array_agg(ARRAY[o3.o_name, pc_workfrom::text, p3.pl_name]) from person_company, organisation o3, place p3 where pc_personid = id and pc_organisationid = o3.o_organisationid and o3.o_placeid = p3.pl_placeid group by pc_personid) as company
+  person.id,
+  person.lastname,
+  min(dist) as dist,
+  person.birthday,
+  person.creationdate,
+  person.gender,
+  person.browserused,
+  person.locationip,
+  --(select array_agg(pe_email) from person_email where pe_personid = id group by pe_personid) as emails,
+  --(select array_agg(plang_language) from person_language where plang_personid = id group by plang_personid) as languages,
+  person.email AS emails,
+  person.speaks AS languages,
+  City.name,
+  (select array_agg(ARRAY[u.name, Person_studyAt_University.classYear::text, c.name]) from Person_studyAt_University, University u, City c where Person_studyAt_University.PersonId = Person.id and Person_studyAt_University.UniversityId = u.id and u.LocationPlaceId = c.id group by Person.id) as university,
+  (select array_agg(ARRAY[comp.name, Person_workAt_Company.workFrom::text, ctr.name]) from Person_workAt_Company, Company comp, Country ctr where Person_workAt_Company.PersonId = Person.id and Person_workAt_Company.CompanyId = comp.id and comp.LocationPlaceId = ctr.id group by Person.id) as company
 from
     (
-    select k_person2id as id, 1 as dist from knows, person where k_person1id = :personId and p_personid = k_person2id and p_firstname = :firstName
+    select person2id as id, 1 as dist from Person_knows_Person, person
+    where person1id = :personId
+      and person.id = person2id
+      and firstname = :firstName
     union all
-    select b.k_person2id as id, 2 as dist from knows a, knows b, person
-    where a.k_person1id = :personId
-      and b.k_person1id = a.k_person2id
-      and p_personid = b.k_person2id
-      and p_firstname = :firstName
-      and p_personid != :personId -- excluding start person
+    select b.person2id as id, 2 as dist from Person_knows_Person a, Person_knows_Person b, person
+    where a.person1id = :personId
+      and b.person1id = a.person2id
+      and person.id = b.person2id
+      and firstname = :firstName
+      and person.id != :personId -- excluding start person
     union all
-    select c.k_person2id as id, 3 as dist from knows a, knows b, knows c, person
-    where a.k_person1id = :personId
-      and b.k_person1id = a.k_person2id
-      and b.k_person2id = c.k_person1id
-      and p_personid = c.k_person2id
-      and p_firstname = :firstName
-      and p_personid != :personId -- excluding start person
-    ) tmp, person, place p1
+    select c.person2id as id, 3 as dist from Person_knows_Person a, Person_knows_Person b, Person_knows_Person c, person
+    where a.person1id = :personId
+      and b.person1id = a.person2id
+      and b.person2id = c.person1id
+      and person.id = c.person2id
+      and firstname = :firstName
+      and person.id != :personId -- excluding start person
+    ) tmp, person, City
   where
-    p_personid = id and
-    p_placeid = p1.pl_placeid
-  group by id, p_lastname, p_birthday, p_creationdate, p_gender, p_browserused, p_locationip, p1.pl_name
-  order by dist, p_lastname, id
+    person.id = tmp.id and
+    person.LocationCityId = City.id
+  group by person.id, lastname, birthday, creationdate, gender, browserused, locationip, City.name
+  order by dist, lastname, person.id
   LIMIT 20
 ;

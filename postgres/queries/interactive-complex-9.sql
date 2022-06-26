@@ -1,23 +1,22 @@
 /* Q9. Recent messages by friends or friends of friends
-\set personId 4398046511268
+\set personId 17592186044461
 \set maxDate '\'2010-11-16\''::date
  */
-select p_personid, p_firstname, p_lastname,
-       m_messageid, COALESCE(m_ps_imagefile, m_content), m_creationdate
+select person.id, firstname, lastname, messageid, COALESCE(imagefile, content), message.creationdate
 from
-  ( select k_person2id
-    from knows
-    where k_person1id = :personId
+  ( select person2id
+    from Person_knows_Person
+    where person1id = :personId
     union
-    select k2.k_person2id
-    from knows k1, knows k2
-    where k1.k_person1id = :personId
-      and k1.k_person2id = k2.k_person1id
-      and k2.k_person2id <> :personId
+    select k2.person2id
+    from Person_knows_Person k1, Person_knows_Person k2
+    where k1.person1id = :personId
+      and k1.person2id = k2.person1id
+      and k2.person2id <> :personId
   ) f, person, message
-where
-  p_personid = m_creatorid and p_personid = f.k_person2id and
-  m_creationdate < :maxDate
-order by m_creationdate desc, m_messageid asc
+where person.id = CreatorPersonId
+  and person.id = f.person2id
+  and message.creationdate < :maxDate
+order by message.creationdate desc, messageid asc
 limit 20
 ;

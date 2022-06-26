@@ -1,7 +1,7 @@
 /* IS5. Creator of a message
-\set messageId 206158431836
+\set messageId 824633720985
  */
-select p_personid, p_firstname, p_lastname
-from message, person
-where m_messageid = :messageId and m_creatorid = p_personid;
+select Person.id, Person.firstname, Person.lastname
+from Message, Person
+where Message.MessageId = :messageId and message.CreatorPersonId = Person.id;
 ;

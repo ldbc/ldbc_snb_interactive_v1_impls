@@ -1,26 +1,29 @@
 /* Q5 New groups
-\set personId 6597069766734
+\set personId 17592186044461
 \set minDate '\'2010-11-01\''::date
  */
-select f_title, count(m_messageid) AS postCount
+select title, count(messageid) AS postCount
 from (
-select f_title, f_forumid, f.k_person2id
-from forum, forum_person,
- ( select k_person2id
-   from knows
-   where
-   k_person1id = :personId
-   union
-   select k2.k_person2id
-   from knows k1, knows k2
-   where
-   k1.k_person1id = :personId and k1.k_person2id = k2.k_person1id and k2.k_person2id <> :personId
- ) f
-where f_forumid = fp_forumid and fp_personid = f.k_person2id and
-      fp_joindate >= :minDate
-) tmp left join message
-on tmp.f_forumid = m_ps_forumid and m_creatorid = tmp.k_person2id
-group by f_forumid, f_title
-order by postCount desc, f_forumid asc
+  select title, Forum.id AS forumid, f.person2id
+  from Forum, Forum_hasMember_Person,
+  ( select person2id
+    from Person_knows_Person
+    where person1id = :personId
+    union
+    select k2.person2id
+    from Person_knows_Person k1, Person_knows_Person k2
+    where k1.person1id = :personId
+      and k1.person2id = k2.person1id
+      and k2.person2id <> :personId
+  ) f
+  where Forum.id = Forum_hasMember_Person.ForumId
+    and personid = f.person2id
+    and Forum_hasMember_Person.creationDate >= :minDate
+) tmp
+left join message
+  on tmp.forumid = Message.ContainerForumId
+ and CreatorPersonId = tmp.person2id
+group by forumid, title
+order by postCount desc, forumid asc
 limit 20
 ;
