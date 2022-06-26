@@ -152,7 +152,7 @@ jobs:
       - run:
           name: Download SF1 data set
           command: |
-            curl -L https://surfdrive.surf.nl/files/index.php/s/Ng2eCg6m06ZNKKo/download | tar -xv --use-compress-program=zstd
+            curl -L https://surfdrive.surf.nl/files/index.php/s/Ng2eCg6m06ZNKKo/download | tar -xv --use-compress-program=unzstd
             # substitution parameters and updateStreams for Neo4j
             cp ./sf1/substitution_parameters/* ./cypher/test-data/substitution_parameters/
             cp ./sf1/substitution_parameters/* ./postgres/test-data/substitution_parameters/

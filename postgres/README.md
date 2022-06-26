@@ -15,7 +15,7 @@ The recommended environment is that the benchmark scripts (Bash) and the LDBC dr
 
 ### docker-compose
 
-Alternatively, a docker-compose available to start the PostgreSQL container and a container loading the data. This requires `docker-compose` installed on the host machine. Running Postgres and loading the data can be done by executing:
+Alternatively, a docker-compose specification is available to start the PostgreSQL container and a container loading the data. This requires `docker-compose` installed on the host machine. Running Postgres and loading the data can be done by executing:
 
 ```bash
 docker-compose build && docker-compose up
@@ -35,18 +35,32 @@ To persist the data by storing the database outside a Docker volume, uncomment t
   target: /var/lib/postgresql/data
 ```
 
-
-
 ## Generating and loading the data set
 
-### Generating the data set
+## Generating the data set
 
-The data sets need to be generated before loading it to the database. No preprocessing is required. To generate data sets for Postgres, use the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop)'s `CsvMergeForeign` serializer classes:
+The PostgreSQL `composite-merged-fk` CSV layout, with headers and without quoted fields.
+To generate data that confirms this requirement, run Datagen without any layout or formatting arguments (`--explode-*` or `--format-options`).
 
-```ini
-ldbc.snb.datagen.serializer.dynamicActivitySerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.activity.CsvMergeForeignDynamicActivitySerializer
-ldbc.snb.datagen.serializer.dynamicPersonSerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.person.CsvMergeForeignDynamicPersonSerializer
-ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv.staticserializer.CsvMergeForeignStaticSerializer
+In Datagen's directory (`ldbc_snb_datagen_spark`), issue the following commands. We assume that the Datagen project is built and the `${PLATFORM_VERSION}`, `${DATAGEN_VERSION}` environment variables are set correctly.
+
+```bash
+export SF=desired_scale_factor
+export LDBC_SNB_DATAGEN_MAX_MEM=available_memory
+```
+
+```bash
+rm -rf out-sf${SF}/
+tools/run.py \
+    --cores $(nproc) \
+    --memory ${LDBC_SNB_DATAGEN_MAX_MEM} \
+    ./target/ldbc_snb_datagen_${PLATFORM_VERSION}-${DATAGEN_VERSION}.jar \
+    -- \
+    --format csv \
+    --scale-factor ${SF} \
+    --mode bi \
+    --output-dir out-sf${SF} \
+    --generate-factors
 ```
 
 ### Configuration

@@ -1,27 +1,36 @@
 /* Q11. Job referral
-\set personId 10995116277918
+\set personId 17592186044461
 \set countryName '\'Hungary\''
 \set workFromYear 2011
  */
-select p_personid,p_firstname, p_lastname, o_name, pc_workfrom
-from person, person_company, organisation, place,
- ( select k_person2id
-   from knows
-   where
-   k_person1id = :personId
-   union
-   select k2.k_person2id
-   from knows k1, knows k2
-   where
-   k1.k_person1id = :personId and k1.k_person2id = k2.k_person1id and k2.k_person2id <> :personId
- ) f
-where
-    p_personid = f.k_person2id and
-    p_personid = pc_personid and
-    pc_organisationid = o_organisationid and
-    pc_workfrom < :workFromYear and
-    o_placeid = pl_placeid and
-    pl_name = :countryName
-order by pc_workfrom, p_personid, o_name desc
-limit 10
+SELECT
+    Person.id,
+    firstName,
+    lastName,
+    Company.name,
+    Person_workAt_Company.workFrom
+FROM
+    Person,
+    Person_workAt_Company,
+    Company,
+    Country,
+    (
+        SELECT Person2Id
+        FROM Person_knows_Person
+        WHERE Person1Id = :personId
+        UNION
+        SELECT k2.Person2Id
+        FROM Person_knows_Person k1, Person_knows_Person k2
+        WHERE k1.Person1Id = :personId
+          AND k1.Person2Id = k2.Person1Id
+          AND k2.Person2Id <> :personId
+    ) friend
+WHERE Person.id = friend.Person2Id
+  AND Person.id = Person_workAt_Company.PersonId
+  AND Person_workAt_Company.CompanyId = Company.id
+  AND Person_workAt_Company.workFROM < :workFromYear
+  AND Country.id = Company.LocationPlaceId
+  AND Country.name = :countryName
+ORDER BY Person_workAt_Company.workFrom, Person.id, Company.name DESC
+LIMIT 10
 ;

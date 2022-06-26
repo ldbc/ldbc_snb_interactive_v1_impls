@@ -1,24 +1,32 @@
 /* Q7. Recent likers
-\set personId 4398046511268
+\set personId 17592186044461
  */
-select p_personid, p_firstname, p_lastname, l.l_creationdate, m_messageid,
-    COALESCE(m_ps_imagefile, m_content),
-    CAST(floor(EXTRACT(EPOCH FROM (l.l_creationdate - m_creationdate))) AS INTEGER) / 60 as minutesLatency,
-    (case when exists (select 1 from knows where k_person1id = :personId and k_person2id = p_personid) then 0 else 1 end) as isnew
-from
-  (select l_personid, max(l_creationdate) as l_creationdate
-   from likes, message
-   where
-     m_messageid = l_messageid and
-     m_creatorid = :personId
-   group by l_personid
-   order by l_creationdate desc
-   limit 20
-  ) tmp, message, person, likes as l
-where
-    p_personid = tmp.l_personid and
-    tmp.l_personid = l.l_personid and
-    tmp.l_creationdate = l.l_creationdate and
-    l.l_messageid = m_messageid
-order by l_creationdate desc, p_personid asc
+SELECT
+    Person.id,
+    firstName,
+    lastName,
+    l.creationDate,
+    Message.MessageId,
+    coalesce(imageFile, content),
+    CAST(floor(EXTRACT(EPOCH FROM (l.creationDate - Message.creationDate))) AS INTEGER) / 60 AS minutesLatency,
+    (CASE WHEN EXISTS (SELECT 1 FROM Person_knows_Person WHERE Person1Id = :personId AND Person2Id = Person.id) THEN 0 ELSE 1 END) AS isNew
+FROM
+    (
+        SELECT PersonId, max(Person_likes_Message.creationDate) AS creationDate
+        FROM Person_likes_Message, Message
+        WHERE
+          Person_likes_Message.MessageId = Message.MessageId AND
+          CreatorPersonId = :personId
+        GROUP BY PersonId
+        ORDER BY creationDate DESC
+        LIMIT 20
+    ) tmp,
+    Message,
+    Person,
+    Person_likes_Message AS l
+WHERE Person.id = tmp.PersonId
+  AND tmp.PersonId = l.PersonId
+  AND tmp.creationDate = l.creationDate
+  AND l.MessageId = Message.MessageId
+ORDER BY creationDate DESC, Person.id ASC
 ;

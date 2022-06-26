@@ -1,7 +1,7 @@
-/* IS1. Profile of a person
-\set personId 10995116277794
+/* IS1. Profile of a Person
+\set personId 17592186044461
  */
-select p_firstname, p_lastname, p_birthday, p_locationip, p_browserused, p_placeid, p_gender,  p_creationdate
-from person
-where p_personid = :personId;
+SELECT firstName, lastName, birthday, locationIP, browserUsed, LocationCityId, gender, creationDate
+FROM Person
+WHERE id = :personId
 ;
