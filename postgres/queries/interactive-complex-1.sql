@@ -11,8 +11,8 @@ SELECT
     Person.gender,
     Person.browserUsed,
     Person.locationIP,
-    Person.email AS emails,
-    Person.speaks AS languages,
+    string_to_array(Person.email, ';') AS emails,
+    string_to_array(Person.speaks, ';') AS languages,
     City.name,
     (
         SELECT array_agg(ARRAY[University.name, Person_studyAt_University.classYear::text, City.name])
