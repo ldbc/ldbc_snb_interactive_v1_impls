@@ -9,14 +9,20 @@ SELECT
     Message.MessageId,
     coalesce(imageFile, content),
     CAST(floor(EXTRACT(EPOCH FROM (l.creationDate - Message.creationDate))) AS INTEGER) / 60 AS minutesLatency,
-    (CASE WHEN EXISTS (SELECT 1 FROM Person_knows_Person WHERE Person1Id = :personId AND Person2Id = Person.id) THEN 0 ELSE 1 END) AS isNew
+    (
+        CASE WHEN EXISTS (
+            SELECT 1
+            FROM Person_knows_Person
+            WHERE Person1Id = :personId
+              AND Person2Id = Person.id
+        ) THEN 0 ELSE 1 END
+    ) AS isNew
 FROM
     (
         SELECT PersonId, max(Person_likes_Message.creationDate) AS creationDate
         FROM Person_likes_Message, Message
-        WHERE
-          Person_likes_Message.MessageId = Message.MessageId AND
-          CreatorPersonId = :personId
+        WHERE Person_likes_Message.MessageId = Message.MessageId
+          AND Message.CreatorPersonId = :personId
         GROUP BY PersonId
         ORDER BY creationDate DESC
         LIMIT 20

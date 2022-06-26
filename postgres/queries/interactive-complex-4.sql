@@ -22,10 +22,10 @@ WHERE Message.MessageId = recent.MessageId
             SELECT DISTINCT TagId
             FROM Message, Message_hasTag_Tag, Person_knows_Person
             WHERE Person1Id = :personId
-            AND Person2Id = CreatorPersonId
-            AND ParentMessageId IS NULL -- post, not comment
-            AND Message_hasTag_Tag.MessageId = Message.MessageId
-            AND Message.creationDate < :startDate
+              AND Person2Id = CreatorPersonId
+              AND ParentMessageId IS NULL -- post, not comment
+              AND Message_hasTag_Tag.MessageId = Message.MessageId
+              AND Message.creationDate < :startDate
         ) tags
         WHERE tags.TagId = recent.TagId
       )

@@ -13,7 +13,7 @@ SELECT
             SELECT 1
             FROM Person_knows_Person
             WHERE p1.CreatorPersonId = Person1Id
-            AND p2.CreatorPersonId = Person2Id
+              AND p2.CreatorPersonId = Person2Id
         )
         THEN true
         ELSE false
