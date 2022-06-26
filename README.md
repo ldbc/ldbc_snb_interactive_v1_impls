@@ -119,16 +119,7 @@ The implementation process looks roughly as follows:
 
 ### Benchmark data sets
 
-To generate the benchmark data sets, use the [Hadoop-based LDBC SNB Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop/releases/tag/v0.3.7-SNAPSHOT).
-
-The key configurations are the following:
-
-* `ldbc.snb.datagen.generator.scaleFactor`: set this to `snb.interactive.${SCALE_FACTOR}` where `${SCALE_FACTOR}` is the desired scale factor
-* `ldbc.snb.datagen.serializer.numUpdatePartitions`: set this to the number of write threads used in the benchmark runs
-* serializers: set these to the required format, e.g. the ones starting with `CsvMergeForeign` or `CsvComposite`
-  * `ldbc.snb.datagen.serializer.dynamicActivitySerializer`
-  * `ldbc.snb.datagen.serializer.dynamicPersonSerializer`
-  * `ldbc.snb.datagen.serializer.staticSerializer`
+To generate the benchmark data sets, use the [Spark-based LDBC SNB Datagen](https://github.com/ldbc/ldbc_snb_datagen_spark/). Detailed instructions are given for each tool.
 
 ### Pre-generated data sets
 
