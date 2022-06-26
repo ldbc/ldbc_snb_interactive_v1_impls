@@ -132,13 +132,7 @@ The key configurations are the following:
 
 ### Pre-generated data sets
 
-Producing large-scale data sets requires non-trivial amounts of memory and computing resources (e.g. SF100 requires 24GB memory and takes about 4 hours to generate on a single machine).
-To mitigate this, we have pregenerated data sets using 9 different serializers and the update streams using 17 different partition numbers:
-
-* Serializers: csv_basic, csv_basic-longdateformatter, csv_composite, csv_composite-longdateformatter, csv_composite_merge_foreign, csv_composite_merge_foreign-longdateformatter, csv_merge_foreign, csv_merge_foreign-longdateformatter, ttl
-* Partition numbers: 2^k (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024) and 6×2^k (24, 48, 96, 192, 384, 768).
-
-The data sets are available at the [SURF/CWI data repository](https://hdl.handle.net/11112/e6e00558-a2c3-9214-473e-04a16de09bf8). We also provide [direct links and download scripts](https://github.com/ldbc/data-sets-surf-repository).
+Pre-generated data sets are currently not available.
 
 ### Test data set
 
