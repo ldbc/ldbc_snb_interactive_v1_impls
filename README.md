@@ -125,13 +125,9 @@ To generate the benchmark data sets, use the [Spark-based LDBC SNB Datagen](http
 
 Pre-generated data sets are currently not available.
 
-### Test data set
-
-The test data sets are placed in the `cypher/test-data/` directory for Neo4j and in the `postgres/test-data/` for the SQL systems.
-
-To generate a data set with the same characteristics, see the [documentation on generating the test data set](test-data.md).
-
 ## Preparing for an audited run
+
+:warning: Audited runs are currently only possible with the old version. The new version of Interactive (with deletes and larger SFs) will be released in Q4 2022.
 
 Implementations of the Interactive workload can be audited by a certified LDBC auditor.
 The [Auditing Policies chapter](https://ldbcouncil.org/ldbc_snb_docs/ldbc-snb-specification.pdf#chapter.7) of the specification describes the auditing process and the required artifacts.
