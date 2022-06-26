@@ -20,6 +20,7 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             sudo apt update && sudo apt install -y zstd
             scripts/install-dependencies.sh
+            paramgen/scripts/install-dependencies.sh
       - run:
           name: Build project
           command: scripts/build.sh
