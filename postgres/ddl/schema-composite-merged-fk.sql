@@ -64,7 +64,7 @@ CREATE TABLE University (
 
 CREATE TABLE Comment (
     creationDate timestamp with time zone NOT NULL,
-    id bigint PRIMARY KEY,
+    id bigint,
     locationIP varchar(40) NOT NULL,
     browserUsed varchar(40) NOT NULL,
     content varchar(2000) NOT NULL,
@@ -77,14 +77,14 @@ CREATE TABLE Comment (
 
 CREATE TABLE Forum (
     creationDate timestamp with time zone NOT NULL,
-    id bigint PRIMARY KEY,
+    id bigint,
     title varchar(256) NOT NULL,
     ModeratorPersonId bigint -- can be null as its cardinality is 0..1
 );
 
 CREATE TABLE Post (
     creationDate timestamp with time zone NOT NULL,
-    id bigint PRIMARY KEY,
+    id bigint,
     imageFile varchar(40),
     locationIP varchar(40) NOT NULL,
     browserUsed varchar(40) NOT NULL,
@@ -98,7 +98,7 @@ CREATE TABLE Post (
 
 CREATE TABLE Person (
     creationDate timestamp with time zone NOT NULL,
-    id bigint PRIMARY KEY,
+    id bigint,
     firstName varchar(40) NOT NULL,
     lastName varchar(40) NOT NULL,
     gender varchar(40) NOT NULL,
@@ -116,49 +116,42 @@ CREATE TABLE Comment_hasTag_Tag (
     creationDate timestamp with time zone NOT NULL,
     CommentId bigint NOT NULL,
     TagId bigint NOT NULL
-    --, PRIMARY KEY(CommentId, TagId)
 );
 
 CREATE TABLE Post_hasTag_Tag (
     creationDate timestamp with time zone NOT NULL,
     PostId bigint NOT NULL,
     TagId bigint NOT NULL
-    --, PRIMARY KEY(PostId, TagId)
 );
 
 CREATE TABLE Forum_hasMember_Person (
     creationDate timestamp with time zone NOT NULL,
     ForumId bigint NOT NULL,
     PersonId bigint NOT NULL
-    --, PRIMARY KEY(ForumId, PersonId)
 );
 
 CREATE TABLE Forum_hasTag_Tag (
     creationDate timestamp with time zone NOT NULL,
     ForumId bigint NOT NULL,
     TagId bigint NOT NULL
-    --, PRIMARY KEY(ForumId, TagId)
 );
 
 CREATE TABLE Person_hasInterest_Tag (
     creationDate timestamp with time zone NOT NULL,
     PersonId bigint NOT NULL,
     TagId bigint NOT NULL
-    --, PRIMARY KEY(PersonId, TagId)
 );
 
 CREATE TABLE Person_likes_Comment (
     creationDate timestamp with time zone NOT NULL,
     PersonId bigint NOT NULL,
     CommentId bigint NOT NULL
-    --, PRIMARY KEY(PersonId, CommentId)
 );
 
 CREATE TABLE Person_likes_Post (
     creationDate timestamp with time zone NOT NULL,
     PersonId bigint NOT NULL,
     PostId bigint NOT NULL
-    --, PRIMARY KEY(PersonId, PostId)
 );
 
 CREATE TABLE Person_studyAt_University (
@@ -166,7 +159,6 @@ CREATE TABLE Person_studyAt_University (
     PersonId bigint NOT NULL,
     UniversityId bigint NOT NULL,
     classYear int NOT NULL
-    --, PRIMARY KEY(PersonId, UniversityId)
 );
 
 CREATE TABLE Person_workAt_Company (
@@ -174,14 +166,12 @@ CREATE TABLE Person_workAt_Company (
     PersonId bigint NOT NULL,
     CompanyId bigint NOT NULL,
     workFrom int NOT NULL
-    --, PRIMARY KEY(PersonId, CompanyId)
 );
 
 CREATE TABLE Person_knows_Person (
     creationDate timestamp with time zone NOT NULL,
     Person1id bigint NOT NULL,
     Person2id bigint NOT NULL
-    --, PRIMARY KEY(Person1id, Person2id)
 );
 
 
@@ -190,7 +180,7 @@ CREATE TABLE Person_knows_Person (
 -- A recursive materialized view containing the root Post of each Message (for Posts, themselves, for Comments, traversing up the Message thread to the root Post of the tree)
 CREATE TABLE Message (
     creationDate timestamp with time zone not null,
-    MessageId bigint primary key,
+    MessageId bigint,
     RootPostId bigint not null,
     RootPostLanguage varchar(40),
     content varchar(2000),

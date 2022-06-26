@@ -105,6 +105,11 @@ class PostgresDbLoader():
             run_script(pg_con, cur, "dml/create-static-materialized-views.sql")
             print("Done.")
 
+            print("Adding indexes and constraints")
+            cur.execute(self.load_script("ddl/schema-constraints.sql"))
+            cur.execute(self.load_script("ddl/schema-foreign-keys.sql"))
+            pg_con.commit()
+
             print("Loaded initial snapshot to Postgres.")
 
 
