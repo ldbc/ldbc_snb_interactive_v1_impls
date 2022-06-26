@@ -15,8 +15,6 @@ To get started with the LDBC SNB benchmarks, check out our introductory presenta
 
 * The default workload contains updates which are persisted in the database. Therefore, **the database needs to be reloaded or restored from backup before each run**. Use the provided `scripts/backup-database.sh` and `scripts/restore-database.sh` scripts to achieve this.
 
-* We expect most systems-under-test to use multi-threaded execution for their benchmark runs. **To allow running the updates on multiple threads, the update stream files need to be partitioned accordingly by the generator.** We have [pre-generated](#benchmark-data-sets) these for frequent partition numbers (1, 2, ..., 1024 and 24, 48, 96, ..., 768) and scale factors up to 1000.
-
 ## Implementations
 
 We provide two reference implementations:
@@ -59,7 +57,7 @@ The benchmark framework relies on the following inputs produced by the [SNB Data
 ### Driver modes
 
 For each implementation, it is possible to perform to perform the run in one of the [SNB driver's](https://github.com/ldbc/ldbc_snb_interactive_driver) three modes.
-All three should be started withe the initial data set loaded to the database.
+All of these runs should be started with the initial data set loaded to the database.
 
 1. Create validation parameters with the `driver/create-validation-parameters.sh` script.
 
