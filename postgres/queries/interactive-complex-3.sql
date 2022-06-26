@@ -1,45 +1,65 @@
 /* Q3. Friends and friends of friends that have been to given countries
-\set personId 6597069766734
+\set personId 17592186044461
 \set countryXName '\'Angola\''
 \set countryYName '\'Colombia\''
 \set startDate '\'2010-06-01\''::date
 \set durationDays 28
  */
-select p_personid, p_firstname, p_lastname, ct1, ct2, total as totalcount
-from
- ( select k_person2id
-   from knows
-   where
-   k_person1id = :personId
-   union
-   select k2.k_person2id
-   from knows k1, knows k2
-   where
-   k1.k_person1id = :personId and k1.k_person2id = k2.k_person1id and k2.k_person2id <> :personId
- ) f,  person, place p1, place p2,
- (
-  select chn.m_c_creatorid, ct1, ct2, ct1 + ct2 as total
-  from
-   (
-      select m_creatorid as m_c_creatorid, count(*) as ct1 from message, place
-      where
-        m_locationid = pl_placeid and pl_name = :countryXName and
-        m_creationdate >= :startDate and  m_creationdate < (:startDate + INTERVAL '1 days' * :durationDays)
-      group by m_c_creatorid
-   ) chn,
-   (
-      select m_creatorid as m_c_creatorid, count(*) as ct2 from message, place
-      where
-        m_locationid = pl_placeid and pl_name = :countryYName and
-        m_creationdate >= :startDate and  m_creationdate < (:startDate + INTERVAL '1 days' * :durationDays)
-      group by m_creatorid --m_c_creatorid
-   ) ind
-  where CHN.m_c_creatorid = IND.m_c_creatorid
- ) cpc
-where
-f.k_person2id = p_personid and p_placeid = p1.pl_placeid and
-p1.pl_containerplaceid = p2.pl_placeid and p2.pl_name <> :countryXName and p2.pl_name <> :countryYName and
-f.k_person2id = cpc.m_c_creatorid
-order by totalcount desc, p_personid asc
-limit 20
+SELECT
+    Person.id AS otherPersonId,
+    Person.firstName AS otherPersonFirstName,
+    Person.lastName AS otherPersonLastName,
+    ct1 AS xCount,
+    ct2 AS yCount,
+    total AS count
+FROM
+    (
+        SELECT Person2Id
+        FROM Person_knows_Person
+        WHERE Person1Id = :personId
+        UNION
+        SELECT k2.Person2Id
+        FROM Person_knows_Person k1, Person_knows_Person k2
+        WHERE k1.Person1Id = :personId
+          AND k1.Person2Id = k2.Person1Id
+          AND k2.Person2Id <> :personId
+    ) friend,
+    Person,
+    City,
+    Country,
+    (
+        SELECT
+            chn.CreatorPersonId,
+            ct1,
+            ct2,
+            ct1 + ct2 AS total
+        FROM
+            (
+                SELECT CreatorPersonId AS CreatorPersonId, count(*) AS ct1
+                FROM Message, Country
+                WHERE LocationCountryId = Country.id
+                  AND Country.name = :countryXName
+                  AND Message.creationDate >= :startDate
+                  AND Message.creationDate < (:startDate + INTERVAL '1 days' * :durationDays)
+                GROUP BY CreatorPersonId
+            ) chn,
+            (
+                SELECT CreatorPersonId AS CreatorPersonId, count(*) AS ct2
+                FROM Message, Country
+                WHERE LocationCountryId = Country.id
+                  AND Country.name = :countryYName
+                  AND Message.creationDate >= :startDate
+                  AND Message.creationDate < (:startDate + INTERVAL '1 days' * :durationDays)
+                GROUP BY CreatorPersonId
+            ) ind
+        WHERE chn.CreatorPersonId = IND.CreatorPersonId
+    ) cpc
+WHERE friend.Person2Id = Person.id
+  AND Person.LocationCityId = City.id
+  AND City.PartOfCountryId = Country.id
+  AND Country.name <> :countryXName
+  AND Country.name <> :countryYName
+  AND friend.Person2Id = cpc.CreatorPersonId
+ORDER BY totalcount DESC, Person.id ASC
+LIMIT 20
 ;
