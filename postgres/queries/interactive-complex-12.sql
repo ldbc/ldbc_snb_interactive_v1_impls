@@ -2,27 +2,44 @@
 \set personId 17592186044461
 \set tagClassName '\'Monarch\''
  */
-with recursive extended_tags(s_subtagclassid, s_supertagclassid) as (
-    select id, id from tagclass
+WITH RECURSIVE extended_tags(s_subtagclassid, s_supertagclassid) AS (
+    SELECT id, id
+    FROM tagclass
     UNION
-    select tc.id, t.s_supertagclassid from tagclass tc, extended_tags t
-        where tc.SubclassOfTagClassId = t.s_subtagclassid
+    SELECT tc.id, t.s_supertagclassid
+      FROM tagclass tc, extended_tags t
+     WHERE tc.SubclassOfTagClassId = t.s_subtagclassid
 )
-select person.id, firstname, lastname, array_agg(distinct name), count(*) as replyCount
-from person, message p1, Person_knows_Person, message p2, Message_hasTag_Tag, 
-    (select distinct id, name from tag where (TypeTagClassId in (
-          select distinct s_subtagclassid from extended_tags k, tagclass
-        where id = k.s_supertagclassid and name = :tagClassName) 
-   )) selected_tags
-where
-  person1id = :personId and 
-  person2id = person.id and 
-  person.id = p1.CreatorPersonId and 
-  p1.ParentMessageId = p2.messageid and 
-  p2.ParentMessageId is null and
-  p2.messageid = Message_hasTag_Tag.messageid and 
-  Message_hasTag_Tag.TagId = selected_tags.id
-group by person.id, person.firstname, person.lastname
-order by replyCount desc, person.id asc
-limit 20
+SELECT
+    Person.id,
+    firstName,
+    lastName,
+    array_agg(DISTINCT name),
+    count(*) AS replyCount
+FROM
+    Person,
+    Message m1,
+    Person_knows_Person,
+    Message m2,
+    Message_hasTag_Tag, 
+    (
+        SELECT DISTINCT id, name
+        FROM tag
+        WHERE TypeTagClassId IN (
+            SELECT DISTINCT s_subtagclassid
+            FROM extended_tags k, tagclass
+            WHERE id = k.s_supertagclassid
+              AND name = :tagClassName
+            )
+    ) selected_tags
+WHERE Person1Id = :personId
+  AND Person2Id = Person.id
+  AND Person.id = m1.CreatorPersonId
+  AND m1.ParentMessageId = m2.MessageId
+  AND m2.ParentMessageId IS NULL
+  AND m2.MessageId = Message_hasTag_Tag.MessageId
+  AND Message_hasTag_Tag.TagId = selected_tags.id
+GROUP BY Person.id, Person.firstName, person.lastName
+ORDER BY replyCount DESC, Person.id ASC
+LIMIT 20
 ;

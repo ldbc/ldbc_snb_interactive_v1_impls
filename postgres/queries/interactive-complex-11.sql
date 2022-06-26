@@ -3,25 +3,34 @@
 \set countryName '\'Hungary\''
 \set workFromYear 2011
  */
-select person.id, firstname, lastname, Company.name, Person_workAt_Company.workFrom
-from Person, Person_workAt_Company, Company, Country,
- ( select person2id
-   from Person_knows_Person
-   where person1id = :personId
-   union
-   select k2.person2id
-   from Person_knows_Person k1, Person_knows_Person k2
-   where k1.person1id = :personId
-     and k1.person2id = k2.person1id
-     and k2.person2id <> :personId
- ) f
-where
-    person.id = f.person2id and
-    person.id = Person_workAt_Company.PersonId and
-    Person_workAt_Company.CompanyId = Company.id and
-    Person_workAt_Company.workfrom < :workFromYear and
-    Country.id = Company.LocationPlaceId and
-    Country.name = :countryName
-order by Person_workAt_Company.workFrom, person.id, Company.name desc
-limit 10
+SELECT
+    Person.id,
+    firstName,
+    lastName,
+    Company.name,
+    Person_workAt_Company.workFrom
+FROM
+    Person,
+    Person_workAt_Company,
+    Company,
+    Country,
+    (
+        SELECT Person2Id
+        FROM Person_knows_Person
+        WHERE Person1Id = :personId
+        UNION
+        SELECT k2.Person2Id
+        FROM Person_knows_Person k1, Person_knows_Person k2
+        WHERE k1.Person1Id = :personId
+          AND k1.Person2Id = k2.Person1Id
+          AND k2.Person2Id <> :personId
+    ) friend
+WHERE Person.id = friend.Person2Id
+  AND Person.id = Person_workAt_Company.PersonId
+  AND Person_workAt_Company.CompanyId = Company.id
+  AND Person_workAt_Company.workFROM < :workFromYear
+  AND Country.id = Company.LocationPlaceId
+  AND Country.name = :countryName
+ORDER BY Person_workAt_Company.workFrom, Person.id, Company.name DESC
+LIMIT 10
 ;

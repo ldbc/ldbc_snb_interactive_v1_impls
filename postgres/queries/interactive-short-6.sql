@@ -2,12 +2,22 @@
 \set messageId 824633720985
  */
 WITH RECURSIVE chain(parent, child) as(
-    SELECT replyof, messageid FROM message where messageid = :messageId
+    SELECT ParentMessageId, MessageId
+    FROM Message
+    WHERE MessageId = :messageId
     UNION ALL
-    SELECT p.replyof, p.messageid FROM message p, chain c where p.messageid = c.parent 
+    SELECT p.ParentMessageId, p.MessageId
+    FROM Message p, chain c
+    WHERE p.MessageId = c.parent
 )
-selectforumid,title, personid, firstname, lastname
-from message, person, forum
-where messageid = (select coalesce(min(parent), :messageId) from chain)
-  and forumid =forumid andmoderatorid = personid;
+SELECT
+  Forum.id,
+  Forum.title,
+  Person.id,
+  Person.firstName,
+  Person.lastName
+FROM Message, Person, Forum
+WHERE MessageId = (SELECT coalesce(min(parent), :messageId) FROM chain)
+  AND Message.ContainerForumId = Forum.id
+  AND ModeratorPersonId = Person.id
 ;

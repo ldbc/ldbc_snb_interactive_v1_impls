@@ -1,15 +1,27 @@
 /* IS7. Replies of a message
-\set messageId 824633720985
+\set messageId 618475290624
  */
-select p2.messageid, p2.content, p2.creationdate, personid, firstname, lastname,
-    (case when exists (
-                       select 1 from Person_knows_Person
-               where p1.CreatorPersonId = person1id and p2.CreatorPersonId = person2id)
-      then TRUE
-      else FALSE
-      end)
-from message p1, message p2, person
-where
-  p1.messageid = :messageId and p2.replyof = p1.messageid and p2.CreatorPersonId = personid
-order by p2.creationdate desc, p2.CreatorPersonId asc;
+SELECT
+    p2.MessageId,
+    p2.content,
+    p2.creationDate,
+    Person.id,
+    Person.firstName,
+    Person.lastName,
+    (
+        CASE WHEN EXISTS (
+            SELECT 1
+            FROM Person_knows_Person
+            WHERE p1.CreatorPersonId = Person1Id
+            AND p2.CreatorPersonId = Person2Id
+        )
+        THEN true
+        ELSE false
+        END
+    )
+FROM Message p1, Message p2, Person
+WHERE p1.MessageId = :messageId
+  AND p2.ParentMessageId = p1.MessageId
+  AND p2.CreatorPersonId = Person.id
+ORDER BY p2.creationDate DESC, p2.CreatorPersonId ASC
 ;

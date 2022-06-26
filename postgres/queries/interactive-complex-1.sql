@@ -1,49 +1,63 @@
-/* Q1. Transitive friends with certain name
+/* Q1. Transitive friends WITH certain name
 \set personId 17592186044461
 \set firstName '\'Jose\''
  */
-select
-  person.id,
-  person.lastname,
-  min(dist) as dist,
-  person.birthday,
-  person.creationdate,
-  person.gender,
-  person.browserused,
-  person.locationip,
-  --(select array_agg(pe_email) from person_email where pe_personid = id group by pe_personid) as emails,
-  --(select array_agg(plang_language) from person_language where plang_personid = id group by plang_personid) as languages,
-  person.email AS emails,
-  person.speaks AS languages,
-  City.name,
-  (select array_agg(ARRAY[u.name, Person_studyAt_University.classYear::text, c.name]) from Person_studyAt_University, University u, City c where Person_studyAt_University.PersonId = Person.id and Person_studyAt_University.UniversityId = u.id and u.LocationPlaceId = c.id group by Person.id) as university,
-  (select array_agg(ARRAY[comp.name, Person_workAt_Company.workFrom::text, ctr.name]) from Person_workAt_Company, Company comp, Country ctr where Person_workAt_Company.PersonId = Person.id and Person_workAt_Company.CompanyId = comp.id and comp.LocationPlaceId = ctr.id group by Person.id) as company
-from
+SELECT
+    Person.id,
+    Person.lastName,
+    min(distance) AS distance,
+    Person.birthday,
+    Person.creationDate,
+    Person.gender,
+    Person.browserUsed,
+    Person.locationIP,
+    Person.email AS emails,
+    Person.speaks AS languages,
+    City.name,
     (
-    select person2id as id, 1 as dist from Person_knows_Person, person
-    where person1id = :personId
-      and person.id = person2id
-      and firstname = :firstName
-    union all
-    select b.person2id as id, 2 as dist from Person_knows_Person a, Person_knows_Person b, person
-    where a.person1id = :personId
-      and b.person1id = a.person2id
-      and person.id = b.person2id
-      and firstname = :firstName
-      and person.id != :personId -- excluding start person
-    union all
-    select c.person2id as id, 3 as dist from Person_knows_Person a, Person_knows_Person b, Person_knows_Person c, person
-    where a.person1id = :personId
-      and b.person1id = a.person2id
-      and b.person2id = c.person1id
-      and person.id = c.person2id
-      and firstname = :firstName
-      and person.id != :personId -- excluding start person
-    ) tmp, person, City
-  where
-    person.id = tmp.id and
-    person.LocationCityId = City.id
-  group by person.id, lastname, birthday, creationdate, gender, browserused, locationip, City.name
-  order by dist, lastname, person.id
+        SELECT array_agg(ARRAY[University.name, Person_studyAt_University.classYear::text, City.name])
+        FROM Person_studyAt_University, University, City
+        WHERE Person_studyAt_University.PersonId = Person.id
+        AND Person_studyAt_University.UniversityId = University.id
+        AND University.LocationPlaceId = City.id
+        GROUP BY Person.id
+    ) AS university,
+    (
+        SELECT array_agg(ARRAY[Company.name, Person_workAt_Company.workFrom::text, Country.name])
+        FROM Person_workAt_Company, Company, Country
+        WHERE Person_workAt_Company.PersonId = Person.id
+        AND Person_workAt_Company.CompanyId = Company.id
+        AND Company.LocationPlaceId = Country.id
+        GROUP BY Person.id
+    ) AS company
+FROM
+    (
+        SELECT Person2Id AS id, 1 AS distance
+        FROM Person_knows_Person, Person
+        WHERE Person1Id = :personId
+          AND Person.id = Person2Id
+          AND firstName = :firstName
+        UNION ALL
+        SELECT k2.Person2Id AS id, 2 AS distance
+        FROM Person_knows_Person k1, Person_knows_Person k2, Person
+        WHERE k1.Person1Id = :personId
+          AND k2.Person1Id = k1.Person2Id
+          AND Person.id = k2.Person2Id
+          AND firstName = :firstName
+          AND Person.id != :personId -- excluding start person
+        UNION ALL
+        SELECT k3.Person2Id AS id, 3 AS distance
+        FROM Person_knows_Person k1, Person_knows_Person k2, Person_knows_Person k3, Person
+        WHERE k1.Person1Id = :personId
+          AND k2.Person1Id = k1.Person2Id
+          AND k2.Person2Id = k3.Person1Id
+          AND Person.id = k3.Person2Id
+          AND firstName = :firstName
+          AND Person.id != :personId -- excluding start person
+    ) tmp, Person, City
+  WHERE Person.id = tmp.id
+    AND Person.LocationCityId = City.id
+  GROUP BY Person.id, lastName, birthday, creationDate, gender, browserUsed, locationIP, City.name
+  ORDER BY distance, lastName, Person.id
   LIMIT 20
 ;

@@ -1,8 +1,9 @@
-/* IS3. Friends of a person
+/* IS3. Friends of a Person
 \set personId 17592186044461
  */
-select person.id, person.firstname, person.lastname, person.creationdate
-from Person_knows_Person k, Person
-where k.person1id = :personId and k.person2id = Person.id
-order by person.creationdate desc, person.id asc;
+SELECT Person.id, Person.firstName, person.lastName, person.creationDate
+FROM Person_knows_Person k, Person
+WHERE k.Person1Id = :personId
+  AND k.Person2Id = Person.id
+ORDER BY Person.creationDate DESC, Person.id ASC
 ;
