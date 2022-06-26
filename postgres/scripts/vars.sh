@@ -7,6 +7,7 @@ export POSTGRES_PASSWORD=mysecretpassword
 export POSTGRES_DATABASE=ldbcsnb
 export POSTGRES_USER=postgres
 export POSTGRES_DATA_DIR=`pwd`/scratch/data
+export POSTGRES_DDL_DIR=`pwd`/ddl/
 export POSTGRES_PORT=5432
 
 if [[ `uname -m` == "arm64" ]]; then
