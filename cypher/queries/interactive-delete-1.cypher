@@ -1,4 +1,4 @@
-// Remove person and its personal forums and message (sub)threads
+// DEL 1: Remove person and its personal forums and message (sub)threads
 MATCH (person:Person {id: $personId})
 // DEL 6/7: Post/Comment
 OPTIONAL MATCH (person)<-[:HAS_CREATOR]-(:Message)<-[:REPLY_OF*0..]-(message1:Message)
