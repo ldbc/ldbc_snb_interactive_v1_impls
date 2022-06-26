@@ -11,7 +11,7 @@ SELECT
     Person.lastName AS otherPersonLastName,
     ct1 AS xCount,
     ct2 AS yCount,
-    total AS count
+    totalcount AS count
 FROM
     (
         SELECT Person2Id
@@ -32,7 +32,7 @@ FROM
             chn.CreatorPersonId,
             ct1,
             ct2,
-            ct1 + ct2 AS total
+            ct1 + ct2 AS totalcount
         FROM
             (
                 SELECT CreatorPersonId AS CreatorPersonId, count(*) AS ct1
