@@ -18,3 +18,9 @@ tcr.log
 *.priv
 *.priv.*
 umbra/.dev.env
+
+social-network-sf*/
+social-network-sf*.*
+
+parameters-sf*/
+parameters-sf*.*

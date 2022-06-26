@@ -3,10 +3,10 @@ cd ..
 
 export NEO4J_CONTAINER_NAME=snb-interactive-neo4j
 export NEO4J_CONTAINER_ROOT=`pwd`/scratch
-export NEO4J_CSV_POSTFIX=_0_0.csv
 export NEO4J_DATA_DIR=${NEO4J_CONTAINER_ROOT}/data
-export NEO4J_ENV_VARS=""
-export NEO4J_VERSION=4.4.1
+export NEO4J_ENV_VARS=${NEO4J_ENV_VARS:-}
+export NEO4J_HEADER_DIR=`pwd`/headers
+export NEO4J_VERSION=${NEO4J_VERSION:-4.4.4}
 
 if [[ `uname -m` == "arm64" ]]; then
     export NEO4J_DOCKER_PLATFORM_FLAG="--platform linux/arm64"
