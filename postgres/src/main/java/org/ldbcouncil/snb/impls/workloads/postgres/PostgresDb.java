@@ -599,45 +599,31 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
     public static class Update6AddPost extends PostgresMultipleUpdateOperationHandler<LdbcUpdate6AddPost> {
         @Override
         public void executeOperation(LdbcUpdate6AddPost operation, PostgresDbConnectionState state, ResultReporter resultReporter) throws DbException {
-            try {
-                Connection conn = state.getConnection();
+            try (Connection conn = state.getConnection()) {
+                // InteractiveUpdate6AddPost
                 String queryStringAddPost = state.getQueryStore().getParameterizedQuery(QueryType.InteractiveUpdate6AddPost);
                 replaceParameterNamesWithQuestionMarks(operation, queryStringAddPost);
 
-                final PreparedStatement stmt1 = prepareAndSetParametersInPreparedStatement(operation, queryStringAddPost, conn);
                 state.logQuery(operation.getClass().getSimpleName(), queryStringAddPost);
-                try {
-                    // InteractiveUpdate6AddPost
+                try (final PreparedStatement stmt1 = prepareAndSetParametersInPreparedStatement(operation, queryStringAddPost, conn)) {
                     stmt1.executeUpdate();
                 } catch (Exception e) {
                     throw new DbException(e);
                 }
-                finally{
-                    stmt1.close();
-                }
 
                 // InteractiveUpdate6AddPostTags
                 String queryStringAddPostTags = state.getQueryStore().getParameterizedQuery(QueryType.InteractiveUpdate6AddPostTags);
-                replaceParameterNamesWithQuestionMarks(operation, queryStringAddPostTags, ImmutableList.of("tagId"));
-                final PreparedStatement stmt2 = prepareSnbStatement(queryStringAddPostTags, conn);
-                state.logQuery(operation.getClass().getSimpleName(), queryStringAddPostTags);
-                stmt2.setLong(1, operation.getPostId());
+                replaceParameterNamesWithQuestionMarks(operation, queryStringAddPostTags);
 
-                try{
-                    for (long tagId: operation.getTagIds()) {
-                        stmt2.setLong(2, tagId);
-                        stmt2.executeUpdate();
-                    }
+                state.logQuery(operation.getClass().getSimpleName(), queryStringAddPostTags);
+                try (final PreparedStatement stmt2 = prepareAndSetParametersInPreparedStatement(operation, queryStringAddPostTags, conn)) {
+                    stmt2.executeUpdate();
                 } catch (Exception e) {
                     throw new DbException(e);
                 }
-                finally{
-                    stmt2.close();
-                    conn.close();
-                }
-        } catch (Exception e) {
-            throw new DbException(e);
-        }
+            } catch (Exception e) {
+                throw new DbException(e);
+            }
             resultReporter.report(0, LdbcNoResult.INSTANCE, operation);
         }
     }

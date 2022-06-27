@@ -3,4 +3,8 @@ INSERT INTO Message_hasTag_Tag (
   , MessageId
   , TagId
 )
-SELECT :creationDate, :postId, unnest(:tagIds);
+SELECT
+    :creationDate
+  , :postId
+  , unnest(:tagIds)
+;

@@ -76,7 +76,9 @@ public class PostgresOperationHandler {
             for (Integer parameterIndex : positions.get(parameter.getKey())) {
                 Object value = parameter.getValue();
 
-                if (value instanceof Integer) {
+                if (value == null) {
+                    stmt.setObject(parameterIndex, null);
+                } else if (value instanceof Integer) {
                     stmt.setInt(parameterIndex, (Integer) value);
                 } else if (value instanceof Long) {
                     stmt.setLong(parameterIndex, (Long) value);

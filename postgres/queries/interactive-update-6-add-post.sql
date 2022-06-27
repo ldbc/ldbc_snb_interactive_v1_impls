@@ -1,5 +1,4 @@
 INSERT INTO Message (
-  -- only comment-related fields are filled explicitly
     creationDate
   , MessageId
   , RootPostId
