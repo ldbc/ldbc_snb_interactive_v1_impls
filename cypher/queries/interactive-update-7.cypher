@@ -1,7 +1,7 @@
 MATCH
   (author:Person {id: $authorPersonId}),
   (country:Country {id: $countryId}),
-  (message:Message {id: $replyToPostId + $replyToCommentId + 1}) // $replyToCommentId is -1 if the message is a reply to a post and vica versa (see spec)
+  (message:Message {id: $replyToPostId + $replyToCommentId})
 CREATE (author)<-[:HAS_CREATOR]-(c:Comment:Message {
     id: $commentId,
     creationDate: $creationDate,
