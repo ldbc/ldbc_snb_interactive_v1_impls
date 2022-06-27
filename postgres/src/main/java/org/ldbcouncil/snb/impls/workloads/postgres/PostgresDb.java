@@ -539,46 +539,47 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public void executeOperation(LdbcUpdate4AddForum operation, PostgresDbConnectionState state, ResultReporter resultReporter) throws DbException {
-            try {
-                Connection conn = state.getConnection();
+            try (Connection conn = state.getConnection()) {
+                System.out.println("!!!!!!! !!!!! !!!!!");
+
                 // InteractiveUpdate4AddForum
                 String queryStringAddForum = state.getQueryStore().getParameterizedQuery(QueryType.InteractiveUpdate4AddForum);
                 replaceParameterNamesWithQuestionMarks(operation, queryStringAddForum);
 
-                final PreparedStatement stmt1 = prepareAndSetParametersInPreparedStatement(operation, queryStringAddForum, conn);
                 state.logQuery(operation.getClass().getSimpleName(), queryStringAddForum);
-                try {
-
+                try (PreparedStatement stmt1 = prepareAndSetParametersInPreparedStatement(operation, queryStringAddForum, conn)) {
                     stmt1.executeUpdate();
-
-                } catch (Exception e) {
-                    throw new DbException(e);
-                }
-                finally{
-                    stmt1.close();
                 }
 
                 // InteractiveUpdate4AddForumTags
-                String queryStringAddForumTags = state.getQueryStore().getParameterizedQuery(QueryType.InteractiveUpdate4AddForumTags);
-                replaceParameterNamesWithQuestionMarks(operation, queryStringAddForumTags, ImmutableList.of("tagId"));
-                final PreparedStatement stmt2 = prepareSnbStatement(queryStringAddForumTags, conn);
-                state.logQuery(operation.getClass().getSimpleName(), queryStringAddForumTags);
-                stmt2.setLong(1, operation.getForumId());
+                String queryStringAddForumTagIds = state.getQueryStore().getParameterizedQuery(QueryType.InteractiveUpdate4AddForumTags);
+                replaceParameterNamesWithQuestionMarks(operation, queryStringAddForumTagIds);
 
-                try {
-
-
-                    for (long tagId: operation.getTagIds()) {
-                        stmt2.setLong(2, tagId);
-                        stmt2.executeUpdate();
-                    }
-                } catch (Exception e) {
-                    throw new DbException(e);
+                state.logQuery(operation.getClass().getSimpleName(), queryStringAddForumTagIds);
+                try (final PreparedStatement stmt2 = prepareAndSetParametersInPreparedStatement(operation, queryStringAddForumTagIds, conn)) {
+                    stmt2.executeUpdate();
                 }
-                finally{
-                    stmt2.close();
-                    conn.close();
-                }
+
+//                // InteractiveUpdate4AddForumTags
+//                String queryStringAddForumTags = state.getQueryStore().getParameterizedQuery(QueryType.InteractiveUpdate4AddForumTags);
+//                replaceParameterNamesWithQuestionMarks(operation, queryStringAddForumTags, ImmutableList.of("tagId"));
+//                final PreparedStatement stmt2 = prepareSnbStatement(queryStringAddForumTags, conn);
+//                state.logQuery(operation.getClass().getSimpleName(), queryStringAddForumTags);
+//                stmt2.setDate(1, operation.getCreationDate());
+//                stmt2.setLong(1, operation.getForumId());
+//
+//                try {
+//                    for (long tagId: operation.getTagIds()) {
+//                        stmt2.setLong(2, tagId);
+//                        stmt2.executeUpdate();
+//                    }
+//                } catch (Exception e) {
+//                    throw new DbException(e);
+//                }
+//                finally{
+//                    stmt2.close();
+//                    conn.close();
+//                }
             } catch (Exception e) {
                 throw new DbException(e);
             }
@@ -645,41 +646,28 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
         @Override
         public void executeOperation(LdbcUpdate7AddComment operation, PostgresDbConnectionState state, ResultReporter resultReporter) throws DbException {
-            try {
-                Connection conn = state.getConnection();
+            try (Connection conn = state.getConnection()) {
                 // InteractiveUpdate7AddComment
                 String queryStringAddComment = state.getQueryStore().getParameterizedQuery(QueryType.InteractiveUpdate7AddComment);
                 replaceParameterNamesWithQuestionMarks(operation, queryStringAddComment);
-                final PreparedStatement stmt1 = prepareAndSetParametersInPreparedStatement(operation, queryStringAddComment, conn);
+
                 state.logQuery(operation.getClass().getSimpleName(), queryStringAddComment);
-            try {
-
-                stmt1.executeUpdate();
-            } catch (Exception e) {
-                throw new DbException(e);
-            }
-            finally{
-                stmt1.close();
-            }
-            // InteractiveUpdate7AddCommentTags
-            String queryStringAddCommentTags = state.getQueryStore().getParameterizedQuery(QueryType.InteractiveUpdate7AddCommentTags);
-            replaceParameterNamesWithQuestionMarks(operation, queryStringAddCommentTags, ImmutableList.of("tagId"));
-            final PreparedStatement stmt2 = prepareSnbStatement(queryStringAddCommentTags, conn);
-            state.logQuery(operation.getClass().getSimpleName(), queryStringAddCommentTags);
-            stmt2.setLong(1, operation.getCommentId());
-            try{
-
-                for (long tagId: operation.getTagIds()) {
-                    stmt2.setLong(2, tagId);
-                    stmt2.executeUpdate();
+                try (final PreparedStatement stmt1 = prepareAndSetParametersInPreparedStatement(operation, queryStringAddComment, conn)) {
+                    stmt1.executeUpdate();
+                } catch (Exception e) {
+                    throw new DbException(e);
                 }
-            } catch (Exception e) {
-                throw new DbException(e);
-            }
-            finally{
-                stmt2.close();
-                conn.close();
-            }
+
+                // InteractiveUpdate7AddCommentTags
+                String queryStringAddCommentTags = state.getQueryStore().getParameterizedQuery(QueryType.InteractiveUpdate7AddCommentTags);
+                replaceParameterNamesWithQuestionMarks(operation, queryStringAddCommentTags);
+
+                state.logQuery(operation.getClass().getSimpleName(), queryStringAddCommentTags);
+                try (final PreparedStatement stmt2 = prepareAndSetParametersInPreparedStatement(operation, queryStringAddCommentTags, conn)) {
+                    stmt2.executeUpdate();
+                } catch (Exception e) {
+                    throw new DbException(e);
+                }
         } catch (Exception e) {
             throw new DbException(e);
         }

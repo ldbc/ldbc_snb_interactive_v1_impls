@@ -6,6 +6,7 @@ import com.google.common.collect.Multimap;
 import org.ldbcouncil.snb.driver.Operation;
 import org.ldbcouncil.snb.impls.workloads.postgres.converter.PostgresConverter;
 
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -83,8 +84,11 @@ public class PostgresOperationHandler {
                     stmt.setString(parameterIndex, (String) value);
                 } else if (value instanceof Date) {
                     stmt.setObject(parameterIndex, PostgresConverter.convertDateToOffsetDateTime((Date) value));
+                } else if (value instanceof List) {
+                    Array arr = conn.createArrayOf("bigint", ((List<?>) value).toArray());
+                    stmt.setArray(parameterIndex, arr);
                 } else {
-                    throw new RuntimeException("Type not supported: " + value.getClass().getName());
+                    throw new RuntimeException("Type not supported by PostgresOperationHandler: " + value.getClass().getName());
                 }
             }
         }

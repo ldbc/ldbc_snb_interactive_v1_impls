@@ -170,8 +170,8 @@ CREATE TABLE Person_workAt_Company (
 
 CREATE TABLE Person_knows_Person (
     creationDate timestamp with time zone NOT NULL,
-    Person1id bigint NOT NULL,
-    Person2id bigint NOT NULL
+    Person1Id bigint NOT NULL,
+    Person2Id bigint NOT NULL
 );
 
 
@@ -181,7 +181,7 @@ CREATE TABLE Person_knows_Person (
 CREATE TABLE Message (
     creationDate timestamp with time zone not null,
     MessageId bigint,
-    RootPostId bigint not null,
+    RootPostId bigint, -- not null,
     RootPostLanguage varchar(40),
     content varchar(2000),
     imageFile varchar(40),

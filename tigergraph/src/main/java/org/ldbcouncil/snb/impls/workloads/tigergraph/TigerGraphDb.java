@@ -756,7 +756,7 @@ public abstract class TigerGraphDb extends BaseDb<TigerGraphQueryStore> {
             return ImmutableMap.<String, String>builder()
                     .put(LdbcUpdate5AddForumMembership.FORUM_ID, Long.toString(o.getForumId()))
                     .put(LdbcUpdate5AddForumMembership.PERSON_ID, Long.toString(o.getPersonId()))
-                    .put(LdbcUpdate5AddForumMembership.JOIN_DATE, Long.toString(o.getJoinDate().getTime()))
+                    .put(LdbcUpdate5AddForumMembership.CREATION_DATE, Long.toString(o.getCreationDate().getTime()))
                     .build();
         }
     }

@@ -814,7 +814,7 @@ public class CypherDb extends BaseDb<CypherQueryStore>
             return ImmutableMap.<String, Object>builder()
                                .put( LdbcUpdate5AddForumMembership.FORUM_ID, operation.getForumId() )
                                .put( LdbcUpdate5AddForumMembership.PERSON_ID, operation.getPersonId() )
-                               .put( LdbcUpdate5AddForumMembership.JOIN_DATE, operation.getJoinDate().getTime() )
+                               .put( LdbcUpdate5AddForumMembership.CREATION_DATE, operation.getCreationDate().getTime() )
                                .build();
         }
     }
