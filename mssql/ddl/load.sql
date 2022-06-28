@@ -1,84 +1,270 @@
 USE ldbc;
+-- Static --
 
--- Populate forum table
-BULK INSERT dbo.forum FROM '/data/dynamic/forum_0_0.csv_encoded.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
+-- Organisation
+INSERT INTO [dbo].[Organisation] (id, type, name, url, LocationPlaceId)
+SELECT id,
+       type,
+       name,
+       url,
+       LocationPlaceId
+FROM OPENROWSET (
+    BULK ':organisation_csv',
+    FORMATFILE = '/data/format-files/Organisation.xml',
+    FIRSTROW = 2
+) AS raw;
 
--- Populate forum_person table
-BULK INSERT dbo.forum_person FROM '/data/dynamic/forum_hasMember_person_0_0.csv_encoded.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
+-- Place
+INSERT INTO [dbo].[Place] (id, name, type, url, PartOfPlaceId)
+SELECT id,
+       name,
+       type,
+       url,
+       PartOfPlaceId
+FROM OPENROWSET (
+    BULK ':place_csv',
+    FORMATFILE = '/data/format-files/Place.xml',
+    FIRSTROW = 2
+) AS raw;
 
--- Populate forum_tag table
-BULK INSERT dbo.forum_tag FROM '/data/dynamic/forum_hasTag_tag_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
+-- Tag
+INSERT INTO [dbo].[Tag] (id, name, url, TypeTagClassId)
+SELECT id,
+       name,
+       url,
+       TypeTagClassId
+FROM OPENROWSET (
+    BULK ':tag_csv',
+    FORMATFILE = '/data/format-files/Tag.xml',
+    FIRSTROW = 2
+) AS raw;
 
--- Populate organisation table
-BULK INSERT dbo.organisation FROM '/data/static/organisation_0_0.csv_encoded.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
+-- TagClass
+INSERT INTO [dbo].[TagClass] (id, name, url, SubclassOfTagClassId)
+SELECT id,
+       name,
+       url,
+       SubclassOfTagClassId
+FROM OPENROWSET (
+    BULK ':tagclass_csv',
+    FORMATFILE = '/data/format-files/TagClass.xml',
+    FIRSTROW = 2
+) AS raw;
 
--- Populate person table
-BULK INSERT dbo.person_temp FROM '/data/dynamic/person_0_0.csv_encoded.csv' WITH ( DATAFILETYPE = 'char', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
-INSERT INTO dbo.person ( p_personid, p_firstname, p_lastname, p_gender, p_birthday, p_creationdate, p_locationip, p_browserused, p_placeid) SELECT p_personid, p_firstname, p_lastname, p_gender, p_birthday, p_creationdate, p_locationip, p_browserused, p_placeid FROM dbo.person_temp;
+--Dynamic
+-- Comments
+INSERT INTO [dbo].[Comment] (
+    creationDate,
+    id,
+    locationIP,
+    browserUsed,
+    content,
+    length,
+    CreatorPersonId,
+    LocationCountryId,
+    ParentPostId,
+    ParentCommentId
+)
+SELECT creationDate,
+    id,
+    locationIP,
+    browserUsed,
+    content,
+    length,
+    CreatorPersonId,
+    LocationCountryId,
+    ParentPostId,
+    ParentCommentId
+FROM OPENROWSET (
+    BULK ':comment_csv',
+    FORMATFILE = '/data/format-files/Comment.xml',
+    FIRSTROW = 2
+) AS raw;
 
-drop table dbo.person_temp;
+-- Comment_hasTag_Tag
+INSERT INTO [dbo].[Comment_hasTag_Tag] (creationDate, CommentId, TagId)
+SELECT creationDate,
+       CommentId,
+       TagId
+FROM OPENROWSET (
+    BULK ':comment_hastag_tag_csv',
+    FORMATFILE = '/data/format-files/Comment_hasTag_Tag.xml',
+    FIRSTROW = 2
+) AS raw;
 
--- Populate person_email table
-BULK INSERT dbo.person_email FROM '/data/dynamic/person_email_emailaddress_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
+-- Forum
+INSERT INTO [dbo].[Forum] (creationDate, id, title, ModeratorPersonId)
+SELECT creationDate,
+       id,
+       title,
+       ModeratorPersonId
+FROM OPENROWSET (
+    BULK ':forum_csv',
+    FORMATFILE = '/data/format-files/Forum.xml',
+    FIRSTROW = 2
+) AS raw;
 
--- Populate person_tag table
-BULK INSERT dbo.person_tag FROM '/data/dynamic/person_hasInterest_tag_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
+-- Forum_hasMember_Person
+INSERT INTO [dbo].[Forum_hasMember_Person] (creationDate, ForumId, PersonId)
+SELECT creationDate,
+       ForumId,
+       PersonId
+FROM OPENROWSET (
+    BULK ':forum_hasmember_person_csv',
+    FORMATFILE = '/data/format-files/Forum_hasMember_Person.xml',
+    FIRSTROW = 2
+) AS raw;
 
--- Populate knows table
-BULK INSERT dbo.knows_temp FROM '/data/dynamic/person_knows_person_0_0.csv_encoded.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
-INSERT INTO dbo.knows_temp ( k_person1id, k_person2id, k_creationdate) SELECT k_person2id, k_person1id, k_creationdate FROM dbo.knows_temp;
+-- Forum_hasTag_Tag
+INSERT INTO [dbo].[Forum_hasTag_Tag] (creationDate, ForumId, TagId)
+SELECT creationDate,
+       ForumId,
+       TagId
+FROM OPENROWSET (
+    BULK ':forum_hastag_tag_csv',
+    FORMATFILE = '/data/format-files/Forum_hasTag_Tag.xml',
+    FIRSTROW = 2
+) AS raw;
 
--- Populate knows edge table (SQL Graph)
-INSERT INTO dbo.knows($from_id, $to_id, k_person1id, k_person2id, k_creationdate)
-SELECT 
-    (SELECT $node_id FROM dbo.person WHERE k_person1id = p_personid),
-    (SELECT $node_id FROM dbo.person WHERE k_person2id = p_personid),
-k_person1id, k_person2id, k_creationdate FROM dbo.knows_temp;
+-- Person 
+INSERT INTO [dbo].[Person] (
+    $NODE_ID,
+    creationDate,
+    personId,
+    firstName,
+    lastName,
+    gender,
+    birthday,
+    locationIP,
+    browserUsed,
+    LocationCityId,
+    language,
+    email
+)
+SELECT NODE_ID_FROM_PARTS(object_id('Person'), id) AS node_id,
+       creationDate,
+       id,
+       firstName,
+       lastName,
+       gender,
+       birthday,
+       locationIP,
+       browserUsed,
+       LocationCityId,
+       language,
+       email
+FROM   OPENROWSET (
+    BULK ':person_csv',
+    FORMATFILE = '/data/format-files/Person.xml',
+    FIRSTROW = 2
+) AS raw;
 
-drop table dbo.knows_temp;
+-- Person_hasInterest_Tag
+INSERT INTO [dbo].[Person_hasInterest_Tag] (creationDate, PersonId, TagId)
+SELECT creationDate,
+       PersonId,
+       TagId
+FROM OPENROWSET (
+    BULK ':person_hasinterest_tag_csv',
+    FORMATFILE = '/data/format-files/Person_hasInterest_Tag.xml',
+    FIRSTROW = 2
+) AS raw;
 
--- Populate likes table
-BULK INSERT dbo.likes FROM '/data/dynamic/person_likes_post_0_0.csv_encoded.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
-BULK INSERT dbo.likes FROM '/data/dynamic/person_likes_comment_0_0.csv_encoded.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
+-- Person_knows_Person
+INSERT INTO [dbo].[Person_knows_Person] ($FROM_ID, $TO_ID, creationDate)
+SELECT NODE_ID_FROM_PARTS(object_id('Person'), Person1id) AS from_id,
+       NODE_ID_FROM_PARTS(object_id('Person'), Person2id) AS to_id,
+       creationDate
+FROM OPENROWSET (
+    BULK ':person_knows_person_csv',
+    FORMATFILE =  '/data/format-files/Person_knows_Person.xml',
+    FIRSTROW = 2
+) AS raw;
 
--- Populate person_language table
-BULK INSERT dbo.person_language FROM '/data/dynamic/person_speaks_language_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
+-- Person_likes_Comment
+INSERT INTO [dbo].[Person_likes_Comment] (creationDate, PersonId, CommentId)
+SELECT creationDate,
+       PersonId,
+       CommentId
+FROM OPENROWSET (
+    BULK ':person_likes_comment_csv',
+    FORMATFILE = '/data/format-files/Person_likes_Comment.xml',
+    FIRSTROW = 2
+) AS raw;
 
--- Populate person_university table
-BULK INSERT dbo.person_university FROM '/data/dynamic/person_studyAt_organisation_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
+-- Person_likes_Post
+INSERT INTO [dbo].[Person_likes_Post] (creationDate, PersonId, PostId)
+SELECT creationDate,
+       PersonId,
+       PostId
+FROM OPENROWSET (
+    BULK ':person_likes_post_csv',
+    FORMATFILE = '/data/format-files/Person_likes_Post.xml',
+    FIRSTROW = 2
+) AS raw;
 
--- Populate person_company table
-BULK INSERT dbo.person_company FROM '/data/dynamic/person_workAt_organisation_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
+-- Person_studyAt_University
+INSERT INTO [dbo].[Person_studyAt_University] (creationDate, PersonId, UniversityId, classYear)
+SELECT creationDate,
+       PersonId,
+       UniversityId,
+       classYear
+FROM OPENROWSET (
+    BULK ':person_studyat_university_csv',
+    FORMATFILE = '/data/format-files/Person_studyAt_University.xml',
+    FIRSTROW = 2
+) AS raw;
 
--- Populate place table
-BULK INSERT dbo.place FROM '/data/static/place_0_0.csv_encoded.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
+-- Person_workAt_Company
+INSERT INTO [dbo].[Person_workAt_Company] (creationDate, PersonId, CompanyId, workFrom)
+SELECT creationDate,
+       PersonId,
+       CompanyId,
+       workFrom
+FROM OPENROWSET (
+    BULK ':person_studyat_university_csv',
+    FORMATFILE = '/data/format-files/Person_workAt_Company.xml',
+    FIRSTROW = 2
+) AS raw;
 
--- Populate message_tag table
-BULK INSERT dbo.message_tag FROM '/data/dynamic/post_hasTag_tag_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
-BULK INSERT dbo.message_tag FROM '/data/dynamic/comment_hasTag_tag_0_0.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
+-- Post
+INSERT INTO [dbo].[Post] (
+    creationDate,
+    id,
+    imageFile,
+    locationIP,
+    browserUsed,
+    language,
+    content,
+    length,
+    CreatorPersonId,
+    ContainerForumId,
+    LocationCountryId
+)
+SELECT creationDate,
+    id,
+    imageFile,
+    locationIP,
+    browserUsed,
+    language,
+    content,
+    length,
+    CreatorPersonId,
+    ContainerForumId,
+    LocationCountryId
+FROM OPENROWSET (
+    BULK ':post_csv',
+    FORMATFILE = '/data/format-files/Post.xml',
+    FIRSTROW = 2
+) AS raw;
 
--- Populate tagclass table
-BULK INSERT dbo.tagclass FROM '/data/static/tagclass_0_0.csv_encoded.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
-
--- Populate tag table
-BULK INSERT dbo.tag FROM '/data/static/tag_0_0.csv_encoded.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
-
-
-CREATE VIEW country AS
-    SELECT city.pl_placeid AS ctry_city, ctry.pl_name AS ctry_name
-    FROM place city, place ctry
-    WHERE city.pl_containerplaceid = ctry.pl_placeid
-      AND ctry.pl_type = 'country';
-
-
-BULK INSERT dbo.post FROM '/data/dynamic/post_0_0.csv_encoded.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
-BULK INSERT dbo.comment FROM '/data/dynamic/comment_0_0.csv_encoded.csv' WITH ( FORMAT='CSV', FIELDTERMINATOR='|', ROWTERMINATOR='\n',FIRSTROW=2);
-
-
-INSERT INTO message
-    SELECT m_messageid, m_ps_imagefile, m_creationdate, m_locationip, m_browserused, m_ps_language, m_content, m_length, m_creatorid, m_locationid, m_ps_forumid, NULL AS m_c_replyof
-    FROM dbo.post;
-
-INSERT INTO message
-    SELECT m_messageid, NULL, m_creationdate, m_locationip, m_browserused, NULL, m_content, m_length, m_creatorid, m_locationid, NULl, coalesce(m_replyof_post, m_replyof_comment)
-    FROM dbo.comment;
+-- Post_hasTag_Tag
+INSERT INTO [dbo].[Post_hasTag_Tag] (creationDate, PostId, TagId)
+SELECT creationDate,
+       PostId,
+       TagId
+FROM OPENROWSET (
+    BULK ':post_hastag_tag_csv',
+    FORMATFILE = '/data/format-files/Post_hasTag_Tag.xml',
+    FIRSTROW = 2
+) AS raw;

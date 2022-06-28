@@ -1,95 +1,62 @@
 import time
-import pandas as pd
-import base64
+import re
 import os
+import glob
 from DBLoader import DBLoader
 
-"""
-FILE: load.py
+entity_to_folder = {
+    ":organisation_csv" : "/data/static/Organisation",
+    ":place_csv" : "/data/static/Place",
+    ":tag_csv" : "/data/static/Tag",
+    ":tagclass_csv" : "/data/static/TagClass",
+    ":comment_csv" : "/data/dynamic/Comment",
+    ":comment_hastag_tag_csv" :"/data/dynamic/Comment_hasTag_Tag",
+    ":forum_csv" :"/data/dynamic/Forum",
+    ":forum_hasmember_person_csv" :"/data/dynamic/Forum_hasMember_Person",
+    ":forum_hastag_tag_csv" :"/data/dynamic/Forum_hasTag_Tag",
+    ":person_csv" :"/data/dynamic/Person",
+    ":person_hasinterest_tag_csv" :"/data/dynamic/Person_hasInterest_Tag",
+    ":person_knows_person_csv" :"/data/dynamic/Person_knows_Person",
+    ":person_likes_comment_csv" : "/data/dynamic/Person_likes_Comment",
+    ":person_likes_post_csv" : "/data/dynamic/Person_likes_Post",
+    ":person_studyat_university_csv" : "/data/dynamic/Person_studyAt_University",
+    ":person_workat_company_csv" : "/data/dynamic/Person_workAt_Company",
+    ":post_csv" : "/data/dynamic/Post",
+    ":post_hastag_tag_csv" : "/data/dynamic/Post_hasTag_Tag"
+}
 
-DESC: Script to load the LDBC SNB interactive data into SQL Server.
-      The sql scripts executed in this script can be found under
-      the ddl/ directory. 
-
-      This script encodes the UTF-8 columns to UTF-16LE and then
-      base64 which is decoded in SQL Server to perserve the unicode
-      characters and speedup the loading. (Bulk loading unicode
-      is not supported by SQL Server on Linux as of 05-2022) The 
-      script used on SQL Server converts it to UTF-16LE, the 
-      encoding used in the NVARCHAR field, using XML. Therefore,
-      XML characters are encoded here as well.
-
-      Datetime information is loaded and written back to a format
-      that is compatible by SQL Servers datetimeoffset datatype.
-"""
-
-def get_df_from_csv(csv_file) -> pd.DataFrame:
+def load_data(path_to_file, DBL):
     """
-    Load dataframe from csv
     Args:
-        - csv_file (str): csv-filename
-    Returns:
-        Dataframe with loaded CSV-data.
+    - path_to_file
+    - DBL
+    Function to load the data.
+    It reads each line in the load.sql and replaces the csv-file.
+    It stores the result in a temp_load.sql, which is then removed
+    after loading.
     """
-    filepath = os.path.join('/data/', csv_file).replace("\\","/")
-    chunksize = 10 ** 6
-    df_list = []
-    with pd.read_csv(filepath, chunksize=chunksize, sep='|', dtype=str, na_filter=False) as reader:
-        for chunk in reader:
-            df_list.append(chunk)
-    return pd.concat(df_list)
-
-
-def convert(csv_file, columns):
-    """
-    Convert unicode sensitive columns to base64 and datetime strings.
-    Args:
-        - csv_file (str): Path to the CSV file
-        - columns (list(list)): list containing a list of unicode columns at [0]
-                                and datetime columns at [1].
-    Returns:
-        None (files are written to disk)
-    """
-    df = get_df_from_csv(csv_file)
-    print(f"Parsing file: {csv_file}")
-    for column in columns[0]:
-        # Convert unicode columns
-        df.fillna('', inplace=True)
-        # We need to replace these characters since we use XML conversion
-        df[column] = df[column].str.replace("&", "&amp;")
-        df[column] = df[column].str.replace("<", "&lt;")
-        df[column] = df[column].str.replace(">", "&gt;")
-        df[column] = df[column].str.replace('"', "&quot;")
-        df[column] = df[column].str.replace("'", "&apos;")
-        df[column] = df[column].str.encode('utf-16-le', 'strict').apply(base64.b64encode)
-        df[column] = df[column].str.decode('ascii') # to remove the b'' in the string
-
-    for column in columns[1]:
-        # convert datetime columns
-        df[column]= pd.to_datetime(df[column])
-
-    filepath_new = os.path.join('/data/', csv_file + "_encoded.csv").replace("\\","/")
-    df.to_csv(filepath_new, sep='|', index=False)
-
-
-def encode_columns():
-    csv_dict = {
-        "dynamic/post_0_0.csv":[['content'], ['creationDate']],
-        "dynamic/comment_0_0.csv":[['content'], ['creationDate']],
-        "dynamic/forum_0_0.csv":[['title'], ['creationDate']],
-        "static/organisation_0_0.csv":[['name'], []],
-        "dynamic/person_0_0.csv":[['firstName','lastName'], ['creationDate']],
-        "static/place_0_0.csv":[['name'], []],
-        "static/tagclass_0_0.csv":[['name'], []],
-        "static/tag_0_0.csv":[['name'], []],
-        "dynamic/person_likes_post_0_0.csv":[[], ['creationDate']],
-        "dynamic/person_likes_comment_0_0.csv":[[], ['creationDate']],
-        "dynamic/forum_hasMember_person_0_0.csv":[[], ['joinDate']],
-        "dynamic/person_knows_person_0_0.csv":[[], ['creationDate']]
-    }
-
-    for filename, columns in csv_dict.items():
-        convert(filename, columns)
+    with open(path_to_file, "r") as f:
+        with open('ddl/load_temp.sql', "w") as w:
+            queries_file = f.read()
+            queries = queries_file.split(";")
+            for query in queries:
+                if query.isspace():
+                    continue
+                print(query)
+                m = re.search(':.*csv', query)
+                if(m):
+                    csv_key = m.group(0)
+                    csv_files = glob.glob(f'{entity_to_folder[csv_key]}/*.csv', recursive=True)
+                    for csv_path in csv_files:
+                        # Assume only one csv-file
+                        query_new = query.replace(csv_key, csv_path)
+                        w.write(query_new + ';')
+                else:
+                    w.write(query + ';')
+            w.write('\n')
+    DBL.run_ddl_scripts("ddl/load_temp.sql")
+    os.remove('ddl/load_temp.sql')
+    
 
 if __name__ == "__main__":
     # Fetch the env variables.
@@ -104,25 +71,23 @@ if __name__ == "__main__":
 
     DBL = DBLoader(SERVER_NAME, DB_NAME, DB_USER, DB_PASS, DB_PORT, DB_DRIVER)
     DBL.check_and_create_database(DB_NAME, RECREATE)
-    if (RECREATE):
-        print("Create tables")
-        DBL.run_ddl_scripts("ddl/schema.sql")
 
-        print("Encode UTF-8 columns to Base64")
-        start_encode = time.time()
-        encode_columns()
-        end_encode = time.time()
-        duration = end_encode - start_encode
-        print(f"-> {duration:.4f} seconds")
+    if (RECREATE):
+        print("Drop existing tables")
+        DBL.run_ddl_scripts("ddl/drop-tables.sql")
+        print("Create tables")
+        DBL.run_ddl_scripts("ddl/schema-composite-merged-fk.sql")
+
+        print("Create deletion tables")
+        DBL.run_ddl_scripts("ddl/schema-delete-candidates.sql")
 
         print("Load initial snapshot")
-        DBL.run_ddl_scripts("ddl/load.sql")
+        load_data("ddl/load.sql", DBL)
+        # print("Convert UTF-8")
+        # DBL.run_ddl_scripts("ddl/unicode.sql")
 
-        print("Convert UTF-8")
-        DBL.run_ddl_scripts("ddl/unicode.sql")
-
-        print("Creating materialized views . . . ")
-        DBL.run_ddl_scripts("ddl/schema_constraints.sql")
+        # print("Creating materialized views . . . ")
+        # DBL.run_ddl_scripts("ddl/schema_constraints.sql")
 
     end_total = time.time()
     duration_total = end_total - start_total
