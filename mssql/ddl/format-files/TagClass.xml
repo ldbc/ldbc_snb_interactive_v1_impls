@@ -10,6 +10,6 @@
   <COLUMN SOURCE="1" NAME="id"            xsi:type="SQLBIGINT"/>
   <COLUMN SOURCE="2" NAME="name"          xsi:type="SQLNVARCHAR"/>
   <COLUMN SOURCE="3" NAME="url"           xsi:type="SQLVARYCHAR"/>
-  <COLUMN SOURCE="4" NAME="SubclassOfTagClassId" xsi:type="SQLBIGINT"/>
+  <COLUMN SOURCE="4" NAME="SubclassOfTagClassId" xsi:type="SQLBIGINT" NULLABLE="YES"/>
  </ROW>
 </BCPFORMAT>
