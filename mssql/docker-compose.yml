@@ -23,6 +23,9 @@ services:
       - type: bind
         source: ${MSSQL_CSV_DIR}
         target: /data/
+      - type: bind
+        source: ${MSSQL_FORMATFILE_DIR}
+        target: /data/format-files/
     user: 0:0 # TODO: make directories writeable by non-root user
 
   db-load:
