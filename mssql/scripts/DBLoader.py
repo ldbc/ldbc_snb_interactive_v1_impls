@@ -1,9 +1,13 @@
+"""
+FILE: DBLoader.py
+DESC: Class to create connections using pyodbc to
+      MS SQL Server and create a database 
+"""
 import pyodbc 
 import time
 import logging
 
 class DBLoader:
-
     def __init__(self, server, name, user, password, port, driver):
         """
         Args:
@@ -33,22 +37,26 @@ class DBLoader:
                       autocommit=True)
         return conn
 
-    def check_and_create_database(self, db_name, recreate):
+    def check_and_create_database(self, db_name, recreate) -> bool:
         """
         Args:
             - db_name (str): The name of the database to create.
             - recreate (bool): Whether the database should be recreated.
+
+        Returns:
+            - bool: Whether a new database is created
         """
         con = self.get_connection()
 
         cursor = con.cursor()
         cursor.execute("SELECT name FROM master.dbo.sysdatabases where name=?;",(db_name,))
         data = cursor.fetchall()
-
+        recreated = False
         if not data:
             logging.info(f"Database does not exist. Creating {db_name}.")
             cursor.execute(f"CREATE DATABASE {db_name};")
             logging.info("Database created.")
+            recreated = True
         else:
             logging.info(f"Database {db_name} already exists. ")
             if recreate:
@@ -61,8 +69,10 @@ class DBLoader:
                 )
                 cursor.execute(f"CREATE DATABASE {db_name};")
                 logging.info("Database created.")
+                recreated = True
         cursor.close()
         con.close()
+        return recreated
 
     def run_ddl_scripts(self, path_to_file):
         """

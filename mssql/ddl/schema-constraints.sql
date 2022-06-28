@@ -4,7 +4,6 @@ ALTER TABLE Message ADD PRIMARY KEY (messageid);
 ALTER TABLE Forum ADD PRIMARY KEY (id);
 ALTER TABLE Forum_hasMember_Person ADD PRIMARY KEY (ForumId, PersonId);
 ALTER TABLE Forum_hasTag_Tag ADD PRIMARY KEY (ForumId, TagId);
-ALTER TABLE Person ADD PRIMARY KEY (id);
 -- ALTER TABLE person_email ADD PRIMARY KEY (pe_personid, pe_email);
 ALTER TABLE Person_hasInterest_Tag ADD PRIMARY KEY (PersonId, TagId);
 ALTER TABLE Person_knows_Person ADD PRIMARY KEY (Person1Id, Person2Id);

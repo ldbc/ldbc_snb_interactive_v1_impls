@@ -1,3 +1,14 @@
+"""
+FILE: load.py
+DESC: This file loads the LDBC SNB Spark dataset to MS SQL Server.
+      To automate the loading of the files, the ddl/load.sql file
+      contains replacement markers to insert the path to the csv
+      file(s) in the BULK INSERT statement. This step is required
+      since the Spark datagen outputs a different filename each time
+      it is run. The entity_to_folder dictionary contains the mapping
+      of the replacement marker to the folder where the part-0000X
+      files are located
+"""
 import time
 import re
 import os
@@ -27,13 +38,13 @@ entity_to_folder = {
 
 def load_data(path_to_file, DBL):
     """
-    Args:
-    - path_to_file
-    - DBL
     Function to load the data.
     It reads each line in the load.sql and replaces the csv-file.
-    It stores the result in a temp_load.sql, which is then removed
-    after loading.
+    It stores the result in a temp_load.sql, which is removed
+    after loading is completed
+    Args:
+    - path_to_file: Path to the load.sql file (usually ddl/load.sql)
+    - DBL: The DatabaseLoader object
     """
     with open(path_to_file, "r") as f:
         with open('ddl/load_temp.sql', "w") as w:
@@ -48,7 +59,6 @@ def load_data(path_to_file, DBL):
                     csv_key = m.group(0)
                     csv_files = glob.glob(f'{entity_to_folder[csv_key]}/*.csv', recursive=True)
                     for csv_path in csv_files:
-                        # Assume only one csv-file
                         query_new = query.replace(csv_key, csv_path)
                         w.write(query_new + ';')
                 else:
@@ -56,11 +66,10 @@ def load_data(path_to_file, DBL):
             w.write('\n')
     DBL.run_ddl_scripts("ddl/load_temp.sql")
     os.remove('ddl/load_temp.sql')
-    
+
 
 if __name__ == "__main__":
     # Fetch the env variables.
-    start_total = time.time()
     DB_PORT = os.getenv("MSSQL_PORT", 1433)
     DB_NAME = os.getenv("MSSQL_DB_NAME", "ldbc")
     DB_USER = os.getenv("MSSQL_USER", "SA")
@@ -69,10 +78,11 @@ if __name__ == "__main__":
     SERVER_NAME = os.getenv("MSSQL_SERVER_NAME", "snb-interactive-mssql")
     DB_DRIVER = os.getenv("MSSQL_DRIVER", "ODBC Driver 18 for SQL Server")
 
+    start_total = time.time()
     DBL = DBLoader(SERVER_NAME, DB_NAME, DB_USER, DB_PASS, DB_PORT, DB_DRIVER)
-    DBL.check_and_create_database(DB_NAME, RECREATE)
+    recreated = DBL.check_and_create_database(DB_NAME, RECREATE)
 
-    if (RECREATE):
+    if (recreated):
         print("Drop existing tables")
         DBL.run_ddl_scripts("ddl/drop-tables.sql")
         print("Create tables")
@@ -83,11 +93,18 @@ if __name__ == "__main__":
 
         print("Load initial snapshot")
         load_data("ddl/load.sql", DBL)
-        # print("Convert UTF-8")
-        # DBL.run_ddl_scripts("ddl/unicode.sql")
 
-        # print("Creating materialized views . . . ")
-        # DBL.run_ddl_scripts("ddl/schema_constraints.sql")
+        # print("Maintain materialized views . . . ")
+        # DBL.run_ddl_scripts("dml/maintain-views.sql")
+        # print("Done.")
+
+        # print("Create static materialized views . . . ")
+        # DBL.run_ddl_scripts("dml/create-static-materialized-views.sql")
+        # print("Done.")
+
+        print("Adding indexes and constraints")
+        DBL.run_ddl_scripts("ddl/schema-constraints.sql")
+        DBL.run_ddl_scripts("ddl/schema-foreign-keys.sql")
 
     end_total = time.time()
     duration_total = end_total - start_total

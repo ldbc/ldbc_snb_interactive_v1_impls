@@ -171,9 +171,11 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Person_knows_Person
-INSERT INTO [dbo].[Person_knows_Person] ($FROM_ID, $TO_ID, creationDate)
+INSERT INTO [dbo].[Person_knows_Person] ($FROM_ID, $TO_ID,Person1id, Person2id, creationDate)
 SELECT NODE_ID_FROM_PARTS(object_id('Person'), Person1id) AS from_id,
        NODE_ID_FROM_PARTS(object_id('Person'), Person2id) AS to_id,
+       Person1id,
+       Person2id,
        creationDate
 FROM OPENROWSET (
     BULK ':person_knows_person_csv',

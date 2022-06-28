@@ -37,6 +37,9 @@ services:
         source: ${MSSQL_DDL_DIR}
         target: /ddl/
       - type: bind
+        source: ${MSSQL_DML_DIR}
+        target: /dml/
+      - type: bind
         source: ${MSSQL_CSV_DIR}
         target: /data/
     depends_on:

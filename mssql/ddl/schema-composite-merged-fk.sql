@@ -77,7 +77,7 @@ CREATE TABLE Comment (
 
 CREATE TABLE Forum (
     creationDate datetimeoffset NOT NULL,
-    id bigint,
+    id bigint NOT NULL,
     title nvarchar(256) NOT NULL,
     ModeratorPersonId bigint -- can be null as its cardinality is 0..1
 );
@@ -111,20 +111,6 @@ CREATE TABLE [dbo].[Person] (
     CONSTRAINT PK_Person PRIMARY KEY NONCLUSTERED ([personId] ASC) WITH (DATA_COMPRESSION = PAGE),
        CONSTRAINT Graph_Unique_Key_Person UNIQUE CLUSTERED ($node_id) WITH (DATA_COMPRESSION = PAGE)
 ) AS NODE;
-
--- CREATE TABLE Person (
---     creationDate datetimeoffset NOT NULL,
---     id bigint,
---     firstName nvarchar(40) NOT NULL,
---     lastName nvarchar(40) NOT NULL,
---     gender varchar(40) NOT NULL,
---     birthday date NOT NULL,
---     locationIP varchar(40) NOT NULL,
---     browserUsed varchar(40) NOT NULL,
---     LocationCityId bigint NOT NULL,
---     speaks varchar(640) NOT NULL,
---     email varchar(MAX) NOT NULL
--- );
 
 -- edges
 CREATE TABLE Comment_hasTag_Tag (
@@ -183,14 +169,10 @@ CREATE TABLE Person_workAt_Company (
     workFrom int NOT NULL
 );
 
--- CREATE TABLE Person_knows_Person (
---     creationDate datetimeoffset NOT NULL,
---     Person1id bigint NOT NULL,
---     Person2id bigint NOT NULL
--- );
-
 CREATE TABLE [dbo].[Person_knows_Person] (
        creationDate datetimeoffset NOT NULL,
+    [person1Id]     BIGINT        NOT NULL,
+    [person2Id]     BIGINT        NOT NULL,
        INDEX [GRAPH_UNIQUE_INDEX_Person_knows_Person] UNIQUE NONCLUSTERED ($edge_id) WITH (DATA_COMPRESSION = PAGE),
        INDEX [GRAPH_FromTo_INDEX_Person_knows_Person] CLUSTERED ($from_id, $to_id) WITH (DATA_COMPRESSION = PAGE)
        , INDEX [GRAPH_ToFrom_INDEX_Person_knows_Person] NONCLUSTERED ($to_id, $from_id) WITH (DATA_COMPRESSION = PAGE)
@@ -203,7 +185,7 @@ ALTER INDEX [GRAPH_UNIQUE_INDEX_Person_knows_Person] ON [dbo].[Person_knows_Pers
 -- A recursive materialized view containing the root Post of each Message (for Posts, themselves, for Comments, traversing up the Message thread to the root Post of the tree)
 CREATE TABLE Message (
     creationDate datetimeoffset not null,
-    MessageId bigint,
+    MessageId bigint not null,
     RootPostId bigint not null,
     RootPostLanguage varchar(40),
     content ntext,
@@ -217,7 +199,7 @@ CREATE TABLE Message (
     ParentMessageId bigint,
     ParentPostId bigint,
     ParentCommentId bigint,
-    type varchar(7)
+    type varchar(10)
 );
 
 CREATE TABLE Person_likes_Message (
