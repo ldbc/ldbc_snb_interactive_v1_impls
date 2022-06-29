@@ -1,11 +1,9 @@
-insert into forum_person (
-    fp_forumid
-  , fp_personid
-  , fp_joindate
-)
-values
+INSERT Forum_hasMember_Person ($from_id, $to_id, creationDate, ForumId, PersonId)
+VALUES
 (
-    :forumId
-  , :personId
-  , :joinDate
+    NODE_ID_FROM_PARTS(object_id('Person'), :forumId),
+    NODE_ID_FROM_PARTS(object_id('Post'), :personId),
+    :creationDate,
+    :ForumId,
+    :PersonId
 );

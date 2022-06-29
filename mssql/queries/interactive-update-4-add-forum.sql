@@ -1,13 +1,13 @@
-insert into forum (
-    f_forumid
-  , f_title
-  , f_creationdate
-  , f_moderatorid
+INSERT INTO forum (
+    creationDate
+  , id
+  , title
+  , ModeratorPersonId
 )
-values
+VALUES
 (
-    :forumId
+    :creationDate
+  , :forumId
   , :forumTitle
-  , :creationDate
   , :moderatorPersonId
 );

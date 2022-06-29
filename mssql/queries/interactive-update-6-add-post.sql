@@ -1,28 +1,35 @@
-insert into message (
-    -- only post-related fields are filled explicitly
-    m_messageid
-  , m_ps_imagefile
-  , m_creationdate
-  , m_locationip
-  , m_browserused
-  , m_ps_language
-  , m_content
-  , m_length
-  , m_creatorid
-  , m_locationid
-  , m_ps_forumid
+INSERT INTO Message (
+    creationDate
+  , MessageId
+  , RootPostId
+  , RootPostLanguage
+  , content
+  , imageFile
+  , locationIP
+  , browserUsed
+  , length
+  , CreatorPersonId
+  , ContainerForumId
+  , LocationCountryId
+  , ParentMessageId
+  , ParentPostId
+  , ParentCommentId
 )
-values
+VALUES
 (
-    :postId
-  , CASE :imageFile WHEN '' THEN NULL ELSE :imageFile END
-  , :creationDate
-  , :locationIP
-  , :browserUsed
+    :creationDate
+  , :postId
+  , NULL
   , :language
   , CASE :content WHEN '' THEN NULL ELSE :content END
+  , CASE :imageFile WHEN '' THEN NULL ELSE :imageFile END
+  , :locationIP
+  , :browserUsed
   , :length
-  , :authorPersonId
-  , :countryId
+  , :authorPersonId -- CreatorPersonId
   , :forumId
+  , :countryId -- LocationCountryId
+  , NULL
+  , NULL
+  , NULL
 );

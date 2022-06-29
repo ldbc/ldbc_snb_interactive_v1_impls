@@ -1,16 +1,16 @@
-insert into knows (
-    k_person1id
-  , k_person2id
-  , k_creationdate
-)
-values
+INSERT Person_knows_Person ($from_id, $to_id, Person1id, Person2id, k_creationDate)
+VALUES
 (
-    :person1Id
-  , :person2Id
-  , :creationDate
+    NODE_ID_FROM_PARTS(object_id('Person'), :person1Id),
+    NODE_ID_FROM_PARTS(object_id('Person'), :person2Id),
+    :person1Id,
+    :person2Id
+    :creationDate
 ),
 (
-    :person2Id
-  , :person1Id
-  , :creationDate
+    NODE_ID_FROM_PARTS(object_id('Person'), :person2Id),
+    NODE_ID_FROM_PARTS(object_id('Person'), :person1Id),
+    :person2Id,
+    :person1Id
+    :creationDate
 );
