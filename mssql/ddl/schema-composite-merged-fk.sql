@@ -238,25 +238,21 @@ CREATE TABLE [dbo].[Person_knows_Person] (
 ALTER INDEX [GRAPH_UNIQUE_INDEX_Person_knows_Person] ON [dbo].[Person_knows_Person] DISABLE;
 
 -- materialized views
-
--- A recursive materialized view containing the root Post of each Message (for Posts, themselves, for Comments, traversing up the Message thread to the root Post of the tree)
 CREATE TABLE Message (
     creationDate datetimeoffset not null,
     MessageId bigint not null,
-    RootPostId bigint not null,
-    RootPostLanguage varchar(40),
     content ntext,
     imageFile varchar(40),
     locationIP varchar(40) not null,
     browserUsed varchar(40) not null,
     length int not null,
+    language varchar(40),
     CreatorPersonId bigint not null,
-    ContainerForumId bigint,
     LocationCountryId bigint not null,
+    ContainerForumId bigint,
     ParentMessageId bigint,
     ParentPostId bigint,
     ParentCommentId bigint,
-    type varchar(10)
     CONSTRAINT PK_Message PRIMARY KEY NONCLUSTERED ([MessageId] ASC) WITH (DATA_COMPRESSION = PAGE),
     CONSTRAINT Graph_Unique_Key_Message UNIQUE CLUSTERED ($node_id) WITH (DATA_COMPRESSION = PAGE)
 ) AS NODE;
@@ -288,6 +284,6 @@ CREATE VIEW Comment_View AS
     WHERE ParentMessageId IS NOT NULL;
 
 CREATE VIEW Post_View AS
-    SELECT creationDate, MessageId AS id, imageFile, locationIP, browserUsed, RootPostLanguage, content, length, CreatorPersonId, ContainerForumId, LocationCountryId
+    SELECT creationDate, MessageId AS id, imageFile, locationIP, browserUsed, language, content, length, CreatorPersonId, ContainerForumId, LocationCountryId
     From Message
     WHERE ParentMessageId IS NULL;

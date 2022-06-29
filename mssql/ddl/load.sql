@@ -297,3 +297,63 @@ FROM OPENROWSET (
     FORMATFILE = '/data/format-files/Post_hasTag_Tag.xml',
     FIRSTROW = 2
 ) AS raw;
+
+INSERT INTO [dbo].[Message] (
+    $NODE_ID,
+    creationDate,
+    MessageId,
+    content,
+    imageFile,
+    locationIP,
+    browserUsed,
+    length,
+    language,
+    CreatorPersonId,
+    LocationCountryId,
+    ContainerForumId,
+    ParentMessageId
+)
+SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS node_id,
+    creationDate,
+    id,
+    content,
+    imageFile,
+    locationIP,
+    browserUsed,
+    length,
+    language,
+    CreatorPersonId,
+    LocationCountryId,
+    ContainerForumId,
+    CAST(NULL AS bigint) AS ParentMessageId
+FROM dbo.post;
+
+INSERT INTO [dbo].[Message] (
+    $NODE_ID,
+    creationDate,
+    MessageId,
+    content,
+    imageFile,
+    locationIP,
+    browserUsed,
+    length,
+    language,
+    CreatorPersonId,
+    LocationCountryId,
+    ContainerForumId,
+    ParentMessageId
+)
+SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS node_id,
+    creationDate,
+    id AS MessageId,
+    content,
+    CAST(NULL AS varchar(40)) AS imageFile,
+    locationIP,
+    browserUsed,
+    length,
+    CAST(NULL AS varchar(40)) AS language,
+    CreatorPersonId,
+    LocationCountryId,
+    CAST(NULL AS bigint) AS ContainerForumId,
+    coalesce(ParentPostId, ParentCommentId) AS ParentMessageId
+FROM dbo.Comment;
