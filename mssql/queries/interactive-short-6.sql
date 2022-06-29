@@ -1,18 +1,23 @@
 /* IS6. Forum of a message
-\set messageId 206158431836
+\set messageId 824633720985
  */
-WITH chain(parent, child) AS (
-    SELECT m_c_replyof, m_messageid
-      FROM message 
-     WHERE m_messageid = :messageId
- UNION ALL
-    SELECT p.m_c_replyof, p.m_messageid
-      FROM message p, chain c
-     WHERE p.m_messageid = c.parent 
+WITH chain(parent, child) as(
+    SELECT ParentMessageId, MessageId
+    FROM Message
+    WHERE MessageId = :messageId
+    UNION ALL
+    SELECT p.ParentMessageId, p.MessageId
+    FROM Message p, chain c
+    WHERE p.MessageId = c.parent
 )
-SELECT f_forumid, f_title, p_personid, p_firstname, p_lastname
-  FROM message, person, forum
- WHERE m_messageid = (SELECT coalesce(min(parent), :messageId) FROM chain)
-   AND m_ps_forumid = f_forumid
-   AND f_moderatorid = p_personid;
+SELECT
+  Forum.id,
+  Forum.title,
+  Person.id,
+  Person.firstName,
+  Person.lastName
+FROM Message, Person, Forum
+WHERE MessageId = (SELECT coalesce(min(parent), :messageId) FROM chain)
+  AND Message.ContainerForumId = Forum.id
+  AND ModeratorPersonId = Person.id
 ;
