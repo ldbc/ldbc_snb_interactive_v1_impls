@@ -1,27 +1,28 @@
-SELECT TOP(20) f_title
-             , count(m_messageid) AS postCount
-          FROM (SELECT f_title
-                     , f_forumid
-                     , f.k_person2id
-                  FROM forum
-                     , forum_person
-                     , (SELECT k_person2id
-                          FROM knows
-                         WHERE k_person1id = :personId
-                         UNION
-                        SELECT k2.k_person2id
-                          FROM knows k1
-                             , knows k2
-                         WHERE k1.k_person1id = :personId
-                           AND k1.k_person2id = k2.k_person1id
-                           AND k2.k_person2id <> :personId
-                             ) f
-                 WHERE f_forumid = fp_forumid
-                   AND fp_personid = f.k_person2id
-                   AND fp_joindate >= :minDate
-                     ) tmp
-             LEFT JOIN message ON tmp.f_forumid = m_ps_forumid
-                   AND m_creatorid = tmp.k_person2id
-              GROUP BY f_forumid, f_title
-              ORDER BY postCount DESC, f_forumid ASC
+SELECT TOP(20)
+    title,
+    count(MessageId) AS postCount
+FROM
+    (
+        SELECT title, Forum.id AS forumid, friend.Person2Id
+        FROM Forum, Forum_hasMember_Person,
+        (
+            SELECT Person2Id
+            FROM Person_knows_Person
+            WHERE Person1Id = :personId
+            UNION
+            SELECT k2.Person2Id
+            FROM Person_knows_Person k1, Person_knows_Person k2
+            WHERE k1.Person1Id = :personId
+              AND k1.Person2Id = k2.Person1Id
+              AND k2.Person2Id <> :personId
+        ) friend
+        WHERE Forum.id = Forum_hasMember_Person.ForumId
+          AND Forum_hasMember_Person.PersonId = friend.Person2Id
+          AND Forum_hasMember_Person.creationDate >= :minDate
+    ) tmp
+LEFT JOIN Message
+  ON tmp.forumid = Message.ContainerForumId
+ AND CreatorPersonId = tmp.Person2Id
+GROUP BY forumid, title
+ORDER BY postCount DESC, forumid ASC
 ;

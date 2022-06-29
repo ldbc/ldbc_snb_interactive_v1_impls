@@ -1,14 +1,18 @@
-SELECT TOP(20) p1.m_creatorid
-             , p_firstname
-             , p_lastname
-             , p1.m_creationdate
-             , p1.m_messageid
-             , p1.m_content
-          FROM message p1
-             , message p2
-             , person
-         WHERE p1.m_c_replyof = p2.m_messageid
-           AND p2.m_creatorid = :personId
-           AND p_personid = p1.m_creatorid
-      ORDER BY p1.m_creationdate DESC, p1.m_messageid ASC
+SELECT TOP(20)
+    m1.CreatorPersonId,
+    firstName,
+    lastName,
+    m1.creationDate,
+    m1.MessageId,
+    m1.content
+FROM
+    Message m1,
+    Message m2,
+    Person
+WHERE m1.ParentMessageId = m2.MessageId
+  AND m2.CreatorPersonId = :personId
+  AND Person.Id = m1.CreatorPersonId
+ORDER BY
+    m1.creationDate DESC,
+    m1.MessageId ASC
 ;

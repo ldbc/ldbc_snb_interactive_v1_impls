@@ -1,29 +1,29 @@
-SELECT TOP(10) t_name
-             , count(*) AS postCount
-          FROM tag
-             , message
-             , message_tag recent
-             , knows
-         WHERE m_messageid = mt_messageid
-           AND mt_tagid = t_tagid
-           AND m_creatorid = k_person2id
-           AND m_c_replyof IS NULL
-           AND k_person1id = :personId
-           AND m_creationdate >= :startDate
-           AND m_creationdate < DATEADD(day, :durationDays, :startDate)
-           AND NOT EXISTS (
-                SELECT *
-                  FROM (SELECT DISTINCT mt_tagid
-                          FROM message
-                             , message_tag
-                             , knows
-                         WHERE k_person1id = :personId
-                          AND k_person2id = m_creatorid
-                          AND m_c_replyof IS NULL
-                          AND mt_messageid = m_messageid
-                          AND m_creationdate < :startDate
-                            ) tags
-                WHERE tags.mt_tagid = recent.mt_tagid)
-      GROUP BY t_name
-      ORDER BY postCount DESC, t_name ASC
+SELECT TOP(10) name, count(*) AS postCount
+        FROM
+            Tag,
+            Message,
+            Message_hasTag_Tag recent,
+            Person_knows_Person
+        WHERE Message.MessageId = recent.MessageId
+        AND recent.TagId = Tag.id
+        AND Message.CreatorPersonId = Person2Id
+        AND ParentMessageId IS NULL -- post, not comment
+        AND Person1Id = :personId
+        AND Message.creationDate >= :startDate
+           AND creationDate < DATEADD(day, :durationDays, :startDate)
+  AND NOT EXISTS (
+        SELECT *
+        FROM (
+            SELECT DISTINCT TagId
+            FROM Message, Message_hasTag_Tag, Person_knows_Person
+            WHERE Person1Id = :personId
+            AND Person2Id = CreatorPersonId
+            AND ParentMessageId IS NULL -- post, not comment
+            AND Message_hasTag_Tag.MessageId = Message.MessageId
+            AND Message.creationDate < :startDate
+        ) tags
+        WHERE tags.TagId = recent.TagId
+      )
+GROUP BY name
+ORDER BY postCount DESC, name ASC
 ;

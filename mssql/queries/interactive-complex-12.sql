@@ -1,44 +1,43 @@
 WITH extended_tags(s_subtagclassid,s_supertagclassid) AS (
-    SELECT tc_tagclassid
-         , tc_tagclassid 
+    SELECT id, id
       FROM tagclass
      UNION ALL
-    SELECT tc.tc_tagclassid
+    SELECT tc.id
          , t.s_supertagclassid
       FROM tagclass tc
          , extended_tags t
-     WHERE tc.tc_subclassoftagclassid = t.s_subtagclassid
+     WHERE tc.SubclassOfTagClassId = t.s_subtagclassid
 )
-SELECT TOP(20) p_personid
-             , p_firstname
-             , p_lastname
-             , string_agg(t_name, ';')
-             , sum(partialReplyCount)
+SELECT TOP(20) Person.id
+                firstName,
+                lastName,
+             , string_agg(name, ';')
+             , sum(replyCount)
             AS replyCount
-          FROM ( SELECT DISTINCT p_personid, p_firstname, p_lastname, t_name, count(*) AS partialReplyCount
-                   FROM person
-                      , message p1
-                      , knows
-                      , message p2
-                      , message_tag
-                      , (SELECT DISTINCT t_tagid
-                              , t_name 
+          FROM ( SELECT DISTINCT Person.id, firstName, lastName, name, count(*) AS partialReplyCount
+                   FROM Person
+                      , Message p1
+                      , Person_knows_Person
+                      , Message p2
+                      , Message_hasTag_Tag
+                      , (SELECT DISTINCT id
+                              , name 
                            FROM tag
-                          WHERE (t_tagclassid IN (
+                          WHERE (TypeTagClassId IN (
                                  SELECT DISTINCT s_subtagclassid
                                    FROM extended_tags k
                                       , tagclass
-                                  WHERE tc_tagclassid = k.s_supertagclassid 
-                                    AND tc_name = :tagClassName
+                                  WHERE id = k.s_supertagclassid
+                                    AND name = :tagClassName
                                 ))) selected_tags
-                          WHERE k_person1id = :personId
-                            AND k_person2id = p_personid
-                            AND p_personid = p1.m_creatorid 
-                            AND p1.m_c_replyof = p2.m_messageid
-                            AND p2.m_c_replyof IS NULL
-                            AND p2.m_messageid = mt_messageid
-                            AND mt_tagid = t_tagid
-      GROUP BY p_personid, p_firstname, p_lastname, t_name
+                        WHERE Person1Id = :personId
+                        AND Person2Id = Person.id
+                        AND Person.id = m1.CreatorPersonId
+                        AND m1.ParentMessageId = m2.MessageId
+                        AND m2.ParentMessageId IS NULL
+                        AND m2.MessageId = Message_hasTag_Tag.MessageId
+                        AND Message_hasTag_Tag.TagId = selected_tags.id
+      GROUP BY Person.id, Person.firstName, person.lastName, name
       ) x
-      GROUP BY p_personid, p_firstname, p_lastname
-      ORDER BY replyCount DESC, p_personid;
+      GROUP BY Person.id, Person.firstName, person.lastName
+      ORDER BY replyCount DESC, Person.id ASC;

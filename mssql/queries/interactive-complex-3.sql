@@ -1,51 +1,54 @@
-SELECT TOP(20) p_personid
-             , p_firstname
-             , p_lastname
-             , ct1
-             , ct2
-             , total AS totalcount
-          FROM (SELECT k_person2id
-                  FROM knows
-                 WHERE k_person1id = :personId
+SELECT TOP(20)
+            Person.id AS otherPersonId,
+            Person.firstName AS otherPersonFirstName,
+            Person.lastName AS otherPersonLastName,
+            ct1 AS xCount,
+            ct2 AS yCount,
+            total AS count
+          FROM (SELECT Person2Id
+                  FROM Person_knows_Person
+                 WHERE Person1Id = :personId
                  UNION
-                SELECT k2.k_person2id
-                  FROM knows k1
-                     , knows k2
-                 WHERE k1.k_person1id = :personId
-                   AND k1.k_person2id = k2.k_person1id
-                   AND k2.k_person2id <> :personId
-               ) f, person, place p1, place p2,
+                SELECT k2.Person2Id
+                  FROM Person_knows_Person k1
+                     , Person_knows_Person k2
+                 WHERE k1.Person1Id = :personId
+                   AND k1.Person2Id = k2.Person1Id
+                   AND k2.Person2Id <> :personId
+               ) friend,
+                Person,
+                City,
+                Country,
                (
-                SELECT chn.m_creatorid
+                SELECT chn.CreatorPersonId
                      , ct1
                      , ct2
                      , ct1 + ct2 AS total
                   FROM
                      (
-                SELECT m_creatorid, count(*) AS ct1 FROM message, place
-                 WHERE m_locationid = pl_placeid
-                   AND pl_name = :countryXName
-                   AND m_creationdate >= :startDate
-                   AND m_creationdate < DATEADD(day, :durationDays, :startDate)
-              GROUP BY m_creatorid
+                SELECT CreatorPersonId, count(*) AS ct1
+                FROM Message, Country
+                 WHERE LocationCountryId = Country.id
+                  AND Country.name = :countryXName
+                  AND Message.creationDate >= :startDate
+                   AND creationDate < DATEADD(day, :durationDays, :startDate)
+              GROUP BY CreatorPersonId
                      ) chn
-                     , (SELECT m_creatorid
-                             , count(*) AS ct2 
-                          FROM message
-                             , place
-                         WHERE m_locationid = pl_placeid
-                           AND pl_name = :countryYName
-                           AND m_creationdate >= :startDate
-                           AND m_creationdate < DATEADD(day, :durationDays, :startDate)
-                      GROUP BY m_creatorid
+                     , (SELECT CreatorPersonId, count(*) AS ct2
+                          FROM Message, Country
+                         WHERE LocationCountryId = Country.id
+                            AND Country.name = :countryYName
+                            AND Message.creationDate >= :startDate
+                           AND Message.creationDate < DATEADD(day, :durationDays, :startDate)
+                      GROUP BY CreatorPersonId
                              ) ind
-                WHERE CHN.m_creatorid = IND.m_creatorid
+                WHERE chn.CreatorPersonId = IND.CreatorPersonId
                     ) cpc
-         WHERE f.k_person2id = p_personid
-           AND p_placeid = p1.pl_placeid
-           AND p1.pl_containerplaceid = p2.pl_placeid
-           AND p2.pl_name <> :countryXName
-           AND p2.pl_name <> :countryYName
-           AND f.k_person2id = cpc.m_creatorid
-      ORDER BY totalcount DESC, p_personid ASC
+            WHERE friend.Person2Id = Person.id
+            AND Person.LocationCityId = City.id
+            AND City.PartOfCountryId = Country.id
+            AND Country.name <> :countryXName
+            AND Country.name <> :countryYName
+            AND friend.Person2Id = cpc.CreatorPersonId
+            ORDER BY totalcount DESC, Person.id ASC
 ;

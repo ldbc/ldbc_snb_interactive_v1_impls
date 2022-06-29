@@ -1,28 +1,33 @@
-SELECT p_personid
-     , p_firstname
-     , p_lastname
-     , l.l_creationdate
-     , m_messageid
-     , COALESCE(m_ps_imagefile, m_content)
-     , DATEDIFF_BIG(second, m_creationdate, l.l_creationdate)/60 AS minutesLatency
+SELECT
+    Person.id,
+    firstName,
+    lastName,
+    l.creationDate,
+    Message.MessageId,
+    coalesce(imageFile, content),
+     , DATEDIFF_BIG(second, Message.creationDate, l.creationDate)/60 AS minutesLatency
      , (CASE WHEN EXISTS (SElECT 1
-                            FROM knows
-                           WHERE k_person1id = :personId
-                             AND k_person2id = p_personid)
+                            FROM Person_knows_Person
+                           WHERE Person1Id = :personId
+                             AND Person2Id = Person.id)
                             THEN 0 ELSE 1 END
-       ) AS isnew
-  FROM (SELECT TOP(20) l_personid
-                     , max(l_creationdate) AS l_creationdate
-                  FROM likes
-                     , message
-                 WHERE m_messageid = l_messageid
-                   AND m_creatorid = :personId
-              GROUP BY l_personid
-              ORDER BY l_creationdate DESC
-       ) tmp, message, person, likes AS l
- WHERE p_personid = tmp.l_personid
-   AND tmp.l_personid = l.l_personid
-   AND tmp.l_creationdate = l.l_creationdate
-   AND l.l_messageid = m_messageid
- ORDER BY l_creationdate DESC, p_personid ASC
+       ) AS isNew
+FROM
+    (
+        SELECT TOP(20) PersonId, max(Person_likes_Message.creationDate) AS creationDate
+        FROM Person_likes_Message, Message
+        WHERE
+          Person_likes_Message.MessageId = Message.MessageId AND
+          CreatorPersonId = :personId
+        GROUP BY PersonId
+        ORDER BY creationDate DESC
+    ) tmp,
+    Message,
+    Person,
+    Person_likes_Message AS l
+WHERE Person.id = tmp.PersonId
+  AND tmp.PersonId = l.PersonId
+  AND tmp.creationDate = l.creationDate
+  AND l.MessageId = Message.MessageId
+ORDER BY creationDate DESC, Person.id ASC
 ;
