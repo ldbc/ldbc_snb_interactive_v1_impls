@@ -88,8 +88,8 @@ if __name__ == "__main__":
         print("Create tables")
         DBL.run_ddl_scripts("ddl/schema-composite-merged-fk.sql")
 
-        print("Create deletion tables")
-        DBL.run_ddl_scripts("ddl/schema-delete-candidates.sql")
+        # print("Create deletion tables")
+        # DBL.run_ddl_scripts("ddl/schema-delete-candidates.sql")
 
         print("Load initial snapshot")
         load_data("ddl/load.sql", DBL)
@@ -98,13 +98,13 @@ if __name__ == "__main__":
         # DBL.run_ddl_scripts("dml/maintain-views.sql")
         # print("Done.")
 
-        # print("Create static materialized views . . . ")
-        # DBL.run_ddl_scripts("dml/create-static-materialized-views.sql")
-        # print("Done.")
+        print("Create static materialized views . . . ")
+        DBL.run_ddl_scripts("dml/create-static-materialized-views.sql")
+        print("Done.")
 
-        print("Adding indexes and constraints")
-        DBL.run_ddl_scripts("ddl/schema-constraints.sql")
-        DBL.run_ddl_scripts("ddl/schema-foreign-keys.sql")
+        # print("Adding indexes and constraints")
+        # DBL.run_ddl_scripts("ddl/schema-constraints.sql")
+        # DBL.run_ddl_scripts("ddl/schema-foreign-keys.sql")
 
     end_total = time.time()
     duration_total = end_total - start_total
