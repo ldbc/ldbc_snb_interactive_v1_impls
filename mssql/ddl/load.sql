@@ -1,13 +1,13 @@
 USE ldbc;
 -- Static --
-
 -- Organisation
-INSERT INTO [dbo].[Organisation] (id, type, name, url, LocationPlaceId)
-SELECT id,
-       type,
-       name,
-       url,
-       LocationPlaceId
+INSERT INTO [dbo].[Organisation] ($NODE_ID, id, type, name, url, LocationPlaceId)
+SELECT NODE_ID_FROM_PARTS(object_id('Organisation'), id) AS node_id,
+    id,
+    type,
+    name,
+    url,
+    LocationPlaceId
 FROM OPENROWSET (
     BULK ':organisation_csv',
     FORMATFILE = '/data/format-files/Organisation.xml',
@@ -15,12 +15,13 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Place
-INSERT INTO [dbo].[Place] (id, name, type, url, PartOfPlaceId)
-SELECT id,
-       name,
-       type,
-       url,
-       PartOfPlaceId
+INSERT INTO [dbo].[Place] ($NODE_ID, id, name, type, url, PartOfPlaceId)
+SELECT NODE_ID_FROM_PARTS(object_id('Place'), id) AS node_id,
+    id,
+    name,
+    type,
+    url,
+    PartOfPlaceId
 FROM OPENROWSET (
     BULK ':place_csv',
     FORMATFILE = '/data/format-files/Place.xml',
@@ -28,11 +29,12 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Tag
-INSERT INTO [dbo].[Tag] (id, name, url, TypeTagClassId)
-SELECT id,
-       name,
-       url,
-       TypeTagClassId
+INSERT INTO [dbo].[Tag] ($NODE_ID, id, name, url, TypeTagClassId)
+SELECT NODE_ID_FROM_PARTS(object_id('Tag'), id) AS node_id,
+    id,
+    name,
+    url,
+    TypeTagClassId
 FROM OPENROWSET (
     BULK ':tag_csv',
     FORMATFILE = '/data/format-files/Tag.xml',
@@ -40,11 +42,12 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- TagClass
-INSERT INTO [dbo].[TagClass] (id, name, url, SubclassOfTagClassId)
-SELECT id,
-       name,
-       url,
-       SubclassOfTagClassId
+INSERT INTO [dbo].[TagClass] ($NODE_ID, id, name, url, SubclassOfTagClassId)
+SELECT NODE_ID_FROM_PARTS(object_id('TagClass'), id) AS node_id,
+    id,
+    name,
+    url,
+    SubclassOfTagClassId
 FROM OPENROWSET (
     BULK ':tagclass_csv',
     FORMATFILE = '/data/format-files/TagClass.xml',
@@ -54,6 +57,7 @@ FROM OPENROWSET (
 --Dynamic
 -- Comments
 INSERT INTO [dbo].[Comment] (
+    $NODE_ID,
     creationDate,
     id,
     locationIP,
@@ -65,7 +69,8 @@ INSERT INTO [dbo].[Comment] (
     ParentPostId,
     ParentCommentId
 )
-SELECT creationDate,
+SELECT NODE_ID_FROM_PARTS(object_id('Comment'), id) AS node_id,
+    creationDate,
     id,
     locationIP,
     browserUsed,
@@ -82,8 +87,10 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Comment_hasTag_Tag
-INSERT INTO [dbo].[Comment_hasTag_Tag] (creationDate, CommentId, TagId)
-SELECT creationDate,
+INSERT INTO [dbo].[Comment_hasTag_Tag] ($FROM_ID, $TO_ID, creationDate, CommentId, TagId)
+SELECT  NODE_ID_FROM_PARTS(object_id('Comment'), CommentId) AS from_id,
+        NODE_ID_FROM_PARTS(object_id('Tag'), TagId) AS to_id,
+       creationDate,
        CommentId,
        TagId
 FROM OPENROWSET (
@@ -92,9 +99,11 @@ FROM OPENROWSET (
     FIRSTROW = 2
 ) AS raw;
 
+    
 -- Forum
-INSERT INTO [dbo].[Forum] (creationDate, id, title, ModeratorPersonId)
-SELECT creationDate,
+INSERT INTO [dbo].[Forum] ($NODE_ID, creationDate, id, title, ModeratorPersonId)
+SELECT NODE_ID_FROM_PARTS(object_id('Forum'), id) AS node_id,
+       creationDate,
        id,
        title,
        ModeratorPersonId
@@ -105,10 +114,12 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Forum_hasMember_Person
-INSERT INTO [dbo].[Forum_hasMember_Person] (creationDate, ForumId, PersonId)
-SELECT creationDate,
-       ForumId,
-       PersonId
+INSERT INTO [dbo].[Forum_hasMember_Person] ($FROM_ID, $TO_ID, creationDate, ForumId, PersonId)
+SELECT  NODE_ID_FROM_PARTS(object_id('Forum'), ForumId) AS from_id,
+        NODE_ID_FROM_PARTS(object_id('Person'), PersonId) AS to_id,
+        creationDate,
+        ForumId,
+        PersonId
 FROM OPENROWSET (
     BULK ':forum_hasmember_person_csv',
     FORMATFILE = '/data/format-files/Forum_hasMember_Person.xml',
@@ -116,8 +127,10 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Forum_hasTag_Tag
-INSERT INTO [dbo].[Forum_hasTag_Tag] (creationDate, ForumId, TagId)
-SELECT creationDate,
+INSERT INTO [dbo].[Forum_hasTag_Tag] ($FROM_ID, $TO_ID, creationDate, ForumId, TagId)
+SELECT NODE_ID_FROM_PARTS(object_id('Forum'), ForumId) AS from_id,
+       NODE_ID_FROM_PARTS(object_id('Tag'), TagId) AS to_id,
+       creationDate,
        ForumId,
        TagId
 FROM OPENROWSET (
@@ -153,15 +166,17 @@ SELECT NODE_ID_FROM_PARTS(object_id('Person'), id) AS node_id,
        LocationCityId,
        language,
        email
-FROM   OPENROWSET (
+FROM OPENROWSET (
     BULK ':person_csv',
     FORMATFILE = '/data/format-files/Person.xml',
     FIRSTROW = 2
 ) AS raw;
 
 -- Person_hasInterest_Tag
-INSERT INTO [dbo].[Person_hasInterest_Tag] (creationDate, PersonId, TagId)
-SELECT creationDate,
+INSERT INTO [dbo].[Person_hasInterest_Tag] ($FROM_ID, $TO_ID, creationDate, PersonId, TagId)
+SELECT NODE_ID_FROM_PARTS(object_id('Person'), PersonId) AS from_id,
+       NODE_ID_FROM_PARTS(object_id('Tag'), TagId) AS to_id,
+       creationDate,
        PersonId,
        TagId
 FROM OPENROWSET (
@@ -171,7 +186,7 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Person_knows_Person
-INSERT INTO [dbo].[Person_knows_Person] ($FROM_ID, $TO_ID,Person1id, Person2id, creationDate)
+INSERT INTO [dbo].[Person_knows_Person] ($FROM_ID, $TO_ID, Person1id, Person2id, creationDate)
 SELECT NODE_ID_FROM_PARTS(object_id('Person'), Person1id) AS from_id,
        NODE_ID_FROM_PARTS(object_id('Person'), Person2id) AS to_id,
        Person1id,
@@ -184,8 +199,10 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Person_likes_Comment
-INSERT INTO [dbo].[Person_likes_Comment] (creationDate, PersonId, CommentId)
-SELECT creationDate,
+INSERT INTO [dbo].[Person_likes_Comment] ($FROM_ID, $TO_ID, creationDate, PersonId, CommentId)
+SELECT NODE_ID_FROM_PARTS(object_id('Person'), PersonId) AS from_id,
+       NODE_ID_FROM_PARTS(object_id('Comment'), CommentId) AS to_id,
+       creationDate,
        PersonId,
        CommentId
 FROM OPENROWSET (
@@ -195,8 +212,10 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Person_likes_Post
-INSERT INTO [dbo].[Person_likes_Post] (creationDate, PersonId, PostId)
-SELECT creationDate,
+INSERT INTO [dbo].[Person_likes_Post] ($FROM_ID, $TO_ID, creationDate, PersonId, PostId)
+SELECT NODE_ID_FROM_PARTS(object_id('Person'), PersonId) AS from_id,
+       NODE_ID_FROM_PARTS(object_id('Post'), PostId) AS to_id,
+       creationDate,
        PersonId,
        PostId
 FROM OPENROWSET (
@@ -206,8 +225,10 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Person_studyAt_University
-INSERT INTO [dbo].[Person_studyAt_University] (creationDate, PersonId, UniversityId, classYear)
-SELECT creationDate,
+INSERT INTO [dbo].[Person_studyAt_University] ($FROM_ID, $TO_ID, creationDate, PersonId, UniversityId, classYear)
+SELECT NODE_ID_FROM_PARTS(object_id('Person'), PersonId) AS from_id,
+       NODE_ID_FROM_PARTS(object_id('University'), UniversityId) AS to_id,
+       creationDate,
        PersonId,
        UniversityId,
        classYear
@@ -218,8 +239,10 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Person_workAt_Company
-INSERT INTO [dbo].[Person_workAt_Company] (creationDate, PersonId, CompanyId, workFrom)
-SELECT creationDate,
+INSERT INTO [dbo].[Person_workAt_Company] ($FROM_ID, $TO_ID, creationDate, PersonId, CompanyId, workFrom)
+SELECT NODE_ID_FROM_PARTS(object_id('Person'), PersonId) AS from_id,
+       NODE_ID_FROM_PARTS(object_id('Company'), CompanyId) AS to_id,
+       creationDate,
        PersonId,
        CompanyId,
        workFrom
@@ -231,6 +254,7 @@ FROM OPENROWSET (
 
 -- Post
 INSERT INTO [dbo].[Post] (
+    $NODE_ID,
     creationDate,
     id,
     imageFile,
@@ -243,7 +267,8 @@ INSERT INTO [dbo].[Post] (
     ContainerForumId,
     LocationCountryId
 )
-SELECT creationDate,
+SELECT NODE_ID_FROM_PARTS(object_id('Post'), id) AS node_id,
+    creationDate,
     id,
     imageFile,
     locationIP,
@@ -261,10 +286,12 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Post_hasTag_Tag
-INSERT INTO [dbo].[Post_hasTag_Tag] (creationDate, PostId, TagId)
-SELECT creationDate,
-       PostId,
-       TagId
+INSERT INTO [dbo].[Post_hasTag_Tag] ($FROM_ID, $TO_ID, creationDate, PostId, TagId)
+SELECT NODE_ID_FROM_PARTS(object_id('Post'), PostId) AS from_id,
+       NODE_ID_FROM_PARTS(object_id('Tag'), TagId) AS to_id,
+    creationDate,
+    PostId,
+    TagId
 FROM OPENROWSET (
     BULK ':post_hastag_tag_csv',
     FORMATFILE = '/data/format-files/Post_hasTag_Tag.xml',
