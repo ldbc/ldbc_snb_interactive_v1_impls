@@ -31,9 +31,6 @@ jobs:
             cd cypher
             ## compressed CSVs for Cypher
             scripts/get-sample-data-set.sh
-            ## uncompressed CSVs for Cypher
-            wget -q https://ldbcouncil.org/ldbc_snb_datagen_spark/social-network-sf0.003-bi-composite-projected-fk-neo4j.zip
-            unzip -q social-network-sf0.003-bi-composite-projected-fk-neo4j.zip
             cd ..
       ### Neo4j
       - run:
