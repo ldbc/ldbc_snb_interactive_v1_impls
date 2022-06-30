@@ -4,6 +4,7 @@ CREATE (author)<-[:HAS_CREATOR]-(p:Post:Message {
     creationDate: $creationDate,
     locationIP: $locationIP,
     browserUsed: $browserUsed,
+    language: $language,
     content: CASE $content WHEN '' THEN NULL ELSE $content END,
     imageFile: CASE $imageFile WHEN '' THEN NULL ELSE $imageFile END,
     length: $length
