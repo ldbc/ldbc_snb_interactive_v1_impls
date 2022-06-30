@@ -13,12 +13,7 @@ import org.ldbcouncil.snb.impls.workloads.cypher.operationhandlers.CypherUpdateO
 import org.ldbcouncil.snb.impls.workloads.db.BaseDb;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.neo4j.driver.Driver;
@@ -829,20 +824,20 @@ public class CypherDb extends BaseDb<CypherQueryStore>
         @Override
         public Map<String, Object> getParameters( LdbcUpdate6AddPost operation )
         {
-            return ImmutableMap.<String, Object>builder()
-                               .put( LdbcUpdate6AddPost.POST_ID, operation.getPostId() )
-                               .put( LdbcUpdate6AddPost.IMAGE_FILE, operation.getImageFile() )
-                               .put( LdbcUpdate6AddPost.CREATION_DATE, operation.getCreationDate().getTime() )
-                               .put( LdbcUpdate6AddPost.LOCATION_IP, operation.getLocationIp() )
-                               .put( LdbcUpdate6AddPost.BROWSER_USED, operation.getBrowserUsed() )
-                               .put( LdbcUpdate6AddPost.LANGUAGE, operation.getLanguage() )
-                               .put( LdbcUpdate6AddPost.CONTENT, operation.getContent() )
-                               .put( LdbcUpdate6AddPost.LENGTH, operation.getLength() )
-                               .put( LdbcUpdate6AddPost.AUTHOR_PERSON_ID, operation.getAuthorPersonId() )
-                               .put( LdbcUpdate6AddPost.FORUM_ID, operation.getForumId() )
-                               .put( LdbcUpdate6AddPost.COUNTRY_ID, operation.getCountryId() )
-                               .put( LdbcUpdate6AddPost.TAG_IDS, operation.getTagIds() )
-                               .build();
+            final HashMap<String, Object> parameterMap = new HashMap<>();
+            parameterMap.put(LdbcUpdate6AddPost.POST_ID, operation.getPostId());
+            parameterMap.put(LdbcUpdate6AddPost.IMAGE_FILE, operation.getImageFile());
+            parameterMap.put(LdbcUpdate6AddPost.CREATION_DATE, operation.getCreationDate().getTime());
+            parameterMap.put(LdbcUpdate6AddPost.LOCATION_IP, operation.getLocationIp());
+            parameterMap.put(LdbcUpdate6AddPost.BROWSER_USED, operation.getBrowserUsed());
+            parameterMap.put(LdbcUpdate6AddPost.LANGUAGE, operation.getLanguage());
+            parameterMap.put(LdbcUpdate6AddPost.CONTENT, operation.getContent());
+            parameterMap.put(LdbcUpdate6AddPost.LENGTH, operation.getLength());
+            parameterMap.put(LdbcUpdate6AddPost.AUTHOR_PERSON_ID, operation.getAuthorPersonId());
+            parameterMap.put(LdbcUpdate6AddPost.FORUM_ID, operation.getForumId());
+            parameterMap.put(LdbcUpdate6AddPost.COUNTRY_ID, operation.getCountryId());
+            parameterMap.put(LdbcUpdate6AddPost.TAG_IDS, operation.getTagIds());
+            return parameterMap;
         }
     }
 
