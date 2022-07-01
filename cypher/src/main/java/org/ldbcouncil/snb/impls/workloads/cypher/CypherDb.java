@@ -884,4 +884,130 @@ public class CypherDb extends BaseDb<CypherQueryStore>
                                .build();
         }
     }
+
+    // Deletions
+    public static class Delete1RemovePerson extends CypherUpdateOperationHandler<LdbcDelete1RemovePerson> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete1RemovePerson operation) {
+            return state.getQueryStore().getDelete1(operation);
+        }
+
+        @Override
+        public Map<String, Object> getParameters(LdbcDelete1RemovePerson operation) {
+            return ImmutableMap.<String, Object>builder()
+                    .put( LdbcDelete1RemovePerson.PERSON_ID, operation.getremovePersonIdD1() )
+                    .build();
+        }
+    }
+
+    public static class Delete2RemovePostLike extends CypherUpdateOperationHandler<LdbcDelete2RemovePostLike> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete2RemovePostLike operation) {
+            return state.getQueryStore().getDelete2(operation);
+        }
+
+        @Override
+        public Map<String, Object> getParameters(LdbcDelete2RemovePostLike operation) {
+            return ImmutableMap.<String, Object>builder()
+                    .put( LdbcDelete2RemovePostLike.PERSON_ID, operation.getremovePersonIdD2() )
+                    .put( LdbcDelete2RemovePostLike.POST_ID, operation.getremovePostIdD2() )
+                    .build();
+        }
+    }
+
+    public static class Delete3RemoveCommentLike extends CypherUpdateOperationHandler<LdbcDelete3RemoveCommentLike> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete3RemoveCommentLike operation) {
+            return state.getQueryStore().getDelete3(operation);
+        }
+
+        @Override
+        public Map<String, Object> getParameters(LdbcDelete3RemoveCommentLike operation) {
+            return ImmutableMap.<String, Object>builder()
+                    .put( LdbcDelete3RemoveCommentLike.PERSON_ID, operation.getremovePersonIdD3() )
+                    .put( LdbcDelete3RemoveCommentLike.COMMENT_ID, operation.getremoveCommentIdD3() )
+                    .build();
+        }
+    }
+
+    public static class Delete4RemoveForum extends CypherUpdateOperationHandler<LdbcDelete4RemoveForum> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete4RemoveForum operation) {
+            return state.getQueryStore().getDelete4(operation);
+        }
+
+        @Override
+        public Map<String, Object> getParameters(LdbcDelete4RemoveForum operation) {
+            return ImmutableMap.<String, Object>builder()
+                    .put( LdbcDelete4RemoveForum.FORUM_ID, operation.getremoveForumIdD4() )
+                    .build();
+        }
+    }
+
+    public static class Delete5RemoveForumMembership extends CypherUpdateOperationHandler<LdbcDelete5RemoveForumMembership> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete5RemoveForumMembership operation) {
+            return state.getQueryStore().getDelete5(operation);
+        }
+
+        @Override
+        public Map<String, Object> getParameters(LdbcDelete5RemoveForumMembership operation) {
+            return ImmutableMap.<String, Object>builder()
+                    .put( LdbcDelete5RemoveForumMembership.PERSON_ID, operation.getremovePersonIdD5() )
+                    .put( LdbcDelete5RemoveForumMembership.FORUM_ID, operation.getremoveForumIdD5() )
+                    .build();
+        }
+    }
+
+    public static class Delete6RemovePostThread extends CypherUpdateOperationHandler<LdbcDelete6RemovePostThread> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete6RemovePostThread operation) {
+            return state.getQueryStore().getDelete6(operation);
+        }
+
+        @Override
+        public Map<String, Object> getParameters(LdbcDelete6RemovePostThread operation) {
+            return ImmutableMap.<String, Object>builder()
+                    .put( LdbcDelete6RemovePostThread.POST_ID, operation.getremovePostIdD6() )
+                    .build();
+        }
+    }
+
+    public static class Delete7RemoveCommentSubthread extends CypherUpdateOperationHandler<LdbcDelete7RemoveCommentSubthread> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete7RemoveCommentSubthread operation) {
+            return state.getQueryStore().getDelete7(operation);
+        }
+
+        @Override
+        public Map<String, Object> getParameters(LdbcDelete7RemoveCommentSubthread operation) {
+            return ImmutableMap.<String, Object>builder()
+                    .put( LdbcDelete7RemoveCommentSubthread.COMMENT_ID, operation.getremoveCommentIdD7() )
+                    .build();
+        }
+    }
+
+    public static class Delete8RemoveFriendship extends CypherUpdateOperationHandler<LdbcDelete8RemoveFriendship> {
+
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcDelete8RemoveFriendship operation) {
+            return state.getQueryStore().getDelete8(operation);
+        }
+
+        @Override
+        public Map<String, Object> getParameters(LdbcDelete8RemoveFriendship operation) {
+            return ImmutableMap.<String, Object>builder()
+                    .put( LdbcDelete8RemoveFriendship.PERSON1_ID, operation.getremovePerson1Id() )
+                    .put( LdbcDelete8RemoveFriendship.PERSON2_ID, operation.getremovePerson2Id() )
+                    .build();
+        }
+    }
+
 }
