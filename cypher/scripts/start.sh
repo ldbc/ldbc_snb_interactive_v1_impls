@@ -21,7 +21,6 @@ docker run --rm \
     --ulimit nofile=40000:40000 \
     ${NEO4J_ENV_VARS} \
     --volume=${NEO4J_DATA_DIR}:/data:z \
-    --volume=${NEO4J_CSV_DIR}:/import \
     --volume=${NEO4J_CONTAINER_ROOT}/logs:/logs:z \
     --volume=${NEO4J_CONTAINER_ROOT}/plugins:/plugins:z \
     --env NEO4JLABS_PLUGINS='["apoc", "graph-data-science"]' \
