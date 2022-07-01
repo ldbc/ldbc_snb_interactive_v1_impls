@@ -46,6 +46,9 @@ jobs:
             mv inserts ../../update-streams/
             mv deletes ../../update-streams/
             cd ../..
+            # workaround
+            mv update-streams/* parameters/
+            sed -i 's|/update-streams|/parameters|g' {cypher,postgres}/driver/*.properties
       - run:
           name: Generate parameters
           command: |
