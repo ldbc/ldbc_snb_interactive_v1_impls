@@ -29,10 +29,13 @@ jobs:
           command: |
             # Cypher
             cd cypher
-            ## compressed CSVs for Cypher
             scripts/get-sample-data-set.sh
             cd ..
-            ## regular CSVs for updates
+            # Postgres
+            cd postgres
+            scripts/get-sample-data-set.sh
+            cd ..
+            # regular CSVs for updates
             wget -q https://ldbcouncil.org/ldbc_snb_datagen_spark/social-network-sf0.003-bi-composite-merged-fk.zip
             unzip -q social-network-sf0.003-bi-composite-merged-fk.zip
       - run:
@@ -77,7 +80,7 @@ jobs:
           name: Tiny data set - Load PostgreSQL database and create a backup
           command: |
             cd postgres
-            export POSTGRES_CSV_DIR=`pwd`/test-data/
+            . scripts/use-sample-data-set.sh
             scripts/load-in-one-step.sh
             scripts/backup-database.sh
             cd ..
