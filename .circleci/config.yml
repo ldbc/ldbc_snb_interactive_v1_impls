@@ -25,16 +25,22 @@ jobs:
           name: Build project
           command: scripts/build.sh
       - run:
-          name: Download small data sets
+          name: Download small data set for Cypher
           command: |
             # Cypher
             cd cypher
             scripts/get-sample-data-set.sh
             cd ..
+      - run:
+          name: Download small data set for Postgres
+          command: |
             # Postgres
             cd postgres
             scripts/get-sample-data-set.sh
             cd ..
+      - run:
+          name: Download small data set for updates
+          command: |
             # regular CSVs for updates
             wget -q https://ldbcouncil.org/ldbc_snb_datagen_spark/social-network-sf0.003-bi-composite-merged-fk.zip
             unzip -q social-network-sf0.003-bi-composite-merged-fk.zip
