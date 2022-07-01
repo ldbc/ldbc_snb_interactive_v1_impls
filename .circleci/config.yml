@@ -32,6 +32,26 @@ jobs:
             ## compressed CSVs for Cypher
             scripts/get-sample-data-set.sh
             cd ..
+            ## regular CSVs for updates
+            wget -q https://ldbcouncil.org/ldbc_snb_datagen_spark/social-network-sf0.003-bi-composite-merged-fk.zip
+            unzip -q social-network-sf0.003-bi-composite-merged-fk.zip
+      - run:
+          name: Convert update streams
+          command: |
+            git clone --branch v2.0-dev https://github.com/ldbc/ldbc_snb_interactive_driver
+            cd ldbc_snb_interactive_driver/scripts/
+            export DATA_ROOT_DIRECTORY=../../social-network-sf0.003-bi-composite-merged-fk/
+            scripts/convert.sh
+            mv inserts ../../parameters/
+            mv deletes ../../parameters/
+            cd ../..
+      - run:
+          name: Generate parameters
+          command: |
+            cd paramgen
+            scripts/get-sample-factors.sh
+            scripts/paramgen.sh
+            cd ..
       ### Neo4j
       - run:
           name: Tiny data set - Load Neo4j database and create a backup
