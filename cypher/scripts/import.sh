@@ -59,6 +59,7 @@ docker run --rm \
     --volume=${NEO4J_DATA_DIR}:/data \
     --volume=${NEO4J_CSV_DIR}:/import \
     --volume=${NEO4J_HEADER_DIR}:/headers \
+    --env=SECURE_FILE_PERMISSIONS=no \
     ${NEO4J_ENV_VARS} \
     ${NEO4J_DOCKER_PLATFORM_FLAG} \
     neo4j:${NEO4J_VERSION} \
