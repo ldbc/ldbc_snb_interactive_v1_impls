@@ -43,8 +43,8 @@ jobs:
             cd ldbc_snb_interactive_driver/scripts/
             export DATA_ROOT_DIRECTORY=../../social-network-sf0.003-bi-composite-merged-fk/
             ./convert.sh
-            mv inserts ../../parameters/
-            mv deletes ../../parameters/
+            mv inserts ../../update-streams/
+            mv deletes ../../update-streams/
             cd ../..
       - run:
           name: Generate parameters
