@@ -24,7 +24,7 @@ docker-compose build && docker-compose up
 The default environment variables are loaded from `.env`. Change the `POSTGRES_CSV_DIR` to point to point to the data set, e.g.
 
 ```bash
-POSTGRES_CSV_DIR=`pwd`/test-data/
+POSTGRES_CSV_DIR=`pwd`/social-network-sf0.003-bi-composite-merged-fk/
 ```
 
 To persist the data by storing the database outside a Docker volume, uncomment the following lines in the `docker-compose.yml` file:
@@ -37,7 +37,7 @@ To persist the data by storing the database outside a Docker volume, uncomment t
 
 ## Generating and loading the data set
 
-## Generating the data set
+### Generating the data set
 
 The PostgreSQL `composite-merged-fk` CSV layout, with headers and without quoted fields.
 To generate data that confirms this requirement, run Datagen without any layout or formatting arguments (`--explode-*` or `--format-options`).
@@ -62,7 +62,7 @@ tools/run.py \
     --output-dir out-sf${SF}
 ```
 
-### Configuration
+## Configuration
 
 The default configuration of the database (e.g. database name, user, password) is set in the `scripts/vars.sh` file.
 
