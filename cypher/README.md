@@ -65,7 +65,6 @@ tools/run.py \
     --explode-edges \
     --mode bi \
     --output-dir out-sf${SF}/ \
-    --generate-factors \
     --epoch-millis \
     --format-options header=false,quoteAll=true,compression=gzip
 ```
