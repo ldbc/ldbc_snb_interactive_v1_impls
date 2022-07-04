@@ -43,6 +43,9 @@ services:
       - type: bind
         source: ${POSTGRES_DML_DIR}
         target: /dml/
+      - type: bind
+        source: ${POSTGRES_CSV_DIR}
+        target: /data/
     depends_on:
       - postgres-db
     command: sh -c "/wait && python3 -u home/load.py --POSTGRES_DATA_DIR ${POSTGRES_CSV_DIR}"

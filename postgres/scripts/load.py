@@ -62,25 +62,25 @@ class PostgresDbLoader():
 
             print("Load initial snapshot")
 
-            # initial snapshot
-            static_path = f"{data_dir}/initial_snapshot/static"
-            dynamic_path = f"{data_dir}/initial_snapshot/dynamic"
-            static_entities = ["Organisation", "Place", "Tag", "TagClass"]
-            dynamic_entities = ["Comment", "Comment_hasTag_Tag", "Forum", "Forum_hasMember_Person", "Forum_hasTag_Tag", "Person", "Person_hasInterest_Tag", "Person_knows_Person", "Person_likes_Comment", "Person_likes_Post", "Person_studyAt_University", "Person_workAt_Company", "Post", "Post_hasTag_Tag"]
-
             if local:
                 dbs_data_dir = data_dir
             else:
                 dbs_data_dir = '/data'
 
+            # initial snapshot
+            static_path = f"{dbs_data_dir}/initial_snapshot/static"
+            dynamic_path = f"{dbs_data_dir}/initial_snapshot/dynamic"
+            static_entities = ["Organisation", "Place", "Tag", "TagClass"]
+            dynamic_entities = ["Comment", "Comment_hasTag_Tag", "Forum", "Forum_hasMember_Person", "Forum_hasTag_Tag", "Person", "Person_hasInterest_Tag", "Person_knows_Person", "Person_likes_Comment", "Person_likes_Post", "Person_studyAt_University", "Person_workAt_Company", "Post", "Post_hasTag_Tag"]
             print("## Static entities")
             for entity in static_entities:
                 print(f"===== {entity} =====")
                 entity_dir = os.path.join(static_path, entity)
                 print(f"--> {entity_dir}")
+                print(glob.glob(f'{entity_dir}/**/*.csv', recursive=True))
                 for csv_file in glob.glob(f'{entity_dir}/*.csv', recursive=True):
                     print(f"- {csv_file}")
-                    cur.execute(f"COPY {entity} FROM '{dbs_data_dir}/initial_snapshot/static/{entity}/{csv_file}' (DELIMITER '|', HEADER, NULL '', FORMAT csv)")
+                    cur.execute(f"COPY {entity} FROM '{csv_file}' (DELIMITER '|', HEADER, NULL '', FORMAT csv)")
                     pg_con.commit()
             print("Loaded static entities.")
 
@@ -89,11 +89,11 @@ class PostgresDbLoader():
                 print(f"===== {entity} =====")
                 entity_dir = os.path.join(dynamic_path, entity)
                 print(f"--> {entity_dir}")
-                for csv_file in glob.glob(f'{entity_dir}/*.csv', recursive=True):
+                for csv_file in glob.glob(f'{entity_dir}/**/*.csv', recursive=True):
                     print(f"- {csv_file}")
-                    cur.execute(f"COPY {entity} FROM '{dbs_data_dir}/initial_snapshot/dynamic/{entity}/{csv_file}' (DELIMITER '|', HEADER, NULL '', FORMAT csv)")
+                    cur.execute(f"COPY {entity} FROM '{csv_file}' (DELIMITER '|', HEADER, NULL '', FORMAT csv)")
                     if entity == "Person_knows_Person":
-                        cur.execute(f"COPY {entity} (creationDate, Person2id, Person1id) FROM '{dbs_data_dir}/initial_snapshot/dynamic/{entity}/{csv_file}' (DELIMITER '|', HEADER, NULL '', FORMAT csv)")
+                        cur.execute(f"COPY {entity} (creationDate, Person2id, Person1id) FROM '{csv_file}' (DELIMITER '|', HEADER, NULL '', FORMAT csv)")
                     pg_con.commit()
             print("Loaded dynamic entities.")
 
