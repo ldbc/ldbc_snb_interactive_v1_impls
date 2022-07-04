@@ -13,4 +13,4 @@ if [ ! -d "${POSTGRES_CSV_DIR}" ]; then
     exit 1
 fi
 
-python3 scripts/load.py ${POSTGRES_CSV_DIR}
+python3 scripts/load.py --POSTGRES_DATA_DIR ${POSTGRES_CSV_DIR}

@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-import sys
+import glob
 import os
 import re
 import time
+import argparse
 import psycopg
 
 class PostgresDbLoader():
@@ -19,7 +20,33 @@ class PostgresDbLoader():
         conn.cursor().execute("ANALYZE")
         conn.autocommit=False
 
-    def main(self):
+    def run_script(self, pg_con, cur, filename):
+        with open(filename, "r") as f:
+            try:
+                queries_file = f.read()
+                # strip comments
+                queries_file = re.sub(r"\n--.*", "", queries_file)
+                queries = queries_file.split(";")
+                for query in queries:
+                    if query.isspace():
+                        continue
+
+                    sql_statement = re.findall(r"^((CREATE|INSERT|DROP|DELETE|SELECT|COPY) [A-Za-z0-9_ ]*)", query, re.MULTILINE)
+                    print(f"{sql_statement[0][0].strip()} ...")
+                    start = time.time()
+                    cur.execute(query)
+                    pg_con.commit()
+                    end = time.time()
+                    duration = end - start
+                    print(f"-> {duration:.4f} seconds")
+            except Exception:
+                print(f"Error trying to execute query: {query}")
+
+    def load_script(self, filename):
+        with open(filename, "r") as f:
+            return f.read()
+
+    def main(self, data_dir, local=False):
         with psycopg.connect(
             dbname=self.database,
             host=self.endpoint,
@@ -27,38 +54,11 @@ class PostgresDbLoader():
             password=self.password,
             port=self.port
         ) as pg_con:
-            if len(sys.argv) < 2:
-                print("Postgres loader script")
-                print("Usage: load.py <POSTGRES_DATA_DIR> [--compressed]")
-                exit(1)
-
-            data_dir = sys.argv[1]
-            local = len(sys.argv) == 3 and sys.argv[2] == "--local"
-
             cur = pg_con.cursor()
 
-            def run_script(pg_con, cur, filename):
-                with open(filename, "r") as f:
-                    queries_file = f.read()
-                    # strip comments
-                    queries_file = re.sub(r"\n--.*", "", queries_file)
-                    queries = queries_file.split(";")
-                    for query in queries:
-                        if query.isspace():
-                            continue
-
-                        sql_statement = re.findall(r"^((CREATE|INSERT|DROP|DELETE|SELECT|COPY) [A-Za-z0-9_ ]*)", query, re.MULTILINE)
-                        print(f"{sql_statement[0][0].strip()} ...")
-                        start = time.time()
-                        cur.execute(query)
-                        pg_con.commit()
-                        end = time.time()
-                        duration = end - start
-                        print(f"-> {duration:.4f} seconds")
-
-            run_script(pg_con, cur, "ddl/drop-tables.sql")
-            run_script(pg_con, cur, "ddl/schema-composite-merged-fk.sql")
-            run_script(pg_con, cur, "ddl/schema-delete-candidates.sql")
+            self.run_script(pg_con, cur, "ddl/drop-tables.sql")
+            self.run_script(pg_con, cur, "ddl/schema-composite-merged-fk.sql")
+            self.run_script(pg_con, cur, "ddl/schema-delete-candidates.sql")
 
             print("Load initial snapshot")
 
@@ -75,34 +75,34 @@ class PostgresDbLoader():
 
             print("## Static entities")
             for entity in static_entities:
-                for csv_file in [f for f in os.listdir(f"{static_path}/{entity}") if f.startswith("part-") and f.endswith(".csv")]:
-                    csv_path = f"{entity}/{csv_file}"
-                    print(f"- {csv_path}")
-                    #print(f"- {csv_path}", end='\r')
+                print(f"===== {entity} =====")
+                entity_dir = os.path.join(static_path, entity)
+                print(f"--> {entity_dir}")
+                for csv_file in glob.glob(f'{entity_dir}/*.csv', recursive=True):
+                    print(f"- {csv_file}")
                     cur.execute(f"COPY {entity} FROM '{dbs_data_dir}/initial_snapshot/static/{entity}/{csv_file}' (DELIMITER '|', HEADER, NULL '', FORMAT csv)")
-                    #print(" " * 120, end='\r')
                     pg_con.commit()
             print("Loaded static entities.")
 
             print("## Dynamic entities")
             for entity in dynamic_entities:
-                for csv_file in [f for f in os.listdir(f"{dynamic_path}/{entity}") if f.startswith("part-") and f.endswith(".csv")]:
-                    csv_path = f"{entity}/{csv_file}"
-                    print(f"- {csv_path}")
-                    #print(f"- {csv_path}", end='\r')
+                print(f"===== {entity} =====")
+                entity_dir = os.path.join(dynamic_path, entity)
+                print(f"--> {entity_dir}")
+                for csv_file in glob.glob(f'{entity_dir}/*.csv', recursive=True):
+                    print(f"- {csv_file}")
                     cur.execute(f"COPY {entity} FROM '{dbs_data_dir}/initial_snapshot/dynamic/{entity}/{csv_file}' (DELIMITER '|', HEADER, NULL '', FORMAT csv)")
                     if entity == "Person_knows_Person":
                         cur.execute(f"COPY {entity} (creationDate, Person2id, Person1id) FROM '{dbs_data_dir}/initial_snapshot/dynamic/{entity}/{csv_file}' (DELIMITER '|', HEADER, NULL '', FORMAT csv)")
-                    #print(" " * 120, end='\r')
                     pg_con.commit()
             print("Loaded dynamic entities.")
 
             print("Maintain materialized views . . . ")
-            run_script(pg_con, cur, "dml/maintain-views.sql")
+            self.run_script(pg_con, cur, "dml/maintain-views.sql")
             print("Done.")
 
             print("Create static materialized views . . . ")
-            run_script(pg_con, cur, "dml/create-static-materialized-views.sql")
+            self.run_script(pg_con, cur, "dml/create-static-materialized-views.sql")
             print("Done.")
 
             print("Adding indexes and constraints")
@@ -113,12 +113,21 @@ class PostgresDbLoader():
             print("Loaded initial snapshot to Postgres.")
 
 
-    def load_script(self, filename):
-        with open(filename, "r") as f:
-            return f.read()
-
-
 if __name__ == "__main__":
-    PGLoader = PostgresDbLoader()
-    PGLoader.main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--POSTGRES_DATA_DIR',
+        help="POSTGRES_DATA_DIR: folder containing the initial snapshot data to load e.g. '/out-sf1/graphs/csv/bi/composite-merged-fk'",
+        type=str,
+        required=True
+    )
+    parser.add_argument(
+        '--local',
+        help="local: True or False: whether the data is in a local folder (False defaults to /data)",
+        type=bool,
+        required=False
+    )
+    args = parser.parse_args()
 
+    PGLoader = PostgresDbLoader()
+    PGLoader.main(args.POSTGRES_DATA_DIR, args.local)

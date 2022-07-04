@@ -40,9 +40,12 @@ services:
       - type: bind
         source: ${POSTGRES_DDL_DIR}
         target: /ddl/
+      - type: bind
+        source: ${POSTGRES_DML_DIR}
+        target: /dml/
     depends_on:
       - postgres-db
-    command: sh -c "/wait && python3 -u home/load.py"
+    command: sh -c "/wait && python3 -u home/load.py --POSTGRES_DATA_DIR ${POSTGRES_CSV_DIR}"
     environment:
       - POSTGRES_HOST=postgres-db
       - POSTGRES_DB=${POSTGRES_DB}
