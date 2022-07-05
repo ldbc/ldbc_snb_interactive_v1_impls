@@ -48,7 +48,7 @@ services:
         target: /data/
     depends_on:
       - postgres-db
-    command: sh -c "/wait && python3 -u home/load.py --POSTGRES_DATA_DIR ${POSTGRES_CSV_DIR}"
+    command: sh -c "/wait && python3 -u home/load.py --POSTGRES_DATA_DIR ${POSTGRES_CSV_DIR} --is_container True"
     environment:
       - POSTGRES_HOST=postgres-db
       - POSTGRES_DB=${POSTGRES_DB}

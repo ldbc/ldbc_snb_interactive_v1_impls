@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import glob
+from multiprocessing.sharedctypes import Value
 import os
 import re
 import time
@@ -63,7 +64,10 @@ class PostgresDbLoader():
             print(f"===== {entity} =====")
             entity_dir = os.path.join(static_path_local, entity)
             print(f"--> {entity_dir}")
-            for csv_file in glob.glob(f'{entity_dir}/*.csv', recursive=True):
+            csv_files = glob.glob(f'{entity_dir}/**/*.csv', recursive=True)
+            if(not csv_files):
+                raise ValueError(f"No CSV-files found for entity {entity}")
+            for csv_file in csv_files:
                 print(f"- {csv_file}")
                 cur.execute(f"COPY {entity} FROM '{os.path.join(static_path_container, entity, os.path.basename(csv_file))}' (DELIMITER '|', HEADER, NULL '', FORMAT csv)")
                 pg_con.commit()
@@ -74,7 +78,10 @@ class PostgresDbLoader():
             print(f"===== {entity} =====")
             entity_dir = os.path.join(dynamic_path_local, entity)
             print(f"--> {entity_dir}")
-            for csv_file in glob.glob(f'{entity_dir}/*.csv', recursive=True):
+            csv_files = glob.glob(f'{entity_dir}/**/*.csv', recursive=True)
+            if(not csv_files):
+                raise ValueError(f"No CSV-files found for entity {entity}")
+            for csv_file in csv_files:
                 print(f"- {csv_file}")
                 container_path = os.path.join(dynamic_path_container, entity, os.path.basename(csv_file))
                 cur.execute(f"COPY {entity} FROM '{container_path}' (DELIMITER '|', HEADER, NULL '', FORMAT csv)")
@@ -122,11 +129,24 @@ if __name__ == "__main__":
         type=str,
         required=True
     )
+    parser.add_argument(
+        '--is_container',
+        help="is_container: whether the data is loaded from within a container",
+        type=str,
+        required=False,
+        default=False
+    )
     args = parser.parse_args()
 
     PGLoader = PostgresDbLoader()
+
+    if (args.is_container):
+        data_dir = "/data/"
+    else:
+        data_dir = args.POSTGRES_DATA_DIR
+
     start = time.time()
-    PGLoader.main(args.POSTGRES_DATA_DIR)
+    PGLoader.main(data_dir)
     end = time.time()
     duration = end - start
     print(f"Data loaded in {duration:.4f} seconds")
