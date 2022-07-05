@@ -3,3 +3,4 @@
  */
 DELETE FROM Person
 WHERE id = :personId
+;

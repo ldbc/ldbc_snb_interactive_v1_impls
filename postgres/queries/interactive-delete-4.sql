@@ -3,3 +3,4 @@
  */
 DELETE FROM Forum
 WHERE id = :forumId
+;

@@ -3,3 +3,4 @@
  */
 DELETE FROM Message
 WHERE MessageId = :commentId
+;
