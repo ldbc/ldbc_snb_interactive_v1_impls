@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""
+FILE: load2.py
+DESC: Alternative loading script using psycopg copy construct to load the CSV
+      file with the advantage that the paths are from the client, not requiring
+      the data to be present at the Postgres instance
+"""
 import glob
 import os
 import re
@@ -7,6 +13,9 @@ import argparse
 import psycopg
 
 class PostgresDbLoader():
+    # Linux uses 4096 as default block size
+    # Postgres uses 8192
+    BLOCK_SIZE = 4096
 
     def __init__(self):
         self.database = os.environ.get("POSTGRES_DB", "ldbcsnb")
@@ -46,16 +55,22 @@ class PostgresDbLoader():
         with open(filename, "r") as f:
             return f.read()
 
+    def copy_csv(self, cur, copy_command, csv_file):
+        """
+        Copy a local CSV file to Postgres
+        Args:
+            - cur (Cursor): the cursor object
+            - copy_command (str): The COPY statement to execute
+            - csv_file (str): The CSV-file to copy
+        """
+        with open(csv_file, "r") as csv:
+            with cur.copy(copy_command) as copy:
+                while data := csv.read(self.BLOCK_SIZE):
+                    copy.write(data)
+
     def load_initial_snapshot(self, pg_con, cur, data_dir):
-
-        static_path = "initial_snapshot/static"
-        dynamic_path = "initial_snapshot/dynamic"
-        static_path_local = os.path.join(data_dir, static_path)
-        dynamic_path_local = os.path.join(data_dir, dynamic_path)
-
-        static_path_container = "/data/" + static_path
-        dynamic_path_container = "/data/" + dynamic_path
-
+        static_path_local = os.path.join(data_dir, "initial_snapshot/static")
+        dynamic_path_local = os.path.join(data_dir, "initial_snapshot/dynamic")
         static_entities = ["Organisation", "Place", "Tag", "TagClass"]
         dynamic_entities = ["Comment", "Comment_hasTag_Tag", "Forum", "Forum_hasMember_Person", "Forum_hasTag_Tag", "Person", "Person_hasInterest_Tag", "Person_knows_Person", "Person_likes_Comment", "Person_likes_Post", "Person_studyAt_University", "Person_workAt_Company", "Post", "Post_hasTag_Tag"]
         print("## Static entities")
@@ -65,7 +80,7 @@ class PostgresDbLoader():
             print(f"--> {entity_dir}")
             for csv_file in glob.glob(f'{entity_dir}/*.csv', recursive=True):
                 print(f"- {csv_file}")
-                cur.execute(f"COPY {entity} FROM '{os.path.join(static_path_container, entity, os.path.basename(csv_file))}' (DELIMITER '|', HEADER, NULL '', FORMAT csv)")
+                self.copy_csv(cur, f"COPY {entity} FROM STDIN (DELIMITER '|', HEADER, NULL '', FORMAT csv)", csv_file)
                 pg_con.commit()
         print("Loaded static entities.")
 
@@ -76,10 +91,9 @@ class PostgresDbLoader():
             print(f"--> {entity_dir}")
             for csv_file in glob.glob(f'{entity_dir}/*.csv', recursive=True):
                 print(f"- {csv_file}")
-                container_path = os.path.join(dynamic_path_container, entity, os.path.basename(csv_file))
-                cur.execute(f"COPY {entity} FROM '{container_path}' (DELIMITER '|', HEADER, NULL '', FORMAT csv)")
+                self.copy_csv(cur, f"COPY {entity} FROM STDIN (DELIMITER '|', HEADER, NULL '', FORMAT csv)", csv_file)
                 if entity == "Person_knows_Person":
-                    cur.execute(f"COPY {entity} (creationDate, Person2id, Person1id) FROM '{container_path}' (DELIMITER '|', HEADER, NULL '', FORMAT csv)")
+                    self.copy_csv(cur, f"COPY {entity} (creationDate, Person2id, Person1id) FROM STDIN (DELIMITER '|', HEADER, NULL '', FORMAT csv)", csv_file)
                 pg_con.commit()
         print("Loaded dynamic entities.")
 
