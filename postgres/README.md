@@ -50,7 +50,7 @@ export LDBC_SNB_DATAGEN_MAX_MEM=available_memory
 ```
 
 ```bash
-rm -rf out-sf${SF}/
+rm -rf out-sf${SF}/graphs/parquet/raw
 tools/run.py \
     --cores $(nproc) \
     --memory ${LDBC_SNB_DATAGEN_MAX_MEM} \

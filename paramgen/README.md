@@ -22,7 +22,7 @@ The paramgen implements [parameter curation](https://research.vu.nl/en/publicati
     ```
 
     ```bash
-    rm -rf out-sf${SF}/
+    rm -rf out-sf${SF}/{factors,graphs/parquet/raw}
     tools/run.py \
         --cores $(nproc) \
         --memory ${LDBC_SNB_DATAGEN_MAX_MEM} \
@@ -30,7 +30,7 @@ The paramgen implements [parameter curation](https://research.vu.nl/en/publicati
         -- \
         --format csv \
         --scale-factor ${SF} \
-        --mode bi \
+        --mode raw \
         --output-dir out-sf${SF} \
         --generate-factors
     ```
