@@ -15,7 +15,7 @@ SELECT
           AND EXISTS (
               SELECT *
               FROM Person_hasInterest_Tag
-              WHERE Person.id = :personId
+              WHERE Person_hasInterest_Tag.PersonId = :personId
                 AND Person_hasInterest_Tag.TagId = pt1.TagId
           )
     ) -
@@ -27,7 +27,7 @@ SELECT
           AND NOT EXISTS (
               SELECT *
               FROM Person_hasInterest_Tag, Message_hasTag_Tag
-              WHERE Person.id = :personId
+              WHERE Person_hasInterest_Tag.PersonId = :personId
                 AND Person_hasInterest_Tag.TagId = Message_hasTag_Tag.TagId
                 AND Message_hasTag_Tag.MessageId = Message.MessageId
           )
