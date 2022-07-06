@@ -71,13 +71,13 @@ All of these runs should be started with the initial data set loaded to the data
         * The query substitution parameters are taken from the directory set in `ldbc.snb.interactive.parameters_dir` configuration property.
         * The update streams are the `updateStream_0_0_{forum,person}.csv` files from the location set in the `ldbc.snb.interactive.updates_dir` configuration property.
         * For this mode, the query frequencies are set to a uniform `1` value to ensure the best average test coverage.
-    * **Output:** The results will be stored in the validation parameters file (e.g. `validation_params.csv`) file set in the `create_validation_parameters` configuration property.
+    * **Output:** The results will be stored in the validation parameters file (e.g. `validation_params.json`) file set in the `validate_database` configuration property.
     * **Parallelism:** The execution must be single-threaded to ensure a deterministic order of operations.
 
 2. Validate against existing validation parameters with the `driver/validate.sh` script.
 
     * **Input:**
-        * The query substitution parameters are taken from the validation parameters file (e.g. `validation_params.csv`) file set in the `validate_database` configuration property.
+        * The query substitution parameters are taken from the validation parameters file (e.g. `validation_params.json`) file set in the `validate_database` configuration property.
         * The update operations are also based on the content of the validation parameters file.
     * **Output:**
         * The validation either passes of fails.
