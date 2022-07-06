@@ -31,7 +31,7 @@ SELECT
                 AND Person_hasInterest_Tag.TagId = Message_hasTag_Tag.TagId
                 AND Message_hasTag_Tag.MessageId = Message.MessageId
           )
-    ) AS score,
+    ) AS commonInterestScore,
     gender,
     City.name
 FROM
@@ -56,6 +56,6 @@ WHERE LocationCityId = City.id
       (extract(month FROM birthday) = :month          AND (CASE WHEN extract(day FROM birthday) >= 21 THEN true ELSE false END))
    OR (extract(month FROM birthday) = :month % 12 + 1 AND (CASE WHEN extract(day FROM birthday) <  22 THEN true ELSE false END))
   )
-ORDER BY score DESC, Person.id
+ORDER BY commonInterestScore DESC, Person.id
 LIMIT 10
 ;
