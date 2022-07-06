@@ -15,7 +15,7 @@ SELECT
     firstName,
     lastName,
     array_agg(DISTINCT name),
-    count(*) AS replyCount
+    count(DISTINCT m1.MessageId) AS replyCount
 FROM
     Person,
     Message m1,
