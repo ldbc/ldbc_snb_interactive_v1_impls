@@ -54,11 +54,25 @@ scripts/build.sh
 
 ### Inputs
 
-The benchmark framework relies on the following inputs produced by the [SNB Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop/):
+The benchmark framework relies on the following inputs produced by the [SNB Datagen's new (Spark) version](https://github.com/ldbc/ldbc_snb_datagen_spark/).
 
+Currently, the initial data set, update streams, and parameters can generated with the following command:
+
+```bash
+export SF=
+export LDBC_SNB_DATAGEN_DIR=
+export LDBC_SNB_DATAGEN_MAX_MEM=
+export PLATFORM_VERSION=
+export DATAGEN_VERSION=
+export LDBC_SNB_DRIVER_DIR=
+scripts/generate-all.sh
+```
+
+<!--
 * **Initial data set:** the SNB graph in CSV format (`social_network/{static,dynamic}`)
 * **Update streams:** the input for the update operations (`social_network/updateStream_*.csv`)
 * **Substitution parameters:** the input parameters for the complex queries. It is produced by the Datagen (`substitution_parameters/`)
+-->
 
 ### Driver modes
 
@@ -69,8 +83,8 @@ All of these runs should be started with the initial data set loaded to the data
 
     * **Inputs:**
         * The query substitution parameters are taken from the directory set in `ldbc.snb.interactive.parameters_dir` configuration property.
-        * The update streams are the `updateStream_0_0_{forum,person}.csv` files from the location set in the `ldbc.snb.interactive.updates_dir` configuration property.
-        * For this mode, the query frequencies are set to a uniform `1` value to ensure the best average test coverage.
+        * The update streams are the files from the `inserts` and `deletes` directories in the directory `ldbc.snb.interactive.updates_dir` configuration property.
+        * For this mode, the query frequencies are set to a uniform `1` value to ensure the best average test coverage. [TODO]
     * **Output:** The results will be stored in the validation parameters file (e.g. `validation_params.json`) file set in the `validate_database` configuration property.
     * **Parallelism:** The execution must be single-threaded to ensure a deterministic order of operations.
 
@@ -89,9 +103,7 @@ All of these runs should be started with the initial data set loaded to the data
 
     * **Inputs:**
         * The query substitution parameters are taken from the directory set in `ldbc.snb.interactive.parameters_dir` configuration property.
-        * The update streams are the `updateStream_*_{forum,person}.csv` files from the location set in the `ldbc.snb.interactive.updates_dir` configuration property.
-            * To get *2n* write threads, the framework requires *n* `updateStream_*_forum.csv` and *n* `updateStream_*_person.csv` files.
-            * If you are generating the data sets from scratch, set `ldbc.snb.datagen.serializer.numUpdatePartitions` to *n* in the [data generator](https://github.com/ldbc/ldbc_snb_datagen_hadoop) to get produce these.
+        * The update streams are the files from the `inserts` and `deletes` directories in the directory `ldbc.snb.interactive.updates_dir` configuration property.
         * The goal of the benchmark is the achieve the best (lowest possible) `time_compression_ratio` value while ensuring that the 95% on-time requirement is kept (i.e. 95% of the queries can be started within 1 second of their scheduled time). If your benchmark run returns "failed schedule audit", increase this number (which lowers the time compression rate) until it passes.
         * Set the `thread_count` property to the size of the thread pool for read operations.
         * For audited benchmarks, ensure that the `warmup` and `operation_count` properties are set so that the warmup and benchmark phases last for 30+ minutes and 2+ hours, respectively.
@@ -100,8 +112,6 @@ All of these runs should be started with the initial data set loaded to the data
         * The throughput achieved in the run (operations/second).
         * The detailed results of the benchmark are printed to the console and saved in the `results/` directory.
     * **Parallelism:** Multi-threaded execution is recommended to achieve the best result.
-
-For more details on validating and benchmarking, visit the [driver wiki](https://github.com/ldbc/ldbc_snb_interactive_driver/wiki).
 
 ## Developer's guide
 
