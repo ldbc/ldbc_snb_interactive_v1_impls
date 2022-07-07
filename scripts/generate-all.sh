@@ -11,8 +11,8 @@ cd ..
 export LDBC_SNB_IMPLS_DIR=`pwd`
 
 echo "==================== Cleanup existing directories ===================="
-mkdir -p update-streams-sf${SF}/*
-mkdir -p parameters-sf${SF}/*
+mkdir -p update-streams-sf${SF}/
+mkdir -p parameters-sf${SF}/
 rm -rf ${LDBC_SNB_IMPLS_DIR}/update-streams-sf${SF}/*
 rm -rf ${LDBC_SNB_IMPLS_DIR}/parameters-sf${SF}/*
 
