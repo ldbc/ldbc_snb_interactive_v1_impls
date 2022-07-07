@@ -24,7 +24,7 @@ FROM
         WHERE Person_likes_Message.MessageId = Message.MessageId
           AND Message.CreatorPersonId = :personId
         GROUP BY PersonId
-        ORDER BY creationDate DESC
+        ORDER BY creationDate DESC, PersonId ASC
         LIMIT 20
     ) tmp,
     Message,
