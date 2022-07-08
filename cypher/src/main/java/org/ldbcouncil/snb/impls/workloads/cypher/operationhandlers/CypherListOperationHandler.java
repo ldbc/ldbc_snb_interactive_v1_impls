@@ -33,6 +33,8 @@ public abstract class CypherListOperationHandler<TOperation extends Operation<Li
         final Map<String, Object> parameters = getParameters(state, operation );
 
         final SessionConfig config = SessionConfig.builder().withDefaultAccessMode( AccessMode.READ ).build();
+
+        state.logQuery(operation.getClass().getSimpleName(), query);
         try ( final Session session = state.getSession( config ) )
         {
             final List<TOperationResult> results = new ArrayList<>();
