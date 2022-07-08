@@ -102,7 +102,6 @@ class PostgresDbLoader():
 
             self.run_script(pg_con, cur, "ddl/drop-tables.sql")
             self.run_script(pg_con, cur, "ddl/schema-composite-merged-fk.sql")
-            self.run_script(pg_con, cur, "ddl/schema-delete-candidates.sql")
             print("Load initial snapshot")
             self.load_initial_snapshot(pg_con, cur, data_dir)
             print("Maintain materialized views . . . ")
