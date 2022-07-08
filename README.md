@@ -37,10 +37,10 @@ Additional implementations -- currently only supported in the [old version (v1.0
 
 For detailed instructions, consult the READMEs of the projects.
 
-To build a subset of the projects, use Maven profiles, e.g. to build the reference implementations, run:
+To build a subset of the projects, use Maven profiles, e.g. to build the PostgreSQL implementation, run:
 
 ```bash
-mvn clean package -DskipTests -Pcypher,postgres
+mvn clean package -DskipTests -Ppostgres
 ```
 
 ## User's guide
