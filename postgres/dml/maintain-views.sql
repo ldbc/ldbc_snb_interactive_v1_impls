@@ -1,7 +1,7 @@
 INSERT INTO Message
     SELECT
         creationDate,
-        id AS MessageId,
+        id AS id,
         language,
         content,
         imageFile,
@@ -18,7 +18,7 @@ INSERT INTO Message
 INSERT INTO Message
     SELECT
         Comment.creationDate AS creationDate,
-        Comment.id AS MessageId,
+        Comment.id AS id,
         NULL,
         Comment.content AS content,
         NULL AS imageFile,
@@ -33,13 +33,13 @@ INSERT INTO Message
 ;
 
 INSERT INTO Person_likes_Message
-    SELECT creationDate, PersonId, CommentId AS MessageId FROM Person_likes_Comment
+    SELECT creationDate, PersonId, CommentId AS id FROM Person_likes_Comment
     UNION ALL
-    SELECT creationDate, PersonId, PostId AS MessageId FROM Person_likes_Post
+    SELECT creationDate, PersonId, PostId AS id FROM Person_likes_Post
 ;
 
 INSERT INTO Message_hasTag_Tag
-    SELECT creationDate, CommentId AS MessageId, TagId FROM Comment_hasTag_Tag
+    SELECT creationDate, CommentId AS id, TagId FROM Comment_hasTag_Tag
     UNION ALL
-    SELECT creationDate, PostId AS MessageId, TagId FROM Post_hasTag_Tag
+    SELECT creationDate, PostId AS id, TagId FROM Post_hasTag_Tag
 ;

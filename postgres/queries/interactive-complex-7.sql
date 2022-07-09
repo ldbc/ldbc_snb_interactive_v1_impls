@@ -6,7 +6,7 @@ SELECT
     firstName,
     lastName,
     l.creationDate,
-    Message.MessageId,
+    Message.id,
     coalesce(imageFile, content),
     CAST(floor(EXTRACT(EPOCH FROM (l.creationDate - Message.creationDate))) AS INTEGER) / 60 AS minutesLatency,
     (
@@ -21,7 +21,7 @@ FROM
     (
         SELECT PersonId, max(Person_likes_Message.creationDate) AS creationDate
         FROM Person_likes_Message, Message
-        WHERE Person_likes_Message.MessageId = Message.MessageId
+        WHERE Person_likes_Message.id = Message.id
           AND Message.CreatorPersonId = :personId
         GROUP BY PersonId
         ORDER BY creationDate DESC, PersonId ASC
@@ -33,6 +33,6 @@ FROM
 WHERE Person.id = tmp.PersonId
   AND tmp.PersonId = l.PersonId
   AND tmp.creationDate = l.creationDate
-  AND l.MessageId = Message.MessageId
+  AND l.id = Message.id
 ORDER BY creationDate DESC, Person.id ASC
 ;

@@ -3,6 +3,6 @@
  */
 SELECT Person.id, Person.firstName, Person.lastName
 FROM Message, Person
-WHERE Message.MessageId = :messageId
+WHERE Message.id = :messageId
   AND Message.CreatorPersonId = Person.id
 ;

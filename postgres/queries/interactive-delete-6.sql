@@ -2,5 +2,5 @@
 \set postId 549755813906
  */
 DELETE FROM Message
-WHERE MessageId = :postId
+WHERE id = :postId
 ;

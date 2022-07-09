@@ -180,7 +180,7 @@ CREATE TABLE Person_knows_Person (
 -- A recursive materialized view containing the root Post of each Message (for Posts, themselves, for Comments, traversing up the Message thread to the root Post of the tree)
 CREATE TABLE Message (
     creationDate timestamp with time zone not null,
-    MessageId bigint,
+    id bigint,
     language varchar(40),
     content varchar(2000),
     imageFile varchar(40),
@@ -196,11 +196,11 @@ CREATE TABLE Message (
 CREATE TABLE Person_likes_Message (
     creationDate timestamp with time zone NOT NULL,
     PersonId bigint NOT NULL,
-    MessageId bigint NOT NULL
+    id bigint NOT NULL
 );
 
 CREATE TABLE Message_hasTag_Tag (
     creationDate timestamp with time zone NOT NULL,
-    MessageId bigint NOT NULL,
+    id bigint NOT NULL,
     TagId bigint NOT NULL
 );

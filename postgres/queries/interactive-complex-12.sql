@@ -15,7 +15,7 @@ SELECT
     firstName,
     lastName,
     array_agg(DISTINCT name),
-    count(DISTINCT m1.MessageId) AS replyCount
+    count(DISTINCT m1.id) AS replyCount
 FROM
     Person,
     Message m1,
@@ -35,9 +35,9 @@ FROM
 WHERE Person1Id = :personId
   AND Person2Id = Person.id
   AND Person.id = m1.CreatorPersonId
-  AND m1.ParentMessageId = m2.MessageId
+  AND m1.ParentMessageId = m2.id
   AND m2.ParentMessageId IS NULL
-  AND m2.MessageId = Message_hasTag_Tag.MessageId
+  AND m2.id = Message_hasTag_Tag.id
   AND Message_hasTag_Tag.TagId = selected_tags.id
 GROUP BY Person.id, Person.firstName, person.lastName
 ORDER BY replyCount DESC, Person.id ASC

@@ -4,7 +4,7 @@
  */
 SELECT
     title,
-    count(MessageId) AS postCount
+    count(id) AS postCount
 FROM
     (
         SELECT title, Forum.id AS ForumId, friend.Person2Id

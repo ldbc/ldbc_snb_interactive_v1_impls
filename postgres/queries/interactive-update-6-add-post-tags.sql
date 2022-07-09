@@ -1,6 +1,6 @@
 INSERT INTO Message_hasTag_Tag (
     creationDate
-  , MessageId
+  , id
   , TagId
 )
 SELECT

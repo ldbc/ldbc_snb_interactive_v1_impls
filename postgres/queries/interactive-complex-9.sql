@@ -6,7 +6,7 @@ SELECT
     Person.id,
     firstName,
     lastName,
-    MessageId,
+    Message.id,
     coalesce(imageFile, content),
     Message.creationDate
 FROM
@@ -26,6 +26,6 @@ FROM
 WHERE Person.id = CreatorPersonId
   AND Person.id = friend.Person2Id
   AND Message.creationDate < :maxDate
-ORDER BY Message.creationDate DESC, MessageId ASC
+ORDER BY Message.creationDate DESC, Message.id ASC
 LIMIT 20
 ;

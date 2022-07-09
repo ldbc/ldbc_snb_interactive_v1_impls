@@ -39,21 +39,21 @@ FROM
             FROM (
                 SELECT e, mid1, mid2, max(score) AS score
                 FROM (
-                    SELECT e, 1 AS score, m1.MessageId AS mid1, m2.MessageId AS mid2
+                    SELECT e, 1 AS score, m1.id AS mid1, m2.id AS mid2
                     FROM unique_edges, Message m1, Message m2
-                    WHERE (m1.CreatorPersonId = e[1] AND m2.CreatorPersonId = e[2] AND m2.ParentMessageId = m1.MessageId AND m1.ParentMessageId IS NULL)
+                    WHERE (m1.CreatorPersonId = e[1] AND m2.CreatorPersonId = e[2] AND m2.ParentMessageId = m1.id AND m1.ParentMessageId IS NULL)
                     UNION ALL
-                    SELECT e, 1 AS score, m1.MessageId AS mid1, m2.MessageId AS mid2
+                    SELECT e, 1 AS score, m1.id AS mid1, m2.id AS mid2
                     FROM unique_edges, Message m1, Message m2
-                    WHERE (m1.CreatorPersonId = e[2] AND m2.CreatorPersonId = e[1] AND m2.ParentMessageId = m1.MessageId AND m1.ParentMessageId IS NULL)
+                    WHERE (m1.CreatorPersonId = e[2] AND m2.CreatorPersonId = e[1] AND m2.ParentMessageId = m1.id AND m1.ParentMessageId IS NULL)
                     UNION ALL
-                    SELECT e, 0.5 AS score, m1.MessageId AS mid1, m2.MessageId AS mid2
+                    SELECT e, 0.5 AS score, m1.id AS mid1, m2.id AS mid2
                     FROM unique_edges, Message m1, Message m2
-                    WHERE (m1.CreatorPersonId = e[1] AND m2.CreatorPersonId = e[2] AND m2.ParentMessageId = m1.MessageId AND m1.ParentMessageId IS NOT NULL)
+                    WHERE (m1.CreatorPersonId = e[1] AND m2.CreatorPersonId = e[2] AND m2.ParentMessageId = m1.id AND m1.ParentMessageId IS NOT NULL)
                     UNION ALL
-                    SELECT e, 0.5 AS score, m1.MessageId AS mid1, m2.MessageId AS mid2
+                    SELECT e, 0.5 AS score, m1.id AS mid1, m2.id AS mid2
                     FROM unique_edges, Message m1, Message m2
-                    WHERE (m1.CreatorPersonId = e[2] AND m2.CreatorPersonId = e[1] AND m2.ParentMessageId = m1.MessageId AND m1.ParentMessageId IS NOT NULL)
+                    WHERE (m1.CreatorPersonId = e[2] AND m2.CreatorPersonId = e[1] AND m2.ParentMessageId = m1.id AND m1.ParentMessageId IS NOT NULL)
                 ) pps
                 GROUP BY e, mid1, mid2
             ) tmp

@@ -1,6 +1,6 @@
 INSERT INTO Message (
     creationDate
-  , MessageId
+  , id
   , language
   , content
   , imageFile

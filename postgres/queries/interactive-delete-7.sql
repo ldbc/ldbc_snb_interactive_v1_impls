@@ -2,5 +2,5 @@
 \set commentId 1099511632040
  */
 DELETE FROM Message
-WHERE MessageId = :commentId
+WHERE id = :commentId
 ;

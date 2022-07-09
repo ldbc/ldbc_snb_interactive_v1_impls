@@ -1,7 +1,7 @@
 INSERT INTO Person_likes_Message (
     creationDate
   , PersonId
-  , MessageId
+  , id
 )
 VALUES
 (
