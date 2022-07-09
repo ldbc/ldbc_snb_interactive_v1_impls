@@ -64,4 +64,4 @@ scripts/get-factors.sh
 scripts/paramgen.sh
 cd ..
 
-mv parameters/* parameters-sf${SF}/
+mv parameters/*.parquet parameters-sf${SF}/
