@@ -48,6 +48,7 @@ class PostgresDbLoader():
             return f.read()
 
     def load_initial_snapshot(self, pg_con, cur, data_dir):
+        sql_copy_configuration = "(DELIMITER '|', HEADER, NULL '', FORMAT csv)"
 
         static_path = "initial_snapshot/static"
         dynamic_path = "initial_snapshot/dynamic"
@@ -69,7 +70,7 @@ class PostgresDbLoader():
                 raise ValueError(f"No CSV-files found for entity {entity}")
             for csv_file in csv_files:
                 print(f"- {csv_file}")
-                cur.execute(f"COPY {entity} FROM '{os.path.join(static_path_container, entity, os.path.basename(csv_file))}' (DELIMITER '|', HEADER, NULL '', FORMAT csv)")
+                cur.execute(f"COPY {entity} FROM '{os.path.join(static_path_container, entity, os.path.basename(csv_file))}' {sql_copy_configuration}")
                 pg_con.commit()
         print("Loaded static entities.")
 
@@ -83,10 +84,11 @@ class PostgresDbLoader():
                 raise ValueError(f"No CSV-files found for entity {entity}")
             for csv_file in csv_files:
                 print(f"- {csv_file}")
-                container_path = os.path.join(dynamic_path_container, entity, os.path.basename(csv_file))
-                cur.execute(f"COPY {entity} FROM '{container_path}' (DELIMITER '|', HEADER, NULL '', FORMAT csv)")
+                csv_file_path_in_container = os.path.join(dynamic_path_container, entity, os.path.basename(csv_file))
+
+                cur.execute(f"COPY {entity} FROM '{csv_file_path_in_container}' {sql_copy_configuration}")
                 if entity == "Person_knows_Person":
-                    cur.execute(f"COPY {entity} (creationDate, Person2id, Person1id) FROM '{container_path}' (DELIMITER '|', HEADER, NULL '', FORMAT csv)")
+                    cur.execute(f"COPY {entity} (creationDate, Person2id, Person1id) FROM '{csv_file_path_in_container}' {sql_copy_configuration}")
                 pg_con.commit()
         print("Loaded dynamic entities.")
 
