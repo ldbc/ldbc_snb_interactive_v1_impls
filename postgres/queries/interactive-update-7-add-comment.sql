@@ -1,8 +1,7 @@
 INSERT INTO Message (
     creationDate
   , MessageId
-  , RootPostId
-  , RootPostLanguage
+  , language
   , content
   , imageFile
   , locationIP
@@ -12,15 +11,11 @@ INSERT INTO Message (
   , ContainerForumId
   , LocationCountryId
   , ParentMessageId
-  , ParentPostId
-  , ParentCommentId
-  , type
 )
 VALUES
 (
     :creationDate
   , :commentId
-  , NULL
   , NULL
   , :content
   , NULL
@@ -30,8 +25,5 @@ VALUES
   , :authorPersonId -- CreatorPersonId
   , NULL
   , :countryId -- LocationCountryId
-  , :replyToCommentId + :replyToPostId -- ParentMessageId = ParentPostId, ParentCommentId
-  , NULL
-  , NULL
-  , ''
+  , :replyToCommentId + :replyToPostId
 );

@@ -181,8 +181,7 @@ CREATE TABLE Person_knows_Person (
 CREATE TABLE Message (
     creationDate timestamp with time zone not null,
     MessageId bigint,
-    RootPostId bigint, -- not null,
-    RootPostLanguage varchar(40),
+    language varchar(40),
     content varchar(2000),
     imageFile varchar(40),
     locationIP varchar(40) not null,
@@ -191,10 +190,7 @@ CREATE TABLE Message (
     CreatorPersonId bigint not null,
     ContainerForumId bigint,
     LocationCountryId bigint not null,
-    ParentMessageId bigint,
-    ParentPostId bigint,
-    ParentCommentId bigint,
-    type varchar(7)
+    ParentMessageId bigint
 );
 
 CREATE TABLE Person_likes_Message (
@@ -208,15 +204,3 @@ CREATE TABLE Message_hasTag_Tag (
     MessageId bigint NOT NULL,
     TagId bigint NOT NULL
 );
-
--- views
-
-CREATE VIEW Comment_View AS
-    SELECT creationDate, MessageId AS id, locationIP, browserUsed, content, length, CreatorPersonId, LocationCountryId, ParentPostId, ParentCommentId
-    FROM Message
-    WHERE ParentMessageId IS NOT NULL;
-
-CREATE VIEW Post_View AS
-    SELECT creationDate, MessageId AS id, imageFile, locationIP, browserUsed, RootPostLanguage, content, length, CreatorPersonId, ContainerForumId, LocationCountryId
-    From Message
-    WHERE ParentMessageId IS NULL;

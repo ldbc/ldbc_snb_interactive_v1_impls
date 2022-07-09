@@ -1,6 +1,3 @@
-DROP VIEW IF EXISTS Comment_View;
-DROP VIEW IF EXISTS Post_View;
-
 DROP TABLE IF EXISTS Comment_hasTag_Tag;
 DROP TABLE IF EXISTS Post_hasTag_Tag;
 DROP TABLE IF EXISTS Forum_hasMember_Person;
