@@ -46,11 +46,12 @@ This implementation also supports compressed data sets, both for the initial loa
 
 (Rationale: Files should not have headers as these are provided separately in the `headers/` directory and quoting the fields in the CSV is required to [preserve trailing spaces](https://neo4j.com/docs/operations-manual/4.3/tools/neo4j-admin-import/#import-tool-header-format).)
 
-In Datagen's directory (`ldbc_snb_datagen_spark`), issue the following commands. We assume that the Datagen project is built and the `${PLATFORM_VERSION}`, `${DATAGEN_VERSION}` environment variables are set correctly.
+In Datagen's directory (`ldbc_snb_datagen_spark`), issue the following commands. We assume that the Datagen project is built and `sbt` is available.
 
 ```bash
 export SF=desired_scale_factor
 export LDBC_SNB_DATAGEN_MAX_MEM=available_memory
+export LDBC_SNB_DATAGEN_JAR=$(sbt -batch -error 'print assembly / assemblyOutputPath')
 ```
 
 ```bash
@@ -58,7 +59,6 @@ rm -rf out-sf${SF}/graphs/parquet/raw
 tools/run.py \
     --cores $(nproc) \
     --memory ${LDBC_SNB_DATAGEN_MAX_MEM} \
-    --jar ./target/ldbc_snb_datagen_${PLATFORM_VERSION}-${DATAGEN_VERSION}.jar \
     -- \
     --format csv \
     --scale-factor ${SF} \

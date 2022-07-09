@@ -18,6 +18,7 @@ rm -rf ${LDBC_SNB_IMPLS_DIR}/parameters-sf${SF}/*
 
 echo "==================== Generate data ===================="
 cd ${LDBC_SNB_DATAGEN_DIR}
+LDBC_SNB_DATAGEN_JAR=$(sbt -batch -error 'print assembly / assemblyOutputPath') && export LDBC_SNB_DATAGEN_JAR
 rm -rf out-sf${SF}
 
 echo "-------------------- Generate data for Cypher --------------------"
@@ -25,7 +26,6 @@ rm -rf out-sf${SF}/graphs/parquet/raw
 tools/run.py \
     --cores $(nproc) \
     --memory ${LDBC_SNB_DATAGEN_MAX_MEM} \
-    --jar ./target/ldbc_snb_datagen_${PLATFORM_VERSION}-${DATAGEN_VERSION}.jar \
     -- \
     --format csv \
     --scale-factor ${SF} \
@@ -40,7 +40,6 @@ rm -rf out-sf${SF}/graphs/parquet/raw
 tools/run.py \
     --cores $(nproc) \
     --memory ${LDBC_SNB_DATAGEN_MAX_MEM} \
-    --jar ./target/ldbc_snb_datagen_${PLATFORM_VERSION}-${DATAGEN_VERSION}.jar \
     -- \
     --format csv \
     --scale-factor ${SF} \
