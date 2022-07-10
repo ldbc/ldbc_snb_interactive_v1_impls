@@ -13,12 +13,12 @@ INSERT INTO person (
 )
 VALUES
 (
-    :personId
+    :creationDate
+  , :personId
   , :personFirstName
   , :personLastName
   , :gender
   , :birthday
-  , :creationDate
   , :locationIP
   , :browserUsed
   , :cityId
