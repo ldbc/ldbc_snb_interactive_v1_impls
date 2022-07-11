@@ -194,31 +194,6 @@ jobs:
             scripts/load-in-one-step.sh
             scripts/backup-database.sh
             cd ..
-      ### Neo4j
-      - run:
-          name: SF1 data set - Cross-validate the Neo4j project based on the results from PostgreSQL
-          command: |
-            export SF=1
-            export LDBC_SNB_DATAGEN_DIR=`pwd`
-            cp postgres/validation_params_postgres_sf${SF}.json cypher/validation_params.json
-            cd cypher
-            . scripts/use-datagen-data-set.sh
-            scripts/restore-database.sh
-            sed -i "s|ldbc.snb.interactive.parameters_dir=../parameters/|ldbc.snb.interactive.parameters_dir=../parameters-sf1/|" driver/validate.properties
-            driver/validate.sh | tee validation-log.txt
-            grep 'Validation Result: PASS' validation-log.txt
-            cd ..
-      - run:
-          name: SF1 data set - Benchmark Neo4j
-          command: |
-            export SF=1
-            export LDBC_SNB_DATAGEN_DIR=`pwd`
-            cd cypher
-            . scripts/use-datagen-data-set.sh
-            scripts/restore-database.sh
-            driver/benchmark.sh driver/benchmark-sf${SF}.properties
-            cd ..
-      ### PostgreSQL
       - run:
           name: SF1 data set - Cross-validate the PostgreSQL project based on the results from Neo4j
           command: |
@@ -232,6 +207,18 @@ jobs:
             driver/validate.sh | tee validation-log.txt
             grep 'Validation Result: PASS' validation-log.txt
             cd ..
+      ### Neo4j
+      - run:
+          name: SF1 data set - Benchmark Neo4j
+          command: |
+            export SF=1
+            export LDBC_SNB_DATAGEN_DIR=`pwd`
+            cd cypher
+            . scripts/use-datagen-data-set.sh
+            scripts/restore-database.sh
+            driver/benchmark.sh driver/benchmark-sf${SF}.properties
+            cd ..
+      ### PostgreSQL
       - run:
           name: SF1 data set - Benchmark PostgreSQL
           command: |
