@@ -1,10 +1,10 @@
 INSERT INTO person (
-    creationDate
-  , id
+    id
   , firstName
   , lastName
   , gender
   , birthday
+  , creationDate
   , locationIP
   , browserUsed
   , LocationCityId
@@ -22,6 +22,6 @@ VALUES
   , :locationIP
   , :browserUsed
   , :cityId
-  , :languages
-  , :emails
+  , unnest(:languages)
+  , unnest(:emails)
 );
