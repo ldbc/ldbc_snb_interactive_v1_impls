@@ -22,6 +22,6 @@ VALUES
   , :locationIP
   , :browserUsed
   , :cityId
-  , unnest(:languages)
-  , unnest(:emails)
+  , :languages
+  , :emails
 );
