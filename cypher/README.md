@@ -88,14 +88,6 @@ tools/run.py \
     * To download and use the sample data set, run:
 
         ```bash
-        wget -q https://ldbcouncil.org/ldbc_snb_datagen_spark/social-network-sf0.003-bi-composite-projected-fk-neo4j-compressed.zip
-        unzip -q social-network-sf0.003-bi-composite-projected-fk-neo4j-compressed.zip
-        export NEO4J_CSV_DIR=`pwd`/social-network-sf0.003-bi-composite-projected-fk-neo4j-compressed/graphs/csv/bi/composite-projected-fk/
-        ```
-
-        Or, simply run:
-
-        ```bash
         scripts/get-sample-data-set.sh
         . scripts/use-sample-data-set.sh
         ```
@@ -118,4 +110,4 @@ driver/validate.sh
 driver/benchmark.sh
 ```
 
-:Warning: The default workload contains updates which are persisted in the database. Therefore, **the database needs to be reloaded or restored from backup before each run**. Use the provided `scripts/backup-database.sh` and `scripts/restore-database.sh` scripts to achieve this. Alternatively, e.g. if you lack sudo rights, use Neo4j's built-in dump and load features through the `scripts/backup-neo4j.sh` and `scripts/restore-neo4j.sh` scripts.
+:warning: The default workload contains updates which change the state of the database. Therefore, **the database needs to be reloaded or restored from backup before each run**. Use the provided `scripts/backup-database.sh` and `scripts/restore-database.sh` scripts to achieve this. Alternatively, e.g. if you lack sudo rights, use Neo4j's built-in dump and load features through the `scripts/backup-neo4j.sh` and `scripts/restore-neo4j.sh` scripts.
