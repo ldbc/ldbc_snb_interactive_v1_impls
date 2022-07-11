@@ -201,7 +201,7 @@ jobs:
             export LDBC_SNB_DATAGEN_DIR=`pwd`
             cd postgres
             . scripts/use-datagen-data-set.sh
-            driver/create-validation-parameters.sh
+            driver/create-validation-parameters.sh driver/create-validation-parameters-sf${SF}.properties
             scripts/stop.sh
             cp validation_params.json validation_params_postgres_sf${SF}.json
             cd ..
@@ -215,6 +215,7 @@ jobs:
             cd cypher
             . scripts/use-datagen-data-set.sh
             scripts/restore-database.sh
+            sed -i "s|ldbc.snb.interactive.parameters_dir=../parameters/|ldbc.snb.interactive.parameters_dir=../parameters-sf1/|" driver/validate.properties
             driver/validate.sh | tee validation-log.txt
             grep 'Validation Result: PASS' validation-log.txt
             cd ..
@@ -238,6 +239,7 @@ jobs:
             cd postgres
             . scripts/use-datagen-data-set.sh
             scripts/restore-database.sh
+            sed -i "s|ldbc.snb.interactive.parameters_dir=../parameters/|ldbc.snb.interactive.parameters_dir=../parameters-sf${SF}/|" driver/validate.properties
             driver/validate.sh | tee validation-log.txt
             grep 'Validation Result: PASS' validation-log.txt
             cd ..
