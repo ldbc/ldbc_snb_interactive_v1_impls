@@ -8,6 +8,11 @@ cd ..
 
 . scripts/vars.sh
 
+if [ ! -d ${NEO4J_CSV_DIR} ]; then
+    echo "Neo4j CSV directory does not exist. \${NEO4J_CSV_DIR} is set to: ${NEO4J_CSV_DIR}"
+    exit 1
+fi
+
 echo "==============================================================================="
 echo "Loading the Neo4j database"
 echo "-------------------------------------------------------------------------------"

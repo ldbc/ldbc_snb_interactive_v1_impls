@@ -676,7 +676,7 @@ public abstract class QueryStore {
         return ImmutableMap.of(
             LdbcUpdate5AddForumMembership.FORUM_ID, getConverter().convertId(operation.getForumId()),
             LdbcUpdate5AddForumMembership.PERSON_ID, getConverter().convertId(operation.getPersonId()),
-            LdbcUpdate5AddForumMembership.JOIN_DATE, getConverter().convertDateTime(operation.getJoinDate())
+            LdbcUpdate5AddForumMembership.CREATION_DATE, getConverter().convertDateTime(operation.getCreationDate())
         );
     }
     

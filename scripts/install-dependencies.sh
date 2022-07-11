@@ -8,4 +8,3 @@ cd ..
 
 cypher/scripts/install-dependencies.sh
 postgres/scripts/install-dependencies.sh
-umbra/scripts/install-dependencies.sh

@@ -34,6 +34,8 @@ public abstract class CypherUpdateOperationHandler<TOperation extends Operation<
         final Map<String, Object> parameters = getParameters( operation );
 
         final SessionConfig config = SessionConfig.builder().withDefaultAccessMode( AccessMode.WRITE ).build();
+
+        state.logQuery(operation.getClass().getSimpleName(), query);
         try ( final Session session = state.getSession( config ) )
         {
             final Result result = session.run( query, parameters );

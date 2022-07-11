@@ -7,15 +7,15 @@ SELECT
     firstName,
     lastName,
     (
-        SELECT count(DISTINCT Message.MessageId)
+        SELECT count(DISTINCT Message.id)
         FROM Message, Message_hasTag_Tag pt1
         WHERE CreatorPersonId = Person.id
           AND ParentMessageId IS NULL -- post, not comment
-          AND Message.MessageId = pt1.MessageId
+          AND Message.id = pt1.id
           AND EXISTS (
               SELECT *
               FROM Person_hasInterest_Tag
-              WHERE Person.id = :personId
+              WHERE Person_hasInterest_Tag.PersonId = :personId
                 AND Person_hasInterest_Tag.TagId = pt1.TagId
           )
     ) -
@@ -27,11 +27,11 @@ SELECT
           AND NOT EXISTS (
               SELECT *
               FROM Person_hasInterest_Tag, Message_hasTag_Tag
-              WHERE Person.id = :personId
+              WHERE Person_hasInterest_Tag.PersonId = :personId
                 AND Person_hasInterest_Tag.TagId = Message_hasTag_Tag.TagId
-                AND Message_hasTag_Tag.MessageId = Message.MessageId
+                AND Message_hasTag_Tag.id = Message.id
           )
-    ) AS score,
+    ) AS commonInterestScore,
     gender,
     City.name
 FROM
@@ -56,6 +56,6 @@ WHERE LocationCityId = City.id
       (extract(month FROM birthday) = :month          AND (CASE WHEN extract(day FROM birthday) >= 21 THEN true ELSE false END))
    OR (extract(month FROM birthday) = :month % 12 + 1 AND (CASE WHEN extract(day FROM birthday) <  22 THEN true ELSE false END))
   )
-ORDER BY score DESC, Person.id
+ORDER BY commonInterestScore DESC, Person.id
 LIMIT 10
 ;

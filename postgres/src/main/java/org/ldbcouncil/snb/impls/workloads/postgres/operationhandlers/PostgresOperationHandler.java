@@ -6,6 +6,7 @@ import com.google.common.collect.Multimap;
 import org.ldbcouncil.snb.driver.Operation;
 import org.ldbcouncil.snb.impls.workloads.postgres.converter.PostgresConverter;
 
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -75,7 +76,9 @@ public class PostgresOperationHandler {
             for (Integer parameterIndex : positions.get(parameter.getKey())) {
                 Object value = parameter.getValue();
 
-                if (value instanceof Integer) {
+                if (value == null) {
+                    stmt.setObject(parameterIndex, null);
+                } else if (value instanceof Integer) {
                     stmt.setInt(parameterIndex, (Integer) value);
                 } else if (value instanceof Long) {
                     stmt.setLong(parameterIndex, (Long) value);
@@ -83,8 +86,27 @@ public class PostgresOperationHandler {
                     stmt.setString(parameterIndex, (String) value);
                 } else if (value instanceof Date) {
                     stmt.setObject(parameterIndex, PostgresConverter.convertDateToOffsetDateTime((Date) value));
+                } else if (value instanceof List) {
+                    if(((List)value).size() > 0) {
+                        Object innerValue = ((List)value).get(0);
+                        if(innerValue instanceof Long || innerValue instanceof Integer)
+                        {
+                            Array arr = conn.createArrayOf("bigint", ((List<?>) value).toArray());
+                            stmt.setArray(parameterIndex, arr);
+                        }
+                        if(innerValue instanceof String)
+                        {
+                            Array arr = conn.createArrayOf("varchar", ((List<?>) value).toArray());
+                            stmt.setArray(parameterIndex, arr);
+                        }
+                    }
+                    else{
+                        // list is empty, assume type bigint
+                        Array arr = conn.createArrayOf("bigint", ((List<?>) value).toArray());
+                        stmt.setArray(parameterIndex, arr);
+                    }
                 } else {
-                    throw new RuntimeException("Type not supported: " + value.getClass().getName());
+                    throw new RuntimeException("Type not supported by PostgresOperationHandler: " + value.getClass().getName());
                 }
             }
         }

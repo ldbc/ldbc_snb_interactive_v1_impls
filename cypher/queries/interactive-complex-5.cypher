@@ -5,19 +5,19 @@
   1288612800000 AS minDate
 }
 */
-MATCH (person:Person { id: $personId })-[:KNOWS*1..2]-(friend)
+MATCH (person:Person { id: $personId })-[:KNOWS*1..2]-(otherPerson)
 WHERE
-    NOT person=friend
-WITH DISTINCT friend
-MATCH (friend)<-[membership:HAS_MEMBER]-(forum)
+    person <> otherPerson
+WITH DISTINCT otherPerson
+MATCH (otherPerson)<-[membership:HAS_MEMBER]-(forum)
 WHERE
-    membership.joinDate > $minDate
+    membership.creationDate > $minDate
 WITH
     forum,
-    collect(friend) AS friends
-OPTIONAL MATCH (friend)<-[:HAS_CREATOR]-(post)<-[:CONTAINER_OF]-(forum)
+    collect(otherPerson) AS otherPersons
+OPTIONAL MATCH (otherPerson2)<-[:HAS_CREATOR]-(post)<-[:CONTAINER_OF]-(forum)
 WHERE
-    friend IN friends
+    otherPerson2 IN otherPersons
 WITH
     forum,
     count(post) AS postCount

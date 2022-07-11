@@ -3,7 +3,7 @@
 \set person2Id 15393162788877
  */
 WITH RECURSIVE search_graph(link, depth, path) AS (
-    SELECT :Person1Id::bigint, 0, ARRAY[:Person1Id::bigint]::bigint[]
+    SELECT :person1Id::bigint, 0, ARRAY[:person1Id::bigint]::bigint[]
     UNION ALL
         (
           WITH
@@ -14,7 +14,7 @@ WITH RECURSIVE search_graph(link, depth, path) AS (
           WHERE x.link = Person1Id
             AND Person2Id <> ALL (path)
             -- stop if we have reached Person2 in the previous iteration
-            AND NOT EXISTS (SELECT * FROM sg y WHERE y.link = :Person2Id::bigint)
+            AND NOT EXISTS (SELECT * FROM sg y WHERE y.link = :person2Id::bigint)
             -- skip reaching Persons reached in the previous iteration
             AND NOT EXISTS (SELECT * FROM sg y WHERE y.link = Person2Id)
       )
@@ -24,7 +24,7 @@ FROM
     (
         SELECT depth
         FROM search_graph
-        WHERE link = :Person2Id::bigint
+        WHERE link = :person2Id::bigint
         UNION
         SELECT -1
     ) tmp;

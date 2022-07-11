@@ -11,23 +11,23 @@ SELECT
     Person.gender,
     Person.browserUsed,
     Person.locationIP,
-    Person.email AS emails,
-    Person.speaks AS languages,
+    string_to_array(Person.email, ';') AS emails,
+    string_to_array(Person.speaks, ';') AS languages,
     City.name,
     (
         SELECT array_agg(ARRAY[University.name, Person_studyAt_University.classYear::text, City.name])
         FROM Person_studyAt_University, University, City
         WHERE Person_studyAt_University.PersonId = Person.id
-        AND Person_studyAt_University.UniversityId = University.id
-        AND University.LocationPlaceId = City.id
+          AND Person_studyAt_University.UniversityId = University.id
+          AND University.LocationPlaceId = City.id
         GROUP BY Person.id
     ) AS university,
     (
         SELECT array_agg(ARRAY[Company.name, Person_workAt_Company.workFrom::text, Country.name])
         FROM Person_workAt_Company, Company, Country
         WHERE Person_workAt_Company.PersonId = Person.id
-        AND Person_workAt_Company.CompanyId = Company.id
-        AND Company.LocationPlaceId = Country.id
+          AND Person_workAt_Company.CompanyId = Company.id
+          AND Company.LocationPlaceId = Country.id
         GROUP BY Person.id
     ) AS company
 FROM

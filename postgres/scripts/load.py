@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-import sys
+import glob
+from multiprocessing.sharedctypes import Value
 import os
 import re
 import time
+import argparse
 import psycopg
 
 class PostgresDbLoader():
@@ -19,7 +21,78 @@ class PostgresDbLoader():
         conn.cursor().execute("ANALYZE")
         conn.autocommit=False
 
-    def main(self):
+    def run_script(self, pg_con, cur, filename):
+        with open(filename, "r") as f:
+            try:
+                queries_file = f.read()
+                # strip comments
+                queries_file = re.sub(r"\n--.*", "", queries_file)
+                queries = queries_file.split(";")
+                for query in queries:
+                    if query.isspace():
+                        continue
+
+                    sql_statement = re.findall(r"^((CREATE|INSERT|DROP|DELETE|SELECT|COPY) [A-Za-z0-9_ ]*)", query, re.MULTILINE)
+                    print(f"{sql_statement[0][0].strip()} ...")
+                    start = time.time()
+                    cur.execute(query)
+                    pg_con.commit()
+                    end = time.time()
+                    duration = end - start
+                    print(f"-> {duration:.4f} seconds")
+            except Exception:
+                print(f"Error trying to execute query: {query}")
+
+    def load_script(self, filename):
+        with open(filename, "r") as f:
+            return f.read()
+
+    def load_initial_snapshot(self, pg_con, cur, data_dir):
+        sql_copy_configuration = "(DELIMITER '|', HEADER, NULL '', FORMAT csv)"
+
+        static_path = "initial_snapshot/static"
+        dynamic_path = "initial_snapshot/dynamic"
+        static_path_local = os.path.join(data_dir, static_path)
+        dynamic_path_local = os.path.join(data_dir, dynamic_path)
+
+        static_path_container = "/data/" + static_path
+        dynamic_path_container = "/data/" + dynamic_path
+
+        static_entities = ["Organisation", "Place", "Tag", "TagClass"]
+        dynamic_entities = ["Comment", "Comment_hasTag_Tag", "Forum", "Forum_hasMember_Person", "Forum_hasTag_Tag", "Person", "Person_hasInterest_Tag", "Person_knows_Person", "Person_likes_Comment", "Person_likes_Post", "Person_studyAt_University", "Person_workAt_Company", "Post", "Post_hasTag_Tag"]
+        print("## Static entities")
+        for entity in static_entities:
+            print(f"===== {entity} =====")
+            entity_dir = os.path.join(static_path_local, entity)
+            print(f"--> {entity_dir}")
+            csv_files = glob.glob(f'{entity_dir}/**/*.csv', recursive=True)
+            if(not csv_files):
+                raise ValueError(f"No CSV-files found for entity {entity}")
+            for csv_file in csv_files:
+                print(f"- {csv_file}")
+                cur.execute(f"COPY {entity} FROM '{os.path.join(static_path_container, entity, os.path.basename(csv_file))}' {sql_copy_configuration}")
+                pg_con.commit()
+        print("Loaded static entities.")
+
+        print("## Dynamic entities")
+        for entity in dynamic_entities:
+            print(f"===== {entity} =====")
+            entity_dir = os.path.join(dynamic_path_local, entity)
+            print(f"--> {entity_dir}")
+            csv_files = glob.glob(f'{entity_dir}/**/*.csv', recursive=True)
+            if(not csv_files):
+                raise ValueError(f"No CSV-files found for entity {entity}")
+            for csv_file in csv_files:
+                print(f"- {csv_file}")
+                csv_file_path_in_container = os.path.join(dynamic_path_container, entity, os.path.basename(csv_file))
+
+                cur.execute(f"COPY {entity} FROM '{csv_file_path_in_container}' {sql_copy_configuration}")
+                if entity == "Person_knows_Person":
+                    cur.execute(f"COPY {entity} (creationDate, Person2id, Person1id) FROM '{csv_file_path_in_container}' {sql_copy_configuration}")
+                pg_con.commit()
+        print("Loaded dynamic entities.")
+
+    def main(self, data_dir):
         with psycopg.connect(
             dbname=self.database,
             host=self.endpoint,
@@ -27,82 +100,18 @@ class PostgresDbLoader():
             password=self.password,
             port=self.port
         ) as pg_con:
-            if len(sys.argv) < 2:
-                print("Postgres loader script")
-                print("Usage: load.py <POSTGRES_DATA_DIR> [--compressed]")
-                exit(1)
-
-            data_dir = sys.argv[1]
-            local = len(sys.argv) == 3 and sys.argv[2] == "--local"
-
             cur = pg_con.cursor()
 
-            def run_script(pg_con, cur, filename):
-                with open(filename, "r") as f:
-                    queries_file = f.read()
-                    # strip comments
-                    queries_file = re.sub(r"\n--.*", "", queries_file)
-                    queries = queries_file.split(";")
-                    for query in queries:
-                        if query.isspace():
-                            continue
-
-                        sql_statement = re.findall(r"^((CREATE|INSERT|DROP|DELETE|SELECT|COPY) [A-Za-z0-9_ ]*)", query, re.MULTILINE)
-                        print(f"{sql_statement[0][0].strip()} ...")
-                        start = time.time()
-                        cur.execute(query)
-                        pg_con.commit()
-                        end = time.time()
-                        duration = end - start
-                        print(f"-> {duration:.4f} seconds")
-
-            run_script(pg_con, cur, "ddl/drop-tables.sql")
-            run_script(pg_con, cur, "ddl/schema-composite-merged-fk.sql")
-            run_script(pg_con, cur, "ddl/schema-delete-candidates.sql")
-
+            self.run_script(pg_con, cur, "ddl/drop-tables.sql")
+            self.run_script(pg_con, cur, "ddl/schema-composite-merged-fk.sql")
             print("Load initial snapshot")
-
-            # initial snapshot
-            static_path = f"{data_dir}/initial_snapshot/static"
-            dynamic_path = f"{data_dir}/initial_snapshot/dynamic"
-            static_entities = ["Organisation", "Place", "Tag", "TagClass"]
-            dynamic_entities = ["Comment", "Comment_hasTag_Tag", "Forum", "Forum_hasMember_Person", "Forum_hasTag_Tag", "Person", "Person_hasInterest_Tag", "Person_knows_Person", "Person_likes_Comment", "Person_likes_Post", "Person_studyAt_University", "Person_workAt_Company", "Post", "Post_hasTag_Tag"]
-
-            if local:
-                dbs_data_dir = data_dir
-            else:
-                dbs_data_dir = '/data'
-
-            print("## Static entities")
-            for entity in static_entities:
-                for csv_file in [f for f in os.listdir(f"{static_path}/{entity}") if f.startswith("part-") and f.endswith(".csv")]:
-                    csv_path = f"{entity}/{csv_file}"
-                    print(f"- {csv_path}")
-                    #print(f"- {csv_path}", end='\r')
-                    cur.execute(f"COPY {entity} FROM '{dbs_data_dir}/initial_snapshot/static/{entity}/{csv_file}' (DELIMITER '|', HEADER, NULL '', FORMAT csv)")
-                    #print(" " * 120, end='\r')
-                    pg_con.commit()
-            print("Loaded static entities.")
-
-            print("## Dynamic entities")
-            for entity in dynamic_entities:
-                for csv_file in [f for f in os.listdir(f"{dynamic_path}/{entity}") if f.startswith("part-") and f.endswith(".csv")]:
-                    csv_path = f"{entity}/{csv_file}"
-                    print(f"- {csv_path}")
-                    #print(f"- {csv_path}", end='\r')
-                    cur.execute(f"COPY {entity} FROM '{dbs_data_dir}/initial_snapshot/dynamic/{entity}/{csv_file}' (DELIMITER '|', HEADER, NULL '', FORMAT csv)")
-                    if entity == "Person_knows_Person":
-                        cur.execute(f"COPY {entity} (creationDate, Person2id, Person1id) FROM '{dbs_data_dir}/initial_snapshot/dynamic/{entity}/{csv_file}' (DELIMITER '|', HEADER, NULL '', FORMAT csv)")
-                    #print(" " * 120, end='\r')
-                    pg_con.commit()
-            print("Loaded dynamic entities.")
-
+            self.load_initial_snapshot(pg_con, cur, data_dir)
             print("Maintain materialized views . . . ")
-            run_script(pg_con, cur, "dml/maintain-views.sql")
+            self.run_script(pg_con, cur, "dml/maintain-views.sql")
             print("Done.")
 
             print("Create static materialized views . . . ")
-            run_script(pg_con, cur, "dml/create-static-materialized-views.sql")
+            self.run_script(pg_con, cur, "dml/create-static-materialized-views.sql")
             print("Done.")
 
             print("Adding indexes and constraints")
@@ -113,12 +122,32 @@ class PostgresDbLoader():
             print("Loaded initial snapshot to Postgres.")
 
 
-    def load_script(self, filename):
-        with open(filename, "r") as f:
-            return f.read()
-
-
 if __name__ == "__main__":
-    PGLoader = PostgresDbLoader()
-    PGLoader.main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '--POSTGRES_DATA_DIR',
+        help="POSTGRES_DATA_DIR: folder containing the initial snapshot data to load e.g. '/out-sf1/graphs/csv/bi/composite-merged-fk'",
+        type=str,
+        required=True
+    )
+    parser.add_argument(
+        '--is_container',
+        help="is_container: whether the data is loaded from within a container",
+        type=str,
+        required=False,
+        default=False
+    )
+    args = parser.parse_args()
 
+    PGLoader = PostgresDbLoader()
+
+    if (args.is_container):
+        data_dir = "/data/"
+    else:
+        data_dir = args.POSTGRES_DATA_DIR
+
+    start = time.time()
+    PGLoader.main(data_dir)
+    end = time.time()
+    duration = end - start
+    print(f"Data loaded in {duration:.4f} seconds")

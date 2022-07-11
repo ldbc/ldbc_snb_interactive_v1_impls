@@ -1,5 +1,0 @@
-CREATE OR REPLACE QUERY interactiveInsert2(UINT personId, UINT postId, INT creationDate) {
-    INSERT INTO Person (id) VALUES (personId);
-    INSERT INTO Post (id) VALUES (postId);
-    INSERT INTO LIKES (FROM, TO, creationDate) VALUES (personId Person, postId Post, creationDate);
-}

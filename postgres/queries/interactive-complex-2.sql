@@ -6,7 +6,7 @@ SELECT
     Person.id,
     Person.firstName,
     Person.lastName,
-    Message.MessageId,
+    Message.id,
     coalesce(Message.imageFile, Message.content),
     Message.creationDate
 FROM
@@ -17,6 +17,6 @@ WHERE Person.id = Message.CreatorPersonId
   AND Message.creationDate <= :maxDate
   AND Person1Id = :personId
   AND Person2Id = Person.id
-ORDER BY creationDate DESC, MessageId ASC
+ORDER BY creationDate DESC, Message.id ASC
 LIMIT 20
 ;

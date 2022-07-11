@@ -2,13 +2,13 @@
 \set messageId 824633720985
  */
 WITH RECURSIVE chain(parent, child) as(
-    SELECT ParentMessageId, MessageId
+    SELECT ParentMessageId, id
     FROM Message
-    WHERE MessageId = :messageId
+    WHERE id = :messageId
     UNION ALL
-    SELECT p.ParentMessageId, p.MessageId
-    FROM Message p, chain c
-    WHERE p.MessageId = c.parent
+    SELECT ParentMessageId, id
+    FROM Message, chain c
+    WHERE id = parent
 )
 SELECT
   Forum.id,
@@ -17,7 +17,7 @@ SELECT
   Person.firstName,
   Person.lastName
 FROM Message, Person, Forum
-WHERE MessageId = (SELECT coalesce(min(parent), :messageId) FROM chain)
+WHERE Message.id = (SELECT coalesce(min(parent), :messageId) FROM chain)
   AND Message.ContainerForumId = Forum.id
   AND ModeratorPersonId = Person.id
 ;

@@ -24,7 +24,7 @@ docker-compose build && docker-compose up
 The default environment variables are loaded from `.env`. Change the `POSTGRES_CSV_DIR` to point to point to the data set, e.g.
 
 ```bash
-POSTGRES_CSV_DIR=`pwd`/test-data/
+POSTGRES_CSV_DIR=`pwd`/social-network-sf0.003-bi-composite-merged-fk/
 ```
 
 To persist the data by storing the database outside a Docker volume, uncomment the following lines in the `docker-compose.yml` file:
@@ -37,33 +37,32 @@ To persist the data by storing the database outside a Docker volume, uncomment t
 
 ## Generating and loading the data set
 
-## Generating the data set
+### Generating the data set
 
 The PostgreSQL `composite-merged-fk` CSV layout, with headers and without quoted fields.
 To generate data that confirms this requirement, run Datagen without any layout or formatting arguments (`--explode-*` or `--format-options`).
 
-In Datagen's directory (`ldbc_snb_datagen_spark`), issue the following commands. We assume that the Datagen project is built and the `${PLATFORM_VERSION}`, `${DATAGEN_VERSION}` environment variables are set correctly.
+In Datagen's directory (`ldbc_snb_datagen_spark`), issue the following commands. We assume that the Datagen project is built and `sbt` is available.
 
 ```bash
 export SF=desired_scale_factor
 export LDBC_SNB_DATAGEN_MAX_MEM=available_memory
+export LDBC_SNB_DATAGEN_JAR=$(sbt -batch -error 'print assembly / assemblyOutputPath')
 ```
 
 ```bash
-rm -rf out-sf${SF}/
+rm -rf out-sf${SF}/graphs/parquet/raw
 tools/run.py \
     --cores $(nproc) \
     --memory ${LDBC_SNB_DATAGEN_MAX_MEM} \
-    ./target/ldbc_snb_datagen_${PLATFORM_VERSION}-${DATAGEN_VERSION}.jar \
     -- \
     --format csv \
     --scale-factor ${SF} \
     --mode bi \
-    --output-dir out-sf${SF} \
-    --generate-factors
+    --output-dir out-sf${SF}
 ```
 
-### Configuration
+## Configuration
 
 The default configuration of the database (e.g. database name, user, password) is set in the `scripts/vars.sh` file.
 

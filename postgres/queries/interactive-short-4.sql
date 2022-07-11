@@ -3,5 +3,5 @@
  */
 SELECT coalesce(imageFile, content, ''), creationDate
 FROM Message
-WHERE MessageId = :messageId
+WHERE id = :messageId
 ;

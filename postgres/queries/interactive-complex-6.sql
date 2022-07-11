@@ -20,13 +20,13 @@ FROM
     ) friend
 WHERE CreatorPersonId = friend.Person2Id
   AND ParentMessageId IS NULL -- post, not comment
-  AND Message.MessageId = Message_hasTag_Tag.MessageId
+  AND Message.id = Message_hasTag_Tag.id
   AND Message_hasTag_Tag.TagId = Tag.id
   AND name <> :tagName
   AND EXISTS (
           SELECT *
           FROM Tag, Message_hasTag_Tag
-          WHERE Message.MessageId = Message_hasTag_Tag.MessageId
+          WHERE Message.id = Message_hasTag_Tag.id
             AND Message_hasTag_Tag.TagId = Tag.id
             AND Tag.name = :tagName
       )
