@@ -88,6 +88,9 @@ jobs:
             scripts/get-factors.sh
             scripts/paramgen.sh
             cd ..
+
+            mkdir parameters-sf${SF}
+            mv parameters/*.parquet parameters-sf${SF}/
       ### Neo4j
       - run:
           name: Tiny data set - Load Neo4j database and create a backup
