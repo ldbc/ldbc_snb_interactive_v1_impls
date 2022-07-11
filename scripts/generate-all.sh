@@ -18,6 +18,7 @@ rm -rf ${LDBC_SNB_IMPLS_DIR}/parameters-sf${SF}/*
 
 echo "==================== Generate data ===================="
 cd ${LDBC_SNB_DATAGEN_DIR}
+
 LDBC_SNB_DATAGEN_JAR=$(sbt -batch -error 'print assembly / assemblyOutputPath') && export LDBC_SNB_DATAGEN_JAR
 rm -rf out-sf${SF}
 
@@ -47,12 +48,12 @@ tools/run.py \
     --output-dir out-sf${SF} \
     --generate-factors
 
+export LDBC_SNB_DATA_ROOT_DIRECTORY=${LDBC_SNB_DATAGEN_DIR}/out-sf${SF}/
 
 echo "==================== Generate update streams ===================="
 cd ${LDBC_SNB_DRIVER_DIR}
 cd scripts
 
-export DATA_ROOT_DIRECTORY=${LDBC_SNB_DATAGEN_DIR}/out-sf${SF}/
 ./convert.sh
 mv inserts/ ${LDBC_SNB_IMPLS_DIR}/update-streams-sf${SF}/
 mv deletes/ ${LDBC_SNB_IMPLS_DIR}/update-streams-sf${SF}/
