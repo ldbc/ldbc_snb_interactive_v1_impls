@@ -156,4 +156,94 @@ jobs:
             driver/benchmark.sh
             scripts/stop.sh
             cd ..
+      ### Neo4j
+      - run:
+          name: SF1 data set - Load Neo4j database and create a backup
+          command: |
+            export SF=1
+            export LDBC_SNB_DATAGEN_DIR=`pwd`
+            cd cypher
+            . scripts/use-datagen-data-set.sh
+            scripts/load-in-one-step.sh
+            scripts/backup-database.sh
+            cd ..
+      - run:
+          name: SF1 data set - Create validation parameters with Neo4j project
+          command: |
+            export SF=1
+            export LDBC_SNB_DATAGEN_DIR=`pwd`
+            cd cypher
+            . scripts/use-datagen-data-set.sh
+            driver/create-validation-parameters.sh driver/create-validation-parameters-sf${SF}.properties
+            cp validation_params.json validation_params_cypher_sf${SF}.json
+            cd ..
+      ### PostgreSQL
+      - run:
+          name: SF1 data set - Load PostgreSQL database and create a backup
+          command: |
+            export SF=1
+            export LDBC_SNB_DATAGEN_DIR=`pwd`
+            cd postgres
+            . scripts/use-datagen-data-set.sh
+            scripts/load-in-one-step.sh
+            scripts/backup-database.sh
+            cd ..
+      - run:
+          name: SF1 data set - Create validation parameters with PostgreSQL
+          command: |
+            export SF=1
+            export LDBC_SNB_DATAGEN_DIR=`pwd`
+            cd postgres
+            . scripts/use-datagen-data-set.sh
+            driver/create-validation-parameters.sh
+            scripts/stop.sh
+            cp validation_params.json validation_params_postgres_sf${SF}.json
+            cd ..
+      ### Neo4j
+      - run:
+          name: SF1 data set - Cross-validate the Neo4j project based on the results from PostgreSQL
+          command: |
+            export SF=1
+            export LDBC_SNB_DATAGEN_DIR=`pwd`
+            cp postgres/validation_params_postgres_sf${SF}.json cypher/validation_params.json
+            cd cypher
+            . scripts/use-datagen-data-set.sh
+            scripts/restore-database.sh
+            driver/validate.sh | tee validation-log.txt
+            grep 'Validation Result: PASS' validation-log.txt
+            cd ..
+      - run:
+          name: SF1 data set - Benchmark Neo4j
+          command: |
+            export SF=1
+            export LDBC_SNB_DATAGEN_DIR=`pwd`
+            cd cypher
+            . scripts/use-datagen-data-set.sh
+            scripts/restore-database.sh
+            driver/benchmark.sh
+            cd ..
+      ### PostgreSQL
+      - run:
+          name: SF1 data set - Cross-validate the PostgreSQL project based on the results from Neo4j
+          command: |
+            export SF=1
+            export LDBC_SNB_DATAGEN_DIR=`pwd`
+            cp cypher/validation_params_cypher_sf${SF}.json postgres/validation_params.json
+            cd postgres
+            . scripts/use-datagen-data-set.sh
+            scripts/restore-database.sh
+            driver/validate.sh | tee validation-log.txt
+            grep 'Validation Result: PASS' validation-log.txt
+            cd ..
+      - run:
+          name: SF1 data set - Benchmark PostgreSQL
+          command: |
+            export SF=1
+            export LDBC_SNB_DATAGEN_DIR=`pwd`
+            cd postgres
+            . scripts/use-datagen-data-set.sh
+            scripts/restore-database.sh
+            driver/benchmark.sh
+            scripts/stop.sh
+            cd ..
       - slack/status
