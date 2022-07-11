@@ -87,8 +87,24 @@ public class PostgresOperationHandler {
                 } else if (value instanceof Date) {
                     stmt.setObject(parameterIndex, PostgresConverter.convertDateToOffsetDateTime((Date) value));
                 } else if (value instanceof List) {
-                    Array arr = conn.createArrayOf("bigint", ((List<?>) value).toArray());
-                    stmt.setArray(parameterIndex, arr);
+                    if(((List)value).size() > 0) {
+                        Object innerValue = ((List)value).get(0);
+                        if(innerValue instanceof Long || innerValue instanceof Integer)
+                        {
+                            Array arr = conn.createArrayOf("bigint", ((List<?>) value).toArray());
+                            stmt.setArray(parameterIndex, arr);
+                        }
+                        if(innerValue instanceof String)
+                        {
+                            Array arr = conn.createArrayOf("varchar", ((List<?>) value).toArray());
+                            stmt.setArray(parameterIndex, arr);
+                        }
+                    }
+                    else{
+                        // list is empty, assume type bigint
+                        Array arr = conn.createArrayOf("bigint", ((List<?>) value).toArray());
+                        stmt.setArray(parameterIndex, arr);
+                    }
                 } else {
                     throw new RuntimeException("Type not supported by PostgresOperationHandler: " + value.getClass().getName());
                 }
