@@ -457,8 +457,9 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                         stmt2.setLong(2, operation.getPersonId());
                         stmt2.setLong(3, o.getOrganizationId());
                         stmt2.setInt(4, o.getYear());
-                        stmt2.executeUpdate();
+                        stmt2.addBatch();
                     }
+                    stmt2.executeBatch();
                 }
 
                 // InteractiveUpdate1AddPersonTags
@@ -471,8 +472,9 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                         stmt5.setObject(1, PostgresConverter.convertDateToOffsetDateTime(operation.getCreationDate()));
                         stmt5.setLong(2, operation.getPersonId());
                         stmt5.setLong(3, tagId);
-                        stmt5.executeUpdate();
+                        stmt5.addBatch();
                     }
+                    stmt5.executeBatch();
                 }
 
                 // InteractiveUpdate1AddPersonUniversities
@@ -485,8 +487,9 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                         stmt6.setLong(2, operation.getPersonId());
                         stmt6.setLong(3, o.getOrganizationId());
                         stmt6.setInt(4, o.getYear());
-                        stmt6.executeUpdate();
+                        stmt6.addBatch();
                     }
+                    stmt6.executeBatch();
                 }
 
             } catch (Exception e) {
