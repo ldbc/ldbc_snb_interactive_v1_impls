@@ -2,6 +2,7 @@
 USE ldbc;
 ALTER TABLE Message ADD PRIMARY KEY (messageid);
 ALTER TABLE Forum ADD PRIMARY KEY (id);
+ALTER TABLE Person ADD PRIMARY KEY (id);
 ALTER TABLE Forum_hasMember_Person ADD PRIMARY KEY (ForumId, PersonId);
 ALTER TABLE Forum_hasTag_Tag ADD PRIMARY KEY (ForumId, TagId);
 -- ALTER TABLE person_email ADD PRIMARY KEY (pe_personid, pe_email);

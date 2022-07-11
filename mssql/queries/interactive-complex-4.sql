@@ -10,7 +10,7 @@ SELECT TOP(10) name, count(*) AS postCount
         AND ParentMessageId IS NULL -- post, not comment
         AND Person1Id = :personId
         AND Message.creationDate >= :startDate
-           AND creationDate < DATEADD(day, :durationDays, :startDate)
+           AND Message.creationDate < DATEADD(day, :durationDays, :startDate)
   AND NOT EXISTS (
         SELECT *
         FROM (

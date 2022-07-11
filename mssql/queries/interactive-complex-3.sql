@@ -50,5 +50,5 @@ SELECT TOP(20)
             AND Country.name <> :countryXName
             AND Country.name <> :countryYName
             AND friend.Person2Id = cpc.CreatorPersonId
-            ORDER BY totalcount DESC, Person.id ASC
+            ORDER BY total DESC, Person.id ASC
 ;

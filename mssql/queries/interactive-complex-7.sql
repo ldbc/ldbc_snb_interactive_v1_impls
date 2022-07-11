@@ -4,7 +4,7 @@ SELECT
     lastName,
     l.creationDate,
     Message.MessageId,
-    coalesce(imageFile, content),
+    coalesce(imageFile, content)
      , DATEDIFF_BIG(second, Message.creationDate, l.creationDate)/60 AS minutesLatency
      , (CASE WHEN EXISTS (SElECT 1
                             FROM Person_knows_Person

@@ -143,7 +143,7 @@ FROM OPENROWSET (
 INSERT INTO [dbo].[Person] (
     $NODE_ID,
     creationDate,
-    personId,
+    id,
     firstName,
     lastName,
     gender,
