@@ -143,9 +143,10 @@ jobs:
             export LDBC_SNB_IMPLS_DIR=`pwd`
 
             echo "==================== Generate update streams ===================="
-            cd ${LDBC_SNB_DRIVER_DIR}
+            cd ${LDBC_SNB_IMPLS_DIR}
             mkdir update-streams-sf${SF}/
 
+            cd ${LDBC_SNB_DRIVER_DIR}
             cd scripts
             ./convert.sh
             mv inserts ${LDBC_SNB_IMPLS_DIR}/update-streams-sf${SF}/
