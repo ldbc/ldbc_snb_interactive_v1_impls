@@ -144,20 +144,22 @@ jobs:
 
             echo "==================== Generate update streams ===================="
             cd ${LDBC_SNB_DRIVER_DIR}
-            cd scripts
+            mkdir update-streams-sf${SF}/
 
+            cd scripts
             ./convert.sh
-            mv inserts/ ${LDBC_SNB_IMPLS_DIR}/update-streams-sf${SF}/
-            mv deletes/ ${LDBC_SNB_IMPLS_DIR}/update-streams-sf${SF}/
+            mv inserts ${LDBC_SNB_IMPLS_DIR}/update-streams-sf${SF}/
+            mv deletes ${LDBC_SNB_IMPLS_DIR}/update-streams-sf${SF}/
 
             echo "==================== Generate parameters ===================="
             cd ${LDBC_SNB_IMPLS_DIR}
+            mkdir parameters-sf${SF}
+
             cd paramgen
             scripts/get-factors.sh
             scripts/paramgen.sh
             cd ..
 
-            mkdir parameters-sf${SF}
             mv parameters/*.parquet parameters-sf${SF}/
       ### Neo4j
       - run:
