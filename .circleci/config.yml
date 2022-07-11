@@ -62,35 +62,6 @@ jobs:
             scripts/get-sample-factors.sh
             scripts/paramgen.sh
             cd ..
-      - run:
-          name: Get SF1 data set
-          command: |
-            curl -L https://surfdrive.surf.nl/files/index.php/s/IbWgmBVQfdu1BRV/download | tar -xv --use-compress-program=unzstd
-      - run:
-          name: Process SF1 data set
-          command: |
-            export SF=1
-            export LDBC_SNB_DRIVER_DIR=`pwd`/ldbc_snb_interactive_driver
-            export LDBC_SNB_DATA_ROOT_DIRECTORY=`pwd`/out-sf${SF}
-            export LDBC_SNB_IMPLS_DIR=`pwd`
-
-            echo "==================== Generate update streams ===================="
-            cd ${LDBC_SNB_DRIVER_DIR}
-            cd scripts
-
-            ./convert.sh
-            mv inserts/ ${LDBC_SNB_IMPLS_DIR}/update-streams-sf${SF}/
-            mv deletes/ ${LDBC_SNB_IMPLS_DIR}/update-streams-sf${SF}/
-
-            echo "==================== Generate parameters ===================="
-            cd ${LDBC_SNB_IMPLS_DIR}
-            cd paramgen
-            scripts/get-factors.sh
-            scripts/paramgen.sh
-            cd ..
-
-            mkdir parameters-sf${SF}
-            mv parameters/*.parquet parameters-sf${SF}/
       ### Neo4j
       - run:
           name: Tiny data set - Load Neo4j database and create a backup
@@ -159,6 +130,35 @@ jobs:
             driver/benchmark.sh
             scripts/stop.sh
             cd ..
+      - run:
+          name: Get SF1 data set
+          command: |
+            curl -L https://surfdrive.surf.nl/files/index.php/s/IbWgmBVQfdu1BRV/download | tar -xv --use-compress-program=unzstd
+      - run:
+          name: Process SF1 data set
+          command: |
+            export SF=1
+            export LDBC_SNB_DRIVER_DIR=`pwd`/ldbc_snb_interactive_driver
+            export LDBC_SNB_DATA_ROOT_DIRECTORY=`pwd`/out-sf${SF}
+            export LDBC_SNB_IMPLS_DIR=`pwd`
+
+            echo "==================== Generate update streams ===================="
+            cd ${LDBC_SNB_DRIVER_DIR}
+            cd scripts
+
+            ./convert.sh
+            mv inserts/ ${LDBC_SNB_IMPLS_DIR}/update-streams-sf${SF}/
+            mv deletes/ ${LDBC_SNB_IMPLS_DIR}/update-streams-sf${SF}/
+
+            echo "==================== Generate parameters ===================="
+            cd ${LDBC_SNB_IMPLS_DIR}
+            cd paramgen
+            scripts/get-factors.sh
+            scripts/paramgen.sh
+            cd ..
+
+            mkdir parameters-sf${SF}
+            mv parameters/*.parquet parameters-sf${SF}/
       ### Neo4j
       - run:
           name: SF1 data set - Load Neo4j database and create a backup
