@@ -1,7 +1,7 @@
 package org.ldbcouncil.snb.impls.workloads.cypher.converter;
 
 import org.ldbcouncil.snb.driver.workloads.interactive.queries.LdbcQuery1Result;
-import org.ldbcouncil.snb.driver.workloads.interactive.queries.LdbcUpdate1AddPerson;
+import org.ldbcouncil.snb.driver.workloads.interactive.queries.LdbcInsert1AddPerson;
 import org.ldbcouncil.snb.impls.workloads.converter.Converter;
 
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class CypherConverter extends Converter {
 
-    public String convertOrganisations(List<LdbcUpdate1AddPerson.Organization> values) {
+    public String convertOrganisations(List<LdbcInsert1AddPerson.Organization> values) {
         String res = "[";
         res += values
                 .stream()
