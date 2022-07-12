@@ -36,14 +36,14 @@ public class PostgresInteractiveDb extends PostgresDb {
         registerOperationHandler(LdbcShortQuery6MessageForum.class, ShortQuery6MessageForum.class);
         registerOperationHandler(LdbcShortQuery7MessageReplies.class, ShortQuery7MessageReplies.class);
 
-        registerOperationHandler(LdbcUpdate1AddPerson.class, Update1AddPerson.class);
-        registerOperationHandler(LdbcUpdate2AddPostLike.class, Update2AddPostLike.class);
-        registerOperationHandler(LdbcUpdate3AddCommentLike.class, Update3AddCommentLike.class);
-        registerOperationHandler(LdbcUpdate4AddForum.class, Update4AddForum.class);
-        registerOperationHandler(LdbcUpdate5AddForumMembership.class, Update5AddForumMembership.class);
-        registerOperationHandler(LdbcUpdate6AddPost.class, Update6AddPost.class);
-        registerOperationHandler(LdbcUpdate7AddComment.class, Update7AddComment.class);
-        registerOperationHandler(LdbcUpdate8AddFriendship.class, Update8AddFriendship.class);
+        registerOperationHandler(LdbcInsert1AddPerson.class, Insert1AddPerson.class);
+        registerOperationHandler(LdbcInsert2AddPostLike.class, Insert2AddPostLike.class);
+        registerOperationHandler(LdbcInsert3AddCommentLike.class, Insert3AddCommentLike.class);
+        registerOperationHandler(LdbcInsert4AddForum.class, Insert4AddForum.class);
+        registerOperationHandler(LdbcInsert5AddForumMembership.class, Insert5AddForumMembership.class);
+        registerOperationHandler(LdbcInsert6AddPost.class, Insert6AddPost.class);
+        registerOperationHandler(LdbcInsert7AddComment.class, Insert7AddComment.class);
+        registerOperationHandler(LdbcInsert8AddFriendship.class, Insert8AddFriendship.class);
 
         registerOperationHandler(LdbcDelete1RemovePerson.class, Delete1RemovePerson.class);
         registerOperationHandler(LdbcDelete2RemovePostLike.class, Delete2RemovePostLike.class);
