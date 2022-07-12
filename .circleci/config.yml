@@ -47,7 +47,7 @@ jobs:
       - run:
           name: Convert update streams
           command: |
-            git clone --branch v2.0-dev https://github.com/ldbc/ldbc_snb_interactive_driver
+            git clone https://github.com/ldbc/ldbc_snb_interactive_driver
             cd ldbc_snb_interactive_driver/scripts/
             ./install-dependencies-for-convert-script.sh
             export LDBC_SNB_DATA_ROOT_DIRECTORY=../../social-network-sf0.003-bi-composite-merged-fk/
