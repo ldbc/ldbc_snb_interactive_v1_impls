@@ -26,7 +26,6 @@ public abstract class PostgresUpdateOperationHandler<TOperation extends Operatio
             state.logQuery(operation.getClass().getSimpleName(), queryString);
             
             try {
-                state.logQuery(operation.getClass().getSimpleName(), queryString);
                 stmt.executeUpdate();
             } catch (Exception e) {
                 throw new DbException(e);

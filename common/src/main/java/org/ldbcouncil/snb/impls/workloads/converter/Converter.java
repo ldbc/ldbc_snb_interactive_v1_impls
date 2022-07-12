@@ -1,6 +1,6 @@
 package org.ldbcouncil.snb.impls.workloads.converter;
 
-import org.ldbcouncil.snb.driver.workloads.interactive.queries.LdbcUpdate1AddPerson;
+import org.ldbcouncil.snb.driver.workloads.interactive.queries.LdbcInsert1AddPerson;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -77,7 +77,7 @@ public class Converter {
      * @param values
      * @return
      */
-    public String convertOrganisations(List<LdbcUpdate1AddPerson.Organization> values) {
+    public String convertOrganisations(List<LdbcInsert1AddPerson.Organization> values) {
         String res = "[";
         res += values
                 .stream()

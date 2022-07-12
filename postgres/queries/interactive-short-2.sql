@@ -1,29 +1,36 @@
-/* IS2. Recent messages of a person
-\set personId 10995116277795
+/* IS2. Recent messages of a Person
+\set personId 17592186044461
  */
-with recursive cposts(m_messageid, m_content, m_ps_imagefile, m_creationdate, m_c_replyof, m_creatorid) AS (
-      select m_messageid, m_content, m_ps_imagefile, m_creationdate, m_c_replyof, m_creatorid
-      from message
-      where m_creatorid = :personId
-      order by m_creationdate desc
-      limit 10
-), parent(postid,replyof,orig_postid,creator) AS (
-      select m_messageid, m_c_replyof, m_messageid, m_creatorid from cposts
+WITH RECURSIVE cposts(id, content, imageFile, creationDate, ParentMessageId, CreatorPersonId) AS (
+    SELECT id, content, imageFile, creationDate, ParentMessageId, CreatorPersonId
+    FROM Message
+    WHERE CreatorPersonId = :personId
+    ORDER BY creationDate DESC
+    LIMIT 10
+), parent(postid, ParentMessageId, orig_postid, CreatorPersonId) AS (
+    SELECT id, ParentMessageId, id, CreatorPersonId
+    FROM cposts
     UNION ALL
-      select m_messageid, m_c_replyof, orig_postid, m_creatorid
-      from message,parent
-      where m_messageid=replyof
+    SELECT Message.id, Message.ParentMessageId, parent.orig_postid, Message.CreatorPersonId
+    FROM Message, parent
+    WHERE Message.id = parent.ParentMessageId
 )
-select p1.m_messageid, COALESCE(m_ps_imagefile, m_content, ''), p1.m_creationdate,
-       p2.m_messageid, p2.p_personid, p2.p_firstname, p2.p_lastname
-from 
-     (select m_messageid, m_content, m_ps_imagefile, m_creationdate, m_c_replyof from cposts
-     ) p1
-left join
-     (select orig_postid, postid as m_messageid, p_personid, p_firstname, p_lastname
-      from parent, person
-      where replyof is null and creator = p_personid
-     )p2  
-on p2.orig_postid = p1.m_messageid
-order by m_creationdate desc, p2.m_messageid desc;
+SELECT
+    m1.id,
+    coalesce(imageFile, content, ''),
+    m1.creationDate,
+    m2.id,
+    m2.PersonId,
+    m2.firstName,
+    m2.lastName
+FROM 
+    (SELECT id, content, imageFile, creationDate, ParentMessageId FROM cposts) m1
+LEFT JOIN
+    (
+        SELECT orig_postid, postid AS id, Person.id AS PersonId, firstName, lastName
+        FROM parent, Person
+        WHERE ParentMessageId IS NULL AND parent.CreatorPersonId = Person.id
+    ) m2
+    ON m2.orig_postid = m1.id
+ORDER BY creationDate DESC, m2.id DESC
 ;

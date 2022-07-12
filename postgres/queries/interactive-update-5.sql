@@ -1,11 +1,11 @@
-insert into forum_person (
-    fp_forumid
-  , fp_personid
-  , fp_joindate
+INSERT INTO Forum_hasMember_Person (
+    creationDate
+  , ForumId
+  , PersonId
 )
-values
+VALUES
 (
-    :forumId
+    :creationDate
+  , :forumId
   , :personId
-  , :joinDate
 );

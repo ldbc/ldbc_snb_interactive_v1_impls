@@ -1,23 +1,27 @@
-insert into person (
-    p_personid
-  , p_firstname
-  , p_lastname
-  , p_gender
-  , p_birthday
-  , p_creationdate
-  , p_locationip
-  , p_browserused
-  , p_placeid
+INSERT INTO person (
+    id
+  , firstName
+  , lastName
+  , gender
+  , birthday
+  , creationDate
+  , locationIP
+  , browserUsed
+  , LocationCityId
+  , speaks
+  , email
 )
-values
+VALUES
 (
-    :personId
+    :creationDate
+  , :personId
   , :personFirstName
   , :personLastName
   , :gender
   , :birthday
-  , :creationDate
   , :locationIP
   , :browserUsed
   , :cityId
+  , :languages
+  , :emails
 );

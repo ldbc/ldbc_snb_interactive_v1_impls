@@ -20,35 +20,85 @@ The default environment variables (e.g. Neo4j version, container name, etc.) are
 ### Generating the data set
 
 The data sets need to be generated and preprocessed before loading it to the database. To generate such data sets, use the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop)'s `CsvComposite` serializer classes with the `LongDateFormatter` date formatter:
+## Configuration
 
-```ini
-ldbc.snb.datagen.serializer.dateFormatter:ldbc.snb.datagen.util.formatter.LongDateFormatter
+The default environment variables (e.g. Neo4j version, container name, etc.) are stored in `scripts/vars.sh`. Adjust these as you see fit.
 
-ldbc.snb.datagen.serializer.dynamicActivitySerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.activity.CsvCompositeDynamicActivitySerializer
-ldbc.snb.datagen.serializer.dynamicPersonSerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.person.CsvCompositeDynamicPersonSerializer
-ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv.staticserializer.CsvCompositeStaticSerializer
-```
+## Generating and loading the data set
 
-An example configuration for scale factor 1 is given in the [`params-csv-composite-longdateformatter.ini`](https://github.com/ldbc/ldbc_snb_datagen_hadoop/blob/main/params-csv-composite-longdateformatter.ini) file of the Datagen repository.
+### Generating the data set
 
-### Preprocessing and loading
+The data sets need to be generated and preprocessed before loading it to the database. To generate such data sets, use the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop)'s `CsvComposite` serializer classes with the `LongDateFormatter` date formatter:
+## Configuration
 
-Set the following environment variables based on your data source and where you would like to store the converted CSVs:
+The default environment variables (e.g. Neo4j version, container name, etc.) are stored in `scripts/vars.sh`. Adjust these as you see fit.
+
+## Generating and loading the data set
+
+### Generating the data set
+
+The data sets need to be generated and preprocessed before loading it to the database. To generate such data sets, use the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop)'s `CsvComposite` serializer classes with the `LongDateFormatter` date formatter:
+## Generating the data set
+
+The Neo4j implementation expects the data to be in `composite-projected-fk` CSV layout, without headers and with quoted fields.
+To generate data that confirms this requirement, run Datagen with the `--explode-edges` and the `--format-options header=false,quoteAll=true` options.
+This implementation also supports compressed data sets, both for the initial load and for batches. To generate compressed data sets, include `compression=gzip` in the Datagen's `--format-options`. The scripts in this repository change between compressed and uncompressed representations.
+
+(Rationale: Files should not have headers as these are provided separately in the `headers/` directory and quoting the fields in the CSV is required to [preserve trailing spaces](https://neo4j.com/docs/operations-manual/4.3/tools/neo4j-admin-import/#import-tool-header-format).)
+
+In Datagen's directory (`ldbc_snb_datagen_spark`), issue the following commands. We assume that the Datagen project is built and `sbt` is available.
 
 ```bash
-export NEO4J_VANILLA_CSV_DIR=`pwd`/test-data/vanilla
-export NEO4J_CONVERTED_CSV_DIR=`pwd`/test-data/converted
+export SF=desired_scale_factor
+export LDBC_SNB_DATAGEN_MAX_MEM=available_memory
+export LDBC_SNB_DATAGEN_JAR=$(sbt -batch -error 'print assembly / assemblyOutputPath')
 ```
-
-#### Loading the data set
-
-To load the data sets, run the following script:
 
 ```bash
-scripts/load-in-one-step.sh
+rm -rf out-sf${SF}/graphs/parquet/raw
+tools/run.py \
+    --cores $(nproc) \
+    --memory ${LDBC_SNB_DATAGEN_MAX_MEM} \
+    -- \
+    --format csv \
+    --scale-factor ${SF} \
+    --explode-edges \
+    --mode bi \
+    --output-dir out-sf${SF}/ \
+    --epoch-millis \
+    --format-options header=false,quoteAll=true,compression=gzip
 ```
 
-This preprocesses the CSVs in `${NEO4J_VANILLA_CSV_DIR}` and places the resulting CSVs in `${NEO4J_CONVERTED_CSV_DIR}`, stops any running Neo4j database instances, loads the database and starts it.
+## Loading the data
+
+1. Set the `${NEO4J_CSV_DIR}` environment variable.
+
+    * To use a locally generated data set, set the `${LDBC_SNB_DATAGEN_DIR}` and `${SF}` environment variables and run:
+
+        ```bash
+        export NEO4J_CSV_DIR=${LDBC_SNB_DATAGEN_DIR}/out-sf${SF}/graphs/csv/bi/composite-projected-fk/
+        ```
+
+        Or, simply run:
+
+        ```bash
+        . scripts/use-datagen-data-set.sh
+        ```
+
+    * To download and use the sample data set, run:
+
+        ```bash
+        scripts/get-sample-data-set.sh
+        . scripts/use-sample-data-set.sh
+        ```
+
+1. Load the data:
+
+    ```bash
+    scripts/load-in-one-step.sh
+    ```
+
+1. The substitution parameters should be generated using the [`paramgen`](../paramgen).
 
 ## Running the benchmark
 
@@ -60,4 +110,4 @@ driver/validate.sh
 driver/benchmark.sh
 ```
 
-:Warning: The default workload contains updates which are persisted in the database. Therefore, **the database needs to be reloaded or restored from backup before each run**. Use the provided `scripts/backup-database.sh` and `scripts/restore-database.sh` scripts to achieve this. Alternatively, e.g. if you lack sudo rights, use Neo4j's built-in dump and load features through the `scripts/backup-neo4j.sh` and `scripts/restore-neo4j.sh` scripts.
+:warning: The default workload contains updates which change the state of the database. Therefore, **the database needs to be reloaded or restored from backup before each run**. Use the provided `scripts/backup-database.sh` and `scripts/restore-database.sh` scripts to achieve this. Alternatively, e.g. if you lack sudo rights, use Neo4j's built-in dump and load features through the `scripts/backup-neo4j.sh` and `scripts/restore-neo4j.sh` scripts.
