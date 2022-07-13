@@ -27,12 +27,16 @@ public class SQLServerConverter extends Converter {
         return "'" + sdf.format(date) + "'";
     }
 
+
     public String convertDate(Date date) {
         return super.convertDate(date) + "";
     }
 
     @Override
     public String convertString(String value) {
+        if (value == null){
+            return "''";
+        }
         return "'" + value.replace("'", "''") + "'";
     }
 
@@ -42,7 +46,7 @@ public class SQLServerConverter extends Converter {
                         .stream()
                         .map(v -> "\"" + v + "\"")
                         .collect(Collectors.joining(", ")) +
-                "}'::text[]";
+                "}'";
     }
 
 

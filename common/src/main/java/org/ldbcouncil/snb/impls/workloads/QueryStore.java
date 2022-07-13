@@ -564,12 +564,12 @@ public abstract class QueryStore {
      */
     public Map<String, Object> getInsert1SingleMap(LdbcInsert1AddPerson operation) {
         return new ImmutableMap.Builder<String, Object>()
+        .put(LdbcInsert1AddPerson.CREATION_DATE, getConverter().convertDateTime(operation.getCreationDate()))
         .put(LdbcInsert1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.getPersonId()))
         .put(LdbcInsert1AddPerson.PERSON_FIRST_NAME, getConverter().convertString(operation.getPersonFirstName()))
         .put(LdbcInsert1AddPerson.PERSON_LAST_NAME, getConverter().convertString(operation.getPersonLastName()))
         .put(LdbcInsert1AddPerson.GENDER, getConverter().convertString(operation.getGender()))
         .put(LdbcInsert1AddPerson.BIRTHDAY, getConverter().convertDate(operation.getBirthday()))
-        .put(LdbcInsert1AddPerson.CREATION_DATE, getConverter().convertDateTime(operation.getCreationDate()))
         .put(LdbcInsert1AddPerson.LOCATION_IP, getConverter().convertString(operation.getLocationIp()))
         .put(LdbcInsert1AddPerson.BROWSER_USED, getConverter().convertString(operation.getBrowserUsed()))
         .put(LdbcInsert1AddPerson.CITY_ID, getConverter().convertId(operation.getCityId()))
@@ -782,53 +782,37 @@ public abstract class QueryStore {
         list.add(prepare(
                 QueryType.InteractiveInsert1AddPerson,
                 new ImmutableMap.Builder<String, Object>()
+                        .put(LdbcInsert1AddPerson.CREATION_DATE, getConverter().convertDateTime(operation.getCreationDate()))
                         .put(LdbcInsert1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.getPersonId()))
                         .put(LdbcInsert1AddPerson.PERSON_FIRST_NAME, getConverter().convertString(operation.getPersonFirstName()))
                         .put(LdbcInsert1AddPerson.PERSON_LAST_NAME, getConverter().convertString(operation.getPersonLastName()))
                         .put(LdbcInsert1AddPerson.GENDER, getConverter().convertString(operation.getGender()))
                         .put(LdbcInsert1AddPerson.BIRTHDAY, getConverter().convertDate(operation.getBirthday()))
-                        .put(LdbcInsert1AddPerson.CREATION_DATE, getConverter().convertDateTime(operation.getCreationDate()))
                         .put(LdbcInsert1AddPerson.LOCATION_IP, getConverter().convertString(operation.getLocationIp()))
                         .put(LdbcInsert1AddPerson.BROWSER_USED, getConverter().convertString(operation.getBrowserUsed()))
                         .put(LdbcInsert1AddPerson.CITY_ID, getConverter().convertId(operation.getCityId()))
+                        .put(LdbcInsert1AddPerson.LANGUAGES, getConverter().convertStringList(operation.getLanguages()))
+                        .put(LdbcInsert1AddPerson.EMAILS, getConverter().convertStringList(operation.getEmails()))
                         .build()
         ));
-
         for (LdbcInsert1AddPerson.Organization organization : operation.getWorkAt()) {
             list.add(prepare(
                     QueryType.InteractiveInsert1AddPersonCompanies,
                     ImmutableMap.of(
-                            LdbcInsert1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.getPersonId()),
-                            "organizationId", getConverter().convertId(organization.getOrganizationId()),
-                            "worksFromYear", getConverter().convertInteger(organization.getYear())
+                        LdbcInsert1AddPerson.CREATION_DATE, getConverter().convertDateTime(operation.getCreationDate()),
+                        LdbcInsert1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.getPersonId()),
+                    "organizationId", getConverter().convertId(organization.getOrganizationId()),
+                    "worksFromYear", getConverter().convertInteger(organization.getYear())
                     )
             ));
         }
-        for (String email : operation.getEmails()) {
-            list.add(prepare(
-                    QueryType.InteractiveInsert1AddPersonEmails,
-                    ImmutableMap.of(
-                            LdbcInsert1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.getPersonId()),
-                            "email", getConverter().convertString(email)
-                    )
-            ));
-        }
-        for (String language : operation.getLanguages()) {
-            list.add(prepare(
-                    QueryType.InteractiveInsert1AddPersonLanguages,
-                    ImmutableMap.of(
-                            LdbcInsert1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.getPersonId()),
-                            "language", getConverter().convertString(language)
-                    )
-            ));
-        }
-
         for (long tagId : operation.getTagIds()) {
             list.add(prepare(
                     QueryType.InteractiveInsert1AddPersonTags,
                     ImmutableMap.of(
-                            LdbcInsert1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.getPersonId()),
-                            "tagId", getConverter().convertId(tagId))
+                        LdbcInsert1AddPerson.CREATION_DATE, getConverter().convertDateTime(operation.getCreationDate()),
+                        LdbcInsert1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.getPersonId()),
+                        "tagId", getConverter().convertId(tagId))
                     )
             );
         }
@@ -836,9 +820,10 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveInsert1AddPersonUniversities,
                     ImmutableMap.of(
-                            LdbcInsert1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.getPersonId()),
-                            "organizationId", getConverter().convertId(organization.getOrganizationId()),
-                            "studiesFromYear", getConverter().convertInteger(organization.getYear())
+                        LdbcInsert1AddPerson.CREATION_DATE, getConverter().convertDateTime(operation.getCreationDate()),
+                        LdbcInsert1AddPerson.PERSON_ID, getConverter().convertIdForInsertion(operation.getPersonId()),
+                        "organizationId", getConverter().convertId(organization.getOrganizationId()),
+                        "studiesFromYear", getConverter().convertInteger(organization.getYear())
                     )
             ));
         }
@@ -856,9 +841,9 @@ public abstract class QueryStore {
         list.add(prepare(
                 QueryType.InteractiveInsert4AddForum,
                 ImmutableMap.of(
+                        LdbcInsert4AddForum.CREATION_DATE, getConverter().convertDateTime(operation.getCreationDate()),
                         LdbcInsert4AddForum.FORUM_ID, getConverter().convertIdForInsertion(operation.getForumId()),
                         LdbcInsert4AddForum.FORUM_TITLE, getConverter().convertString(operation.getForumTitle()),
-                        LdbcInsert4AddForum.CREATION_DATE, getConverter().convertDateTime(operation.getCreationDate()),
                         LdbcInsert4AddForum.MODERATOR_PERSON_ID, getConverter().convertId(operation.getModeratorPersonId())
                 )
         ));
@@ -867,7 +852,8 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveInsert4AddForumTags,
                     ImmutableMap.of(
-                            LdbcInsert4AddForum.FORUM_ID, getConverter().convertIdForInsertion(operation.getForumId()),
+                        LdbcInsert4AddForum.CREATION_DATE, getConverter().convertDateTime(operation.getCreationDate()),
+                        LdbcInsert4AddForum.FORUM_ID, getConverter().convertIdForInsertion(operation.getForumId()),
                             "tagId", getConverter().convertId(tagId))
                     )
             );
@@ -886,9 +872,9 @@ public abstract class QueryStore {
         list.add(prepare(
                 QueryType.InteractiveInsert6AddPost,
                 new ImmutableMap.Builder<String, Object>()
+                        .put(LdbcInsert6AddPost.CREATION_DATE, getConverter().convertDateTime(operation.getCreationDate()))
                         .put(LdbcInsert6AddPost.POST_ID, getConverter().convertIdForInsertion(operation.getPostId()))
                         .put(LdbcInsert6AddPost.IMAGE_FILE, getConverter().convertString(operation.getImageFile()))
-                        .put(LdbcInsert6AddPost.CREATION_DATE, getConverter().convertDateTime(operation.getCreationDate()))
                         .put(LdbcInsert6AddPost.LOCATION_IP, getConverter().convertString(operation.getLocationIp()))
                         .put(LdbcInsert6AddPost.BROWSER_USED, getConverter().convertString(operation.getBrowserUsed()))
                         .put(LdbcInsert6AddPost.LANGUAGE, getConverter().convertString(operation.getLanguage()))
@@ -904,7 +890,8 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveInsert6AddPostTags,
                     ImmutableMap.of(
-                            LdbcInsert6AddPost.POST_ID, getConverter().convertIdForInsertion(operation.getPostId()),
+                        LdbcInsert6AddPost.CREATION_DATE, getConverter().convertDateTime(operation.getCreationDate()),
+                        LdbcInsert6AddPost.POST_ID, getConverter().convertIdForInsertion(operation.getPostId()),
                             "tagId", getConverter().convertId(tagId))
                     )
             );
@@ -923,8 +910,8 @@ public abstract class QueryStore {
         list.add(prepare(
                 QueryType.InteractiveInsert7AddComment,
                 new ImmutableMap.Builder<String, Object>()
-                        .put(LdbcInsert7AddComment.COMMENT_ID, getConverter().convertIdForInsertion(operation.getCommentId()))
                         .put(LdbcInsert7AddComment.CREATION_DATE, getConverter().convertDateTime(operation.getCreationDate()))
+                        .put(LdbcInsert7AddComment.COMMENT_ID, getConverter().convertIdForInsertion(operation.getCommentId()))
                         .put(LdbcInsert7AddComment.LOCATION_IP, getConverter().convertString(operation.getLocationIp()))
                         .put(LdbcInsert7AddComment.BROWSER_USED, getConverter().convertString(operation.getBrowserUsed()))
                         .put(LdbcInsert7AddComment.CONTENT, getConverter().convertString(operation.getContent()))
@@ -939,7 +926,8 @@ public abstract class QueryStore {
             list.add(prepare(
                     QueryType.InteractiveInsert7AddCommentTags,
                     ImmutableMap.of(
-                            LdbcInsert7AddComment.COMMENT_ID, getConverter().convertIdForInsertion(operation.getCommentId()),
+                        LdbcInsert7AddComment.CREATION_DATE, getConverter().convertDateTime(operation.getCreationDate()),
+                        LdbcInsert7AddComment.COMMENT_ID, getConverter().convertIdForInsertion(operation.getCommentId()),
                             "tagId", getConverter().convertId(tagId))
                     )
             );
