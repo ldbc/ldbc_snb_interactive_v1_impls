@@ -5,7 +5,7 @@ SELECT
     p2.MessageId,
     p2.content,
     p2.creationDate,
-    Person.id,
+    Person.personId,
     Person.firstName,
     Person.lastName,
     (
@@ -15,13 +15,13 @@ SELECT
             WHERE p1.CreatorPersonId = Person1Id
               AND p2.CreatorPersonId = Person2Id
         )
-        THEN true
-        ELSE false
+        THEN 1
+        ELSE 0
         END
     )
 FROM Message p1, Message p2, Person
 WHERE p1.MessageId = :messageId
   AND p2.ParentMessageId = p1.MessageId
-  AND p2.CreatorPersonId = Person.id
+  AND p2.CreatorPersonId = Person.personId
 ORDER BY p2.creationDate DESC, p2.CreatorPersonId ASC
 ;

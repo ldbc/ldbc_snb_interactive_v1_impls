@@ -23,10 +23,10 @@ WITH cposts(MessageId
                  , CreatorPersonId 
               FROM cposts
          UNION ALL
-            SELECT MessageId
-                 , ParentMessageId
-                 , orig_postid
-                 , CreatorPersonId
+            SELECT Message.MessageId
+                 , Message.ParentMessageId
+                 , parent.orig_postid
+                 , Message.CreatorPersonId
             FROM Message, parent
             WHERE Message.MessageId = parent.ParentMessageId
 )
@@ -37,9 +37,9 @@ FROM
      ) p1
 LEFT JOIN
      (
-        SELECT orig_postid, postid AS MessageId, Person.id AS PersonId, firstName, lastName
+        SELECT orig_postid, postid AS MessageId, Person.personId AS PersonId, firstName, lastName
         FROM parent, Person
-        WHERE ParentMessageId IS NULL AND parent.CreatorPersonId = Person.id
+        WHERE ParentMessageId IS NULL AND parent.CreatorPersonId = Person.personId
      )p2  
 ON p2.orig_postid = p1.MessageId
 ORDER BY creationDate DESC, p2.MessageId DESC;

@@ -3,5 +3,5 @@
  */
 SELECT firstName, lastName, birthday, locationIP, browserUsed, LocationCityId, gender, creationDate
 FROM Person
-WHERE id = :personId
+WHERE personId = :personId
 ;

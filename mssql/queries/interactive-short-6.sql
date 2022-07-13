@@ -13,11 +13,11 @@ WITH chain(parent, child) as(
 SELECT
   Forum.id,
   Forum.title,
-  Person.id,
+  Person.personId,
   Person.firstName,
   Person.lastName
 FROM Message, Person, Forum
 WHERE MessageId = (SELECT coalesce(min(parent), :messageId) FROM chain)
   AND Message.ContainerForumId = Forum.id
-  AND ModeratorPersonId = Person.id
+  AND ModeratorPersonId = Person.personId
 ;
