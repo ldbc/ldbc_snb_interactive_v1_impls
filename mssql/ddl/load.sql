@@ -198,6 +198,18 @@ FROM OPENROWSET (
     FIRSTROW = 2
 ) AS raw;
 
+INSERT INTO [dbo].[Person_knows_Person] ($FROM_ID, $TO_ID, Person1id, Person2id, creationDate)
+SELECT NODE_ID_FROM_PARTS(object_id('Person'), Person2id) AS from_id,
+       NODE_ID_FROM_PARTS(object_id('Person'), Person1id) AS to_id,
+       Person2id,
+       Person1id,
+       creationDate
+FROM OPENROWSET (
+    BULK ':person_knows_person_csv',
+    FORMATFILE =  '/data/format-files/Person_knows_Person.xml',
+    FIRSTROW = 2
+) AS raw;
+
 -- Person_likes_Comment
 INSERT INTO [dbo].[Person_likes_Comment] ($FROM_ID, $TO_ID, creationDate, PersonId, CommentId)
 SELECT NODE_ID_FROM_PARTS(object_id('Person'), PersonId) AS from_id,
