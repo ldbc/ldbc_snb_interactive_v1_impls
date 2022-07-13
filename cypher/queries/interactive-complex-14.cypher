@@ -27,5 +27,5 @@ CALL gds.shortestPath.dijkstra.stream({
   relationshipWeightProperty: 'weight'
 })
 YIELD index, sourceNode, targetNode, totalCost, nodeIds, costs, path
-RETURN path AS personIdsInPath, totalCost AS pathWeight
+RETURN [person IN nodes(path) | person.id] AS personIdsInPath, totalCost AS pathWeight
 LIMIT 1
