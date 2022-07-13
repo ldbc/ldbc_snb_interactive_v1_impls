@@ -14,13 +14,13 @@ CALL gds.shortestPath.dijkstra.stream({
       (pA:Person)-[knows:KNOWS]-(pB:Person),
       (pA)<-[:HAS_CREATOR]-(c:Comment)-[r:REPLY_OF]->(post:Post)-[:HAS_CREATOR]->(pB)
     WITH
-       id(pA) AS source,
-       id(pB) AS target,
-       count(r) AS numInteractions
+      id(pA) AS source,
+      id(pB) AS target,
+      count(r) AS numInteractions
     RETURN
-        source,
-        target,
-        max(floor(10-sqrt(numInteractions))) AS weight
+      source,
+      target,
+      CASE WHEN floor(40-sqrt(numInteractions)) > 1 THEN floor(40-sqrt(numInteractions)) ELSE 1 END AS weight
     ',
   sourceNode: person1,
   targetNode: person2,
