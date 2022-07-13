@@ -9,7 +9,7 @@ workflows:
 
 jobs:
   test:
-    resource_class: large
+    resource_class: xlarge
     machine:
       image: ubuntu-2004:202008-01
     steps:
@@ -47,17 +47,14 @@ jobs:
       - run:
           name: Convert update streams
           command: |
-            git clone --branch v2.0-dev https://github.com/ldbc/ldbc_snb_interactive_driver
+            git clone https://github.com/ldbc/ldbc_snb_interactive_driver
             cd ldbc_snb_interactive_driver/scripts/
             ./install-dependencies-for-convert-script.sh
-            export DATA_ROOT_DIRECTORY=../../social-network-sf0.003-bi-composite-merged-fk/
+            export LDBC_SNB_DATA_ROOT_DIRECTORY=../../social-network-sf0.003-bi-composite-merged-fk/
             ./convert.sh
             mv inserts ../../update-streams/
             mv deletes ../../update-streams/
             cd ../..
-            # workaround
-            mv update-streams/* parameters/
-            sed -i 's|/update-streams|/parameters|g' {cypher,postgres}/driver/*.properties
       - run:
           name: Generate parameters
           command: |
@@ -131,6 +128,106 @@ jobs:
             cd postgres
             scripts/restore-database.sh
             driver/benchmark.sh
+            scripts/stop.sh
+            cd ..
+      - run:
+          name: Get SF1 data set
+          command: |
+            curl -L https://surfdrive.surf.nl/files/index.php/s/IbWgmBVQfdu1BRV/download | tar -xv --use-compress-program=unzstd
+      - run:
+          name: Process SF1 data set
+          command: |
+            export SF=1
+            export LDBC_SNB_DRIVER_DIR=`pwd`/ldbc_snb_interactive_driver
+            export LDBC_SNB_DATA_ROOT_DIRECTORY=`pwd`/out-sf${SF}
+            export LDBC_SNB_IMPLS_DIR=`pwd`
+
+            echo "==================== Generate update streams ===================="
+            cd ${LDBC_SNB_IMPLS_DIR}
+            mkdir update-streams-sf${SF}/
+
+            cd ${LDBC_SNB_DRIVER_DIR}
+            cd scripts
+            ./convert.sh
+            mv inserts ${LDBC_SNB_IMPLS_DIR}/update-streams-sf${SF}/
+            mv deletes ${LDBC_SNB_IMPLS_DIR}/update-streams-sf${SF}/
+
+            echo "==================== Generate parameters ===================="
+            cd ${LDBC_SNB_IMPLS_DIR}
+            mkdir parameters-sf${SF}
+
+            cd paramgen
+            scripts/get-factors.sh
+            scripts/paramgen.sh
+            cd ..
+
+            mv parameters/*.parquet parameters-sf${SF}/
+      ### Neo4j
+      - run:
+          name: SF1 data set - Load Neo4j database and create a backup
+          command: |
+            export SF=1
+            export LDBC_SNB_DATAGEN_DIR=`pwd`
+            cd cypher
+            . scripts/use-datagen-data-set.sh
+            scripts/load-in-one-step.sh
+            scripts/backup-database.sh
+            cd ..
+      - run:
+          name: SF1 data set - Create validation parameters with Neo4j project
+          command: |
+            export SF=1
+            export LDBC_SNB_DATAGEN_DIR=`pwd`
+            cd cypher
+            . scripts/use-datagen-data-set.sh
+            driver/create-validation-parameters.sh driver/create-validation-parameters-sf${SF}.properties
+            cp validation_params.json validation_params_cypher_sf${SF}.json
+            cd ..
+      ### PostgreSQL
+      - run:
+          name: SF1 data set - Load PostgreSQL database and create a backup
+          command: |
+            export SF=1
+            export LDBC_SNB_DATAGEN_DIR=`pwd`
+            cd postgres
+            . scripts/use-datagen-data-set.sh
+            scripts/load-in-one-step.sh
+            scripts/backup-database.sh
+            cd ..
+      - run:
+          name: SF1 data set - Cross-validate the PostgreSQL project based on the results from Neo4j
+          command: |
+            export SF=1
+            export LDBC_SNB_DATAGEN_DIR=`pwd`
+            cp cypher/validation_params_cypher_sf${SF}.json postgres/validation_params.json
+            cd postgres
+            . scripts/use-datagen-data-set.sh
+            scripts/restore-database.sh
+            sed -i "s|ldbc.snb.interactive.parameters_dir=../parameters/|ldbc.snb.interactive.parameters_dir=../parameters-sf${SF}/|" driver/validate.properties
+            driver/validate.sh | tee validation-log.txt
+            grep 'Validation Result: PASS' validation-log.txt
+            cd ..
+      ### Neo4j
+      - run:
+          name: SF1 data set - Benchmark Neo4j
+          command: |
+            export SF=1
+            export LDBC_SNB_DATAGEN_DIR=`pwd`
+            cd cypher
+            . scripts/use-datagen-data-set.sh
+            scripts/restore-database.sh
+            driver/benchmark.sh driver/benchmark-sf${SF}.properties
+            cd ..
+      ### PostgreSQL
+      - run:
+          name: SF1 data set - Benchmark PostgreSQL
+          command: |
+            export SF=1
+            export LDBC_SNB_DATAGEN_DIR=`pwd`
+            cd postgres
+            . scripts/use-datagen-data-set.sh
+            scripts/restore-database.sh
+            driver/benchmark.sh driver/benchmark-sf${SF}.properties
             scripts/stop.sh
             cd ..
       - slack/status

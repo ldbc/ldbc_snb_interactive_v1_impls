@@ -146,8 +146,8 @@ public abstract class InteractiveTest<D extends Db> extends SnbTest<D>
     @Test
     public void testUpdateQuery1() throws Exception
     {
-        final LdbcUpdate1AddPerson.Organization university1 = new LdbcUpdate1AddPerson.Organization( 5142L, 2004 );
-        run( db, new LdbcUpdate1AddPerson(
+        final LdbcInsert1AddPerson.Organization university1 = new LdbcInsert1AddPerson.Organization( 5142L, 2004 );
+        run( db, new LdbcInsert1AddPerson(
                      10995116277777L,
                      "Almira",
                      "Patras",
@@ -169,31 +169,31 @@ public abstract class InteractiveTest<D extends Db> extends SnbTest<D>
     @Test
     public void testUpdateQuery2() throws Exception
     {
-        run( db, new LdbcUpdate2AddPostLike( 8796093022239L, 206158430617L, new Date( 1290749436322L ) ) );
+        run( db, new LdbcInsert2AddPostLike( 8796093022239L, 206158430617L, new Date( 1290749436322L ) ) );
     }
 
     @Test
     public void testUpdateQuery3() throws Exception
     {
-        run( db, new LdbcUpdate3AddCommentLike( 4398046511123L, 343597384736L, new Date( 1290725729770L ) ) );
+        run( db, new LdbcInsert3AddCommentLike( 4398046511123L, 343597384736L, new Date( 1290725729770L ) ) );
     }
 
     @Test
     public void testUpdateQuery4() throws Exception
     {
-        run( db, new LdbcUpdate4AddForum( 343597383803L, "Album 1 of Wolfgang Bauer", new Date( 1290883501867L ), 10, ImmutableList.of( 4844L ) ) );
+        run( db, new LdbcInsert4AddForum( 343597383803L, "Album 1 of Wolfgang Bauer", new Date( 1290883501867L ), 10, ImmutableList.of( 4844L ) ) );
     }
 
     @Test
     public void testUpdateQuery5() throws Exception
     {
-        run( db, new LdbcUpdate5AddForumMembership( 343597383798L, 8796093022252L, new Date( 1290748277090L ) ) );
+        run( db, new LdbcInsert5AddForumMembership( 343597383798L, 8796093022252L, new Date( 1290748277090L ) ) );
     }
 
     @Test
     public void testUpdateQuery6() throws Exception
     {
-        run( db, new LdbcUpdate6AddPost(
+        run( db, new LdbcInsert6AddPost(
                 343597384592L,
                 "photo343597384592.jpg",
                 new Date( 1290883512867L ),
@@ -212,7 +212,7 @@ public abstract class InteractiveTest<D extends Db> extends SnbTest<D>
     @Test
     public void testUpdateQuery7() throws Exception
     {
-        run( db, new LdbcUpdate7AddComment(
+        run( db, new LdbcInsert7AddComment(
                 343597384747L,
                 new Date( 1290689294243L ),
                 "49.206.89.61",
@@ -229,7 +229,7 @@ public abstract class InteractiveTest<D extends Db> extends SnbTest<D>
     @Test
     public void testUpdateQuery8() throws Exception
     {
-        run( db, new LdbcUpdate8AddFriendship( 4398046511147L, 10995116277809L, new Date( 1290907550597L ) ) );
+        run( db, new LdbcInsert8AddFriendship( 4398046511147L, 10995116277809L, new Date( 1290907550597L ) ) );
     }
 }
 

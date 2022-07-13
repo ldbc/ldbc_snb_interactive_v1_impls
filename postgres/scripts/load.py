@@ -64,32 +64,39 @@ class PostgresDbLoader():
         for entity in static_entities:
             print(f"===== {entity} =====")
             entity_dir = os.path.join(static_path_local, entity)
-            print(f"--> {entity_dir}")
             csv_files = glob.glob(f'{entity_dir}/**/*.csv', recursive=True)
             if(not csv_files):
                 raise ValueError(f"No CSV-files found for entity {entity}")
             for csv_file in csv_files:
-                print(f"- {csv_file}")
+                print(f"- {csv_file.rsplit('/', 1)[-1]}")
+                start = time.time()
                 cur.execute(f"COPY {entity} FROM '{os.path.join(static_path_container, entity, os.path.basename(csv_file))}' {sql_copy_configuration}")
                 pg_con.commit()
+                end = time.time()
+                duration = end - start
+                print(f"-> {duration:.4f} seconds")
         print("Loaded static entities.")
 
         print("## Dynamic entities")
         for entity in dynamic_entities:
             print(f"===== {entity} =====")
             entity_dir = os.path.join(dynamic_path_local, entity)
-            print(f"--> {entity_dir}")
             csv_files = glob.glob(f'{entity_dir}/**/*.csv', recursive=True)
             if(not csv_files):
                 raise ValueError(f"No CSV-files found for entity {entity}")
             for csv_file in csv_files:
-                print(f"- {csv_file}")
+                print(f"- {csv_file.rsplit('/', 1)[-1]}")
                 csv_file_path_in_container = os.path.join(dynamic_path_container, entity, os.path.basename(csv_file))
 
+                start = time.time()
                 cur.execute(f"COPY {entity} FROM '{csv_file_path_in_container}' {sql_copy_configuration}")
                 if entity == "Person_knows_Person":
                     cur.execute(f"COPY {entity} (creationDate, Person2id, Person1id) FROM '{csv_file_path_in_container}' {sql_copy_configuration}")
                 pg_con.commit()
+                end = time.time()
+                duration = end - start
+                print(f"-> {duration:.4f} seconds")
+
         print("Loaded dynamic entities.")
 
     def main(self, data_dir):
@@ -114,12 +121,20 @@ class PostgresDbLoader():
             self.run_script(pg_con, cur, "dml/create-static-materialized-views.sql")
             print("Done.")
 
-            print("Adding indexes and constraints")
-            cur.execute(self.load_script("ddl/schema-constraints.sql"))
+            print("Add primary key constraints")
+            cur.execute(self.load_script("ddl/schema-primary-keys.sql"))
+            pg_con.commit()
+
+            print("Add foreign key constraints")
             cur.execute(self.load_script("ddl/schema-foreign-keys.sql"))
             pg_con.commit()
 
-            print("Loaded initial snapshot to Postgres.")
+            print("Add indexes")
+            cur.execute(self.load_script("ddl/schema-indexes.sql"))
+            pg_con.commit()
+
+            print("Run vacuum")
+            self.vacuum(pg_con)
 
 
 if __name__ == "__main__":
@@ -150,4 +165,4 @@ if __name__ == "__main__":
     PGLoader.main(data_dir)
     end = time.time()
     duration = end - start
-    print(f"Data loaded in {duration:.4f} seconds")
+    print(f"Loaded data in Postgres in {duration:.4f} seconds")

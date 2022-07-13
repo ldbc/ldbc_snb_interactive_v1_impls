@@ -4,7 +4,7 @@
 WIP
 ---
 
-The paramgen implements [parameter curation](https://research.vu.nl/en/publications/parameter-curation-for-benchmark-queries) to ensure predictable performance results that (mostly) correspond to a normal distribution.
+The paramgen **WILL IMPLEMENT** [parameter curation](https://research.vu.nl/en/publications/parameter-curation-for-benchmark-queries) to ensure predictable performance results that **WILL** (mostly) correspond to a normal distribution.
 
 ## Getting started
 
@@ -35,9 +35,10 @@ The paramgen implements [parameter curation](https://research.vu.nl/en/publicati
         --generate-factors
     ```
 
-1. **Obtaining the factors:** Cleanup the `factors/` directory and move the factor directories from `out-sf${SF}/factors/csv/raw/composite-merged-fk/` (`cityPairsNumFriends/`, `personDisjointEmployerPairs/`, etc.) to the `factors/` directory. Assuming that your `${LDBC_SNB_DATAGEN_DIR}` and `${SF}` environment variables are set, run:
+1. **Obtaining the factors:** Cleanup the `factors/` directory and move the factor directories from `out-sf${SF}/factors/csv/raw/composite-merged-fk/` (`cityPairsNumFriends/`, `personDisjointEmployerPairs/`, etc.) to the `factors/` directory. Assuming that your `${LDBC_SNB_DATAGEN_DIR}` and `${SF}` environment variable set, run:
 
     ```bash
+    export LDBC_SNB_DATA_ROOT_DIRECTORY=${LDBC_SNB_DATAGEN_DIR}/out-sf${SF}/
     rm -rf factors/*
     cp -r ${LDBC_SNB_DATAGEN_DIR}/out-sf${SF}/factors/csv/raw/composite-merged-fk/* factors/
     ```
@@ -45,6 +46,7 @@ The paramgen implements [parameter curation](https://research.vu.nl/en/publicati
     Or, simply run:
 
     ```bash
+    export LDBC_SNB_DATA_ROOT_DIRECTORY=${LDBC_SNB_DATAGEN_DIR}/out-sf${SF}/
     scripts/get-factors.sh
     ```
 

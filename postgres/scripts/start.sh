@@ -60,7 +60,7 @@ docker run --rm \
     --user "$(id -u):$(id -g)" \
     --publish=${POSTGRES_PORT}:5432 \
     ${POSTGRES_DOCKER_PLATFORM_FLAG} \
-    --shm-size=1g \
+    --shm-size=4g \
     --name ${POSTGRES_CONTAINER_NAME} \
     --env POSTGRES_DATABASE=${POSTGRES_DATABASE} \
     --env POSTGRES_USER=${POSTGRES_USER} \

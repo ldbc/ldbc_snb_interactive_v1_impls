@@ -33,35 +33,35 @@ public enum QueryType {
         InteractiveShortQuery7("interactive-short-7"),
 
         // interactive updates (single queries)
-        InteractiveUpdate1("interactive-update-1"),
-        InteractiveUpdate2("interactive-update-2"),
-        InteractiveUpdate3("interactive-update-3"),
-        InteractiveUpdate4("interactive-update-4"),
-        InteractiveUpdate5("interactive-update-5"),
-        InteractiveUpdate6("interactive-update-6"),
-        InteractiveUpdate7("interactive-update-7"),
-        InteractiveUpdate8("interactive-update-8"),
+        InteractiveInsert1("interactive-update-1"),
+        InteractiveInsert2("interactive-update-2"),
+        InteractiveInsert3("interactive-update-3"),
+        InteractiveInsert4("interactive-update-4"),
+        InteractiveInsert5("interactive-update-5"),
+        InteractiveInsert6("interactive-update-6"),
+        InteractiveInsert7("interactive-update-7"),
+        InteractiveInsert8("interactive-update-8"),
 
         // interactive updates (additional queries for systems that perform them as multiple queries)
-        InteractiveUpdate1AddPerson            ("interactive-update-1-add-person"),
-        InteractiveUpdate1AddPersonCompanies   ("interactive-update-1-add-person-companies"),
-        InteractiveUpdate1AddPersonEmails      ("interactive-update-1-add-person-emails"),
-        InteractiveUpdate1AddPersonLanguages   ("interactive-update-1-add-person-languages"),
-        InteractiveUpdate1AddPersonTags        ("interactive-update-1-add-person-tags"),
-        InteractiveUpdate1AddPersonUniversities("interactive-update-1-add-person-universities"),
+        InteractiveInsert1AddPerson            ("interactive-update-1-add-person"),
+        InteractiveInsert1AddPersonCompanies   ("interactive-update-1-add-person-companies"),
+        InteractiveInsert1AddPersonEmails      ("interactive-update-1-add-person-emails"),
+        InteractiveInsert1AddPersonLanguages   ("interactive-update-1-add-person-languages"),
+        InteractiveInsert1AddPersonTags        ("interactive-update-1-add-person-tags"),
+        InteractiveInsert1AddPersonUniversities("interactive-update-1-add-person-universities"),
 
-        InteractiveUpdate4AddForum             ("interactive-update-4-add-forum"),
-        InteractiveUpdate4AddForumTags         ("interactive-update-4-add-forum-tags"),
+        InteractiveInsert4AddForum             ("interactive-update-4-add-forum"),
+        InteractiveInsert4AddForumTags         ("interactive-update-4-add-forum-tags"),
 
-        InteractiveUpdate6AddPost              ("interactive-update-6-add-post"),
-        InteractiveUpdate6AddPostTags          ("interactive-update-6-add-post-tags"),
+        InteractiveInsert6AddPost              ("interactive-update-6-add-post"),
+        InteractiveInsert6AddPostTags          ("interactive-update-6-add-post-tags"),
 
-        InteractiveUpdate7AddComment           ("interactive-update-7-add-comment"),
-        InteractiveUpdate7AddCommentTags       ("interactive-update-7-add-comment-tags"),
+        InteractiveInsert7AddComment           ("interactive-update-7-add-comment"),
+        InteractiveInsert7AddCommentTags       ("interactive-update-7-add-comment-tags"),
 
         // interactive updates (additional queries for system that insert content/imageFile using separate operations)
-        InteractiveUpdate6AddPostContent       ("interactive-update-6-add-post-content"),
-        InteractiveUpdate6AddPostImageFile     ("interactive-update-6-add-post-imagefile"),
+        InteractiveInsert6AddPostContent       ("interactive-update-6-add-post-content"),
+        InteractiveInsert6AddPostImageFile     ("interactive-update-6-add-post-imagefile"),
 
         // Deletes
         InteractiveDelete1("interactive-delete-1"),

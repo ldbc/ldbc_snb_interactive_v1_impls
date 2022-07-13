@@ -33,34 +33,35 @@ CREATE TABLE TagClass (
 -- static tables / separate table per individual subtype
 
 CREATE TABLE Country (
-    id bigint primary key,
-    name varchar(256) not null,
-    url varchar(256) not null,
+    id bigint PRIMARY KEY,
+    name varchar(256) NOT NULL,
+    url varchar(256) NOT NULL,
     PartOfContinentId bigint
 );
 
 CREATE TABLE City (
-    id bigint primary key,
-    name varchar(256) not null,
-    url varchar(256) not null,
+    id bigint PRIMARY KEY,
+    name varchar(256) NOT NULL,
+    url varchar(256) NOT NULL,
     PartOfCountryId bigint
 );
 
 CREATE TABLE Company (
-    id bigint primary key,
-    name varchar(256) not null,
-    url varchar(256) not null,
-    LocationPlaceId bigint not null
+    id bigint PRIMARY KEY,
+    name varchar(256) NOT NULL,
+    url varchar(256) NOT NULL,
+    LocationPlaceId bigint NOT NULL
 );
 
 CREATE TABLE University (
-    id bigint primary key,
-    name varchar(256) not null,
-    url varchar(256) not null,
-    LocationPlaceId bigint not null
+    id bigint PRIMARY KEY,
+    name varchar(256) NOT NULL,
+    url varchar(256) NOT NULL,
+    LocationPlaceId bigint NOT NULL
 );
 
 -- dynamic tables
+-- primary key constraints will be added after bulk loading the data
 
 CREATE TABLE Comment (
     creationDate timestamp with time zone NOT NULL,
@@ -110,8 +111,8 @@ CREATE TABLE Person (
     email varchar(8192) NOT NULL
 );
 
+-- dynamic edges
 
--- edges
 CREATE TABLE Comment_hasTag_Tag (
     creationDate timestamp with time zone NOT NULL,
     CommentId bigint NOT NULL,
@@ -175,21 +176,20 @@ CREATE TABLE Person_knows_Person (
 );
 
 
--- materialized views
+-- materialized views for Messages and their edges (likes: incoming, hasTag: outgoing)
 
--- A recursive materialized view containing the root Post of each Message (for Posts, themselves, for Comments, traversing up the Message thread to the root Post of the tree)
 CREATE TABLE Message (
-    creationDate timestamp with time zone not null,
+    creationDate timestamp with time zone NOT NULL,
     id bigint,
     language varchar(40),
     content varchar(2000),
     imageFile varchar(40),
-    locationIP varchar(40) not null,
-    browserUsed varchar(40) not null,
-    length int not null,
-    CreatorPersonId bigint not null,
+    locationIP varchar(40) NOT NULL,
+    browserUsed varchar(40) NOT NULL,
+    length int NOT NULL,
+    CreatorPersonId bigint NOT NULL,
     ContainerForumId bigint,
-    LocationCountryId bigint not null,
+    LocationCountryId bigint NOT NULL,
     ParentMessageId bigint
 );
 
