@@ -1,10 +1,10 @@
 INSERT INTO person (
-    id
+    creationDate
+  , id
   , firstName
   , lastName
   , gender
   , birthday
-  , creationDate
   , locationIP
   , browserUsed
   , LocationCityId

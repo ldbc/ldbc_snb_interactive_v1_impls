@@ -1,8 +1,7 @@
 INSERT INTO Message (
     creationDate
   , MessageId
-  , RootPostId
-  , RootPostLanguage
+  , language
   , content
   , imageFile
   , locationIP
@@ -12,14 +11,11 @@ INSERT INTO Message (
   , ContainerForumId
   , LocationCountryId
   , ParentMessageId
-  , ParentPostId
-  , ParentCommentId
 )
 VALUES
 (
     :creationDate
   , :postId
-  , NULL
   , :language
   , CASE :content WHEN '' THEN NULL ELSE :content END
   , CASE :imageFile WHEN '' THEN NULL ELSE :imageFile END
@@ -29,7 +25,5 @@ VALUES
   , :authorPersonId -- CreatorPersonId
   , :forumId
   , :countryId -- LocationCountryId
-  , NULL
-  , NULL
   , NULL
 );

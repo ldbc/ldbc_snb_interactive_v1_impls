@@ -1,14 +1,14 @@
 INSERT INTO person (
-    id
+    creationDate
+  , personId
   , firstName
   , lastName
   , gender
   , birthday
-  , creationDate
   , locationIP
   , browserUsed
   , LocationCityId
-  , speaks
+  , language
   , email
 )
 VALUES
