@@ -429,70 +429,70 @@ public abstract class SQLServerDb extends BaseDb<SQLServerQueryStore> {
         }
 
     }
-    public static class Update1AddPerson extends SQLServerMultipleUpdateOperationHandler<LdbcUpdate1AddPerson> {
+    public static class Insert1AddPerson extends SQLServerMultipleUpdateOperationHandler<LdbcInsert1AddPerson> {
 
         @Override
-        public List<String> getQueryString(SQLServerDbConnectionState state, LdbcUpdate1AddPerson operation) {
-            return state.getQueryStore().getUpdate1Multiple(operation);
+        public List<String> getQueryString(SQLServerDbConnectionState state, LdbcInsert1AddPerson operation) {
+            return state.getQueryStore().getInsert1Multiple(operation);
         }
 
     }
 
-    public static class Update2AddPostLike extends SQLServerUpdateOperationHandler<LdbcUpdate2AddPostLike> {
+    public static class Insert2AddPostLike extends SQLServerUpdateOperationHandler<LdbcInsert2AddPostLike> {
 
         @Override
-        public String getQueryString(SQLServerDbConnectionState state, LdbcUpdate2AddPostLike operation) {
-            return state.getQueryStore().getUpdate2(operation);
+        public String getQueryString(SQLServerDbConnectionState state, LdbcInsert2AddPostLike operation) {
+            return state.getQueryStore().getInsert2(operation);
         }
 
     }
 
-    public static class Update3AddCommentLike extends SQLServerUpdateOperationHandler<LdbcUpdate3AddCommentLike> {
+    public static class Insert3AddCommentLike extends SQLServerUpdateOperationHandler<LdbcInsert3AddCommentLike> {
 
         @Override
-        public String getQueryString(SQLServerDbConnectionState state, LdbcUpdate3AddCommentLike operation) {
-            return state.getQueryStore().getUpdate3(operation);
+        public String getQueryString(SQLServerDbConnectionState state, LdbcInsert3AddCommentLike operation) {
+            return state.getQueryStore().getInsert3(operation);
         }
     }
 
-    public static class Update4AddForum extends SQLServerMultipleUpdateOperationHandler<LdbcUpdate4AddForum> {
+    public static class Insert4AddForum extends SQLServerMultipleUpdateOperationHandler<LdbcInsert4AddForum> {
 
         @Override
-        public List<String> getQueryString(SQLServerDbConnectionState state, LdbcUpdate4AddForum operation) {
-            return state.getQueryStore().getUpdate4Multiple(operation);
+        public List<String> getQueryString(SQLServerDbConnectionState state, LdbcInsert4AddForum operation) {
+            return state.getQueryStore().getInsert4Multiple(operation);
         }
     }
 
-    public static class Update5AddForumMembership extends SQLServerUpdateOperationHandler<LdbcUpdate5AddForumMembership> {
+    public static class Insert5AddForumMembership extends SQLServerUpdateOperationHandler<LdbcInsert5AddForumMembership> {
 
         @Override
-        public String getQueryString(SQLServerDbConnectionState state, LdbcUpdate5AddForumMembership operation) {
-            return state.getQueryStore().getUpdate5(operation);
+        public String getQueryString(SQLServerDbConnectionState state, LdbcInsert5AddForumMembership operation) {
+            return state.getQueryStore().getInsert5(operation);
         }
     }
 
-    public static class Update6AddPost extends SQLServerMultipleUpdateOperationHandler<LdbcUpdate6AddPost> {
+    public static class Insert6AddPost extends SQLServerMultipleUpdateOperationHandler<LdbcInsert6AddPost> {
 
         @Override
-        public List<String> getQueryString(SQLServerDbConnectionState state, LdbcUpdate6AddPost operation) {
-            return state.getQueryStore().getUpdate6Multiple(operation);
+        public List<String> getQueryString(SQLServerDbConnectionState state, LdbcInsert6AddPost operation) {
+            return state.getQueryStore().getInsert6Multiple(operation);
         }
     }
 
-    public static class Update7AddComment extends SQLServerMultipleUpdateOperationHandler<LdbcUpdate7AddComment> {
+    public static class Insert7AddComment extends SQLServerMultipleUpdateOperationHandler<LdbcInsert7AddComment> {
 
         @Override
-        public List<String> getQueryString(SQLServerDbConnectionState state, LdbcUpdate7AddComment operation) {
-            return state.getQueryStore().getUpdate7Multiple(operation);
+        public List<String> getQueryString(SQLServerDbConnectionState state, LdbcInsert7AddComment operation) {
+            return state.getQueryStore().getInsert7Multiple(operation);
         }
 
     }
 
-    public static class Update8AddFriendship extends SQLServerUpdateOperationHandler<LdbcUpdate8AddFriendship> {
+    public static class Insert8AddFriendship extends SQLServerUpdateOperationHandler<LdbcInsert8AddFriendship> {
 
         @Override
-        public String getQueryString(SQLServerDbConnectionState state, LdbcUpdate8AddFriendship operation) {
-            return state.getQueryStore().getUpdate8(operation);
+        public String getQueryString(SQLServerDbConnectionState state, LdbcInsert8AddFriendship operation) {
+            return state.getQueryStore().getInsert8(operation);
         }
     }
 
