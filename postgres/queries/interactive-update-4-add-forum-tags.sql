@@ -1,9 +1,10 @@
-insert into forum_tag (
-    ft_forumid
-  , ft_tagid
+INSERT INTO Forum_hasTag_Tag (
+    creationDate
+  , ForumId
+  , TagId
 )
-values
-(
-    :forumId
-  , :tagId
-);
+SELECT
+    :creationDate
+  , :forumId
+  , unnest(:tagIds)
+;

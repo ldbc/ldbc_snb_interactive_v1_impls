@@ -1,13 +1,23 @@
 /* IS6. Forum of a message
-\set messageId 206158431836
+\set messageId 824633720985
  */
 WITH RECURSIVE chain(parent, child) as(
-    SELECT m_c_replyof, m_messageid FROM message where m_messageid = :messageId
+    SELECT ParentMessageId, id
+    FROM Message
+    WHERE id = :messageId
     UNION ALL
-    SELECT p.m_c_replyof, p.m_messageid FROM message p, chain c where p.m_messageid = c.parent 
+    SELECT ParentMessageId, id
+    FROM Message, chain c
+    WHERE id = parent
 )
-select f_forumid, f_title, p_personid, p_firstname, p_lastname
-from message, person, forum
-where m_messageid = (select coalesce(min(parent), :messageId) from chain)
-  and m_ps_forumid = f_forumid and f_moderatorid = p_personid;
+SELECT
+  Forum.id,
+  Forum.title,
+  Person.id,
+  Person.firstName,
+  Person.lastName
+FROM Message, Person, Forum
+WHERE Message.id = (SELECT coalesce(min(parent), :messageId) FROM chain)
+  AND Message.ContainerForumId = Forum.id
+  AND ModeratorPersonId = Person.id
 ;

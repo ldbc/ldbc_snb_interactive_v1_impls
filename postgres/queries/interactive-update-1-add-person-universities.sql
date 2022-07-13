@@ -1,11 +1,13 @@
-insert into person_university (
-    pu_personid
-  , pu_organisationid
-  , pu_classyear
+INSERT INTO Person_studyAt_University (
+    creationDate
+  , PersonId
+  , UniversityId
+  , classYear
 )
-values
+VALUES
 (
-    :personId
+    :creationDate
+  , :personId
   , :organizationId
   , :studiesFromYear
 );

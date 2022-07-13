@@ -3,7 +3,7 @@
 set -eu
 set -o pipefail
 
-cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+cd "$( cd "$( dirname "${BASH_SOURCE[0]:-${(%):-%x}}" )" >/dev/null 2>&1 && pwd )"
 cd ..
 
 . scripts/vars.sh
@@ -60,19 +60,21 @@ docker run --rm \
     --user "$(id -u):$(id -g)" \
     --publish=${POSTGRES_PORT}:5432 \
     ${POSTGRES_DOCKER_PLATFORM_FLAG} \
+    --shm-size=4g \
     --name ${POSTGRES_CONTAINER_NAME} \
     --env POSTGRES_DATABASE=${POSTGRES_DATABASE} \
     --env POSTGRES_USER=${POSTGRES_USER} \
     --env POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
     ${MOUNT_CSV_DIR} \
     --volume=${POSTGRES_DATA_DIR}:/var/lib/postgresql/data:z \
+    --volume=${POSTGRES_DDL_DIR}:/ddl/:z \
     ${POSTGRES_CUSTOM_MOUNTS} \
     --detach \
     postgres:${POSTGRES_VERSION} \
     ${POSTGRES_CUSTOM_ARGS}
 
 echo -n "Waiting for the database to start ."
-until python3 scripts/test-db-connection.py; do
+until python3 scripts/test-db-connection.py 1>/dev/null 2>&1; do
     docker ps | grep ${POSTGRES_CONTAINER_NAME} 1>/dev/null 2>&1 || (
         echo
         echo "Container lost."

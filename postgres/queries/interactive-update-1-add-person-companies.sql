@@ -1,11 +1,13 @@
-insert into person_company (
-    pc_personid
-  , pc_organisationid
-  , pc_workfrom
+INSERT INTO Person_workAt_Company (
+    creationDate
+  , PersonId
+  , CompanyId
+  , workFrom
 )
-values
+VALUES
 (
-    :personId
+    :creationDate
+  , :personId
   , :organizationId
   , :worksFromYear
 );

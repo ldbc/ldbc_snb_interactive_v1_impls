@@ -1,9 +1,10 @@
-insert into message_tag (
-    mt_messageid
-  , mt_tagid
+INSERT INTO Message_hasTag_Tag (
+    creationDate
+  , id
+  , TagId
 )
-values
-(
-    :postId
-  , :tagId
-);
+SELECT
+    :creationDate
+  , :postId
+  , unnest(:tagIds)
+;

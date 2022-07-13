@@ -1,16 +1,16 @@
-insert into knows (
-    k_person1id
-  , k_person2id
-  , k_creationdate
+INSERT INTO Person_knows_Person (
+    creationDate
+  , Person1id
+  , Person2id
 )
-values
+VALUES
 (
-    :person1Id
+    :creationDate
+  , :person1Id
   , :person2Id
-  , :creationDate
 ),
 (
-    :person2Id
+    :creationDate
+  , :person2Id
   , :person1Id
-  , :creationDate
 );

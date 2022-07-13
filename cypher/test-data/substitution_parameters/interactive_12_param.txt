@@ -1,3 +1,0 @@
-personId|tagClassName
-10995116278009|Monarch
-4398046511133|ChristianBishop

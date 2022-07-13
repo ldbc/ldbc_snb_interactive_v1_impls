@@ -1,3 +1,0 @@
-personId|firstName
-4398046511333|Jose
-10995116277918|Ayesha

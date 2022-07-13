@@ -1,9 +1,11 @@
-insert into person_tag (
-    pt_personid
-  , pt_tagid
+INSERT INTO Person_hasInterest_Tag (
+    creationDate
+  , PersonId
+  , TagId
 )
-values
+VALUES
 (
-    :personId
+    :creationDate
+  , :personId
   , :tagId
 );
