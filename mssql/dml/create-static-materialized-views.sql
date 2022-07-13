@@ -1,8 +1,7 @@
 USE ldbc;
 
-INSERT INTO [dbo].[Country] ($NODE_ID, id, name, url, PartOfContinentId)
+INSERT INTO [dbo].[Country] (id, name, url, PartOfContinentId)
     SELECT
-        NODE_ID_FROM_PARTS(object_id('Country'), id) AS node_id,
         id,
         name,
         url,
@@ -11,9 +10,8 @@ INSERT INTO [dbo].[Country] ($NODE_ID, id, name, url, PartOfContinentId)
     WHERE type = 'Country'
 ;
 
-INSERT INTO [dbo].[City] ($NODE_ID, id, name, url, PartOfCountryId)
+INSERT INTO [dbo].[City] (id, name, url, PartOfCountryId)
     SELECT
-        NODE_ID_FROM_PARTS(object_id('City'), id) AS node_id,
         id,
         name,
         url,
@@ -22,9 +20,8 @@ INSERT INTO [dbo].[City] ($NODE_ID, id, name, url, PartOfCountryId)
     WHERE type = 'City'
 ;
 
-INSERT INTO [dbo].[Company] ($NODE_ID, id, name, url, LocationPlaceId)
+INSERT INTO [dbo].[Company] (id, name, url, LocationPlaceId)
     SELECT
-        NODE_ID_FROM_PARTS(object_id('Company'), id) AS node_id,
         id,
         name,
         url,
@@ -33,9 +30,8 @@ INSERT INTO [dbo].[Company] ($NODE_ID, id, name, url, LocationPlaceId)
     WHERE type = 'Company'
 ;
 
-INSERT INTO [dbo].[University] ($NODE_ID, id, name, url, LocationPlaceId)
+INSERT INTO [dbo].[University] (id, name, url, LocationPlaceId)
     SELECT
-        NODE_ID_FROM_PARTS(object_id('University'), id) AS node_id,
         id,
         name,
         url,

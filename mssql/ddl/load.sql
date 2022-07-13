@@ -1,9 +1,8 @@
 USE ldbc;
 -- Static --
 -- Organisation
-INSERT INTO [dbo].[Organisation] ($NODE_ID, id, type, name, url, LocationPlaceId)
-SELECT NODE_ID_FROM_PARTS(object_id('Organisation'), id) AS node_id,
-    id,
+INSERT INTO [dbo].[Organisation] (id, type, name, url, LocationPlaceId)
+SELECT    id,
     type,
     name,
     url,
@@ -15,9 +14,8 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Place
-INSERT INTO [dbo].[Place] ($NODE_ID, id, name, type, url, PartOfPlaceId)
-SELECT NODE_ID_FROM_PARTS(object_id('Place'), id) AS node_id,
-    id,
+INSERT INTO [dbo].[Place] (id, name, type, url, PartOfPlaceId)
+SELECT    id,
     name,
     type,
     url,
@@ -29,9 +27,8 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Tag
-INSERT INTO [dbo].[Tag] ($NODE_ID, id, name, url, TypeTagClassId)
-SELECT NODE_ID_FROM_PARTS(object_id('Tag'), id) AS node_id,
-    id,
+INSERT INTO [dbo].[Tag] (id, name, url, TypeTagClassId)
+SELECT    id,
     name,
     url,
     TypeTagClassId
@@ -42,9 +39,8 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- TagClass
-INSERT INTO [dbo].[TagClass] ($NODE_ID, id, name, url, SubclassOfTagClassId)
-SELECT NODE_ID_FROM_PARTS(object_id('TagClass'), id) AS node_id,
-    id,
+INSERT INTO [dbo].[TagClass] (id, name, url, SubclassOfTagClassId)
+SELECT    id,
     name,
     url,
     SubclassOfTagClassId
@@ -57,7 +53,6 @@ FROM OPENROWSET (
 --Dynamic
 -- Comments
 INSERT INTO [dbo].[Comment] (
-    $NODE_ID,
     creationDate,
     id,
     locationIP,
@@ -69,8 +64,7 @@ INSERT INTO [dbo].[Comment] (
     ParentPostId,
     ParentCommentId
 )
-SELECT NODE_ID_FROM_PARTS(object_id('Comment'), id) AS node_id,
-    creationDate,
+SELECT    creationDate,
     id,
     locationIP,
     browserUsed,
@@ -87,10 +81,8 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Comment_hasTag_Tag
-INSERT INTO [dbo].[Comment_hasTag_Tag] ($FROM_ID, $TO_ID, creationDate, CommentId, TagId)
-SELECT  NODE_ID_FROM_PARTS(object_id('Comment'), CommentId) AS from_id,
-        NODE_ID_FROM_PARTS(object_id('Tag'), TagId) AS to_id,
-       creationDate,
+INSERT INTO [dbo].[Comment_hasTag_Tag] (creationDate, CommentId, TagId)
+SELECT       creationDate,
        CommentId,
        TagId
 FROM OPENROWSET (
@@ -101,9 +93,8 @@ FROM OPENROWSET (
 
     
 -- Forum
-INSERT INTO [dbo].[Forum] ($NODE_ID, creationDate, id, title, ModeratorPersonId)
-SELECT NODE_ID_FROM_PARTS(object_id('Forum'), id) AS node_id,
-       creationDate,
+INSERT INTO [dbo].[Forum] (creationDate, id, title, ModeratorPersonId)
+SELECT       creationDate,
        id,
        title,
        ModeratorPersonId
@@ -114,10 +105,8 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Forum_hasMember_Person
-INSERT INTO [dbo].[Forum_hasMember_Person] ($FROM_ID, $TO_ID, creationDate, ForumId, PersonId)
-SELECT  NODE_ID_FROM_PARTS(object_id('Forum'), ForumId) AS from_id,
-        NODE_ID_FROM_PARTS(object_id('Person'), PersonId) AS to_id,
-        creationDate,
+INSERT INTO [dbo].[Forum_hasMember_Person] (creationDate, ForumId, PersonId)
+SELECT        creationDate,
         ForumId,
         PersonId
 FROM OPENROWSET (
@@ -127,10 +116,8 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Forum_hasTag_Tag
-INSERT INTO [dbo].[Forum_hasTag_Tag] ($FROM_ID, $TO_ID, creationDate, ForumId, TagId)
-SELECT NODE_ID_FROM_PARTS(object_id('Forum'), ForumId) AS from_id,
-       NODE_ID_FROM_PARTS(object_id('Tag'), TagId) AS to_id,
-       creationDate,
+INSERT INTO [dbo].[Forum_hasTag_Tag] (creationDate, ForumId, TagId)
+SELECT       creationDate,
        ForumId,
        TagId
 FROM OPENROWSET (
@@ -173,10 +160,8 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Person_hasInterest_Tag
-INSERT INTO [dbo].[Person_hasInterest_Tag] ($FROM_ID, $TO_ID, creationDate, PersonId, TagId)
-SELECT NODE_ID_FROM_PARTS(object_id('Person'), PersonId) AS from_id,
-       NODE_ID_FROM_PARTS(object_id('Tag'), TagId) AS to_id,
-       creationDate,
+INSERT INTO [dbo].[Person_hasInterest_Tag] (creationDate, PersonId, TagId)
+SELECT creationDate,
        PersonId,
        TagId
 FROM OPENROWSET (
@@ -211,10 +196,8 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Person_likes_Comment
-INSERT INTO [dbo].[Person_likes_Comment] ($FROM_ID, $TO_ID, creationDate, PersonId, CommentId)
-SELECT NODE_ID_FROM_PARTS(object_id('Person'), PersonId) AS from_id,
-       NODE_ID_FROM_PARTS(object_id('Comment'), CommentId) AS to_id,
-       creationDate,
+INSERT INTO [dbo].[Person_likes_Comment] (creationDate, PersonId, CommentId)
+SELECT       creationDate,
        PersonId,
        CommentId
 FROM OPENROWSET (
@@ -224,10 +207,8 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Person_likes_Post
-INSERT INTO [dbo].[Person_likes_Post] ($FROM_ID, $TO_ID, creationDate, PersonId, PostId)
-SELECT NODE_ID_FROM_PARTS(object_id('Person'), PersonId) AS from_id,
-       NODE_ID_FROM_PARTS(object_id('Post'), PostId) AS to_id,
-       creationDate,
+INSERT INTO [dbo].[Person_likes_Post] (creationDate, PersonId, PostId)
+SELECT       creationDate,
        PersonId,
        PostId
 FROM OPENROWSET (
@@ -237,10 +218,8 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Person_studyAt_University
-INSERT INTO [dbo].[Person_studyAt_University] ($FROM_ID, $TO_ID, creationDate, PersonId, UniversityId, classYear)
-SELECT NODE_ID_FROM_PARTS(object_id('Person'), PersonId) AS from_id,
-       NODE_ID_FROM_PARTS(object_id('University'), UniversityId) AS to_id,
-       creationDate,
+INSERT INTO [dbo].[Person_studyAt_University] (creationDate, PersonId, UniversityId, classYear)
+SELECT       creationDate,
        PersonId,
        UniversityId,
        classYear
@@ -251,10 +230,8 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Person_workAt_Company
-INSERT INTO [dbo].[Person_workAt_Company] ($FROM_ID, $TO_ID, creationDate, PersonId, CompanyId, workFrom)
-SELECT NODE_ID_FROM_PARTS(object_id('Person'), PersonId) AS from_id,
-       NODE_ID_FROM_PARTS(object_id('Company'), CompanyId) AS to_id,
-       creationDate,
+INSERT INTO [dbo].[Person_workAt_Company] (creationDate, PersonId, CompanyId, workFrom)
+SELECT       creationDate,
        PersonId,
        CompanyId,
        workFrom
@@ -266,7 +243,6 @@ FROM OPENROWSET (
 
 -- Post
 INSERT INTO [dbo].[Post] (
-    $NODE_ID,
     creationDate,
     id,
     imageFile,
@@ -279,8 +255,7 @@ INSERT INTO [dbo].[Post] (
     ContainerForumId,
     LocationCountryId
 )
-SELECT NODE_ID_FROM_PARTS(object_id('Post'), id) AS node_id,
-    creationDate,
+SELECT    creationDate,
     id,
     imageFile,
     locationIP,
@@ -298,10 +273,8 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Post_hasTag_Tag
-INSERT INTO [dbo].[Post_hasTag_Tag] ($FROM_ID, $TO_ID, creationDate, PostId, TagId)
-SELECT NODE_ID_FROM_PARTS(object_id('Post'), PostId) AS from_id,
-       NODE_ID_FROM_PARTS(object_id('Tag'), TagId) AS to_id,
-    creationDate,
+INSERT INTO [dbo].[Post_hasTag_Tag] (creationDate, PostId, TagId)
+SELECT    creationDate,
     PostId,
     TagId
 FROM OPENROWSET (
@@ -311,7 +284,6 @@ FROM OPENROWSET (
 ) AS raw;
 
 INSERT INTO [dbo].[Message] (
-    $NODE_ID,
     creationDate,
     MessageId,
     content,
@@ -325,8 +297,7 @@ INSERT INTO [dbo].[Message] (
     ContainerForumId,
     ParentMessageId
 )
-SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS node_id,
-    creationDate,
+SELECT    creationDate,
     id,
     content,
     imageFile,
@@ -341,7 +312,6 @@ SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS node_id,
 FROM dbo.post;
 
 INSERT INTO [dbo].[Message] (
-    $NODE_ID,
     creationDate,
     MessageId,
     content,
@@ -355,8 +325,7 @@ INSERT INTO [dbo].[Message] (
     ContainerForumId,
     ParentMessageId
 )
-SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS node_id,
-    creationDate,
+SELECT    creationDate,
     id AS MessageId,
     content,
     CAST(NULL AS varchar(40)) AS imageFile,
