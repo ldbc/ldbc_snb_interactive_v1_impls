@@ -1,5 +1,5 @@
 SELECT
-    Person.id,
+    Person.personId,
     firstName,
     lastName,
     l.creationDate,
@@ -9,7 +9,7 @@ SELECT
      , (CASE WHEN EXISTS (SElECT 1
                             FROM Person_knows_Person
                            WHERE Person1Id = :personId
-                             AND Person2Id = Person.id)
+                             AND Person2Id = Person.personId)
                             THEN 0 ELSE 1 END
        ) AS isNew
 FROM
@@ -25,9 +25,9 @@ FROM
     Message,
     Person,
     Person_likes_Message AS l
-WHERE Person.id = tmp.PersonId
+WHERE Person.personId = tmp.PersonId
   AND tmp.PersonId = l.PersonId
   AND tmp.creationDate = l.creationDate
   AND l.MessageId = Message.MessageId
-ORDER BY creationDate DESC, Person.id ASC
+ORDER BY creationDate DESC, Person.personId ASC
 ;

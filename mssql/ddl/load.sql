@@ -143,7 +143,7 @@ FROM OPENROWSET (
 INSERT INTO [dbo].[Person] (
     $NODE_ID,
     creationDate,
-    id,
+    personId,
     firstName,
     lastName,
     gender,
@@ -154,9 +154,9 @@ INSERT INTO [dbo].[Person] (
     language,
     email
 )
-SELECT NODE_ID_FROM_PARTS(object_id('Person'), id) AS node_id,
+SELECT NODE_ID_FROM_PARTS(object_id('Person'), personId) AS node_id,
        creationDate,
-       id,
+       personId,
        firstName,
        lastName,
        gender,

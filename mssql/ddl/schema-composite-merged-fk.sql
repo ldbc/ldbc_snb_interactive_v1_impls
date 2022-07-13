@@ -118,7 +118,7 @@ CREATE TABLE Post (
 
 CREATE TABLE [dbo].[Person] (
     [creationDate]      datetimeoffset NOT NULL,
-    [id]                BIGINT         NOT NULL,
+    [personId]                BIGINT         NOT NULL,
     [firstName]         nvarchar (MAX) NOT NULL,
     [lastName]          nvarchar (MAX) NOT NULL,
     [gender]            nvarchar (50)  NOT NULL,
@@ -128,7 +128,7 @@ CREATE TABLE [dbo].[Person] (
     [LocationCityId]    BIGINT         NOT NULL,
     [language]          varchar(640)   NOT NULL,
     [email]             varchar(MAX)   NOT NULL
-    CONSTRAINT PK_Person PRIMARY KEY NONCLUSTERED ([id] ASC) WITH (DATA_COMPRESSION = PAGE),
+    CONSTRAINT PK_Person PRIMARY KEY NONCLUSTERED ([personId] ASC) WITH (DATA_COMPRESSION = PAGE),
     CONSTRAINT Graph_Unique_Key_Person UNIQUE CLUSTERED ($node_id) WITH (DATA_COMPRESSION = PAGE)
 ) AS NODE;
 

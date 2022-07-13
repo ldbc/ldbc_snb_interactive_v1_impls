@@ -1,5 +1,5 @@
 SELECT TOP(20)
-    Person.id,
+    Person.personId,
     firstName,
     lastName,
     MessageId,
@@ -19,8 +19,8 @@ FROM
     ) friend,
     Person,
     Message
-WHERE Person.id = CreatorPersonId
-  AND Person.id = friend.Person2Id
+WHERE Person.personId = CreatorPersonId
+  AND Person.personId = friend.Person2Id
   AND Message.creationDate < :maxDate
 ORDER BY Message.creationDate DESC, MessageId ASC
 ;

@@ -1,24 +1,24 @@
-SELECT TOP(10) Person.id, firstName, lastName,( 
+SELECT TOP(10) Person.personId, firstName, lastName,( 
   SELECT count(DISTINCT Message.MessageId)
     FROM Message, Message_hasTag_Tag pt1
-   WHERE CreatorPersonId = Person.id 
+   WHERE CreatorPersonId = Person.personId 
      AND ParentMessageId IS NULL
      AND Message.MessageId = pt1.MessageId
      AND EXISTS (
        SELECT * 
         FROM Person_hasInterest_Tag
-        WHERE Person.id = :personId
+        WHERE Person.personId = :personId
         AND Person_hasInterest_Tag.TagId = pt1.TagId
      )
 ) -
 ( SELECT count(*)
     FROM Message
-   WHERE CreatorPersonId = Person.id
+   WHERE CreatorPersonId = Person.personId
      AND ParentMessageId IS NULL 
      AND NOT EXISTS (
     SELECT *
     FROM Person_hasInterest_Tag, Message_hasTag_Tag
-    WHERE Person.id = :personId
+    WHERE Person.personId = :personId
     AND Person_hasInterest_Tag.TagId = Message_hasTag_Tag.TagId
     AND Message_hasTag_Tag.MessageId = Message.MessageId
      )
@@ -38,13 +38,13 @@ FROM Person, City,(
     ) f
 WHERE (
   LocationCityId = City.id
-  AND Person.id = f.Person2Id
+  AND Person.personId = f.Person2Id
   AND MONTH(birthday) = :month
   AND DAY(birthday) >= 21
 OR 
  LocationCityId = City.id
-  AND Person.id = f.Person2Id
+  AND Person.personId = f.Person2Id
   AND MONTH(birthday) = (:month % 12 + 1) 
   AND DAY(birthday) <  22
 )
-ORDER BY score DESC, Person.id;
+ORDER BY score DESC, Person.personId;

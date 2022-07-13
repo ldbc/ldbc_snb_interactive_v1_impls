@@ -9,13 +9,13 @@ WITH extended_tags(s_subtagclassid,s_supertagclassid) AS (
          , extended_tags t
      WHERE tc.SubclassOfTagClassId = t.s_subtagclassid
 )
-SELECT TOP(20) id
+SELECT TOP(20) personId
              , firstName
              , lastName
              , string_agg(name, ';')
              , sum(partialReplyCount)
             AS replyCount
-          FROM ( SELECT DISTINCT Person.id, firstName, lastName, name, count(*) AS partialReplyCount
+          FROM ( SELECT DISTINCT Person.personId, firstName, lastName, name, count(*) AS partialReplyCount
                    FROM Person
                       , Message m1
                       , Person_knows_Person k
@@ -32,13 +32,13 @@ SELECT TOP(20) id
                                     AND name = :tagClassName
                                 ))) selected_tags
                         WHERE Person1Id = :personId
-                        AND k.Person2Id = Person.id
-                        AND Person.id = m1.CreatorPersonId
+                        AND k.Person2Id = Person.personId
+                        AND Person.personId = m1.CreatorPersonId
                         AND m1.ParentMessageId = m2.MessageId
                         AND m2.ParentMessageId IS NULL
                         AND m2.MessageId = Message_hasTag_Tag.MessageId
                         AND Message_hasTag_Tag.TagId = selected_tags.id
-      GROUP BY Person.id, Person.firstName, person.lastName, name
+      GROUP BY Person.personId, Person.firstName, person.lastName, name
       ) x
-      GROUP BY id, firstName, lastName
-      ORDER BY replyCount DESC, id ASC;
+      GROUP BY personId, firstName, lastName
+      ORDER BY replyCount DESC, personId ASC;

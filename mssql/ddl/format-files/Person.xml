@@ -15,7 +15,7 @@
  </RECORD>
  <ROW>
   <COLUMN SOURCE="1" NAME="creationDate" xsi:type="SQLDATETIMEOFFSET"/>
-  <COLUMN SOURCE="2" NAME="id" xsi:type="SQLBIGINT"/>
+  <COLUMN SOURCE="2" NAME="personId" xsi:type="SQLBIGINT"/>
   <COLUMN SOURCE="3" NAME="firstName" xsi:type="SQLNVARCHAR"/>
   <COLUMN SOURCE="4" NAME="lastName" xsi:type="SQLNVARCHAR"/>
   <COLUMN SOURCE="5" NAME="gender" xsi:type="SQLVARYCHAR"/>

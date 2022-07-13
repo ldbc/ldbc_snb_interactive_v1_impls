@@ -1,5 +1,5 @@
 SELECT TOP(20)
-            Person.id AS otherPersonId,
+            Person.personId AS otherPersonId,
             Person.firstName AS otherPersonFirstName,
             Person.lastName AS otherPersonLastName,
             ct1 AS xCount,
@@ -44,11 +44,11 @@ SELECT TOP(20)
                              ) ind
                 WHERE chn.CreatorPersonId = IND.CreatorPersonId
                     ) cpc
-            WHERE friend.Person2Id = Person.id
+            WHERE friend.Person2Id = Person.personId
             AND Person.LocationCityId = City.id
             AND City.PartOfCountryId = Country.id
             AND Country.name <> :countryXName
             AND Country.name <> :countryYName
             AND friend.Person2Id = cpc.CreatorPersonId
-            ORDER BY total DESC, Person.id ASC
+            ORDER BY total DESC, Person.personId ASC
 ;

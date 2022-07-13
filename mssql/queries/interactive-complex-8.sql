@@ -11,7 +11,7 @@ FROM
     Person
 WHERE m1.ParentMessageId = m2.MessageId
   AND m2.CreatorPersonId = :personId
-  AND Person.Id = m1.CreatorPersonId
+  AND Person.personId = m1.CreatorPersonId
 ORDER BY
     m1.creationDate DESC,
     m1.MessageId ASC

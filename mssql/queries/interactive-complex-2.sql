@@ -1,5 +1,5 @@
 SELECT TOP(20)
-    Person.id,
+    Person.personId,
     Person.firstName,
     Person.lastName,
     Message.MessageId,
@@ -9,9 +9,9 @@ FROM
     Person,
     Message,
     Person_knows_Person
-WHERE Person.id = Message.CreatorPersonId
+WHERE Person.personId = Message.CreatorPersonId
   AND Message.creationDate <= :maxDate
   AND Person1Id = :personId
-  AND Person2Id = Person.id
+  AND Person2Id = Person.personId
 ORDER BY creationDate DESC, MessageId ASC
 ;

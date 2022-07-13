@@ -1,5 +1,5 @@
 SELECT TOP (10)
-    Person.id,
+    Person.personId,
     firstName,
     lastName,
     Company.name,
@@ -20,11 +20,11 @@ FROM
           AND k1.Person2Id = k2.Person1Id
           AND k2.Person2Id <> :personId
     ) friend
-WHERE Person.id = friend.Person2Id
-  AND Person.id = Person_workAt_Company.PersonId
+WHERE Person.personId = friend.Person2Id
+  AND Person.personId = Person_workAt_Company.PersonId
   AND Person_workAt_Company.CompanyId = Company.id
   AND Person_workAt_Company.workFROM < :workFromYear
   AND Country.id = Company.LocationPlaceId
   AND Country.name = :countryName
-ORDER BY Person_workAt_Company.workFrom, Person.id, Company.name DESC
+ORDER BY Person_workAt_Company.workFrom, Person.personId, Company.name DESC
 ;
