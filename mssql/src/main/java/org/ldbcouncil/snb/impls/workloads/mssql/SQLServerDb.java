@@ -1,20 +1,16 @@
 package org.ldbcouncil.snb.impls.workloads.mssql;
 
-import com.google.common.collect.ImmutableList;
 import org.ldbcouncil.snb.driver.DbException;
-import org.ldbcouncil.snb.driver.ResultReporter;
 import org.ldbcouncil.snb.driver.control.LoggingService;
 import org.ldbcouncil.snb.driver.workloads.interactive.queries.*;
-import org.ldbcouncil.snb.impls.workloads.QueryStore;
 import org.ldbcouncil.snb.impls.workloads.db.BaseDb;
 import org.ldbcouncil.snb.impls.workloads.mssql.converter.SQLServerConverter;
+import org.ldbcouncil.snb.impls.workloads.mssql.operationhandlers.SQLServerIC13OperationHandler;
 import org.ldbcouncil.snb.impls.workloads.mssql.operationhandlers.SQLServerListOperationHandler;
 import org.ldbcouncil.snb.impls.workloads.mssql.operationhandlers.SQLServerMultipleUpdateOperationHandler;
 import org.ldbcouncil.snb.impls.workloads.mssql.operationhandlers.SQLServerSingletonOperationHandler;
 import org.ldbcouncil.snb.impls.workloads.mssql.operationhandlers.SQLServerUpdateOperationHandler;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -267,18 +263,12 @@ public abstract class SQLServerDb extends BaseDb<SQLServerQueryStore> {
 
     }
 
-    public static class Query13 extends SQLServerSingletonOperationHandler<LdbcQuery13, LdbcQuery13Result> {
+    public static class Query13 extends SQLServerIC13OperationHandler {
 
         @Override
         public String getQueryString(SQLServerDbConnectionState state, LdbcQuery13 operation) {
             return state.getQueryStore().getQuery13(operation);
         }
-
-        @Override
-        public LdbcQuery13Result convertSingleResult(ResultSet result) throws SQLException {
-            return new LdbcQuery13Result(result.getInt(1));
-        }
-
     }
 
     public static class Query14 extends SQLServerListOperationHandler<LdbcQuery14, LdbcQuery14Result> {
