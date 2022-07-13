@@ -19,6 +19,7 @@ tcr.log
 *.priv
 *.priv.*
 umbra/.dev.env
+mssql/.dev.env
 
 social-network-sf*/
 social-network-sf*.*

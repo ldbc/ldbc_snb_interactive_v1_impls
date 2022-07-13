@@ -1,6 +1,6 @@
 INSERT INTO person (
     creationDate
-  , id
+  , personId
   , firstName
   , lastName
   , gender
@@ -8,7 +8,7 @@ INSERT INTO person (
   , locationIP
   , browserUsed
   , LocationCityId
-  , speaks
+  , language
   , email
 )
 VALUES

@@ -31,6 +31,7 @@ We provide two reference implementations:
 Additional implementations -- currently only supported in the [old version (v1.0.0) of SNB Interactive](https://github.com/ldbc/ldbc_snb_interactive_impls/releases/tag/1.0.0):
 
 * [DuckDB (SQL) implementation](duckdb/README.md)
+* [Microsoft SQL Server (Transact-SQL) implementation](mssql/README.md)
 * [TigerGraph (GSQL) implementation](tigergraph/README.md)
 * [Umbra (SQL) implementation](umbra/README.md)
 * [Microsoft SQL Server (T-SQL) implementation](mssql/README.md)

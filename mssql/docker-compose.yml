@@ -1,0 +1,55 @@
+version: "3.9"
+
+services:
+  mssql-db:
+    image: ${MSSQL_DOCKER_IMAGE}
+    container_name: snb-interactive-mssql
+    hostname: snb-interactive-mssql
+    ports:
+      - ${MSSQL_PORT}:${MSSQL_PORT}
+    environment:
+      - SA_PASSWORD=${MSSQL_PASSWORD}
+      - ACCEPT_EULA=Y
+    volumes:
+      - type: bind
+        source: ${MSSQL_DATA_DIR}
+        target: /var/opt/mssql/data
+      - type: bind
+        source: ${MSSQL_DATA_LOGS}
+        target: /var/opt/mssql/log
+      - type: bind
+        source: ${MSSQL_DATA_SECRETS}
+        target: /var/opt/mssql/secrets
+      - type: bind
+        source: ${MSSQL_CSV_DIR}
+        target: /data/
+      - type: bind
+        source: ${MSSQL_FORMATFILE_DIR}
+        target: /data/format-files/
+    user: 0:0 # TODO: make directories writeable by non-root user
+
+  db-load:
+    build: ./scripts
+    image: "mssql-db-loader:latest"
+    container_name: mssql-db-loader
+    volumes:
+      - type: bind
+        source: ${MSSQL_DDL_DIR}
+        target: /ddl/
+      - type: bind
+        source: ${MSSQL_DML_DIR}
+        target: /dml/
+      - type: bind
+        source: ${MSSQL_CSV_DIR}
+        target: /data/
+    depends_on:
+      - mssql-db
+    command: sh -c "/home/wait && python3 -u home/load.py ${MSSQL_CSV_DIR}"
+    environment:
+      - MSSQL_PORT=${MSSQL_PORT}
+      - MSSQL_PASSWORD=${MSSQL_PASSWORD}
+      - MSSQL_HOST=mssql-db:${MSSQL_PORT}
+      - WAIT_HOSTS=mssql-db:${MSSQL_PORT}
+      - WAIT_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=5
+      - WAIT_HOST_CONNECT_TIMEOUT=30

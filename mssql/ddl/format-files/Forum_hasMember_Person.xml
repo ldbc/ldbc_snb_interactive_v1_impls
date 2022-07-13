@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<BCPFORMAT xmlns="http://schemas.microsoft.com/sqlserver/2004/bulkload/format" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <RECORD>
+  <FIELD ID="1" xsi:type="CharTerm" TERMINATOR="|" MAX_LENGTH="2147483647"/>
+  <FIELD ID="2" xsi:type="CharTerm" TERMINATOR="|" MAX_LENGTH="2147483647"/>
+  <FIELD ID="3" xsi:type="CharTerm" TERMINATOR="\n" MAX_LENGTH="2147483647"/>
+ </RECORD>
+ <ROW>
+  <COLUMN SOURCE="1" NAME="creationDate" xsi:type="SQLDATETIMEOFFSET"/>
+  <COLUMN SOURCE="2" NAME="ForumId" xsi:type="SQLBIGINT"/>
+  <COLUMN SOURCE="3" NAME="PersonId" xsi:type="SQLBIGINT"/>
+ </ROW>
+</BCPFORMAT>
