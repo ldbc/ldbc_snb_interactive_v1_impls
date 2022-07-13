@@ -1,7 +1,27 @@
-/* IS1. Profile of a Person
-\set personId 17592186044461
- */
-SELECT firstName, lastName, birthday, locationIP, browserUsed, LocationCityId, gender, creationDate
-FROM Person
-WHERE id = :personId
-;
+INSERT INTO person (
+    id
+  , firstName
+  , lastName
+  , gender
+  , birthday
+  , creationDate
+  , locationIP
+  , browserUsed
+  , LocationCityId
+  , speaks
+  , email
+)
+VALUES
+(
+    :creationDate
+  , :personId
+  , :personFirstName
+  , :personLastName
+  , :gender
+  , :birthday
+  , :locationIP
+  , :browserUsed
+  , :cityId
+  , :languages
+  , :emails
+);
