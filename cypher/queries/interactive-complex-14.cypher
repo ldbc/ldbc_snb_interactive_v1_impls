@@ -1,35 +1,31 @@
 // Q14. Trusted connection paths
+// Requires the Neo4j Graph Data Science library
 /*
 :param [{ person1Id, person2Id }] => { RETURN
-  8796093022357 AS person1Id,
-  8796093022390 AS person2Id
+  14 AS person1Id,
+  27 AS person2Id
 }
 */
-MATCH path = allShortestPaths((person1:Person { id: $person1Id })-[:KNOWS*0..]-(person2:Person { id: $person2Id }))
-WITH collect(path) as paths
-UNWIND paths as path
-WITH path, relationships(path) as rels_in_path
-WITH
-    [n in nodes(path) | n.id ] as personIdsInPath,
-    [r in rels_in_path |
-        reduce(w=0.0, v in [
-            (a:Person)<-[:HAS_CREATOR]-(:Comment)-[:REPLY_OF]->(:Post)-[:HAS_CREATOR]->(b:Person)
-            WHERE
-                (a.id = startNode(r).id and b.id=endNode(r).id) OR (a.id=endNode(r).id and b.id=startNode(r).id)
-            | 1.0] | w+v)
-    ] as weight1,
-    [r in rels_in_path |
-        reduce(w=0.0,v in [
-        (a:Person)<-[:HAS_CREATOR]-(:Comment)-[:REPLY_OF]->(:Comment)-[:HAS_CREATOR]->(b:Person)
-        WHERE
-                (a.id = startNode(r).id and b.id=endNode(r).id) OR (a.id=endNode(r).id and b.id=startNode(r).id)
-        | 0.5] | w+v)
-    ] as weight2
-WITH
-    personIdsInPath,
-    reduce(w=0.0,v in weight1| w+v) as w1,
-    reduce(w=0.0,v in weight2| w+v) as w2
-RETURN
-    personIdsInPath,
-    (w1+w2) as pathWeight
-ORDER BY pathWeight desc
+MATCH (person1:Person {id: $person1Id}), (person2:Person {id: $person2Id})
+CALL gds.shortestPath.dijkstra.stream({
+  nodeQuery: 'MATCH (p:Person) RETURN id(p) AS id',
+  relationshipQuery: '
+    MATCH
+      (pA:Person)-[knows:KNOWS]-(pB:Person),
+      (pA)<-[:HAS_CREATOR]-(c:Comment)-[r:REPLY_OF]->(post:Post)-[:HAS_CREATOR]->(pB)
+    WITH
+      id(pA) AS source,
+      id(pB) AS target,
+      count(r) AS numInteractions
+    RETURN
+      source,
+      target,
+      CASE WHEN floor(40-sqrt(numInteractions)) > 1 THEN floor(40-sqrt(numInteractions)) ELSE 1 END AS weight
+    ',
+  sourceNode: person1,
+  targetNode: person2,
+  relationshipWeightProperty: 'weight'
+})
+YIELD index, sourceNode, targetNode, totalCost, nodeIds, costs, path
+RETURN path AS personIdsInPath, totalCost AS pathWeight
+LIMIT 1
