@@ -13,19 +13,61 @@ The recommended environment is that the benchmark scripts (Bash) and the LDBC dr
 
 To build, use the script: `scripts/build.sh`
 
+
+### docker-compose
+
+Alternatively, a docker-compose specification is available to start the SQL Server container and a container loading the data. This requires `docker-compose` installed on the host machine. Running SQL Server and loading the data can be done by executing:
+
+```bash
+docker-compose build && docker-compose up
+```
+
+The default environment variables are loaded from `.env`. Change the `MSSQL_CSV_DIR` to point to point to the data set, e.g.
+
+```bash
+MSSQL_CSV_DIR=`pwd`/social-network-sf1-bi-composite-merged-fk/
+```
+
+To persist the data by storing the database outside a Docker volume, uncomment the following lines in the `docker-compose.yml` file:
+
+```yaml
+- type: bind
+source: ${MSSQL_DATA_DIR}
+target: /var/opt/mssql/data
+- type: bind
+source: ${MSSQL_DATA_LOGS}
+target: /var/opt/mssql/log
+- type: bind
+source: ${MSSQL_DATA_SECRETS}
+target: /var/opt/mssql/secrets
+```
+
 ## Generating and loading the data set
 
 ### Generating the data set
 
-The data sets need to be generated before loading it to the database. No preprocessing is required. To generate data sets, use the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop)'s `CsvMergeForeign` serializer classes:
+This SQL Server implementation uses the `composite-merged-fk` CSV layout, with headers and without quoted fields. To generate data that confirms this requirement, run Datagen without any layout or formatting arguments (`--explode-*` or `--format-options`).
 
-```ini
-ldbc.snb.datagen.serializer.dynamicActivitySerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.activity.CsvMergeForeignDynamicActivitySerializer
-ldbc.snb.datagen.serializer.dynamicPersonSerializer:ldbc.snb.datagen.serializer.snb.csv.dynamicserializer.person.CsvMergeForeignDynamicPersonSerializer
-ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv.staticserializer.CsvMergeForeignStaticSerializer
+In Datagen's directory (`ldbc_snb_datagen_spark`), issue the following commands. We assume that the Datagen project [is](https://github.com/ldbc/ldbc_snb_datagen_spark) built and `sbt` is available.
+
+```bash
+export SF=desired_scale_factor
+export LDBC_SNB_DATAGEN_MAX_MEM=available_memory
+export LDBC_SNB_DATAGEN_JAR=$(sbt -batch -error 'print assembly / assemblyOutputPath')
 ```
 
-Pre-generated data sets are available in the [SURF repository](https://github.com/ldbc/data-sets-surf-repository).
+```bash
+rm -rf out-sf${SF}/graphs/parquet/raw
+tools/run.py \
+    --cores $(nproc) \
+    --memory ${LDBC_SNB_DATAGEN_MAX_MEM} \
+    -- \
+    --format csv \
+    --scale-factor ${SF} \
+    --mode bi \
+    --output-dir out-sf${SF}
+```
+
 
 ### Configuration
 
