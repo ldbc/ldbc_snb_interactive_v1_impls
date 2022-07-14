@@ -13,35 +13,6 @@ The recommended environment is that the benchmark scripts (Bash) and the LDBC dr
 
 To build, use the script: `scripts/build.sh`
 
-
-### docker-compose
-
-Alternatively, a docker-compose specification is available to start the SQL Server container and a container loading the data. This requires `docker-compose` installed on the host machine. Running SQL Server and loading the data can be done by executing:
-
-```bash
-docker-compose build && docker-compose up
-```
-
-The default environment variables are loaded from `.env`. Change the `MSSQL_CSV_DIR` to point to point to the data set, e.g.
-
-```bash
-MSSQL_CSV_DIR=`pwd`/social-network-sf1-bi-composite-merged-fk/
-```
-
-To persist the data by storing the database outside a Docker volume, uncomment the following lines in the `docker-compose.yml` file:
-
-```yaml
-- type: bind
-source: ${MSSQL_DATA_DIR}
-target: /var/opt/mssql/data
-- type: bind
-source: ${MSSQL_DATA_LOGS}
-target: /var/opt/mssql/log
-- type: bind
-source: ${MSSQL_DATA_SECRETS}
-target: /var/opt/mssql/secrets
-```
-
 ## Generating and loading the data set
 
 ### Generating the data set
@@ -74,13 +45,26 @@ tools/run.py \
 Before starting the SQL Server Docker instance, change the `MSSQL_CSV_DIR` found in `.env` file to the path where the dataset is located. E.g.:
 
 ```bash
-MSSQL_CSV_DIR=/data/ldbc-data/social_network-csv_merge_foreign-sf1
+MSSQL_CSV_DIR=`pwd`/social-network-sf1-bi-composite-merged-fk/
 ```
 
-By default, the dataset is loaded again when the docker container is restarted. To prevent reloading, set the `MSSQL_RECREATE_DB` variable to `False`. E.g.:
+By default, the dataset is loaded again when the docker container is restarted. To prevent reloading, set the `MSSQL_RECREATE` variable to `False`. E.g.:
 
 ```bash
-MSSQL_RECREATE_DB=False
+MSSQL_RECREATE=False
+```
+To persist the data by storing the database outside a Docker volume, uncomment the following lines in the `docker-compose.yml` file:
+
+```yaml
+- type: bind
+source: ${MSSQL_DATA_DIR}
+target: /var/opt/mssql/data
+- type: bind
+source: ${MSSQL_DATA_LOGS}
+target: /var/opt/mssql/log
+- type: bind
+source: ${MSSQL_DATA_SECRETS}
+target: /var/opt/mssql/secrets
 ```
 
 Make sure the following folders are created relative to the `docker-compose.yml`:
