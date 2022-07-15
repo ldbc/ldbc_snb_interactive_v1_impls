@@ -15,29 +15,6 @@ The recommended environment is that the benchmark scripts (Bash) and the LDBC dr
 
 The default environment variables (e.g. Neo4j version, container name, etc.) are stored in `scripts/vars.sh`. Adjust these as you see fit.
 
-## Generating and loading the data set
-
-### Generating the data set
-
-The data sets need to be generated and preprocessed before loading it to the database. To generate such data sets, use the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop)'s `CsvComposite` serializer classes with the `LongDateFormatter` date formatter:
-## Configuration
-
-The default environment variables (e.g. Neo4j version, container name, etc.) are stored in `scripts/vars.sh`. Adjust these as you see fit.
-
-## Generating and loading the data set
-
-### Generating the data set
-
-The data sets need to be generated and preprocessed before loading it to the database. To generate such data sets, use the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop)'s `CsvComposite` serializer classes with the `LongDateFormatter` date formatter:
-## Configuration
-
-The default environment variables (e.g. Neo4j version, container name, etc.) are stored in `scripts/vars.sh`. Adjust these as you see fit.
-
-## Generating and loading the data set
-
-### Generating the data set
-
-The data sets need to be generated and preprocessed before loading it to the database. To generate such data sets, use the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop)'s `CsvComposite` serializer classes with the `LongDateFormatter` date formatter:
 ## Generating the data set
 
 The Neo4j implementation expects the data to be in `composite-projected-fk` CSV layout, without headers and with quoted fields.
