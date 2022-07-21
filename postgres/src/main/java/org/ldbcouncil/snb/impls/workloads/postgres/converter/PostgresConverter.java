@@ -81,6 +81,20 @@ public class PostgresConverter extends Converter {
         }
     }
 
+    public static Iterable<Long> arrayToLongArray(ResultSet r, int column) throws SQLException {
+        Array value = r.getArray(column);
+        if (value == null) {
+            return new ArrayList<Long>();
+        } else {
+            Long[] strs = (Long[]) value.getArray();
+            List<Long> array = new ArrayList<Long>();
+            for (int i = 0; i < strs.length; i++) {
+                array.add(strs[i]);
+            }
+            return array;
+        }
+    }
+
     public static Iterable<LdbcQuery1Result.Organization> arrayToOrganizationArray(ResultSet r, int column) throws SQLException {
         Array value = r.getArray(column);
         if (value == null) {
