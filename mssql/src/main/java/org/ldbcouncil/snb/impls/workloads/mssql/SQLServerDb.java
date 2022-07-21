@@ -282,7 +282,7 @@ public abstract class SQLServerDb extends BaseDb<SQLServerQueryStore> {
         public LdbcQuery14Result convertSingleResult(ResultSet result) throws SQLException {
             return new LdbcQuery14Result(
                     SQLServerConverter.convertLists(SQLServerConverter.arrayToObjectArray(result, 1)),
-                    result.getDouble(2));
+                    result.getLong(2));
         }
 
     }
