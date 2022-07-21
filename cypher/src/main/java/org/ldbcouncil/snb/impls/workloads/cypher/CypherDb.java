@@ -490,7 +490,7 @@ public class CypherDb extends BaseDb<CypherQueryStore>
             {
                 personIdsInPath = record.get( 0 ).asList( Value::asLong );
             }
-            double pathWeight = record.get( 1 ).asDouble();
+            long pathWeight = record.get( 1 ).asLong();
             return new LdbcQuery14Result(
                     personIdsInPath,
                     pathWeight );

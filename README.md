@@ -27,13 +27,11 @@ We provide two reference implementations:
 
 * [Neo4j (Cypher) implementation](cypher/README.md)
 * [PostgreSQL (SQL) implementation](postgres/README.md)
+
+Additional implementations:
+
 * [Microsoft SQL Server (Transact-SQL) implementation](mssql/README.md)
-
-Additional implementations -- currently only supported in the [old version (v1.0.0) of SNB Interactive](https://github.com/ldbc/ldbc_snb_interactive_impls/releases/tag/1.0.0):
-
-* [DuckDB (SQL) implementation](duckdb/README.md)
-* [TigerGraph (GSQL) implementation](tigergraph/README.md)
-* [Umbra (SQL) implementation](umbra/README.md)
+* more implementations coming by 2023
 
 For detailed instructions, consult the READMEs of the projects.
 

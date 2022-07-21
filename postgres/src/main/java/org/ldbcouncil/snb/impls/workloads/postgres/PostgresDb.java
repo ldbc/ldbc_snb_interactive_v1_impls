@@ -294,7 +294,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
         public LdbcQuery14Result convertSingleResult(ResultSet result) throws SQLException {
             return new LdbcQuery14Result(
                     PostgresConverter.convertLists(PostgresConverter.arrayToObjectArray(result, 1)),
-                    result.getDouble(2));
+                    result.getLong(2));
         }
 
     }
