@@ -293,7 +293,7 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
         @Override
         public LdbcQuery14Result convertSingleResult(ResultSet result) throws SQLException {
             return new LdbcQuery14Result(
-                    PostgresConverter.convertLists(PostgresConverter.arrayToObjectArray(result, 1)),
+                    PostgresConverter.arrayToLongArray(result, 1),
                     result.getLong(2));
         }
 

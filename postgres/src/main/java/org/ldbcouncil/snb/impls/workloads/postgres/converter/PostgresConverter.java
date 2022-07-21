@@ -109,17 +109,6 @@ public class PostgresConverter extends Converter {
         }
     }
 
-    public static Iterable<Long> convertLists(Iterable<List<Object>> arr) {
-        List<Long> new_arr = new ArrayList<>();
-        List<List<Object>> better_arr = (List<List<Object>>) arr;
-        for (List<Object> entry : better_arr) {
-            new_arr.add((Long) entry.get(0));
-        }
-        new_arr.add((Long) better_arr.get(better_arr.size() - 1).get(1));
-        return new_arr;
-    }
-
-
     public static long stringTimestampToEpoch(ResultSet r, int column) throws SQLException {
         return r.getTimestamp(column, Calendar.getInstance(TimeZone.getTimeZone("GMT"))).getTime();
     }
