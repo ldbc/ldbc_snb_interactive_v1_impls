@@ -2,74 +2,84 @@
 \set person1Id 17592186044461
 \set person2Id 15393162788877
  */
-WITH start_node(v) AS (
-    SELECT :person1Id::bigint
-)
-SELECT *
-FROM
+with recursive
+pathb(a, b, w) AS (
+    SELECT least(c.creatorpersonid, p.creatorpersonid) AS a, greatest(c.creatorpersonid, p.creatorpersonid) AS b, greatest(floor(40 - sqrt(count(*)))::bigint, 1)  AS w
+    FROM message c, message p
+    WHERE c.parentmessageid = p.id AND EXISTS (SELECT * FROM person_knows_person WHERE person1id = c.creatorpersonid AND person2id = p.creatorpersonid)
+    group by a, b
+),
+path(src, dst, w) AS (
+    SELECT a, b, w
+    FROM pathb
+    union all
+    SELECT b, a, w
+    FROM pathb
+),
+shorts(dir, gsrc, dst, prev, w, dead, iter) AS (
+    SELECT sdir, sgsrc, sdst, sdst, sw, sdead, siter
+    FROM
+        (VALUES
+             (false, :person1Id::bigint, :person1Id::bigint, 0::bigint, false, 0),
+             (true, :person2Id::bigint, :person2Id::bigint, 0::bigint, false, 0))
+        t(sdir, sgsrc, sdst, sw, sdead, siter)
+    union all
     (
-        WITH RECURSIVE
-            search_graph(link, depth, path) AS (
-                SELECT v::bigint, 0, ARRAY[]::bigint[][] FROM start_node
-                UNION ALL (
-                    WITH sg(link, depth) AS (SELECT * FROM search_graph)
-                    SELECT DISTINCT Person2Id, x.depth + 1, path || ARRAY[[x.link, Person2Id]]
-                    FROM Person_knows_Person, sg x
-                    WHERE x.link = Person1Id
-                    AND NOT EXISTS (SELECT * FROM sg y WHERE y.link = :person2Id::bigint)
-                    AND NOT EXISTS (SELECT * FROM sg y WHERE y.link = Person2Id)
-                )
+        with
+        ss AS (SELECT * FROM shorts),
+        toExplore AS (SELECT * FROM ss WHERE dead = false order by w limit 1000),
+        -- assumes graph is undirected
+        newPoints(dir, gsrc, dst, prev, w, dead) AS (
+            SELECT e.dir, e.gsrc AS gsrc, p.dst AS dst, p.src as prev, e.w + p.w AS w, false AS dead
+            FROM path p join toExplore e on (e.dst = p.src)
+            UNION ALL
+            SELECT dir, gsrc, dst, prev, w, dead OR EXISTS (SELECT * FROM toExplore e WHERE e.dir = o.dir AND e.gsrc = o.gsrc AND e.dst = o.dst) FROM ss o
         ),
-        paths(pid, path) AS (
-            SELECT row_number() OVER (), path
-            FROM search_graph
-            WHERE link = :person2Id::bigint
+        fullTable AS (
+            SELECT DISTINCT ON(dir, gsrc, dst) dir, gsrc, dst, prev, w, dead
+            FROM newPoints
+            ORDER BY dir, gsrc, dst, w, dead, prev DESC
         ),
-        edges(id, e) AS (
-            SELECT pid, array_agg(path[d1][d2])
-            FROM paths, generate_subscripts(path, 1) d1, generate_subscripts(path, 2) d2
-            GROUP BY pid, d1
-        ),
-        unique_edges(e) AS (
-            SELECT DISTINCT e
-            FROM edges
-        ),
-        weights(we, score) AS (
-            SELECT e, sum(score)
-            FROM (
-                SELECT e, mid1, mid2, max(score) AS score
-                FROM (
-                    SELECT e, 1 AS score, m1.id AS mid1, m2.id AS mid2
-                    FROM unique_edges, Message m1, Message m2
-                    WHERE (m1.CreatorPersonId = e[1] AND m2.CreatorPersonId = e[2] AND m2.ParentMessageId = m1.id AND m1.ParentMessageId IS NULL)
-                    UNION ALL
-                    SELECT e, 1 AS score, m1.id AS mid1, m2.id AS mid2
-                    FROM unique_edges, Message m1, Message m2
-                    WHERE (m1.CreatorPersonId = e[2] AND m2.CreatorPersonId = e[1] AND m2.ParentMessageId = m1.id AND m1.ParentMessageId IS NULL)
-                    UNION ALL
-                    SELECT e, 0.5 AS score, m1.id AS mid1, m2.id AS mid2
-                    FROM unique_edges, Message m1, Message m2
-                    WHERE (m1.CreatorPersonId = e[1] AND m2.CreatorPersonId = e[2] AND m2.ParentMessageId = m1.id AND m1.ParentMessageId IS NOT NULL)
-                    UNION ALL
-                    SELECT e, 0.5 AS score, m1.id AS mid1, m2.id AS mid2
-                    FROM unique_edges, Message m1, Message m2
-                    WHERE (m1.CreatorPersonId = e[2] AND m2.CreatorPersonId = e[1] AND m2.ParentMessageId = m1.id AND m1.ParentMessageId IS NOT NULL)
-                ) pps
-                GROUP BY e, mid1, mid2
-            ) tmp
-            GROUP BY e
-        ),
-        weightedpaths(path, score) AS (
-            SELECT path, coalesce(sum(score), 0)
-            FROM paths, edges
-            LEFT JOIN weights
-                   ON we = e
-            WHERE pid = id
-            GROUP BY id, path
+        found AS (
+            SELECT min(l.w + r.w) AS w
+            FROM fullTable l, fullTable r
+            WHERE l.dir = false AND r.dir = true AND l.dst = r.dst
         )
-        SELECT path, score
-        FROM weightedpaths
-        ORDER BY score DESC
-    ) x
-ORDER BY score DESC;
+        SELECT dir,
+               gsrc,
+               dst,
+               prev,
+               w,
+               dead OR (coalesce(t.w > (SELECT f.w/2 FROM found f), false)),
+               e.iter + 1 AS iter
+        FROM fullTable t, (SELECT iter FROM toExplore limit 1) e
+    )
+),
+ss(dir, gsrc, dst, prev, w, iter) AS (
+    SELECT dir, gsrc, dst, prev, w, iter FROM shorts WHERE iter = (SELECT max(iter) FROM shorts)
+),
+result(f, t, inter, w) AS (
+    SELECT l.gsrc, r.gsrc, l.dst, l.w + r.w
+    FROM ss l, ss r
+    WHERE l.dir = false AND r.dir = true AND l.dst = r.dst
+    ORDER BY l.w + r.w
+    LIMIT 1
+),
+sp1(arr, cur) as (
+    SELECT ARRAY[inter]::bigint[], inter FROM result
+    UNION ALL
+    SELECT array_prepend(ss.prev, sp1.arr), ss.prev
+    FROM ss, sp1
+    WHERE ss.dir = false AND ss.dst = sp1.cur AND ss.prev <> ss.dst
+),
+sp2(arr, cur) as (
+    SELECT (SELECT arr FROM sp1 WHERE cur = (SELECT f FROM result)), (SELECT inter FROM result)
+    UNION ALL
+    SELECT array_append(sp2.arr, ss.prev), ss.prev
+    FROM ss, sp2
+    WHERE ss.dir = true AND ss.dst = sp2.cur AND ss.prev <> ss.dst
+)
+SELECT sp2.arr AS personIdsInPath, result.w AS pathWeight
+FROM result, sp2
+WHERE sp2.cur = result.t
 ;
