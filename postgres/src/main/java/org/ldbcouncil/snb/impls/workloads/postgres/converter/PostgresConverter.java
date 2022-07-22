@@ -52,7 +52,6 @@ public class PostgresConverter extends Converter {
                 "}'::text[]";
     }
 
-
     public static Iterable<String> arrayToStringArray(ResultSet r, int column) throws SQLException {
         Array value = r.getArray(column);
         if (value == null) {
@@ -62,20 +61,6 @@ public class PostgresConverter extends Converter {
             List<String> array = new ArrayList<>();
             for (int i = 0; i < strs.length; i++) {
                 array.add(strs[i]);
-            }
-            return array;
-        }
-    }
-
-    public static Iterable<List<Object>> arrayToObjectArray(ResultSet r, int column) throws SQLException {
-        Array value = r.getArray(column);
-        if (value == null) {
-            return new ArrayList<>();
-        } else {
-            Object[][] strs = (Object[][]) value.getArray();
-            List<List<Object>> array = new ArrayList<>();
-            for (int i = 0; i < strs.length; i++) {
-                array.add(new ArrayList(Arrays.asList(strs[i])));
             }
             return array;
         }
@@ -111,15 +96,6 @@ public class PostgresConverter extends Converter {
 
     public static long stringTimestampToEpoch(ResultSet r, int column) throws SQLException {
         return r.getTimestamp(column, Calendar.getInstance(TimeZone.getTimeZone("GMT"))).getTime();
-    }
-
-
-    public static long timestampToEpoch(ResultSet r, int column) throws SQLException {
-        return r.getTimestamp(column).getTime();
-    }
-
-    public static long dateToEpoch(ResultSet r, int column) throws SQLException {
-        return r.getDate(column).getTime();
     }
 
 }
