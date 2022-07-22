@@ -64,7 +64,7 @@ public class PostgresConverter extends Converter {
     public static Iterable<Long> arrayToLongArray(ResultSet r, int column) throws SQLException {
         Array value = r.getArray(column);
         if (value == null) {
-            return new ArrayList<Long>();
+            return new ArrayList<>();
         } else {
             return Arrays.asList((Long[]) value.getArray());
         }
@@ -75,12 +75,9 @@ public class PostgresConverter extends Converter {
         if (value == null) {
             return new ArrayList<>();
         } else {
-            Object[][] strs = (Object[][]) value.getArray();
-            List<LdbcQuery1Result.Organization> array = new ArrayList<>();
-            for (int i = 0; i < strs.length; i++) {
-                array.add(new LdbcQuery1Result.Organization((String) strs[i][0],Integer.parseInt((String) strs[i][1]), (String) strs[i][2]));
-            }
-            return array;
+            return Arrays.asList((Object[][]) value.getArray()).stream().map(
+                    x -> new LdbcQuery1Result.Organization((String) x[0],  Integer.parseInt((String) x[1]), (String) x[2])
+            ).collect(Collectors.toList());
         }
     }
 
