@@ -66,12 +66,7 @@ public class PostgresConverter extends Converter {
         if (value == null) {
             return new ArrayList<Long>();
         } else {
-            Long[] strs = (Long[]) value.getArray();
-            List<Long> array = new ArrayList<Long>();
-            for (int i = 0; i < strs.length; i++) {
-                array.add(strs[i]);
-            }
-            return array;
+            return Arrays.asList((Long[]) value.getArray());
         }
     }
 
