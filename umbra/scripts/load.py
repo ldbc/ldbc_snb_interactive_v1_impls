@@ -140,8 +140,8 @@ class UmbraDbLoader():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--UMBRA_DATA_DIR',
-        help="UMBRA_DATA_DIR: folder containing the initial snapshot data to load e.g. '/out-sf1/graphs/csv/bi/composite-merged-fk'",
+        '--UMBRA_CSV_DIR',
+        help="UMBRA_CSV_DIR: folder containing the initial snapshot data to load e.g. '/out-sf1/graphs/csv/bi/composite-merged-fk'",
         type=str,
         required=True
     )
@@ -159,7 +159,7 @@ if __name__ == "__main__":
     if (args.is_container):
         data_dir = "/data/"
     else:
-        data_dir = args.UMBRA_DATA_DIR
+        data_dir = args.UMBRA_CSV_DIR
 
     start = time.time()
     PGLoader.main(data_dir)

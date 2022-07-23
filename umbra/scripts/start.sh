@@ -12,33 +12,23 @@ python3 -c 'import psycopg' || (echo "psycopg Python package is missing or broke
 
 scripts/stop.sh
 
-if [ -n "${UMBRA_CSV_DIR-}" ]; then
-    if [ ! -d "${UMBRA_CSV_DIR}" ]; then
-        echo "Directory ${UMBRA_CSV_DIR} does not exist."
-        exit 1
-    fi
-    export MOUNT_CSV_DIR="--volume=${UMBRA_CSV_DIR}:/data:z"
-else
-    export UMBRA_CSV_DIR="<unspecified>"
-    export MOUNT_CSV_DIR=""
-fi
-
-# ensure that ${UMBRA_DATA_DIR} exists
-mkdir -p "${UMBRA_DATA_DIR}"
-
 echo "==============================================================================="
 echo "Starting Umbra container"
 echo "-------------------------------------------------------------------------------"
 echo "UMBRA_VERSION: ${UMBRA_VERSION}"
 echo "UMBRA_CONTAINER_NAME: ${UMBRA_CONTAINER_NAME}"
+echo "UMBRA_DOCKER_IMAGE: ${UMBRA_DOCKER_IMAGE}"
 echo "UMBRA_PASSWORD: ${UMBRA_PASSWORD}"
-echo "UMBRA_DATABASE: ${UMBRA_DATABASE}"
 echo "UMBRA_USER: ${UMBRA_USER}"
 echo "UMBRA_PORT: ${UMBRA_PORT}"
-echo "UMBRA_DATA_DIR (on the host machine):"
-echo "  ${UMBRA_DATA_DIR}"
 echo "UMBRA_CSV_DIR (on the host machine):"
 echo "  ${UMBRA_CSV_DIR}"
+echo "UMBRA_DATABASE_DIR (on the host machine):"
+echo "  ${UMBRA_DATABASE_DIR}"
+echo "UMBRA_DDL_DIR (on the host machine):"
+echo "  ${UMBRA_DDL_DIR}"
+echo "UMBRA_LOG_DIR (on the host machine):"
+echo "  ${UMBRA_LOG_DIR}"
 echo "==============================================================================="
 
 docker run --rm \
