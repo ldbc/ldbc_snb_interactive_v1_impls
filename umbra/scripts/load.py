@@ -121,13 +121,13 @@ class UmbraDbLoader():
             self.run_script(pg_con, cur, "dml/create-static-materialized-views.sql")
             print("Done.")
 
-            print("Add primary key constraints")
-            cur.execute(self.load_script("ddl/schema-primary-keys.sql"))
-            pg_con.commit()
+            #print("Add primary key constraints")
+            #cur.execute(self.load_script("ddl/schema-primary-keys.sql"))
+            #pg_con.commit()
 
-            print("Add foreign key constraints")
-            cur.execute(self.load_script("ddl/schema-foreign-keys.sql"))
-            pg_con.commit()
+            #print("Add foreign key constraints")
+            #cur.execute(self.load_script("ddl/schema-foreign-keys.sql"))
+            #pg_con.commit()
 
             print("Add indexes")
             cur.execute(self.load_script("ddl/schema-indexes.sql"))
