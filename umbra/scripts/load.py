@@ -16,11 +16,6 @@ class UmbraDbLoader():
         self.user = os.environ.get("UMBRA_USER", "postgres")
         self.password = os.environ.get("UMBRA_PASSWORD", "mysecretpassword")
 
-    def vacuum(self, conn):
-        conn.autocommit=True
-        conn.cursor().execute("ANALYZE")
-        conn.autocommit=False
-
     def run_script(self, pg_con, cur, filename):
         with open(filename, "r") as f:
             try:
@@ -129,12 +124,9 @@ class UmbraDbLoader():
             #cur.execute(self.load_script("ddl/schema-foreign-keys.sql"))
             #pg_con.commit()
 
-            print("Add indexes")
-            cur.execute(self.load_script("ddl/schema-indexes.sql"))
-            pg_con.commit()
-
-            print("Run vacuum")
-            self.vacuum(pg_con)
+            #print("Add indexes")
+            #cur.execute(self.load_script("ddl/schema-indexes.sql"))
+            #pg_con.commit()
 
 
 if __name__ == "__main__":
