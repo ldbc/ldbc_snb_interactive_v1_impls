@@ -140,8 +140,8 @@ class PostgresDbLoader():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--POSTGRES_DATA_DIR',
-        help="POSTGRES_DATA_DIR: folder containing the initial snapshot data to load e.g. '/out-sf1/graphs/csv/bi/composite-merged-fk'",
+        '--POSTGRES_CSV_DIR',
+        help="POSTGRES_CSV_DIR: folder containing the initial snapshot data to load e.g. '/out-sf1/graphs/csv/bi/composite-merged-fk'",
         type=str,
         required=True
     )
@@ -159,7 +159,7 @@ if __name__ == "__main__":
     if (args.is_container):
         data_dir = "/data/"
     else:
-        data_dir = args.POSTGRES_DATA_DIR
+        data_dir = args.POSTGRES_CSV_DIR
 
     start = time.time()
     PGLoader.main(data_dir)
