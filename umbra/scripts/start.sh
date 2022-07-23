@@ -31,14 +31,13 @@ echo "UMBRA_LOG_DIR (on the host machine):"
 echo "  ${UMBRA_LOG_DIR}"
 echo "==============================================================================="
 
-docker run --rm \
-    --user "$(id -u):$(id -g)" \
+docker run \
     --name ${UMBRA_CONTAINER_NAME} \
+    --detach \
     --volume=${UMBRA_CSV_DIR}:/data/:z \
     --volume=${UMBRA_DATABASE_DIR}:/var/db/:z \
     --volume=${UMBRA_DDL_DIR}:/ddl/:z \
     --volume=${UMBRA_LOG_DIR}:/var/log/:z \
-    --detach \
     --publish=8000:5432 \
     ${UMBRA_DOCKER_IMAGE} \
     umbra_server \
