@@ -35,10 +35,10 @@ Additional implementations:
 
 For detailed instructions, consult the READMEs of the projects.
 
-To build a subset of the projects, use Maven profiles, e.g. to build the PostgreSQL implementation, run:
+To build a subset of the projects, e.g. to build the PostgreSQL implementation, run its individual build script:
 
 ```bash
-mvn clean package -DskipTests -Ppostgres
+postgres/scripts/build.sh
 ```
 
 ## User's guide
