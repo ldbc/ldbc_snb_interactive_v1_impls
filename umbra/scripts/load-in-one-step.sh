@@ -17,11 +17,11 @@ echo "UMBRA_DOCKER_IMAGE: ${UMBRA_DOCKER_IMAGE}"
 echo "UMBRA_PASSWORD: ${UMBRA_PASSWORD}"
 echo "UMBRA_USER: ${UMBRA_USER}"
 echo "UMBRA_PORT: ${UMBRA_PORT}"
-echo "UMBRA_BACKUP_DIR: ${UMBRA_BACKUP_DIR}"
 echo "UMBRA_CSV_DIR: ${UMBRA_CSV_DIR}"
-echo "UMBRA_DATABASE_DIR: ${UMBRA_DATABASE_DIR}"
 echo "UMBRA_DDL_DIR: ${UMBRA_DDL_DIR}"
 echo "UMBRA_LOG_DIR: ${UMBRA_LOG_DIR}"
+echo "UMBRA_DATABASE_DIR: ${UMBRA_DATABASE_DIR}"
+echo "UMBRA_BACKUP_DIR: ${UMBRA_BACKUP_DIR}"
 echo "==============================================================================="
 
 if [ ! -d "${UMBRA_CSV_DIR}" ]; then
