@@ -9,6 +9,6 @@ export UMBRA_BACKUP_DIR=`pwd`/scratch/backup/
 export UMBRA_DATABASE_DIR=`pwd`/scratch/db/
 export UMBRA_LOG_DIR=`pwd`/scratch/log/
 export UMBRA_DDL_DIR=`pwd`/ddl/
-export UMBRA_PORT=5432
+export UMBRA_PORT=8000
 export UMBRA_DOCKER_IMAGE=umbra-release:${UMBRA_VERSION}
 export UMBRA_CONTAINER_NAME=snb-interactive-umbra

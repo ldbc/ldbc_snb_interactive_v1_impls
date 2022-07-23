@@ -12,7 +12,7 @@ class UmbraDbLoader():
     def __init__(self):
         self.database = os.environ.get("UMBRA_DB", "ldbcsnb")
         self.endpoint = os.environ.get("UMBRA_HOST", "localhost")
-        self.port = int(os.environ.get("UMBRA_PORT", 5432))
+        self.port = int(os.environ.get("UMBRA_PORT", 8000))
         self.user = os.environ.get("UMBRA_USER", "postgres")
         self.password = os.environ.get("UMBRA_PASSWORD", "mysecretpassword")
 

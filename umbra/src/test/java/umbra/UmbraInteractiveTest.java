@@ -12,7 +12,7 @@ public class UmbraInteractiveTest extends InteractiveTest {
         super(new UmbraInteractiveDb());
     }
 
-    String endpoint = "localhost:5432";
+    String endpoint = "localhost:8000";
     String user = "postgres";
     String password = "mysecretpassword";
     String databaseName = "ldbcsnb";
