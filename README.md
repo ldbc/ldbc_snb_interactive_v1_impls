@@ -97,7 +97,7 @@ All of these runs should be started with the initial data set loaded to the data
     * **Inputs:**
         * The query substitution parameters are taken from the directory set in `ldbc.snb.interactive.parameters_dir` configuration property.
         * The update streams are the files from the `inserts` and `deletes` directories in the directory `ldbc.snb.interactive.updates_dir` configuration property.
-        * The goal of the benchmark is the achieve the best (lowest possible) `time_compression_ratio` value while ensuring that the 95% on-time requirement is kept (i.e. 95% of the queries can be started within 1 second of their scheduled time). If your benchmark run returns "failed schedule audit", increase this number (which lowers the time compression rate) until it passes.
+        * The goal of the benchmark is to achieve the best (lowest possible) `time_compression_ratio` value while ensuring that the 95% on-time requirement is kept (i.e. 95% of the queries can be started within 1 second of their scheduled time). If your benchmark run returns "failed schedule audit", increase this number (which lowers the time compression rate) until it passes.
         * Set the `thread_count` property to the size of the thread pool for read operations.
         * For audited benchmarks, ensure that the `warmup` and `operation_count` properties are set so that the warmup and benchmark phases last for 30+ minutes and 2+ hours, respectively.
     * **Output:**
@@ -126,11 +126,12 @@ To generate the benchmark data sets, use the [Spark-based LDBC SNB Datagen](http
 
 ### Pre-generated data sets
 
-Pre-generated data sets are currently not available.
+Pre-generated data sets will be available in autumn 2023.
 
 ## Preparing for an audited run
 
-:warning: Audited runs are currently only possible with the old version. The new version of Interactive (with deletes and larger SFs) will be released in Q4 2022.
+:warning: Audited runs are currently only possible with the old versions.
+The new version of Interactive (with deletes and larger SFs) will be released in Q4 2022.
 
 Implementations of the Interactive workload can be audited by a certified LDBC auditor.
 The [Auditing Policies chapter](https://ldbcouncil.org/ldbc_snb_docs/ldbc-snb-specification.pdf#chapter.7) of the specification describes the auditing process and the required artifacts.
@@ -141,12 +142,11 @@ The [Auditing Policies chapter](https://ldbcouncil.org/ldbc_snb_docs/ldbc-snb-sp
 2. Load the data set with `scripts/load-in-one-step.sh`.
 3. Create a backup with `scripts/backup-database.sh`.
 4. Run the `driver/determine-best-tcr.sh`.
-5. Once the "best TCR" value has been determined, test it with a full workload (at least 0.5h for warmup operation and at least 2h of benchmark time), and make further adjustments if necessary.
+5. Once the best TCR value has been determined, test it with a full workload (at least 0.5h for warmup operation and at least 2h of benchmark time), and make further adjustments if necessary.
 
 ### Recommendations
 
 We have a few recommendations for creating audited implementations. (These are not requirements – implementations are allowed to deviate from these recommendations.)
-
 * The implementation should target a popular Linux distribution (e.g. Ubuntu LTS, CentOS, Fedora).
 * Use a containerized setup, where the DBMS is running in a Docker container.
 * Instead of a specific hardware, target a cloud virtual machine instance (e.g. AWS `r5d.12xlarge`). Both bare-metal and regular instances can be used for audited runs.
