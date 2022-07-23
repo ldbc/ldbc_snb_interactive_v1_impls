@@ -67,15 +67,9 @@ export LDBC_SNB_DRIVER_DIR=
 scripts/generate-all.sh
 ```
 
-<!--
-* **Initial data set:** the SNB graph in CSV format (`social_network/{static,dynamic}`)
-* **Update streams:** the input for the update operations (`social_network/updateStream_*.csv`)
-* **Substitution parameters:** the input parameters for the complex queries. It is produced by the Datagen (`substitution_parameters/`)
--->
-
 ### Driver modes
 
-For each implementation, it is possible to perform to perform the run in one of the [SNB driver's](https://github.com/ldbc/ldbc_snb_interactive_driver) three modes.
+For each implementation, it is possible to perform the run in one of the [SNB driver's](https://github.com/ldbc/ldbc_snb_interactive_driver) three modes.
 All of these runs should be started with the initial data set loaded to the database.
 
 1. Create validation parameters with the `driver/create-validation-parameters.sh` script.
