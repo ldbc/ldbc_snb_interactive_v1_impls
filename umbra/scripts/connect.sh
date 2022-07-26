@@ -8,4 +8,5 @@ cd ..
 
 . scripts/vars.sh
 
-docker exec -it ${UMBRA_CONTAINER_NAME} psql --username=${UMBRA_USER} --dbname=${UMBRA_DATABASE}
+export PGPASSWORD=${UMBRA_PASSWORD}
+psql -h localhost -U postgres -p 8000
