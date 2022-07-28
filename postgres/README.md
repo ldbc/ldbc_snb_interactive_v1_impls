@@ -21,7 +21,7 @@ Alternatively, a docker-compose available to start the PostgreSQL container and 
 docker-compose build && docker-compose up
 ```
 
-The default environment variables are loaded from `.env`. Change the `POSTGRES_CSV_DIR` to point to point to the data set, e.g.
+The default environment variables are loaded from `.env`. Change the `${POSTGRES_CSV_DIR}` variable to point to point to the data set, e.g.
 
 ```bash
 POSTGRES_CSV_DIR=`pwd`/test-data/
@@ -39,7 +39,7 @@ To persist the data by storing the database outside a Docker volume, uncomment t
 
 ### Using pre-generated data sets
 
-From the pre-generated data sets in the [SURF/CWI data repository](https://hdl.handle.net/11112/e6e00558-a2c3-9214-473e-04a16de09bf8), use the ones named `social_network-csv_composite_merge_foreign-sf*`.
+From the pre-generated data sets in the [SURF/CWI data repository](https://hdl.handle.net/11112/e6e00558-a2c3-9214-473e-04a16de09bf8), use the ones named `social_network-csv_merge_foreign-sf*`.
 
 ### Generating the data set
 
