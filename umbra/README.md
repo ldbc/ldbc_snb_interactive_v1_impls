@@ -29,8 +29,6 @@ The default environment variables are loaded from `.env`. Change the `UMBRA_CSV_
 UMBRA_CSV_DIR=`pwd`/test-data/
 ```
 
-
-
 ## Get the container
 
 The Umbra container is available upon request from TU Munich's Database group. Load it to Docker as follows:
@@ -41,7 +39,7 @@ curl ... | docker load
 
 ### Loading the data set
 
-Umbra uses the same data format at PostgreSQL (`CsvMergeForeign`).
+Umbra uses the same data format at PostgreSQL (`CsvMergeForeign` serializer / `social_network-csv_composite_merge_foreign-sf*` data sets).
 
 1. Set the `${UMBRA_CSV_DIR}` environment variable to point to the data set, e.g.:
 

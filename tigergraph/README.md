@@ -36,7 +36,8 @@ and some helper scripts in [scripts](./scripts) to manage TigerGraph in a Docker
 In this section, we will describe how to obtain the data set and load it into the database.
 
 The data can be generated using the data generator tool or downloaded from the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop).
-There are also some pre-generated data sets available in the [SURF/CWI data repository](https://repository.surfsara.nl/datasets/cwi/snb).
+
+From the pre-generated data sets in the [SURF/CWI data repository](https://hdl.handle.net/11112/e6e00558-a2c3-9214-473e-04a16de09bf8), use the ones named ` social_network-csv_composite-longdateformatter-sf*`.
 
 ### Generating a dataset
 The data sets need to be generated and preprocessed before loading it to the database.
@@ -49,8 +50,8 @@ ldbc.snb.datagen.serializer.dynamicPersonSerializer:ldbc.snb.datagen.serializer.
 ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv.staticserializer.CsvCompositeStaticSerializer
 ```
 
-    Please note, that the loading procedure assumes that person data about languages and emails are combined into a person record.
-    An example configuration for scale factor 1 is given in the [`params-csv-composite-longdateformatter.ini`](https://github.com/ldbc/ldbc_snb_datagen_hadoop/blob/main/params-csv-composite-longdateformatter.ini) file of the Datagen repository.
+Please note, that the loading procedure assumes that person data about languages and emails are combined into a person record.
+An example configuration for scale factor 1 is given in the [`params-csv-composite-longdateformatter.ini`](https://github.com/ldbc/ldbc_snb_datagen_hadoop/blob/main/params-csv-composite-longdateformatter.ini) file of the Datagen repository.
 
 ### Preprocessing and loading
 TigerGraph uses a mechanism called "loading jobs" for data import.

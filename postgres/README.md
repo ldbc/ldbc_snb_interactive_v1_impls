@@ -35,9 +35,11 @@ To persist the data by storing the database outside a Docker volume, uncomment t
   target: /var/lib/postgresql/data
 ```
 
-
-
 ## Generating and loading the data set
+
+### Using pre-generated data sets
+
+From the pre-generated data sets in the [SURF/CWI data repository](https://hdl.handle.net/11112/e6e00558-a2c3-9214-473e-04a16de09bf8), use the ones named `social_network-csv_composite_merge_foreign-sf*`.
 
 ### Generating the data set
 

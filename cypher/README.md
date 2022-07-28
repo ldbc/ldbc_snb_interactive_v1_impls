@@ -17,6 +17,10 @@ The default environment variables (e.g. Neo4j version, container name, etc.) are
 
 ## Generating and loading the data set
 
+### Using pre-generated data sets
+
+From the pre-generated data sets in the [SURF/CWI data repository](https://hdl.handle.net/11112/e6e00558-a2c3-9214-473e-04a16de09bf8), use the ones named ` social_network-csv_composite-longdateformatter-sf*`.
+
 ### Generating the data set
 
 The data sets need to be generated and preprocessed before loading it to the database. To generate such data sets, use the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop)'s `CsvComposite` serializer classes with the `LongDateFormatter` date formatter:
