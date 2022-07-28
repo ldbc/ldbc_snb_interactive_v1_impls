@@ -133,7 +133,7 @@ jobs:
       - run:
           name: Get SF1 data set
           command: |
-            curl -L https://surfdrive.surf.nl/files/index.php/s/IbWgmBVQfdu1BRV/download | tar -xv --use-compress-program=unzstd
+            curl -L https://r2-public-worker.ldbc.workers.dev/interactive/snb-sf1-2022-07-11.tar.zst | tar -x --use-compress-program=unzstd
       - run:
           name: Process SF1 data set
           command: |
