@@ -6,7 +6,6 @@ import org.ldbcouncil.snb.driver.control.LoggingService;
 import org.ldbcouncil.snb.driver.workloads.interactive.queries.*;
 import org.ldbcouncil.snb.impls.workloads.QueryType;
 import org.ldbcouncil.snb.impls.workloads.cypher.converter.CypherConverter;
-import org.ldbcouncil.snb.impls.workloads.cypher.operationhandlers.CypherIC13OperationHandler;
 import org.ldbcouncil.snb.impls.workloads.cypher.operationhandlers.CypherListOperationHandler;
 import org.ldbcouncil.snb.impls.workloads.cypher.operationhandlers.CypherSingletonOperationHandler;
 import org.ldbcouncil.snb.impls.workloads.cypher.operationhandlers.CypherUpdateOperationHandler;
@@ -451,7 +450,7 @@ public class CypherDb extends BaseDb<CypherQueryStore>
         }
     }
 
-    public static class InteractiveQuery13 extends CypherIC13OperationHandler
+    public static class InteractiveQuery13 extends CypherSingletonOperationHandler<LdbcQuery13,LdbcQuery13Result>
     {
         @Override
         public String getQueryString(CypherDbConnectionState state, LdbcQuery13 operation) {
