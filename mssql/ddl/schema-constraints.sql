@@ -1,7 +1,7 @@
 -- add PKs
 USE ldbc;
-ALTER TABLE Message ADD PRIMARY KEY (Messageid);
-ALTER TABLE Forum ADD PRIMARY KEY (id);
+-- ALTER TABLE Message ADD PRIMARY KEY (Messageid);
+-- ALTER TABLE Forum ADD PRIMARY KEY (id);
 ALTER TABLE Forum_hasMember_Person ADD PRIMARY KEY (ForumId, PersonId);
 ALTER TABLE Forum_hasTag_Tag ADD PRIMARY KEY (ForumId, TagId);
 ALTER TABLE Person_hasInterest_Tag ADD PRIMARY KEY (PersonId, TagId);

@@ -75,7 +75,7 @@ CREATE TABLE Comment (
 
 CREATE TABLE Forum (
     creationDate datetimeoffset NOT NULL,
-    id bigint NOT NULL,
+    id bigint NOT NULL PRIMARY KEY,
     title nvarchar(256) NOT NULL,
     ModeratorPersonId bigint -- can be null as its cardinality is 0..1
 );
@@ -182,7 +182,7 @@ ALTER INDEX [GRAPH_UNIQUE_INDEX_Person_knows_Person] ON [dbo].[Person_knows_Pers
 -- materialized views
 CREATE TABLE Message (
     creationDate datetimeoffset not null,
-    MessageId bigint not null,
+    MessageId bigint not null PRIMARY KEY,
     content ntext,
     imageFile varchar(40),
     locationIP varchar(40) not null,
