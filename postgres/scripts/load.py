@@ -14,6 +14,7 @@ class PostgresDbLoader():
         self.user = os.environ.get("POSTGRES_USER", "postgres")
         self.password = os.environ.get("POSTGRES_PASSWORD", "mysecretpassword")
 
+
     def run_script(self, conn, filename):
 
         with open(filename, "r") as f:
@@ -26,7 +27,7 @@ class PostgresDbLoader():
                     if query.isspace():
                         continue
 
-                    sql_statement = re.findall(r"^((CREATE|INSERT|DROP|DELETE|SELECT|COPY) [A-Za-z0-9_ ]*)", query, re.MULTILINE|re.IGNORECASE)
+                    sql_statement = re.findall(r"^((CREATE|INSERT|DROP|DELETE|SELECT|COPY|ALTER) [A-Za-z0-9_ ]*)", query, re.MULTILINE|re.IGNORECASE)
                     print(f"{sql_statement[0][0].strip()} ...")
                     start = time.time()
                     cur = conn.cursor()
@@ -44,6 +45,7 @@ class PostgresDbLoader():
         conn.autocommit=True
         conn.cursor().execute("ANALYZE")
         conn.autocommit=False
+
 
     def main(self):
         with psycopg.connect(
