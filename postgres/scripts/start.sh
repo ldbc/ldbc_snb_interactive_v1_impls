@@ -72,7 +72,7 @@ docker run --rm \
     ${POSTGRES_CUSTOM_ARGS}
 
 echo -n "Waiting for the database to start ."
-until python3 scripts/test-db-connection.py; do
+until python3 scripts/test-db-connection.py 1>/dev/null 2>&1; do
     docker ps | grep ${POSTGRES_CONTAINER_NAME} 1>/dev/null 2>&1 || (
         echo
         echo "Container lost."
