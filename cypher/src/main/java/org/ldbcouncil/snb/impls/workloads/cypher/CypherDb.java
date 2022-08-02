@@ -22,24 +22,7 @@ import org.neo4j.driver.Value;
 public class CypherDb extends BaseDb<CypherQueryStore>
 {
 
-    Driver driver;
     CypherQueryStore queryStore;
-
-    static protected Date addDays( Date startDate, int days )
-    {
-        final Calendar cal = Calendar.getInstance();
-        cal.setTime( startDate );
-        cal.add( Calendar.DATE, days );
-        return cal.getTime();
-    }
-
-    static protected Date addMonths( Date startDate, int months )
-    {
-        final Calendar cal = Calendar.getInstance();
-        cal.setTime( startDate );
-        cal.add( Calendar.MONTH, months );
-        return cal.getTime();
-    }
 
     @Override
     protected void onInit( Map<String, String> properties, LoggingService loggingService ) throws DbException

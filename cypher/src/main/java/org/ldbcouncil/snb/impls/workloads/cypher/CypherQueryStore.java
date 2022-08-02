@@ -32,14 +32,6 @@ public class CypherQueryStore extends QueryStore
         return cal.getTime();
     }
 
-    static protected Date addMonths( Date startDate, int months )
-    {
-        final Calendar cal = Calendar.getInstance();
-        cal.setTime( startDate );
-        cal.add( Calendar.MONTH, months );
-        return cal.getTime();
-    }
-
     /**
      * The maps are overriden here to return maps with Java types
      * instead of strings. This speeds up querying the Cypher instance
