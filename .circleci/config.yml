@@ -11,7 +11,7 @@ jobs:
   test:
     resource_class: large
     machine:
-      image: ubuntu-2004:202008-01
+      image: ubuntu-2204:2022.04.1
     steps:
       - checkout
       - run:
