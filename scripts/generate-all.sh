@@ -19,7 +19,7 @@ rm -rf ${LDBC_SNB_IMPLS_DIR}/parameters-sf${SF}/*
 echo "==================== Generate data ===================="
 cd ${LDBC_SNB_DATAGEN_DIR}
 
-LDBC_SNB_DATAGEN_JAR=$(sbt -batch -error 'print assembly / assemblyOutputPath') && export LDBC_SNB_DATAGEN_JAR
+export LDBC_SNB_DATAGEN_JAR=$(sbt -batch -error 'print assembly / assemblyOutputPath') && export LDBC_SNB_DATAGEN_JAR
 rm -rf out-sf${SF}
 
 echo "-------------------- Generate data for Cypher --------------------"
