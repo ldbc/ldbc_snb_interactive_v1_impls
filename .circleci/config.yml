@@ -62,15 +62,6 @@ jobs:
             scripts/get-sample-factors.sh
             scripts/paramgen.sh
             cd ..
-      ### Generate SF1 data sets
-      - run:
-          name: Generate SF1 data sets
-          command: |
-            export LDBC_SNB_DATAGEN_DIR=`pwd`
-            export LDBC_SNB_DATAGEN_MAX_MEM=8G
-            export USE_DATAGEN_DOCKER=true
-            export SF=1
-            scripts/generate-all.sh
       ### Neo4j
       - run:
           name: Tiny data set - Load Neo4j database and create a backup
@@ -139,6 +130,15 @@ jobs:
             driver/benchmark.sh
             scripts/stop.sh
             cd ..
+      ### Generate SF1 data sets
+      - run:
+          name: Generate SF1 data sets
+          command: |
+            export LDBC_SNB_DATAGEN_DIR=`pwd`
+            export LDBC_SNB_DATAGEN_MAX_MEM=8G
+            export USE_DATAGEN_DOCKER=true
+            export SF=1
+            scripts/generate-all.sh
       ### Neo4j
       - run:
           name: SF1 data set - Load Neo4j database and create a backup
