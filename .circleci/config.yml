@@ -67,6 +67,8 @@ jobs:
           name: Clone Datagen repository
           command: |
             git clone git@github.com:ldbc/ldbc_snb_datagen_spark.git
+            cd ldbc_snb_datagen_spark
+            scripts/build.sh
             curl https://archive.apache.org/dist/spark/spark-3.2.2/spark-3.2.2-bin-hadoop3.2.tgz | tar -xz -C ~/
       - run:
           name: Generate SF1 data sets
