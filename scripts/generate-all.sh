@@ -48,8 +48,7 @@ rm -rf out-sf${SF}/graphs/parquet/raw
 ${DATAGEN_COMMAND} \
     --mode bi \
     --format csv \
-    --scale-factor ${SF} \
-    --output-dir out-sf${SF}
+    --scale-factor ${SF}
 
 echo "-------------------- Generate data for update streams and factors --------------------"
 rm -rf out-sf${SF}/graphs/parquet/raw
@@ -57,7 +56,6 @@ ${DATAGEN_COMMAND} \
     --mode bi \
     --format parquet \
     --scale-factor ${SF} \
-    --output-dir out-sf${SF} \
     --generate-factors
 
 export LDBC_SNB_DATA_ROOT_DIRECTORY=${LDBC_SNB_DATAGEN_DIR}/out-sf${SF}/
