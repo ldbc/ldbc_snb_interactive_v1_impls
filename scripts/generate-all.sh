@@ -10,6 +10,19 @@ cd ..
 
 export LDBC_SNB_IMPLS_DIR=`pwd`
 
+# set DATAGEN_COMMAND
+if ${USE_DATAGEN_DOCKER:-false}; then
+    echo "Using Datagen Docker image"
+    DATAGEN_COMMAND="docker run --volume `pwd`/out:/out-sf${SF} ldbc/datagen-standalone:latest --parallelism $(nproc) --"
+else
+    echo "Using non-containerized Datagen"
+    cd ${LDBC_SNB_DATAGEN_DIR}
+    export LDBC_SNB_DATAGEN_JAR=$(sbt -batch -error 'print assembly / assemblyOutputPath')
+    DATAGEN_COMMAND="tools/run.py --cores $(nproc) --memory ${LDBC_SNB_DATAGEN_MAX_MEM} -- --output-dir out-sf${SF}"
+fi
+
+cd ${LDBC_SNB_IMPLS_DIR}
+
 echo "==================== Cleanup existing directories ===================="
 mkdir -p update-streams-sf${SF}/
 mkdir -p parameters-sf${SF}/
@@ -18,33 +31,32 @@ rm -rf ${LDBC_SNB_IMPLS_DIR}/parameters-sf${SF}/*
 
 echo "==================== Generate data ===================="
 cd ${LDBC_SNB_DATAGEN_DIR}
-
-export LDBC_SNB_DATAGEN_JAR=$(sbt -batch -error 'print assembly / assemblyOutputPath') && export LDBC_SNB_DATAGEN_JAR
 rm -rf out-sf${SF}
 
 echo "-------------------- Generate data for Cypher --------------------"
 rm -rf out-sf${SF}/graphs/parquet/raw
-tools/run.py \
-    --cores $(nproc) \
-    --memory ${LDBC_SNB_DATAGEN_MAX_MEM} \
-    -- \
+${DATAGEN_COMMAND} \
+    --mode bi \
     --format csv \
     --scale-factor ${SF} \
     --explode-edges \
-    --mode bi \
-    --output-dir out-sf${SF}/ \
     --epoch-millis \
     --format-options header=false,quoteAll=true,compression=gzip
 
-echo "-------------------- Generate data for Postgres and Paramgen --------------------"
+echo "-------------------- Generate data for Postgres --------------------"
 rm -rf out-sf${SF}/graphs/parquet/raw
-tools/run.py \
-    --cores $(nproc) \
-    --memory ${LDBC_SNB_DATAGEN_MAX_MEM} \
-    -- \
+${DATAGEN_COMMAND} \
+    --mode bi \
     --format csv \
     --scale-factor ${SF} \
+    --output-dir out-sf${SF}
+
+echo "-------------------- Generate data for update streams and factors --------------------"
+rm -rf out-sf${SF}/graphs/parquet/raw
+${DATAGEN_COMMAND} \
     --mode bi \
+    --format parquet \
+    --scale-factor ${SF} \
     --output-dir out-sf${SF} \
     --generate-factors
 
