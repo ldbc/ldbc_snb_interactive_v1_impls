@@ -31,10 +31,10 @@ rm -rf ${LDBC_SNB_IMPLS_DIR}/parameters-sf${SF}/*
 
 echo "==================== Generate data ===================="
 cd ${LDBC_SNB_DATAGEN_DIR}
-rm -rf out-sf${SF}
+sudo rm -rf out-sf${SF}
 
 echo "-------------------- Generate data for Cypher --------------------"
-rm -rf out-sf${SF}/graphs/parquet/raw
+sudo rm -rf out-sf${SF}/graphs/parquet/raw
 ${DATAGEN_COMMAND} \
     --mode bi \
     --format csv \
@@ -44,14 +44,14 @@ ${DATAGEN_COMMAND} \
     --format-options header=false,quoteAll=true,compression=gzip
 
 echo "-------------------- Generate data for Postgres --------------------"
-rm -rf out-sf${SF}/graphs/parquet/raw
+sudo rm -rf out-sf${SF}/graphs/parquet/raw
 ${DATAGEN_COMMAND} \
     --mode bi \
     --format csv \
     --scale-factor ${SF}
 
 echo "-------------------- Generate data for update streams and factors --------------------"
-rm -rf out-sf${SF}/graphs/parquet/raw
+sudo rm -rf out-sf${SF}/graphs/parquet/raw
 ${DATAGEN_COMMAND} \
     --mode bi \
     --format parquet \
