@@ -10,8 +10,9 @@ cd ..
 
 export LDBC_SNB_IMPLS_DIR=`pwd`
 
+USE_DATAGEN_DOCKER=${USE_DATAGEN_DOCKER:-false}
 # set DATAGEN_COMMAND
-if ${USE_DATAGEN_DOCKER:-false}; then
+if ${USE_DATAGEN_DOCKER}; then
     echo "Using Datagen Docker image"
     DATAGEN_COMMAND="docker run --volume ${LDBC_SNB_DATAGEN_DIR}/out-sf${SF}:/out ldbc/datagen-standalone:latest --cores $(nproc) --parallelism $(nproc) --memory ${LDBC_SNB_DATAGEN_MAX_MEM} --"
 else
@@ -31,10 +32,16 @@ rm -rf ${LDBC_SNB_IMPLS_DIR}/parameters-sf${SF}/*
 
 echo "==================== Generate data ===================="
 cd ${LDBC_SNB_DATAGEN_DIR}
-sudo rm -rf out-sf${SF}
+if ${USE_DATAGEN_DOCKER}; then
+    sudo chown -R $(id -u):$(id -g) out-sf${SF}
+fi
+rm -rf out-sf${SF}
 
 echo "-------------------- Generate data for Cypher --------------------"
-sudo rm -rf out-sf${SF}/graphs/parquet/raw
+if ${USE_DATAGEN_DOCKER}; then
+    sudo chown -R $(id -u):$(id -g) out-sf${SF}
+fi
+rm -rf out-sf${SF}/graphs/parquet/raw
 ${DATAGEN_COMMAND} \
     --mode bi \
     --format csv \
@@ -44,19 +51,29 @@ ${DATAGEN_COMMAND} \
     --format-options header=false,quoteAll=true,compression=gzip
 
 echo "-------------------- Generate data for Postgres --------------------"
-sudo rm -rf out-sf${SF}/graphs/parquet/raw
+if ${USE_DATAGEN_DOCKER}; then
+    sudo chown -R $(id -u):$(id -g) out-sf${SF}
+fi
+rm -rf out-sf${SF}/graphs/parquet/raw
 ${DATAGEN_COMMAND} \
     --mode bi \
     --format csv \
     --scale-factor ${SF}
 
 echo "-------------------- Generate data for update streams and factors --------------------"
-sudo rm -rf out-sf${SF}/graphs/parquet/raw
+if ${USE_DATAGEN_DOCKER}; then
+    sudo chown -R $(id -u):$(id -g) out-sf${SF}
+fi
+rm -rf out-sf${SF}/graphs/parquet/raw
 ${DATAGEN_COMMAND} \
     --mode bi \
     --format parquet \
     --scale-factor ${SF} \
     --generate-factors
+
+if ${USE_DATAGEN_DOCKER}; then
+    sudo chown -R $(id -u):$(id -g) out-sf${SF}
+fi
 
 export LDBC_SNB_DATA_ROOT_DIRECTORY=${LDBC_SNB_DATAGEN_DIR}/out-sf${SF}/
 
