@@ -4,12 +4,12 @@ import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.Update;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 
-import com.ldbc.driver.DbException;
-import com.ldbc.driver.Operation;
-import com.ldbc.driver.ResultReporter;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.LdbcNoResult;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.GraphDBConnectionState;
-import com.ldbc.impls.workloads.ldbc.snb.operationhandlers.UpdateOperationHandler;
+import org.ldbcouncil.snb.driver.DbException;
+import org.ldbcouncil.snb.driver.Operation;
+import org.ldbcouncil.snb.driver.ResultReporter;
+import org.ldbcouncil.snb.driver.workloads.interactive.LdbcNoResult;
+import org.ldbcouncil.snb.impls.workloads.operationhandlers.UpdateOperationHandler;
 
 public abstract class GraphDBUpdateOperationHandler<TOperation extends Operation<LdbcNoResult>>
 		implements UpdateOperationHandler<TOperation, GraphDBConnectionState> {

@@ -59,14 +59,6 @@ Axioms
 
 Rules
 {
-	Id: rule_snb_q5
-	  forum <snvoc:hasMember> mem
-	  mem <snvoc:hasPerson> fr
-	  forum <snvoc:containerOf> post
-	  post <snvoc:hasCreator> ?fr 
-	------------------------
-    	  post <snvoc:hasCreatorMember> ?mem
-
 
 	Id: rdfs7
 
@@ -142,5 +134,13 @@ Rules
 	  b <rdfs:subPropertyOf> a [Cut]
 	------------------------------------
 	  a <owl:equivalentProperty> b
+	
+	  
+	Id: rule_snb_knows_bidirectional
+	  p <snvoc:knows> rel [Constraint p != fr]
+	  rel <snvoc:hasPerson> fr [Constraint p != fr]
+	---------------------------
+	 fr <snvoc:directKnows> p
+	 p <snvoc:directKnows> fr
 
 }

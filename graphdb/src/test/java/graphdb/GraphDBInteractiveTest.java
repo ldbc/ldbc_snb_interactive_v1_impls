@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.interactive.GraphDBInteractive;
-import com.ldbc.impls.workloads.ldbc.snb.interactive.InteractiveTest;
+import org.ldbcouncil.snb.impls.workloads.interactive.InteractiveTest;
 
 public class GraphDBInteractiveTest extends InteractiveTest {
 

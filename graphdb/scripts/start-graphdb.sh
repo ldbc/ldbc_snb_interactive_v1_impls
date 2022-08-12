@@ -10,11 +10,8 @@ cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 : ${GRAPHDB_VERSION:?"Environment variable GRAPHDB_VERSION is unset or empty"}
 : ${GRAPHDB_CONTAINER_NAME:?"Environment variable GRAPHDB_CONTAINER_NAME is unset or empty"}
 
-cd ../config
-
-export CURRENT_UID=$(id -u):$(id -g)
-
-echo -n "Waiting for the database to start..."
-docker-compose -f docker-compose-start.yml up -d
-echo
-echo "GraphDB has started successfully"
+docker run --rm \
+    --publish=${GRAPHDB_PORT}:7200 \
+    ${GRAPHDB_ENV_VARS} \
+    --volume=${GRAPHDB_CONTAINER_ROOT}:/opt/graphdb/home:z \
+    ontotext/graphdb:${GRAPHDB_VERSION}

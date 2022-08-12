@@ -11,9 +11,9 @@ INSERT DATA {
     snvoc:lastName "%personLastName%" ;
     snvoc:gender "%gender%" ;
     snvoc:birthday "%birthday%"^^xsd:date ;
+    snvoc:creationDate "%creationDate%"^^xsd:dateTime ;
     snvoc:locationIP "%locationIP%" ;
-    snvoc:browserUsed "%browserUsed%" ;
-    snvoc:creationDate "%creationDate%"^^xsd:dateTime .
+    snvoc:browserUsed "%browserUsed%" .
 };
 INSERT{
      sn:pers%subjectId% snvoc:isLocatedIn ?countryIri .

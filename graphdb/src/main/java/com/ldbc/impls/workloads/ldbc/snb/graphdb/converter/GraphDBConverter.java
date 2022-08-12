@@ -7,24 +7,35 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.ldbc.impls.workloads.ldbc.snb.converter.Converter;
 import org.eclipse.rdf4j.model.Literal;
-import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.impl.SimpleIRI;
 import org.eclipse.rdf4j.query.BindingSet;
+import org.ldbcouncil.snb.driver.workloads.interactive.LdbcQuery1Result;
+import org.ldbcouncil.snb.impls.workloads.converter.Converter;
 
 public class GraphDBConverter extends Converter {
 
 	private final static String COLLECTION_SEPARATOR = ", ";
 
-	//converts date of type "2011-08-12T20:17:46.384Z" to millisecond.
-	// This is the datetime type of sparql
+	/**
+	 * Converts date of type "2011-08-12T20:17:46.384Z" to milliseconds.
+	 *
+	 * @param bindingSet
+	 * @param name
+	 * @return
+	 */
 	public long timestampToEpoch(BindingSet bindingSet, String name) {
 		Instant instant = Instant.parse(bindingSet.getValue(name).stringValue());
 		return instant.toEpochMilli();
 	}
 
-	//converts date of type "2011-08-12" to millisecond.
+	/**
+	 * Converts date of type "2011-08-12" to milliseconds.
+	 *
+	 * @param bindingSet
+	 * @param name
+	 * @return
+	 */
 	public long localDateToEpoch(BindingSet bindingSet, String name) {
 		String s = bindingSet.getValue(name).stringValue();
 		return LocalDate.parse(s).atStartOfDay(ZoneId.of("GMT")).toInstant().toEpochMilli();
@@ -49,18 +60,19 @@ public class GraphDBConverter extends Converter {
 		}
 	}
 
-	public Iterable<List<Object>> asObjectCollection(BindingSet bindingSet, String name) {
+	public List<LdbcQuery1Result.Organization> asOrganization(BindingSet bindingSet, String name) {
 		String stringValue = bindingSet.getValue(name).stringValue();
 		if (stringValue.isEmpty()) {
 			return Collections.emptyList();
-		} else {
-			List<List<Object>> result = new ArrayList<>();
-			String[] organizations = stringValue.split(COLLECTION_SEPARATOR);
-			for (String organization : organizations) {
-				result.add(Arrays.asList(organization.split(" ")));
-			}
-			return result;
 		}
+		List<LdbcQuery1Result.Organization> result = new ArrayList<>();
+		String[] organizations = stringValue.split(COLLECTION_SEPARATOR);
+		for (String organization : organizations) {
+			List<String> orgParams = Arrays.asList(organization.split(" "));
+			result.add(new LdbcQuery1Result.Organization(orgParams.get(0), Integer.parseInt(orgParams.get(1)), orgParams.get(2)));
+		}
+
+		return result;
 	}
 
 	public long asLong(BindingSet bindingSet, String name) {
@@ -85,11 +97,23 @@ public class GraphDBConverter extends Converter {
 		return ((Literal) bindingSet.getValue(name)).booleanValue();
 	}
 
+	/**
+	 * SPARQL implementation requires some tinkering, e.g. padding the id with '0' characters.
+	 *
+	 * @param value
+	 * @return
+	 */
 	@Override
 	public String convertId(long value) {
 		return String.format("%020d", value);
 	}
 
+	/**
+	 * Does not need to surround the string parameter with quotes.
+	 *
+	 * @param value
+	 * @return
+	 */
 	@Override
 	public String convertString(String value) {
 		return value;

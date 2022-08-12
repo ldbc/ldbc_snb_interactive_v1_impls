@@ -1,9 +1,10 @@
 package com.ldbc.impls.workloads.ldbc.snb.graphdb.interactive;
 
-import com.ldbc.driver.DbException;
-import com.ldbc.driver.control.LoggingService;
-import com.ldbc.driver.workloads.ldbc.snb.interactive.*;
+
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.GraphDB;
+import org.ldbcouncil.snb.driver.DbException;
+import org.ldbcouncil.snb.driver.control.LoggingService;
+import org.ldbcouncil.snb.driver.workloads.interactive.*;
 
 import java.util.Map;
 

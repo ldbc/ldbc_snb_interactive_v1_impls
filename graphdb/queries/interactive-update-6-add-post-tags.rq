@@ -8,5 +8,6 @@ INSERT {
 } WHERE {
     ?tag snvoc:id "%tagId%"^^xsd:int ;
    		 rdf:type ?tagClass .
-    ?tagClass rdf:type snvoc:TagClass .
+    ?mainTagClass rdfs:subClassOf ?tagClass ;
+        rdf:type snvoc:TagClass .
 }

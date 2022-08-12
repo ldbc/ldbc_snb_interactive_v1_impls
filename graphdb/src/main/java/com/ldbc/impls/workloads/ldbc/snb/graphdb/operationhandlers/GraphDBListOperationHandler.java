@@ -1,14 +1,14 @@
 package com.ldbc.impls.workloads.ldbc.snb.graphdb.operationhandlers;
 
-import com.ldbc.driver.DbException;
-import com.ldbc.driver.Operation;
-import com.ldbc.driver.ResultReporter;
 import com.ldbc.impls.workloads.ldbc.snb.graphdb.GraphDBConnectionState;
-import com.ldbc.impls.workloads.ldbc.snb.operationhandlers.ListOperationHandler;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.QueryLanguage;
 import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.ldbcouncil.snb.driver.DbException;
+import org.ldbcouncil.snb.driver.Operation;
+import org.ldbcouncil.snb.driver.ResultReporter;
+import org.ldbcouncil.snb.impls.workloads.operationhandlers.ListOperationHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +39,8 @@ public abstract class GraphDBListOperationHandler<TOperation extends Operation<L
 				}
 			}
 		}
+		//todo: add catch clauses for different types of exceptions
+
 		resultReporter.report(resultCount, results, operation);
 	}
 

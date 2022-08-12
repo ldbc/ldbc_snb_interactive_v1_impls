@@ -5,7 +5,7 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
 INSERT {
-    sn:pers%subjectId% snvoc:snvoc:studyAt ?study .
+    sn:pers%subjectId% snvoc:studyAt ?study .
 } WHERE {
     ?study snvoc:hasOrganisation ?organization ;
            snvoc:classYear "%studiesFromYear%"^^xsd:integer .

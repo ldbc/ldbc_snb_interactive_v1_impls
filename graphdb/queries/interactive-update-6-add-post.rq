@@ -3,8 +3,8 @@ PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
-INSERT DATA
-{
+
+INSERT DATA {
     sn:post%subjectId% rdf:type snvoc:Post ;
     snvoc:id "%postId%"^^xsd:long ;
   #  snvoc:imageFile "%imageFile%" ;
@@ -14,29 +14,25 @@ INSERT DATA
   #  snvoc:content "%content%" ;
     snvoc:length "%length%"^^xsd:int ;
     snvoc:language "%language%" .
-
+    ?imageOrContent ?data .
+} WHERE {
+    BIND(IF("%imageFile%" != "", snvoc:imageFile, snvoc:content) AS ?imageOrContent) .
+    BIND(IF("%imageFile%" != "", "%imageFile%", "%content%") AS ?data) .
 };
+
 INSERT{
-    sn:post%subjectId%    snvoc:isLocatedIn ?country .
+    sn:post%subjectId% snvoc:isLocatedIn ?country .
 } WHERE {
     ?country rdf:type dbpedia-owl:Country .
     ?country snvoc:id  "%countryId%"^^xsd:int .
 };
-INSERT{
-    sn:post%subjectId% snvoc:imageFile "%imageFile%" .
-} WHERE{
-    FILTER ("%imageFile%" != "")
-};
-INSERT{
- sn:post%subjectId% snvoc:content "%content%" .
- } WHERE {
-    FILTER ("%content%" != "")
-};
+
 INSERT{
     sn:post%subjectId% snvoc:hasCreator sn:pers%authorPersonId% .
 } WHERE {
     sn:pers%authorPersonId% rdf:type snvoc:Person .
 };
+
 INSERT {
     sn:forum%forumId% snvoc:containerOf sn:post%subjectId% .
 } WHERE {

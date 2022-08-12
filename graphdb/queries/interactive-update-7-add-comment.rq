@@ -13,9 +13,11 @@ INSERT DATA {
     snvoc:content "%content%" ;
     snvoc:length "%length%"^^xsd:int .
 };
-INSERT {  sn:comm%subjectId% snvoc:replyOf ?commOrPost .
+
+INSERT {
+    sn:comm%subjectId% snvoc:replyOf ?commOrPost .
 } WHERE {
-    BIND ( (IF (%replyToPostId% = -1,
+    BIND ((IF (%replyToPostId% = -1,
                     sn:comm%replyToCommentId%,
                     sn:post%replyToPostId%
                    ))

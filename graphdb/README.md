@@ -13,6 +13,10 @@ The recommended environment for executing this benchmark is as follows: the benc
 
 ## Generating and loading the data set
 
+### Using pre-generated data sets
+
+From the pre-generated data sets in the [SURF/CWI data repository](https://hdl.handle.net/11112/e6e00558-a2c3-9214-473e-04a16de09bf8), use the ones named `social_network_ttl_sf*`.
+
 ### Generating the data set
 
 The data sets need to be generated and preprocessed before loading it to the database. To generate such data sets, use the `TurtleDynamicActivitySerializer` serializer classes of the [Hadoop-based Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop):
@@ -52,23 +56,6 @@ export GRAPHDB_REPOSITORY_CONFIG_FILE=`pwd`/config/graphdb-repo-config.ttl
 
 ### Running GraphDB in a Docker container
 
-Check [Docker Hub Images](https://hub.docker.com/r/ontotext/graphdb/) for information on how to use the images. Note that to use GraphDB EE or SE docker images, you will need a license.
-
-Currently, there are no public images for GraphDB Free and you will have to build one following the above instructions:
-
-- Register on the [Ontotext website](https://www.ontotext.com/products/graphdb/graphdb-free/) for the GraphDB Free edition.
-- Download the zip distribution - GraphDB as a stand-alone distributive. 
-- Set `GRAPHDB_DIST_ZIP_FOLDER_PATH` environment variable to point to `graphdb-free-${GRAPHDB_VERSION}-dist.zip` folder.
-
-```bash
-export GRAPHDB_DIST_ZIP_FOLDER_PATH=
-```
-
-- To build the docker image, run:
-
-```bash
-scripts/build-graphdb-free-image.sh
-```
 
 ### Loading the data set
 
@@ -79,7 +66,7 @@ scripts/build-graphdb-free-image.sh
 ```bash
 scripts/stop-graphdb.sh
 scripts/delete-graphdb-database.sh
-scripts/graphdb-loadrdf.sh
+scripts/graphdb-importrdf.sh
 scripts/start-graphdb.sh
 ```
 
@@ -99,7 +86,7 @@ driver/validate.sh
 driver/benchmark.sh
  ```
 
-:warning: *Note that if the default workload contains updates which are persisted in the database. Therefore, the database needs to be re-loaded between steps – otherwise repeated updates would insert duplicate entries.*
+:warning: *Note that the default workload contains updates which are persisted in the database. Therefore, the database needs to be re-loaded between steps – otherwise repeated updates would insert duplicate entries.*
 
 
 
