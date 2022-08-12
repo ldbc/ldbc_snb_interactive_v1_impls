@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  graphdb:
+    container_name: ${GRAPHDB_CONTAINER_NAME}
+    image: ontotext/graphdb:${GRAPHDB_VERSION}-free
+    user: "${CURRENT_UID}"
+    restart: unless-stopped
+    environment: 
+      GDB_JAVA_OPTS: >-
+        -Xmx${GRAPHDB_HEAP_SIZE} -Xms${GRAPHDB_HEAP_SIZE}
+        -Dgraphdb.home=/opt/graphdb/home
+        -Dgraphdb.workbench.importDirectory=/opt/graphdb/home/graphdb-import
+        -Dgraphdb.workbench.cors.enable=true
+        -Denable-context-index=true
+        -Dentity-pool-implementation=transactional
+        -Dhealth.max.query.time.seconds=60
+        -Dgraphdb.append.request.id.headers=true
+        -Dreuse.vars.in.subselects=true
+    ports: 
+      - ${GRAPHDB_PORT}:7200
+    volumes:
+      - ${GRAPHDB_CONTAINER_ROOT}:/opt/graphdb/home
+
