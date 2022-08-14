@@ -284,6 +284,7 @@ FROM OPENROWSET (
 ) AS raw;
 
 INSERT INTO [dbo].[Message] (
+    $NODE_ID,
     creationDate,
     MessageId,
     content,
@@ -297,8 +298,9 @@ INSERT INTO [dbo].[Message] (
     ContainerForumId,
     ParentMessageId
 )
-SELECT    creationDate,
-    id,
+SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS node_id,
+    creationDate,
+    id AS MessageId,
     content,
     imageFile,
     locationIP,
@@ -312,6 +314,7 @@ SELECT    creationDate,
 FROM dbo.post;
 
 INSERT INTO [dbo].[Message] (
+    $NODE_ID,
     creationDate,
     MessageId,
     content,
@@ -325,7 +328,8 @@ INSERT INTO [dbo].[Message] (
     ContainerForumId,
     ParentMessageId
 )
-SELECT    creationDate,
+SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS node_id,
+    creationDate,
     id AS MessageId,
     content,
     CAST(NULL AS varchar(40)) AS imageFile,
