@@ -6,7 +6,6 @@ import org.ldbcouncil.snb.driver.control.LoggingService;
 import org.ldbcouncil.snb.driver.workloads.interactive.queries.*;
 import org.ldbcouncil.snb.impls.workloads.QueryType;
 import org.ldbcouncil.snb.impls.workloads.cypher.converter.CypherConverter;
-import org.ldbcouncil.snb.impls.workloads.cypher.operationhandlers.CypherIC13OperationHandler;
 import org.ldbcouncil.snb.impls.workloads.cypher.operationhandlers.CypherListOperationHandler;
 import org.ldbcouncil.snb.impls.workloads.cypher.operationhandlers.CypherSingletonOperationHandler;
 import org.ldbcouncil.snb.impls.workloads.cypher.operationhandlers.CypherUpdateOperationHandler;
@@ -23,24 +22,7 @@ import org.neo4j.driver.Value;
 public class CypherDb extends BaseDb<CypherQueryStore>
 {
 
-    Driver driver;
     CypherQueryStore queryStore;
-
-    static protected Date addDays( Date startDate, int days )
-    {
-        final Calendar cal = Calendar.getInstance();
-        cal.setTime( startDate );
-        cal.add( Calendar.DATE, days );
-        return cal.getTime();
-    }
-
-    static protected Date addMonths( Date startDate, int months )
-    {
-        final Calendar cal = Calendar.getInstance();
-        cal.setTime( startDate );
-        cal.add( Calendar.MONTH, months );
-        return cal.getTime();
-    }
 
     @Override
     protected void onInit( Map<String, String> properties, LoggingService loggingService ) throws DbException
@@ -451,7 +433,7 @@ public class CypherDb extends BaseDb<CypherQueryStore>
         }
     }
 
-    public static class InteractiveQuery13 extends CypherIC13OperationHandler
+    public static class InteractiveQuery13 extends CypherSingletonOperationHandler<LdbcQuery13,LdbcQuery13Result>
     {
         @Override
         public String getQueryString(CypherDbConnectionState state, LdbcQuery13 operation) {

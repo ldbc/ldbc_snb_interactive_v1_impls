@@ -10,6 +10,20 @@ cd ..
 
 export LDBC_SNB_IMPLS_DIR=`pwd`
 
+USE_DATAGEN_DOCKER=${USE_DATAGEN_DOCKER:-false}
+# set DATAGEN_COMMAND
+if ${USE_DATAGEN_DOCKER}; then
+    echo "Using Datagen Docker image"
+    DATAGEN_COMMAND="docker run --volume ${LDBC_SNB_DATAGEN_DIR}/out-sf${SF}:/out ldbc/datagen-standalone:latest --cores $(nproc) --parallelism $(nproc) --memory ${LDBC_SNB_DATAGEN_MAX_MEM} --"
+else
+    echo "Using non-containerized Datagen"
+    cd ${LDBC_SNB_DATAGEN_DIR}
+    export LDBC_SNB_DATAGEN_JAR=$(sbt -batch -error 'print assembly / assemblyOutputPath')
+    DATAGEN_COMMAND="tools/run.py --cores $(nproc) --parallelism $(nproc) --memory ${LDBC_SNB_DATAGEN_MAX_MEM} -- --output-dir ${LDBC_SNB_DATAGEN_DIR}/out-sf${SF}"
+fi
+
+cd ${LDBC_SNB_IMPLS_DIR}
+
 echo "==================== Cleanup existing directories ===================="
 mkdir -p update-streams-sf${SF}/
 mkdir -p parameters-sf${SF}/
@@ -18,35 +32,48 @@ rm -rf ${LDBC_SNB_IMPLS_DIR}/parameters-sf${SF}/*
 
 echo "==================== Generate data ===================="
 cd ${LDBC_SNB_DATAGEN_DIR}
-
-LDBC_SNB_DATAGEN_JAR=$(sbt -batch -error 'print assembly / assemblyOutputPath') && export LDBC_SNB_DATAGEN_JAR
+if ${USE_DATAGEN_DOCKER} && [ -d out-sf${SF} ]; then
+    sudo chown -R $(id -u):$(id -g) out-sf${SF}
+fi
 rm -rf out-sf${SF}
 
 echo "-------------------- Generate data for Cypher --------------------"
+if ${USE_DATAGEN_DOCKER} && [ -d out-sf${SF} ]; then
+    sudo chown -R $(id -u):$(id -g) out-sf${SF}
+fi
 rm -rf out-sf${SF}/graphs/parquet/raw
-tools/run.py \
-    --cores $(nproc) \
-    --memory ${LDBC_SNB_DATAGEN_MAX_MEM} \
-    -- \
+${DATAGEN_COMMAND} \
+    --mode bi \
     --format csv \
     --scale-factor ${SF} \
     --explode-edges \
-    --mode bi \
-    --output-dir out-sf${SF}/ \
     --epoch-millis \
     --format-options header=false,quoteAll=true,compression=gzip
 
-echo "-------------------- Generate data for Postgres and Paramgen --------------------"
+echo "-------------------- Generate data for Postgres --------------------"
+if ${USE_DATAGEN_DOCKER} && [ -d out-sf${SF} ]; then
+    sudo chown -R $(id -u):$(id -g) out-sf${SF}
+fi
 rm -rf out-sf${SF}/graphs/parquet/raw
-tools/run.py \
-    --cores $(nproc) \
-    --memory ${LDBC_SNB_DATAGEN_MAX_MEM} \
-    -- \
-    --format csv \
-    --scale-factor ${SF} \
+${DATAGEN_COMMAND} \
     --mode bi \
-    --output-dir out-sf${SF} \
+    --format csv \
+    --scale-factor ${SF}
+
+echo "-------------------- Generate data for update streams and factors --------------------"
+if ${USE_DATAGEN_DOCKER} && [ -d out-sf${SF} ]; then
+    sudo chown -R $(id -u):$(id -g) out-sf${SF}
+fi
+rm -rf out-sf${SF}/graphs/parquet/raw
+${DATAGEN_COMMAND} \
+    --mode bi \
+    --format parquet \
+    --scale-factor ${SF} \
     --generate-factors
+
+if ${USE_DATAGEN_DOCKER}; then
+    sudo chown -R $(id -u):$(id -g) out-sf${SF}
+fi
 
 export LDBC_SNB_DATA_ROOT_DIRECTORY=${LDBC_SNB_DATAGEN_DIR}/out-sf${SF}/
 
