@@ -9,4 +9,4 @@ cd ..
 rm -rf factors/*
 wget -q https://ldbcouncil.org/ldbc_snb_datagen_spark/social-network-sf0.003-bi-factors.zip
 unzip -q social-network-sf0.003-bi-factors.zip
-cp -r social-network-sf0.003-bi-factors/factors/csv/raw/composite-merged-fk/* factors/
+cp -r social-network-sf0.003-bi-factors/factors/parquet/raw/composite-merged-fk/* factors/
