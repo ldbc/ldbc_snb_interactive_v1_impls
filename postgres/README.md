@@ -9,13 +9,13 @@ The recommended environment is that the benchmark scripts (Bash) and the LDBC dr
 * Bash
 * Java 8
 * Docker 19+
-* `libpq5` 
+* `libpq5`
 * the `psycopg` Python library: `scripts/install-dependencies.sh`
 * enough free space in the directory `${POSTGRES_DATA_DIR}` (its default value is specified in `scripts/vars.sh`)
 
 ### docker-compose
 
-Alternatively, a docker-compose specification is available to start the PostgreSQL container and a container loading the data. This requires `docker-compose` installed on the host machine. Running Postgres and loading the data can be done by executing:
+Alternatively, a docker-compose specification is available to start the PostgreSQL container and a container loading the data. This requires `docker-compose` installed on the host machine. Running PostgreSQL and loading the data can be done by executing:
 
 ```bash
 docker-compose build && docker-compose up
@@ -39,7 +39,7 @@ To persist the data by storing the database outside a Docker volume, uncomment t
 
 ### Generating the data set
 
-The PostgreSQL implementaiton uses the `composite-merged-fk` CSV layout, with headers and without quoted fields.
+The PostgreSQL implementation uses the `composite-merged-fk` CSV layout, with headers and without quoted fields.
 To generate data that confirms this requirement, run Datagen without any layout or formatting arguments (`--explode-*` or `--format-options`).
 
 In Datagen's directory (`ldbc_snb_datagen_spark`), issue the following commands. We assume that the Datagen project is built and `sbt` is available.

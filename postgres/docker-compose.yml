@@ -15,7 +15,7 @@ services:
         target: /etc/postgresql.conf
       # Uncomment to persist data
       # - type: bind
-      #   source: ${POSTGRES_DATA_DIR}
+      #   source: ${POSTGRES_CSV_DIR}
       #   target: /var/lib/postgresql/data
       - type: bind
         source: ${POSTGRES_SCRIPTS_DIR}/create-postgresdb.sh
@@ -48,7 +48,7 @@ services:
         target: /data/
     depends_on:
       - postgres-db
-    command: sh -c "/wait && python3 -u home/load.py --POSTGRES_DATA_DIR ${POSTGRES_CSV_DIR} --is_container True"
+    command: sh -c "/wait && python3 -u home/load.py --POSTGRES_CSV_DIR ${POSTGRES_CSV_DIR} --is_container True"
     environment:
       - POSTGRES_HOST=postgres-db
       - POSTGRES_DB=${POSTGRES_DB}

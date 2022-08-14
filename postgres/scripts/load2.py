@@ -130,8 +130,8 @@ class PostgresDbLoader():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--POSTGRES_DATA_DIR',
-        help="POSTGRES_DATA_DIR: folder containing the initial snapshot data to load e.g. '/out-sf1/graphs/csv/bi/composite-merged-fk'",
+        '--POSTGRES_CSV_DIR',
+        help="POSTGRES_CSV_DIR: folder containing the initial snapshot data to load e.g. '/out-sf1/graphs/csv/bi/composite-merged-fk'",
         type=str,
         required=True
     )
@@ -139,7 +139,7 @@ if __name__ == "__main__":
 
     PGLoader = PostgresDbLoader()
     start = time.time()
-    PGLoader.main(args.POSTGRES_DATA_DIR)
+    PGLoader.main(args.POSTGRES_CSV_DIR)
     end = time.time()
     duration = end - start
     print(f"Data loaded in {duration:.4f} seconds")

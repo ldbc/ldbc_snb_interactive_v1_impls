@@ -12,7 +12,7 @@ CALL gds.shortestPath.dijkstra.stream({
   relationshipQuery: '
     MATCH
       (pA:Person)-[knows:KNOWS]-(pB:Person),
-      (pA)<-[:HAS_CREATOR]-(c:Comment)-[r:REPLY_OF]->(post:Post)-[:HAS_CREATOR]->(pB)
+      (pA)<-[:HAS_CREATOR]-(m1:Message)-[r:REPLY_OF]-(m2:Message)-[:HAS_CREATOR]->(pB)
     WITH
       id(pA) AS source,
       id(pB) AS target,
