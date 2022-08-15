@@ -28,19 +28,19 @@ The paramgen **WILL IMPLEMENT** [parameter curation](https://research.vu.nl/en/p
         --cores $(nproc) \
         --memory ${LDBC_SNB_DATAGEN_MAX_MEM} \
         -- \
-        --format csv \
+        --format parquet \
         --scale-factor ${SF} \
         --mode raw \
         --output-dir out-sf${SF} \
         --generate-factors
     ```
 
-1. **Obtaining the factors:** Cleanup the `factors/` directory and move the factor directories from `out-sf${SF}/factors/csv/raw/composite-merged-fk/` (`cityPairsNumFriends/`, `personDisjointEmployerPairs/`, etc.) to the `factors/` directory. Assuming that your `${LDBC_SNB_DATAGEN_DIR}` and `${SF}` environment variable set, run:
+1. **Obtaining the factors:** Cleanup the `factors/` directory and move the factor directories from `out-sf${SF}/factors/parquet/raw/composite-merged-fk/` (`personFirstNames`, `personNumFriendOfFriendPosts/`, etc.) to the `factors/` directory. Assuming that your `${LDBC_SNB_DATAGEN_DIR}` and `${SF}` environment variable set, run:
 
     ```bash
     export LDBC_SNB_DATA_ROOT_DIRECTORY=${LDBC_SNB_DATAGEN_DIR}/out-sf${SF}/
     rm -rf factors/*
-    cp -r ${LDBC_SNB_DATAGEN_DIR}/out-sf${SF}/factors/csv/raw/composite-merged-fk/* factors/
+    cp -r ${LDBC_SNB_DATA_ROOT_DIRECTORY}/factors/parquet/raw/composite-merged-fk/* factors/
     ```
 
     Or, simply run:
