@@ -23,6 +23,7 @@ We provide two reference implementations:
 
 * [Neo4j (Cypher) implementation](cypher/README.md)
 * [PostgreSQL (SQL) implementation](postgres/README.md)
+* [GraphDB (SPARQL) implementation](graphdb/README.md)
 
 Additional implementations:
 

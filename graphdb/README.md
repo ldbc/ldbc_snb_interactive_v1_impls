@@ -1,4 +1,4 @@
-# LDBC SNB GraphDB implementation
+# LDBC SNB GraphDB/SPARQL implementation
 
 This directory contains the [GraphDB](https://www.ontotext.com/products/graphdb/) implementation of the Interactive workload of the [LDBC SNB benchmark](https://github.com/ldbc/ldbc_snb_docs).
 
@@ -53,9 +53,6 @@ export GRAPHDB_IMPORT_TTL_DIR=`pwd`/test-data/
 ```bash
 export GRAPHDB_REPOSITORY_CONFIG_FILE=`pwd`/config/graphdb-repo-config.ttl
 ```
-
-### Running GraphDB in a Docker container
-
 
 ### Loading the data set
 
