@@ -4,7 +4,7 @@ PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 
-INSERT DATA {
+INSERT {
     sn:post%subjectId% rdf:type snvoc:Post ;
     snvoc:id "%postId%"^^xsd:long ;
   #  snvoc:imageFile "%imageFile%" ;
@@ -13,7 +13,7 @@ INSERT DATA {
     snvoc:browserUsed "%browserUsed%" ;
   #  snvoc:content "%content%" ;
     snvoc:length "%length%"^^xsd:int ;
-    snvoc:language "%language%" .
+    snvoc:language "%language%" ;
     ?imageOrContent ?data .
 } WHERE {
     BIND(IF("%imageFile%" != "", snvoc:imageFile, snvoc:content) AS ?imageOrContent) .
