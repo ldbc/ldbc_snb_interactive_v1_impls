@@ -1,7 +1,7 @@
 cd "$( cd "$( dirname "${BASH_SOURCE[0]:-${(%):-%x}}" )" >/dev/null 2>&1 && pwd )"
 cd ..
 
-export UMBRA_VERSION=75f99d093
+export UMBRA_VERSION=bad073541
 export UMBRA_USER=postgres
 export UMBRA_PASSWORD=mysecretpassword
 export UMBRA_DATABASE=ldbcsnb

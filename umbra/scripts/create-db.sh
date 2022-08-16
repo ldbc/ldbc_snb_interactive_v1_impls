@@ -24,6 +24,14 @@ docker run \
     umbra_sql \
     --createdb \
       /var/db/ldbc.db \
-      /ddl/create-role.sql \
+      /ddl/create-role.sql
+
+docker run \
+    --volume=${UMBRA_DATABASE_DIR}:/var/db/:z \
+    --volume=${UMBRA_DDL_DIR}:/ddl/:z \
+    ${UMBRA_DOCKER_IMAGE} \
+    umbra_sql \
+    --database ldbcsnb \
+      /var/db/ldbc.db \
       /ddl/schema-composite-merged-fk.sql
 echo " Database created."

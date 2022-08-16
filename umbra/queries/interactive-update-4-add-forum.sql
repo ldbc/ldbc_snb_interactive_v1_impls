@@ -8,6 +8,6 @@ VALUES
 (
     :creationDate
   , :forumId
-  , :forumTitle
+  , :forumTitle::text
   , :moderatorPersonId
 );

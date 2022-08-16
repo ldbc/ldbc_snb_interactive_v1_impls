@@ -10,7 +10,7 @@ import psycopg
 class UmbraDbLoader():
 
     def __init__(self):
-        self.database = os.environ.get("UMBRA_DB", "ldbcsnb")
+        self.database = os.environ.get("UMBRA_DATABASE", "ldbcsnb")
         self.endpoint = os.environ.get("UMBRA_HOST", "localhost")
         self.port = int(os.environ.get("UMBRA_PORT", 8000))
         self.user = os.environ.get("UMBRA_USER", "postgres")
@@ -50,9 +50,6 @@ class UmbraDbLoader():
         static_path_local = os.path.join(data_dir, static_path)
         dynamic_path_local = os.path.join(data_dir, dynamic_path)
 
-        static_path_container = "/data/" + static_path
-        dynamic_path_container = "/data/" + dynamic_path
-
         static_entities = ["Organisation", "Place", "Tag", "TagClass"]
         dynamic_entities = ["Comment", "Comment_hasTag_Tag", "Forum", "Forum_hasMember_Person", "Forum_hasTag_Tag", "Person", "Person_hasInterest_Tag", "Person_knows_Person", "Person_likes_Comment", "Person_likes_Post", "Person_studyAt_University", "Person_workAt_Company", "Post", "Post_hasTag_Tag"]
         print("## Static entities")
@@ -65,7 +62,7 @@ class UmbraDbLoader():
             for csv_file in csv_files:
                 print(f"- {csv_file.rsplit('/', 1)[-1]}")
                 start = time.time()
-                cur.execute(f"COPY {entity} FROM '{os.path.join(static_path_container, entity, os.path.basename(csv_file))}' {sql_copy_configuration}")
+                cur.execute(f"COPY {entity} FROM '{os.path.join(static_path_local, entity, os.path.basename(csv_file))}' {sql_copy_configuration}")
                 pg_con.commit()
                 end = time.time()
                 duration = end - start
@@ -81,12 +78,12 @@ class UmbraDbLoader():
                 raise ValueError(f"No CSV-files found for entity {entity}")
             for csv_file in csv_files:
                 print(f"- {csv_file.rsplit('/', 1)[-1]}")
-                csv_file_path_in_container = os.path.join(dynamic_path_container, entity, os.path.basename(csv_file))
+                csv_file_path = os.path.join(dynamic_path_local, entity, os.path.basename(csv_file))
 
                 start = time.time()
-                cur.execute(f"COPY {entity} FROM '{csv_file_path_in_container}' {sql_copy_configuration}")
+                cur.execute(f"COPY {entity} FROM '{csv_file_path}' {sql_copy_configuration}")
                 if entity == "Person_knows_Person":
-                    cur.execute(f"COPY {entity} (creationDate, Person2id, Person1id) FROM '{csv_file_path_in_container}' {sql_copy_configuration}")
+                    cur.execute(f"COPY {entity} (creationDate, Person2id, Person1id) FROM '{csv_file_path}' {sql_copy_configuration}")
                 pg_con.commit()
                 end = time.time()
                 duration = end - start

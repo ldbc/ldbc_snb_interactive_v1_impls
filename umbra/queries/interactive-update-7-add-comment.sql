@@ -15,12 +15,12 @@ INSERT INTO Message (
 VALUES
 (
     :creationDate
-  , :commentId
+  , :commentId::bigint
   , NULL
-  , :content
+  , :content::text
   , NULL
-  , :locationIP
-  , :browserUsed
+  , :locationIP::text
+  , :browserUsed::text
   , :length
   , :authorPersonId -- CreatorPersonId
   , NULL

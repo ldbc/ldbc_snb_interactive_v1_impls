@@ -57,7 +57,7 @@ FROM
     ) tmp, Person, City
   WHERE Person.id = tmp.id
     AND Person.LocationCityId = City.id
-  GROUP BY Person.id, lastName, birthday, creationDate, gender, browserUsed, locationIP, City.name
+  GROUP BY Person.id, lastName, birthday, creationDate, gender, browserUsed, locationIP, email, speaks, City.name
   ORDER BY distance, lastName, Person.id
   LIMIT 20
 ;

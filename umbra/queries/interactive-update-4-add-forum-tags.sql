@@ -6,5 +6,5 @@ INSERT INTO Forum_hasTag_Tag (
 SELECT
     :creationDate
   , :forumId
-  , unnest(:tagIds)
+  , unnest(:tagIds::bigint[])
 ;

@@ -6,5 +6,5 @@ INSERT INTO Message_hasTag_Tag (
 SELECT
     :creationDate
   , :postId
-  , unnest(:tagIds)
+  , unnest(:tagIds::bigint[])
 ;
