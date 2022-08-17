@@ -14,20 +14,13 @@ FROM
     LIMIT 20
     ),
     (SELECT
-        name AS countryXName,
+        country1Name AS countryXName,
+        country2Name AS countryYName,
         frequency AS freq,
-        abs(frequency - (SELECT percentile_disc(0.77) WITHIN GROUP (ORDER BY frequency) FROM countryNumPersons)) AS diff
-    FROM countryNumPersons
-    ORDER BY diff, name
-    LIMIT 10
-    ),
-    (SELECT
-        name AS countryYName,
-        frequency AS freq,
-        abs(frequency - (SELECT percentile_disc(0.66) WITHIN GROUP (ORDER BY frequency) FROM countryNumPersons)) AS diff
-    FROM countryNumPersons
-    ORDER BY diff, name
-    LIMIT 10
+        abs(frequency - (SELECT percentile_disc(0.98) WITHIN GROUP (ORDER BY frequency) FROM countryPairsNumFriends)) AS diff
+    FROM countryPairsNumFriends
+    ORDER BY diff, country1Name, country2Name
+    LIMIT 50
     ),
     (SELECT
         creationDay,
