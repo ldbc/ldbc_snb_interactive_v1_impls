@@ -4,17 +4,44 @@ import duckdb
 parquet_path = "factors/"
 con = duckdb.connect(database="scratch/factors.duckdb")
 
-print("============ Initializing database ============")
-with open(f"paramgen-queries/ddl/schema.sql", "r") as schema_file:
-    con.execute(schema_file.read())
-
-print()
 print("============ Loading the factor tables ============")
-for entity in ["cityNumPersons", "cityPairsNumFriends", "companyNumEmployees", "countryNumMessages", "countryNumPersons", "countryPairsNumFriends", "creationDayAndLengthCategoryNumMessages", "creationDayAndTagNumMessages", "creationDayAndTagClassNumMessages", "creationDayNumMessages", "languageNumPosts", "lengthNumMessages", "people2Hops", "people4Hops", "personDisjointEmployerPairs", "personFirstNames", "personNumFriends", "tagClassNumMessages", "tagClassNumTags", "tagNumMessages", "tagNumPersons"]:
+for entity in [
+    "cityNumPersons",
+    "cityPairsNumFriends",
+    "companyNumEmployees",
+    "countryNumMessages",
+    "countryNumPersons",
+    "countryPairsNumFriends",
+    "creationDayAndLengthCategoryNumMessages",
+    "creationDayAndTagClassNumMessages",
+    "creationDayAndTagNumMessages",
+    "creationDayNumMessages",
+    "languageNumPosts",
+    "lengthNumMessages",
+    "people2Hops",
+    "people4Hops",
+    "personDisjointEmployerPairs",
+    "personFirstNames",
+    "personKnowsPersonConnected",
+    "personLikesNumMessages",
+    "personNumFriendComments",
+    "personNumFriendOfFriendCompanies",
+    "personNumFriendOfFriendForums",
+    "personNumFriendOfFriendPosts",
+    "personNumFriendTags",
+    "personNumFriends",
+    "personNumFriendsOfFriends",
+    "sameUniversityConnected",
+    "tagClassNumMessages",
+    "tagClassNumTags",
+    "tagNumMessages",
+    "tagNumPersons",
+    ]:
     print(f"{entity}")
     for parquet_file in [f for f in os.listdir(f"{parquet_path}{entity}/") if f.endswith(".parquet")]:
         print(f"- {parquet_file}")
-        con.execute(f"COPY {entity} FROM '{parquet_path}{entity}/{parquet_file}'")
+        con.execute(f"DROP TABLE IF EXISTS {entity}")
+        con.execute(f"CREATE TABLE {entity} AS SELECT * FROM read_parquet('{parquet_path}{entity}/{parquet_file}')")
 
 print()
 print("============ Creating materialized views ============")

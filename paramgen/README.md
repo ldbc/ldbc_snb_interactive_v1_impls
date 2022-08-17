@@ -59,3 +59,11 @@ The paramgen implements [parameter curation](https://research.vu.nl/en/publicati
     ```
 
 1. The parameters will be placed in the `../parameters/` directory.
+
+## Previewing the Parquet files with DuckDB
+
+Ensure that the `duckdb` CLI binary is on your path. Then, you can run e.g.:
+
+```bash
+echo "SELECT * FROM '../parameters/interactive-13a.parquet' limit 1;" | duckdb
+```

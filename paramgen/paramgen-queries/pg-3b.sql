@@ -7,26 +7,26 @@ SELECT
     2 + salt * 37 % 5 AS 'durationDays:INT'
 FROM
     (SELECT
-        personId,
+        id AS personId,
         abs(frequency - (SELECT percentile_disc(0.55) WITHIN GROUP (ORDER BY frequency) FROM personNumFriends)) AS diff
     FROM personNumFriends
-    ORDER BY diff, md5(personId)
+    ORDER BY diff, md5(id)
     LIMIT 20
     ),
     (SELECT
-        countryName AS countryXName,
+        name AS countryXName,
         frequency AS freq,
         abs(frequency - (SELECT percentile_disc(0.77) WITHIN GROUP (ORDER BY frequency) FROM countryNumPersons)) AS diff
     FROM countryNumPersons
-    ORDER BY diff, countryName
+    ORDER BY diff, name
     LIMIT 10
     ),
     (SELECT
-        countryName AS countryYName,
+        name AS countryYName,
         frequency AS freq,
         abs(frequency - (SELECT percentile_disc(0.66) WITHIN GROUP (ORDER BY frequency) FROM countryNumPersons)) AS diff
     FROM countryNumPersons
-    ORDER BY diff, countryName
+    ORDER BY diff, name
     LIMIT 10
     ),
     (SELECT
