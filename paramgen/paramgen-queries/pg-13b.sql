@@ -1,3 +1,4 @@
+-- variant (b): guaranteed that there is a path
 SELECT
     person1Id AS 'person1Id',
     person2Id AS 'person2Id'
