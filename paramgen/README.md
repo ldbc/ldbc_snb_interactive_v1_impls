@@ -65,5 +65,11 @@ The paramgen implements [parameter curation](https://research.vu.nl/en/publicati
 Ensure that the `duckdb` CLI binary is on your path. Then, you can run e.g.:
 
 ```bash
-echo "SELECT * FROM '../parameters/interactive-13a.parquet' limit 1;" | duckdb
+echo "SELECT * FROM '../parameters/interactive-13a.parquet' LIMIT 1;" | duckdb
+```
+
+To preview all results, use:
+
+```bash
+scripts/preview.sh
 ```
