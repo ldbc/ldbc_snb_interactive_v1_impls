@@ -1,7 +1,7 @@
 SELECT
-    personId AS 'personId:ID',
-    creationDay AS 'startDate:DATE',
-    2 + salt * 37 % 5 AS 'durationDays:INT'
+    personId AS 'personId',
+    creationDay AS 'startDate',
+    2 + salt * 37 % 5 AS 'durationDays'
 FROM
     (SELECT
         id AS personId,

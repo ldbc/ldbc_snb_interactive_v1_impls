@@ -1,6 +1,6 @@
 SELECT
-    personId AS 'personId:ID',
-    firstName AS 'firstName:STRING'
+    personId AS 'personId',
+    firstName AS 'firstName'
 FROM
     (SELECT
         id AS personId,

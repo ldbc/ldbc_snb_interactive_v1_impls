@@ -1,6 +1,6 @@
 SELECT
-    personId AS 'personId:ID',
-    tagName AS 'tagName:STRING'
+    personId AS 'personId',
+    tagName AS 'tagName'
 FROM
     (SELECT
         id AS personId,

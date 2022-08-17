@@ -1,6 +1,6 @@
 SELECT
-    person1Id AS 'person1Id:ID',
-    person2Id AS 'person2Id:ID'
+    person1Id AS 'person1Id',
+    person2Id AS 'person2Id'
 FROM
     (SELECT
         id AS person1Id,

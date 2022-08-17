@@ -1,5 +1,5 @@
 SELECT
-    personId AS 'personId:ID'
+    personId AS 'personId'
 FROM
     (SELECT
         id AS personId,

@@ -1,6 +1,6 @@
 SELECT
-    personId AS 'personId:ID',
-    1 + salt * 37 % 12 AS 'month:INT'
+    personId AS 'personId',
+    1 + salt * 37 % 12 AS 'month'
 FROM
     (SELECT
         id AS personId,

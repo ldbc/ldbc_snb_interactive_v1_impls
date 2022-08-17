@@ -1,6 +1,6 @@
 SELECT
-    personId AS 'personId:ID',
-    creationDay AS 'minDate:DATE'
+    personId AS 'personId',
+    creationDay AS 'minDate'
 FROM
     (SELECT
         id AS personId,

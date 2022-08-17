@@ -1,6 +1,6 @@
 SELECT
-    personId AS 'personId:ID',
-    creationDay AS 'maxDate:DATE'
+    personId AS 'personId',
+    creationDay AS 'maxDate'
 FROM
     (SELECT
         id AS personId,

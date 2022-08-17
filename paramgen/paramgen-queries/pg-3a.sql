@@ -1,10 +1,10 @@
 -- variant (a): correlated countries
 SELECT
-    personId AS 'personId:ID',
-    countryXName AS 'countryXName:STRING',
-    countryYName AS 'countryYName:STRING',
-    creationDay AS 'startDate:DATE',
-    2 + salt * 37 % 5 AS 'durationDays:INT'
+    personId AS 'personId',
+    countryXName AS 'countryXName',
+    countryYName AS 'countryYName',
+    creationDay AS 'startDate',
+    2 + salt * 37 % 5 AS 'durationDays'
 FROM
     (SELECT
         id AS personId,
