@@ -28,7 +28,7 @@ for query_variant in []:
 
 print()
 print("============ Generating parameters ============")
-for query_variant in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"]:
+for query_variant in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13a", "13b", "14a", "14b"]:
     print(f"- Q{query_variant}")
     with open(f"paramgen-queries/pg-{query_variant}.sql", "r") as parameter_query_file:
         parameter_query = parameter_query_file.read()
