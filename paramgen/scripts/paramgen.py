@@ -6,23 +6,23 @@ con = duckdb.connect(database="scratch/factors.duckdb")
 
 print("============ Loading the factor tables ============")
 for entity in [
-    "cityNumPersons",
-    "cityPairsNumFriends",
-    "companyNumEmployees",
-    "countryNumMessages",
+    # "cityNumPersons",
+    # "cityPairsNumFriends",
+    # "companyNumEmployees",
+    # "countryNumMessages",
     "countryNumPersons",
-    "countryPairsNumFriends",
-    "creationDayAndLengthCategoryNumMessages",
-    "creationDayAndTagClassNumMessages",
-    "creationDayAndTagNumMessages",
+    "countryPairsNumFriends",                    # Q3a, Q3b
+    # "creationDayAndLengthCategoryNumMessages",
+    # "creationDayAndTagClassNumMessages",
+    # "creationDayAndTagNumMessages",
     "creationDayNumMessages",
-    "languageNumPosts",
-    "lengthNumMessages",
-    "people2Hops",
-    "people4Hops",
-    "personDisjointEmployerPairs",
-    "personFirstNames",
-    "personKnowsPersonConnected",
+    # "languageNumPosts",
+    # "lengthNumMessages",
+    # "people2Hops",
+    "people4Hops",                               # Q13b, Q14b
+    # "personDisjointEmployerPairs",
+    "personFirstNames",                          # Q1
+    "personKnowsPersonConnected",                # Q13a, Q14a
     "personLikesNumMessages",
     "personNumFriendComments",
     "personNumFriendOfFriendCompanies",
@@ -31,10 +31,10 @@ for entity in [
     "personNumFriendTags",
     "personNumFriends",
     "personNumFriendsOfFriends",
-    "sameUniversityConnected",
-    "tagClassNumMessages",
+    # "sameUniversityConnected",
+    # "tagClassNumMessages",
     "tagClassNumTags",
-    "tagNumMessages",
+    # "tagNumMessages",
     "tagNumPersons",
     ]:
     print(f"{entity}")
