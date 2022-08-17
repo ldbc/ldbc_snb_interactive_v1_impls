@@ -2,9 +2,7 @@ import os
 import duckdb
 
 parquet_path = "factors/"
-con = duckdb.connect(database='factors.duckdb')
-
-temporal_parquet_path = "temporal/"
+con = duckdb.connect(database="scratch/factors.duckdb")
 
 print("============ Initializing database ============")
 with open(f"paramgen-queries/ddl/schema.sql", "r") as schema_file:
