@@ -1,3 +1,4 @@
+-- variant (a): correlated countries
 SELECT
     personId AS 'personId:ID',
     countryXName AS 'countryXName:STRING',
