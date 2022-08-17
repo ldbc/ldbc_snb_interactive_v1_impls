@@ -1,10 +1,6 @@
 # Parameter generation
 
----
-WIP
----
-
-The paramgen **WILL IMPLEMENT** [parameter curation](https://research.vu.nl/en/publications/parameter-curation-for-benchmark-queries) to ensure predictable performance results that **WILL** (mostly) correspond to a normal distribution.
+The paramgen implements [parameter curation](https://research.vu.nl/en/publications/parameter-curation-for-benchmark-queries) to ensure predictable performance results where the runtimes of a given query variant (roughly) correspond to a normal distribution.
 
 ## Getting started
 
