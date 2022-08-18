@@ -81,6 +81,7 @@ jobs:
           name: Tiny data set - Load Umbra database and create a backup
           command: |
             cd umbra
+            scripts/get-sample-data-set.sh
             . scripts/use-sample-data-set.sh
             scripts/load-in-one-step.sh --is_container true
             scripts/backup-database.sh
