@@ -35,7 +35,7 @@ start_time=$(date +%s.%3N)
 
 scripts/create-db.sh
 scripts/start.sh
-scripts/load.sh
+scripts/load.sh $@
 
 end_time=$(date +%s.%3N)
 elapsed=$(echo "scale=3; $end_time - $start_time" | bc)

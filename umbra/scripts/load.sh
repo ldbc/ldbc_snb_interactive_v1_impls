@@ -13,4 +13,4 @@ if [ ! -d "${UMBRA_CSV_DIR}" ]; then
     exit 1
 fi
 
-python3 scripts/load.py --UMBRA_CSV_DIR ${UMBRA_CSV_DIR}
+python3 scripts/load.py --UMBRA_CSV_DIR ${UMBRA_CSV_DIR} $@
