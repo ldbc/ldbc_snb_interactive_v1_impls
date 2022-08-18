@@ -97,6 +97,7 @@ if __name__ == "__main__":
         print("Adding triggers and constraints")
         DBL.run_ddl_scripts("ddl/schema-constraints.sql")
         DBL.run_ddl_scripts("ddl/triggers.sql")
+        DBL.run_ddl_scripts("ddl/preprocess.sql")
         print("Done.")
 
     end_total = time.time()
