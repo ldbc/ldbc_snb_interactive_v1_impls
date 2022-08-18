@@ -95,3 +95,16 @@ class DBLoader:
                 duration = end - start
                 print(f"-> {duration:.4f} seconds")
         con.close()
+
+    def run_single_file(self, path_to_file):
+        con = self.get_connection()
+        with open(path_to_file, "r") as f:
+            query = f.read()
+            print(query)
+            start = time.time()
+            con.execute("USE ldbc;")
+            con.execute(query)
+            end = time.time()
+            duration = end - start
+            print(f"-> {duration:.4f} seconds")
+        con.close()

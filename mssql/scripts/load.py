@@ -85,6 +85,8 @@ if __name__ == "__main__":
     if (recreated):
         print("Drop existing tables")
         DBL.run_ddl_scripts("ddl/drop-tables.sql")
+        DBL.run_single_file("ddl/func-calculate-weights.sql")
+        DBL.run_single_file("ddl/functions.sql")
         print("Create tables")
         DBL.run_ddl_scripts("ddl/schema-composite-merged-fk.sql")
 
