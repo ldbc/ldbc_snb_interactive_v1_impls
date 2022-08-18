@@ -85,7 +85,7 @@ class UmbraDbLoader():
                 raise ValueError(f"No CSV-files found for entity {entity}")
             for csv_file in csv_files:
                 print(f"- {csv_file.rsplit('/', 1)[-1]}")
-                csv_file_path = os.path.join(path_prefix, dynamic_path_local, entity, os.path.basename(csv_file))
+                csv_file_path = os.path.join(path_prefix, dynamic_path, entity, os.path.basename(csv_file))
 
                 start = time.time()
                 cur.execute(f"COPY {entity} FROM '{csv_file_path}' {sql_copy_configuration}")
