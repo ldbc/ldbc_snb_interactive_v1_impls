@@ -8,6 +8,6 @@
  <ROW>
   <COLUMN SOURCE="1" NAME="creationDate" xsi:type="SQLDATETIMEOFFSET"/>
   <COLUMN SOURCE="2" NAME="PersonId" xsi:type="SQLBIGINT"/>
-  <COLUMN SOURCE="3" NAME="CommentId" xsi:type="SQLBIGINT"/>
+  <COLUMN SOURCE="3" NAME="MessageId" xsi:type="SQLBIGINT"/>
  </ROW>
 </BCPFORMAT>

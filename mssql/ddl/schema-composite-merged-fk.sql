@@ -60,18 +60,6 @@ CREATE TABLE University (
 );
 
 -- dynamic tables
-CREATE TABLE Comment (
-    creationDate datetimeoffset NOT NULL,
-    id bigint,
-    locationIP varchar(40) NOT NULL,
-    browserUsed varchar(40) NOT NULL,
-    content ntext NOT NULL,
-    length int NOT NULL,
-    CreatorPersonId bigint NOT NULL,
-    LocationCountryId bigint NOT NULL,
-    ParentPostId bigint,
-    ParentCommentId bigint
-);
 
 CREATE TABLE [dbo].[Forum] (
     [creationDate]      datetimeoffset  NOT NULL,
@@ -81,20 +69,6 @@ CREATE TABLE [dbo].[Forum] (
     -- CONSTRAINT PK_Forum PRIMARY KEY NONCLUSTERED ([id] ASC) WITH (DATA_COMPRESSION = PAGE),
     -- CONSTRAINT Graph_Unique_Key_Forum UNIQUE CLUSTERED ($node_id) WITH (DATA_COMPRESSION = PAGE)
 );-- AS NODE;
-
-CREATE TABLE Post (
-    creationDate datetimeoffset NOT NULL,
-    id bigint NOT NULL,
-    imageFile varchar(40),
-    locationIP varchar(40) NOT NULL,
-    browserUsed varchar(40) NOT NULL,
-    language varchar(40),
-    content ntext,
-    length int NOT NULL,
-    CreatorPersonId bigint NOT NULL,
-    ContainerForumId bigint NOT NULL,
-    LocationCountryId bigint NOT NULL
-);
 
 CREATE TABLE [dbo].[Person] (
     [creationDate]      datetimeoffset NOT NULL,
@@ -143,18 +117,6 @@ CREATE TABLE [dbo].[Person_hasInterest_Tag] (
     creationDate datetimeoffset NOT NULL,
     PersonId bigint NOT NULL,
     TagId bigint NOT NULL
-);
-
-CREATE TABLE [dbo].[Person_likes_Comment] (
-    creationDate datetimeoffset NOT NULL,
-    PersonId bigint NOT NULL,
-    CommentId bigint NOT NULL
-);
-
-CREATE TABLE [dbo].[Person_likes_Post] (
-    creationDate datetimeoffset NOT NULL,
-    PersonId bigint NOT NULL,
-    PostId bigint NOT NULL,
 );
 
 CREATE TABLE [dbo].[Person_studyAt_University] (

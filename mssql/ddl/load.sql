@@ -51,34 +51,6 @@ FROM OPENROWSET (
 ) AS raw;
 
 --Dynamic
--- Comments
-INSERT INTO [dbo].[Comment] (
-    creationDate,
-    id,
-    locationIP,
-    browserUsed,
-    content,
-    length,
-    CreatorPersonId,
-    LocationCountryId,
-    ParentPostId,
-    ParentCommentId
-)
-SELECT    creationDate,
-    id,
-    locationIP,
-    browserUsed,
-    content,
-    length,
-    CreatorPersonId,
-    LocationCountryId,
-    ParentPostId,
-    ParentCommentId
-FROM OPENROWSET (
-    BULK ':comment_csv',
-    FORMATFILE = '/data/format-files/Comment.xml',
-    FIRSTROW = 2
-) AS raw;
 
 -- Comment_hasTag_Tag
 INSERT INTO [dbo].[Comment_hasTag_Tag] (creationDate, CommentId, TagId)
@@ -196,42 +168,30 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Person_likes_Comment
-INSERT INTO [dbo].[Person_likes_Comment] (creationDate, PersonId, CommentId)
-SELECT       creationDate,
+INSERT INTO [dbo].[Person_likes_Message] ($FROM_ID, $TO_ID,creationDate, PersonId, MessageId)
+SELECT NODE_ID_FROM_PARTS(object_id('Person'), PersonId) AS from_id,
+       NODE_ID_FROM_PARTS(object_id('Message'), MessageId) AS to_id,
+       creationDate,
        PersonId,
-       CommentId
+       MessageId
 FROM OPENROWSET (
     BULK ':person_likes_comment_csv',
     FORMATFILE = '/data/format-files/Person_likes_Comment.xml',
     FIRSTROW = 2
 ) AS raw;
 
+-- Person_likes_Post
 INSERT INTO [dbo].[Person_likes_Message] ($FROM_ID, $TO_ID, creationDate, PersonId, MessageId)
 SELECT NODE_ID_FROM_PARTS(object_id('Person'), PersonId) AS from_id,
-       NODE_ID_FROM_PARTS(object_id('Message'), CommentId) AS to_id,
+       NODE_ID_FROM_PARTS(object_id('Message'), MessageId) AS to_id,
        creationDate,
        PersonId,
-       CommentId
-FROM dbo.Person_likes_Comment;
-
--- Person_likes_Post
-INSERT INTO [dbo].[Person_likes_Post] (creationDate, PersonId, PostId)
-SELECT       creationDate,
-       PersonId,
-       PostId
+       MessageId
 FROM OPENROWSET (
     BULK ':person_likes_post_csv',
     FORMATFILE = '/data/format-files/Person_likes_Post.xml',
     FIRSTROW = 2
 ) AS raw;
-
-INSERT INTO [dbo].[Person_likes_Message] ($FROM_ID, $TO_ID, creationDate, PersonId, MessageId)
-SELECT NODE_ID_FROM_PARTS(object_id('Person'), PersonId) AS from_id,
-       NODE_ID_FROM_PARTS(object_id('Message'), PostId) AS to_id,
-       creationDate,
-       PersonId,
-       PostId
-FROM dbo.Person_likes_Post;
 
 -- Person_studyAt_University
 INSERT INTO [dbo].[Person_studyAt_University] (creationDate, PersonId, UniversityId, classYear)
@@ -257,37 +217,6 @@ FROM OPENROWSET (
     FIRSTROW = 2
 ) AS raw;
 
--- Post
-INSERT INTO [dbo].[Post] (
-    creationDate,
-    id,
-    imageFile,
-    locationIP,
-    browserUsed,
-    language,
-    content,
-    length,
-    CreatorPersonId,
-    ContainerForumId,
-    LocationCountryId
-)
-SELECT creationDate,
-    id,
-    imageFile,
-    locationIP,
-    browserUsed,
-    language,
-    content,
-    length,
-    CreatorPersonId,
-    ContainerForumId,
-    LocationCountryId
-FROM OPENROWSET (
-    BULK ':post_csv',
-    FORMATFILE = '/data/format-files/Post.xml',
-    FIRSTROW = 2
-) AS raw;
-
 -- Post_hasTag_Tag
 INSERT INTO [dbo].[Post_hasTag_Tag] (creationDate, PostId, TagId)
 SELECT    creationDate,
@@ -299,6 +228,7 @@ FROM OPENROWSET (
     FIRSTROW = 2
 ) AS raw;
 
+-- Post
 INSERT INTO [dbo].[Message] (
     $NODE_ID,
     creationDate,
@@ -327,7 +257,11 @@ SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS node_id,
     LocationCountryId,
     ContainerForumId,
     CAST(NULL AS bigint) AS ParentMessageId
-FROM dbo.post;
+FROM OPENROWSET (
+    BULK ':post_csv',
+    FORMATFILE = '/data/format-files/Post.xml',
+    FIRSTROW = 2
+) AS raw;
 
 INSERT INTO [dbo].[Message] (
     $NODE_ID,
@@ -357,9 +291,8 @@ SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS node_id,
     LocationCountryId,
     CAST(NULL AS bigint) AS ContainerForumId,
     coalesce(ParentPostId, ParentCommentId) AS ParentMessageId
-FROM dbo.Comment;
-
-DROP TABLE dbo.Comment;
-DROP TABLE dbo.Person_likes_Comment;
-DROP TABLE dbo.Post;
-DROP TABLE dbo.Person_likes_Post;
+FROM OPENROWSET (
+    BULK ':comment_csv',
+    FORMATFILE = '/data/format-files/Comment.xml',
+    FIRSTROW = 2
+) AS raw;
