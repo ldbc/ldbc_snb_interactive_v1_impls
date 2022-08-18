@@ -42,13 +42,18 @@ class UmbraDbLoader():
         with open(filename, "r") as f:
             return f.read()
 
-    def load_initial_snapshot(self, pg_con, cur, data_dir):
+    def load_initial_snapshot(self, pg_con, cur, data_dir, is_container):
         sql_copy_configuration = "(DELIMITER '|', HEADER, NULL '', FORMAT csv)"
 
         static_path = "initial_snapshot/static"
         dynamic_path = "initial_snapshot/dynamic"
         static_path_local = os.path.join(data_dir, static_path)
         dynamic_path_local = os.path.join(data_dir, dynamic_path)
+
+        if is_container:
+            path_prefix = "/data/"
+        else:
+            path_prefix = "f{data_dir}/"
 
         static_entities = ["Organisation", "Place", "Tag", "TagClass"]
         dynamic_entities = ["Comment", "Comment_hasTag_Tag", "Forum", "Forum_hasMember_Person", "Forum_hasTag_Tag", "Person", "Person_hasInterest_Tag", "Person_knows_Person", "Person_likes_Comment", "Person_likes_Post", "Person_studyAt_University", "Person_workAt_Company", "Post", "Post_hasTag_Tag"]
@@ -61,8 +66,10 @@ class UmbraDbLoader():
                 raise ValueError(f"No CSV-files found for entity {entity}")
             for csv_file in csv_files:
                 print(f"- {csv_file.rsplit('/', 1)[-1]}")
+                csv_file_path = os.path.join(path_prefix, static_path, entity, os.path.basename(csv_file))
+
                 start = time.time()
-                cur.execute(f"COPY {entity} FROM '{os.path.join(static_path_local, entity, os.path.basename(csv_file))}' {sql_copy_configuration}")
+                cur.execute(f"COPY {entity} FROM '{csv_file_path}' {sql_copy_configuration}")
                 pg_con.commit()
                 end = time.time()
                 duration = end - start
@@ -78,7 +85,7 @@ class UmbraDbLoader():
                 raise ValueError(f"No CSV-files found for entity {entity}")
             for csv_file in csv_files:
                 print(f"- {csv_file.rsplit('/', 1)[-1]}")
-                csv_file_path = os.path.join(dynamic_path_local, entity, os.path.basename(csv_file))
+                csv_file_path = os.path.join(path_prefix, dynamic_path_local, entity, os.path.basename(csv_file))
 
                 start = time.time()
                 cur.execute(f"COPY {entity} FROM '{csv_file_path}' {sql_copy_configuration}")
@@ -91,7 +98,7 @@ class UmbraDbLoader():
 
         print("Loaded dynamic entities.")
 
-    def main(self, data_dir):
+    def main(self, data_dir, is_container):
         with psycopg.connect(
             dbname=self.database,
             host=self.endpoint,
@@ -104,7 +111,7 @@ class UmbraDbLoader():
             self.run_script(pg_con, cur, "ddl/drop-tables.sql")
             self.run_script(pg_con, cur, "ddl/schema-composite-merged-fk.sql")
             print("Load initial snapshot")
-            self.load_initial_snapshot(pg_con, cur, data_dir)
+            self.load_initial_snapshot(pg_con, cur, data_dir, is_container)
             print("Maintain materialized views . . . ")
             self.run_script(pg_con, cur, "dml/maintain-views.sql")
             print("Done.")
@@ -145,13 +152,8 @@ if __name__ == "__main__":
 
     PGLoader = UmbraDbLoader()
 
-    if (args.is_container):
-        data_dir = "/data/"
-    else:
-        data_dir = args.UMBRA_CSV_DIR
-
     start = time.time()
-    PGLoader.main(data_dir)
+    PGLoader.main(args.UMBRA_CSV_DIR, args.is_container)
     end = time.time()
     duration = end - start
     print(f"Loaded data in Umbra in {duration:.4f} seconds")
