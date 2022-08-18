@@ -7,19 +7,14 @@ import time
 import argparse
 import psycopg
 
-class PostgresDbLoader():
+class UmbraDbLoader():
 
     def __init__(self):
-        self.database = os.environ.get("POSTGRES_DB", "ldbcsnb")
-        self.endpoint = os.environ.get("POSTGRES_HOST", "localhost")
-        self.port = int(os.environ.get("POSTGRES_PORT", 5432))
-        self.user = os.environ.get("POSTGRES_USER", "postgres")
-        self.password = os.environ.get("POSTGRES_PASSWORD", "mysecretpassword")
-
-    def vacuum(self, conn):
-        conn.autocommit=True
-        conn.cursor().execute("ANALYZE")
-        conn.autocommit=False
+        self.database = os.environ.get("UMBRA_DATABASE", "ldbcsnb")
+        self.endpoint = os.environ.get("UMBRA_HOST", "localhost")
+        self.port = int(os.environ.get("UMBRA_PORT", 8000))
+        self.user = os.environ.get("UMBRA_USER", "postgres")
+        self.password = os.environ.get("UMBRA_PASSWORD", "mysecretpassword")
 
     def run_script(self, pg_con, cur, filename):
         with open(filename, "r") as f:
@@ -47,7 +42,7 @@ class PostgresDbLoader():
         with open(filename, "r") as f:
             return f.read()
 
-    def load_initial_snapshot(self, pg_con, cur, data_dir):
+    def load_initial_snapshot(self, pg_con, cur, data_dir, is_container):
         sql_copy_configuration = "(DELIMITER '|', HEADER, NULL '', FORMAT csv)"
 
         static_path = "initial_snapshot/static"
@@ -55,8 +50,10 @@ class PostgresDbLoader():
         static_path_local = os.path.join(data_dir, static_path)
         dynamic_path_local = os.path.join(data_dir, dynamic_path)
 
-        static_path_container = "/data/" + static_path
-        dynamic_path_container = "/data/" + dynamic_path
+        if is_container:
+            path_prefix = "/data/"
+        else:
+            path_prefix = "f{data_dir}/"
 
         static_entities = ["Organisation", "Place", "Tag", "TagClass"]
         dynamic_entities = ["Comment", "Comment_hasTag_Tag", "Forum", "Forum_hasMember_Person", "Forum_hasTag_Tag", "Person", "Person_hasInterest_Tag", "Person_knows_Person", "Person_likes_Comment", "Person_likes_Post", "Person_studyAt_University", "Person_workAt_Company", "Post", "Post_hasTag_Tag"]
@@ -64,20 +61,15 @@ class PostgresDbLoader():
         for entity in static_entities:
             print(f"===== {entity} =====")
             entity_dir = os.path.join(static_path_local, entity)
-            csv_files = glob.glob(f'{entity_dir}/**/*.csv*', recursive=True)
+            csv_files = glob.glob(f'{entity_dir}/**/*.csv', recursive=True)
             if(not csv_files):
                 raise ValueError(f"No CSV-files found for entity {entity}")
             for csv_file in csv_files:
                 print(f"- {csv_file.rsplit('/', 1)[-1]}")
+                csv_file_path = os.path.join(path_prefix, static_path, entity, os.path.basename(csv_file))
+
                 start = time.time()
-
-                csv_file_path_in_container = os.path.join(static_path_container, entity, os.path.basename(csv_file))
-                if csv_file.endswith(".gz"):
-                    copy_source = f"PROGRAM 'gzip -dc {csv_file_path_in_container}'"
-                else:
-                    copy_source = f"'{csv_file_path_in_container}'"
-
-                cur.execute(f"COPY {entity} FROM {copy_source} {sql_copy_configuration}")
+                cur.execute(f"COPY {entity} FROM '{csv_file_path}' {sql_copy_configuration}")
                 pg_con.commit()
                 end = time.time()
                 duration = end - start
@@ -88,22 +80,17 @@ class PostgresDbLoader():
         for entity in dynamic_entities:
             print(f"===== {entity} =====")
             entity_dir = os.path.join(dynamic_path_local, entity)
-            csv_files = glob.glob(f'{entity_dir}/**/*.csv*', recursive=True)
+            csv_files = glob.glob(f'{entity_dir}/**/*.csv', recursive=True)
             if(not csv_files):
                 raise ValueError(f"No CSV-files found for entity {entity}")
             for csv_file in csv_files:
                 print(f"- {csv_file.rsplit('/', 1)[-1]}")
-
-                csv_file_path_in_container = os.path.join(dynamic_path_container, entity, os.path.basename(csv_file))
-                if csv_file.endswith(".gz"):
-                    copy_source = f"PROGRAM 'gzip -dc {csv_file_path_in_container}'"
-                else:
-                    copy_source = f"'{csv_file_path_in_container}'"
+                csv_file_path = os.path.join(path_prefix, dynamic_path, entity, os.path.basename(csv_file))
 
                 start = time.time()
-                cur.execute(f"COPY {entity} FROM {copy_source} {sql_copy_configuration}")
+                cur.execute(f"COPY {entity} FROM '{csv_file_path}' {sql_copy_configuration}")
                 if entity == "Person_knows_Person":
-                    cur.execute(f"COPY {entity} (creationDate, Person2id, Person1id) FROM {copy_source} {sql_copy_configuration}")
+                    cur.execute(f"COPY {entity} (creationDate, Person2id, Person1id) FROM '{csv_file_path}' {sql_copy_configuration}")
                 pg_con.commit()
                 end = time.time()
                 duration = end - start
@@ -111,7 +98,7 @@ class PostgresDbLoader():
 
         print("Loaded dynamic entities.")
 
-    def main(self, data_dir):
+    def main(self, data_dir, is_container):
         with psycopg.connect(
             dbname=self.database,
             host=self.endpoint,
@@ -124,7 +111,7 @@ class PostgresDbLoader():
             self.run_script(pg_con, cur, "ddl/drop-tables.sql")
             self.run_script(pg_con, cur, "ddl/schema-composite-merged-fk.sql")
             print("Load initial snapshot")
-            self.load_initial_snapshot(pg_con, cur, data_dir)
+            self.load_initial_snapshot(pg_con, cur, data_dir, is_container)
             print("Maintain materialized views . . . ")
             self.run_script(pg_con, cur, "dml/maintain-views.sql")
             print("Done.")
@@ -133,48 +120,40 @@ class PostgresDbLoader():
             self.run_script(pg_con, cur, "dml/create-static-materialized-views.sql")
             print("Done.")
 
-            print("Add primary key constraints")
-            cur.execute(self.load_script("ddl/schema-primary-keys.sql"))
-            pg_con.commit()
+            #print("Add primary key constraints")
+            #cur.execute(self.load_script("ddl/schema-primary-keys.sql"))
+            #pg_con.commit()
 
-            print("Add foreign key constraints")
-            cur.execute(self.load_script("ddl/schema-foreign-keys.sql"))
-            pg_con.commit()
+            #print("Add foreign key constraints")
+            #cur.execute(self.load_script("ddl/schema-foreign-keys.sql"))
+            #pg_con.commit()
 
-            print("Add indexes")
-            cur.execute(self.load_script("ddl/schema-indexes.sql"))
-            pg_con.commit()
-
-            print("Run vacuum")
-            self.vacuum(pg_con)
+            #print("Add indexes")
+            #cur.execute(self.load_script("ddl/schema-indexes.sql"))
+            #pg_con.commit()
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--POSTGRES_CSV_DIR',
-        help="POSTGRES_CSV_DIR: folder containing the initial snapshot data to load e.g. '/out-sf1/graphs/csv/bi/composite-merged-fk'",
+        '--UMBRA_CSV_DIR',
+        help="UMBRA_CSV_DIR: folder containing the initial snapshot data to load e.g. '/out-sf1/graphs/csv/bi/composite-merged-fk'",
         type=str,
         required=True
     )
     parser.add_argument(
         '--is_container',
         help="is_container: whether the data is loaded from within a container",
-        type=str,
+        type=bool,
         required=False,
         default=False
     )
     args = parser.parse_args()
 
-    PGLoader = PostgresDbLoader()
-
-    if (args.is_container):
-        data_dir = "/data/"
-    else:
-        data_dir = args.POSTGRES_CSV_DIR
+    PGLoader = UmbraDbLoader()
 
     start = time.time()
-    PGLoader.main(data_dir)
+    PGLoader.main(args.UMBRA_CSV_DIR, args.is_container)
     end = time.time()
     duration = end - start
-    print(f"Loaded data in Postgres in {duration:.4f} seconds")
+    print(f"Loaded data in Umbra in {duration:.4f} seconds")

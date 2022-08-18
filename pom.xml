@@ -83,6 +83,7 @@
                 <module>cypher</module>
                 <module>mssql</module>
                 <module>postgres</module>
+                <module>umbra</module>
           </modules>
         </profile>
         <profile>
@@ -101,6 +102,12 @@
             <id>postgres</id>
             <modules>
                 <module>postgres</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>umbra</id>
+            <modules>
+                <module>umbra</module>
             </modules>
         </profile>
     </profiles>
