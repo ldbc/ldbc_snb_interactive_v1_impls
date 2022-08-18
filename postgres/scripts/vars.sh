@@ -1,7 +1,7 @@
 cd "$( cd "$( dirname "${BASH_SOURCE[0]:-${(%):-%x}}" )" >/dev/null 2>&1 && pwd )"
 cd ..
 
-export POSTGRES_VERSION=14.4
+export POSTGRES_VERSION=14.5
 export POSTGRES_CONTAINER_NAME=snb-interactive-postgres
 export POSTGRES_PASSWORD=mysecretpassword
 export POSTGRES_DATABASE=ldbcsnb
