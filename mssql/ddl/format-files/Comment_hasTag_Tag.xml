@@ -7,7 +7,7 @@
  </RECORD>
  <ROW>
   <COLUMN SOURCE="1" NAME="creationDate" xsi:type="SQLDATETIMEOFFSET"/>
-  <COLUMN SOURCE="2" NAME="CommentId" xsi:type="SQLBIGINT"/>
+  <COLUMN SOURCE="2" NAME="MessageId" xsi:type="SQLBIGINT"/>
   <COLUMN SOURCE="3" NAME="TagId" xsi:type="SQLBIGINT"/>
  </ROW>
 </BCPFORMAT>

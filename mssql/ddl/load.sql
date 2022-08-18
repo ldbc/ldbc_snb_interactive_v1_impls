@@ -27,8 +27,8 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Tag
-INSERT INTO [dbo].[Tag] (id, name, url, TypeTagClassId)
-SELECT    id,
+INSERT INTO [dbo].[Tag] ($NODE_ID,id, name, url, TypeTagClassId)
+SELECT  NODE_ID_FROM_PARTS(object_id('Tag'), id) AS node_id,  id,
     name,
     url,
     TypeTagClassId
@@ -53,9 +53,11 @@ FROM OPENROWSET (
 --Dynamic
 
 -- Comment_hasTag_Tag
-INSERT INTO [dbo].[Comment_hasTag_Tag] (creationDate, CommentId, TagId)
-SELECT       creationDate,
-       CommentId,
+INSERT INTO [dbo].[Message_hasTag_Tag] ($FROM_ID, $TO_ID,creationDate, MessageId, TagId)
+SELECT NODE_ID_FROM_PARTS(object_id('Message'), MessageId) AS from_id,
+       NODE_ID_FROM_PARTS(object_id('Tag'), TagId) AS to_id, 
+        creationDate,
+       MessageId,
        TagId
 FROM OPENROWSET (
     BULK ':comment_hastag_tag_csv',
@@ -218,9 +220,11 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- Post_hasTag_Tag
-INSERT INTO [dbo].[Post_hasTag_Tag] (creationDate, PostId, TagId)
-SELECT    creationDate,
-    PostId,
+INSERT INTO [dbo].[Message_hasTag_Tag] ($FROM_ID, $TO_ID,creationDate, MessageId, TagId)
+SELECT NODE_ID_FROM_PARTS(object_id('Message'), MessageId) AS from_id,
+       NODE_ID_FROM_PARTS(object_id('Tag'), TagId) AS to_id, 
+  creationDate,
+    MessageId,
     TagId
 FROM OPENROWSET (
     BULK ':post_hastag_tag_csv',

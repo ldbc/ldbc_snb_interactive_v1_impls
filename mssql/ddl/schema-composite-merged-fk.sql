@@ -20,8 +20,10 @@ CREATE TABLE Tag (
     id bigint,
     name nvarchar(256) NOT NULL,
     url varchar(256) NOT NULL,
-    TypeTagClassId bigint NOT NULL
-);
+    TypeTagClassId bigint NOT NULL,
+    CONSTRAINT PK_Tag PRIMARY KEY NONCLUSTERED ([id] ASC) WITH (DATA_COMPRESSION = PAGE),
+    CONSTRAINT Graph_Unique_Key_Tag UNIQUE CLUSTERED ($node_id) WITH (DATA_COMPRESSION = PAGE)
+) AS NODE;
 
 CREATE TABLE TagClass (
     id bigint,
