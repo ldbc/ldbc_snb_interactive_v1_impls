@@ -64,13 +64,20 @@ class PostgresDbLoader():
         for entity in static_entities:
             print(f"===== {entity} =====")
             entity_dir = os.path.join(static_path_local, entity)
-            csv_files = glob.glob(f'{entity_dir}/**/*.csv', recursive=True)
+            csv_files = glob.glob(f'{entity_dir}/**/*.csv*', recursive=True)
             if(not csv_files):
                 raise ValueError(f"No CSV-files found for entity {entity}")
             for csv_file in csv_files:
                 print(f"- {csv_file.rsplit('/', 1)[-1]}")
                 start = time.time()
-                cur.execute(f"COPY {entity} FROM '{os.path.join(static_path_container, entity, os.path.basename(csv_file))}' {sql_copy_configuration}")
+
+                csv_file_path_in_container = os.path.join(static_path_container, entity, os.path.basename(csv_file))
+                if csv_file.endswith(".gz"):
+                    copy_source = f"PROGRAM 'gzip -dc {csv_file_path_in_container}'"
+                else:
+                    copy_source = f"'{csv_file_path_in_container}'"
+
+                cur.execute(f"COPY {entity} FROM {copy_source} {sql_copy_configuration}")
                 pg_con.commit()
                 end = time.time()
                 duration = end - start
@@ -81,17 +88,22 @@ class PostgresDbLoader():
         for entity in dynamic_entities:
             print(f"===== {entity} =====")
             entity_dir = os.path.join(dynamic_path_local, entity)
-            csv_files = glob.glob(f'{entity_dir}/**/*.csv', recursive=True)
+            csv_files = glob.glob(f'{entity_dir}/**/*.csv*', recursive=True)
             if(not csv_files):
                 raise ValueError(f"No CSV-files found for entity {entity}")
             for csv_file in csv_files:
                 print(f"- {csv_file.rsplit('/', 1)[-1]}")
+
                 csv_file_path_in_container = os.path.join(dynamic_path_container, entity, os.path.basename(csv_file))
+                if csv_file.endswith(".gz"):
+                    copy_source = f"PROGRAM 'gzip -dc {csv_file_path_in_container}'"
+                else:
+                    copy_source = f"'{csv_file_path_in_container}'"
 
                 start = time.time()
-                cur.execute(f"COPY {entity} FROM '{csv_file_path_in_container}' {sql_copy_configuration}")
+                cur.execute(f"COPY {entity} FROM {copy_source} {sql_copy_configuration}")
                 if entity == "Person_knows_Person":
-                    cur.execute(f"COPY {entity} (creationDate, Person2id, Person1id) FROM '{csv_file_path_in_container}' {sql_copy_configuration}")
+                    cur.execute(f"COPY {entity} (creationDate, Person2id, Person1id) FROM {copy_source} {sql_copy_configuration}")
                 pg_con.commit()
                 end = time.time()
                 duration = end - start

@@ -59,7 +59,8 @@ tools/run.py \
     --format csv \
     --scale-factor ${SF} \
     --mode bi \
-    --output-dir out-sf${SF}
+    --output-dir out-sf${SF} \
+    --format-options compression=gzip
 ```
 
 ## Configuration
