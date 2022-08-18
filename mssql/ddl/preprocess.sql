@@ -1,7 +1,7 @@
 -- Add weight column to Person_knows_Person
 USE ldbc;
 ALTER TABLE [dbo].[Person_knows_Person]
-ADD weight bigint DEFAULT 0
+ADD weight bigint DEFAULT 0;
 
 -- Precalculate interaction weights
 UPDATE t
