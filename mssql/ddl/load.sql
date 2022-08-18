@@ -206,6 +206,14 @@ FROM OPENROWSET (
     FIRSTROW = 2
 ) AS raw;
 
+INSERT INTO [dbo].[Person_likes_Message] ($FROM_ID, $TO_ID, creationDate, PersonId, MessageId)
+SELECT NODE_ID_FROM_PARTS(object_id('Person'), PersonId) AS from_id,
+       NODE_ID_FROM_PARTS(object_id('Message'), CommentId) AS to_id,
+       creationDate,
+       PersonId,
+       CommentId
+FROM dbo.Person_likes_Comment;
+
 -- Person_likes_Post
 INSERT INTO [dbo].[Person_likes_Post] (creationDate, PersonId, PostId)
 SELECT       creationDate,
@@ -216,6 +224,14 @@ FROM OPENROWSET (
     FORMATFILE = '/data/format-files/Person_likes_Post.xml',
     FIRSTROW = 2
 ) AS raw;
+
+INSERT INTO [dbo].[Person_likes_Message] ($FROM_ID, $TO_ID, creationDate, PersonId, MessageId)
+SELECT NODE_ID_FROM_PARTS(object_id('Person'), PersonId) AS from_id,
+       NODE_ID_FROM_PARTS(object_id('Message'), PostId) AS to_id,
+       creationDate,
+       PersonId,
+       PostId
+FROM dbo.Person_likes_Post;
 
 -- Person_studyAt_University
 INSERT INTO [dbo].[Person_studyAt_University] (creationDate, PersonId, UniversityId, classYear)
@@ -255,7 +271,7 @@ INSERT INTO [dbo].[Post] (
     ContainerForumId,
     LocationCountryId
 )
-SELECT    creationDate,
+SELECT creationDate,
     id,
     imageFile,
     locationIP,
@@ -342,3 +358,8 @@ SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS node_id,
     CAST(NULL AS bigint) AS ContainerForumId,
     coalesce(ParentPostId, ParentCommentId) AS ParentMessageId
 FROM dbo.Comment;
+
+DROP TABLE dbo.Comment;
+DROP TABLE dbo.Person_likes_Comment;
+DROP TABLE dbo.Post;
+DROP TABLE dbo.Person_likes_Post;
