@@ -144,7 +144,7 @@ if __name__ == "__main__":
     parser.add_argument(
         '--is_container',
         help="is_container: whether the data is loaded from within a container",
-        type=str,
+        type=bool,
         required=False,
         default=False
     )

@@ -83,7 +83,7 @@ jobs:
             cd umbra
             scripts/get-sample-data-set.sh
             . scripts/use-sample-data-set.sh
-            scripts/load-in-one-step.sh --is_container true
+            scripts/load-in-one-step.sh --is_container True
             scripts/backup-database.sh
             cd ..
       - run:
