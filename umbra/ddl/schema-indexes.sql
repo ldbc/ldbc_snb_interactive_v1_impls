@@ -1,0 +1,27 @@
+-- create indexes on foreign keys
+CREATE INDEX ON Forum (ModeratorPersonId);
+CREATE INDEX ON Forum_hasMember_Person (ForumId);
+CREATE INDEX ON Forum_hasMember_Person (PersonId);
+CREATE INDEX ON Forum_hasTag_Tag (ForumId);
+CREATE INDEX ON Forum_hasTag_Tag (TagId);
+CREATE INDEX ON Person_knows_Person (Person1Id);
+CREATE INDEX ON Person_knows_Person (Person2Id);
+CREATE INDEX ON Person_likes_Message (PersonId);
+CREATE INDEX ON Person_likes_Message (id);
+CREATE INDEX ON University (LocationPlaceId);
+CREATE INDEX ON Company (LocationPlaceId);
+CREATE INDEX ON person (LocationCityId);
+CREATE INDEX ON Person_workAt_Company (PersonId);
+CREATE INDEX ON Person_workAt_Company (CompanyId);
+CREATE INDEX ON Person_hasInterest_Tag (PersonId);
+CREATE INDEX ON Person_hasInterest_Tag (TagId);
+CREATE INDEX ON Person_studyAt_University (PersonId);
+CREATE INDEX ON Person_studyAt_University (UniversityId);
+CREATE INDEX ON Message (CreatorPersonId);
+CREATE INDEX ON Message (LocationCountryId);
+CREATE INDEX ON Message (ContainerForumId);
+CREATE INDEX ON Message (ParentMessageId);
+CREATE INDEX ON Message_hasTag_Tag (id);
+CREATE INDEX ON Message_hasTag_Tag (TagId);
+CREATE INDEX ON Tag (TypeTagClassId);
+CREATE INDEX ON TagClass (SubclassOfTagClassId);
