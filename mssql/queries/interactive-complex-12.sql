@@ -12,7 +12,7 @@ WITH extended_tags(s_subtagclassid,s_supertagclassid) AS (
 SELECT TOP(20) personId
              , firstName
              , lastName
-             , string_agg(name, ';')
+             , string_agg(CONVERT(NVARCHAR(max),name), ';')
              , sum(partialReplyCount)
             AS replyCount
           FROM ( SELECT DISTINCT Person.personId, firstName, lastName, name, count(*) AS partialReplyCount
