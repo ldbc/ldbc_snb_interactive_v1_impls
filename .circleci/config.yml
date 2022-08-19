@@ -70,6 +70,30 @@ jobs:
             scripts/get-sample-factors.sh
             scripts/paramgen.sh
             cd ..
+      ### Umbra
+      - run:
+          name: Load Umbra Docker image
+          command: |
+            . umbra/scripts/vars.sh
+            # ${UMBRA_URL_PREFIX} should be set as a sercet variable
+            curl -s ${UMBRA_URL_PREFIX}${UMBRA_VERSION}.tar.gz | docker load
+      - run:
+          name: Tiny data set - Load Umbra database and create a backup
+          command: |
+            cd umbra
+            scripts/get-sample-data-set.sh
+            . scripts/use-sample-data-set.sh
+            scripts/load-in-one-step.sh --is_container True
+            scripts/backup-database.sh
+            cd ..
+      - run:
+          name: Tiny data set - Create validation parameters with Umbra
+          command: |
+            cd umbra
+            driver/create-validation-parameters.sh
+            cp validation_params.json validation_params_umbra_tiny.json
+            scripts/stop.sh
+            cd ..
       ### Neo4j
       - run:
           name: Tiny data set - Load Neo4j database and create a backup
@@ -85,6 +109,26 @@ jobs:
             cd cypher
             driver/create-validation-parameters.sh
             cp validation_params.json validation_params_cypher_tiny.json
+            cd ..
+      ### Umbra
+      - run:
+          name: Tiny data set - Cross-validate the Umbra project based on the results from Neo4j
+          command: |
+            cp cypher/validation_params_cypher_tiny.json umbra/validation_params.json
+            cd umbra
+            . scripts/use-sample-data-set.sh
+            scripts/restore-database.sh
+            driver/validate.sh | tee validation-log.txt
+            grep 'Validation Result: PASS' validation-log.txt
+            cd ..
+      - run:
+          name: Tiny data set - Benchmark Umbra
+          command: |
+            cd umbra
+            . scripts/use-sample-data-set.sh
+            scripts/restore-database.sh
+            driver/benchmark.sh
+            scripts/stop.sh
             cd ..
       ### PostgreSQL
       - run:
