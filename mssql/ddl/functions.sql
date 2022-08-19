@@ -48,7 +48,7 @@ BEGIN
 		UNION ALL
 
 		SELECT n.personId, d.OrderDiscovered,
-			CAST(cte.Path + ',' + CAST(n.personId as varchar(MAX)) as varchar(MAX)),
+			CAST(cte.Path + ';' + CAST(n.personId as varchar(MAX)) as varchar(MAX)),
             cte.score + d.weight
 		FROM #Discovered d JOIN BacktraceCTE cte ON d.Predecessor = cte.Id
 		JOIN dbo.Person n ON d.Id = n.personId
