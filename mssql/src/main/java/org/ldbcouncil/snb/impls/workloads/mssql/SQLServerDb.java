@@ -281,10 +281,9 @@ public abstract class SQLServerDb extends BaseDb<SQLServerQueryStore> {
         @Override
         public LdbcQuery14Result convertSingleResult(ResultSet result) throws SQLException {
             return new LdbcQuery14Result(
-                    SQLServerConverter.convertLists(SQLServerConverter.arrayToObjectArray(result, 1)),
+                    SQLServerConverter.arrayToLongArray(result, 1),
                     result.getLong(2));
         }
-
     }
 
     public static class ShortQuery1PersonProfile extends SQLServerSingletonOperationHandler<LdbcShortQuery1PersonProfile, LdbcShortQuery1PersonProfileResult> {
