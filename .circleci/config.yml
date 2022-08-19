@@ -108,6 +108,7 @@ jobs:
           command: |
             cd cypher
             driver/create-validation-parameters.sh
+            scripts/stop.sh
             cp validation_params.json validation_params_cypher_tiny.json
             cd ..
       ### Umbra
@@ -119,6 +120,7 @@ jobs:
             . scripts/use-sample-data-set.sh
             scripts/restore-database.sh
             driver/validate.sh | tee validation-log.txt
+            scripts/stop.sh
             grep 'Validation Result: PASS' validation-log.txt
             cd ..
       - run:
@@ -155,6 +157,7 @@ jobs:
             cd cypher
             scripts/restore-database.sh
             driver/validate.sh | tee validation-log.txt
+            scripts/stop.sh
             grep 'Validation Result: PASS' validation-log.txt
             cd ..
       - run:
@@ -163,6 +166,7 @@ jobs:
             cd cypher
             scripts/restore-database.sh
             driver/benchmark.sh
+            scripts/stop.sh
             cd ..
       ### PostgreSQL
       - run:
@@ -172,6 +176,7 @@ jobs:
             cd postgres
             scripts/restore-database.sh
             driver/validate.sh | tee validation-log.txt
+            scripts/stop.sh
             grep 'Validation Result: PASS' validation-log.txt
             cd ..
       - run:
@@ -211,6 +216,7 @@ jobs:
             cd cypher
             . scripts/use-datagen-data-set.sh
             driver/create-validation-parameters.sh driver/create-validation-parameters-sf${SF}.properties
+            scripts/stop.sh
             cp validation_params.json validation_params_cypher_sf${SF}.json
             cd ..
       ### PostgreSQL
@@ -235,6 +241,32 @@ jobs:
             scripts/restore-database.sh
             sed -i "s|ldbc.snb.interactive.parameters_dir=../parameters/|ldbc.snb.interactive.parameters_dir=../parameters-sf${SF}/|" driver/validate.properties
             driver/validate.sh | tee validation-log.txt
+            scripts/stop.sh
+            grep 'Validation Result: PASS' validation-log.txt
+            cd ..
+      ### Umbra
+      - run:
+          name: SF1 data set - Load Umbra database and create a backup
+          command: |
+            export SF=1
+            export LDBC_SNB_DATAGEN_DIR=`pwd`
+            cd umbra
+            . scripts/use-datagen-data-set.sh
+            scripts/load-in-one-step.sh --is_container True
+            scripts/backup-database.sh
+            cd ..
+      - run:
+          name: SF1 data set - Cross-validate the Umbra project based on the results from Neo4j
+          command: |
+            export SF=1
+            export LDBC_SNB_DATAGEN_DIR=`pwd`
+            cp cypher/validation_params_cypher_sf${SF}.json umbra/validation_params.json
+            cd umbra
+            . scripts/use-datagen-data-set.sh
+            scripts/restore-database.sh
+            sed -i "s|ldbc.snb.interactive.parameters_dir=../parameters/|ldbc.snb.interactive.parameters_dir=../parameters-sf${SF}/|" driver/validate.properties
+            driver/validate.sh | tee validation-log.txt
+            scripts/stop.sh
             grep 'Validation Result: PASS' validation-log.txt
             cd ..
       ### Neo4j
@@ -247,6 +279,7 @@ jobs:
             . scripts/use-datagen-data-set.sh
             scripts/restore-database.sh
             driver/benchmark.sh driver/benchmark-sf${SF}.properties
+            scripts/stop.sh
             cd ..
       ### PostgreSQL
       - run:
@@ -255,6 +288,18 @@ jobs:
             export SF=1
             export LDBC_SNB_DATAGEN_DIR=`pwd`
             cd postgres
+            . scripts/use-datagen-data-set.sh
+            scripts/restore-database.sh
+            driver/benchmark.sh driver/benchmark-sf${SF}.properties
+            scripts/stop.sh
+            cd ..
+      ### Umbra
+      - run:
+          name: SF1 data set - Benchmark Umbra
+          command: |
+            export SF=1
+            export LDBC_SNB_DATAGEN_DIR=`pwd`
+            cd umbra
             . scripts/use-datagen-data-set.sh
             scripts/restore-database.sh
             driver/benchmark.sh driver/benchmark-sf${SF}.properties
