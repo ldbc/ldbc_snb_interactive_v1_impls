@@ -38,7 +38,11 @@ for entity in [
     "tagNumPersons",
     ]:
     print(f"{entity}")
-    for parquet_file in [f for f in os.listdir(f"{parquet_path}{entity}/") if f.endswith(".parquet")]:
+
+    parquet_files = [f for f in os.listdir(f"{parquet_path}{entity}/") if f.endswith(".parquet")]
+    if not parquet_files:
+        raise ValueError(f"No Parquet factor table files found for entity {entity}")
+    for parquet_file in parquet_files:
         print(f"- {parquet_file}")
         con.execute(f"DROP TABLE IF EXISTS {entity}")
         con.execute(f"CREATE TABLE {entity} AS SELECT * FROM read_parquet('{parquet_path}{entity}/{parquet_file}')")
