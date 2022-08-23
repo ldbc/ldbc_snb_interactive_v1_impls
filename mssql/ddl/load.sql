@@ -214,7 +214,7 @@ SELECT       creationDate,
        CompanyId,
        workFrom
 FROM OPENROWSET (
-    BULK ':person_studyat_university_csv',
+    BULK ':person_workat_company_csv',
     FORMATFILE = '/data/format-files/Person_workAt_Company.xml',
     FIRSTROW = 2
 ) AS raw;
