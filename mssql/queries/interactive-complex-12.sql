@@ -21,7 +21,7 @@ SELECT TOP(20)
         Person2.personId as friendPersonId,
         Person2.firstName as friendFirstName,
         Person2.lastName as friendLastName,
-        string_agg(CONVERT(NVARCHAR(max), st.name), ';'),
+        dbo.fn_DistinctList(string_agg(CONVERT(NVARCHAR(max), st.name), ';') WITHIN GROUP ( ORDER BY st.name), ';'),
         count(DISTINCT Message1.MessageId) as replyCount
 FROM 	Person Person1,
         Person_knows_Person,
