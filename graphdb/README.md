@@ -31,6 +31,8 @@ An example configuration for scale factor 1 is given in the [`params-ttl.ini`](h
 
 > The result of the execution will generate three .ttl files `social_network_activity_0_0.ttl`, `social_network_person_0_0.ttl` and `social_network_static_0_0.ttl`
 
+### Preprocessing and loading
+
 After that you need to change the following environment variables based on your data source.
 
 1. Set the `GRAPHDB_IMPORT_TTL_DIR` environment variable to point to the generated data set. Its default value points to the example data set under the `test-data` directory:
