@@ -39,8 +39,8 @@ FROM OPENROWSET (
 ) AS raw;
 
 -- TagClass
-INSERT INTO [dbo].[TagClass] (id, name, url, SubclassOfTagClassId)
-SELECT    id,
+INSERT INTO [dbo].[TagClass] ($NODE_ID, id, name, url, SubclassOfTagClassId)
+SELECT  NODE_ID_FROM_PARTS(object_id('TagClass'), id) AS node_id,  id,
     name,
     url,
     SubclassOfTagClassId
@@ -294,6 +294,40 @@ SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS node_id,
     CreatorPersonId,
     LocationCountryId,
     CAST(NULL AS bigint) AS ContainerForumId,
+    coalesce(ParentPostId, ParentCommentId) AS ParentMessageId
+FROM OPENROWSET (
+    BULK ':comment_csv',
+    FORMATFILE = '/data/format-files/Comment.xml',
+    FIRSTROW = 2
+) AS raw;
+
+-- Load edge tables
+INSERT INTO [dbo].[Message_hasCreator_Person] ($FROM_ID, $TO_ID, MessageId, CreatorPersonId)
+SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS from_id,
+       NODE_ID_FROM_PARTS(object_id('Person'), CreatorPersonId) AS to_id, 
+    id AS MessageId,
+    CreatorPersonId
+FROM OPENROWSET (
+    BULK ':comment_csv',
+    FORMATFILE = '/data/format-files/Comment.xml',
+    FIRSTROW = 2
+) AS raw;
+
+INSERT INTO [dbo].[Message_hasCreator_Person] ($FROM_ID, $TO_ID, MessageId, CreatorPersonId)
+SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS from_id,
+       NODE_ID_FROM_PARTS(object_id('Person'), CreatorPersonId) AS to_id, 
+    id AS MessageId,
+    CreatorPersonId
+FROM OPENROWSET (
+    BULK ':post_csv',
+    FORMATFILE = '/data/format-files/Post.xml',
+    FIRSTROW = 2
+) AS raw;
+
+INSERT INTO [dbo].[Message_replyOf_Message] ($FROM_ID, $TO_ID, MessageId, ParentMessageId)
+SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS from_id,
+       NODE_ID_FROM_PARTS(object_id('Message'), coalesce(ParentPostId, ParentCommentId)) AS to_id, 
+    id AS MessageId,
     coalesce(ParentPostId, ParentCommentId) AS ParentMessageId
 FROM OPENROWSET (
     BULK ':comment_csv',

@@ -3,20 +3,20 @@
  person1id 17592186049308,
  person2Id 30786325579204;
 */
-declare @trustedPaths as table
+DECLARE @trustedPaths as table
 (
     Id bigint,
     OrderDiscovered int,
     Path varchar(MAX)
 )
 
-declare @pathWithScore as table
+DECLARE @pathWithScore as table
 (
     Path varchar(MAX),
     score bigint
 )
 
-declare @interactions as table
+DECLARE @interactions as table
 (
     person1Id bigint,
     person2Id bigint,
@@ -26,39 +26,50 @@ declare @interactions as table
 INSERT INTO @trustedPaths
 EXEC dbo.knows_Breadth_First :person1Id, :person2Id;
 
-Declare @Path VARCHAR(MAX);
-Declare @Score bigint;
-Declare @person1Id bigint;
-Declare @person2Id bigint;
+DECLARE @Path VARCHAR(MAX);
+DECLARE @Score bigint;
+DECLARE @person1Id bigint;
+DECLARE @person2Id bigint;
 
-While (Select Count(*) From @trustedPaths) > 0
-Begin
+WHILE (Select Count(*) FROM @trustedPaths) > 0
+BEGIN
 
-    Select Top 1 @Path = Path From @trustedPaths
+    SELECT TOP 1 @Path = Path FROM @trustedPaths
     DROP TABLE IF EXISTS #Temp
 
-    select items as id, rownum
+    SELECT items AS id, rownum
     INTO #Temp
     FROM dbo.Split(@Path, ';')
 
-    Select Top 1 @person1Id = id From #Temp
-    DELETE #Temp Where id = @person1Id
-    While (Select Count(*) From #Temp) > 0
+    SELECT TOP 1 @person1Id = id FROM #Temp
+    DELETE #Temp WHERE id = @person1Id
+    WHILE (SELECT Count(*) FROM #Temp) > 0
     BEGIN
-        Select Top 1 @person2Id = id From #Temp
+        SELECT TOP 1 @person2Id = id FROM #Temp
 
-        INSERT INTO @interactions VALUES(@person1Id, @person2Id, dbo.CalculateInteractionScore(@person1Id, @person2Id))
+        SET @Score = dbo.CalculateInteractionScore(@person1Id, @person2Id)
 
+        IF @Score = 1
+            BEGIN
+                DELETE FROM @interactions
+                DROP TABLE IF EXISTS #Temp
+                BREAK
+            END
+        ELSE
+            BEGIN
+                INSERT INTO @interactions VALUES(@person1Id, @person2Id, dbo.CalculateInteractionScore(@person1Id, @person2Id))
+            END
         SET @person1Id = @person2Id
-        DELETE #Temp Where id = @person2Id
-        Select Top 1 @person2Id = id From #Temp
+        DELETE #Temp WHERE id = @person2Id
+        SELECT Top 1 @person2Id = id FROM #Temp
     END
-    Delete @trustedPaths Where Path = @Path
-
-    INSERT INTO @pathWithScore
-    SELECT @Path, SUM(score) FROM @interactions;
-
+    DELETE @trustedPaths WHERE Path = @Path
+        IF @Score > 1
+            BEGIN
+                INSERT INTO @pathWithScore
+                SELECT @Path, SUM(score) FROM @interactions;
+            END
     DELETE FROM @interactions;
-End
+END
 
 SELECT TOP(1) * FROM @pathWithScore ORDER BY score;
