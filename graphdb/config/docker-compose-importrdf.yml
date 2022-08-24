@@ -14,7 +14,7 @@ services:
         -Dgraphdb.home=/opt/graphdb/home
         -Dgraphdb.workbench.importDirectory=/opt/graphdb/home/graphdb-import
     volumes:
-      # Change folders in the .environment-variables-default.sh file or directly here
+      # Change folders in the vars.sh file or directly here
       - ${GRAPHDB_CONTAINER_ROOT}:/opt/graphdb/home
       - ${GRAPHDB_IMPORT_TTL_DIR}:/opt/graphdb/home/graphdb-import
       - ${GRAPHDB_REPOSITORY_CONFIG_FILE}:/opt/graphdb/graphdb-repo-config.ttl

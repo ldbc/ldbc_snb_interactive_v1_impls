@@ -9,7 +9,7 @@ The recommended environment for executing this benchmark is as follows: the benc
 * Bash
 * Java 8
 * Docker 19+
-* enough free space in the directory `GRAPHDB_CONTAINER_ROOT` (its default value is specified in `scripts/environment-variables-default.sh`)
+* enough free space in the directory `GRAPHDB_CONTAINER_ROOT` (its default value is specified in `scripts/vars.sh`)
 
 ## Generating and loading the data set
 
@@ -30,15 +30,6 @@ ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.tur
 An example configuration for scale factor 1 is given in the [`params-ttl.ini`](https://github.com/ldbc/ldbc_snb_datagen_hadoop/blob/main/params-ttl.ini) file of the Datagen repository. For small loading experiments, you can use scale factor 0.1, i.e. `snb.interactive.0.1`.
 
 > The result of the execution will generate three .ttl files `social_network_activity_0_0.ttl`, `social_network_person_0_0.ttl` and `social_network_static_0_0.ttl`
-
-### Initializing environment variables
-
-To set and list the default environment variables, run:
-
-```bash
-. scripts/environment-variables-default.sh
-env | grep ^GRAPHDB_
-```
 
 After that you need to change the following environment variables based on your data source.
 
