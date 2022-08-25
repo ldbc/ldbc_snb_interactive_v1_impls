@@ -1,4 +1,4 @@
-CREATE OR ALTER FUNCTION [dbo].[fn_DistinctList]
+CREATE OR ALTER FUNCTION dbo.fn_DistinctList
 (
   @String NVARCHAR(MAX),
   @Delimiter char(1)
