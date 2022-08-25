@@ -5,8 +5,6 @@ AFTER DELETE
 AS
 BEGIN
   DELETE FROM Message WHERE ParentMessageId IN (  SELECT MessageId FROM DELETED)
-  DELETE FROM Message_hasTag_Tag WHERE MessageId IN (  SELECT MessageId FROM DELETED)
-  DELETE FROM Person_likes_Message WHERE MessageId IN (  SELECT MessageId FROM DELETED)
 END;
 
 CREATE TRIGGER TR_DEL_Forum ON Forum
@@ -22,9 +20,6 @@ CREATE TRIGGER TR_DEL_Person_edges ON Person
 AFTER DELETE 
 AS
 BEGIN
-  DELETE FROM Person_knows_Person WHERE Person1Id IN (  SELECT PersonId FROM DELETED)
-  DELETE FROM Person_knows_Person WHERE Person2Id IN (  SELECT PersonId FROM DELETED)
-  DELETE FROM Person_likes_Message WHERE PersonId IN (  SELECT PersonId FROM DELETED)
   DELETE FROM Person_hasInterest_Tag WHERE PersonId IN (  SELECT PersonId FROM DELETED)
   DELETE FROM Person_studyAt_University WHERE PersonId IN (  SELECT PersonId FROM DELETED)
   DELETE FROM Person_workAt_Company WHERE PersonId IN (  SELECT PersonId FROM DELETED)

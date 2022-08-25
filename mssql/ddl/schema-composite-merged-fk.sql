@@ -29,10 +29,10 @@ CREATE TABLE TagClass (
     id bigint,
     name nvarchar(256) NOT NULL,
     url varchar(256) NOT NULL,
-    SubclassOfTagClassId bigint, -- null for the root TagClass (Thing)
-    CONSTRAINT PK_TagClass PRIMARY KEY NONCLUSTERED ([id] ASC) WITH (DATA_COMPRESSION = PAGE),
-    CONSTRAINT Graph_Unique_Key_TagClass UNIQUE CLUSTERED ($node_id) WITH (DATA_COMPRESSION = PAGE)
-) AS NODE;
+    SubclassOfTagClassId bigint--, -- null for the root TagClass (Thing)
+    -- CONSTRAINT PK_TagClass PRIMARY KEY NONCLUSTERED ([id] ASC) WITH (DATA_COMPRESSION = PAGE),
+    -- CONSTRAINT Graph_Unique_Key_TagClass UNIQUE CLUSTERED ($node_id) WITH (DATA_COMPRESSION = PAGE)
+);-- AS NODE;
 
 -- static tables / separate table per individual subtype
 CREATE TABLE Country (
@@ -143,7 +143,8 @@ CREATE TABLE [dbo].[Person_knows_Person] (
     [person2Id]     BIGINT        NOT NULL,
     INDEX [GRAPH_UNIQUE_INDEX_Person_knows_Person] UNIQUE NONCLUSTERED ($edge_id) WITH (DATA_COMPRESSION = PAGE),
     INDEX [GRAPH_FromTo_INDEX_Person_knows_Person] CLUSTERED ($from_id, $to_id) WITH (DATA_COMPRESSION = PAGE),
-    INDEX [GRAPH_ToFrom_INDEX_Person_knows_Person] NONCLUSTERED ($to_id, $from_id) WITH (DATA_COMPRESSION = PAGE)
+    INDEX [GRAPH_ToFrom_INDEX_Person_knows_Person] NONCLUSTERED ($to_id, $from_id) WITH (DATA_COMPRESSION = PAGE),
+    CONSTRAINT EC_Person_knows_Person CONNECTION (Person TO Person) ON DELETE CASCADE
 ) AS EDGE;
 ALTER INDEX [GRAPH_UNIQUE_INDEX_Person_knows_Person] ON [dbo].[Person_knows_Person] DISABLE;
 
@@ -174,6 +175,7 @@ CREATE TABLE Person_likes_Message (
     INDEX [GRAPH_UNIQUE_INDEX_Person_likes_Message] UNIQUE NONCLUSTERED ($edge_id) WITH (DATA_COMPRESSION = PAGE),
     INDEX [GRAPH_FromTo_INDEX_Person_likes_Message] CLUSTERED ($from_id, $to_id) WITH (DATA_COMPRESSION = PAGE),
     INDEX [GRAPH_ToFrom_INDEX_Person_likes_Message] NONCLUSTERED ($to_id, $from_id) WITH (DATA_COMPRESSION = PAGE),
+    CONSTRAINT EC_Person_likes_Message CONNECTION (Person TO Message) ON DELETE CASCADE
 ) AS EDGE;
 ALTER INDEX [GRAPH_UNIQUE_INDEX_Person_likes_Message] ON [dbo].[Person_likes_Message] DISABLE;
 
@@ -183,7 +185,8 @@ CREATE TABLE Message_hasTag_Tag (
     TagId bigint NOT NULL,
     INDEX [GRAPH_UNIQUE_INDEX_Message_hasTag_Tag] UNIQUE NONCLUSTERED ($edge_id) WITH (DATA_COMPRESSION = PAGE),
     INDEX [GRAPH_FromTo_INDEX_Message_hasTag_Tag] CLUSTERED ($from_id, $to_id) WITH (DATA_COMPRESSION = PAGE),
-    INDEX [GRAPH_ToFrom_INDEX_Message_hasTag_Tag] NONCLUSTERED ($to_id, $from_id) WITH (DATA_COMPRESSION = PAGE)
+    INDEX [GRAPH_ToFrom_INDEX_Message_hasTag_Tag] NONCLUSTERED ($to_id, $from_id) WITH (DATA_COMPRESSION = PAGE),
+    CONSTRAINT EC_Message_hasTag_Tag CONNECTION (Message TO Tag) ON DELETE CASCADE
 ) AS EDGE;
 ALTER INDEX [GRAPH_UNIQUE_INDEX_Message_hasTag_Tag] ON [dbo].[Message_hasTag_Tag] DISABLE;
 
@@ -192,27 +195,13 @@ CREATE TABLE Message_hasCreator_Person (
     CreatorPersonId bigint NOT NULL,
     INDEX [GRAPH_UNIQUE_INDEX_Message_hasCreator_Person] UNIQUE NONCLUSTERED ($edge_id) WITH (DATA_COMPRESSION = PAGE),
     INDEX [GRAPH_FromTo_INDEX_Message_hasCreator_Person] CLUSTERED ($from_id, $to_id) WITH (DATA_COMPRESSION = PAGE),
-    INDEX [GRAPH_ToFrom_INDEX_Message_hasCreator_Person] NONCLUSTERED ($to_id, $from_id) WITH (DATA_COMPRESSION = PAGE)
+    CONSTRAINT EC_Message_hasCreator_Person CONNECTION (Message TO Person) ON DELETE CASCADE
 ) AS EDGE;
 ALTER INDEX [GRAPH_UNIQUE_INDEX_Message_hasCreator_Person] ON [dbo].[Message_hasCreator_Person] DISABLE;
 
 CREATE TABLE Message_replyOf_Message (
-    MessageId bigint NOT NULL,
-    ParentMessageId bigint NOT NULL,
     INDEX [GRAPH_UNIQUE_INDEX_Message_replyOf_Message] UNIQUE NONCLUSTERED ($edge_id) WITH (DATA_COMPRESSION = PAGE),
     INDEX [GRAPH_FromTo_INDEX_Message_replyOf_Message] CLUSTERED ($from_id, $to_id) WITH (DATA_COMPRESSION = PAGE),
-    INDEX [GRAPH_ToFrom_INDEX_Message_replyOf_Message] NONCLUSTERED ($to_id, $from_id) WITH (DATA_COMPRESSION = PAGE)
+    CONSTRAINT EC_Message_replyOf_Message CONNECTION (Message TO Message) ON DELETE CASCADE
 ) AS EDGE;
 ALTER INDEX [GRAPH_UNIQUE_INDEX_Message_replyOf_Message] ON [dbo].[Message_replyOf_Message] DISABLE;
-
-
--- views
--- CREATE VIEW Comment_View AS
---     SELECT creationDate, MessageId AS id, locationIP, browserUsed, content, length, CreatorPersonId, LocationCountryId, ParentPostId, ParentCommentId
---     FROM Message
---     WHERE ParentMessageId IS NOT NULL;
-
--- CREATE VIEW Post_View AS
---     SELECT creationDate, MessageId AS id, imageFile, locationIP, browserUsed, language, content, length, CreatorPersonId, ContainerForumId, LocationCountryId
---     From Message
---     WHERE ParentMessageId IS NULL;
