@@ -2,7 +2,7 @@
 \set personId 10995116277795
  */
 ;WITH recentMessages AS (
-    SELECT TOP(10) messageId, messageContent, messageCreationDate, originalParentMessageId, originalPostId, creatorPersonId
+    SELECT messageId, messageContent, messageCreationDate, originalParentMessageId, originalPostId, creatorPersonId
     FROM (
         SELECT 
             m1.MessageId as messageId,
@@ -19,9 +19,19 @@
         AND m1.CreatorPersonId = :personId
     ) AS Q
     WHERE Q.originalParentMessageId IS NULL
-    ORDER BY messageCreationDate DESC
+    UNION ALL
+    SELECT
+	m1.MessageId AS messageId,
+            COALESCE(m1.imageFile, m1.content, '') AS messageContent,
+            m1.creationDate AS messageCreationDate,
+            m1.ParentMessageId   AS originalParentMessageId,
+            m1.MessageId    AS originalPostId,
+            m1.CreatorPersonId  AS creatorPersonId
+    FROM Message m1
+    WHERE m1.CreatorPersonId = :personId 
+      AND m1.ParentMessageId IS NULL
 )
-SELECT recentMessages.MessageId, recentMessages.messageContent, recentMessages.messageCreationDate,
+SELECT TOP(10) recentMessages.MessageId, recentMessages.messageContent, recentMessages.messageCreationDate,
        recentMessages.originalPostId, p2.PersonId, p2.firstName, p2.lastName
 FROM recentMessages
 LEFT JOIN Person p2 ON p2.personId = recentMessages.creatorPersonId
