@@ -6,18 +6,7 @@ WITH extended_tags(s_subtagclassid,s_supertagclassid) AS (
       FROM tagclass tc, extended_tags t
      WHERE tc.SubclassOfTagClassId = t.s_subtagclassid
 )
-SELECT DISTINCT id, name 
-INTO #SelectedTags
-FROM tag t 
-WHERE EXISTS (
-	SELECT s_subtagclassid
-	FROM extended_tags k, tagclass
-	WHERE id = k.s_supertagclassid
-	AND name = :tagClassName
-	AND t.TypeTagClassId = s_subtagclassid
-)
-
-SELECT TOP(20)
+SELECT TOP (20)
         Person2.personId as friendPersonId,
         Person2.firstName as friendFirstName,
         Person2.lastName as friendLastName,
@@ -32,7 +21,15 @@ FROM 	Person Person1,
         Tag Tag1,
         Message Message1,
         Message Message2,
-    	#SelectedTags as st
+    	(SELECT DISTINCT id, name 
+            FROM tag t 
+            WHERE EXISTS (
+                SELECT s_subtagclassid
+                FROM extended_tags k, tagclass
+                WHERE id = k.s_supertagclassid
+                AND name = :tagClassName
+                AND t.TypeTagClassId = s_subtagclassid
+            )) st
 WHERE MATCH (
         Person1-(Person_knows_Person)->Person2
         AND Message1-(Message_hasCreator_Person)->Person2
@@ -45,4 +42,3 @@ AND Message2.ParentMessageId IS NULL
 AND Tag1.id = st.id
 GROUP BY Person2.personId, Person2.firstName, Person2.lastName
 ORDER BY replyCount DESC, Person2.personId ASC;
-DROP TABLE #SelectedTags
