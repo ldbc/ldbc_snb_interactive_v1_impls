@@ -58,6 +58,8 @@ public enum QueryType {
 
         InteractiveInsert7AddComment           ("interactive-update-7-add-comment"),
         InteractiveInsert7AddCommentTags       ("interactive-update-7-add-comment-tags"),
+        InteractiveInsert7AddCommentWeights       ("interactive-update-7-add-comment-weight"),
+        InteractiveInsert7AddCommentEdges       ("interactive-update-7-add-comment-edge"),
 
         // interactive updates (additional queries for system that insert content/imageFile using separate operations)
         InteractiveInsert6AddPostContent       ("interactive-update-6-add-post-content"),
