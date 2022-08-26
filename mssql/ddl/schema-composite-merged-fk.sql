@@ -141,6 +141,7 @@ CREATE TABLE [dbo].[Person_knows_Person] (
     creationDate datetimeoffset NOT NULL,
     [person1Id]     BIGINT        NOT NULL,
     [person2Id]     BIGINT        NOT NULL,
+    [weight]     BIGINT        DEFAULT 0,
     INDEX [GRAPH_UNIQUE_INDEX_Person_knows_Person] UNIQUE NONCLUSTERED ($edge_id) WITH (DATA_COMPRESSION = PAGE),
     INDEX [GRAPH_FromTo_INDEX_Person_knows_Person] CLUSTERED ($from_id, $to_id) WITH (DATA_COMPRESSION = PAGE),
     INDEX [GRAPH_ToFrom_INDEX_Person_knows_Person] NONCLUSTERED ($to_id, $from_id) WITH (DATA_COMPRESSION = PAGE),

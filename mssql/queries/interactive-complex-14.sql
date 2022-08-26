@@ -33,7 +33,6 @@ DECLARE @person2Id bigint;
 
 WHILE (Select Count(*) FROM @trustedPaths) > 0
 BEGIN
-
     SELECT TOP 1 @Path = Path FROM @trustedPaths
     DROP TABLE IF EXISTS #Temp
 
@@ -47,9 +46,8 @@ BEGIN
     BEGIN
         SELECT TOP 1 @person2Id = id FROM #Temp
 
-        SET @Score = dbo.CalculateInteractionScore(@person1Id, @person2Id)
-
-        IF @Score = 1
+        SET @Score = (SELECT FLOOR(40 - SQRT(weight)) from Person_knows_Person WHERE Person1Id = @Person1Id AND Person2Id = @Person2Id)
+        IF @Score < 1
             BEGIN
                 DELETE FROM @interactions
                 DROP TABLE IF EXISTS #Temp
@@ -57,18 +55,17 @@ BEGIN
             END
         ELSE
             BEGIN
-                INSERT INTO @interactions VALUES(@person1Id, @person2Id, dbo.CalculateInteractionScore(@person1Id, @person2Id))
+                INSERT INTO @interactions VALUES(@person1Id, @person2Id, @Score)
             END
         SET @person1Id = @person2Id
         DELETE #Temp WHERE id = @person2Id
         SELECT Top 1 @person2Id = id FROM #Temp
     END
     DELETE @trustedPaths WHERE Path = @Path
-        IF @Score > 1
-            BEGIN
-                INSERT INTO @pathWithScore
-                SELECT @Path, SUM(score) FROM @interactions;
-            END
+
+    INSERT INTO @pathWithScore
+    SELECT @Path, SUM(score) FROM @interactions;
+
     DELETE FROM @interactions;
 END
 

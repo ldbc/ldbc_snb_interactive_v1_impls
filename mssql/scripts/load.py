@@ -101,6 +101,7 @@ if __name__ == "__main__":
         DBL.run_ddl_scripts("ddl/triggers.sql")
         DBL.run_single_file("ddl/string_split_with_num.sql")
         DBL.run_single_file("ddl/distinct-string-agg.sql")
+        DBL.run_ddl_scripts("ddl/preprocess.sql")
         print("Done.")
 
     end_total = time.time()

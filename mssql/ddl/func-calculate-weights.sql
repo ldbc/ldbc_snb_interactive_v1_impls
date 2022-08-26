@@ -1,4 +1,4 @@
-CREATE FUNCTION dbo.CalculateInteractionScore(@person1Id bigint, @person2Id bigint)
+CREATE OR ALTER FUNCTION dbo.CalculateInteractionScore(@person1Id bigint, @person2Id bigint)
 RETURNS int
 AS
 BEGIN
@@ -18,8 +18,8 @@ BEGIN
         GROUP BY mid1, mid2
     ) tmp
     RETURN CASE
-        WHEN (FLOOR(40 - SQRT(@score))) > 1 
-        THEN FLOOR(40 - SQRT(@score))
-        ELSE 1
+        WHEN @score IS NULL
+        THEN 1
+        ELSE @score
     END
 END;
