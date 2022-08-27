@@ -18,8 +18,8 @@ BEGIN
         GROUP BY mid1, mid2
     ) tmp
     RETURN CASE
-        WHEN @score IS NULL
-        THEN 1
-        ELSE @score
+        WHEN (FLOOR(40 - SQRT(@score))) > 1 
+        THEN @score
+        ELSE 0
     END
 END;

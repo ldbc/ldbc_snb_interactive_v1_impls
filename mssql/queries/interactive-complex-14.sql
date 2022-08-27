@@ -1,8 +1,8 @@
-/* 
- Trusted connection paths
- person1id 17592186049308,
- person2Id 30786325579204;
-*/
+-- /* 
+--  Trusted connection paths
+--  person1id 10995116279771,
+--  person2Id 30786325579204;
+-- */
 DECLARE @trustedPaths as table
 (
     Id bigint,
@@ -26,6 +26,7 @@ DECLARE @interactions as table
 INSERT INTO @trustedPaths
 EXEC dbo.knows_Breadth_First :person1Id, :person2Id;
 
+
 DECLARE @Path VARCHAR(MAX);
 DECLARE @Score bigint;
 DECLARE @person1Id bigint;
@@ -33,6 +34,7 @@ DECLARE @person2Id bigint;
 
 WHILE (Select Count(*) FROM @trustedPaths) > 0
 BEGIN
+
     SELECT TOP 1 @Path = Path FROM @trustedPaths
     DROP TABLE IF EXISTS #Temp
 
@@ -46,8 +48,8 @@ BEGIN
     BEGIN
         SELECT TOP 1 @person2Id = id FROM #Temp
 
-        SET @Score = (SELECT FLOOR(40 - SQRT(weight)) from Person_knows_Person WHERE Person1Id = @Person1Id AND Person2Id = @Person2Id)
-        IF @Score < 1
+        SET @Score = (SELECT weight from Person_knows_Person WHERE Person1Id = @Person1Id AND Person2Id = @Person2Id)
+        IF @Score = 0
             BEGIN
                 DELETE FROM @interactions
                 DROP TABLE IF EXISTS #Temp
@@ -55,17 +57,18 @@ BEGIN
             END
         ELSE
             BEGIN
-                INSERT INTO @interactions VALUES(@person1Id, @person2Id, @Score)
+                INSERT INTO @interactions VALUES(@person1Id, @person2Id, FLOOR(40 - SQRT(@Score)))
             END
         SET @person1Id = @person2Id
         DELETE #Temp WHERE id = @person2Id
         SELECT Top 1 @person2Id = id FROM #Temp
     END
     DELETE @trustedPaths WHERE Path = @Path
-
-    INSERT INTO @pathWithScore
-    SELECT @Path, SUM(score) FROM @interactions;
-
+        IF @Score > 0
+            BEGIN
+                INSERT INTO @pathWithScore
+                SELECT @Path, SUM(score) FROM @interactions;
+            END
     DELETE FROM @interactions;
 END
 
