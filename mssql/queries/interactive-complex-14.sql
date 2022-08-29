@@ -14,4 +14,6 @@ DECLARE @trustedPaths as table
 INSERT INTO @trustedPaths
 EXEC dbo.knows_Breadth_First :person1Id, :person2Id;
 
-SELECT TOP(1) Path, score FROM @trustedPaths;
+SELECT TOP(1) Path, score
+  FROM @trustedPaths
+ ORDER BY score ASC;
