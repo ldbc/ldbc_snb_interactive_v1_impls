@@ -58,7 +58,7 @@ jobs:
             git clone https://github.com/ldbc/ldbc_snb_interactive_driver
             cd ldbc_snb_interactive_driver/scripts/
             ./install-dependencies.sh
-            export LDBC_SNB_DATA_ROOT_DIRECTORY=`pwd`/social-network-sf0.003-bi-composite-merged-fk/
+            export LDBC_SNB_DATA_ROOT_DIRECTORY=../../social-network-sf0.003-bi-composite-merged-fk/
             export DATA_INPUT_TYPE=csv
             ./convert.sh
             mv inserts ../../update-streams/
