@@ -85,8 +85,7 @@ if __name__ == "__main__":
     if (recreated):
         print("Drop existing tables")
         DBL.run_ddl_scripts("ddl/drop-tables.sql")
-        DBL.run_single_file("ddl/func-calculate-weights.sql")
-        DBL.run_single_file("ddl/functions.sql")
+
         print("Create tables")
         DBL.run_ddl_scripts("ddl/schema-composite-merged-fk.sql")
 
@@ -99,8 +98,9 @@ if __name__ == "__main__":
         print("Adding triggers and constraints")
         DBL.run_ddl_scripts("ddl/schema-constraints.sql")
         DBL.run_ddl_scripts("ddl/triggers.sql")
-        DBL.run_single_file("ddl/string_split_with_num.sql")
-        DBL.run_single_file("ddl/distinct-string-agg.sql")
+        DBL.run_single_file("ddl/func-calculate-weights.sql")
+        DBL.run_single_file("ddl/func-bfs.sql")
+        DBL.run_single_file("ddl/func-distinct-string-agg.sql")
         DBL.run_ddl_scripts("ddl/preprocess.sql")
         print("Done.")
 
