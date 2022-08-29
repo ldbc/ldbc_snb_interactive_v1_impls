@@ -188,6 +188,7 @@ jobs:
           name: Generate SF1 data sets
           command: |
             export LDBC_SNB_DATAGEN_DIR=`pwd`
+            export DATA_INPUT_TYPE=csv
             export LDBC_SNB_DRIVER_DIR=`pwd`/ldbc_snb_interactive_driver
             export LDBC_SNB_DATAGEN_MAX_MEM=8G
             export USE_DATAGEN_DOCKER=true
