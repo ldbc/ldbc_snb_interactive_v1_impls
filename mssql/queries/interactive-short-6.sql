@@ -1,14 +1,19 @@
 /* IS6. Forum of a message
 \set messageId 824633720985
  */
-WITH chain(parent, child) as(
-    SELECT ParentMessageId, MessageId
-    FROM Message
-    WHERE MessageId = :messageId
-    UNION ALL
-    SELECT p.ParentMessageId, p.MessageId
-    FROM Message p, chain c
-    WHERE p.MessageId = c.parent
+;WITH chain AS (
+    SELECT forumId
+    FROM (
+        SELECT 
+            LAST_VALUE(m2.ContainerForumId) WITHIN GROUP (GRAPH PATH) AS forumId
+        FROM
+            Message m1,
+            Message_replyOf_Message FOR PATH,
+            Message FOR PATH AS m2
+        WHERE MATCH(SHORTEST_PATH(m1(-(Message_replyOf_Message)->m2)+))
+        AND m1.MessageId = :messageId
+    ) AS Q
+    WHERE Q.forumId IS NOT NULL
 )
 SELECT
   Forum.id,
@@ -17,7 +22,7 @@ SELECT
   Person.firstName,
   Person.lastName
 FROM Message, Person, Forum
-WHERE MessageId = (SELECT coalesce(min(parent), :messageId) FROM chain)
-  AND Message.ContainerForumId = Forum.id
+WHERE MessageId = :messageId
+AND Forum.id = (SELECT coalesce(min(forumId), Message.ContainerForumId) FROM chain)
   AND ModeratorPersonId = Person.personId
 ;

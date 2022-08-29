@@ -28,3 +28,11 @@ DROP TABLE IF EXISTS Country;
 DROP TABLE IF EXISTS Continent;
 DROP TABLE IF EXISTS Tag;
 DROP TABLE IF EXISTS TagClass;
+
+
+IF OBJECT_ID('dbo.CalculateInteractionScore') IS NOT NULL
+    DROP FUNCTION dbo.CalculateInteractionScore;
+
+IF OBJECT_ID('dbo.knows_Breadth_First') IS NOT NULL
+    DROP PROCEDURE dbo.knows_Breadth_First;
+

@@ -33,14 +33,14 @@ FROM
         FROM Person_knows_Person, Person
         WHERE Person1Id = :personId
           AND personId = Person2Id
-          AND firstName = :firstName
+          AND firstName = N:firstName
         UNION ALL
         SELECT k2.Person2Id AS id, 2 AS distance
         FROM Person_knows_Person k1, Person_knows_Person k2, Person
         WHERE k1.Person1Id = :personId
           AND k2.Person1Id = k1.Person2Id
           AND personId = k2.Person2Id
-          AND firstName = :firstName
+          AND firstName = N:firstName
           AND Person.personId != :personId -- excluding start person
         UNION ALL
         SELECT k3.Person2Id AS id, 3 AS distance
@@ -49,7 +49,7 @@ FROM
           AND k2.Person1Id = k1.Person2Id
           AND k2.Person2Id = k3.Person1Id
           AND personId = k3.Person2Id
-          AND firstName = :firstName
+          AND firstName = N:firstName
           AND Person.personId != :personId -- excluding start person
     ) tmp, Person, City
   WHERE Person.personId = tmp.id

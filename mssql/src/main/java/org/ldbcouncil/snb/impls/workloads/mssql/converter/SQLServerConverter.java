@@ -64,6 +64,20 @@ public class SQLServerConverter extends Converter {
         }
     }
 
+    public static Iterable<Long> arrayToLongArray(ResultSet r, int column) throws SQLException {
+        String value = r.getString(column);
+        if (value == null) {
+            return new ArrayList<>();
+        } else {
+            String[] strs = value.split(";");
+            List<Long> array = new ArrayList<>();
+            for (int i = 0; i < strs.length; i++) {
+                array.add(Long.parseLong(strs[i]));
+            }
+            return array;
+        }
+    }
+
     public static Iterable<LdbcQuery1Result.Organization> arrayToOrganizationArray(ResultSet r, int column) throws SQLException {
         String value = r.getString(column);
         if (value == null) {
