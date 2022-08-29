@@ -42,7 +42,10 @@ public abstract class SQLServerIC13OperationHandler
             if ( tuple != null){
                 resultReporter.report(resultCount, tuple, operation);
             }
-            resultReporter.report(1, new LdbcQuery13Result(-1), operation);
+            else
+            {
+                resultReporter.report(1, new LdbcQuery13Result(-1), operation);
+            }
         }
         catch (SQLException e){
             throw new DbException(e);

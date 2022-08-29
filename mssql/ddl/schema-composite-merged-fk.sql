@@ -20,15 +20,19 @@ CREATE TABLE Tag (
     id bigint,
     name nvarchar(256) NOT NULL,
     url varchar(256) NOT NULL,
-    TypeTagClassId bigint NOT NULL
-);
+    TypeTagClassId bigint NOT NULL,
+    CONSTRAINT PK_Tag PRIMARY KEY NONCLUSTERED ([id] ASC) WITH (DATA_COMPRESSION = PAGE),
+    CONSTRAINT Graph_Unique_Key_Tag UNIQUE CLUSTERED ($node_id) WITH (DATA_COMPRESSION = PAGE)
+) AS NODE;
 
 CREATE TABLE TagClass (
     id bigint,
     name nvarchar(256) NOT NULL,
     url varchar(256) NOT NULL,
-    SubclassOfTagClassId bigint -- null for the root TagClass (Thing)
-);
+    SubclassOfTagClassId bigint--, -- null for the root TagClass (Thing)
+    -- CONSTRAINT PK_TagClass PRIMARY KEY NONCLUSTERED ([id] ASC) WITH (DATA_COMPRESSION = PAGE),
+    -- CONSTRAINT Graph_Unique_Key_TagClass UNIQUE CLUSTERED ($node_id) WITH (DATA_COMPRESSION = PAGE)
+);-- AS NODE;
 
 -- static tables / separate table per individual subtype
 CREATE TABLE Country (
@@ -60,43 +64,19 @@ CREATE TABLE University (
 );
 
 -- dynamic tables
-CREATE TABLE Comment (
-    creationDate datetimeoffset NOT NULL,
-    id bigint,
-    locationIP varchar(40) NOT NULL,
-    browserUsed varchar(40) NOT NULL,
-    content ntext NOT NULL,
-    length int NOT NULL,
-    CreatorPersonId bigint NOT NULL,
-    LocationCountryId bigint NOT NULL,
-    ParentPostId bigint,
-    ParentCommentId bigint
-);
 
-CREATE TABLE Forum (
-    creationDate datetimeoffset NOT NULL,
-    id bigint NOT NULL,
-    title nvarchar(256) NOT NULL,
-    ModeratorPersonId bigint -- can be null as its cardinality is 0..1
-);
-
-CREATE TABLE Post (
-    creationDate datetimeoffset NOT NULL,
-    id bigint NOT NULL,
-    imageFile varchar(40),
-    locationIP varchar(40) NOT NULL,
-    browserUsed varchar(40) NOT NULL,
-    language varchar(40),
-    content ntext,
-    length int NOT NULL,
-    CreatorPersonId bigint NOT NULL,
-    ContainerForumId bigint NOT NULL,
-    LocationCountryId bigint NOT NULL
-);
+CREATE TABLE [dbo].[Forum] (
+    [creationDate]      datetimeoffset  NOT NULL,
+    [id]                bigint          NOT NULL,
+    [title]             nvarchar  (256) NOT NULL,
+    [ModeratorPersonId] bigint -- can be null as its cardinality is 0..1
+    -- CONSTRAINT PK_Forum PRIMARY KEY NONCLUSTERED ([id] ASC) WITH (DATA_COMPRESSION = PAGE),
+    -- CONSTRAINT Graph_Unique_Key_Forum UNIQUE CLUSTERED ($node_id) WITH (DATA_COMPRESSION = PAGE)
+);-- AS NODE;
 
 CREATE TABLE [dbo].[Person] (
     [creationDate]      datetimeoffset NOT NULL,
-    [personId]                BIGINT         NOT NULL,
+    [personId]          BIGINT         NOT NULL,
     [firstName]         nvarchar (MAX) NOT NULL,
     [lastName]          nvarchar (MAX) NOT NULL,
     [gender]            nvarchar (50)  NOT NULL,
@@ -104,8 +84,8 @@ CREATE TABLE [dbo].[Person] (
     [locationIP]        nvarchar (50)  NOT NULL,
     [browserUsed]       nvarchar (500) NOT NULL,
     [LocationCityId]    BIGINT         NOT NULL,
-    [language]          varchar(640)   NOT NULL,
-    [email]             varchar(MAX)   NOT NULL
+    [language]          varchar  (640) NOT NULL,
+    [email]             varchar  (MAX) NOT NULL
     CONSTRAINT PK_Person PRIMARY KEY NONCLUSTERED ([personId] ASC) WITH (DATA_COMPRESSION = PAGE),
     CONSTRAINT Graph_Unique_Key_Person UNIQUE CLUSTERED ($node_id) WITH (DATA_COMPRESSION = PAGE)
 ) AS NODE;
@@ -143,18 +123,6 @@ CREATE TABLE [dbo].[Person_hasInterest_Tag] (
     TagId bigint NOT NULL
 );
 
-CREATE TABLE [dbo].[Person_likes_Comment] (
-    creationDate datetimeoffset NOT NULL,
-    PersonId bigint NOT NULL,
-    CommentId bigint NOT NULL
-);
-
-CREATE TABLE [dbo].[Person_likes_Post] (
-    creationDate datetimeoffset NOT NULL,
-    PersonId bigint NOT NULL,
-    PostId bigint NOT NULL,
-);
-
 CREATE TABLE [dbo].[Person_studyAt_University] (
     creationDate datetimeoffset NOT NULL,
     PersonId bigint NOT NULL,
@@ -173,9 +141,11 @@ CREATE TABLE [dbo].[Person_knows_Person] (
     creationDate datetimeoffset NOT NULL,
     [person1Id]     BIGINT        NOT NULL,
     [person2Id]     BIGINT        NOT NULL,
+    [weight]     BIGINT        DEFAULT 0,
     INDEX [GRAPH_UNIQUE_INDEX_Person_knows_Person] UNIQUE NONCLUSTERED ($edge_id) WITH (DATA_COMPRESSION = PAGE),
     INDEX [GRAPH_FromTo_INDEX_Person_knows_Person] CLUSTERED ($from_id, $to_id) WITH (DATA_COMPRESSION = PAGE),
-    INDEX [GRAPH_ToFrom_INDEX_Person_knows_Person] NONCLUSTERED ($to_id, $from_id) WITH (DATA_COMPRESSION = PAGE)
+    INDEX [GRAPH_ToFrom_INDEX_Person_knows_Person] NONCLUSTERED ($to_id, $from_id) WITH (DATA_COMPRESSION = PAGE),
+    CONSTRAINT EC_Person_knows_Person CONNECTION (Person TO Person) ON DELETE CASCADE
 ) AS EDGE;
 ALTER INDEX [GRAPH_UNIQUE_INDEX_Person_knows_Person] ON [dbo].[Person_knows_Person] DISABLE;
 
@@ -195,27 +165,44 @@ CREATE TABLE Message (
     ParentMessageId bigint,
     ParentPostId bigint,
     ParentCommentId bigint,
-);
+    CONSTRAINT PK_Message PRIMARY KEY NONCLUSTERED ([MessageId] ASC) WITH (DATA_COMPRESSION = PAGE),
+    CONSTRAINT Graph_Unique_Key_Message UNIQUE CLUSTERED ($node_id) WITH (DATA_COMPRESSION = PAGE)
+) AS NODE;
 
 CREATE TABLE Person_likes_Message (
     creationDate datetimeoffset NOT NULL,
     PersonId bigint NOT NULL,
-    MessageId bigint NOT NULL
-);
+    MessageId bigint NOT NULL,
+    INDEX [GRAPH_UNIQUE_INDEX_Person_likes_Message] UNIQUE NONCLUSTERED ($edge_id) WITH (DATA_COMPRESSION = PAGE),
+    INDEX [GRAPH_FromTo_INDEX_Person_likes_Message] CLUSTERED ($from_id, $to_id) WITH (DATA_COMPRESSION = PAGE),
+    INDEX [GRAPH_ToFrom_INDEX_Person_likes_Message] NONCLUSTERED ($to_id, $from_id) WITH (DATA_COMPRESSION = PAGE),
+    CONSTRAINT EC_Person_likes_Message CONNECTION (Person TO Message) ON DELETE CASCADE
+) AS EDGE;
+ALTER INDEX [GRAPH_UNIQUE_INDEX_Person_likes_Message] ON [dbo].[Person_likes_Message] DISABLE;
 
 CREATE TABLE Message_hasTag_Tag (
     creationDate datetimeoffset NOT NULL,
     MessageId bigint NOT NULL,
-    TagId bigint NOT NULL
-);
+    TagId bigint NOT NULL,
+    INDEX [GRAPH_UNIQUE_INDEX_Message_hasTag_Tag] UNIQUE NONCLUSTERED ($edge_id) WITH (DATA_COMPRESSION = PAGE),
+    INDEX [GRAPH_FromTo_INDEX_Message_hasTag_Tag] CLUSTERED ($from_id, $to_id) WITH (DATA_COMPRESSION = PAGE),
+    INDEX [GRAPH_ToFrom_INDEX_Message_hasTag_Tag] NONCLUSTERED ($to_id, $from_id) WITH (DATA_COMPRESSION = PAGE),
+    CONSTRAINT EC_Message_hasTag_Tag CONNECTION (Message TO Tag) ON DELETE CASCADE
+) AS EDGE;
+ALTER INDEX [GRAPH_UNIQUE_INDEX_Message_hasTag_Tag] ON [dbo].[Message_hasTag_Tag] DISABLE;
 
--- views
-CREATE VIEW Comment_View AS
-    SELECT creationDate, MessageId AS id, locationIP, browserUsed, content, length, CreatorPersonId, LocationCountryId, ParentPostId, ParentCommentId
-    FROM Message
-    WHERE ParentMessageId IS NOT NULL;
+CREATE TABLE Message_hasCreator_Person (
+    MessageId bigint NOT NULL,
+    CreatorPersonId bigint NOT NULL,
+    INDEX [GRAPH_UNIQUE_INDEX_Message_hasCreator_Person] UNIQUE NONCLUSTERED ($edge_id) WITH (DATA_COMPRESSION = PAGE),
+    INDEX [GRAPH_FromTo_INDEX_Message_hasCreator_Person] CLUSTERED ($from_id, $to_id) WITH (DATA_COMPRESSION = PAGE),
+    CONSTRAINT EC_Message_hasCreator_Person CONNECTION (Message TO Person) ON DELETE CASCADE
+) AS EDGE;
+ALTER INDEX [GRAPH_UNIQUE_INDEX_Message_hasCreator_Person] ON [dbo].[Message_hasCreator_Person] DISABLE;
 
-CREATE VIEW Post_View AS
-    SELECT creationDate, MessageId AS id, imageFile, locationIP, browserUsed, language, content, length, CreatorPersonId, ContainerForumId, LocationCountryId
-    From Message
-    WHERE ParentMessageId IS NULL;
+CREATE TABLE Message_replyOf_Message (
+    INDEX [GRAPH_UNIQUE_INDEX_Message_replyOf_Message] UNIQUE NONCLUSTERED ($edge_id) WITH (DATA_COMPRESSION = PAGE),
+    INDEX [GRAPH_FromTo_INDEX_Message_replyOf_Message] CLUSTERED ($from_id, $to_id) WITH (DATA_COMPRESSION = PAGE),
+    CONSTRAINT EC_Message_replyOf_Message CONNECTION (Message TO Message) ON DELETE CASCADE
+) AS EDGE;
+ALTER INDEX [GRAPH_UNIQUE_INDEX_Message_replyOf_Message] ON [dbo].[Message_replyOf_Message] DISABLE;

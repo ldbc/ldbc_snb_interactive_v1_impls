@@ -27,5 +27,5 @@ WHERE CreatorPersonId = friend.Person2Id
             AND Tag.name = :tagName
       )
 GROUP BY name
-ORDER BY postCount DESC, name ASC
+ORDER BY postCount DESC, name COLLATE Latin1_General_BIN2;  
 ;

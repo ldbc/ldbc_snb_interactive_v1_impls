@@ -1,10 +1,14 @@
-INSERT Person_knows_Person ($from_id, $to_id, Person1id, Person2id, creationDate)
+DECLARE @Score bigint;
+SET @Score = dbo.CalculateInteractionScore(:person1Id, :person2Id);
+
+INSERT Person_knows_Person ($from_id, $to_id, Person1id, Person2id, weight, creationDate)
 VALUES
 (
     (SELECT $NODE_ID FROM Person WHERE personId = :person1Id),
     (SELECT $NODE_ID FROM Person WHERE personId = :person2Id),
     :person1Id,
     :person2Id,
+    @score,
     :creationDate
 ),
 (
@@ -12,5 +16,6 @@ VALUES
     (SELECT $NODE_ID FROM Person WHERE personId = :person1Id),
     :person2Id,
     :person1Id,
+    @score,
     :creationDate
 );
