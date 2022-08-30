@@ -84,7 +84,7 @@ jobs:
             cd umbra
             scripts/get-sample-data-set.sh
             . scripts/use-sample-data-set.sh
-            scripts/load-in-one-step.sh --is_container True
+            scripts/load-in-one-step.sh
             scripts/backup-database.sh
             cd ..
       - run:
@@ -254,7 +254,7 @@ jobs:
             export LDBC_SNB_DATAGEN_DIR=`pwd`
             cd umbra
             . scripts/use-datagen-data-set.sh
-            scripts/load-in-one-step.sh --is_container True
+            scripts/load-in-one-step.sh
             scripts/backup-database.sh
             cd ..
       - run:

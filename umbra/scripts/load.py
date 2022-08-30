@@ -146,7 +146,7 @@ if __name__ == "__main__":
         help="is_container: whether the data is loaded from within a container",
         type=bool,
         required=False,
-        default=False
+        default=True
     )
     args = parser.parse_args()
 
