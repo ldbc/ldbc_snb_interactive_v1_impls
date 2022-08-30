@@ -1,6 +1,6 @@
 /* Q13. Single shortest path
-\set person1Id 35184372097026
-\set person2Id 495
+\set person1Id 17592186044461
+\set person2Id 15393162788877
  */
 WITH RECURSIVE
 -- Bidirectional breadth first search

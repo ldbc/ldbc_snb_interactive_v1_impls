@@ -39,4 +39,4 @@ scripts/load.sh $@
 
 end_time=$(date +%s.%3N)
 elapsed=$(echo "scale=3; $end_time - $start_time" | bc)
-echo -e "Loading process took ${elapsed} seconds"
+echo -e "Loading process took ${elapsed} ms"
