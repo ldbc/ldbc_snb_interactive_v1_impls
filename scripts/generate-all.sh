@@ -81,6 +81,7 @@ echo "==================== Generate update streams ===================="
 cd ${LDBC_SNB_DRIVER_DIR}
 cd scripts
 
+export DATA_INPUT_TYPE=parquet
 ./convert.sh
 mv inserts/ ${LDBC_SNB_IMPLS_DIR}/update-streams-sf${SF}/
 mv deletes/ ${LDBC_SNB_IMPLS_DIR}/update-streams-sf${SF}/
