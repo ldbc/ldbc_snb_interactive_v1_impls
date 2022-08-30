@@ -53,7 +53,7 @@ class UmbraDbLoader():
         if is_container:
             path_prefix = "/data/"
         else:
-            path_prefix = "f{data_dir}/"
+            path_prefix = f"{data_dir}/"
 
         static_entities = ["Organisation", "Place", "Tag", "TagClass"]
         dynamic_entities = ["Comment", "Comment_hasTag_Tag", "Forum", "Forum_hasMember_Person", "Forum_hasTag_Tag", "Person", "Person_hasInterest_Tag", "Person_knows_Person", "Person_likes_Comment", "Person_likes_Post", "Person_studyAt_University", "Person_workAt_Company", "Post", "Post_hasTag_Tag"]
