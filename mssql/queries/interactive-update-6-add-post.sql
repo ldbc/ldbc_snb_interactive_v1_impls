@@ -27,3 +27,10 @@ VALUES
   , :countryId -- LocationCountryId
   , NULL
 );
+
+INSERT INTO Message_hasCreator_Person($from_id, $to_id)
+VALUES
+(
+    (SELECT $NODE_ID FROM Message WHERE MessageId = :postId),
+    (SELECT $NODE_ID FROM Person WHERE personId = :authorPersonId)
+);

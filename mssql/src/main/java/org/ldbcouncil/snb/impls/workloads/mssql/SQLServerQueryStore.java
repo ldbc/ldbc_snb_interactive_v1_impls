@@ -68,7 +68,8 @@ public class SQLServerQueryStore extends QueryStore {
             ImmutableMap.of(
                 LdbcInsert7AddComment.COMMENT_ID, getConverter().convertIdForInsertion(operation.getCommentId()),
                 LdbcInsert7AddComment.REPLY_TO_POST_ID, getConverter().convertId(operation.getReplyToPostId()),
-                LdbcInsert7AddComment.REPLY_TO_COMMENT_ID, getConverter().convertId(operation.getReplyToCommentId())
+                LdbcInsert7AddComment.REPLY_TO_COMMENT_ID, getConverter().convertId(operation.getReplyToCommentId()),
+                LdbcInsert7AddComment.AUTHOR_PERSON_ID,  getConverter().convertId(operation.getAuthorPersonId())
             )
         ));
 
