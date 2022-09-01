@@ -353,29 +353,10 @@ FROM OPENROWSET (
     FIRSTROW = 2
 ) AS raw;
 
-
 -- -- Load edge tables
-INSERT INTO [dbo].[Message_hasCreator_Person] ($FROM_ID, $TO_ID)
-SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS from_id,
-       NODE_ID_FROM_PARTS(object_id('Person'), CreatorPersonId) AS to_id
-FROM OPENROWSET (
-    BULK ':comment_csv',
-    DATA_SOURCE = 'ldbcstorage',
-    FORMATFILE = 'format-files/Comment.xml',
-    FORMATFILE_DATA_SOURCE = 'ldbcstorage',
-    FIRSTROW = 2
-) AS raw;
-
-INSERT INTO [dbo].[Message_hasCreator_Person] ($FROM_ID, $TO_ID)
-SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS from_id,
-       NODE_ID_FROM_PARTS(object_id('Person'), CreatorPersonId) AS to_id
-FROM OPENROWSET (
-    BULK ':post_csv',
-    DATA_SOURCE = 'ldbcstorage',
-    FORMATFILE = 'format-files/Post.xml',
-    FORMATFILE_DATA_SOURCE = 'ldbcstorage',
-    FIRSTROW = 2
-) AS raw;
+INSERT INTO Message_hasCreator_Person($from_id, $to_id)
+SELECT NODE_ID_FROM_PARTS(object_id('Message'), MessageId), NODE_ID_FROM_PARTS(object_id('Person'), CreatorPersonId)
+FROM Message;
 
 INSERT INTO [dbo].[Message_replyOf_Message] ($FROM_ID, $TO_ID)
 SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS from_id,

@@ -75,6 +75,7 @@ if __name__ == "__main__":
     DB_USER = os.getenv("MSSQL_USER", "SA")
     DB_PASS = os.getenv("MSSQL_PASSWORD", "")
     RECREATE = os.getenv("MSSQL_RECREATE", True)
+    EXTERNAL_AZURE = os.getenv("MSSQL_EXTERNAL_AZURE", False)
     SERVER_NAME = os.getenv("MSSQL_SERVER_NAME", "snb-interactive-mssql")
     DB_DRIVER = os.getenv("MSSQL_DRIVER", "ODBC Driver 18 for SQL Server")
 
@@ -89,8 +90,11 @@ if __name__ == "__main__":
         print("Create tables")
         DBL.run_ddl_scripts("ddl/schema-composite-merged-fk.sql")
 
-        print("Load initial snapshot")
-        load_data("ddl/load.sql", DBL)
+        print(f"Load initial snapshot (External: {EXTERNAL_AZURE})")
+        if EXTERNAL_AZURE:
+            DBL.run_ddl_scripts("ddl/load-azure-files.sql")
+        else:
+            load_data("ddl/load.sql", DBL)
 
         print("Create static materialized views . . . ")
         DBL.run_ddl_scripts("dml/create-static-materialized-views.sql")
