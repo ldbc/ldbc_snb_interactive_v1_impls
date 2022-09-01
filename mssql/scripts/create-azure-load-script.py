@@ -9,7 +9,9 @@ Usage:
 python3 create-azure-load-script.py \
     --path ../ddl/ \
     --storage_folder ldbc_snb_interactive_sf1/composite-merged-fk/ \
-    --storage_account_name ldbcstorage
+    --storage_endpoint https://data.blob.core.windows.net/container/ \
+    --sas_token 'SAS_TOKEN' \
+    --master_key ASecretPassword
 """
 
 import argparse
@@ -38,12 +40,15 @@ entity_to_csv_file= {
     ":post_hastag_tag_csv"              : "initial_snapshot/dynamic/Post_hasTag_Tag/Post_hasTag_Tag.csv"
 }
 
-def create_azure_load_script(sql_path, storage_folder, storage_account_name):
+def create_azure_load_script(sql_path, storage_folder, endpoint, sas_token, master_key):
     with open(Path(sql_path, 'load-azure.sql' ), "rt") as fin:
         with open(Path(sql_path, 'load-azure-temp.sql' ), "wt") as fout:
             for line in fin:
-                fout.write(line.replace(r':azure_storage_container', storage_account_name))
-    
+                new_line = line.replace(r':azure_storage_sas_token', sas_token)
+                new_line = new_line.replace(r':azure_storage_endpoint', endpoint)
+                new_line = new_line.replace(r':master_key_password', master_key)
+                fout.write(new_line)
+
     with open(Path(sql_path, 'load-azure-temp.sql' ) , "r") as f:
         with open(Path(sql_path, 'load-azure-files.sql' ), "w") as w:
             queries_file = f.read()
@@ -79,11 +84,22 @@ if __name__ == "__main__":
         required=True
     )
     parser.add_argument(
-        '--storage_account_name',
-        help="storage_account_name: Name of the storage account",
+        '--storage_endpoint',
+        help="storage_endpoint: URL of the storage endpoint including container name, e.g. https://data.blob.core.windows.net/container",
+        type=str,
+        required=True
+    )
+    parser.add_argument(
+        '--sas_token',
+        help="sas_token: Shared Access Signature token to acccess the storage account",
+        type=str,
+        required=True
+    )
+    parser.add_argument(
+        '--master_key',
+        help="master_key: Shared Access Signature token to acccess the storage account",
         type=str,
         required=True
     )
     args = parser.parse_args()
-
-    create_azure_load_script(args.path, args.storage_folder, args.storage_account_name)
+    create_azure_load_script(args.path, args.storage_folder, args.storage_endpoint, args.sas_token, args.master_key)
