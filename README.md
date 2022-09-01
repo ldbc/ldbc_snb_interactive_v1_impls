@@ -61,12 +61,14 @@ The benchmark framework relies on the following inputs produced by the [SNB Data
 Currently, the initial data set, update streams, and parameters can generated with the following command:
 
 ```bash
-export SF=
-export LDBC_SNB_DATAGEN_DIR=
-export LDBC_SNB_DATAGEN_MAX_MEM=
-export PLATFORM_VERSION=
-export DATAGEN_VERSION=
-export LDBC_SNB_DRIVER_DIR=
+export SF= #The scale factor to generate
+export LDBC_SNB_DATAGEN_DIR= # Path to the LDBC SNB datagen directory
+export LDBC_SNB_DATAGEN_MAX_MEM= #Maximum memory the datagen could use, e.g. 16G
+export LDBC_SNB_DRIVER_DIR= # Path to the LDBC SNB driver directory
+export DATA_INPUT_TYPE=parquet
+# If using the Docker Datagen version, set the env variable:
+export USE_DATAGEN_DOCKER=true
+
 scripts/generate-all.sh
 ```
 
