@@ -48,6 +48,7 @@ services:
     environment:
       - MSSQL_PORT=${MSSQL_PORT}
       - MSSQL_PASSWORD=${MSSQL_PASSWORD}
+      - MSSQL_EXTERNAL_AZURE=${MSSQL_EXTERNAL_AZURE}
       - MSSQL_HOST=mssql-db:${MSSQL_PORT}
       - WAIT_HOSTS=mssql-db:${MSSQL_PORT}
       - WAIT_TIMEOUT=300
