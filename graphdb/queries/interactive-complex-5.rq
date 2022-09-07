@@ -1,36 +1,47 @@
 PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
 PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX path: <http://www.ontotext.com/path#>
+PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX onto: <http://www.ontotext.com/path#>
-select ?title  (SUM(?friendHasPostOrNot) AS ?count)
-where {
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+select ?title  (SUM(?friendHasPostOrNot) AS ?count) where {
     {
-        select * where {
+        select ?forum ?dst where {
             {
-                select distinct ?fr
-                where {
-                    {
-                        sn:pers%personId% snvoc:directKnows ?fr.
-                    } union {
-                        sn:pers%personId% snvoc:directKnows/snvoc:directKnows ?fr.
-                        filter ( ?fr != sn:pers%personId%)
+                SELECT distinct ?dst
+                WHERE {
+                    VALUES (?src) {
+                        (sn:pers%personId%)
+                    }
+                    ?dst rdf:type snvoc:Person .
+                    filter (?dst != sn:pers%personId%)
+                    SERVICE path:search {
+                        <urn:path> path:findPath path:allPaths ;
+                                   path:sourceNode ?src ;
+                                   path:destinationNode ?dst ;
+                                   path:maxPathLength 2 ;
+                                   path:startNode ?start;
+                                   path:endNode ?fr;
+                                   SERVICE <urn:path> {
+                            ?start snvoc:directKnows ?fr.
+                        }
                     }
                 }
             }
             ?forum snvoc:hasMember ?mem .
             ?mem snvoc:joinDate ?date .
-            ?mem snvoc:hasPerson ?fr .
+            ?mem snvoc:hasPerson ?dst .
             filter (?date > "%minDate%"^^xsd:dateTime) .
         }
     }
     OPTIONAL{
-        ?post snvoc:hasCreator ?fr .
+        ?post snvoc:hasCreator ?dst .
         ?forum snvoc:containerOf ?post .
-        BIND( 1 AS ?friendHasPost )
     }
     ?forum snvoc:title ?title.
     ?forum snvoc:id ?forumId .
-    BIND( COALESCE(?friendHasPost, 0) AS ?friendHasPostOrNot )
+    BIND(if(bound(?post), 1, 0) AS ?friendHasPostOrNot )
 }
 group by ?title ?forumId
 order by desc(?count) ?forumId
