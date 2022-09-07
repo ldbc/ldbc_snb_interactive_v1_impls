@@ -7,9 +7,9 @@ INSERT INTO Person_likes_Message (
 )
 VALUES
 (
-    (SELECT $NODE_ID FROM Person WHERE personId = :personId),
-    (SELECT $NODE_ID FROM Message WHERE MessageId = :commentId),
-    :creationDate
+    NODE_ID_FROM_PARTS(object_id('Person'),  CAST( :personId AS BIGINT))
+  , NODE_ID_FROM_PARTS(object_id('Message'), CAST( :commentId AS BIGINT))
+  , :creationDate
   , :personId
   , :commentId
 );

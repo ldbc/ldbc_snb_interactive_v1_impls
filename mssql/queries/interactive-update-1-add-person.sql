@@ -15,13 +15,13 @@ VALUES
 (
     :creationDate
   , :personId
-  , :personFirstName
-  , :personLastName
+  , N:personFirstName
+  , N:personLastName
   , :gender
   , :birthday
   , :locationIP
   , :browserUsed
   , :cityId
   , :languages
-  , :emails
+  , N:emails
 );
