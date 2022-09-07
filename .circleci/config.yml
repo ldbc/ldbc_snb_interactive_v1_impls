@@ -304,6 +304,7 @@ jobs:
             cd umbra
             . scripts/use-datagen-data-set.sh
             scripts/restore-database.sh
+            sed -i 's/operation_count=250/operation_count=5000/' driver/benchmark-sf${SF}.properties
             driver/benchmark.sh driver/benchmark-sf${SF}.properties
             scripts/stop.sh
             cd ..
