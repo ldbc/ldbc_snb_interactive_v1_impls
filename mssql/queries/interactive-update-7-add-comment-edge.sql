@@ -5,9 +5,9 @@ VALUES
     (SELECT $NODE_ID FROM Message WHERE MessageId = :replyToCommentId + :replyToPostId)
 );
 
-INSERT INTO Message_hasCreator_Person($from_id, $to_id)
+INSERT Message_hasCreator_Person ($from_id, $to_id)
 VALUES
 (
-    (SELECT $NODE_ID FROM Message WHERE MessageId = :commentId),
-    (SELECT $NODE_ID FROM Person WHERE personId = :authorPersonId)
+    NODE_ID_FROM_PARTS(object_id('Message'), CAST( :commentId AS BIGINT)),
+    NODE_ID_FROM_PARTS(object_id('Person'),  CAST( :authorPersonId AS BIGINT))
 );
