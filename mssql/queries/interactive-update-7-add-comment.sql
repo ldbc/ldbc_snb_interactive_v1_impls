@@ -17,7 +17,7 @@ VALUES
     :creationDate
   , :commentId
   , NULL
-  , :content
+  , N:content
   , NULL
   , :locationIP
   , :browserUsed

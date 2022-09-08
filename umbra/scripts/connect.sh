@@ -9,4 +9,4 @@ cd ..
 . scripts/vars.sh
 
 export PGPASSWORD=${UMBRA_PASSWORD}
-psql -h localhost -U postgres -p 8000
+psql -h localhost -U postgres -p 8000 -d ldbcsnb

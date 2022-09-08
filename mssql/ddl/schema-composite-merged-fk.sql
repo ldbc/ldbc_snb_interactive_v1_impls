@@ -30,9 +30,7 @@ CREATE TABLE TagClass (
     name nvarchar(256) NOT NULL,
     url varchar(256) NOT NULL,
     SubclassOfTagClassId bigint--, -- null for the root TagClass (Thing)
-    -- CONSTRAINT PK_TagClass PRIMARY KEY NONCLUSTERED ([id] ASC) WITH (DATA_COMPRESSION = PAGE),
-    -- CONSTRAINT Graph_Unique_Key_TagClass UNIQUE CLUSTERED ($node_id) WITH (DATA_COMPRESSION = PAGE)
-);-- AS NODE;
+);
 
 -- static tables / separate table per individual subtype
 CREATE TABLE Country (
@@ -70,9 +68,7 @@ CREATE TABLE [dbo].[Forum] (
     [id]                bigint          NOT NULL,
     [title]             nvarchar  (256) NOT NULL,
     [ModeratorPersonId] bigint -- can be null as its cardinality is 0..1
-    -- CONSTRAINT PK_Forum PRIMARY KEY NONCLUSTERED ([id] ASC) WITH (DATA_COMPRESSION = PAGE),
-    -- CONSTRAINT Graph_Unique_Key_Forum UNIQUE CLUSTERED ($node_id) WITH (DATA_COMPRESSION = PAGE)
-);-- AS NODE;
+);
 
 CREATE TABLE [dbo].[Person] (
     [creationDate]      datetimeoffset NOT NULL,
@@ -115,7 +111,6 @@ CREATE TABLE Forum_hasTag_Tag (
     ForumId bigint NOT NULL,
     TagId bigint NOT NULL
 );
-
 
 CREATE TABLE [dbo].[Person_hasInterest_Tag] (
     creationDate datetimeoffset NOT NULL,
@@ -192,8 +187,6 @@ CREATE TABLE Message_hasTag_Tag (
 ALTER INDEX [GRAPH_UNIQUE_INDEX_Message_hasTag_Tag] ON [dbo].[Message_hasTag_Tag] DISABLE;
 
 CREATE TABLE Message_hasCreator_Person (
-    MessageId bigint NOT NULL,
-    CreatorPersonId bigint NOT NULL,
     INDEX [GRAPH_UNIQUE_INDEX_Message_hasCreator_Person] UNIQUE NONCLUSTERED ($edge_id) WITH (DATA_COMPRESSION = PAGE),
     INDEX [GRAPH_FromTo_INDEX_Message_hasCreator_Person] CLUSTERED ($from_id, $to_id) WITH (DATA_COMPRESSION = PAGE),
     CONSTRAINT EC_Message_hasCreator_Person CONNECTION (Message TO Person) ON DELETE CASCADE

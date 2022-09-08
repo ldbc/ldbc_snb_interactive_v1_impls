@@ -1,4 +1,18 @@
 USE ldbc;
+
+CREATE MASTER KEY ENCRYPTION BY PASSWORD=':master_key_password';
+
+CREATE DATABASE SCOPED CREDENTIAL LdbcStorageCredential
+WITH IDENTITY = 'SHARED ACCESS SIGNATURE',
+SECRET = ':azure_storage_sas_token';
+
+CREATE EXTERNAL DATA SOURCE ldbcstorage
+    WITH (
+        TYPE = BLOB_STORAGE,
+        LOCATION = ':azure_storage_endpoint',
+        CREDENTIAL = LdbcStorageCredential
+    );
+
 -- Static --
 -- Organisation
 INSERT INTO [dbo].[Organisation] (id, type, name, url, LocationPlaceId)
@@ -9,7 +23,9 @@ SELECT    id,
     LocationPlaceId
 FROM OPENROWSET (
     BULK ':organisation_csv',
-    FORMATFILE = '/data/format-files/Organisation.xml',
+    DATA_SOURCE = 'ldbcstorage',
+    FORMATFILE = 'format-files/Organisation.xml',
+    FORMATFILE_DATA_SOURCE = 'ldbcstorage',
     FIRSTROW = 2
 ) AS raw;
 
@@ -22,7 +38,9 @@ SELECT    id,
     PartOfPlaceId
 FROM OPENROWSET (
     BULK ':place_csv',
-    FORMATFILE = '/data/format-files/Place.xml',
+    DATA_SOURCE = 'ldbcstorage',
+    FORMATFILE = 'format-files/Place.xml',
+    FORMATFILE_DATA_SOURCE = 'ldbcstorage',
     FIRSTROW = 2
 ) AS raw;
 
@@ -34,7 +52,9 @@ SELECT  NODE_ID_FROM_PARTS(object_id('Tag'), id) AS node_id,  id,
     TypeTagClassId
 FROM OPENROWSET (
     BULK ':tag_csv',
-    FORMATFILE = '/data/format-files/Tag.xml',
+    DATA_SOURCE = 'ldbcstorage',
+    FORMATFILE = 'format-files/Tag.xml',
+    FORMATFILE_DATA_SOURCE = 'ldbcstorage',
     FIRSTROW = 2
 ) AS raw;
 
@@ -46,7 +66,9 @@ SELECT  id,
     SubclassOfTagClassId
 FROM OPENROWSET (
     BULK ':tagclass_csv',
-    FORMATFILE = '/data/format-files/TagClass.xml',
+    DATA_SOURCE = 'ldbcstorage',
+    FORMATFILE = 'format-files/TagClass.xml',
+    FORMATFILE_DATA_SOURCE = 'ldbcstorage',
     FIRSTROW = 2
 ) AS raw;
 
@@ -84,7 +106,9 @@ SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS node_id,
     CAST(NULL AS bigint) AS ParentMessageId
 FROM OPENROWSET (
     BULK ':post_csv',
-    FORMATFILE = '/data/format-files/Post.xml',
+    DATA_SOURCE = 'ldbcstorage',
+    FORMATFILE = 'format-files/Post.xml',
+    FORMATFILE_DATA_SOURCE = 'ldbcstorage',
     FIRSTROW = 2
 ) AS raw;
 
@@ -118,7 +142,9 @@ SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS node_id,
     coalesce(ParentPostId, ParentCommentId) AS ParentMessageId
 FROM OPENROWSET (
     BULK ':comment_csv',
-    FORMATFILE = '/data/format-files/Comment.xml',
+    DATA_SOURCE = 'ldbcstorage',
+    FORMATFILE = 'format-files/Comment.xml',
+    FORMATFILE_DATA_SOURCE = 'ldbcstorage',
     FIRSTROW = 2
 ) AS raw;
 
@@ -132,7 +158,9 @@ SELECT NODE_ID_FROM_PARTS(object_id('Message'), MessageId) AS from_id,
        TagId
 FROM OPENROWSET (
     BULK ':comment_hastag_tag_csv',
-    FORMATFILE = '/data/format-files/Comment_hasTag_Tag.xml',
+    DATA_SOURCE = 'ldbcstorage',
+    FORMATFILE = 'format-files/Comment_hasTag_Tag.xml',
+    FORMATFILE_DATA_SOURCE = 'ldbcstorage',
     FIRSTROW = 2
 ) AS raw;
 
@@ -144,7 +172,9 @@ SELECT NODE_ID_FROM_PARTS(object_id('Message'), MessageId) AS from_id,
     TagId
 FROM OPENROWSET (
     BULK ':post_hastag_tag_csv',
-    FORMATFILE = '/data/format-files/Post_hasTag_Tag.xml',
+    DATA_SOURCE = 'ldbcstorage',
+    FORMATFILE = 'format-files/Post_hasTag_Tag.xml',
+    FORMATFILE_DATA_SOURCE = 'ldbcstorage',
     FIRSTROW = 2
 ) AS raw;
 
@@ -156,7 +186,9 @@ SELECT       creationDate,
        ModeratorPersonId
 FROM OPENROWSET (
     BULK ':forum_csv',
-    FORMATFILE = '/data/format-files/Forum.xml',
+    DATA_SOURCE = 'ldbcstorage',
+    FORMATFILE = 'format-files/Forum.xml',
+    FORMATFILE_DATA_SOURCE = 'ldbcstorage',
     FIRSTROW = 2
 ) AS raw;
 
@@ -167,7 +199,9 @@ SELECT        creationDate,
         PersonId
 FROM OPENROWSET (
     BULK ':forum_hasmember_person_csv',
-    FORMATFILE = '/data/format-files/Forum_hasMember_Person.xml',
+    DATA_SOURCE = 'ldbcstorage',
+    FORMATFILE = 'format-files/Forum_hasMember_Person.xml',
+    FORMATFILE_DATA_SOURCE = 'ldbcstorage',
     FIRSTROW = 2
 ) AS raw;
 
@@ -178,7 +212,9 @@ SELECT       creationDate,
        TagId
 FROM OPENROWSET (
     BULK ':forum_hastag_tag_csv',
-    FORMATFILE = '/data/format-files/Forum_hasTag_Tag.xml',
+    DATA_SOURCE = 'ldbcstorage',
+    FORMATFILE = 'format-files/Forum_hasTag_Tag.xml',
+    FORMATFILE_DATA_SOURCE = 'ldbcstorage',
     FIRSTROW = 2
 ) AS raw;
 
@@ -211,7 +247,9 @@ SELECT NODE_ID_FROM_PARTS(object_id('Person'), personId) AS node_id,
        email
 FROM OPENROWSET (
     BULK ':person_csv',
-    FORMATFILE = '/data/format-files/Person.xml',
+    DATA_SOURCE = 'ldbcstorage',
+    FORMATFILE = 'format-files/Person.xml',
+    FORMATFILE_DATA_SOURCE = 'ldbcstorage',
     FIRSTROW = 2
 ) AS raw;
 
@@ -222,7 +260,9 @@ SELECT creationDate,
        TagId
 FROM OPENROWSET (
     BULK ':person_hasinterest_tag_csv',
-    FORMATFILE = '/data/format-files/Person_hasInterest_Tag.xml',
+    DATA_SOURCE = 'ldbcstorage',
+    FORMATFILE = 'format-files/Person_hasInterest_Tag.xml',
+    FORMATFILE_DATA_SOURCE = 'ldbcstorage',
     FIRSTROW = 2
 ) AS raw;
 
@@ -235,7 +275,9 @@ SELECT NODE_ID_FROM_PARTS(object_id('Person'), Person1id) AS from_id,
        creationDate
 FROM OPENROWSET (
     BULK ':person_knows_person_csv',
-    FORMATFILE =  '/data/format-files/Person_knows_Person.xml',
+    DATA_SOURCE = 'ldbcstorage',
+    FORMATFILE =  'format-files/Person_knows_Person.xml',
+    FORMATFILE_DATA_SOURCE = 'ldbcstorage',
     FIRSTROW = 2
 ) AS raw;
 
@@ -247,7 +289,9 @@ SELECT NODE_ID_FROM_PARTS(object_id('Person'), Person2id) AS from_id,
        creationDate
 FROM OPENROWSET (
     BULK ':person_knows_person_csv',
-    FORMATFILE =  '/data/format-files/Person_knows_Person.xml',
+    DATA_SOURCE = 'ldbcstorage',
+    FORMATFILE =  'format-files/Person_knows_Person.xml',
+    FORMATFILE_DATA_SOURCE = 'ldbcstorage',
     FIRSTROW = 2
 ) AS raw;
 
@@ -260,7 +304,9 @@ SELECT NODE_ID_FROM_PARTS(object_id('Person'), PersonId) AS from_id,
        MessageId
 FROM OPENROWSET (
     BULK ':person_likes_comment_csv',
-    FORMATFILE = '/data/format-files/Person_likes_Comment.xml',
+    DATA_SOURCE = 'ldbcstorage',
+    FORMATFILE = 'format-files/Person_likes_Comment.xml',
+    FORMATFILE_DATA_SOURCE = 'ldbcstorage',
     FIRSTROW = 2
 ) AS raw;
 
@@ -273,7 +319,9 @@ SELECT NODE_ID_FROM_PARTS(object_id('Person'), PersonId) AS from_id,
        MessageId
 FROM OPENROWSET (
     BULK ':person_likes_post_csv',
-    FORMATFILE = '/data/format-files/Person_likes_Post.xml',
+    DATA_SOURCE = 'ldbcstorage',
+    FORMATFILE = 'format-files/Person_likes_Post.xml',
+    FORMATFILE_DATA_SOURCE = 'ldbcstorage',
     FIRSTROW = 2
 ) AS raw;
 
@@ -285,7 +333,9 @@ SELECT       creationDate,
        classYear
 FROM OPENROWSET (
     BULK ':person_studyat_university_csv',
-    FORMATFILE = '/data/format-files/Person_studyAt_University.xml',
+    DATA_SOURCE = 'ldbcstorage',
+    FORMATFILE = 'format-files/Person_studyAt_University.xml',
+    FORMATFILE_DATA_SOURCE = 'ldbcstorage',
     FIRSTROW = 2
 ) AS raw;
 
@@ -297,35 +347,24 @@ SELECT       creationDate,
        workFrom
 FROM OPENROWSET (
     BULK ':person_workat_company_csv',
-    FORMATFILE = '/data/format-files/Person_workAt_Company.xml',
+    DATA_SOURCE = 'ldbcstorage',
+    FORMATFILE = 'format-files/Person_workAt_Company.xml',
+    FORMATFILE_DATA_SOURCE = 'ldbcstorage',
     FIRSTROW = 2
 ) AS raw;
-
 
 -- -- Load edge tables
-INSERT INTO [dbo].[Message_hasCreator_Person] ($FROM_ID, $TO_ID)
-SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS from_id,
-       NODE_ID_FROM_PARTS(object_id('Person'), CreatorPersonId) AS to_id
-FROM OPENROWSET (
-    BULK ':comment_csv',
-    FORMATFILE = '/data/format-files/Comment.xml',
-    FIRSTROW = 2
-) AS raw;
-
-INSERT INTO [dbo].[Message_hasCreator_Person] ($FROM_ID, $TO_ID)
-SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS from_id,
-       NODE_ID_FROM_PARTS(object_id('Person'), CreatorPersonId) AS to_id
-FROM OPENROWSET (
-    BULK ':post_csv',
-    FORMATFILE = '/data/format-files/Post.xml',
-    FIRSTROW = 2
-) AS raw;
+INSERT INTO Message_hasCreator_Person($from_id, $to_id)
+SELECT NODE_ID_FROM_PARTS(object_id('Message'), MessageId), NODE_ID_FROM_PARTS(object_id('Person'), CreatorPersonId)
+FROM Message;
 
 INSERT INTO [dbo].[Message_replyOf_Message] ($FROM_ID, $TO_ID)
 SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS from_id,
        NODE_ID_FROM_PARTS(object_id('Message'), coalesce(ParentPostId, ParentCommentId)) AS to_id
 FROM OPENROWSET (
     BULK ':comment_csv',
-    FORMATFILE = '/data/format-files/Comment.xml',
+    DATA_SOURCE = 'ldbcstorage',
+    FORMATFILE = 'format-files/Comment.xml',
+    FORMATFILE_DATA_SOURCE = 'ldbcstorage',
     FIRSTROW = 2
 ) AS raw;
