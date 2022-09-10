@@ -6,12 +6,18 @@ SELECT
     creationDay AS 'startDate',
     2 + salt * 37 % 5 AS 'durationDays'
 FROM
-    (SELECT
-        id AS personId,
-        abs(frequency - (SELECT percentile_disc(0.55) WITHIN GROUP (ORDER BY frequency) FROM personNumFriends)) AS diff
-    FROM personNumFriends
-    ORDER BY diff, md5(id)
-    LIMIT 20
+    (
+        SELECT Person1Id AS personId,
+               numFriendsOfFriends,
+               abs(numFriendsOfFriends - (
+                    SELECT percentile_disc(0.55)
+                    WITHIN GROUP (ORDER BY numFriendsOfFriends)
+                      FROM personNumFriendsOfFriends)
+               ) AS diff
+          FROM personNumFriendsOfFriends
+         WHERE numFriends > 0 AND deletionDate > '2019'
+         ORDER BY diff, md5(Person1Id)
+         LIMIT 20
     ),
     (SELECT
         country1Name AS countryXName,
