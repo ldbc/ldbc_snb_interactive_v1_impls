@@ -11,7 +11,7 @@ FROM
                       FROM personNumFriendsOfFriends)
                ) AS diff
           FROM personNumFriendsOfFriends
-         WHERE numFriends > 0 AND deletionDate > '2019'
+    WHERE numFriends > 0 AND deletionDate > '2019' AND creationDate < '2012-11-29'
          ORDER BY diff, md5(Person1Id)
          LIMIT 50
     ),
