@@ -1,6 +1,7 @@
 SELECT
     personId AS 'personId',
-    creationDay AS 'maxDate'
+    creationDay AS 'maxDate',
+       useUntil AS 'useUntil'
 FROM
     (
         SELECT Person1Id AS personId,
@@ -11,7 +12,7 @@ FROM
                       FROM personNumFriendsOfFriends)
                ) AS diff
           FROM personNumFriendsOfFriends
-         WHERE numFriends > 0 AND deletionDate > '2019' AND creationDate < '2012-11-29'
+         WHERE numFriends > 0 AND deletionDate > '2019' AND creationDate < :date_limit_filter
          ORDER BY diff, md5(Person1Id)
          LIMIT 50
     ),
@@ -21,6 +22,9 @@ FROM
     FROM creationDayNumMessages
     ORDER BY diff, md5(creationDay)
     LIMIT 20
+    ),
+    (
+        SELECT :date_limit_long AS useUntil
     )
 ORDER BY md5(concat(personId, creationDay))
 LIMIT 500

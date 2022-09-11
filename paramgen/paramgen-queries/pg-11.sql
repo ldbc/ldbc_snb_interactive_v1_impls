@@ -1,7 +1,8 @@
 SELECT
     personId AS 'personId',
     countryName AS 'countryName',
-    1998 + salt * 37 % 15 AS 'workFromYear' -- 1998..2013
+    1998 + salt * 37 % 15 AS 'workFromYear', -- 1998..2013
+       useUntil AS 'useUntil'
 FROM
     (
         SELECT Person1Id AS personId,
@@ -12,7 +13,7 @@ FROM
                       FROM personNumFriendsOfFriends)
                ) AS diff
           FROM personNumFriendsOfFriends
-         WHERE numFriends > 0 AND deletionDate > '2019' AND creationDate < '2012-11-29'
+         WHERE numFriends > 0 AND deletionDate > '2019' AND creationDate < :date_limit_filter
          ORDER BY diff, md5(Person1Id)
          LIMIT 50
     ),
@@ -24,6 +25,9 @@ FROM
     ORDER BY diff, countryName
     LIMIT 20
     ),
-    (SELECT unnest(generate_series(1, 20)) AS salt)
+    (SELECT unnest(generate_series(1, 20)) AS salt),
+    (
+        SELECT :date_limit_long AS useUntil
+    )
 ORDER BY md5(concat(personId, countryName, salt))
 LIMIT 500
