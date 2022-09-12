@@ -23,17 +23,26 @@ remove_duplicates_dict = {
     "Q_14b" : "DELETE FROM Q_14b t1 WHERE t1.useUntil < (SELECT max(t2.useUntil) FROM Q_14b t2 WHERE t2.person1Id = t1.person1Id AND t2.person2Id = t1.person2Id);"
 }
 
-def generate_parameters(cursor, date_limit, first_day, query_variant):
+def generate_parameters(cursor, date_limit, date_start, create_tables, query_variant):
+    """
+    Creates parameters for given query variant.
+    Args:
+        - cursor (DuckDBPyConnection): cursor to the DuckDB instance
+        - date_limit (datetime): The day to filter on. This date will be used to compare creation and deletion dates
+        - date_start (datetime): The first day of the inserts. This is used for parameters that do not contain creation and deletion dates
+        - create_tables (boolean): Whether to create tables at first run
+        - query_variant (str): number of the query to generate the parameters
+    """
     date_limit_string = date_limit.strftime('%Y-%m-%d')
     date_limit_long = date_limit.timestamp() * 1000
+    date_start_long = date_start.timestamp() * 1000
     with open(f"paramgen-queries/pg-{query_variant}.sql", "r") as parameter_query_file:
         parameter_query = parameter_query_file.read().replace(':date_limit_filter', f'\'{date_limit_string}\'')
         parameter_query = parameter_query.replace(':date_limit_long', str(date_limit_long))
-        # print(f'../parameters/interactive-{query_variant}-{filenumber}.parquet')
-        if first_day:
+        parameter_query = parameter_query.replace(':date_start_long', str(date_start_long))
+        if create_tables:
             cursor.execute(f"CREATE TABLE 'Q_{query_variant}' AS SELECT * FROM ({parameter_query});")
         cursor.execute(f"INSERT INTO 'Q_{query_variant}' SELECT * FROM ({parameter_query});")
-        # cursor.execute(f"COPY ( {parameter_query} ) TO '../parameters/interactive-{query_variant}-{filenumber}.parquet' WITH (FORMAT PARQUET);")
 
 if __name__ == "__main__":
     parquet_path = "factors/*"
@@ -60,12 +69,13 @@ if __name__ == "__main__":
 
     # Slide through relevant views
     date_limit = datetime(year=2012, month=11, day=29, hour=0, minute=0, second=0)
+    date_start = date_limit
     print("Start time of initial_snapshot: " + str(date_limit))
     window_time = timedelta(days=1) # Bucket by week
     print(window_time)
     end_date = datetime(year=2013, month=1, day=1, hour=0, minute=0, second=0)
     # Create factor tables with time_bucket column
-    first_day = True
+    create_tables = True
     while (date_limit < end_date):
         # Create factors
         print(date_limit, end_date, window_time)
@@ -74,14 +84,15 @@ if __name__ == "__main__":
         for query_variant in ["1", "2", "3a", "3b", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13a", "13b", "14a", "14b"]:
             print(f"- Q{query_variant}")
 
-            generate_parameters(cursor, date_limit, first_day, query_variant)
-        first_day = False
+            generate_parameters(cursor, date_limit, date_start, create_tables, query_variant)
+        create_tables = False
         date_limit = date_limit + window_time
     
     Path('paramgen.snb.db').unlink(missing_ok=True)
 
-    print("============ Check parameters ============")
+    print("============ Output parameters ============")
     for query_variant in ["1", "2", "3a", "3b", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13a", "13b", "14a", "14b"]:
+        print(f"- Q{query_variant} TO ../parameters/interactive-{query_variant}.parquet")
         query = remove_duplicates_dict[f"Q_{query_variant}"]
         cursor.execute(query)
         cursor.execute(f"COPY 'Q_{query_variant}' TO '../parameters/interactive-{query_variant}.parquet' WITH (FORMAT PARQUET);")
