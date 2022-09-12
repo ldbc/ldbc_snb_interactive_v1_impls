@@ -42,6 +42,7 @@ where {
                 ( sn:pers%personId% )
             }
             ?destination snvoc:firstName "%firstName%" .
+            filter (?destination != sn:pers%personId%)
             SERVICE <http://www.ontotext.com/path#search> {
                 <urn:path> onto:findPath onto:shortestPath ;
                            onto:sourceNode ?source ;

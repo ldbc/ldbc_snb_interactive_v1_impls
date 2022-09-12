@@ -5,44 +5,32 @@ PREFIX path: <http://www.ontotext.com/path#>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-select ?title  (SUM(?friendHasPostOrNot) AS ?count) where {
+select ?title (count(?post) AS ?count) where {
     {
-        select ?forum ?dst where {
+        select ?forum ?fr where {
             {
-                SELECT distinct ?dst
+                SELECT distinct ?fr
                 WHERE {
-                    VALUES (?src) {
-                        (sn:pers%personId%)
-                    }
-                    ?dst rdf:type snvoc:Person .
-                    filter (?dst != sn:pers%personId%)
-                    SERVICE path:search {
-                        <urn:path> path:findPath path:allPaths ;
-                                   path:sourceNode ?src ;
-                                   path:destinationNode ?dst ;
-                                   path:maxPathLength 2 ;
-                                   path:startNode ?start;
-                                   path:endNode ?fr;
-                                   SERVICE <urn:path> {
-                            ?start snvoc:directKnows ?fr.
-                        }
+                    {
+                        sn:pers%personId% snvoc:directKnows ?fr.
+                    } union {
+                        sn:pers%personId% snvoc:directKnows/snvoc:directKnows ?fr.
+                        filter ( ?fr != sn:pers%personId%)
                     }
                 }
             }
             ?forum snvoc:hasMember ?mem .
             ?mem snvoc:joinDate ?date .
-            ?mem snvoc:hasPerson ?dst .
+            ?mem snvoc:hasPerson ?fr .
             filter (?date > "%minDate%"^^xsd:dateTime) .
         }
     }
     OPTIONAL{
-        ?post snvoc:hasCreator ?dst .
+        ?post snvoc:hasCreator ?fr .
         ?forum snvoc:containerOf ?post .
     }
     ?forum snvoc:title ?title.
-    ?forum snvoc:id ?forumId .
-    BIND(if(bound(?post), 1, 0) AS ?friendHasPostOrNot )
 }
-group by ?title ?forumId
-order by desc(?count) ?forumId
+group by ?title ?forum
+order by desc(?count) ?forum
 limit 20

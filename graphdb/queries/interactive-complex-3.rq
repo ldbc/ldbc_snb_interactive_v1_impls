@@ -2,41 +2,35 @@ PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
 PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
 PREFIX dbpedia: <http://dbpedia.org/resource/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-select ?fr ?fname ?lname ?first ?second ?sum where {
+select ?fr ?fname ?lname ?cntXCount ?cntYCount ?totalCount where {
     {
-        select ?fr (sum(?one) as ?first) (sum(?two) as ?second) (?first + ?second as ?sum)
-        where {
+        select distinct ?fr ?city {
             {
-                select distinct ?fr {
-                    {
-                        sn:pers%personId% snvoc:directKnows  ?fr.
-                    } union {
-                        sn:pers%personId% snvoc:directKnows/snvoc:directKnows ?fr.
-                        filter (?fr != sn:pers%personId%)
-                    }
-                    ?fr snvoc:isLocatedIn ?city .
-                    ?city snvoc:isPartOf ?cnt .
-                    filter (?cnt != dbpedia:%countryXName% && ?cnt != dbpedia:%countryYName%)
-                }
-            }
-            {
-                ?post snvoc:hasCreator ?fr .
-                ?post snvoc:isLocatedIn dbpedia:%countryXName% .
-                ?post snvoc:creationDate ?date .
+                sn:pers%personId% snvoc:directKnows  ?fr.
             } union {
-                ?post1 snvoc:hasCreator ?fr .
-                ?post1 snvoc:isLocatedIn dbpedia:%countryYName% .
-                ?post1 snvoc:creationDate ?date .
+                sn:pers%personId% snvoc:directKnows/snvoc:directKnows ?fr.
+                filter (?fr != sn:pers%personId%)
             }
-            bind ("%startDate%"^^xsd:dateTime + "P%durationDays%D"^^xsd:duration as ?dateAdded).
-            filter (?date >= "%startDate%"^^xsd:dateTime && ?date < ?dateAdded) .
-            BIND ((IF (bound(?post), 1,0)) AS ?one)
-            BIND ((IF (bound(?post1), 1,0)) AS ?two)
+            ?fr snvoc:isLocatedIn ?city .
+            ?city snvoc:isPartOf ?cnt .
+            filter (?cnt != dbpedia:%countryXName% && ?cnt != dbpedia:%countryYName%)
+        }
+    }
+    {
+        select ?fr (sum(?msgXCount) as ?cntXCount) (sum(?msgYCount) as ?cntYCount) (?cntXCount + ?cntYCount as ?totalCount) where {
+            ?message snvoc:hasCreator ?fr .
+            ?message snvoc:isLocatedIn ?cnt .
+            ?message snvoc:creationDate ?date .
+            filter (?cnt = dbpedia:%countryXName% || ?cnt = dbpedia:%countryYName%) .
+            bind ("%startDate%"^^xsd:dateTime + "P%durationDays%D"^^xsd:duration as ?endDate).
+            filter (?date >= "%startDate%"^^xsd:dateTime && ?date < ?endDate) .
+            bind(if(?cnt = dbpedia:%countryXName%, 1, 0) as ?msgXCount) .
+            bind(if(?cnt = dbpedia:%countryYName%, 1, 0) as ?msgYCount) .
         } group by ?fr
     }
-    filter(?first != 0 && ?second != 0)
+    filter(?cntXCount != 0 && ?cntYCount != 0) .
     ?fr snvoc:firstName ?fname .
     ?fr snvoc:lastName ?lname .
 }
-order by desc(?sum) ?fr
+order by desc(?totalCount) ?fr
 limit 20

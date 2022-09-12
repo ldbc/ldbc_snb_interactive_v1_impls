@@ -3,27 +3,23 @@ PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-
-select ?tagname (count (distinct ?post) as ?count) 
+select ?tagname ?postCount
 where {
-    sn:pers%personId% (snvoc:directKnows) ?fr.
-    ?post snvoc:hasCreator ?fr .
-    ?post rdf:type snvoc:Post .
-    ?post snvoc:hasTag ?tag .
-    ?tag foaf:name ?tagname .
-    ?post snvoc:creationDate ?date .
-    bind ("%startDate%"^^xsd:dateTime + "P%durationDays%D"^^xsd:duration as ?dateAdded).
-    filter (?date >= "%startDate%"^^xsd:dateTime && ?date < ?dateAdded) .
-      FILTER NOT EXISTS {
-            sn:pers%personId% snvoc:directKnows ?fr2.
-            ?post2 snvoc:hasCreator ?fr2 .
-            ?post2 rdf:type snvoc:Post .
-            ?post2 snvoc:hasTag ?tag .
-            ?post2 snvoc:creationDate ?date2 .
-            filter (?date2 < "%startDate%"^^xsd:dateTime)
+    {
+        select ?tag (sum(?valid) as ?postCount) (sum(?invalid) as ?invalidCount) where {
+            sn:pers%personId% snvoc:directKnows ?fr.
+            ?post snvoc:hasCreator ?fr .
+            ?post rdf:type snvoc:Post .
+            ?post snvoc:hasTag ?tag .
+            ?post snvoc:creationDate ?date .
+            bind("%startDate%"^^xsd:dateTime + "P%durationDays%D"^^xsd:duration as ?endDate) .
+            bind(if("%startDate%"^^xsd:dateTime <= ?date && ?date < ?endDate, 1, 0) as ?valid ) .
+            bind(if(?date < "%startDate%"^^xsd:dateTime, 1, 0) as ?invalid) .
         }
-
+        group by ?tag
+    }
+    filter(?invalidCount = 0 && ?postCount > 0) .
+    ?tag foaf:name ?tagname .
 }
-group by ?tagname
-order by desc(?count) ?tagname
+order by desc(?postCount) ?tagname
 limit 10
