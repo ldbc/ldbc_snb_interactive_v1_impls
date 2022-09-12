@@ -1,6 +1,7 @@
 SELECT
     personId AS 'personId',
     creationDay AS 'minDate',
+       useFrom AS 'useFrom',
        useUntil AS 'useUntil'
 FROM
     (
@@ -10,9 +11,11 @@ FROM
                     SELECT percentile_disc(0.45)
                     WITHIN GROUP (ORDER BY numFriendsOfFriends)
                       FROM personNumFriendsOfFriends)
-               ) AS diff
+               ) AS diff,
+               creationDate AS useFrom,
+               deletionDate AS useUntil
           FROM personNumFriendsOfFriends
-    WHERE numFriends > 0 AND deletionDate > '2019' AND creationDate < :date_limit_filter
+    WHERE numFriends > 0 AND deletionDate - INTERVAL 1 DAY  > :date_limit_filter AND creationDate + INTERVAL 1 DAY < :date_limit_filter
          ORDER BY diff, md5(Person1Id)
          LIMIT 50
     ),
@@ -22,9 +25,6 @@ FROM
     FROM creationDayNumMessages
     ORDER BY diff, md5(creationDay)
     LIMIT 20
-    ),
-    (
-        SELECT :date_limit_long AS useUntil
     )
 ORDER BY md5(concat(personId, creationDay))
 LIMIT 500

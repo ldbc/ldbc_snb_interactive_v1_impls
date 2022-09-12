@@ -5,6 +5,7 @@ SELECT
     countryYName AS 'countryYName',
     creationDay AS 'startDate',
     2 + salt * 37 % 5 AS 'durationDays',
+       useFrom AS 'useFrom',
        useUntil AS 'useUntil'
 FROM
     (
@@ -14,9 +15,11 @@ FROM
                     SELECT percentile_disc(0.55)
                     WITHIN GROUP (ORDER BY numFriendsOfFriends)
                       FROM personNumFriendsOfFriends)
-               ) AS diff
+               ) AS diff,
+               creationDate AS useFrom,
+               deletionDate AS useUntil
           FROM personNumFriendsOfFriends
-         WHERE numFriends > 0 AND deletionDate > '2019' AND creationDate < :date_limit_filter
+         WHERE numFriends > 0 AND deletionDate - INTERVAL 1 DAY  > :date_limit_filter AND creationDate + INTERVAL 1 DAY < :date_limit_filter
          ORDER BY diff, md5(Person1Id)
          LIMIT 20
     ),
@@ -37,10 +40,7 @@ FROM
     ORDER BY diff, creationDay
     LIMIT 15
     ),
-    (SELECT unnest(generate_series(1, 20)) AS salt),
-    (
-        SELECT :date_limit_long AS useUntil
-    )
+    (SELECT unnest(generate_series(1, 20)) AS salt)
 WHERE countryXName != countryYName
 ORDER BY md5(concat(personId, countryXName, countryYName, creationDay, salt))
 LIMIT 500
