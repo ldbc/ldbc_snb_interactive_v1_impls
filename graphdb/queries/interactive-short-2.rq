@@ -1,22 +1,24 @@
 PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
 PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-select ?message ?content ?creationDate ?post ?originalPoster ?originalPosterFirstName ?originalPosterLastName where {
-    ?message snvoc:hasCreator sn:pers%personId% ;
-             snvoc:creationDate ?creationDate .
+PREFIX onto: <http://www.ontotext.com/>
+select ?message ?content ?creationDate ?personMessage ?originalPoster ?originalPosterFirstName ?originalPosterLastName where {
     {
-        {
-            ?message snvoc:content ?content .
-        } UNION {
-            ?message snvoc:imageFile ?content .
+        select ?message ?creationDate where {
+            ?message snvoc:hasCreator sn:pers%personId% ;
+                     snvoc:creationDate ?creationDate .
         }
+        order by desc(?creationDate)
+        limit 10
     } .
-    OPTIONAL {
-        ?message snvoc:replyOf* ?post .
-        ?post rdf:type snvoc:Post .
-        ?post snvoc:hasCreator ?originalPoster .
-        ?originalPoster snvoc:firstName ?originalPosterFirstName ;
-                        snvoc:lastName ?originalPosterLastName .
-    } .
-} ORDER BY DESC(?creationDate) DESC(?message)
-LIMIT 10
+    ?message snvoc:replyOf* ?personMessage .
+    ?personMessage rdf:type snvoc:Post .
+    {
+        ?message snvoc:content ?content .
+    } UNION {
+        ?message snvoc:imageFile ?content .
+    }
+    ?personMessage snvoc:hasCreator ?originalPoster .
+    ?originalPoster snvoc:firstName ?originalPosterFirstName ;
+                    snvoc:lastName ?originalPosterLastName .
+} order by desc(?creationDate) ?personMessage

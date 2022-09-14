@@ -6,9 +6,9 @@ SELECT ?content ?creationDate
 WHERE {
 	?message snvoc:id "%messageId%"^^xsd:long .
 	{
-	  {?message snvoc:content ?content}
-	  UNION
-	  {?message snvoc:imageFile ?content}
-	} .
-     ?message snvoc:creationDate ?creationDate .
+	    ?message snvoc:content ?content
+	} UNION {
+	    ?message snvoc:imageFile ?content
+	}
+    ?message snvoc:creationDate ?creationDate .
 }

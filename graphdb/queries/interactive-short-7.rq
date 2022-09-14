@@ -1,24 +1,20 @@
 PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX onto: <http://www.ontotext.com/>
 
 SELECT distinct ?repliedComment ?repliedCommentContent ?repliedCommentCreationDate ?replyAuthor ?replyAuthorFirstName
 ?replyAuthorLastName ?knowsAuthor
-WHERE {
-	?message snvoc:id "%messageId%"^^xsd:long ;
-             snvoc:hasCreator ?messageAuthor .
+where {
+	?message snvoc:id "%messageId%"^^xsd:long .
+    ?message snvoc:hasCreator ?messageAuthor .
     ?repliedComment snvoc:replyOf ?message .
-   # ?replyMessage snvoc:id "%messageId%"^^xsd:long .
+    ?repliedComment rdf:type snvoc:Comment .
+    ?repliedComment snvoc:hasCreator ?replyAuthor .
     ?repliedComment snvoc:content ?repliedCommentContent ;
-    				snvoc:creationDate ?repliedCommentCreationDate ;
-        			snvoc:hasCreator ?replyAuthor .
-                   OPTIONAL {
-                     ?replyAuthor snvoc:directKnows ?messageAuthor .
-                     BIND( "true"^^xsd:boolean AS ?isKnown ) .
-                 }
-                 BIND (IF((?replyAuthor != ?messageAuthor && COALESCE(?isKnown, false)), true, false) AS
-              ?knowsAuthor)
-       ?replyAuthor snvoc:firstName ?replyAuthorFirstName ;
-                  snvoc:lastName ?replyAuthorLastName ;
-                  snvoc:id ?replyAuthorId .
-} ORDER BY DESC(?repliedCommentCreationDate) ?replyAuthorId
+    				snvoc:creationDate ?repliedCommentCreationDate .
+    ?replyAuthor snvoc:firstName ?replyAuthorFirstName ;
+                  snvoc:lastName ?replyAuthorLastName .
+    bind(if (exists{ ?replyAuthor snvoc:directKnows ?messageAuthor . }, "true", "false") as ?knowsAuthor)
+} ORDER BY DESC(?repliedCommentCreationDate) ?replyAuthor
