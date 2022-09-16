@@ -15,7 +15,8 @@ public class PostgresInteractiveDb extends PostgresDb {
 
         registerOperationHandler(LdbcQuery1.class, Query1.class);
         registerOperationHandler(LdbcQuery2.class, Query2.class);
-        registerOperationHandler(LdbcQuery3.class, Query3.class);
+        registerOperationHandler(LdbcQuery3a.class, Query3a.class);
+        registerOperationHandler(LdbcQuery3b.class, Query3b.class);
         registerOperationHandler(LdbcQuery4.class, Query4.class);
         registerOperationHandler(LdbcQuery5.class, Query5.class);
         registerOperationHandler(LdbcQuery6.class, Query6.class);
@@ -25,8 +26,10 @@ public class PostgresInteractiveDb extends PostgresDb {
         registerOperationHandler(LdbcQuery10.class, Query10.class);
         registerOperationHandler(LdbcQuery11.class, Query11.class);
         registerOperationHandler(LdbcQuery12.class, Query12.class);
-        registerOperationHandler(LdbcQuery13.class, Query13.class);
-        registerOperationHandler(LdbcQuery14.class, Query14.class);
+        registerOperationHandler(LdbcQuery13a.class, Query13a.class);
+        registerOperationHandler(LdbcQuery13b.class, Query13b.class);
+        registerOperationHandler(LdbcQuery14a.class, Query14a.class);
+        registerOperationHandler(LdbcQuery14b.class, Query14b.class);
 
         registerOperationHandler(LdbcShortQuery1PersonProfile.class, ShortQuery1PersonProfile.class);
         registerOperationHandler(LdbcShortQuery2PersonPosts.class, ShortQuery2PersonPosts.class);

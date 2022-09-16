@@ -149,15 +149,46 @@ public class CypherDb extends BaseDb<CypherQueryStore>
         }
     }
 
-    public static class InteractiveQuery3 extends CypherListOperationHandler<LdbcQuery3,LdbcQuery3Result>
+    public static class InteractiveQuery3a extends CypherListOperationHandler<LdbcQuery3a, LdbcQuery3Result>
     {
         @Override
-        public String getQueryString(CypherDbConnectionState state, LdbcQuery3 operation) {
+        public String getQueryString(CypherDbConnectionState state, LdbcQuery3a operation) {
             return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery3);
         }
 
         @Override
-        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery3 operation) {
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery3a operation) {
+            return state.getQueryStore().getQuery3Map(operation);
+        }
+
+        @Override
+        public LdbcQuery3Result toResult( Record record )
+        {
+            long personId = record.get( 0 ).asLong();
+            String personFirstName = record.get( 1 ).asString();
+            String personLastName = record.get( 2 ).asString();
+            int xCount = record.get( 3 ).asInt();
+            int yCount = record.get( 4 ).asInt();
+            int count = record.get( 5 ).asInt();
+            return new LdbcQuery3Result(
+                    personId,
+                    personFirstName,
+                    personLastName,
+                    xCount,
+                    yCount,
+                    count );
+        }
+    }
+
+    public static class InteractiveQuery3b extends CypherListOperationHandler<LdbcQuery3b, LdbcQuery3Result>
+    {
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcQuery3b operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery3);
+        }
+
+        @Override
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery3b operation) {
             return state.getQueryStore().getQuery3Map(operation);
         }
 
@@ -433,15 +464,15 @@ public class CypherDb extends BaseDb<CypherQueryStore>
         }
     }
 
-    public static class InteractiveQuery13 extends CypherSingletonOperationHandler<LdbcQuery13,LdbcQuery13Result>
+    public static class InteractiveQuery13a extends CypherSingletonOperationHandler<LdbcQuery13a, LdbcQuery13Result>
     {
         @Override
-        public String getQueryString(CypherDbConnectionState state, LdbcQuery13 operation) {
+        public String getQueryString(CypherDbConnectionState state, LdbcQuery13a operation) {
             return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery13);
         }
 
         @Override
-        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery13 operation) {
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery13a operation) {
             return state.getQueryStore().getQuery13Map(operation);
         }
 
@@ -452,15 +483,61 @@ public class CypherDb extends BaseDb<CypherQueryStore>
         }
     }
 
-    public static class InteractiveQuery14 extends CypherListOperationHandler<LdbcQuery14,LdbcQuery14Result>
+    public static class InteractiveQuery13b extends CypherSingletonOperationHandler<LdbcQuery13b,LdbcQuery13Result>
     {
         @Override
-        public String getQueryString(CypherDbConnectionState state, LdbcQuery14 operation) {
+        public String getQueryString(CypherDbConnectionState state, LdbcQuery13b operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery13);
+        }
+
+        @Override
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery13b operation) {
+            return state.getQueryStore().getQuery13Map(operation);
+        }
+
+        @Override
+        public LdbcQuery13Result toResult( Record record )
+        {
+            return new LdbcQuery13Result( record.get( 0 ).asInt() );
+        }
+    }
+
+    public static class InteractiveQuery14a extends CypherListOperationHandler<LdbcQuery14a, LdbcQuery14Result>
+    {
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcQuery14a operation) {
             return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery14);
         }
 
         @Override
-        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery14 operation) {
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery14a operation) {
+            return state.getQueryStore().getQuery14Map(operation);
+        }
+
+        @Override
+        public LdbcQuery14Result toResult( Record record ) throws ParseException
+        {
+            List<Long> personIdsInPath = new ArrayList<>();
+            if ( !record.get( 0 ).isNull() )
+            {
+                personIdsInPath = record.get( 0 ).asList( Value::asLong );
+            }
+            long pathWeight = record.get( 1 ).asLong();
+            return new LdbcQuery14Result(
+                    personIdsInPath,
+                    pathWeight );
+        }
+    }
+
+    public static class InteractiveQuery14b extends CypherListOperationHandler<LdbcQuery14b, LdbcQuery14Result>
+    {
+        @Override
+        public String getQueryString(CypherDbConnectionState state, LdbcQuery14b operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery14);
+        }
+
+        @Override
+        public Map<String, Object> getParameters(CypherDbConnectionState state, LdbcQuery14b operation) {
             return state.getQueryStore().getQuery14Map(operation);
         }
 
