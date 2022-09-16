@@ -12,6 +12,6 @@ FROM
     Message
 WHERE MATCH(p1-(Person_knows_Person)->p2)
     AND p2.personId = Message.CreatorPersonId
-    AND Message.creationDate <= :maxDate
+    AND Message.creationDate < :maxDate
     AND p1.personId = :personId
 ORDER BY creationDate DESC, MessageId ASC

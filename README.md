@@ -9,9 +9,11 @@ If you are looking for a stable, auditable version, use one of the old versions:
 
 * [Release v0.3.6](https://github.com/ldbc/ldbc_snb_interactive_impls/releases/tag/0.3.6)
 * [Release v1.2.0](https://github.com/ldbc/ldbc_snb_interactive_impls/releases/tag/1.2.0)
+  (includes fix for counting [on-time operations](https://github.com/ldbc/ldbc_snb_interactive_driver/issues/154))
 * [Branch `v1-dev`](https://github.com/ldbc/ldbc_snb_interactive_impls/tree/v1-dev)
+  (includes delete operations, currently work-in-progress)
 
-Reference implementations of the LDBC Social Network Benchmark's Interactive workload ([paper](https://homepages.cwi.nl/~boncz/snb-challenge/snb-sigmod.pdf), [specification on GitHub pages](https://ldbcouncil.org/ldbc_snb_docs/), [specification on arXiv](https://arxiv.org/pdf/2001.02299.pdf)).
+Reference implementations of the LDBC Social Network Benchmark's Interactive workload. See details on the benchmark, see the [SIGMOD 2015 paper](https://homepages.cwi.nl/~boncz/snb-challenge/snb-sigmod.pdf), [specification on GitHub Pages](https://ldbcouncil.org/ldbc_snb_docs/), and [specification on arXiv](https://arxiv.org/pdf/2001.02299.pdf).
 
 To get started with the LDBC SNB benchmarks, check out our introductory presentation: [The LDBC Social Network Benchmark](https://docs.google.com/presentation/d/1p-nuHarSOKCldZ9iEz__6_V3sJ5kbGWlzZHusudW_Cc/) ([PDF](https://ldbcouncil.org/docs/presentations/ldbc-snb-2021-12.pdf)).
 
@@ -56,7 +58,7 @@ scripts/build.sh
 
 ### Inputs
 
-The benchmark framework relies on the following inputs produced by the [SNB Datagen's new (Spark) version](https://github.com/ldbc/ldbc_snb_datagen_spark/).
+The benchmark framework relies on the following inputs produced by the [SNB Datagen's new (Spark) version](https://github.com/ldbc/ldbc_snb_datagen_spark/). Pre-generated data sets will be made available by the end of 2022.
 
 Currently, the initial data set, update streams, and parameters can generated with the following command:
 
@@ -71,6 +73,12 @@ export USE_DATAGEN_DOCKER=true
 
 scripts/generate-all.sh
 ```
+
+### Loading the data
+
+Select the system to be tested, e.g. [PostgreSQL](postgres/).
+Load the data set as described in the README file of the selected system.
+For most systems, this involves setting an environment variable to the correct location and invoking the `scripts/load-in-one-step.sh` script.
 
 ### Driver modes
 
@@ -122,16 +130,6 @@ The implementation process looks roughly as follows:
 3. Implement the 7 update queries.
 4. Test the implementation against the reference implementations using various scale factors.
 5. Optimize the implementation.
-
-## Data sets
-
-### Benchmark data sets
-
-To generate the benchmark data sets, use the [Spark-based LDBC SNB Datagen](https://github.com/ldbc/ldbc_snb_datagen_spark/). Detailed instructions are given for each tool.
-
-### Pre-generated data sets
-
-Pre-generated data sets will be available in autumn 2023.
 
 ## Preparing for an audited run
 
