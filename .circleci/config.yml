@@ -66,10 +66,12 @@ jobs:
       - run:
           name: Generate parameters for SF0.003
           command: |
-            cd paramgen
-            scripts/get-sample-factors.sh
-            scripts/paramgen.sh
+            export LDBC_SNB_IMPLS_DIR=$(pwd)
+            cd ldbc_snb_interactive_driver/paramgen
+            ./get-sample-factors.sh
+            ./paramgen.sh
             cd ..
+            mv parameters/*.parquet ${LDBC_SNB_IMPLS_DIR}/parameters/
       ### Umbra
       - run:
           name: Load Umbra Docker image
