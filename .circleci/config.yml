@@ -218,6 +218,10 @@ jobs:
             export LDBC_SNB_DATAGEN_DIR=`pwd`
             cd cypher
             . scripts/use-datagen-data-set.sh
+            sed -i "s|ldbc.snb.interactive.LdbcQuery13a_enable = true|ldbc.snb.interactive.LdbcQuery13a_enable = false|g" driver/create-validation-parameters-sf${SF}.properties
+            sed -i "s|ldbc.snb.interactive.LdbcQuery13b_enable = true|ldbc.snb.interactive.LdbcQuery13b_enable = false|g" driver/create-validation-parameters-sf${SF}.properties
+            sed -i "s|ldbc.snb.interactive.LdbcQuery14a_enable = true|ldbc.snb.interactive.LdbcQuery14a_enable = false|g" driver/create-validation-parameters-sf${SF}.properties
+            sed -i "s|ldbc.snb.interactive.LdbcQuery14b_enable = true|ldbc.snb.interactive.LdbcQuery14b_enable = false|g" driver/create-validation-parameters-sf${SF}.properties
             driver/create-validation-parameters.sh driver/create-validation-parameters-sf${SF}.properties
             scripts/stop.sh
             cp validation_params.json validation_params_cypher_sf${SF}.json
@@ -291,6 +295,10 @@ jobs:
             export SF=1
             export LDBC_SNB_DATAGEN_DIR=`pwd`
             cd postgres
+            sed -i "s|ldbc.snb.interactive.LdbcQuery13a_enable = true|ldbc.snb.interactive.LdbcQuery13a_enable = false|g" driver/benchmark-sf${SF}.properties
+            sed -i "s|ldbc.snb.interactive.LdbcQuery13b_enable = true|ldbc.snb.interactive.LdbcQuery13b_enable = false|g" driver/benchmark-sf${SF}.properties
+            sed -i "s|ldbc.snb.interactive.LdbcQuery14a_enable = true|ldbc.snb.interactive.LdbcQuery14a_enable = false|g" driver/benchmark-sf${SF}.properties
+            sed -i "s|ldbc.snb.interactive.LdbcQuery14b_enable = true|ldbc.snb.interactive.LdbcQuery14b_enable = false|g" driver/benchmark-sf${SF}.properties
             . scripts/use-datagen-data-set.sh
             scripts/restore-database.sh
             driver/benchmark.sh driver/benchmark-sf${SF}.properties
