@@ -20,7 +20,6 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             sudo apt update && sudo apt install -y zstd
             scripts/install-dependencies.sh
-            paramgen/scripts/install-dependencies.sh
       - run:
           # Install Java 11 (Ubuntu 22.04 has Java 17 by default)
           name: Install OpenJDK 11
