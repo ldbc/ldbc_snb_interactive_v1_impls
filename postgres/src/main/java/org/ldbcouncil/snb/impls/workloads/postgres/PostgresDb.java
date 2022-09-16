@@ -81,10 +81,10 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
     }
 
-    public static class Query3 extends PostgresListOperationHandler<LdbcQuery3, LdbcQuery3Result> {
+    public static class Query3a extends PostgresListOperationHandler<LdbcQuery3a, LdbcQuery3Result> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState state, LdbcQuery3 operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcQuery3a operation) {
             return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery3);
         }
 
@@ -98,7 +98,25 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                     result.getInt(5),
                     result.getInt(6));
         }
+    }
 
+    public static class Query3b extends PostgresListOperationHandler<LdbcQuery3b, LdbcQuery3Result> {
+
+        @Override
+        public String getQueryString(PostgresDbConnectionState state, LdbcQuery3b operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery3);
+        }
+
+        @Override
+        public LdbcQuery3Result convertSingleResult(ResultSet result) throws SQLException {
+            return new LdbcQuery3Result(
+                    result.getLong(1),
+                    result.getString(2),
+                    result.getString(3),
+                    result.getInt(4),
+                    result.getInt(5),
+                    result.getInt(6));
+        }
     }
 
     public static class Query4 extends PostgresListOperationHandler<LdbcQuery4, LdbcQuery4Result> {
@@ -269,10 +287,10 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
 
     }
 
-    public static class Query13 extends PostgresSingletonOperationHandler<LdbcQuery13, LdbcQuery13Result> {
+    public static class Query13a extends PostgresSingletonOperationHandler<LdbcQuery13a, LdbcQuery13Result> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState state, LdbcQuery13 operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcQuery13a operation) {
             return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery13);
         }
 
@@ -280,13 +298,25 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
         public LdbcQuery13Result convertSingleResult(ResultSet result) throws SQLException {
             return new LdbcQuery13Result(result.getInt(1));
         }
-
     }
 
-    public static class Query14 extends PostgresListOperationHandler<LdbcQuery14, LdbcQuery14Result> {
+    public static class Query13b extends PostgresSingletonOperationHandler<LdbcQuery13b, LdbcQuery13Result> {
 
         @Override
-        public String getQueryString(PostgresDbConnectionState state, LdbcQuery14 operation) {
+        public String getQueryString(PostgresDbConnectionState state, LdbcQuery13b operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery13);
+        }
+
+        @Override
+        public LdbcQuery13Result convertSingleResult(ResultSet result) throws SQLException {
+            return new LdbcQuery13Result(result.getInt(1));
+        }
+    }
+
+    public static class Query14a extends PostgresListOperationHandler<LdbcQuery14a, LdbcQuery14Result> {
+
+        @Override
+        public String getQueryString(PostgresDbConnectionState state, LdbcQuery14a operation) {
             return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery14);
         }
 
@@ -296,7 +326,21 @@ public abstract class PostgresDb extends BaseDb<PostgresQueryStore> {
                     PostgresConverter.arrayToLongArray(result, 1),
                     result.getLong(2));
         }
+    }
 
+    public static class Query14b extends PostgresListOperationHandler<LdbcQuery14b, LdbcQuery14Result> {
+
+        @Override
+        public String getQueryString(PostgresDbConnectionState state, LdbcQuery14b operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery14);
+        }
+
+        @Override
+        public LdbcQuery14Result convertSingleResult(ResultSet result) throws SQLException {
+            return new LdbcQuery14Result(
+                    PostgresConverter.arrayToLongArray(result, 1),
+                    result.getLong(2));
+        }
     }
 
     public static class ShortQuery1PersonProfile extends PostgresSingletonOperationHandler<LdbcShortQuery1PersonProfile, LdbcShortQuery1PersonProfileResult> {

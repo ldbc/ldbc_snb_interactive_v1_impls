@@ -17,7 +17,8 @@ public class CypherInteractiveDb extends CypherDb
 
         registerOperationHandler( LdbcQuery1.class, InteractiveQuery1.class );
         registerOperationHandler( LdbcQuery2.class, InteractiveQuery2.class );
-        registerOperationHandler( LdbcQuery3.class, InteractiveQuery3.class );
+        registerOperationHandler( LdbcQuery3a.class, InteractiveQuery3a.class );
+        registerOperationHandler( LdbcQuery3b.class, InteractiveQuery3b.class );
         registerOperationHandler( LdbcQuery4.class, InteractiveQuery4.class );
         registerOperationHandler( LdbcQuery5.class, InteractiveQuery5.class );
         registerOperationHandler( LdbcQuery6.class, InteractiveQuery6.class );
@@ -27,8 +28,10 @@ public class CypherInteractiveDb extends CypherDb
         registerOperationHandler( LdbcQuery10.class, InteractiveQuery10.class );
         registerOperationHandler( LdbcQuery11.class, InteractiveQuery11.class );
         registerOperationHandler( LdbcQuery12.class, InteractiveQuery12.class );
-        registerOperationHandler( LdbcQuery13.class, InteractiveQuery13.class );
-        registerOperationHandler( LdbcQuery14.class, InteractiveQuery14.class );
+        registerOperationHandler( LdbcQuery13a.class, InteractiveQuery13a.class );
+        registerOperationHandler( LdbcQuery13b.class, InteractiveQuery13b.class );
+        registerOperationHandler( LdbcQuery14a.class, InteractiveQuery14a.class );
+        registerOperationHandler( LdbcQuery14b.class, InteractiveQuery14b.class );
 
         registerOperationHandler( LdbcShortQuery1PersonProfile.class, ShortQuery1PersonProfile.class );
         registerOperationHandler( LdbcShortQuery2PersonPosts.class, ShortQuery2PersonPosts.class );

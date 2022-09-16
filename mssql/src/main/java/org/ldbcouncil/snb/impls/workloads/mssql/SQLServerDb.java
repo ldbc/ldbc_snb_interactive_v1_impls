@@ -5,7 +5,6 @@ import org.ldbcouncil.snb.driver.control.LoggingService;
 import org.ldbcouncil.snb.driver.workloads.interactive.queries.*;
 import org.ldbcouncil.snb.impls.workloads.db.BaseDb;
 import org.ldbcouncil.snb.impls.workloads.mssql.converter.SQLServerConverter;
-import org.ldbcouncil.snb.impls.workloads.mssql.operationhandlers.SQLServerIC13OperationHandler;
 import org.ldbcouncil.snb.impls.workloads.mssql.operationhandlers.SQLServerListOperationHandler;
 import org.ldbcouncil.snb.impls.workloads.mssql.operationhandlers.SQLServerMultipleUpdateOperationHandler;
 import org.ldbcouncil.snb.impls.workloads.mssql.operationhandlers.SQLServerSingletonOperationHandler;
@@ -76,10 +75,10 @@ public abstract class SQLServerDb extends BaseDb<SQLServerQueryStore> {
 
     }
 
-    public static class Query3 extends SQLServerListOperationHandler<LdbcQuery3, LdbcQuery3Result> {
+    public static class Query3a extends SQLServerListOperationHandler<LdbcQuery3a, LdbcQuery3Result> {
 
         @Override
-        public String getQueryString(SQLServerDbConnectionState state, LdbcQuery3 operation) {
+        public String getQueryString(SQLServerDbConnectionState state, LdbcQuery3a operation) {
             return state.getQueryStore().getQuery3(operation);
         }
 
@@ -93,7 +92,25 @@ public abstract class SQLServerDb extends BaseDb<SQLServerQueryStore> {
                     result.getInt(5),
                     result.getInt(6));
         }
+    }
 
+    public static class Query3b extends SQLServerListOperationHandler<LdbcQuery3b, LdbcQuery3Result> {
+
+        @Override
+        public String getQueryString(SQLServerDbConnectionState state, LdbcQuery3b operation) {
+            return state.getQueryStore().getQuery3(operation);
+        }
+
+        @Override
+        public LdbcQuery3Result convertSingleResult(ResultSet result) throws SQLException {
+            return new LdbcQuery3Result(
+                    result.getLong(1),
+                    result.getString(2),
+                    result.getString(3),
+                    result.getInt(4),
+                    result.getInt(5),
+                    result.getInt(6));
+        }
     }
 
     public static class Query4 extends SQLServerListOperationHandler<LdbcQuery4, LdbcQuery4Result> {
@@ -263,18 +280,65 @@ public abstract class SQLServerDb extends BaseDb<SQLServerQueryStore> {
 
     }
 
-    public static class Query13 extends SQLServerIC13OperationHandler {
+    public static class Query13a extends SQLServerSingletonOperationHandler<LdbcQuery13a, LdbcQuery13Result> {
 
         @Override
-        public String getQueryString(SQLServerDbConnectionState state, LdbcQuery13 operation) {
+        public String getQueryString(SQLServerDbConnectionState state, LdbcQuery13a operation) {
             return state.getQueryStore().getQuery13(operation);
+        }
+
+        @Override
+        public LdbcQuery13Result convertSingleResult(ResultSet result) throws SQLException {
+            if (result.next())
+            {
+                return new LdbcQuery13Result(result.getInt(1));
+            }
+            else
+            {
+                return new LdbcQuery13Result(-1);
+            }
         }
     }
 
-    public static class Query14 extends SQLServerListOperationHandler<LdbcQuery14, LdbcQuery14Result> {
+    public static class Query13b extends SQLServerSingletonOperationHandler<LdbcQuery13b, LdbcQuery13Result> {
 
         @Override
-        public String getQueryString(SQLServerDbConnectionState state, LdbcQuery14 operation) {
+        public String getQueryString(SQLServerDbConnectionState state, LdbcQuery13b operation) {
+            return state.getQueryStore().getQuery13(operation);
+        }
+
+        @Override
+        public LdbcQuery13Result convertSingleResult(ResultSet result) throws SQLException {
+            if (result.next())
+            {
+                return new LdbcQuery13Result(result.getInt(1));
+            }
+            else
+            {
+                return new LdbcQuery13Result(-1);
+            }
+        }
+    }
+
+    public static class Query14a extends SQLServerListOperationHandler<LdbcQuery14a, LdbcQuery14Result> {
+
+        @Override
+        public String getQueryString(SQLServerDbConnectionState state, LdbcQuery14a operation) {
+            return state.getQueryStore().getQuery14(operation);
+        }
+
+        @Override
+        public LdbcQuery14Result convertSingleResult(ResultSet result) throws SQLException {
+            return new LdbcQuery14Result(
+                    SQLServerConverter.arrayToLongArray(result, 1),
+                    result.getLong(2));
+        }
+    }
+
+    public static class Query14b extends SQLServerListOperationHandler<LdbcQuery14b, LdbcQuery14Result> {
+
+        @Override
+        public String getQueryString(SQLServerDbConnectionState state, LdbcQuery14b operation) {
             return state.getQueryStore().getQuery14(operation);
         }
 
@@ -295,7 +359,9 @@ public abstract class SQLServerDb extends BaseDb<SQLServerQueryStore> {
 
         @Override
         public LdbcShortQuery1PersonProfileResult convertSingleResult(ResultSet result) throws SQLException {
-            return new LdbcShortQuery1PersonProfileResult(
+            if (result.next())
+            {
+                return new LdbcShortQuery1PersonProfileResult(
                     result.getString(1),
                     result.getString(2),
                     SQLServerConverter.stringTimestampToEpoch(result, 3),
@@ -304,6 +370,11 @@ public abstract class SQLServerDb extends BaseDb<SQLServerQueryStore> {
                     result.getLong(6),
                     result.getString(7),
                     SQLServerConverter.stringTimestampToEpoch(result, 8));
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 
@@ -371,10 +442,17 @@ public abstract class SQLServerDb extends BaseDb<SQLServerQueryStore> {
 
         @Override
         public LdbcShortQuery5MessageCreatorResult convertSingleResult(ResultSet result) throws SQLException {
-            return new LdbcShortQuery5MessageCreatorResult(
+            if (result.next())
+            {
+                return new LdbcShortQuery5MessageCreatorResult(
                     result.getLong(1),
                     result.getString(2),
                     result.getString(3));
+            }
+            else
+            {
+                return null;
+            }
         }
 
     }
@@ -388,12 +466,19 @@ public abstract class SQLServerDb extends BaseDb<SQLServerQueryStore> {
 
         @Override
         public LdbcShortQuery6MessageForumResult convertSingleResult(ResultSet result) throws SQLException {
-            return new LdbcShortQuery6MessageForumResult(
+            if (result.next())
+            {
+                return new LdbcShortQuery6MessageForumResult(
                     result.getLong(1),
                     result.getString(2),
                     result.getLong(3),
                     result.getString(4),
                     result.getString(5));
+            }
+            else
+            {
+                return null;
+            }
         }
 
     }

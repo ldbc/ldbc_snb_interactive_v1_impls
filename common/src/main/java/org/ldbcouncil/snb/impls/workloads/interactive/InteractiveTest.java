@@ -32,7 +32,7 @@ public abstract class InteractiveTest<D extends Db> extends SnbTest<D>
     @Test
     public void testQuery3() throws Exception
     {
-        run( db, new LdbcQuery3( 15393162790207L, "Puerto_Rico", "Republic_of_Macedonia", new Date( 1291161600000L ), 30, LIMIT ) );
+        run( db, new LdbcQuery3a( 15393162790207L, "Puerto_Rico", "Republic_of_Macedonia", new Date( 1291161600000L ), 30, LIMIT ) );
     }
 
     @Test
@@ -92,13 +92,13 @@ public abstract class InteractiveTest<D extends Db> extends SnbTest<D>
     @Test
     public void testQuery13() throws Exception
     {
-        run( db, new LdbcQuery13( 32985348833679L, 26388279067108L ) );
+        run( db, new LdbcQuery13a( 32985348833679L, 26388279067108L ) );
     }
 
     @Test
     public void testQuery14() throws Exception
     {
-        run( db, new LdbcQuery14( 32985348833679L, 2199023256862L ) );
+        run( db, new LdbcQuery14a( 32985348833679L, 2199023256862L ) );
     }
 
     @Test

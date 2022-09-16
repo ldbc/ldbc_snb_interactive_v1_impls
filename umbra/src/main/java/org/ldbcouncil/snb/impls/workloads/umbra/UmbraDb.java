@@ -80,10 +80,10 @@ public abstract class UmbraDb extends BaseDb<UmbraQueryStore> {
 
     }
 
-    public static class Query3 extends UmbraListOperationHandler<LdbcQuery3, LdbcQuery3Result> {
+    public static class Query3a extends UmbraListOperationHandler<LdbcQuery3a, LdbcQuery3Result> {
 
         @Override
-        public String getQueryString(UmbraDbConnectionState state, LdbcQuery3 operation) {
+        public String getQueryString(UmbraDbConnectionState state, LdbcQuery3a operation) {
             return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery3);
         }
 
@@ -97,7 +97,25 @@ public abstract class UmbraDb extends BaseDb<UmbraQueryStore> {
                     result.getInt(5),
                     result.getInt(6));
         }
+    }
 
+    public static class Query3b extends UmbraListOperationHandler<LdbcQuery3b, LdbcQuery3Result> {
+
+        @Override
+        public String getQueryString(UmbraDbConnectionState state, LdbcQuery3b operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery3);
+        }
+
+        @Override
+        public LdbcQuery3Result convertSingleResult(ResultSet result) throws SQLException {
+            return new LdbcQuery3Result(
+                    result.getLong(1),
+                    result.getString(2),
+                    result.getString(3),
+                    result.getInt(4),
+                    result.getInt(5),
+                    result.getInt(6));
+        }
     }
 
     public static class Query4 extends UmbraListOperationHandler<LdbcQuery4, LdbcQuery4Result> {
@@ -268,10 +286,10 @@ public abstract class UmbraDb extends BaseDb<UmbraQueryStore> {
 
     }
 
-    public static class Query13 extends UmbraSingletonOperationHandler<LdbcQuery13, LdbcQuery13Result> {
+    public static class Query13a extends UmbraSingletonOperationHandler<LdbcQuery13a, LdbcQuery13Result> {
 
         @Override
-        public String getQueryString(UmbraDbConnectionState state, LdbcQuery13 operation) {
+        public String getQueryString(UmbraDbConnectionState state, LdbcQuery13a operation) {
             return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery13);
         }
 
@@ -279,13 +297,25 @@ public abstract class UmbraDb extends BaseDb<UmbraQueryStore> {
         public LdbcQuery13Result convertSingleResult(ResultSet result) throws SQLException {
             return new LdbcQuery13Result(result.getInt(1));
         }
-
     }
 
-    public static class Query14 extends UmbraListOperationHandler<LdbcQuery14, LdbcQuery14Result> {
+    public static class Query13b extends UmbraSingletonOperationHandler<LdbcQuery13b, LdbcQuery13Result> {
 
         @Override
-        public String getQueryString(UmbraDbConnectionState state, LdbcQuery14 operation) {
+        public String getQueryString(UmbraDbConnectionState state, LdbcQuery13b operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery13);
+        }
+
+        @Override
+        public LdbcQuery13Result convertSingleResult(ResultSet result) throws SQLException {
+            return new LdbcQuery13Result(result.getInt(1));
+        }
+    }
+
+    public static class Query14a extends UmbraListOperationHandler<LdbcQuery14a, LdbcQuery14Result> {
+
+        @Override
+        public String getQueryString(UmbraDbConnectionState state, LdbcQuery14a operation) {
             return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery14);
         }
 
@@ -295,7 +325,21 @@ public abstract class UmbraDb extends BaseDb<UmbraQueryStore> {
                     UmbraConverter.arrayToLongArray(result, 1),
                     result.getLong(2));
         }
+    }
 
+    public static class Query14b extends UmbraListOperationHandler<LdbcQuery14b, LdbcQuery14Result> {
+
+        @Override
+        public String getQueryString(UmbraDbConnectionState state, LdbcQuery14b operation) {
+            return state.getQueryStore().getParameterizedQuery(QueryType.InteractiveComplexQuery14);
+        }
+
+        @Override
+        public LdbcQuery14Result convertSingleResult(ResultSet result) throws SQLException {
+            return new LdbcQuery14Result(
+                    UmbraConverter.arrayToLongArray(result, 1),
+                    result.getLong(2));
+        }
     }
 
     public static class ShortQuery1PersonProfile extends UmbraSingletonOperationHandler<LdbcShortQuery1PersonProfile, LdbcShortQuery1PersonProfileResult> {

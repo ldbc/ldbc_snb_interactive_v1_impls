@@ -58,15 +58,28 @@ public class CypherQueryStore extends QueryStore
     }
 
     @Override
-    public Map<String, Object> getQuery3Map(LdbcQuery3 operation) {
+    public Map<String, Object> getQuery3Map(LdbcQuery3a operation) {
         final Date endDate = addDays( operation.getStartDate(), operation.getDurationDays() );
         return new ImmutableMap.Builder<String, Object>()
-        .put( LdbcQuery3.PERSON_ID, operation.getPersonIdQ3() )
-        .put( LdbcQuery3.COUNTRY_X_NAME, operation.getCountryXName() )
-        .put( LdbcQuery3.COUNTRY_Y_NAME, operation.getCountryYName()) 
-        .put( LdbcQuery3.START_DATE, operation.getStartDate().getTime() )
+        .put( LdbcQuery3a.PERSON_ID, operation.getPersonIdQ3() )
+        .put( LdbcQuery3a.COUNTRY_X_NAME, operation.getCountryXName() )
+        .put( LdbcQuery3a.COUNTRY_Y_NAME, operation.getCountryYName()) 
+        .put( LdbcQuery3a.START_DATE, operation.getStartDate().getTime() )
         .put( "endDate", endDate.getTime() )
-        .put( LdbcQuery3.LIMIT, operation.getLimit() )
+        .put( LdbcQuery3a.LIMIT, operation.getLimit() )
+        .build();
+    }
+
+    @Override
+    public Map<String, Object> getQuery3Map(LdbcQuery3b operation) {
+        final Date endDate = addDays( operation.getStartDate(), operation.getDurationDays() );
+        return new ImmutableMap.Builder<String, Object>()
+        .put( LdbcQuery3b.PERSON_ID, operation.getPersonIdQ3() )
+        .put( LdbcQuery3b.COUNTRY_X_NAME, operation.getCountryXName() )
+        .put( LdbcQuery3b.COUNTRY_Y_NAME, operation.getCountryYName()) 
+        .put( LdbcQuery3b.START_DATE, operation.getStartDate().getTime() )
+        .put( "endDate", endDate.getTime() )
+        .put( LdbcQuery3b.LIMIT, operation.getLimit() )
         .build();
     }
 
@@ -147,18 +160,34 @@ public class CypherQueryStore extends QueryStore
     }
 
     @Override
-    public Map<String, Object> getQuery13Map (LdbcQuery13 operation) {
+    public Map<String, Object> getQuery13Map (LdbcQuery13a operation) {
         return new ImmutableMap.Builder<String, Object>()
-        .put(LdbcQuery13.PERSON1_ID, operation.getPerson1IdQ13StartNode())
-        .put(LdbcQuery13.PERSON2_ID, operation.getPerson2IdQ13EndNode())
+        .put(LdbcQuery13a.PERSON1_ID, operation.getPerson1IdQ13StartNode())
+        .put(LdbcQuery13a.PERSON2_ID, operation.getPerson2IdQ13EndNode())
         .build();
     }
 
     @Override
-    public Map<String, Object> getQuery14Map (LdbcQuery14 operation) {
+    public Map<String, Object> getQuery13Map (LdbcQuery13b operation) {
         return new ImmutableMap.Builder<String, Object>()
-        .put(LdbcQuery14.PERSON1_ID, operation.getPerson1IdQ14StartNode())
-        .put(LdbcQuery14.PERSON2_ID, operation.getPerson2IdQ14EndNode())
+        .put(LdbcQuery13b.PERSON1_ID, operation.getPerson1IdQ13StartNode())
+        .put(LdbcQuery13b.PERSON2_ID, operation.getPerson2IdQ13EndNode())
+        .build();
+    }
+
+    @Override
+    public Map<String, Object> getQuery14Map (LdbcQuery14a operation) {
+        return new ImmutableMap.Builder<String, Object>()
+        .put(LdbcQuery14a.PERSON1_ID, operation.getPerson1IdQ14StartNode())
+        .put(LdbcQuery14a.PERSON2_ID, operation.getPerson2IdQ14EndNode())
+        .build();
+    }
+
+    @Override
+    public Map<String, Object> getQuery14Map (LdbcQuery14b operation) {
+        return new ImmutableMap.Builder<String, Object>()
+        .put(LdbcQuery14b.PERSON1_ID, operation.getPerson1IdQ14StartNode())
+        .put(LdbcQuery14b.PERSON2_ID, operation.getPerson2IdQ14EndNode())
         .build();
     }
 

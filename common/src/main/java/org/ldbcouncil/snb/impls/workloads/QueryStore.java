@@ -154,7 +154,16 @@ public abstract class QueryStore {
      * @param operation LdbcQuery3 operation containing parameter values
      * @return Prepared Query3 string
      */
-    public String getQuery3(LdbcQuery3 operation) {
+    public String getQuery3(LdbcQuery3a operation) {
+        return prepare(QueryType.InteractiveComplexQuery3, getQuery3Map(operation));
+    }
+
+    /**
+     * Get prepared Query3 string
+     * @param operation LdbcQuery3 operation containing parameter values
+     * @return Prepared Query3 string
+     */
+    public String getQuery3(LdbcQuery3b operation) {
         return prepare(QueryType.InteractiveComplexQuery3, getQuery3Map(operation));
     }
 
@@ -163,13 +172,23 @@ public abstract class QueryStore {
      * @param operation LdbcQuery3 operation containing parameter values
      * @return Map with parameters and values as string.
      */
-    public Map<String, Object> getQuery3Map(LdbcQuery3 operation) {
+    public Map<String, Object> getQuery3Map(LdbcQuery3a operation) {
         return new ImmutableMap.Builder<String, Object>()
-        .put(LdbcQuery3.PERSON_ID, getConverter().convertId(operation.getPersonIdQ3()))
-        .put(LdbcQuery3.COUNTRY_X_NAME, getConverter().convertString(operation.getCountryXName()))
-        .put(LdbcQuery3.COUNTRY_Y_NAME, getConverter().convertString(operation.getCountryYName()))
-        .put(LdbcQuery3.START_DATE, getConverter().convertDate(operation.getStartDate()))
-        .put(LdbcQuery3.DURATION_DAYS, getConverter().convertInteger(operation.getDurationDays()))
+        .put(LdbcQuery3a.PERSON_ID, getConverter().convertId(operation.getPersonIdQ3()))
+        .put(LdbcQuery3a.COUNTRY_X_NAME, getConverter().convertString(operation.getCountryXName()))
+        .put(LdbcQuery3a.COUNTRY_Y_NAME, getConverter().convertString(operation.getCountryYName()))
+        .put(LdbcQuery3a.START_DATE, getConverter().convertDate(operation.getStartDate()))
+        .put(LdbcQuery3a.DURATION_DAYS, getConverter().convertInteger(operation.getDurationDays()))
+        .build();
+    }
+
+    public Map<String, Object> getQuery3Map(LdbcQuery3b operation) {
+        return new ImmutableMap.Builder<String, Object>()
+        .put(LdbcQuery3b.PERSON_ID, getConverter().convertId(operation.getPersonIdQ3()))
+        .put(LdbcQuery3b.COUNTRY_X_NAME, getConverter().convertString(operation.getCountryXName()))
+        .put(LdbcQuery3b.COUNTRY_Y_NAME, getConverter().convertString(operation.getCountryYName()))
+        .put(LdbcQuery3b.START_DATE, getConverter().convertDate(operation.getStartDate()))
+        .put(LdbcQuery3b.DURATION_DAYS, getConverter().convertInteger(operation.getDurationDays()))
         .build();
     }
 
@@ -367,7 +386,11 @@ public abstract class QueryStore {
      * @param operation LdbcQuery13 operation containing parameter values
      * @return Prepared Query13 string
      */
-    public String getQuery13(LdbcQuery13 operation) {
+    public String getQuery13(LdbcQuery13a operation) {
+        return prepare(QueryType.InteractiveComplexQuery13, getQuery13Map(operation));
+    }
+
+    public String getQuery13(LdbcQuery13b operation) {
         return prepare(QueryType.InteractiveComplexQuery13, getQuery13Map(operation));
     }
 
@@ -376,10 +399,17 @@ public abstract class QueryStore {
      * @param operation LdbcQuery13 operation containing parameter values
      * @return Map with parameters and values as string.
      */
-    public Map<String, Object> getQuery13Map (LdbcQuery13 operation) {
+    public Map<String, Object> getQuery13Map (LdbcQuery13a operation) {
         return new ImmutableMap.Builder<String, Object>()
-        .put(LdbcQuery13.PERSON1_ID, getConverter().convertId(operation.getPerson1IdQ13StartNode()))
-        .put(LdbcQuery13.PERSON2_ID, getConverter().convertId(operation.getPerson2IdQ13EndNode()))
+        .put(LdbcQuery13a.PERSON1_ID, getConverter().convertId(operation.getPerson1IdQ13StartNode()))
+        .put(LdbcQuery13a.PERSON2_ID, getConverter().convertId(operation.getPerson2IdQ13EndNode()))
+        .build();
+    }
+
+    public Map<String, Object> getQuery13Map (LdbcQuery13b operation) {
+        return new ImmutableMap.Builder<String, Object>()
+        .put(LdbcQuery13b.PERSON1_ID, getConverter().convertId(operation.getPerson1IdQ13StartNode()))
+        .put(LdbcQuery13b.PERSON2_ID, getConverter().convertId(operation.getPerson2IdQ13EndNode()))
         .build();
     }
 
@@ -388,7 +418,11 @@ public abstract class QueryStore {
      * @param operation LdbcQuery14 operation containing parameter values
      * @return Prepared Query14 string
      */
-    public String getQuery14(LdbcQuery14 operation) {
+    public String getQuery14(LdbcQuery14a operation) {
+        return prepare(QueryType.InteractiveComplexQuery14, getQuery14Map(operation));
+    }
+
+    public String getQuery14(LdbcQuery14b operation) {
         return prepare(QueryType.InteractiveComplexQuery14, getQuery14Map(operation));
     }
 
@@ -397,10 +431,17 @@ public abstract class QueryStore {
      * @param operation LdbcQuery14 operation containing parameter values
      * @return Map with parameters and values as string.
      */
-    public Map<String, Object> getQuery14Map (LdbcQuery14 operation) {
+    public Map<String, Object> getQuery14Map (LdbcQuery14a operation) {
         return new ImmutableMap.Builder<String, Object>()
-        .put(LdbcQuery14.PERSON1_ID, getConverter().convertId(operation.getPerson1IdQ14StartNode()))
-        .put(LdbcQuery14.PERSON2_ID, getConverter().convertId(operation.getPerson2IdQ14EndNode()))
+        .put(LdbcQuery14a.PERSON1_ID, getConverter().convertId(operation.getPerson1IdQ14StartNode()))
+        .put(LdbcQuery14a.PERSON2_ID, getConverter().convertId(operation.getPerson2IdQ14EndNode()))
+        .build();
+    }
+
+    public Map<String, Object> getQuery14Map (LdbcQuery14b operation) {
+        return new ImmutableMap.Builder<String, Object>()
+        .put(LdbcQuery14b.PERSON1_ID, getConverter().convertId(operation.getPerson1IdQ14StartNode()))
+        .put(LdbcQuery14b.PERSON2_ID, getConverter().convertId(operation.getPerson2IdQ14EndNode()))
         .build();
     }
 
