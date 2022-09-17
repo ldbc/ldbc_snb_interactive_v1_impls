@@ -426,9 +426,17 @@ public abstract class SQLServerDb extends BaseDb<SQLServerQueryStore> {
 
         @Override
         public LdbcShortQuery4MessageContentResult convertSingleResult(ResultSet result) throws SQLException {
-            return new LdbcShortQuery4MessageContentResult(
+            if(result.next())
+            {
+                return new LdbcShortQuery4MessageContentResult(
                     result.getString(1),
                     SQLServerConverter.stringTimestampToEpoch(result, 2));
+            }
+            else
+            {
+                return null;
+            }
+
         }
 
     }
