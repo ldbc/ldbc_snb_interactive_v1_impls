@@ -3,17 +3,16 @@
 
 [![Build Status](https://circleci.com/gh/ldbc/ldbc_snb_interactive_impls.svg?style=svg)](https://circleci.com/gh/ldbc/ldbc_snb_interactive_impls)
 
-:warning:
-The Interactive workload is currently being renewed to accommodate new features such as deletions and larger scale factors.
-If you are looking for a stable, auditable version, use one of the old versions:
-
-* [Release v0.3.6](https://github.com/ldbc/ldbc_snb_interactive_impls/releases/tag/0.3.6)
-* [Release v1.2.0](https://github.com/ldbc/ldbc_snb_interactive_impls/releases/tag/1.2.0)
-* [Branch `v1-dev`](https://github.com/ldbc/ldbc_snb_interactive_impls/tree/v1-dev)
-
-Reference implementations of the LDBC Social Network Benchmark's Interactive workload ([paper](https://homepages.cwi.nl/~boncz/snb-challenge/snb-sigmod.pdf), [specification on GitHub pages](https://ldbcouncil.org/ldbc_snb_docs/), [specification on arXiv](https://arxiv.org/pdf/2001.02299.pdf)).
+This repository contains reference implementations of the LDBC Social Network Benchmark's Interactive workload. See details on the benchmark, see the [SIGMOD 2015 paper](https://homepages.cwi.nl/~boncz/snb-challenge/snb-sigmod.pdf), [specification on GitHub Pages](https://ldbcouncil.org/ldbc_snb_docs/), and [specification on arXiv](https://arxiv.org/pdf/2001.02299.pdf).
 
 To get started with the LDBC SNB benchmarks, check out our introductory presentation: [The LDBC Social Network Benchmark](https://docs.google.com/presentation/d/1p-nuHarSOKCldZ9iEz__6_V3sJ5kbGWlzZHusudW_Cc/) ([PDF](https://ldbcouncil.org/docs/presentations/ldbc-snb-2021-12.pdf)).
+
+:warning:
+The Interactive workload is currently being renewed to accommodate new features such as deletions and larger scale factors.
+If you are looking for a stable, auditable version, use the v1.x releases.
+
+* [Branch v1-dev](https://github.com/ldbc/ldbc_snb_interactive_impls/tree/v1-dev): the current stable implementation with read and insert operations. Scales up to SF1k. Stable release: [1.0.0](https://github.com/ldbc/ldbc_snb_interactive_impls/releases/tag/1.0.0).
+* [Branch `main`](https://github.com/ldbc/ldbc_snb_interactive_impls/tree/main): this version includes delete operations and a new parameter generator. Will scale to SF30k and beyond.
 
 ## Notes
 
@@ -34,9 +33,18 @@ Additional implementations:
 
 * [Microsoft SQL Server (Transact-SQL) implementation](mssql/README.md)
 * [Umbra (SQL) implementation](umbra/README.md)
-* more implementations coming by 2023
 
 For detailed instructions, consult the READMEs of the projects.
+
+## User's guide
+
+### Building the project
+
+To build the entire project, run:
+
+```bash
+scripts/build.sh
+```
 
 To build a subset of the projects, e.g. to build the PostgreSQL implementation, run its individual build script:
 
@@ -44,19 +52,9 @@ To build a subset of the projects, e.g. to build the PostgreSQL implementation, 
 postgres/scripts/build.sh
 ```
 
-## User's guide
-
-### Building the project
-
-To build the project, run:
-
-```bash
-scripts/build.sh
-```
-
 ### Inputs
 
-The benchmark framework relies on the following inputs produced by the [SNB Datagen's new (Spark) version](https://github.com/ldbc/ldbc_snb_datagen_spark/).
+The benchmark framework relies on the following inputs produced by the [SNB Datagen's new (Spark) version](https://github.com/ldbc/ldbc_snb_datagen_spark/). Pre-generated data sets will be made available by the end of 2022.
 
 Currently, the initial data set, update streams, and parameters can generated with the following command:
 
@@ -71,6 +69,12 @@ export USE_DATAGEN_DOCKER=true
 
 scripts/generate-all.sh
 ```
+
+### Loading the data
+
+Select the system to be tested, e.g. [PostgreSQL](postgres/).
+Load the data set as described in the README file of the selected system.
+For most systems, this involves setting an environment variable to the correct location and invoking the `scripts/load-in-one-step.sh` script.
 
 ### Driver modes
 
@@ -118,40 +122,18 @@ To create a new implementation, it is recommended to use one of the existing one
 The implementation process looks roughly as follows:
 
 1. Create a bulk loader which loads the initial data set to the database.
-2. Implement the complex and short reads queries (22 in total).
-3. Implement the 7 update queries.
-4. Test the implementation against the reference implementations using various scale factors.
-5. Optimize the implementation.
-
-## Data sets
-
-### Benchmark data sets
-
-To generate the benchmark data sets, use the [Spark-based LDBC SNB Datagen](https://github.com/ldbc/ldbc_snb_datagen_spark/). Detailed instructions are given for each tool.
-
-### Pre-generated data sets
-
-Pre-generated data sets will be available in autumn 2023.
+1. Add the required glue code to the Java driver that allows parameterized execution of queries and operators.
+1. Implement the complex and short reads queries (21 in total).
+1. Implement the insert and delete operations (16 in total).
+1. Test the implementation against the reference implementations using various scale factors.
+1. Optimize the implementation.
 
 ## Preparing for an audited run
-
-:warning: Audited runs are currently only possible with the old versions.
-The new version of Interactive (with deletes and larger SFs) will be released in Q4 2022.
 
 Implementations of the Interactive workload can be audited by a certified LDBC auditor.
 The [Auditing Policies chapter](https://ldbcouncil.org/ldbc_snb_docs/ldbc-snb-specification.pdf#chapter.7) of the specification describes the auditing process and the required artifacts.
 
-### Determining the best TCR
+If you plan to get your system audited, please reach to the [LDBC Steering Committee](https://ldbcouncil.org/organizational-members/).
 
-1. Select a scale factor and configure the `driver/benchmark.properties` file as described in the [Driver modes](#driver-modes) section.
-2. Load the data set with `scripts/load-in-one-step.sh`.
-3. Create a backup with `scripts/backup-database.sh`.
-4. Run the `driver/determine-best-tcr.sh`.
-5. Once the best TCR value has been determined, test it with a full workload (at least 0.5h for warmup operation and at least 2h of benchmark time), and make further adjustments if necessary.
-
-### Recommendations
-
-We have a few recommendations for creating audited implementations. (These are not requirements – implementations are allowed to deviate from these recommendations.)
-* The implementation should target a popular Linux distribution (e.g. Ubuntu LTS, CentOS, Fedora).
-* Use a containerized setup, where the DBMS is running in a Docker container.
-* Instead of a specific hardware, target a cloud virtual machine instance (e.g. AWS `r5d.12xlarge`). Both bare-metal and regular instances can be used for audited runs.
+:warning: Audited runs are currently only possible with the v1.x version.
+The new version of Interactive (with deletes and larger SFs) will be released in Q4 2022.

@@ -20,7 +20,6 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             sudo apt update && sudo apt install -y zstd
             scripts/install-dependencies.sh
-            paramgen/scripts/install-dependencies.sh
       - run:
           # Install Java 11 (Ubuntu 22.04 has Java 17 by default)
           name: Install OpenJDK 11
@@ -67,10 +66,12 @@ jobs:
       - run:
           name: Generate parameters for SF0.003
           command: |
-            cd paramgen
-            scripts/get-sample-factors.sh
-            scripts/paramgen.sh
+            export LDBC_SNB_IMPLS_DIR=$(pwd)
+            cd ldbc_snb_interactive_driver/paramgen
+            ./get-sample-factors.sh
+            ./paramgen.sh
             cd ..
+            mv parameters/*.parquet ${LDBC_SNB_IMPLS_DIR}/parameters/
       ### Umbra
       - run:
           name: Load Umbra Docker image
@@ -217,6 +218,10 @@ jobs:
             export LDBC_SNB_DATAGEN_DIR=`pwd`
             cd cypher
             . scripts/use-datagen-data-set.sh
+            sed -i "s|ldbc.snb.interactive.LdbcQuery13a_enable = true|ldbc.snb.interactive.LdbcQuery13a_enable = false|g" driver/create-validation-parameters-sf${SF}.properties
+            sed -i "s|ldbc.snb.interactive.LdbcQuery13b_enable = true|ldbc.snb.interactive.LdbcQuery13b_enable = false|g" driver/create-validation-parameters-sf${SF}.properties
+            sed -i "s|ldbc.snb.interactive.LdbcQuery14a_enable = true|ldbc.snb.interactive.LdbcQuery14a_enable = false|g" driver/create-validation-parameters-sf${SF}.properties
+            sed -i "s|ldbc.snb.interactive.LdbcQuery14b_enable = true|ldbc.snb.interactive.LdbcQuery14b_enable = false|g" driver/create-validation-parameters-sf${SF}.properties
             driver/create-validation-parameters.sh driver/create-validation-parameters-sf${SF}.properties
             scripts/stop.sh
             cp validation_params.json validation_params_cypher_sf${SF}.json
@@ -290,6 +295,10 @@ jobs:
             export SF=1
             export LDBC_SNB_DATAGEN_DIR=`pwd`
             cd postgres
+            sed -i "s|ldbc.snb.interactive.LdbcQuery13a_enable = true|ldbc.snb.interactive.LdbcQuery13a_enable = false|g" driver/benchmark-sf${SF}.properties
+            sed -i "s|ldbc.snb.interactive.LdbcQuery13b_enable = true|ldbc.snb.interactive.LdbcQuery13b_enable = false|g" driver/benchmark-sf${SF}.properties
+            sed -i "s|ldbc.snb.interactive.LdbcQuery14a_enable = true|ldbc.snb.interactive.LdbcQuery14a_enable = false|g" driver/benchmark-sf${SF}.properties
+            sed -i "s|ldbc.snb.interactive.LdbcQuery14b_enable = true|ldbc.snb.interactive.LdbcQuery14b_enable = false|g" driver/benchmark-sf${SF}.properties
             . scripts/use-datagen-data-set.sh
             scripts/restore-database.sh
             driver/benchmark.sh driver/benchmark-sf${SF}.properties
@@ -304,7 +313,6 @@ jobs:
             cd umbra
             . scripts/use-datagen-data-set.sh
             scripts/restore-database.sh
-            sed -i 's/operation_count=250/operation_count=5000/' driver/benchmark-sf${SF}.properties
             driver/benchmark.sh driver/benchmark-sf${SF}.properties
             scripts/stop.sh
             cd ..
