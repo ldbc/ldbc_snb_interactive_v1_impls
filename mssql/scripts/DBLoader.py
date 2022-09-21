@@ -6,6 +6,7 @@ DESC: Class to create connections using pyodbc to
 import pyodbc 
 import time
 import logging
+from multiprocessing import Pool
 
 class DBLoader:
     def __init__(self, server, name, user, password, port, driver):
@@ -73,6 +74,36 @@ class DBLoader:
         cursor.close()
         con.close()
         return recreated
+
+    def run_ddl_scripts_parallel(self, path_to_file):
+        """
+        Run DDL script given the path to the file.
+        Args:
+            - path_to_file (str): Path to DDL file
+        """
+
+        query_list = []
+        with open(path_to_file, "r") as f:
+            queries_file = f.read()
+            queries = queries_file.split(";")
+            for query in queries:
+                if query.isspace():
+                    continue
+                query_list.append(query)
+
+        with Pool() as pool:
+            pool.map(self.execute_query, query_list)
+
+    def execute_query(self, query):
+        con = self.get_connection()
+        print(query)
+        start = time.time()
+        con.execute("USE ldbc;")
+        con.execute(query)
+        end = time.time()
+        duration = end - start
+        print(f"-> {duration:.4f} seconds")
+        con.close()
 
     def run_ddl_scripts(self, path_to_file):
         """
