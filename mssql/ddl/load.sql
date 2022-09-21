@@ -123,31 +123,6 @@ FROM OPENROWSET (
 ) AS raw;
 
 
--- Comment_hasTag_Tag
-INSERT INTO [dbo].[Message_hasTag_Tag] ($FROM_ID, $TO_ID,creationDate, MessageId, TagId)
-SELECT NODE_ID_FROM_PARTS(object_id('Message'), MessageId) AS from_id,
-       NODE_ID_FROM_PARTS(object_id('Tag'), TagId) AS to_id, 
-        creationDate,
-       MessageId,
-       TagId
-FROM OPENROWSET (
-    BULK ':comment_hastag_tag_csv',
-    FORMATFILE = '/data/format-files/Comment_hasTag_Tag.xml',
-    FIRSTROW = 2
-) AS raw;
-
-INSERT INTO [dbo].[Message_hasTag_Tag] ($FROM_ID, $TO_ID,creationDate, MessageId, TagId)
-SELECT NODE_ID_FROM_PARTS(object_id('Message'), MessageId) AS from_id,
-       NODE_ID_FROM_PARTS(object_id('Tag'), TagId) AS to_id, 
-  creationDate,
-    MessageId,
-    TagId
-FROM OPENROWSET (
-    BULK ':post_hastag_tag_csv',
-    FORMATFILE = '/data/format-files/Post_hasTag_Tag.xml',
-    FIRSTROW = 2
-) AS raw;
-
 -- Forum
 INSERT INTO [dbo].[Forum] (creationDate, id, title, ModeratorPersonId)
 SELECT       creationDate,
@@ -157,28 +132,6 @@ SELECT       creationDate,
 FROM OPENROWSET (
     BULK ':forum_csv',
     FORMATFILE = '/data/format-files/Forum.xml',
-    FIRSTROW = 2
-) AS raw;
-
--- Forum_hasMember_Person
-INSERT INTO [dbo].[Forum_hasMember_Person] (creationDate, ForumId, PersonId)
-SELECT        creationDate,
-        ForumId,
-        PersonId
-FROM OPENROWSET (
-    BULK ':forum_hasmember_person_csv',
-    FORMATFILE = '/data/format-files/Forum_hasMember_Person.xml',
-    FIRSTROW = 2
-) AS raw;
-
--- Forum_hasTag_Tag
-INSERT INTO [dbo].[Forum_hasTag_Tag] (creationDate, ForumId, TagId)
-SELECT       creationDate,
-       ForumId,
-       TagId
-FROM OPENROWSET (
-    BULK ':forum_hastag_tag_csv',
-    FORMATFILE = '/data/format-files/Forum_hasTag_Tag.xml',
     FIRSTROW = 2
 ) AS raw;
 
@@ -303,6 +256,30 @@ FROM OPENROWSET (
 
 
 -- -- Load edge tables
+
+-- Forum_hasMember_Person
+INSERT INTO [dbo].[Forum_hasMember_Person] (creationDate, ForumId, PersonId)
+SELECT        creationDate,
+        ForumId,
+        PersonId
+FROM OPENROWSET (
+    BULK ':forum_hasmember_person_csv',
+    FORMATFILE = '/data/format-files/Forum_hasMember_Person.xml',
+    FIRSTROW = 2
+) AS raw;
+
+-- Forum_hasTag_Tag
+INSERT INTO [dbo].[Forum_hasTag_Tag] (creationDate, ForumId, TagId)
+SELECT       creationDate,
+       ForumId,
+       TagId
+FROM OPENROWSET (
+    BULK ':forum_hastag_tag_csv',
+    FORMATFILE = '/data/format-files/Forum_hasTag_Tag.xml',
+    FIRSTROW = 2
+) AS raw;
+
+
 INSERT INTO [dbo].[Message_hasCreator_Person] ($FROM_ID, $TO_ID)
 SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS from_id,
        NODE_ID_FROM_PARTS(object_id('Person'), CreatorPersonId) AS to_id
@@ -327,5 +304,31 @@ SELECT NODE_ID_FROM_PARTS(object_id('Message'), id) AS from_id,
 FROM OPENROWSET (
     BULK ':comment_csv',
     FORMATFILE = '/data/format-files/Comment.xml',
+    FIRSTROW = 2
+) AS raw;
+
+
+-- Comment_hasTag_Tag
+INSERT INTO [dbo].[Message_hasTag_Tag] ($FROM_ID, $TO_ID,creationDate, MessageId, TagId)
+SELECT NODE_ID_FROM_PARTS(object_id('Message'), MessageId) AS from_id,
+       NODE_ID_FROM_PARTS(object_id('Tag'), TagId) AS to_id, 
+        creationDate,
+       MessageId,
+       TagId
+FROM OPENROWSET (
+    BULK ':comment_hastag_tag_csv',
+    FORMATFILE = '/data/format-files/Comment_hasTag_Tag.xml',
+    FIRSTROW = 2
+) AS raw;
+
+INSERT INTO [dbo].[Message_hasTag_Tag] ($FROM_ID, $TO_ID,creationDate, MessageId, TagId)
+SELECT NODE_ID_FROM_PARTS(object_id('Message'), MessageId) AS from_id,
+       NODE_ID_FROM_PARTS(object_id('Tag'), TagId) AS to_id, 
+  creationDate,
+    MessageId,
+    TagId
+FROM OPENROWSET (
+    BULK ':post_hastag_tag_csv',
+    FORMATFILE = '/data/format-files/Post_hasTag_Tag.xml',
     FIRSTROW = 2
 ) AS raw;
