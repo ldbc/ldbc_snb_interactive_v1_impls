@@ -64,7 +64,7 @@ def load_data(path_to_file, DBL):
                 else:
                     w.write(query + ';')
             w.write('\n')
-    DBL.run_ddl_scripts("ddl/load_temp.sql")
+    DBL.run_ddl_scripts_parallel("ddl/load_temp.sql")
     os.remove('ddl/load_temp.sql')
 
 
@@ -89,12 +89,13 @@ if __name__ == "__main__":
 
         print("Create tables")
         DBL.run_ddl_scripts("ddl/schema-composite-merged-fk.sql")
-
-        print(f"Load initial snapshot (External: {EXTERNAL_AZURE})")
-        if EXTERNAL_AZURE:
-            DBL.run_ddl_scripts("ddl/load-azure-files.sql")
-        else:
-            load_data("ddl/load.sql", DBL)
+        # TODO: Make sure Azure loader is not executed when variable is set to false
+        # This does sometimes happens, which is a bug
+        # print(f"Load initial snapshot (External: {EXTERNAL_AZURE})")
+        # if EXTERNAL_AZURE:
+        #     DBL.run_ddl_scripts("ddl/load-azure-files.sql")
+        # else:
+        load_data("ddl/load.sql", DBL)
 
         print("Create static materialized views . . . ")
         DBL.run_ddl_scripts("dml/create-static-materialized-views.sql")
