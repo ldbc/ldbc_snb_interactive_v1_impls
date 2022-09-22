@@ -20,6 +20,8 @@ public class SQLServerDbConnectionState<TDbQueryStore extends QueryStore> extend
     public SQLServerDbConnectionState(Map<String, String> properties, TDbQueryStore store) throws ClassNotFoundException {
         super(properties, store);
 
+        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+
         Properties props = new Properties();
         endPoint = properties.get("endpoint");
         props.setProperty("dataSource.databaseName", properties.get("databaseName"));
@@ -28,7 +30,7 @@ public class SQLServerDbConnectionState<TDbQueryStore extends QueryStore> extend
         config.setPassword(properties.get("password"));
         config.setUsername(properties.get("user"));
         config.setJdbcUrl(endPoint);
-        config.setDataSourceClassName("com.microsoft.sqlserver.jdbc.SQLServerDataSource");
+        // config.setDataSourceClassName("com.microsoft.sqlserver.jdbc.SQLServerDataSource");
         config.setConnectionTimeout(300000);
         config.setLeakDetectionThreshold(300000);
         ds = new HikariDataSource(config);
