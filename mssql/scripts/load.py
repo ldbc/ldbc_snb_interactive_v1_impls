@@ -64,7 +64,7 @@ def load_data(path_to_file, DBL):
                 else:
                     w.write(query + ';')
             w.write('\n')
-    DBL.run_ddl_scripts_parallel("ddl/load_temp.sql")
+    DBL.run_ddl_scripts("ddl/load_temp.sql")
     os.remove('ddl/load_temp.sql')
 
 
@@ -104,6 +104,7 @@ if __name__ == "__main__":
         DBL.run_ddl_scripts("ddl/schema-constraints.sql")
         DBL.run_ddl_scripts("ddl/triggers.sql")
         DBL.run_single_file("ddl/func-calculate-weights.sql")
+        DBL.run_single_file("ddl/func-bfs-weight.sql")
         DBL.run_single_file("ddl/func-bfs.sql")
         DBL.run_single_file("ddl/func-distinct-string-agg.sql")
         DBL.run_ddl_scripts("ddl/preprocess.sql")
