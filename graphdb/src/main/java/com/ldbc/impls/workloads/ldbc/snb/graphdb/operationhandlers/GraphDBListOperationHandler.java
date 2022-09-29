@@ -39,7 +39,6 @@ public abstract class GraphDBListOperationHandler<TOperation extends Operation<L
 				}
 			}
 		}
-		//todo: add catch clauses for different types of exceptions
 
 		resultReporter.report(resultCount, results, operation);
 	}

@@ -24,7 +24,7 @@
         <dependency>
             <groupId>org.eclipse.rdf4j</groupId>
             <artifactId>rdf4j-repository-http</artifactId>
-            <version>3.7.3</version>
+            <version>4.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.ldbcouncil.snb</groupId>
