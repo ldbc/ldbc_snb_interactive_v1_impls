@@ -89,12 +89,13 @@ if __name__ == "__main__":
 
         print("Create tables")
         DBL.run_ddl_scripts("ddl/schema-composite-merged-fk.sql")
-
-        print(f"Load initial snapshot (External: {EXTERNAL_AZURE})")
-        if EXTERNAL_AZURE:
-            DBL.run_ddl_scripts("ddl/load-azure-files.sql")
-        else:
-            load_data("ddl/load.sql", DBL)
+        # TODO: Make sure Azure loader is not executed when variable is set to false
+        # This does sometimes happens, which is a bug
+        # print(f"Load initial snapshot (External: {EXTERNAL_AZURE})")
+        # if EXTERNAL_AZURE:
+        #     DBL.run_ddl_scripts("ddl/load-azure-files.sql")
+        # else:
+        load_data("ddl/load.sql", DBL)
 
         print("Create static materialized views . . . ")
         DBL.run_ddl_scripts("dml/create-static-materialized-views.sql")
@@ -103,6 +104,7 @@ if __name__ == "__main__":
         DBL.run_ddl_scripts("ddl/schema-constraints.sql")
         DBL.run_ddl_scripts("ddl/triggers.sql")
         DBL.run_single_file("ddl/func-calculate-weights.sql")
+        DBL.run_single_file("ddl/func-bfs-weight.sql")
         DBL.run_single_file("ddl/func-bfs.sql")
         DBL.run_single_file("ddl/func-distinct-string-agg.sql")
         DBL.run_ddl_scripts("ddl/preprocess.sql")

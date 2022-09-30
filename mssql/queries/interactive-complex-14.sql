@@ -12,7 +12,7 @@ DECLARE @trustedPaths as table
 )
 
 INSERT INTO @trustedPaths
-EXEC dbo.knows_Breadth_First :person1Id, :person2Id;
+EXEC dbo.knows_Breadth_First_Weight :person1Id, :person2Id;
 
 SELECT TOP(1) Path, score
   FROM @trustedPaths
