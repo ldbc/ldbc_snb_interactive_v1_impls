@@ -19,7 +19,7 @@ To build, use the script: `scripts/build.sh`
 
 This SQL Server implementation uses the `composite-merged-fk` CSV layout, with headers and without quoted fields. To generate data that confirms this requirement, run Datagen without any layout or formatting arguments (`--explode-*` or `--format-options`).
 
-In Datagen's directory (`ldbc_snb_datagen_spark`), issue the following commands. We assume that the Datagen project [is](https://github.com/ldbc/ldbc_snb_datagen_spark) built and `sbt` is available.
+In Datagen's directory (`ldbc_snb_datagen_spark`), issue the following commands. We assume that the [Datagen project](https://github.com/ldbc/ldbc_snb_datagen_spark) is built and `sbt` is available.
 
 ```bash
 export SF=desired_scale_factor
