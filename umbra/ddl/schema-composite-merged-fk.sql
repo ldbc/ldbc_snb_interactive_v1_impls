@@ -3,30 +3,30 @@
 CREATE TABLE Organisation (
     id bigint PRIMARY KEY,
     type varchar(12) NOT NULL,
-    name varchar(256) NOT NULL,
-    url varchar(256) NOT NULL,
+    name text NOT NULL,
+    url text NOT NULL,
     LocationPlaceId bigint NOT NULL
 ) WITH (storage = paged);
 
 CREATE TABLE Place (
     id bigint PRIMARY KEY,
-    name varchar(256) NOT NULL,
-    url varchar(256) NOT NULL,
+    name text NOT NULL,
+    url text NOT NULL,
     type varchar(12) NOT NULL,
     PartOfPlaceId bigint -- null for continents
 ) WITH (storage = paged);
 
 CREATE TABLE Tag (
     id bigint PRIMARY KEY,
-    name varchar(256) NOT NULL,
-    url varchar(256) NOT NULL,
+    name text NOT NULL,
+    url text NOT NULL,
     TypeTagClassId bigint NOT NULL
 ) WITH (storage = paged);
 
 CREATE TABLE TagClass (
     id bigint PRIMARY KEY,
-    name varchar(256) NOT NULL,
-    url varchar(256) NOT NULL,
+    name text NOT NULL,
+    url text NOT NULL,
     SubclassOfTagClassId bigint -- null for the root TagClass (Thing)
 ) WITH (storage = paged);
 
@@ -34,29 +34,29 @@ CREATE TABLE TagClass (
 
 CREATE TABLE Country (
     id bigint PRIMARY KEY,
-    name varchar(256) NOT NULL,
-    url varchar(256) NOT NULL,
+    name text NOT NULL,
+    url text NOT NULL,
     PartOfContinentId bigint
 ) WITH (storage = paged);
 
 CREATE TABLE City (
     id bigint PRIMARY KEY,
-    name varchar(256) NOT NULL,
-    url varchar(256) NOT NULL,
+    name text NOT NULL,
+    url text NOT NULL,
     PartOfCountryId bigint
 ) WITH (storage = paged);
 
 CREATE TABLE Company (
     id bigint PRIMARY KEY,
-    name varchar(256) NOT NULL,
-    url varchar(256) NOT NULL,
+    name text NOT NULL,
+    url text NOT NULL,
     LocationPlaceId bigint NOT NULL
 ) WITH (storage = paged);
 
 CREATE TABLE University (
     id bigint PRIMARY KEY,
-    name varchar(256) NOT NULL,
-    url varchar(256) NOT NULL,
+    name text NOT NULL,
+    url text NOT NULL,
     LocationPlaceId bigint NOT NULL
 ) WITH (storage = paged);
 
@@ -66,9 +66,9 @@ CREATE TABLE University (
 CREATE TABLE Comment (
     creationDate timestamp with time zone NOT NULL,
     id bigint,
-    locationIP varchar(80) NOT NULL,
-    browserUsed varchar(80) NOT NULL,
-    content varchar(2000) NOT NULL,
+    locationIP text NOT NULL,
+    browserUsed text NOT NULL,
+    content text NOT NULL,
     length int NOT NULL,
     CreatorPersonId bigint NOT NULL,
     LocationCountryId bigint NOT NULL,
@@ -79,18 +79,18 @@ CREATE TABLE Comment (
 CREATE TABLE Forum (
     creationDate timestamp with time zone NOT NULL,
     id bigint,
-    title varchar(256) NOT NULL,
+    title text NOT NULL,
     ModeratorPersonId bigint -- can be null as its cardinality is 0..1
 ) WITH (storage = paged);
 
 CREATE TABLE Post (
     creationDate timestamp with time zone NOT NULL,
     id bigint,
-    imageFile varchar(80),
-    locationIP varchar(80) NOT NULL,
-    browserUsed varchar(80) NOT NULL,
-    language varchar(80),
-    content varchar(2000),
+    imageFile text,
+    locationIP text NOT NULL,
+    browserUsed text NOT NULL,
+    language text,
+    content text,
     length int NOT NULL,
     CreatorPersonId bigint NOT NULL,
     ContainerForumId bigint NOT NULL,
@@ -100,12 +100,12 @@ CREATE TABLE Post (
 CREATE TABLE Person (
     creationDate timestamp with time zone NOT NULL,
     id bigint,
-    firstName varchar(80) NOT NULL,
-    lastName varchar(80) NOT NULL,
-    gender varchar(80) NOT NULL,
+    firstName text NOT NULL,
+    lastName text NOT NULL,
+    gender text NOT NULL,
     birthday date NOT NULL,
-    locationIP varchar(80) NOT NULL,
-    browserUsed varchar(80) NOT NULL,
+    locationIP text NOT NULL,
+    browserUsed text NOT NULL,
     LocationCityId bigint NOT NULL,
     speaks varchar(640) NOT NULL,
     email varchar(8192) NOT NULL
@@ -181,11 +181,11 @@ CREATE TABLE Person_knows_Person (
 CREATE TABLE Message (
     creationDate timestamp with time zone NOT NULL,
     id bigint,
-    language varchar(80),
-    content varchar(2000),
-    imageFile varchar(80),
-    locationIP varchar(80) NOT NULL,
-    browserUsed varchar(80) NOT NULL,
+    language text,
+    content text,
+    imageFile text,
+    locationIP text NOT NULL,
+    browserUsed text NOT NULL,
     length int NOT NULL,
     CreatorPersonId bigint NOT NULL,
     ContainerForumId bigint,
