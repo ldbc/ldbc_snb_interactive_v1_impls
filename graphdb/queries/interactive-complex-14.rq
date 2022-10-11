@@ -1,0 +1,55 @@
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX dbpedia: <http://dbpedia.org/resource/>
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX onto: <http://www.ontotext.com/path#>
+
+select (concat (group_concat(distinct ?startId; separator=", "), ", ", xsd:string(?destId)) as ?path) (count(?postOfReply) + count(?commentOfReply)*0.5 as ?pathWeight)
+where {
+    optional {
+        {
+            ?comment snvoc:hasCreator ?start  .
+            ?comment rdf:type snvoc:Comment .
+            ?comment snvoc:replyOf ?messageOfReply .
+            ?messageOfReply snvoc:hasCreator ?end.
+        }
+        union
+        {
+            ?comment snvoc:hasCreator ?end  .
+            ?comment rdf:type snvoc:Comment .
+            ?comment snvoc:replyOf ?messageOfReply .
+            ?messageOfReply snvoc:hasCreator ?start .
+        }
+        optional {
+            ?messageOfReply rdf:type snvoc:Post.
+            bind(?messageOfReply as ?postOfReply)
+        }
+        optional {
+            ?messageOfReply rdf:type snvoc:Comment.
+            bind(?messageOfReply as ?commentOfReply)
+        }
+    }
+    {
+        SELECT distinct ?start ?end ?pathIndex ?destination where {
+            VALUES (?source ?destination) {
+                (sn:pers%person1Id% sn:pers%person2Id%)
+            }
+            SERVICE <http://www.ontotext.com/path#search> {
+                <urn:path> onto:findPath onto:shortestPath ;
+                           onto:sourceNode ?source ;
+                           onto:destinationNode ?destination ;
+                           onto:startNode ?start ;
+                           onto:endNode ?end ;
+                           onto:pathIndex ?pathIndex .
+                SERVICE <urn:path> {
+                    ?start snvoc:directKnows ?end .
+                }
+            }
+        }
+    }
+    ?start snvoc:id ?startId .
+    ?destination snvoc:id ?destId .
+}
+group by ?pathIndex ?destId
+order by desc(?pathWeight)

@@ -1,0 +1,30 @@
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX ofn:<http://www.ontotext.com/sparql/functions/>
+
+select ?liker ?firstName ?lastName ?recentDate ?likedMessage ?content ?latency ?is_new where {
+    {
+        select ?liker (min(?message) as ?likedMessage) ?recentDate where {
+            {
+                select ?liker (max(?ldt) as ?recentDate) where {
+                    ?message snvoc:hasCreator sn:pers%personId% .
+                    ?liker snvoc:likes ?lk .
+                    ?lk snvoc:hasPost|snvoc:hasComment ?message .
+                    ?lk snvoc:creationDate ?ldt .
+                } group by ?liker
+            }
+            ?liker snvoc:likes ?lk .
+            ?lk snvoc:creationDate ?recentDate .
+            ?lk snvoc:hasPost|snvoc:hasComment ?message .
+        } group by ?liker ?recentDate
+    }
+    ?liker snvoc:firstName ?firstName .
+    ?liker snvoc:lastName ?lastName .
+    ?likedMessage snvoc:content|snvoc:imageFile ?content .
+    ?likedMessage snvoc:creationDate ?creationDate .
+
+    bind(ofn:minutesBetween(?creationDate, ?recentDate) as ?latency).
+    bind(not exists { sn:pers%personId% snvoc:directKnows ?liker } as ?is_new )
+}
+order by desc (?recentDate) ?liker
+limit 20

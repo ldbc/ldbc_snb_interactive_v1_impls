@@ -1,0 +1,29 @@
+#
+# Configuration template for a GraphDB repository
+#
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix rep: <http://www.openrdf.org/config/repository#>.
+@prefix sr: <http://www.openrdf.org/config/repository/sail#>.
+@prefix sail: <http://www.openrdf.org/config/sail#>.
+@prefix graphdb: <http://www.ontotext.com/trree/graphdb#>.
+
+[] a rep:Repository ;
+    rep:repositoryID "ldbc-snb-interactive" ;
+    rdfs:label "LDBC SNB Interactive benchmark repo" ;
+    rep:repositoryImpl [
+    rep:repositoryType "graphdb:SailRepository" ;
+    sr:sailImpl [
+        sail:sailType "graphdb:Sail" ;
+
+            # ruleset to use
+            graphdb:ruleset "/opt/graphdb/rdfsPlus-snb-bidir.pie" ;
+
+            # disable context index(because my data do not uses contexts)
+            graphdb:enable-context-index "false" ;
+
+            # indexes to speed up the read queries
+            graphdb:enablePredicateList "true" ;
+            graphdb:enable-literal-index "true" ;
+            graphdb:in-memory-literal-properties "true" ;
+    ]
+].

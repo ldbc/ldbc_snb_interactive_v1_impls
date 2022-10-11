@@ -1,0 +1,36 @@
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX path: <http://www.ontotext.com/path#>
+PREFIX dbpedia: <http://dbpedia.org/resource/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+select ?title (count(?post) AS ?count) where {
+    {
+        select ?forum ?fr where {
+            {
+                SELECT distinct ?fr
+                WHERE {
+                    {
+                        sn:pers%personId% snvoc:directKnows ?fr.
+                    } union {
+                        sn:pers%personId% snvoc:directKnows/snvoc:directKnows ?fr.
+                        filter ( ?fr != sn:pers%personId%)
+                    }
+                }
+            }
+            ?forum snvoc:hasMember ?mem .
+            ?mem snvoc:joinDate ?date .
+            ?mem snvoc:hasPerson ?fr .
+            filter (?date > "%minDate%"^^xsd:dateTime) .
+        }
+    }
+    OPTIONAL{
+        ?post snvoc:hasCreator ?fr .
+        ?forum snvoc:containerOf ?post .
+    }
+    ?forum snvoc:title ?title.
+}
+group by ?title ?forum
+order by desc(?count) ?forum
+limit 20

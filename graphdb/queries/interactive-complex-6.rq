@@ -1,0 +1,30 @@
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX path: <http://www.ontotext.com/path#>
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+SELECT ?tagname (count (distinct ?post) as ?count)
+WHERE {
+    VALUES (?src) {
+        (sn:pers%personId%)
+    }
+    ?post a snvoc:Post .
+    ?post snvoc:hasTag/foaf:name "%tagName%" .
+    ?post snvoc:hasTag ?tag .
+    ?tag foaf:name ?tagname .
+    ?post snvoc:hasCreator ?dst .
+    filter(?tagname != "%tagName%")
+    SERVICE path:search {
+        <urn:path> path:findPath path:allPaths ;
+                   path:sourceNode ?src ;
+                   path:destinationNode ?dst ;
+                   path:maxPathLength 2 ;
+                   path:startNode ?start;
+                   path:endNode ?fr;
+                   SERVICE <urn:path> {
+            ?start snvoc:directKnows ?fr .
+        }
+    }
+}
+group by ?tagname
+order by desc(?count) ?tagname
+limit 10

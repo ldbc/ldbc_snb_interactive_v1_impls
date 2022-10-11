@@ -1,0 +1,6 @@
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+
+INSERT DATA {
+    sn:pers%subjectId% snvoc:speaks "%language%" .
+};
