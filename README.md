@@ -54,7 +54,7 @@ postgres/scripts/build.sh
 
 ### Inputs
 
-The benchmark framework relies on the following inputs produced by the [SNB Datagen's new (Spark) version](https://github.com/ldbc/ldbc_snb_datagen_spark/). Pre-generated data sets will be made available by the end of 2022.
+The benchmark framework relies on the following inputs produced by the [SNB Datagen's new (Spark) version](https://github.com/ldbc/ldbc_snb_datagen_spark/).
 
 Currently, the initial data set, update streams, and parameters can generated with the following command:
 
@@ -69,6 +69,10 @@ export USE_DATAGEN_DOCKER=true
 
 scripts/generate-all.sh
 ```
+
+### Pre-generate data sets
+
+[Pre-generated SF1-SF300 data sets](snb-interactive-pre-generated-data-sets.md) are available.
 
 ### Loading the data
 
