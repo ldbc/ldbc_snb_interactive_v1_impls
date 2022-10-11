@@ -82,6 +82,7 @@
             <modules>
                 <module>cypher</module>
                 <module>duckdb</module>
+                <module>graphdb</module>
                 <module>postgres</module>
                 <module>tigergraph</module>
                 <module>umbra</module>
@@ -97,6 +98,12 @@
             <id>duckdb</id>
             <modules>
                 <module>duckdb</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>graphdb</id>
+            <modules>
+                <module>graphdb</module>
             </modules>
         </profile>
         <profile>

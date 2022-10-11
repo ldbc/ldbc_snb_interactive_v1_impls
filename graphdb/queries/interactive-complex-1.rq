@@ -1,0 +1,61 @@
+PREFIX path: <http://www.ontotext.com/path#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX dbr: <http://dbpedia.org/resource/>
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+select ?dst ?lname ?dist ?bday ?since ?gen ?browser ?locationIP (group_concat(distinct ?email;
+        separator=", ") as ?emails) (group_concat(distinct ?lng;
+        separator=", ") as ?lngs) ?based (group_concat(distinct concat(?study_name, " ", str(?study_year), " ", ?study_country);
+        separator=", ") as ?studyAt) (group_concat(distinct concat(?work_name, " ", str(?work_year), " ", ?work_country);
+        separator=", ") as ?workAt) where {
+    {
+        SELECT ?dst ?lname ?dist
+        WHERE {
+            VALUES (?src) {
+                ( sn:pers%personId%)
+            }
+            ?dst snvoc:firstName "%firstName%" .
+            filter (?dst != sn:pers%personId%)
+            SERVICE <http://www.ontotext.com/path#search> {
+                <urn:path> path:findPath path:distance ;
+                           path:sourceNode ?src ;
+                           path:destinationNode ?dst ;
+                           path:distanceBinding ?dist;
+                           path:maxPathLength 3 ;
+                           path:startNode ?start ;
+                           path:endNode ?fr .
+                SERVICE <urn:path> {
+                    ?start snvoc:directKnows ?fr.
+                }
+            }
+            ?dst snvoc:lastName ?lname .
+        } order by ?dist ?lname ?dst
+        limit 20
+    }
+    ?dst snvoc:birthday ?bday .
+    ?dst snvoc:isLocatedIn ?basedURI .
+    ?basedURI foaf:name ?based .
+    ?dst snvoc:creationDate ?since .
+    ?dst snvoc:gender ?gen .
+    ?dst snvoc:locationIP ?locationIP .
+    ?dst snvoc:browserUsed ?browser .
+    ?dst snvoc:email ?email .
+    ?dst snvoc:speaks ?lng .
+    optional {
+        ?dst snvoc:studyAt ?study .
+        ?study snvoc:classYear ?study_year .
+        ?study snvoc:hasOrganisation ?study_org .
+        ?study_org snvoc:isLocatedIn ?study_countryURI.
+        ?study_countryURI foaf:name ?study_country .
+        ?study_org foaf:name ?study_name .
+    }
+    optional {
+        ?dst snvoc:workAt ?work .
+        ?work snvoc:workFrom ?work_year .
+        ?work snvoc:hasOrganisation ?work_org .
+        ?work_org snvoc:isLocatedIn ?work_countryURI.
+        ?work_countryURI foaf:name ?work_country .
+        ?work_org foaf:name ?work_name .
+    }
+} group by ?dst ?lname ?bday ?since ?gen ?browser ?locationIP ?based ?dist

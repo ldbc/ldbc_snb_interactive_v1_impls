@@ -1,0 +1,14 @@
+PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
+PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?content ?creationDate
+WHERE {
+	?message snvoc:id "%messageId%"^^xsd:long .
+	{
+	    ?message snvoc:content ?content
+	} UNION {
+	    ?message snvoc:imageFile ?content
+	}
+    ?message snvoc:creationDate ?creationDate .
+}
