@@ -2,10 +2,21 @@
 
 ## Streaming decompression
 
+To download and decompress the data sets on-the-fly, make sure you have `curl` and [`zstd`](https://facebook.github.io/zstd/) installed, then run:
+
 ```bash
 export DATASET_URL=...
 curl --silent --fail ${DATASET_URL} | tar -xv --use-compress-program=unzstd
 ```
+
+For multi-file data sets, first download them. Then, to recombine and decompress, run:
+
+```
+cat <data-set-filename>.tar.zst* | tar -xv --use-compress-program=unzstd
+```
+
+This command works on both standalone files (`.tar.zst`) and chunked ones (`.tar.zst.XXX`).
+
 
 ## Data sets links
 
