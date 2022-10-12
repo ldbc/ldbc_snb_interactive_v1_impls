@@ -11,7 +11,7 @@ curl --silent --fail ${DATASET_URL} | tar -xv --use-compress-program=unzstd
 
 For multi-file data sets, first download them. Then, to recombine and decompress, run:
 
-```
+```bash
 cat <data-set-filename>.tar.zst* | tar -xv --use-compress-program=unzstd
 ```
 
