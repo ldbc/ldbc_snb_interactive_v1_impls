@@ -11,15 +11,15 @@ services:
       - SA_PASSWORD=${MSSQL_PASSWORD}
       - ACCEPT_EULA=Y
     volumes:
-      - type: bind
-        source: ${MSSQL_DATA_DIR}
-        target: /var/opt/mssql/data
-      - type: bind
-        source: ${MSSQL_DATA_LOGS}
-        target: /var/opt/mssql/log
-      - type: bind
-        source: ${MSSQL_DATA_SECRETS}
-        target: /var/opt/mssql/secrets
+      # - type: bind
+      #   source: ${MSSQL_DATA_DIR}
+      #   target: /var/opt/mssql/data
+      # - type: bind
+      #   source: ${MSSQL_DATA_LOGS}
+      #   target: /var/opt/mssql/log
+      # - type: bind
+      #   source: ${MSSQL_DATA_SECRETS}
+      #   target: /var/opt/mssql/secrets
       - type: bind
         source: ${MSSQL_CSV_DIR}
         target: /data/
