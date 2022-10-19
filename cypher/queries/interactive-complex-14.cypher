@@ -26,7 +26,8 @@ CALL gds.graph.project.cypher(
     RETURN
       source,
       target,
-      CASE WHEN floor(40-sqrt(numInteractions)) > 1 THEN floor(40-sqrt(numInteractions)) ELSE 1 END AS weight'
+      CASE WHEN round(40-sqrt(numInteractions)) > 1 THEN round(40-sqrt(numInteractions)) ELSE 1 END AS weight
+  '
 )
 YIELD graphName
 
