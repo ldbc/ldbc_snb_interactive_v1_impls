@@ -1,6 +1,6 @@
 # Microsoft SQL Server implementation
 
-[SQL Server](https://www.microsoft.com/en-us/sql-server) implementation of the [LDBC Social Network Benchmark's Interactive workload](https://github.com/ldbc/ldbc_snb_docs).
+Implementation of the [LDBC Social Network Benchmark's Interactive workload](https://github.com/ldbc/ldbc_snb_docs) in [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server) using its [SQL Graph](https://learn.microsoft.com/en-us/sql/relational-databases/graphs/sql-graph-architecture) feature.
 
 ## Setup
 
