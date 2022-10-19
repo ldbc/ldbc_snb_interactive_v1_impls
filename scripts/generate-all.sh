@@ -87,7 +87,7 @@ mv deletes/ ${LDBC_SNB_IMPLS_DIR}/update-streams-sf${SF}/
 
 echo "==================== Generate parameters ===================="
 cd ${LDBC_SNB_DRIVER_DIR}
-paramgen/get-factors.sh
-paramgen/paramgen.sh
+paramgen/scripts/get-factors.sh
+paramgen/scripts/paramgen.sh
 
 mv parameters/*.parquet ${LDBC_SNB_IMPLS_DIR}/parameters-sf${SF}/
