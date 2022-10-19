@@ -20,7 +20,7 @@ CALL gds.shortestPath.dijkstra.stream({
     RETURN
       source,
       target,
-      CASE WHEN floor(40-sqrt(numInteractions)) > 1 THEN floor(40-sqrt(numInteractions)) ELSE 1 END AS weight
+      CASE WHEN round(40-sqrt(numInteractions)) > 1 THEN round(40-sqrt(numInteractions)) ELSE 1 END AS weight
     ',
   sourceNode: person1,
   targetNode: person2,

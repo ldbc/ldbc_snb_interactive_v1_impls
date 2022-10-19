@@ -4,7 +4,7 @@
  */
 with recursive
 pathb(a, b, w) AS (
-    SELECT least(c.creatorpersonid, p.creatorpersonid) AS a, greatest(c.creatorpersonid, p.creatorpersonid) AS b, greatest(floor(40 - sqrt(count(*)))::bigint, 1)  AS w
+    SELECT least(c.creatorpersonid, p.creatorpersonid) AS a, greatest(c.creatorpersonid, p.creatorpersonid) AS b, greatest(round(40 - sqrt(count(*)))::bigint, 1)  AS w
     FROM message c, message p
     WHERE c.parentmessageid = p.id AND EXISTS (SELECT * FROM person_knows_person WHERE person1id = c.creatorpersonid AND person2id = p.creatorpersonid)
     group by a, b
