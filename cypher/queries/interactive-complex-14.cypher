@@ -6,11 +6,14 @@
   27 AS person2Id
 }
 */
-CALL gds.graph.drop('q14graph', false)
-YIELD graphName
+// Check whether a path exists -- if there is no path, the query will return an empty result
+MATCH
+    (person1:Person {id: $person1Id}),
+    (person2:Person {id: $person2Id}),
+    path = shortestPath((person1)-[:KNOWS*]-(person2))
 
 // ----------------------------------------------------------------------------------------------------
-WITH count(*) AS dummy
+WITH path
 // ----------------------------------------------------------------------------------------------------
 
 CALL gds.graph.project.cypher(
