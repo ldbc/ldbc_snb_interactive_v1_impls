@@ -6,23 +6,24 @@
   27 AS person2Id
 }
 */
-// Check whether a path exists -- if there is no path, the query will return an empty result
-MATCH
-    (person1:Person {id: $person1Id}),
-    (person2:Person {id: $person2Id}),
-    path = shortestPath((person1)-[:KNOWS*]-(person2))
-
-// ----------------------------------------------------------------------------------------------------
-WITH person1, person2
-// ----------------------------------------------------------------------------------------------------
-
 CALL gds.graph.drop('q14graph', false)
 YIELD graphName
 
 // ----------------------------------------------------------------------------------------------------
-WITH person1, person2
+WITH count(*) AS dummy
 // ----------------------------------------------------------------------------------------------------
 
+// Check whether a path exists -- if there is no path, the query will return an empty result
+MATCH
+    path = shortestPath((person1 {id: $person1Id})-[:KNOWS*]-(person2 {id: $person2Id}))
+
+// ----------------------------------------------------------------------------------------------------
+// the actual values are not important,
+// we are only interested in whether there is a row or not
+WITH 42 AS dummy
+// ----------------------------------------------------------------------------------------------------
+
+MATCH (person1:Person {id: $person1Id}), (person2:Person {id: $person2Id})
 CALL gds.graph.project.cypher(
   'q14graph',
   'MATCH (p:Person) RETURN id(p) AS id',
