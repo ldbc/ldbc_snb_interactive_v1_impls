@@ -13,7 +13,14 @@ MATCH
     path = shortestPath((person1)-[:KNOWS*]-(person2))
 
 // ----------------------------------------------------------------------------------------------------
-WITH path
+WITH person1, person2
+// ----------------------------------------------------------------------------------------------------
+
+CALL gds.graph.drop('q14graph', false)
+YIELD graphName
+
+// ----------------------------------------------------------------------------------------------------
+WITH person1, person2
 // ----------------------------------------------------------------------------------------------------
 
 CALL gds.graph.project.cypher(
@@ -35,10 +42,9 @@ CALL gds.graph.project.cypher(
 YIELD graphName
 
 // ----------------------------------------------------------------------------------------------------
-WITH count(*) AS dummy
+WITH person1, person2
 // ----------------------------------------------------------------------------------------------------
 
-MATCH (person1:Person {id: $person1Id}), (person2:Person {id: $person2Id})
 CALL gds.shortestPath.dijkstra.stream(
     'q14graph', {sourceNode: person1, targetNode: person2, relationshipWeightProperty: 'weight'}
 )
