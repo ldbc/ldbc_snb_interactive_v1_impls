@@ -75,7 +75,7 @@ if ${USE_DATAGEN_DOCKER}; then
     sudo chown -R $(id -u):$(id -g) out-sf${SF}
 fi
 
-export LDBC_SNB_DATA_ROOT_DIRECTORY=${LDBC_SNB_DATAGEN_DIR}/out-sf${SF}/
+export LDBC_SNB_DATA_ROOT_DIRECTORY=${LDBC_SNB_DATAGEN_DIR}/out-sf${SF}/graphs/parquet/raw/
 
 echo "==================== Generate update streams ===================="
 cd ${LDBC_SNB_DRIVER_DIR}
@@ -87,6 +87,7 @@ mv deletes/ ${LDBC_SNB_IMPLS_DIR}/update-streams-sf${SF}/
 
 echo "==================== Generate parameters ===================="
 cd ${LDBC_SNB_DRIVER_DIR}
+export LDBC_SNB_DATA_ROOT_DIRECTORY=${LDBC_SNB_DATAGEN_DIR}/out-sf${SF}/
 paramgen/scripts/get-factors.sh
 paramgen/scripts/paramgen.sh
 
