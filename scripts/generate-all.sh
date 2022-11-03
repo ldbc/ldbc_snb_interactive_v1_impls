@@ -14,7 +14,7 @@ USE_DATAGEN_DOCKER=${USE_DATAGEN_DOCKER:-false}
 # set DATAGEN_COMMAND
 if ${USE_DATAGEN_DOCKER}; then
     echo "Using Datagen Docker image"
-    DATAGEN_COMMAND="docker run --volume ${LDBC_SNB_DATAGEN_DIR}/out-sf${SF}:/out ldbc/datagen-standalone:latest --cores $(nproc) --parallelism $(nproc) --memory ${LDBC_SNB_DATAGEN_MAX_MEM} --"
+    DATAGEN_COMMAND="docker run --volume ${LDBC_SNB_DATAGEN_DIR}/out-sf${SF}:/out ldbc/datagen-standalone:0.5.1-2.12_spark3.2 --cores $(nproc) --parallelism $(nproc) --memory ${LDBC_SNB_DATAGEN_MAX_MEM} --"
 else
     echo "Using non-containerized Datagen"
     cd ${LDBC_SNB_DATAGEN_DIR}
