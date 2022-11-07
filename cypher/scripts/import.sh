@@ -54,8 +54,6 @@ fi
 
 docker run --rm \
     --user="$(id -u):$(id -g)" \
-    --publish=7474:7474 \
-    --publish=7687:7687 \
     --volume=${NEO4J_DATA_DIR}:/data \
     --volume=${NEO4J_CSV_DIR}:/import \
     --volume=${NEO4J_HEADER_DIR}:/headers \
