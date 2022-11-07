@@ -1,3 +1,5 @@
+OPTIONAL MATCH (person:Person {id: $personId})
+WITH 1/count(person) AS testWhetherPersonFound
 // DEL 1: Remove person and its personal forums and message (sub)threads
 MATCH (person:Person {id: $personId})
 // DEL 6/7: Post/Comment
