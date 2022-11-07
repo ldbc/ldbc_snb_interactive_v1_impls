@@ -1,3 +1,5 @@
+OPTIONAL MATCH (p:Person {id: $moderatorPersonId})
+WITH 1/count(p) AS testWhetherPersonFound
 MATCH (p:Person {id: $moderatorPersonId})
 CREATE (f:Forum {id: $forumId, title: $forumTitle, creationDate: $creationDate})-[:HAS_MODERATOR]->(p)
 WITH f

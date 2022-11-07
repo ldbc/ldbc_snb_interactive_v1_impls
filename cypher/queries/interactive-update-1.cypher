@@ -1,3 +1,5 @@
+OPTIONAL MATCH (c:City {id: $cityId})
+WITH 1/count(c) AS testWhetherCityFound
 MATCH (c:City {id: $cityId})
 CREATE (p:Person {
     id: $personId,
