@@ -1,11 +1,3 @@
-OPTIONAL MATCH
-  (author:Person {id: $authorPersonId}),
-  (country:Country {id: $countryId}),
-  (message:Message {id: $replyToPostId + $replyToCommentId})
-WITH
-  1/count(author) AS testWhetherAuthorFound,
-  1/count(country) AS testWhetherCountryFound,
-  1/count(message) AS testWhetherMessageFound
 MATCH
   (author:Person {id: $authorPersonId}),
   (country:Country {id: $countryId}),
