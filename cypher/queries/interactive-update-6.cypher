@@ -1,15 +1,4 @@
-OPTIONAL MATCH
-  (author:Person {id: $authorPersonId}),
-  (country:Country {id: $countryId}),
-  (forum:Forum {id: $forumId})
-WITH
-  1/count(author) AS testWhetherAuthorFound,
-  1/count(country) AS testWhetherCountryFound,
-  1/count(forum) AS testWhetherForumFound
-MATCH
-  (author:Person {id: $authorPersonId}),
-  (country:Country {id: $countryId}),
-  (forum:Forum {id: $forumId})
+MATCH (author:Person {id: $authorPersonId}), (country:Country {id: $countryId}), (forum:Forum {id: $forumId})
 CREATE (author)<-[:HAS_CREATOR]-(p:Post:Message {
     id: $postId,
     creationDate: $creationDate,
