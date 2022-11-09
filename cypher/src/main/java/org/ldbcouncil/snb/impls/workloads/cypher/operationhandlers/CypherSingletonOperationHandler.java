@@ -38,20 +38,17 @@ public abstract class CypherSingletonOperationHandler<TOperation extends Operati
             final Result result = session.run( query, parameters );
             if ( result.hasNext() )
             {
-                try
-                {
-                    resultReporter.report( 1, toResult( result.next() ), operation );
-                    final ResultSummary summary = result.consume();
-                }
-                catch ( ParseException e )
-                {
-                    throw new DbException( e );
-                }
+                resultReporter.report( 1, toResult( result.next() ), operation );
+                final ResultSummary summary = result.consume();
             }
             else
             {
-                resultReporter.report( 0, null, operation );
+                resultReporter.report( 0, toResult(null), operation );
             }
+        }
+        catch ( ParseException e )
+        {
+            throw new DbException( e );
         }
     }
 }
