@@ -10,4 +10,4 @@ cd ..
 
 export PGPASSWORD=mysecretpassword
 
-psql -h localhost -U postgres
+psql -h localhost -U postgres -d ldbcsnb
