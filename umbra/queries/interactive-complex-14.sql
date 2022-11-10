@@ -82,7 +82,7 @@ path0r(v, path, l, w) as (
     from path0
     where l0 = -1
 ),
-path1(v, path, l) as (
+path1(v, path, l, w) as (
     select v, path, l, w from path0r
     union all
     select ss.prev, array_append(path, ss.prev), l - 1, w + coalesce(score, 0)
