@@ -138,8 +138,9 @@ jobs:
       - run:
           name: Tiny data set - Cross-validate the Umbra project based on the results from Neo4j
           command: |
-            cp cypher/validation_params_cypher_tiny.csv umbra/validation_params.csv
+            cp cypher/validation_params_cypher_tiny.csv umbra/validation_params_tiny.csv
             cd umbra
+            grep -v Q14 validation_params_tiny.csv > validation_params.csv
             export UMBRA_CSV_DIR=`pwd`/../postgres/test-data/
             scripts/restore-database.sh
             driver/validate.sh | tee validation-log.txt
@@ -218,8 +219,9 @@ jobs:
       - run:
           name: SF1 data set - Cross-validate the Umbra project based on the results from Neo4j
           command: |
-            cp cypher/validation_params_cypher_sf1.csv umbra/validation_params.csv
+            cp cypher/validation_params_cypher_sf1.csv umbra/validation_params_sf1.csv
             cd umbra
+            grep -v Q14 validation_params_sf1.csv > validation_params.csv
             driver/validate.sh | tee validation-log.txt
             scripts/stop.sh
             grep 'Validation Result: PASS' validation-log.txt

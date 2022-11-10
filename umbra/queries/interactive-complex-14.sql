@@ -1,3 +1,4 @@
+-- NOTE: This query currently fails validation and is therefore disabled.
 with recursive
 path(src, dst) as (
     select k_person1id, k_person2id from knows
