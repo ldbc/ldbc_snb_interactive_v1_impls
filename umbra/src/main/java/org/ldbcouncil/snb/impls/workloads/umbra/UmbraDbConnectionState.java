@@ -22,7 +22,6 @@ public class UmbraDbConnectionState<TDbQueryStore extends QueryStore> extends Ba
 
         Class.forName(properties.get("jdbcDriver"));
 
-        endPoint = properties.get("endpoint");
         Properties props = new Properties();
         endPoint = properties.get("endpoint");
         props.setProperty("jdbcUrl", endPoint);
