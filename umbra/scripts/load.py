@@ -6,6 +6,7 @@ import time
 class UmbraDbLoader():
 
     def __init__(self):
+        self.database = os.environ.get("UMBRA_DATABASE", "ldbcsnb")
         self.endpoint = os.environ.get("UMBRA_HOST", "localhost")
         self.port = int(os.environ.get("UMBRA_PORT", 5432))
         self.user = os.environ.get("UMBRA_USER", "postgres")
@@ -13,6 +14,7 @@ class UmbraDbLoader():
 
     def load_data(self):
         with psycopg.connect(
+            dbname=self.database,
             host=self.endpoint,
             user=self.user,
             password=self.password,
