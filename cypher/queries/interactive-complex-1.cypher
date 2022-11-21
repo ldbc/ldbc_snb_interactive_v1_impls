@@ -19,15 +19,15 @@ LIMIT 20
 MATCH (friend)-[:IS_LOCATED_IN]->(friendCity:City)
 OPTIONAL MATCH (friend)-[studyAt:STUDY_AT]->(uni:University)-[:IS_LOCATED_IN]->(uniCity:City)
 WITH friend, collect(
-    CASE uni.name
-        WHEN null THEN null
+    CASE
+        WHEN uni IS NULL THEN null
         ELSE [uni.name, studyAt.classYear, uniCity.name]
     END ) AS unis, friendCity, distance
 
 OPTIONAL MATCH (friend)-[workAt:WORK_AT]->(company:Company)-[:IS_LOCATED_IN]->(companyCountry:Country)
 WITH friend, collect(
-    CASE company.name
-        WHEN null THEN null
+    CASE
+        WHEN company IS NULL then null
         ELSE [company.name, workAt.workFrom, companyCountry.name]
     END ) AS companies, unis, friendCity, distance
 
