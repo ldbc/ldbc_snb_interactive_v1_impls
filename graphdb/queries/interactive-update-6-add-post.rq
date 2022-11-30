@@ -7,17 +7,20 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 INSERT {
     sn:post%subjectId% rdf:type snvoc:Post ;
     snvoc:id "%postId%"^^xsd:long ;
-  #  snvoc:imageFile "%imageFile%" ;
     snvoc:creationDate "%creationDate%"^^xsd:dateTime ;
     snvoc:locationIP "%locationIP%" ;
     snvoc:browserUsed "%browserUsed%" ;
-  #  snvoc:content "%content%" ;
     snvoc:length "%length%"^^xsd:int ;
     snvoc:language "%language%" ;
-    ?imageOrContent ?data .
+    ?imageOrContent ?data ;
+    snvoc:hasCreator sn:pers%authorPersonId% .
 } WHERE {
     BIND(IF("%imageFile%" != "", snvoc:imageFile, snvoc:content) AS ?imageOrContent) .
     BIND(IF("%imageFile%" != "", "%imageFile%", "%content%") AS ?data) .
+};
+
+INSERT DATA {
+    sn:forum%forumId% snvoc:containerOf sn:post%subjectId% .
 };
 
 INSERT{
@@ -25,16 +28,4 @@ INSERT{
 } WHERE {
     ?country rdf:type dbpedia-owl:Country .
     ?country snvoc:id  "%countryId%"^^xsd:int .
-};
-
-INSERT{
-    sn:post%subjectId% snvoc:hasCreator sn:pers%authorPersonId% .
-} WHERE {
-    sn:pers%authorPersonId% rdf:type snvoc:Person .
-};
-
-INSERT {
-    sn:forum%forumId% snvoc:containerOf sn:post%subjectId% .
-} WHERE {
-    sn:forum%forumId% rdf:type snvoc:Forum.
 };

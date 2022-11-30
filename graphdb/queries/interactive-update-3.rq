@@ -2,11 +2,8 @@ PREFIX snvoc: <http://www.ldbc.eu/ldbc_socialnet/1.0/vocabulary/>
 PREFIX sn: <http://www.ldbc.eu/ldbc_socialnet/1.0/data/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-INSERT {
+INSERT DATA {
     sn:pers%personId% snvoc:likes _:likes .
     _:likes snvoc:hasComment sn:comm%commentId% ;
     snvoc:creationDate "%creationDate%"^^xsd:dateTime .
-} WHERE{
-      sn:pers%personId% rdf:type snvoc:Person .
-      sn:comm%commentId% rdf:type snvoc:Comment .
- }
+}

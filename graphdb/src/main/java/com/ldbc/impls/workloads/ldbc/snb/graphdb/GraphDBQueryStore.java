@@ -109,7 +109,7 @@ public class GraphDBQueryStore extends QueryStore {
 					)
 			));
 		}
-		convertTags(list, operation.getTagIds(), operation.getPersonId());
+		convertTags(QueryType.InteractiveUpdate1AddPersonTags, list, operation.getTagIds(), operation.getPersonId());
 		for (LdbcUpdate1AddPerson.Organization organization : operation.getStudyAt()) {
 			list.add(prepare(
 					QueryType.InteractiveUpdate1AddPersonUniversities,
@@ -136,7 +136,7 @@ public class GraphDBQueryStore extends QueryStore {
 						SUBJECT_ID, getConverter().convertId(operation.getForumId())
 				)
 		));
-		convertTags(list, operation.getTagIds(), operation.getForumId());
+		convertTags(QueryType.InteractiveUpdate4AddForumTags, list, operation.getTagIds(), operation.getForumId());
 		return list;
 	}
 
@@ -160,7 +160,7 @@ public class GraphDBQueryStore extends QueryStore {
 								.build()
 				)
 		);
-		convertTags(list, operation.getTagIds(), operation.getPostId());
+		convertTags(QueryType.InteractiveUpdate6AddPostTags, list, operation.getTagIds(), operation.getPostId());
 		return list;
 	}
 
@@ -183,14 +183,14 @@ public class GraphDBQueryStore extends QueryStore {
 						.put(SUBJECT_ID, getConverter().convertId(operation.getCommentId()))
 						.build()
 		));
-		convertTags(list, operation.getTagIds(), operation.getCommentId());
+		convertTags(QueryType.InteractiveUpdate7AddCommentTags, list, operation.getTagIds(), operation.getCommentId());
 		return list;
 	}
 
-	private void convertTags(List<String> list, List<Long> tags, long id) {
+	private void convertTags(QueryType queryType, List<String> list, List<Long> tags, long id) {
 		for (long tagId : tags) {
 			list.add(prepare(
-							QueryType.InteractiveUpdate7AddCommentTags,
+							queryType,
 							ImmutableMap.of(
 									SUBJECT_ID, getConverter().convertId(id),
 									"tagId", getConverter().convertIdForInsertion(tagId))
