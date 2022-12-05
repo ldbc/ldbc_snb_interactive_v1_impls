@@ -7,10 +7,6 @@ INSERT DATA{
 	sn:forum%subjectId% rdf:type snvoc:Forum ;
     snvoc:id "%forumId%"^^xsd:long ;
     snvoc:title "%forumTitle%" ;
-    snvoc:creationDate "%creationDate%"^^xsd:dateTime .
-};
-INSERT {
- sn:forum%subjectId% snvoc:hasModerator sn:pers%moderatorPersonId% .
-} WHERE {
-    sn:pers%moderatorPersonId% rdf:type snvoc:Person .
+    snvoc:creationDate "%creationDate%"^^xsd:dateTime ;
+    snvoc:hasModerator sn:pers%moderatorPersonId% .
 };
