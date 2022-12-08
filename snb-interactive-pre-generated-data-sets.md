@@ -40,12 +40,15 @@ This command works on both standalone files (`.tar.zst`) and chunked ones (`.tar
 
 ### Update streams
 
-* https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive/snb-interactive-update-streams-sf1.tar.zst
-* https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive/snb-interactive-update-streams-sf3.tar.zst
-* https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive/snb-interactive-update-streams-sf10.tar.zst
-* https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive/snb-interactive-update-streams-sf30.tar.zst
-* https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive/snb-interactive-update-streams-sf100.tar.zst
-* https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive/snb-interactive-update-streams-sf300.tar.zst
+* https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive-updates/interactive-updates-sf1.tar.zst
+* https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive-updates/interactive-updates-sf3.tar.zst
+* https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive-updates/interactive-updates-sf10.tar.zst
+* https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive-updates/interactive-updates-sf30.tar.zst
+* https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive-updates/interactive-updates-sf100.tar.zst
+* https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive-updates/interactive-updates-sf300.tar.zst
+* https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive-updates/interactive-updates-sf1000.tar.zst
+* https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive-updates/interactive-updates-sf3000.tar.zst
+* https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive-updates/interactive-updates-sf10000.tar.zst
 
 ### Parameters
 
