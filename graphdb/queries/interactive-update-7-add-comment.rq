@@ -11,7 +11,8 @@ INSERT DATA {
     snvoc:locationIP "%locationIP%" ;
     snvoc:browserUsed "%browserUsed%" ;
     snvoc:content "%content%" ;
-    snvoc:length "%length%"^^xsd:int .
+    snvoc:length "%length%"^^xsd:int ;
+    snvoc:hasCreator sn:pers%authorPersonId% .
 };
 
 INSERT {
@@ -22,11 +23,6 @@ INSERT {
                     sn:post%replyToPostId%
                    ))
                     AS ?commOrPost)
- BIND ((IF (%replyToPostId%  = -1,
-                    snvoc:Comment,
-                    snvoc:Post
-                   )) AS ?type)
-          ?commOrPost rdf:type ?type .
 };
 INSERT{
    sn:comm%subjectId% snvoc:isLocatedIn ?country .
@@ -34,8 +30,3 @@ INSERT{
     ?country rdf:type dbpedia-owl:Country .
     ?country snvoc:id  "%countryId%"^^xsd:int .
 };
-INSERT{
-  sn:comm%subjectId% snvoc:hasCreator sn:pers%authorPersonId% .
-} WHERE {
-    ?person rdf:type snvoc:Person .
-}
