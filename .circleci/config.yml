@@ -11,7 +11,7 @@ jobs:
   test:
     resource_class: xlarge
     machine:
-      image: ubuntu-2204:2022.04.1
+      image: ubuntu-2204:2022.04.2
     steps:
       - checkout
       - run:
