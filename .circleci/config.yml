@@ -18,6 +18,7 @@ jobs:
           name: Install dependencies
           command: |
             export DEBIAN_FRONTEND=noninteractive
+            export NEEDRESTART_SUSPEND=a
             sudo apt update && sudo apt install -y zstd
             scripts/install-dependencies.sh
       - run:
