@@ -18,6 +18,7 @@ BEGIN
           AND Person_knows_Person.Person2Id = repliers.Person1Id
 
     DELETE FROM Message WHERE ParentMessageId IN ( SELECT MessageId FROM DELETED)
+    DELETE FROM Person_likes_Message WHERE MessageId IN ( SELECT MessageId FROM DELETED)
 END;
 
 CREATE OR ALTER TRIGGER TR_DEL_Forum ON Forum
@@ -35,6 +36,9 @@ AS
 BEGIN
   DELETE FROM Person_hasInterest_Tag    WHERE PersonId          IN ( SELECT PersonId FROM DELETED )
   DELETE FROM Person_studyAt_University WHERE PersonId          IN ( SELECT PersonId FROM DELETED )
+  DELETE FROM Person_likes_Message      WHERE PersonId          IN ( SELECT PersonId FROM DELETED )
+  DELETE FROM Person_knows_Person       WHERE Person1Id         IN ( SELECT PersonId FROM DELETED )
+  DELETE FROM Person_knows_Person       WHERE Person2Id         IN ( SELECT PersonId FROM DELETED )
   DELETE FROM Person_workAt_Company     WHERE PersonId          IN ( SELECT PersonId FROM DELETED )
   DELETE FROM Forum_hasMember_Person    WHERE PersonId          IN ( SELECT PersonId FROM DELETED )
   DELETE FROM Message                   WHERE CreatorPersonId   IN ( SELECT PersonId FROM DELETED )
