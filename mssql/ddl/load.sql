@@ -1,4 +1,11 @@
 USE ldbc;
+ALTER DATABASE ldbc
+SET READ_COMMITTED_SNAPSHOT ON
+
+ALTER DATABASE ldbc
+SET ALLOW_SNAPSHOT_ISOLATION ON
+
+SET TRANSACTION ISOLATION LEVEL SNAPSHOT;  
 -- Static --
 -- Organisation
 INSERT INTO [dbo].[Organisation] (id, type, name, url, LocationPlaceId)
