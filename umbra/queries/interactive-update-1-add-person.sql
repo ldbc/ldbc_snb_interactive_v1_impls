@@ -12,12 +12,12 @@ insert into person (
 values
 (
     :personId
-  , :personFirstName
-  , :personLastName
-  , :gender
+  , :personFirstName::varchar
+  , :personLastName::varchar
+  , :gender::varchar
   , :birthday
   , :creationDate
-  , :locationIP
-  , :browserUsed
+  , :locationIP::varchar
+  , :browserUsed::varchar
   , :cityId
 );
