@@ -41,5 +41,6 @@ BEGIN
   DELETE FROM Person_knows_Person       WHERE Person2Id         IN ( SELECT PersonId FROM DELETED )
   DELETE FROM Person_workAt_Company     WHERE PersonId          IN ( SELECT PersonId FROM DELETED )
   DELETE FROM Forum_hasMember_Person    WHERE PersonId          IN ( SELECT PersonId FROM DELETED )
+  DELETE FROM Forum                     WHERE ModeratorPersonId IN ( SELECT PersonId FROM DELETED )
   DELETE FROM Message                   WHERE CreatorPersonId   IN ( SELECT PersonId FROM DELETED )
 END;
