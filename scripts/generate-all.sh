@@ -75,7 +75,7 @@ if ${USE_DATAGEN_DOCKER}; then
     sudo chown -R $(id -u):$(id -g) out-sf${SF}
 fi
 
-export LDBC_SNB_DATA_ROOT_DIRECTORY=${LDBC_SNB_DATAGEN_DIR}/out-sf${SF}/graphs/parquet/raw/
+export LDBC_SNB_DATA_ROOT_DIRECTORY=${LDBC_SNB_DATAGEN_DIR}/out-sf${SF}/
 
 echo "==================== Generate update streams ===================="
 cd ${LDBC_SNB_DRIVER_DIR}
