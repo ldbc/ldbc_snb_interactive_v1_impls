@@ -88,7 +88,8 @@ mv deletes/ ${LDBC_SNB_IMPLS_DIR}/update-streams-sf${SF}/
 echo "==================== Generate parameters ===================="
 cd ${LDBC_SNB_DRIVER_DIR}
 export LDBC_SNB_DATA_ROOT_DIRECTORY=${LDBC_SNB_DATAGEN_DIR}/out-sf${SF}/
-paramgen/scripts/get-factors.sh
+export LDBC_SNB_FACTOR_TABLES_DIR=${LDBC_SNB_DATA_ROOT_DIRECTORY}/parquet/raw/composite-merged-fk/
+
 paramgen/scripts/paramgen.sh
 
 mv parameters/*.parquet ${LDBC_SNB_IMPLS_DIR}/parameters-sf${SF}/
