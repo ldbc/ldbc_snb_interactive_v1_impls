@@ -68,8 +68,8 @@ jobs:
           command: |
             export LDBC_SNB_IMPLS_DIR=$(pwd)
             cd ldbc_snb_interactive_driver/paramgen
-            scripts/get-sample-factors.sh
-            . scripts/use-sample-factors.sh
+            scripts/get-sample-data.sh
+            . scripts/use-sample-data.sh
             scripts/paramgen.sh
             cd ..
             mv parameters/*.parquet ${LDBC_SNB_IMPLS_DIR}/parameters/
