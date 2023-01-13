@@ -15,13 +15,13 @@ VALUES
 (
     :creationDate
   , :personId
-  , :personFirstName
-  , :personLastName
-  , :gender
+  , :personFirstName::varchar
+  , :personLastName::varchar
+  , :gender::varchar
   , :birthday
-  , :locationIP
-  , :browserUsed
+  , :locationIP::varchar
+  , :browserUsed::varchar
   , :cityId
-  , :languages
-  , :emails
+  , :languages::varchar
+  , :emails::varchar
 );

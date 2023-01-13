@@ -60,7 +60,7 @@ docker run --rm \
     ${NEO4J_ENV_VARS} \
     ${NEO4J_DOCKER_PLATFORM_FLAG} \
     neo4j:${NEO4J_VERSION} \
-    neo4j-admin import \
+    neo4j-admin database import full \
     --id-type=INTEGER \
     --ignore-empty-strings=true \
     --bad-tolerance=0 \

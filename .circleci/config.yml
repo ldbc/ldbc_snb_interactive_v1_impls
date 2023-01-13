@@ -25,7 +25,7 @@ jobs:
           # Install Java 11 (Ubuntu 22.04 has Java 17 by default)
           name: Install OpenJDK 11
           command: |
-            sudo apt-get update && sudo apt-get install openjdk-11-jdk
+            sudo apt-get update && sudo apt-get install -y openjdk-11-jdk
             sudo update-alternatives --set java /usr/lib/jvm/java-11-openjdk-amd64/bin/java
             sudo update-alternatives --set javac /usr/lib/jvm/java-11-openjdk-amd64/bin/javac
             java -version
@@ -58,7 +58,7 @@ jobs:
             git clone https://github.com/ldbc/ldbc_snb_interactive_driver
             cd ldbc_snb_interactive_driver/scripts/
             ./install-dependencies.sh
-            export LDBC_SNB_DATA_ROOT_DIRECTORY=../../social-network-sf0.003-bi-composite-merged-fk/graphs/parquet/raw
+            export LDBC_SNB_DATA_ROOT_DIRECTORY=../../social-network-sf0.003-bi-composite-merged-fk
             ./convert.sh
             mv inserts ../../update-streams/
             mv deletes ../../update-streams/
@@ -68,8 +68,8 @@ jobs:
           command: |
             export LDBC_SNB_IMPLS_DIR=$(pwd)
             cd ldbc_snb_interactive_driver/paramgen
-            scripts/get-sample-factors.sh
-            . scripts/use-sample-factors.sh
+            scripts/get-sample-data.sh
+            . scripts/use-sample-data.sh
             scripts/paramgen.sh
             cd ..
             mv parameters/*.parquet ${LDBC_SNB_IMPLS_DIR}/parameters/
