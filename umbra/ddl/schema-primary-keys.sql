@@ -1,4 +1,0 @@
--- add primary keys
-ALTER TABLE Message ADD PRIMARY KEY (id);
-ALTER TABLE Forum ADD PRIMARY KEY (id);
-ALTER TABLE Person ADD PRIMARY KEY (id);

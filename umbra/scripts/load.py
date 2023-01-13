@@ -27,11 +27,17 @@ class UmbraDbLoader():
                     if query.isspace():
                         continue
 
-                    sql_statement = re.findall(r"^((CREATE|INSERT|DROP|DELETE|SELECT|COPY) [A-Za-z0-9_ ]*)", query, re.MULTILINE)
+                    sql_statement = re.findall(r"^((CREATE|INSERT|DROP|DELETE|SELECT|COPY|UPDATE|ALTER) [A-Za-z0-9_ ]*)", query, re.MULTILINE)
+                    is_update = True if re.match(r"^((CREATE|INSERT|DROP|DELETE|COPY|UPDATE|ALTER) [A-Za-z0-9_ ]*)", sql_statement[0][0], re.MULTILINE) else False
+
                     print(f"{sql_statement[0][0].strip()} ...")
                     start = time.time()
+                    
+                    if is_update:
+                        cur.execute("BEGIN BULK WRITE;")
                     cur.execute(query)
-                    pg_con.commit()
+                    cur.execute("COMMIT;")
+                    
                     end = time.time()
                     duration = end - start
                     print(f"-> {duration:.4f} seconds")
@@ -41,6 +47,42 @@ class UmbraDbLoader():
     def load_script(self, filename):
         with open(filename, "r") as f:
             return f.read()
+    
+    def load_mht(self, cur, csvpath):
+        cur.execute("BEGIN BULK WRITE;")
+        cur.execute(f"INSERT INTO Message_hasTag_Tag SELECT a, b, c FROM UMBRA.CSVVIEW('{csvpath}', 'DELIMITER \"|\", HEADER, NULL \"\", FORMAT text', 'a timestamp with time zone NOT NULL, b bigint NOT NULL, c bigint NOT NULL')")
+        cur.execute("COMMIT;")
+
+    def load_plm(self, cur, csvpath):
+        cur.execute("BEGIN BULK WRITE;")
+        cur.execute(f"INSERT INTO Person_likes_Message SELECT a, b, c FROM UMBRA.CSVVIEW('{csvpath}', 'DELIMITER \"|\", HEADER, NULL \"\", FORMAT text', 'a timestamp with time zone NOT NULL, b bigint NOT NULL, c bigint NOT NULL')")
+        cur.execute("COMMIT;")
+
+    def load_post(self, cur, csvpath):
+        cur.execute("BEGIN BULK WRITE;")
+        cur.execute(f"""
+    INSERT INTO Message
+    SELECT
+        creationDate,
+        id AS MessageId,
+        id AS RootPostId,
+        language AS RootPostLanguage,
+        content,
+        imageFile,
+        locationIP,
+        browserUsed,
+        length,
+        CreatorPersonId,
+        ContainerForumId,
+        LocationCountryId,
+        NULL::bigint AS ParentMessageId
+    FROM UMBRA.CSVVIEW(
+        '{csvpath}',
+        'DELIMITER "|", HEADER, NULL "", FORMAT text',
+        'creationDate timestamp with time zone NOT NULL, id bigint NOT NULL, imageFile text, locationIP text NOT NULL, browserUsed text NOT NULL, language text, content text, length int NOT NULL, CreatorPersonId bigint NOT NULL, ContainerForumId bigint NOT NULL, LocationCountryId bigint NOT NULL'
+        )
+    """)
+        cur.execute("COMMIT;")
 
     def load_initial_snapshot(self, pg_con, cur, data_dir, is_container):
         sql_copy_configuration = "(DELIMITER '|', HEADER, NULL '', FORMAT csv)"
@@ -56,7 +98,8 @@ class UmbraDbLoader():
             path_prefix = f"{data_dir}/"
 
         static_entities = ["Organisation", "Place", "Tag", "TagClass"]
-        dynamic_entities = ["Comment", "Comment_hasTag_Tag", "Forum", "Forum_hasMember_Person", "Forum_hasTag_Tag", "Person", "Person_hasInterest_Tag", "Person_knows_Person", "Person_likes_Comment", "Person_likes_Post", "Person_studyAt_University", "Person_workAt_Company", "Post", "Post_hasTag_Tag"]
+        csv_entities =  ["Post", "Comment_hasTag_Tag", "Post_hasTag_Tag", "Person_likes_Comment", "Person_likes_Post"]
+        dynamic_entities = ["Comment", "Forum", "Forum_hasMember_Person", "Forum_hasTag_Tag", "Person", "Person_hasInterest_Tag", "Person_knows_Person", "Person_studyAt_University", "Person_workAt_Company"]
         print("## Static entities")
         for entity in static_entities:
             print(f"===== {entity} =====")
@@ -69,12 +112,34 @@ class UmbraDbLoader():
                 csv_file_path = os.path.join(path_prefix, static_path, entity, os.path.basename(csv_file))
 
                 start = time.time()
+                cur.execute("BEGIN BULK WRITE;")
                 cur.execute(f"COPY {entity} FROM '{csv_file_path}' {sql_copy_configuration}")
-                pg_con.commit()
+                cur.execute("COMMIT;")
                 end = time.time()
                 duration = end - start
                 print(f"-> {duration:.4f} seconds")
         print("Loaded static entities.")
+
+        for entity in ["Comment_hasTag_Tag", "Post_hasTag_Tag"]:
+            entity_dir = os.path.join(dynamic_path_local, entity)
+            csv_files = glob.glob(f'{entity_dir}/**/*.csv', recursive=True)
+            for csv_file in csv_files:
+                csv_file_path = os.path.join(path_prefix, dynamic_path, entity, os.path.basename(csv_file))
+                self.load_mht(cur, csv_file_path)
+
+        for entity in ["Person_likes_Comment", "Person_likes_Post"]:
+            entity_dir = os.path.join(dynamic_path_local, entity)
+            csv_files = glob.glob(f'{entity_dir}/**/*.csv', recursive=True)
+            for csv_file in csv_files:
+                csv_file_path = os.path.join(path_prefix, dynamic_path, entity, os.path.basename(csv_file))
+                self.load_plm(cur, csv_file_path)
+
+        for entity in ["Post"]:
+            entity_dir = os.path.join(dynamic_path_local, entity)
+            csv_files = glob.glob(f'{entity_dir}/**/*.csv', recursive=True)
+            for csv_file in csv_files:
+                csv_file_path = os.path.join(path_prefix, dynamic_path, entity, os.path.basename(csv_file))
+                self.load_post(cur, csv_file_path)
 
         print("## Dynamic entities")
         for entity in dynamic_entities:
@@ -88,10 +153,13 @@ class UmbraDbLoader():
                 csv_file_path = os.path.join(path_prefix, dynamic_path, entity, os.path.basename(csv_file))
 
                 start = time.time()
+                cur.execute("BEGIN BULK WRITE;")
                 cur.execute(f"COPY {entity} FROM '{csv_file_path}' {sql_copy_configuration}")
+                cur.execute("COMMIT;")
                 if entity == "Person_knows_Person":
+                    cur.execute("BEGIN BULK WRITE;")
                     cur.execute(f"COPY {entity} (creationDate, Person2id, Person1id) FROM '{csv_file_path}' {sql_copy_configuration}")
-                pg_con.commit()
+                    cur.execute("COMMIT;")
                 end = time.time()
                 duration = end - start
                 print(f"-> {duration:.4f} seconds")
@@ -106,6 +174,7 @@ class UmbraDbLoader():
             password=self.password,
             port=self.port
         ) as pg_con:
+            pg_con.autocommit = True
             cur = pg_con.cursor()
 
             self.run_script(pg_con, cur, "ddl/drop-tables.sql")
@@ -120,17 +189,8 @@ class UmbraDbLoader():
             self.run_script(pg_con, cur, "dml/create-static-materialized-views.sql")
             print("Done.")
 
-            #print("Add primary key constraints")
-            #cur.execute(self.load_script("ddl/schema-primary-keys.sql"))
-            #pg_con.commit()
-
             #print("Add foreign key constraints")
-            #cur.execute(self.load_script("ddl/schema-foreign-keys.sql"))
-            #pg_con.commit()
-
-            #print("Add indexes")
-            #cur.execute(self.load_script("ddl/schema-indexes.sql"))
-            #pg_con.commit()
+            #self.run_script(pg_con, cur, "ddl/schema-foreign-keys.sql")
 
 
 if __name__ == "__main__":
@@ -143,11 +203,19 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         '--is_container',
+        dest='is_container',
         help="is_container: whether the data is loaded from within a container",
-        type=bool,
-        required=False,
-        default=True
+        action='store_true',
+        required=False
     )
+    parser.add_argument(
+        '--no_is_container',
+        dest='is_container',
+        help="is_container: whether the data is loaded from within a container",
+        action='store_false',
+        required=False
+    )
+    parser.set_defaults(is_container=True)
     args = parser.parse_args()
 
     PGLoader = UmbraDbLoader()

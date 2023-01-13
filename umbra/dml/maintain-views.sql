@@ -1,58 +1,64 @@
-INSERT INTO Message
-    SELECT
-        creationDate,
-        id AS id,
-        language,
-        content,
-        imageFile,
-        locationIP,
-        browserUsed,
-        length,
-        CreatorPersonId,
-        ContainerForumId,
-        LocationCountryId,
-        NULL::bigint AS ParentMessageId
-    FROM Post
-;
+-- maintain materialized views
 
+-- Comments attaching to existing Message trees
 INSERT INTO Message
+    WITH RECURSIVE Message_CTE(id, RootPostId, RootPostLanguage, ContainerForumId, ParentMessageId) AS (
+        -- first half of the union: Comments attaching directly to the existing tree
+        SELECT
+            Comment.id AS id,
+            Message.RootPostId AS RootPostId,
+            Message.RootPostLanguage AS RootPostLanguage,
+            Message.ContainerForumId AS ContainerForumId,
+            coalesce(Comment.ParentPostId, Comment.ParentCommentId) AS ParentMessageId
+        FROM Comment
+        JOIN Message
+          ON Message.id = coalesce(Comment.ParentPostId, Comment.ParentCommentId)
+        UNION ALL
+        -- second half of the union: Comments attaching newly inserted Comments
+        SELECT
+            Comment.id AS id,
+            Message_CTE.RootPostId AS RootPostId,
+            Message_CTE.RootPostLanguage AS RootPostLanguage,
+            Message_CTE.ContainerForumId AS ContainerForumId,
+            Comment.ParentCommentId AS ParentMessageId
+        FROM Comment
+        JOIN Message_CTE
+          ON FORCEORDER(Comment.ParentCommentId = Message_CTE.id)
+    )
     SELECT
         Comment.creationDate AS creationDate,
         Comment.id AS id,
-        NULL,
+        Message_CTE.RootPostId AS RootPostId,
+        Message_CTE.RootPostLanguage AS RootPostLanguage,
         Comment.content AS content,
-        NULL AS imageFile,
+        NULL::text AS imageFile,
         Comment.locationIP AS locationIP,
         Comment.browserUsed AS browserUsed,
         Comment.length AS length,
         Comment.CreatorPersonId AS CreatorPersonId,
-        NULL AS ContainerForumId,
+        Message_CTE.ContainerForumId AS ContainerForumId,
         Comment.LocationCountryId AS LocationCityId,
         coalesce(Comment.ParentPostId, Comment.ParentCommentId) AS ParentMessageId
-    FROM Comment
+    FROM Message_CTE
+    JOIN Comment
+      ON FORCEORDER(Message_CTE.id = Comment.id)
 ;
 
-INSERT INTO Person_likes_Message
-    SELECT creationDate, PersonId, PostId AS id FROM Person_likes_Post
-;
-
-INSERT INTO Person_likes_Message
-    SELECT creationDate, PersonId, CommentId AS id FROM Person_likes_Comment
-;
-
-INSERT INTO Message_hasTag_Tag
-    SELECT creationDate, PostId AS id, TagId FROM Post_hasTag_Tag
-;
-
-INSERT INTO Message_hasTag_Tag
-    SELECT creationDate, CommentId AS id, TagId FROM Comment_hasTag_Tag
-;
-
-DROP TABLE IF EXISTS Post;
 DROP TABLE IF EXISTS Comment;
 
-DROP TABLE IF EXISTS Person_likes_Post;
-DROP TABLE IF EXISTS Person_likes_Comment;
+----------------------------------------------------------------------------------------------------
+------------------------------------------- CLEANUP ------------------------------------------------
+----------------------------------------------------------------------------------------------------
 
-DROP TABLE IF EXISTS Post_hasTag_Tag;
-DROP TABLE IF EXISTS Comment_hasTag_Tag;
+CREATE TABLE Comment (
+    creationDate timestamp with time zone NOT NULL,
+    id bigint NOT NULL, --PRIMARY KEY,
+    locationIP text NOT NULL,
+    browserUsed text NOT NULL,
+    content text NOT NULL,
+    length int NOT NULL,
+    CreatorPersonId bigint NOT NULL,
+    LocationCountryId bigint NOT NULL,
+    ParentPostId bigint,
+    ParentCommentId bigint
+) WITH (storage = paged);
