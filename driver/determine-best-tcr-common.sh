@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Script to determine the best TCR (total_compression_ratio) value.
 # This script should be invoked by a concrete implementation's driver/determine-best-tcr.sh script.
