@@ -6,7 +6,7 @@ export UMBRA_LOG_DIR=`pwd`/scratch/log/
 export UMBRA_DATABASE_DIR=`pwd`/scratch/db/
 export UMBRA_BACKUP_DIR=`pwd`/scratch/backup/
 export UMBRA_CONTAINER_NAME=snb-interactive-umbra
-export UMBRA_VERSION=45f3aae27
+export UMBRA_VERSION=30b000783
 export UMBRA_DOCKER_IMAGE=umbra-release:${UMBRA_VERSION}
 
 export UMBRA_USER=postgres
