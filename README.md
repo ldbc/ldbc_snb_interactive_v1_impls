@@ -5,7 +5,7 @@
 
 This repository contains reference implementations of the LDBC Social Network Benchmark's Interactive workload. See details on the benchmark, see the [SIGMOD 2015 paper](https://homepages.cwi.nl/~boncz/snb-challenge/snb-sigmod.pdf), [specification on GitHub Pages](https://ldbcouncil.org/ldbc_snb_docs/), and [specification on arXiv](https://arxiv.org/pdf/2001.02299.pdf).
 
-To get started with the LDBC SNB benchmarks, check out our introductory presentation: [The LDBC Social Network Benchmark](https://docs.google.com/presentation/d/1p-nuHarSOKCldZ9iEz__6_V3sJ5kbGWlzZHusudW_Cc/) ([PDF](https://ldbcouncil.org/docs/presentations/ldbc-snb-2022-11.pdf)).
+To get started with the LDBC SNB benchmarks, check out our introductory presentation: [The LDBC Social Network Benchmark](https://docs.google.com/presentation/d/1NilxSrKQnFq4WzWMY2-OodZQ2TEksKzKBmgB20C_0Nw/) ([PDF](https://ldbcouncil.org/docs/presentations/ldbc-snb-2022-11.pdf)).
 
 :warning:
 The Interactive workload is currently being renewed to accommodate new features such as deletions and larger scale factors.
