@@ -70,7 +70,10 @@ jobs:
             cd ldbc_snb_interactive_driver/paramgen
             scripts/get-sample-data.sh
             . scripts/use-sample-data.sh
+            mv paramgen_window_values.json paramgen_window_values.bak.json
+            mv paramgen_window_values_test.json paramgen_window_values.json
             scripts/paramgen.sh
+            mv paramgen_window_values.bak.json paramgen_window_values.json
             cd ..
             mv parameters/*.parquet ${LDBC_SNB_IMPLS_DIR}/parameters/
       ### Umbra
