@@ -22,12 +22,12 @@ jobs:
             sudo apt update && sudo apt install -y zstd
             scripts/install-dependencies.sh
       - run:
-          # Install Java 11 (Ubuntu 22.04 has Java 17 by default)
-          name: Install OpenJDK 11
+          # Install Java 17 (Ubuntu 22.04 has Java 17 by default)
+          name: Install OpenJDK 17
           command: |
-            sudo apt-get update && sudo apt-get install -y openjdk-11-jdk
-            sudo update-alternatives --set java /usr/lib/jvm/java-11-openjdk-amd64/bin/java
-            sudo update-alternatives --set javac /usr/lib/jvm/java-11-openjdk-amd64/bin/javac
+            sudo apt-get update && sudo apt-get install -y openjdk-17-jdk
+            sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
+            sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
             java -version
       - run:
           name: Build project
