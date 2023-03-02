@@ -82,7 +82,7 @@ All three should be started withe the initial data set loaded to the database.
         * If the validation failed, the results are saved to the `validation_params-failed-expected.json` and `validation_params-failed-actual.json` files.
     * **Parallelism:** The execution must be single-threaded to ensure a deterministic order of operations.
 
-    Pre-generated [SF10 validation data sets](https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/audits/validation_params_sf10.tar.zst) are for download.
+    Pre-generated [validation data sets for SF0.1 to SF10](https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive-v1/validation_params-sf0.1-sf10.zst) are available.
 
 3. Run the benchmark with the `driver/benchmark.sh` script.
 
