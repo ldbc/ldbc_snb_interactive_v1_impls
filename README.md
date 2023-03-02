@@ -139,5 +139,5 @@ The [Auditing Policies chapter](https://ldbcouncil.org/ldbc_snb_docs/ldbc-snb-sp
 
 If you plan to get your system audited, please reach to the [LDBC Steering Committee](https://ldbcouncil.org/organizational-members/).
 
-:warning: Audited runs are currently only possible with the v1.x version.
-The new version of Interactive (with deletes and larger SFs) will be released in Q4 2022.
+:warning: Audited runs are currently only possible with the [v1.x version](https://github.com/ldbc/ldbc_snb_interactive_impls/tree/v1-dev).
+The new version of Interactive (with deletes and larger SFs) will be released in Q2 2023.
