@@ -75,7 +75,7 @@ tools/run.py \
     scripts/load-in-one-step.sh
     ```
 
-1. The substitution parameters should be generated using the [`paramgen`](../paramgen).
+2. The substitution parameters should be generated using the [`paramgen`](https://github.com/ldbc/ldbc_snb_interactive_driver/tree/main/paramgen).
 
 ## Running the benchmark
 
