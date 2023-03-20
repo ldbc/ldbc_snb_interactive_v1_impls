@@ -149,6 +149,8 @@ To generate a data set with the same characteristics, see the [documentation on 
 
 Implementations of the Interactive workload can be audited by a certified LDBC auditor.
 The [Auditing Policies chapter](http://ldbcouncil.org/ldbc_snb_docs/ldbc-snb-specification.pdf#chapter.7) of the specification describes the auditing process and the required artifacts.
+If you are considering commissioning an LDBC SNB audit, please study the [audit questionnaire](snb-interactive-audit-questionnaire.md).
+
 
 ### Determining the best TCR
 
