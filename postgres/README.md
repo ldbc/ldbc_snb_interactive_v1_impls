@@ -51,6 +51,8 @@ ldbc.snb.datagen.serializer.dynamicPersonSerializer:ldbc.snb.datagen.serializer.
 ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv.staticserializer.CsvMergeForeignStaticSerializer
 ```
 
+## Running the benchmark
+
 ### Configuration
 
 The default configuration of the database (e.g. database name, user, password) is set in the `scripts/vars.sh` file.
@@ -71,7 +73,7 @@ The default configuration of the database (e.g. database name, user, password) i
 
 ### Running the benchmark driver
 
-Run the benchmark driver in one of the three modes (create validation parameters, validate, benchmark).
+The instructions below explain how to run the benchmark driver in one of the three modes (create validation parameters, validate, benchmark). For more details on the driver modes, check the ["Driver modes" section of the main README](../README.md#driver-modes).
 
 #### Create validation parameters
 
@@ -85,7 +87,7 @@ Run the benchmark driver in one of the three modes (create validation parameters
 
 #### Validate
 
-1. Edit the `driver/validate.properties` file. Make sure that the `validate_database` property points to the input CSV file.
+1. Edit the `driver/validate.properties` file. Make sure that the `validate_database` property points to the file you would like to validate against.
 
 2. Run the script:
 

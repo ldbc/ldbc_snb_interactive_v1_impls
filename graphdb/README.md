@@ -31,9 +31,11 @@ An example configuration for scale factor 1 is given in the [`params-ttl.ini`](h
 
 > The result of the execution will generate three .ttl files `social_network_activity_0_0.ttl`, `social_network_person_0_0.ttl` and `social_network_static_0_0.ttl`
 
+## Running the benchmark
+
 ### Preprocessing and loading
 
-After that you need to change the following environment variables based on your data source.
+Change the following environment variables based on your data source.
 
 1. Set the `GRAPHDB_IMPORT_TTL_DIR` environment variable to point to the generated data set. Its default value points to the example data set under the `test-data` directory:
 
@@ -66,17 +68,40 @@ scripts/start-graphdb.sh
 >    scripts/one-step-load.sh
 > ```
 
-## Running the benchmark
+### Running the benchmark driver
 
-4. To run the scripts of benchmark framework, edit the `driver/{create-validation-parameters,validate,benchmark}.properties` files, then run their script, one of:
+The instructions below explain how to run the benchmark driver in one of the three modes (create validation parameters, validate, benchmark). For more details on the driver modes, check the ["Driver modes" section of the main README](../README.md#driver-modes).
 
-```bash
-driver/create-validation-parameters.sh
-driver/validate.sh
-driver/benchmark.sh
- ```
+#### Create validation parameters
 
-:warning: *Note that the default workload contains updates which are persisted in the database. Therefore, the database needs to be re-loaded between steps – otherwise repeated updates would insert duplicate entries.*
+1. Edit the `driver/benchmark.properties` file. Make sure that the `ldbc.snb.interactive.scale_factor`, `ldbc.snb.interactive.updates_dir`, `ldbc.snb.interactive.parameters_dir` properties are set correctly and are in sync.
 
+2. Run the script:
 
+    ```bash
+    driver/create-validation-parameters.sh
+    ```
 
+#### Validate
+
+1. Edit the `driver/validate.properties` file. Make sure that the `validate_database` property points to the file you would like to validate against.
+
+2. Run the script:
+
+    ```bash
+    driver/validate.sh
+    ```
+
+#### Benchmark
+
+1. Edit the `driver/benchmark.properties` file. Make sure that the `ldbc.snb.interactive.scale_factor`, `ldbc.snb.interactive.updates_dir`, and `ldbc.snb.interactive.parameters_dir` properties are set correctly and are in sync.
+
+2. Run the script:
+
+    ```bash
+    driver/benchmark.sh
+    ```
+
+#### Reload between runs
+
+:warning: The default workload contains updates which are persisted in the database. Therefore, **the database needs to be reloaded or restored from backup before each run**. Use the provided `scripts/backup-database.sh` and `scripts/restore-database.sh` scripts to achieve this.

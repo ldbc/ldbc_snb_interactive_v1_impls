@@ -29,13 +29,15 @@ The default environment variables are loaded from `.env`. Change the `UMBRA_CSV_
 UMBRA_CSV_DIR=`pwd`/test-data/
 ```
 
-## Get the container
+## Getting the container image
 
-The Umbra container is available upon request from TU Munich's Database group. Load it to Docker as follows:
+The Umbra Docker container image is available upon request from TU Munich's Database group. Load it to Docker as follows:
 
 ```bash
 curl ... | docker load
 ```
+
+## Running the benchmark
 
 ### Loading the data set
 
@@ -53,14 +55,40 @@ Umbra uses the same data format at PostgreSQL (`CsvMergeForeign` serializer / `s
     scripts/load-in-one-step.sh
     ```
 
-### Running the benchmark
+### Running the benchmark driver
 
-3. To run the scripts of benchmark framework, edit the `driver/{create-validation-parameters,validate,benchmark}.properties` files, then run their script, one of:
+The instructions below explain how to run the benchmark driver in one of the three modes (create validation parameters, validate, benchmark). For more details on the driver modes, check the ["Driver modes" section of the main README](../README.md#driver-modes).
+
+#### Create validation parameters
+
+1. Edit the `driver/benchmark.properties` file. Make sure that the `ldbc.snb.interactive.scale_factor`, `ldbc.snb.interactive.updates_dir`, `ldbc.snb.interactive.parameters_dir` properties are set correctly and are in sync.
+
+2. Run the script:
 
     ```bash
     driver/create-validation-parameters.sh
+    ```
+
+#### Validate
+
+1. Edit the `driver/validate.properties` file. Make sure that the `validate_database` property points to the file you would like to validate against.
+
+2. Run the script:
+
+    ```bash
     driver/validate.sh
+    ```
+
+#### Benchmark
+
+1. Edit the `driver/benchmark.properties` file. Make sure that the `ldbc.snb.interactive.scale_factor`, `ldbc.snb.interactive.updates_dir`, and `ldbc.snb.interactive.parameters_dir` properties are set correctly and are in sync.
+
+2. Run the script:
+
+    ```bash
     driver/benchmark.sh
     ```
+
+#### Reload between runs
 
 :warning: The default workload contains updates which are persisted in the database. Therefore, **the database needs to be reloaded or restored from backup before each run**. Use the provided `scripts/backup-database.sh` and `scripts/restore-database.sh` scripts to achieve this.

@@ -35,7 +35,7 @@ ldbc.snb.datagen.serializer.staticSerializer:ldbc.snb.datagen.serializer.snb.csv
 
 An example configuration for scale factor 1 is given in the [`params-csv-composite-longdateformatter.ini`](https://github.com/ldbc/ldbc_snb_datagen_hadoop/blob/main/params-csv-composite-longdateformatter.ini) file of the Datagen repository.
 
-### Preprocessing and loading
+## Running the benchmark
 
 Set the following environment variables based on your data source and where you would like to store the converted CSVs:
 
@@ -44,9 +44,9 @@ export NEO4J_VANILLA_CSV_DIR=`pwd`/test-data/vanilla
 export NEO4J_CONVERTED_CSV_DIR=`pwd`/test-data/converted
 ```
 
-#### Loading the data set
+### Loading the data set
 
-To load the data sets, run the following script:
+To load the data set, run the following script:
 
 ```bash
 scripts/load-in-one-step.sh
@@ -54,14 +54,40 @@ scripts/load-in-one-step.sh
 
 This preprocesses the CSVs in `${NEO4J_VANILLA_CSV_DIR}` and places the resulting CSVs in `${NEO4J_CONVERTED_CSV_DIR}`, stops any running Neo4j database instances, loads the database and starts it.
 
-## Running the benchmark
+### Running the benchmark driver
 
-To run the scripts of benchmark framework, edit the `driver/{create-validation-parameters,validate,benchmark}.properties` files, then run their script, one of:
+The instructions below explain how to run the benchmark driver in one of the three modes (create validation parameters, validate, benchmark). For more details on the driver modes, check the ["Driver modes" section of the main README](../README.md#driver-modes).
 
-```bash
-driver/create-validation-parameters.sh
-driver/validate.sh
-driver/benchmark.sh
-```
+#### Create validation parameters
+
+1. Edit the `driver/benchmark.properties` file. Make sure that the `ldbc.snb.interactive.scale_factor`, `ldbc.snb.interactive.updates_dir`, `ldbc.snb.interactive.parameters_dir` properties are set correctly and are in sync.
+
+2. Run the script:
+
+    ```bash
+    driver/create-validation-parameters.sh
+    ```
+
+#### Validate
+
+1. Edit the `driver/validate.properties` file. Make sure that the `validate_database` property points to the file you would like to validate against.
+
+2. Run the script:
+
+    ```bash
+    driver/validate.sh
+    ```
+
+#### Benchmark
+
+1. Edit the `driver/benchmark.properties` file. Make sure that the `ldbc.snb.interactive.scale_factor`, `ldbc.snb.interactive.updates_dir`, and `ldbc.snb.interactive.parameters_dir` properties are set correctly and are in sync.
+
+2. Run the script:
+
+    ```bash
+    driver/benchmark.sh
+    ```
+
+#### Reload between runs
 
 :warning: The default workload contains updates which are persisted in the database. Therefore, **the database needs to be reloaded or restored from backup before each run**. Use the provided `scripts/backup-database.sh` and `scripts/restore-database.sh` scripts to achieve this. Alternatively, e.g. if you lack sudo rights, use Neo4j's built-in dump and load features through the `scripts/backup-neo4j.sh` and `scripts/restore-neo4j.sh` scripts.

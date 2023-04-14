@@ -59,8 +59,8 @@ The benchmark framework relies on the following inputs produced by the [SNB Data
 
 ### Driver modes
 
-For each implementation, it is possible to perform to perform the run in one of the [SNB driver's](https://github.com/ldbc/ldbc_snb_interactive_driver) three modes.
-All three should be started withe the initial data set loaded to the database.
+For each implementation, it is possible to perform to perform the run in one of the [SNB driver's](https://github.com/ldbc/ldbc_snb_interactive_driver) three modes: create validation parameters, validate, and benchmark.
+The execution in all three modes should be started after the initial data set was loaded into the system under test.
 
 1. Create validation parameters with the `driver/create-validation-parameters.sh` script.
 
@@ -71,7 +71,7 @@ All three should be started withe the initial data set loaded to the database.
     * **Output:** The results will be stored in the validation parameters file (e.g. `validation_params.csv`) file set in the `create_validation_parameters` configuration property.
     * **Parallelism:** The execution must be single-threaded to ensure a deterministic order of operations.
 
-2. Validate against existing validation parameters with the `driver/validate.sh` script.
+2. Validate against an existing reference output (called "validation parameters") with the `driver/validate.sh` script.
 
     * **Input:**
         * The query substitution parameters are taken from the validation parameters file (e.g. `validation_params.csv`) file set in the `validate_database` configuration property.
@@ -82,7 +82,7 @@ All three should be started withe the initial data set loaded to the database.
         * If the validation failed, the results are saved to the `validation_params-failed-expected.json` and `validation_params-failed-actual.json` files.
     * **Parallelism:** The execution must be single-threaded to ensure a deterministic order of operations.
 
-    Pre-generated [validation data sets for SF0.1 to SF10](https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive-v1/validation_params-sf0.1-sf10.tar.zst) are available.
+    Pre-generated [validation parameters for SF0.1 to SF10](https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive-v1/validation_params-sf0.1-sf10.tar.zst) are available.
 
 3. Run the benchmark with the `driver/benchmark.sh` script.
 
@@ -100,7 +100,7 @@ All three should be started withe the initial data set loaded to the database.
         * The detailed results of the benchmark are printed to the console and saved in the `results/` directory.
     * **Parallelism:** Multi-threaded execution is recommended to achieve the best result.
 
-For more details on validating and benchmarking, visit the [driver wiki](https://github.com/ldbc/ldbc_snb_interactive_driver/wiki).
+For more details on validating and benchmarking, visit the [driver's documentation](https://github.com/ldbc/ldbc_snb_interactive_driver/tree/v1-dev/docs).
 
 ## Developer's guide
 
