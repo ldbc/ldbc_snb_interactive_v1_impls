@@ -69,14 +69,40 @@ The default configuration of the database (e.g. database name, user, password) i
     scripts/load-in-one-step.sh
     ```
 
-### Running the benchmark
+### Running the benchmark driver
 
-3. To run the scripts of benchmark framework, edit the `driver/{create-validation-parameters,validate,benchmark}.properties` files, then run their script, one of:
+Run the benchmark driver in one of the three modes (create validation parameters, validate, benchmark).
+
+#### Create validation parameters
+
+1. Edit the `driver/benchmark.properties` file. Make sure that the `ldbc.snb.interactive.scale_factor`, `ldbc.snb.interactive.updates_dir`, `ldbc.snb.interactive.parameters_dir` properties are set correctly and are in sync.
+
+2. Run the script:
 
     ```bash
     driver/create-validation-parameters.sh
+    ```
+
+#### Validate
+
+1. Edit the `driver/validate.properties` file. Make sure that the `validate_database` property points to the input CSV file.
+
+2. Run the script:
+
+    ```bash
     driver/validate.sh
+    ```
+
+#### Benchmark
+
+1. Edit the `driver/benchmark.properties` file. Make sure that the `ldbc.snb.interactive.scale_factor`, `ldbc.snb.interactive.updates_dir`, and `ldbc.snb.interactive.parameters_dir` properties are set correctly and are in sync.
+
+2. Run the script:
+
+    ```bash
     driver/benchmark.sh
     ```
+
+#### Reload between runs
 
 :warning: The default workload contains updates which are persisted in the database. Therefore, **the database needs to be reloaded or restored from backup before each run**. Use the provided `scripts/backup-database.sh` and `scripts/restore-database.sh` scripts to achieve this.
