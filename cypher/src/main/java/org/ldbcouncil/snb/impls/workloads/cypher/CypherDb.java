@@ -15,7 +15,6 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.neo4j.driver.Driver;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Value;
 
@@ -479,7 +478,14 @@ public class CypherDb extends BaseDb<CypherQueryStore>
         @Override
         public LdbcQuery13Result toResult( Record record )
         {
-            return new LdbcQuery13Result( record.get( 0 ).asInt() );
+            if(record != null)
+            {
+                return new LdbcQuery13Result( record.get( 0 ).asInt() );
+            }
+            else
+            {
+                return new LdbcQuery13Result(-1);
+            }
         }
     }
 
@@ -498,7 +504,14 @@ public class CypherDb extends BaseDb<CypherQueryStore>
         @Override
         public LdbcQuery13Result toResult( Record record )
         {
-            return new LdbcQuery13Result( record.get( 0 ).asInt() );
+            if(record != null)
+            {
+                return new LdbcQuery13Result( record.get( 0 ).asInt() );
+            }
+            else
+            {
+                return new LdbcQuery13Result(-1);
+            }
         }
     }
 
@@ -572,23 +585,30 @@ public class CypherDb extends BaseDb<CypherQueryStore>
         @Override
         public LdbcShortQuery1PersonProfileResult toResult( Record record ) throws ParseException
         {
-            String firstName = record.get( 0 ).asString();
-            String lastName = record.get( 1 ).asString();
-            long birthday = record.get( 2 ).asLong();
-            String locationIP = record.get( 3 ).asString();
-            String browserUsed = record.get( 4 ).asString();
-            long cityId = record.get( 5 ).asLong();
-            String gender = record.get( 6 ).asString();
-            long creationDate = record.get( 7 ).asLong();
-            return new LdbcShortQuery1PersonProfileResult(
-                    firstName,
-                    lastName,
-                    birthday,
-                    locationIP,
-                    browserUsed,
-                    cityId,
-                    gender,
-                    creationDate );
+            if (record != null){
+                String firstName = record.get( 0 ).asString();
+                String lastName = record.get( 1 ).asString();
+                long birthday = record.get( 2 ).asLong();
+                String locationIP = record.get( 3 ).asString();
+                String browserUsed = record.get( 4 ).asString();
+                long cityId = record.get( 5 ).asLong();
+                String gender = record.get( 6 ).asString();
+                long creationDate = record.get( 7 ).asLong();
+                return new LdbcShortQuery1PersonProfileResult(
+                        firstName,
+                        lastName,
+                        birthday,
+                        locationIP,
+                        browserUsed,
+                        cityId,
+                        gender,
+                        creationDate );
+            }
+            else
+            {
+                return null;
+            }
+
         }
     }
 
@@ -607,21 +627,27 @@ public class CypherDb extends BaseDb<CypherQueryStore>
         @Override
         public LdbcShortQuery2PersonPostsResult toResult( Record record ) throws ParseException
         {
-            long messageId = record.get( 0 ).asLong();
-            String messageContent = record.get( 1 ).asString();
-            long messageCreationDate = record.get( 2 ).asLong();
-            long originalPostId = record.get( 3 ).asLong();
-            long originalPostAuthorId = record.get( 4 ).asLong();
-            String originalPostAuthorFirstName = record.get( 5 ).asString();
-            String originalPostAuthorLastName = record.get( 6 ).asString();
-            return new LdbcShortQuery2PersonPostsResult(
-                    messageId,
-                    messageContent,
-                    messageCreationDate,
-                    originalPostId,
-                    originalPostAuthorId,
-                    originalPostAuthorFirstName,
-                    originalPostAuthorLastName );
+            if (record != null){
+                long messageId = record.get( 0 ).asLong();
+                String messageContent = record.get( 1 ).asString();
+                long messageCreationDate = record.get( 2 ).asLong();
+                long originalPostId = record.get( 3 ).asLong();
+                long originalPostAuthorId = record.get( 4 ).asLong();
+                String originalPostAuthorFirstName = record.get( 5 ).asString();
+                String originalPostAuthorLastName = record.get( 6 ).asString();
+                return new LdbcShortQuery2PersonPostsResult(
+                        messageId,
+                        messageContent,
+                        messageCreationDate,
+                        originalPostId,
+                        originalPostAuthorId,
+                        originalPostAuthorFirstName,
+                        originalPostAuthorLastName );
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 
@@ -667,12 +693,18 @@ public class CypherDb extends BaseDb<CypherQueryStore>
         @Override
         public LdbcShortQuery4MessageContentResult toResult( Record record ) throws ParseException
         {
+            if (record != null){
             // Pay attention, the spec's and the implementation's parameter orders are different.
             long messageCreationDate = record.get( 0 ).asLong();
             String messageContent = record.get( 1 ).asString();
             return new LdbcShortQuery4MessageContentResult(
                     messageContent,
                     messageCreationDate );
+            }
+            else{
+                return null;
+            }
+
         }
     }
 
@@ -691,13 +723,20 @@ public class CypherDb extends BaseDb<CypherQueryStore>
         @Override
         public LdbcShortQuery5MessageCreatorResult toResult( Record record )
         {
-            long personId = record.get( 0 ).asLong();
-            String firstName = record.get( 1 ).asString();
-            String lastName = record.get( 2 ).asString();
-            return new LdbcShortQuery5MessageCreatorResult(
-                    personId,
-                    firstName,
-                    lastName );
+            if (record != null){
+                long personId = record.get( 0 ).asLong();
+                String firstName = record.get( 1 ).asString();
+                String lastName = record.get( 2 ).asString();
+                return new LdbcShortQuery5MessageCreatorResult(
+                        personId,
+                        firstName,
+                        lastName );
+            }
+            else
+            {
+                return null;
+            }
+
         }
     }
 
@@ -716,17 +755,25 @@ public class CypherDb extends BaseDb<CypherQueryStore>
         @Override
         public LdbcShortQuery6MessageForumResult toResult( Record record )
         {
-            long forumId = record.get( 0 ).asLong();
-            String forumTitle = record.get( 1 ).asString();
-            long moderatorId = record.get( 2 ).asLong();
-            String moderatorFirstName = record.get( 3 ).asString();
-            String moderatorLastName = record.get( 4 ).asString();
-            return new LdbcShortQuery6MessageForumResult(
-                    forumId,
-                    forumTitle,
-                    moderatorId,
-                    moderatorFirstName,
-                    moderatorLastName );
+            if (record != null)
+            {
+
+                long forumId = record.get( 0 ).asLong();
+                String forumTitle = record.get( 1 ).asString();
+                long moderatorId = record.get( 2 ).asLong();
+                String moderatorFirstName = record.get( 3 ).asString();
+                String moderatorLastName = record.get( 4 ).asString();
+                return new LdbcShortQuery6MessageForumResult(
+                        forumId,
+                        forumTitle,
+                        moderatorId,
+                        moderatorFirstName,
+                        moderatorLastName );
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 

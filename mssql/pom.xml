@@ -16,7 +16,7 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>4.0.3</version>
+            <version>5.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.ldbcouncil.snb</groupId>
@@ -26,7 +26,7 @@
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
-            <version>10.2.0.jre8</version>
+            <version>11.2.3.jre17</version>
         </dependency>
     </dependencies>
     <build>
@@ -34,7 +34,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.1</version>
+                <version>3.4.1</version>
                 <configuration>
                     <filters>
                         <filter>

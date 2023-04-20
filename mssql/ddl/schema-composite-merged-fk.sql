@@ -140,7 +140,6 @@ CREATE TABLE [dbo].[Person_knows_Person] (
     INDEX [GRAPH_UNIQUE_INDEX_Person_knows_Person] UNIQUE NONCLUSTERED ($edge_id) WITH (DATA_COMPRESSION = PAGE),
     INDEX [GRAPH_FromTo_INDEX_Person_knows_Person] CLUSTERED ($from_id, $to_id) WITH (DATA_COMPRESSION = PAGE),
     INDEX [GRAPH_ToFrom_INDEX_Person_knows_Person] NONCLUSTERED ($to_id, $from_id) WITH (DATA_COMPRESSION = PAGE),
-    CONSTRAINT EC_Person_knows_Person CONNECTION (Person TO Person) ON DELETE CASCADE
 ) AS EDGE;
 ALTER INDEX [GRAPH_UNIQUE_INDEX_Person_knows_Person] ON [dbo].[Person_knows_Person] DISABLE;
 
@@ -171,7 +170,6 @@ CREATE TABLE Person_likes_Message (
     INDEX [GRAPH_UNIQUE_INDEX_Person_likes_Message] UNIQUE NONCLUSTERED ($edge_id) WITH (DATA_COMPRESSION = PAGE),
     INDEX [GRAPH_FromTo_INDEX_Person_likes_Message] CLUSTERED ($from_id, $to_id) WITH (DATA_COMPRESSION = PAGE),
     INDEX [GRAPH_ToFrom_INDEX_Person_likes_Message] NONCLUSTERED ($to_id, $from_id) WITH (DATA_COMPRESSION = PAGE),
-    CONSTRAINT EC_Person_likes_Message CONNECTION (Person TO Message) ON DELETE CASCADE
 ) AS EDGE;
 ALTER INDEX [GRAPH_UNIQUE_INDEX_Person_likes_Message] ON [dbo].[Person_likes_Message] DISABLE;
 

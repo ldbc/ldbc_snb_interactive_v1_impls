@@ -1,7 +1,8 @@
 INSERT INTO Message (
     creationDate
   , id
-  , language
+  , RootPostId
+  , RootPostLanguage
   , content
   , imageFile
   , locationIP
@@ -15,6 +16,7 @@ INSERT INTO Message (
 VALUES
 (
     :creationDate
+  , :postId
   , :postId
   , :language::text
   , CASE :content WHEN '' THEN NULL ELSE :content::text END

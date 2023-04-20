@@ -1,7 +1,8 @@
 INSERT INTO Message (
     creationDate
   , id
-  , language
+  , RootPostId
+  , RootPostLanguage
   , content
   , imageFile
   , locationIP
@@ -12,11 +13,11 @@ INSERT INTO Message (
   , LocationCountryId
   , ParentMessageId
 )
-VALUES
-(
+SELECT
     :creationDate
   , :commentId::bigint
-  , NULL
+  , parent.RootPostId
+  , parent.RootPostLanguage
   , :content::text
   , NULL
   , :locationIP::text
@@ -26,4 +27,8 @@ VALUES
   , NULL
   , :countryId -- LocationCountryId
   , :replyToCommentId + :replyToPostId
-);
+FROM
+  Message parent
+WHERE
+  parent.id = (:replyToCommentId + :replyToPostId)
+;

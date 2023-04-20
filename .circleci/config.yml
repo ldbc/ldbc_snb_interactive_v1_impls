@@ -11,22 +11,23 @@ jobs:
   test:
     resource_class: xlarge
     machine:
-      image: ubuntu-2204:2022.04.1
+      image: ubuntu-2204:2022.04.2
     steps:
       - checkout
       - run:
           name: Install dependencies
           command: |
             export DEBIAN_FRONTEND=noninteractive
+            export NEEDRESTART_SUSPEND=a
             sudo apt update && sudo apt install -y zstd
             scripts/install-dependencies.sh
       - run:
-          # Install Java 11 (Ubuntu 22.04 has Java 17 by default)
-          name: Install OpenJDK 11
+          # Install Java 17 (Ubuntu 22.04 has Java 17 by default)
+          name: Install OpenJDK 17
           command: |
-            sudo apt-get update && sudo apt-get install openjdk-11-jdk
-            sudo update-alternatives --set java /usr/lib/jvm/java-11-openjdk-amd64/bin/java
-            sudo update-alternatives --set javac /usr/lib/jvm/java-11-openjdk-amd64/bin/javac
+            sudo apt-get update && sudo apt-get install -y openjdk-17-jdk
+            sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
+            sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
             java -version
       - run:
           name: Build project
@@ -57,7 +58,7 @@ jobs:
             git clone https://github.com/ldbc/ldbc_snb_interactive_driver
             cd ldbc_snb_interactive_driver/scripts/
             ./install-dependencies.sh
-            export LDBC_SNB_DATA_ROOT_DIRECTORY=../../social-network-sf0.003-bi-composite-merged-fk/graphs/parquet/raw
+            export LDBC_SNB_DATA_ROOT_DIRECTORY=../../social-network-sf0.003-bi-composite-merged-fk
             ./convert.sh
             mv inserts ../../update-streams/
             mv deletes ../../update-streams/
@@ -67,9 +68,12 @@ jobs:
           command: |
             export LDBC_SNB_IMPLS_DIR=$(pwd)
             cd ldbc_snb_interactive_driver/paramgen
-            scripts/get-sample-factors.sh
-            . scripts/use-sample-factors.sh
+            scripts/get-sample-data.sh
+            . scripts/use-sample-data.sh
+            mv paramgen_window_values.json paramgen_window_values.bak.json
+            mv paramgen_window_values_test.json paramgen_window_values.json
             scripts/paramgen.sh
+            mv paramgen_window_values.bak.json paramgen_window_values.json
             cd ..
             mv parameters/*.parquet ${LDBC_SNB_IMPLS_DIR}/parameters/
       ### Umbra

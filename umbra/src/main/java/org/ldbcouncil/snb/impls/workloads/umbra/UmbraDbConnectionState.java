@@ -19,7 +19,6 @@ public class UmbraDbConnectionState<TDbQueryStore extends QueryStore> extends Ba
 
     public UmbraDbConnectionState(Map<String, String> properties, TDbQueryStore store) throws ClassNotFoundException {
         super(properties, store);
-        endPoint = properties.get("endpoint");
 
         Class.forName(properties.get("jdbcDriver"));
 
