@@ -32,13 +32,13 @@ rm -rf ${LDBC_SNB_IMPLS_DIR}/parameters-sf${SF}/*
 
 echo "==================== Generate data ===================="
 cd ${LDBC_SNB_DATAGEN_DIR}
-if ${USE_DATAGEN_DOCKER} && [ -d out-sf${SF} ]; then
+if ${USE_DATAGEN_DOCKER} && [ -d out-sf${SF} ] && [ ${OSTYPE} != "darwin"* ]; then
     sudo chown -R $(id -u):$(id -g) out-sf${SF}
 fi
 rm -rf out-sf${SF}
 
 echo "-------------------- Generate data for Cypher --------------------"
-if ${USE_DATAGEN_DOCKER} && [ -d out-sf${SF} ]; then
+if ${USE_DATAGEN_DOCKER} && [ -d out-sf${SF} ] && [ ${OSTYPE} != "darwin"* ]; then
     sudo chown -R $(id -u):$(id -g) out-sf${SF}
 fi
 rm -rf out-sf${SF}/graphs/parquet/raw
@@ -51,7 +51,7 @@ ${DATAGEN_COMMAND} \
     --format-options header=false,quoteAll=true,compression=gzip
 
 echo "-------------------- Generate data for Postgres --------------------"
-if ${USE_DATAGEN_DOCKER} && [ -d out-sf${SF} ]; then
+if ${USE_DATAGEN_DOCKER} && [ -d out-sf${SF} ] && [ ${OSTYPE} != "darwin"* ]; then
     sudo chown -R $(id -u):$(id -g) out-sf${SF}
 fi
 rm -rf out-sf${SF}/graphs/parquet/raw
@@ -61,7 +61,7 @@ ${DATAGEN_COMMAND} \
     --scale-factor ${SF}
 
 echo "-------------------- Generate data for update streams and factors --------------------"
-if ${USE_DATAGEN_DOCKER} && [ -d out-sf${SF} ]; then
+if ${USE_DATAGEN_DOCKER} && [ -d out-sf${SF} ] && [ ${OSTYPE} != "darwin"* ]; then
     sudo chown -R $(id -u):$(id -g) out-sf${SF}
 fi
 rm -rf out-sf${SF}/graphs/parquet/raw
@@ -71,7 +71,7 @@ ${DATAGEN_COMMAND} \
     --scale-factor ${SF} \
     --generate-factors
 
-if ${USE_DATAGEN_DOCKER}; then
+if ${USE_DATAGEN_DOCKER} && [ ${OSTYPE} != "darwin"* ]; then
     sudo chown -R $(id -u):$(id -g) out-sf${SF}
 fi
 
