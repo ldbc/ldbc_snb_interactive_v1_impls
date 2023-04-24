@@ -1,9 +1,6 @@
 // Q12. Expert search
 /*
-:param [{ personId, tagClassName }] => { RETURN
-  10995116278009 AS personId,
-  "Monarch" AS tagClassName
-}
+:params { personId: 10995116278009, tagClassName: "Monarch" }
 */
 MATCH (tag:Tag)-[:HAS_TYPE|IS_SUBCLASS_OF*0..]->(baseTagClass:TagClass)
 WHERE tag.name = $tagClassName OR baseTagClass.name = $tagClassName

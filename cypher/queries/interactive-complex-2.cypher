@@ -1,9 +1,6 @@
 // Q2. Recent messages by your friends
 /*
-:param [{ personId, maxDate }] => { RETURN
-  10995116278009 AS personId,
-  1287230400000 AS maxDate
-}
+:params { personId: 10995116278009, maxDate: 1287230400000 }
 */
 MATCH (:Person {id: $personId })-[:KNOWS]-(friend:Person)<-[:HAS_CREATOR]-(message:Message)
     WHERE message.creationDate < $maxDate

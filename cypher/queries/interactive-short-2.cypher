@@ -1,6 +1,6 @@
 // IS2. Recent messages of a person
 /*
-:param personId: 10995116277795
+:params { personId: 10995116277795 }
  */
 MATCH (:Person {id: $personId})<-[:HAS_CREATOR]-(message)
 WITH

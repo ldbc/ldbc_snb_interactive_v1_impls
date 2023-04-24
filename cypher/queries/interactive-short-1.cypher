@@ -1,6 +1,6 @@
 // IS1. Profile of a person
 /*
-:param personId: 10995116277794
+:params { personId: 10995116277794 }
  */
 MATCH (n:Person {id: $personId })-[:IS_LOCATED_IN]->(p:City)
 RETURN

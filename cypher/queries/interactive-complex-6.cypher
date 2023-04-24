@@ -1,9 +1,6 @@
 // Q6. Tag co-occurrence
 /*
-:param [{ personId, tagName }] => { RETURN
-  4398046511333 AS personId,
-  "Carl_Gustaf_Emil_Mannerheim" AS tagName
-}
+:params { personId: 4398046511333, tagName: "Carl_Gustaf_Emil_Mannerheim" }
 */
 MATCH (knownTag:Tag { name: $tagName })
 WITH knownTag.id as knownTagId

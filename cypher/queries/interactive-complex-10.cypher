@@ -1,9 +1,6 @@
 // Q10. Friend recommendation
 /*
-:param [{ personId, month }] => { RETURN
-  4398046511333 AS personId,
-  5 AS month
-}
+:params { personId: 4398046511333, month: 5 }
 */
 MATCH (person:Person {id: $personId})-[:KNOWS*2..2]-(friend),
        (friend)-[:IS_LOCATED_IN]->(city:City)

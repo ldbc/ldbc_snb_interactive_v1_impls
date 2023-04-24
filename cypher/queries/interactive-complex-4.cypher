@@ -1,10 +1,6 @@
 // Q4. New topics
 /*
-:param [{ personId, startDate, endDate }] => { RETURN
-  4398046511333 AS personId,
-  1275350400000 AS startDate,
-  1277856000000 AS endDate
-}
+:params { personId: 4398046511333, startDate: 1275350400000, endDate: 1277856000000 }
 */
 MATCH (person:Person {id: $personId })-[:KNOWS]-(friend:Person),
       (friend)<-[:HAS_CREATOR]-(post:Post)-[:HAS_TAG]->(tag)

@@ -1,10 +1,7 @@
 // Q14. Trusted connection paths
 // Requires the Neo4j Graph Data Science library
 /*
-:param [{ person1Id, person2Id }] => { RETURN
-  14 AS person1Id,
-  27 AS person2Id
-}
+:params { person1Id: 14, person2Id: 27 }
 */
 // Check whether a path exists -- if there is no path, the query will return an empty result
 MATCH

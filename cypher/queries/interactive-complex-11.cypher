@@ -1,9 +1,9 @@
 // Q11. Job referral
 /*
-:param [{ personId, countryName, workFromYear }] => { RETURN
-  10995116277918 AS personId,
-  "Hungary" AS countryName,
-  2011 AS workFromYear
+:params {
+  personId: 10995116277918,
+  countryName: "Hungary",
+  workFromYear: 2011
 }
 */
 MATCH (person:Person {id: $personId })-[:KNOWS*1..2]-(friend:Person)

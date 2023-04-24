@@ -1,9 +1,6 @@
 // Q1. Transitive friends with certain name
 /*
-:param [{ personId, firstName }] => { RETURN
-  4398046511333 AS personId,
-  "Jose" AS firstName
-}
+:params { personId: 4398046511333, firstName: "Jose" }
 */
 MATCH (p:Person {id: $personId}), (friend:Person {firstName: $firstName})
        WHERE NOT p=friend

@@ -1,9 +1,6 @@
 // Q5. New groups
 /*
-:param [{ personId, minDate }] => { RETURN
-  6597069766734 AS personId,
-  1288612800000 AS minDate
-}
+:params { personId: 6597069766734, minDate: 1288612800000 }
 */
 MATCH (person:Person { id: $personId })-[:KNOWS*1..2]-(otherPerson)
 WHERE

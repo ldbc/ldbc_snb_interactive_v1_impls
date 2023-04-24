@@ -1,6 +1,6 @@
 // IS3. Friends of a person
 /*
-:param personId: 10995116277794
+:params { personId: 10995116277794 }
  */
 MATCH (n:Person {id: $personId })-[r:KNOWS]-(friend)
 RETURN
