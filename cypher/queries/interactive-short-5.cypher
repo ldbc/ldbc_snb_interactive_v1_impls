@@ -1,7 +1,7 @@
 // IS5. Creator of a message
 /*
 :params { messageId: 206158431836 }
- */
+*/
 MATCH (m:Message {id:  $messageId })-[:HAS_CREATOR]->(p:Person)
 RETURN
     p.id AS personId,
