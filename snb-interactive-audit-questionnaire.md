@@ -18,6 +18,7 @@ We created the following questionnaire to make the SNB auditing process more str
 - System version
 - Date of the release to be used
 - Link to product page
+- If possible, please share your motivation for commissioning an LDBC audit (e.g. to demonstrate the maturity of your product, to achieve record-breaking performance, etc.)
 
 ### Test sponsor
 
