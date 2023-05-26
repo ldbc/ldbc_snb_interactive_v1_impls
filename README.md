@@ -39,6 +39,7 @@ For detailed instructions, consult the READMEs of the projects.
 ## User's guide
 
 ### Building the project
+This project uses Java 17.
 
 To build the entire project, run:
 
