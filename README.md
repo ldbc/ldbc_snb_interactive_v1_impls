@@ -42,6 +42,7 @@ mvn clean package -DskipTests -Pcypher,postgres
 ## User's guide
 
 ### Building the project
+This project uses Java 11.
 
 To build the project, run:
 
