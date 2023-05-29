@@ -86,10 +86,27 @@ mv inserts/ ${LDBC_SNB_IMPLS_DIR}/update-streams-sf${SF}/
 mv deletes/ ${LDBC_SNB_IMPLS_DIR}/update-streams-sf${SF}/
 
 echo "==================== Generate parameters ===================="
-cd ${LDBC_SNB_DRIVER_DIR}
+cd ${LDBC_SNB_DRIVER_DIR}/paramgen
 export LDBC_SNB_DATA_ROOT_DIRECTORY=${LDBC_SNB_DATAGEN_DIR}/out-sf${SF}/
 export LDBC_SNB_FACTOR_TABLES_DIR=${LDBC_SNB_DATA_ROOT_DIRECTORY}/factors/parquet/raw/composite-merged-fk/
 
-paramgen/scripts/paramgen.sh
+if [[ $SF < 1 ]]
+then
+  export LDBC_THRESHOLD_VALUE_FILE='paramgen_window_values_test.json'
+else
+  export LDBC_THRESHOLD_VALUE_FILE='paramgen_window_values.json'
+fi
+
+echo $LDBC_THRESHOLD_VALUE_FILE
+
+# paramgen/scripts/paramgen.sh
+python3 paramgen.py \
+--raw_parquet_dir "${LDBC_SNB_DATA_ROOT_DIRECTORY}/graphs/parquet/raw/" \
+--factor_tables_dir "${LDBC_SNB_FACTOR_TABLES_DIR}" \
+--time_bucket_size_in_days 1 \
+--generate_short_query_parameters True \
+--threshold_values_path ${LDBC_THRESHOLD_VALUE_FILE}
+
+cd ..
 
 mv parameters/*.parquet ${LDBC_SNB_IMPLS_DIR}/parameters-sf${SF}/
