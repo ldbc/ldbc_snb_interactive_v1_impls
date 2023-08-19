@@ -83,7 +83,7 @@ The execution in all three modes should be started after the initial data set wa
         * If the validation failed, the results are saved to the `validation_params-failed-expected.json` and `validation_params-failed-actual.json` files.
     * **Parallelism:** The execution must be single-threaded to ensure a deterministic order of operations.
 
-    Pre-generated [validation parameters for SF0.1 to SF10](https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive-v1/validation_params-sf0.1-sf10.tar.zst) are available.
+    For the data sets generated with [Datagen v0.3.6](https://github.com/ldbc/ldbc_snb_datagen_hadoop/releases/tag/v0.3.6), pre-generated [validation parameters for SF0.1 to SF10](https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive-v1/validation_params-sf0.1-sf10.tar.zst) are available.
 
 3. Run the benchmark with the `driver/benchmark.sh` script.
 
