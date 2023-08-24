@@ -8,4 +8,4 @@ cd ..
 
 . scripts/vars.sh
 
-pip3 install --user neo4j==${NEO4J_VERSION} python-dateutil
+pip3 install --user neo4j==${NEO4J_DRIVER_VERSION} python-dateutil
