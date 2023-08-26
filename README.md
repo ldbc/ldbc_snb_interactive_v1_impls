@@ -9,7 +9,7 @@ To get started with the LDBC SNB benchmarks, check out our introductory presenta
 
 ## Notes
 
-:warning: There are some quirks to using this repository:
+:warning: Please keep in mind the following when using this repository.
 
 * The goal of the implementations in this repository is to serve as **reference implementations** which other implementations can cross-validated against. Therefore, our primary objective was readability and not absolute performance when formulating the queries.
 
@@ -19,7 +19,7 @@ To get started with the LDBC SNB benchmarks, check out our introductory presenta
 
 ## Implementations
 
-We provide two reference implementations:
+We provide three reference implementations:
 
 * [Neo4j (Cypher) implementation](cypher/README.md)
 * [PostgreSQL (SQL) implementation](postgres/README.md)
