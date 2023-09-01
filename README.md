@@ -1,11 +1,14 @@
 ![LDBC logo](ldbc-logo.png)
-# LDBC SNB Interactive workload implementations
+# LDBC SNB Interactive v2 workload implementations
 
 [![Build Status](https://circleci.com/gh/ldbc/ldbc_snb_interactive_impls.svg?style=svg)](https://circleci.com/gh/ldbc/ldbc_snb_interactive_impls)
 
-Reference implementations of the LDBC Social Network Benchmark's Interactive workload ([paper](https://homepages.cwi.nl/~boncz/snb-challenge/snb-sigmod.pdf), [specification on GitHub pages](https://ldbcouncil.org/ldbc_snb_docs/), [specification on arXiv](https://arxiv.org/pdf/2001.02299.pdf)).
+This repository contains reference implementations of the LDBC Social Network Benchmark's Interactive v2 workload. See details on the benchmark, see the [SIGMOD 2015 paper](https://ldbcouncil.org/docs/papers/ldbc-snb-interactive-sigmod-2015.pdf), [specification on GitHub Pages](https://ldbcouncil.org/ldbc_snb_docs/), and [specification on arXiv](https://arxiv.org/pdf/2001.02299.pdf).
 
-To get started with the LDBC SNB benchmarks, check out our introductory presentation: [The LDBC Social Network Benchmark](https://docs.google.com/presentation/d/1NilxSrKQnFq4WzWMY2-OodZQ2TEksKzKBmgB20C_0Nw/) ([PDF](https://ldbcouncil.org/docs/presentations/ldbc-snb-2021-12.pdf)).
+To get started with the LDBC SNB benchmarks, check out our introductory presentation: [The LDBC Social Network Benchmark](https://docs.google.com/presentation/d/1NilxSrKQnFq4WzWMY2-OodZQ2TEksKzKBmgB20C_0Nw/) ([PDF](https://ldbcouncil.org/docs/presentations/ldbc-snb-2022-11.pdf)).
+
+:warning:
+This workload is still under design. If you are looking for a stable, auditable version, use the [Interactive v1 workload](https://github.com/ldbc/ldbc_snb_interactive_v1_impls).
 
 ## Notes
 
@@ -13,69 +16,85 @@ To get started with the LDBC SNB benchmarks, check out our introductory presenta
 
 * The goal of the implementations in this repository is to serve as **reference implementations** which other implementations can cross-validated against. Therefore, our primary objective was readability and not absolute performance when formulating the queries.
 
-* The default workload contains updates which are persisted in the database. Therefore, **the database needs to be reloaded or restored from backup before each run**. Use the provided `scripts/backup-database.sh` and `scripts/restore-database.sh` scripts to achieve this.
-
-* We expect most systems-under-test to use multi-threaded execution for their benchmark runs. **To allow running the updates on multiple threads, the update stream files need to be partitioned accordingly by the generator.** We have [pre-generated](#benchmark-data-sets) these for frequent partition numbers (1, 2, ..., 1024 and 24, 48, 96, ..., 768) and scale factors up to 1000.
+* The default workload contains updates which change the state of the database. Therefore, **the database needs to be reloaded or restored from backup before each run**. Use the provided `scripts/backup-database.sh` and `scripts/restore-database.sh` scripts to achieve this.
 
 ## Implementations
 
-We provide three reference implementations:
+We provide two reference implementations:
 
 * [Neo4j (Cypher) implementation](cypher/README.md)
 * [PostgreSQL (SQL) implementation](postgres/README.md)
-* [GraphDB (SPARQL) implementation](graphdb/README.md)
 
 Additional implementations:
 
-* [DuckDB (SQL) implementation](duckdb/README.md)
-* [TigerGraph (GSQL) implementation](tigergraph/README.md)
+* [Microsoft SQL Server (Transact-SQL) implementation](mssql/README.md)
 * [Umbra (SQL) implementation](umbra/README.md)
 
 For detailed instructions, consult the READMEs of the projects.
 
-To build a subset of the projects, use Maven profiles, e.g. to build the reference implementations, run:
-
-```bash
-mvn clean package -DskipTests -Pcypher,postgres
-```
-
 ## User's guide
 
 ### Building the project
-This project uses Java 11.
+This project uses Java 17.
 
-To build the project, run:
+To build the entire project, run:
 
 ```bash
 scripts/build.sh
 ```
 
+To build a subset of the projects, e.g. to build the PostgreSQL implementation, run its individual build script:
+
+```bash
+postgres/scripts/build.sh
+```
+
 ### Inputs
 
-The benchmark framework relies on the following inputs produced by the [SNB Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop/):
+The benchmark framework relies on the following inputs produced by the [SNB Datagen's new (Spark) version](https://github.com/ldbc/ldbc_snb_datagen_spark/).
 
-* **Initial data set:** the SNB graph in CSV format (`social_network/{static,dynamic}`)
-* **Update streams:** the input for the update operations (`social_network/updateStream_*.csv`)
-* **Substitution parameters:** the input parameters for the complex queries. It is produced by the Datagen (`substitution_parameters/`)
+Currently, the initial data set, update streams, and parameters can generated with the following command:
+
+```bash
+export SF= #The scale factor to generate
+export LDBC_SNB_DATAGEN_DIR= # Path to the LDBC SNB datagen directory
+export LDBC_SNB_DATAGEN_MAX_MEM= #Maximum memory the datagen could use, e.g. 16G
+export LDBC_SNB_DRIVER_DIR= # Path to the LDBC SNB driver directory
+export DATA_INPUT_TYPE=parquet
+# If using the Docker Datagen version, set the env variable:
+export USE_DATAGEN_DOCKER=true
+
+scripts/generate-all.sh
+```
+
+### Pre-generate data sets
+
+[Pre-generated SF1-SF300 data sets](snb-interactive-pre-generated-data-sets.md) are available.
+
+### Loading the data
+
+Select the system to be tested, e.g. [PostgreSQL](postgres/).
+Load the data set as described in the README file of the selected system.
+For most systems, this involves setting an environment variable to the correct location and invoking the `scripts/load-in-one-step.sh` script.
 
 ### Driver modes
 
-For each implementation, it is possible to perform to perform the run in one of the [SNB driver's](https://github.com/ldbc/ldbc_snb_interactive_driver) three modes: create validation parameters, validate, and benchmark.
-The execution in all three modes should be started after the initial data set was loaded into the system under test.
+For each implementation, it is possible to perform the run in one of the [SNB driver's](https://github.com/ldbc/ldbc_snb_interactive_driver) three modes.
+All of these runs should be started with the initial data set loaded to the database.
 
 1. Create validation parameters with the `driver/create-validation-parameters.sh` script.
 
     * **Inputs:**
         * The query substitution parameters are taken from the directory set in `ldbc.snb.interactive.parameters_dir` configuration property.
-        * The update streams are the `updateStream_0_0_{forum,person}.csv` files from the location set in the `ldbc.snb.interactive.updates_dir` configuration property.
-        * For this mode, the query frequencies are set to a uniform `1` value to ensure the best average test coverage.
-    * **Output:** The results will be stored in the validation parameters file (e.g. `validation_params.csv`) file set in the `create_validation_parameters` configuration property.
+        * The update streams are the files from the `inserts` and `deletes` directories in the directory `ldbc.snb.interactive.updates_dir` configuration property.
+        * For this mode, the query frequencies are set to a uniform `1` value to ensure the best average test coverage. [TODO]
+    * **Output:** The results will be stored in the validation parameters file (e.g. `validation_params.json`) file set in the `validate_database` configuration property.
     * **Parallelism:** The execution must be single-threaded to ensure a deterministic order of operations.
 
-2. Validate against an existing reference output (called "validation parameters") with the `driver/validate.sh` script.
+2. Validate against existing validation parameters with the `driver/validate.sh` script.
 
     * **Input:**
-        * The query substitution parameters are taken from the validation parameters file (e.g. `validation_params.csv`) file set in the `validate_database` configuration property.
+        * The query substitution parameters are taken from the validation parameters file (e.g. `validation_params.json`) file set in the `validate_database` configuration property.
         * The update operations are also based on the content of the validation parameters file.
     * **Output:**
         * The validation either passes of fails.
@@ -83,16 +102,12 @@ The execution in all three modes should be started after the initial data set wa
         * If the validation failed, the results are saved to the `validation_params-failed-expected.json` and `validation_params-failed-actual.json` files.
     * **Parallelism:** The execution must be single-threaded to ensure a deterministic order of operations.
 
-    For the data sets generated with [Datagen v0.3.6](https://github.com/ldbc/ldbc_snb_datagen_hadoop/releases/tag/v0.3.6), pre-generated [validation parameters for SF0.1 to SF10](https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive-v1/validation_params-sf0.1-sf10.tar.zst) are available.
-
 3. Run the benchmark with the `driver/benchmark.sh` script.
 
     * **Inputs:**
         * The query substitution parameters are taken from the directory set in `ldbc.snb.interactive.parameters_dir` configuration property.
-        * The update streams are the `updateStream_*_{forum,person}.csv` files from the location set in the `ldbc.snb.interactive.updates_dir` configuration property.
-            * To get *2n* write threads, the framework requires *n* `updateStream_*_forum.csv` and *n* `updateStream_*_person.csv` files.
-            * If you are generating the data sets from scratch, set `ldbc.snb.datagen.serializer.numUpdatePartitions` to *n* in the [data generator](https://github.com/ldbc/ldbc_snb_datagen_hadoop) to get produce these.
-        * The goal of the benchmark is the achieve the best (lowest possible) `time_compression_ratio` value while ensuring that the 95% on-time requirement is kept (i.e. 95% of the queries can be started within 1 second of their scheduled time). If your benchmark run returns "failed schedule audit", increase this number (which lowers the time compression rate) until it passes.
+        * The update streams are the files from the `inserts` and `deletes` directories in the directory `ldbc.snb.interactive.updates_dir` configuration property.
+        * The goal of the benchmark is to achieve the best (lowest possible) `time_compression_ratio` value while ensuring that the 95% on-time requirement is kept (i.e. 95% of the queries can be started within 1 second of their scheduled time). If your benchmark run returns "failed schedule audit", increase this number (which lowers the time compression rate) until it passes.
         * Set the `thread_count` property to the size of the thread pool for read operations.
         * For audited benchmarks, ensure that the `warmup` and `operation_count` properties are set so that the warmup and benchmark phases last for 30+ minutes and 2+ hours, respectively.
     * **Output:**
@@ -101,8 +116,6 @@ The execution in all three modes should be started after the initial data set wa
         * The detailed results of the benchmark are printed to the console and saved in the `results/` directory.
     * **Parallelism:** Multi-threaded execution is recommended to achieve the best result.
 
-For more details on validating and benchmarking, visit the [driver's documentation](https://github.com/ldbc/ldbc_snb_interactive_driver/tree/v1-dev/docs).
-
 ## Developer's guide
 
 To create a new implementation, it is recommended to use one of the existing ones: the Neo4j implementation for graph database management systems and the PostgreSQL implementation for RDBMSs.
@@ -110,61 +123,17 @@ To create a new implementation, it is recommended to use one of the existing one
 The implementation process looks roughly as follows:
 
 1. Create a bulk loader which loads the initial data set to the database.
-2. Implement the complex and short reads queries (22 in total).
-3. Implement the 7 update queries.
-4. Test the implementation against the reference implementations using various scale factors.
-5. Optimize the implementation.
-
-## Data sets
-
-### Benchmark data sets
-
-To generate the benchmark data sets, use the [Hadoop-based LDBC SNB Datagen](https://github.com/ldbc/ldbc_snb_datagen_hadoop/releases/tag/v0.3.7-SNAPSHOT).
-
-The key configurations are the following:
-
-* `ldbc.snb.datagen.generator.scaleFactor`: set this to `snb.interactive.${SCALE_FACTOR}` where `${SCALE_FACTOR}` is the desired scale factor
-* `ldbc.snb.datagen.serializer.numUpdatePartitions`: set this to the number of write threads used in the benchmark runs
-* serializers: set these to the required format, e.g. the ones starting with `CsvMergeForeign` or `CsvComposite`
-  * `ldbc.snb.datagen.serializer.dynamicActivitySerializer`
-  * `ldbc.snb.datagen.serializer.dynamicPersonSerializer`
-  * `ldbc.snb.datagen.serializer.staticSerializer`
-
-### Pre-generated data sets
-
-Producing large-scale data sets requires non-trivial amounts of memory and computing resources (e.g. SF100 requires 24GB memory and takes about 4 hours to generate on a single machine).
-To mitigate this, we have pregenerated data sets using 9 different serializers and the update streams using 17 different partition numbers:
-
-* Serializers: csv_basic, csv_basic-longdateformatter, csv_composite, csv_composite-longdateformatter, csv_composite_merge_foreign, csv_composite_merge_foreign-longdateformatter, csv_merge_foreign, csv_merge_foreign-longdateformatter, ttl
-* Partition numbers: 2^k (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024) and 6×2^k (24, 48, 96, 192, 384, 768).
-
-The data sets are available at the [SURF/CWI data repository](https://hdl.handle.net/11112/e6e00558-a2c3-9214-473e-04a16de09bf8). We also provide [direct links and download scripts](https://github.com/ldbc/data-sets-surf-repository).
-
-### Test data set
-
-The test data sets are placed in the `cypher/test-data/` directory for Neo4j and in the `postgres/test-data/` for the SQL systems.
-
-To generate a data set with the same characteristics, see the [documentation on generating the test data set](test-data.md).
+1. Add the required glue code to the Java driver that allows parameterized execution of queries and operators.
+1. Implement the complex and short reads queries (21 in total).
+1. Implement the insert and delete operations (16 in total).
+1. Test the implementation against the reference implementations using various scale factors.
+1. Optimize the implementation.
 
 ## Preparing for an audited run
 
 Implementations of the Interactive workload can be audited by a certified LDBC auditor.
-The [Auditing Policies chapter](http://ldbcouncil.org/ldbc_snb_docs/ldbc-snb-specification.pdf#chapter.7) of the specification describes the auditing process and the required artifacts.
-If you are considering commissioning an LDBC SNB audit, please study the [audit questionnaire](snb-interactive-audit-questionnaire.md).
+The [Auditing Policies chapter](https://ldbcouncil.org/ldbc_snb_docs/ldbc-snb-specification.pdf#chapter.7) of the specification describes the auditing process and the required artifacts.
 
+If you plan to get your system audited, please reach to the [LDBC Steering Committee](https://ldbcouncil.org/organizational-members/).
 
-### Determining the best TCR
-
-1. Select a scale factor and configure the `driver/benchmark.properties` file as described in the [Driver modes](#driver-modes) section.
-2. Load the data set with `scripts/load-in-one-step.sh`.
-3. Create a backup with `scripts/backup-database.sh`.
-4. Run the `driver/determine-best-tcr.sh`.
-5. Once the "best TCR" value has been determined, test it with a full workload (at least 0.5h for warmup operation and at least 2h of benchmark time), and make further adjustments if necessary.
-
-### Recommendations
-
-We have a few recommendations for creating audited implementations. (These are not requirements – implementations are allowed to deviate from these recommendations.)
-
-* The implementation should target a popular Linux distribution (e.g. Ubuntu LTS, CentOS, Fedora).
-* Use a containerized setup, where the DBMS is running in a Docker container.
-* Instead of a specific hardware, target a cloud virtual machine instance (e.g. AWS `r5d.12xlarge`). Both bare-metal and regular instances can be used for audited runs.
+:warning: Audited runs are currently only possible with the [v1 version](https://github.com/ldbc/ldbc_snb_interactive_v1_impls).
