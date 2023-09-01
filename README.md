@@ -132,7 +132,7 @@ The implementation process looks roughly as follows:
 ## Preparing for an audited run
 
 Implementations of the Interactive workload can be audited by a certified LDBC auditor.
-The [Auditing Policies chapter](https://ldbcouncil.org/ldbc_snb_docs/ldbc-snb-specification.pdf#chapter.7) of the specification describes the auditing process and the required artifacts.
+The [Auditing Policies chapter of the specification](https://ldbcouncil.org/ldbc_snb_docs/ldbc-snb-specification.pdf) describes the auditing process and the required artifacts.
 
 If you plan to get your system audited, please reach to the [LDBC Steering Committee](https://ldbcouncil.org/organizational-members/).
 
