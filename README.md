@@ -1,7 +1,7 @@
 ![LDBC logo](ldbc-logo.png)
 # LDBC SNB Interactive v2 workload implementations
 
-[![Build Status](https://circleci.com/gh/ldbc/ldbc_snb_interactive_impls.svg?style=svg)](https://circleci.com/gh/ldbc/ldbc_snb_interactive_impls)
+[![Build Status](https://circleci.com/gh/ldbc/ldbc_snb_interactive_v1_impls.svg?style=svg)](https://circleci.com/gh/ldbc/ldbc_snb_interactive_v1_impls)
 
 This repository contains reference implementations of the LDBC Social Network Benchmark's Interactive v2 workload. See details on the benchmark, see the [SIGMOD 2015 paper](https://ldbcouncil.org/docs/papers/ldbc-snb-interactive-sigmod-2015.pdf), [specification on GitHub Pages](https://ldbcouncil.org/ldbc_snb_docs/), and [specification on arXiv](https://arxiv.org/pdf/2001.02299.pdf).
 
