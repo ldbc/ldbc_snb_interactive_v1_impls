@@ -31,7 +31,8 @@ We created the following questionnaire to make the SNB auditing process more str
 - System type (e.g. relational DBMS, graph DBMS)
 - Storage type (in-memory/disk-based)
 - Main implementation language of the system (e.g. C++)
-- Query language(s) supported by the system
+- Query language(s) supported by the system (e.g. Cypher, Gremlin)
+- Query language(s) used for the audited implementation (e.g. Cypher)
 - Query execution strategy (interpreted/vectorized/compiled/etc.)
 - Is a distributed version available (regardless of whether it is used in the audit)?
 - If a distributed version is available, what sharding strategy does it use?
