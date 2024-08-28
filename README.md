@@ -42,6 +42,7 @@ mvn clean package -DskipTests -Pcypher,postgres
 ## User's guide
 
 ### Building the project
+
 This project uses Java 11.
 
 To build the project, run:
@@ -138,11 +139,13 @@ To mitigate this, we have pregenerated data sets using 9 different serializers a
 
 The data sets are available at the [SURF/CWI data repository](https://repository.surfsara.nl/datasets/cwi/ldbc-snb-interactive-v1-datagen-v100). We also provide [direct links](https://ldbcouncil.org/data-sets-surf-repository/snb-interactive-v1-datagen-v100) and a [download script](https://ldbcouncil.org/data-sets-surf-repository/#usage) (which stages the data sets from tape storage if they are not immediately available).
 
-We pre-generated [**validation parameters for SF0.1 to SF10**](https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive-v1/validation_params-interactive-v1.0.0-sf0.1-to-sf10.tar.zst) using the Neo4j reference implementation.
+### Validation parameters
+
+We provide [**validation parameters for SF0.1 to SF10**](https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive-v1/validation_params-interactive-v1.0.0-sf0.1-to-sf10.tar.zst). These were produced using the Neo4j reference implementation.
 
 ### Test data set
 
-The test data sets are placed in the `cypher/test-data/` directory for Neo4j and in the `postgres/test-data/` for the SQL systems.
+Small test data sets are placed in the `cypher/test-data/` directory for Neo4j and in the `postgres/test-data/` for the SQL systems.
 
 To generate a data set with the same characteristics, see the [documentation on generating the test data set](test-data).
 
