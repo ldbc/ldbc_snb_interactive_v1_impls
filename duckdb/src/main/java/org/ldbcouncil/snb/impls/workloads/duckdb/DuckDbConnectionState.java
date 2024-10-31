@@ -13,14 +13,14 @@ import java.util.TimeZone;
 
 public class DuckDbConnectionState<TDbQueryStore extends QueryStore> extends BaseDbConnectionState<TDbQueryStore> {
 
-    protected Connection connection;
+    protected static Connection connection;
 
     public DuckDbConnectionState(Map<String, String> properties, TDbQueryStore store) throws ClassNotFoundException, SQLException {
         super(properties, store);
-        TimeZone.setDefault(TimeZone.getTimeZone("Etc/GMT+0"));
-        connection = DriverManager.getConnection("jdbc:duckdb:scratch/ldbc.duckdb");
-        Statement statement = connection.createStatement();
-        statement.execute("PRAGMA threads=1;");
+        if (connection == null) {
+            // TimeZone.setDefault(TimeZone.getTimeZone("Etc/GMT+0"));
+            connection = DriverManager.getConnection("jdbc:duckdb:scratch/ldbc.duckdb");
+        }
     }
 
     public Connection getConnection() throws DbException {
@@ -29,12 +29,12 @@ public class DuckDbConnectionState<TDbQueryStore extends QueryStore> extends Bas
 
     @Override
     public void close() {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
+//        if (connection != null) {
+//            try {
+//                connection.close();
+//            } catch (SQLException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
     }
 }
