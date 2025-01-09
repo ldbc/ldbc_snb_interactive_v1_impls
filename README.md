@@ -141,7 +141,7 @@ The data sets are available at the [SURF/CWI data repository](https://repository
 
 ### Validation parameters
 
-We provide [**validation parameters for SF0.1 to SF10**](https://pub-383410a98aef4cb686f0c7601eddd25f.r2.dev/interactive-v1/validation_params-interactive-v1.0.0-sf0.1-to-sf10.tar.zst). These were produced using the Neo4j reference implementation.
+We provide [**validation parameters for SF0.1 to SF10**](https://datasets.ldbcouncil.org/interactive-v1/validation_params-interactive-v1.0.0-sf0.1-to-sf10.tar.zst). These were produced using the Neo4j reference implementation.
 
 ### Test data set
 
