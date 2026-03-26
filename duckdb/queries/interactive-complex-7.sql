@@ -17,5 +17,5 @@ where
     tmp.l_personid = l.l_personid and
     tmp.l_creationdate = l.l_creationdate and
     l.l_messageid = m_messageid
-order by l_creationdate desc, p_personid asc
+order by l.l_creationdate desc, p_personid asc
 ;
