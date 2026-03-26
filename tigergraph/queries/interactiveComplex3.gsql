@@ -1,6 +1,6 @@
 CREATE OR REPLACE QUERY interactiveComplex3(VERTEX<Person> personId, STRING countryXName, STRING countryYName, INT startDate, INT durationDays) SYNTAX v2 {
   TYPEDEF TUPLE<INT personId, STRING personFirstName, STRING personLastName, INT xCount, INT yCount, INT xyCount> msgStats; 
-  HeapAccum<msgStats>(20, xCount DESC, personId ASC) @@result;
+  HeapAccum<msgStats>(20, xyCount DESC, personId ASC) @@result;
   SumAccum<UINT> @xCount, @yCount;
   MaxAccum<UINT> @@countryId1, @@countryId2;
   OrAccum<BOOL> @selected, @selected2;
