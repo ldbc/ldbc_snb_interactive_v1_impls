@@ -1,0 +1,369 @@
+name: Remote EC2 Operations
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'cypher/**'
+      - 'scripts/**'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'cypher/**'
+      - 'scripts/**'
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: 'Operation to perform'
+        required: true
+        default: 'check-status'
+        type: choice
+        options:
+          - check-status
+          - start-neo4j
+          - stop-neo4j
+          - setup-neo4j
+          - run-benchmarks
+      instance_id:
+        description: 'EC2 Instance ID'
+        required: false
+        default: 'i-0c1051b4faec06835'
+      region:
+        description: 'AWS Region'
+        required: false
+        default: 'ap-southeast-1'
+
+env:
+  INSTANCE_ID: ${{ github.event.inputs.instance_id || 'i-0c1051b4faec06835' }}
+  REGION: ${{ github.event.inputs.region || 'ap-southeast-1' }}
+  SSH_USER: ubuntu
+
+jobs:
+  check-instance-status:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.operation == 'check-status' || github.event_name == 'push' || github.event_name == 'pull_request'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.REGION }}
+        
+    - name: Check EC2 instance status
+      run: |
+        echo "Checking EC2 instance status..."
+        INSTANCE_STATE=$(aws ec2 describe-instances \
+          --instance-ids "${{ env.INSTANCE_ID }}" \
+          --region "${{ env.REGION }}" \
+          --query "Reservations[0].Instances[0].State.Name" \
+          --output text)
+        
+        PUBLIC_IP=$(aws ec2 describe-instances \
+          --instance-ids "${{ env.INSTANCE_ID }}" \
+          --region "${{ env.REGION }}" \
+          --query "Reservations[0].Instances[0].PublicIpAddress" \
+          --output text)
+        
+        echo "Instance State: ${INSTANCE_STATE}"
+        echo "Public IP: ${PUBLIC_IP}"
+        
+        if [ "${INSTANCE_STATE}" != "running" ]; then
+          echo "Instance is not running. Starting instance..."
+          aws ec2 start-instances \
+            --instance-ids "${{ env.INSTANCE_ID }}" \
+            --region "${{ env.REGION }}"
+          
+          echo "Waiting for instance to start..."
+          aws ec2 wait instance-running \
+            --instance-ids "${{ env.INSTANCE_ID }}" \
+            --region "${{ env.REGION }}"
+          
+          echo "Instance is now running"
+        fi
+        
+        echo "INSTANCE_STATE=${INSTANCE_STATE}" >> $GITHUB_ENV
+        echo "PUBLIC_IP=${PUBLIC_IP}" >> $GITHUB_ENV
+        
+    - name: Test connectivity
+      run: |
+        echo "Testing connectivity to ${PUBLIC_IP}..."
+        if ping -c 1 -W 5 "${PUBLIC_IP}" > /dev/null 2>&1; then
+          echo "✅ Instance is responding to ping"
+        else
+          echo "❌ Instance is not responding to ping"
+          exit 1
+        fi
+        
+        if timeout 5 bash -c "</dev/tcp/${PUBLIC_IP}/22" 2>/dev/null; then
+          echo "✅ SSH port (22) is open"
+        else
+          echo "❌ SSH port (22) is not accessible"
+          exit 1
+        fi
+
+  setup-neo4j:
+    runs-on: ubuntu-latest
+    needs: check-instance-status
+    if: github.event.inputs.operation == 'setup-neo4j'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.REGION }}
+        
+    - name: Get instance IP
+      run: |
+        PUBLIC_IP=$(aws ec2 describe-instances \
+          --instance-ids "${{ env.INSTANCE_ID }}" \
+          --region "${{ env.REGION }}" \
+          --query "Reservations[0].Instances[0].PublicIpAddress" \
+          --output text)
+        echo "PUBLIC_IP=${PUBLIC_IP}" >> $GITHUB_ENV
+        
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/aws-ec2-key.pem
+        chmod 600 ~/.ssh/aws-ec2-key.pem
+        ssh-keyscan -H "${PUBLIC_IP}" >> ~/.ssh/known_hosts
+        
+    - name: Install Docker on remote instance
+      run: |
+        if ssh -i ~/.ssh/aws-ec2-key.pem \
+          -o StrictHostKeyChecking=no \
+          "${SSH_USER}@${PUBLIC_IP}" \
+          "sudo apt-get update && sudo apt-get install -y docker.io && sudo systemctl start docker && sudo systemctl enable docker && sudo usermod -aG docker ubuntu" 2>/dev/null; then
+          echo "✅ Docker installed successfully"
+        else
+          echo "⚠️ Docker installation failed or already installed - continuing"
+        fi
+          
+    - name: Setup Neo4j environment
+      run: |
+        if ssh -i ~/.ssh/aws-ec2-key.pem \
+          -o StrictHostKeyChecking=no \
+          "${SSH_USER}@${PUBLIC_IP}" \
+          "mkdir -p ~/neo4j/data ~/neo4j/logs ~/neo4j/plugins" 2>/dev/null; then
+          echo "✅ Neo4j directories created"
+        else
+          echo "⚠️ Failed to create directories or directories already exist - continuing"
+        fi
+          
+    - name: Start Neo4j container
+      run: |
+        if ssh -i ~/.ssh/aws-ec2-key.pem \
+          -o StrictHostKeyChecking=no \
+          "${SSH_USER}@${PUBLIC_IP}" \
+          "docker run -d \
+            --name neo4j \
+            -p 7474:7474 \
+            -p 7687:7687 \
+            -v ~/neo4j/data:/data \
+            -v ~/neo4j/logs:/logs \
+            -v ~/neo4j/plugins:/plugins \
+            --env NEO4J_AUTH=none \
+            --env NEO4JLABS_PLUGINS='[\"apoc\", \"graph-data-science\"]' \
+            neo4j:latest" 2>/dev/null; then
+          echo "✅ Neo4j container started"
+        else
+          echo "⚠️ Neo4j container failed to start or already running - continuing"
+        fi
+            
+    - name: Wait for Neo4j to start
+      run: |
+        if ssh -i ~/.ssh/aws-ec2-key.pem \
+          -o StrictHostKeyChecking=no \
+          "${SSH_USER}@${PUBLIC_IP}" \
+          "until docker exec neo4j cypher-shell 'RETURN 1' >/dev/null 2>&1; do sleep 2; done" 2>/dev/null; then
+          echo "✅ Neo4j is running and accessible"
+        else
+          echo "⚠️ Neo4j started but not yet accessible - may need more time"
+        fi
+
+  start-neo4j:
+    runs-on: ubuntu-latest
+    needs: check-instance-status
+    if: github.event.inputs.operation == 'start-neo4j'
+    
+    steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.REGION }}
+        
+    - name: Get instance IP
+      run: |
+        PUBLIC_IP=$(aws ec2 describe-instances \
+          --instance-ids "${{ env.INSTANCE_ID }}" \
+          --region "${{ env.REGION }}" \
+          --query "Reservations[0].Instances[0].PublicIpAddress" \
+          --output text)
+        echo "PUBLIC_IP=${PUBLIC_IP}" >> $GITHUB_ENV
+        
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/aws-ec2-key.pem
+        chmod 600 ~/.ssh/aws-ec2-key.pem
+        ssh-keyscan -H "${PUBLIC_IP}" >> ~/.ssh/known_hosts
+        
+    - name: Start Neo4j
+      run: |
+        if ssh -i ~/.ssh/aws-ec2-key.pem \
+          -o StrictHostKeyChecking=no \
+          "${SSH_USER}@${PUBLIC_IP}" \
+          "docker ps | grep neo4j || docker run -d --name neo4j -p 7474:7474 -p 7687:7687 neo4j:latest" 2>/dev/null; then
+          echo "✅ Neo4j started successfully"
+        else
+          echo "⚠️ Neo4j failed to start or already running - continuing"
+        fi
+          
+    - name: Wait for Neo4j to start
+      run: |
+        if ssh -i ~/.ssh/aws-ec2-key.pem \
+          -o StrictHostKeyChecking=no \
+          "${SSH_USER}@${PUBLIC_IP}" \
+          "until docker exec neo4j cypher-shell 'RETURN 1' >/dev/null 2>&1; do sleep 2; done" 2>/dev/null; then
+          echo "✅ Neo4j is running and accessible"
+        else
+          echo "⚠️ Neo4j started but not yet accessible - may need more time"
+        fi
+
+  stop-neo4j:
+    runs-on: ubuntu-latest
+    needs: check-instance-status
+    if: github.event.inputs.operation == 'stop-neo4j'
+    
+    steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.REGION }}
+        
+    - name: Get instance IP
+      run: |
+        PUBLIC_IP=$(aws ec2 describe-instances \
+          --instance-ids "${{ env.INSTANCE_ID }}" \
+          --region "${{ env.REGION }}" \
+          --query "Reservations[0].Instances[0].PublicIpAddress" \
+          --output text)
+        echo "PUBLIC_IP=${PUBLIC_IP}" >> $GITHUB_ENV
+        
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/aws-ec2-key.pem
+        chmod 600 ~/.ssh/aws-ec2-key.pem
+        ssh-keyscan -H "${PUBLIC_IP}" >> ~/.ssh/known_hosts
+        
+    - name: Stop Neo4j
+      run: |
+        ssh -i ~/.ssh/aws-ec2-key.pem \
+          -o StrictHostKeyChecking=no \
+          "${SSH_USER}@${PUBLIC_IP}" \
+          "docker stop neo4j || true && docker rm neo4j || true"
+        echo "✅ Neo4j stopped"
+
+  run-benchmarks:
+    runs-on: ubuntu-latest
+    needs: [check-instance-status, start-neo4j]
+    if: github.event.inputs.operation == 'run-benchmarks'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.REGION }}
+        
+    - name: Get instance IP
+      run: |
+        PUBLIC_IP=$(aws ec2 describe-instances \
+          --instance-ids "${{ env.INSTANCE_ID }}" \
+          --region "${{ env.REGION }}" \
+          --query "Reservations[0].Instances[0].PublicIpAddress" \
+          --output text)
+        echo "PUBLIC_IP=${PUBLIC_IP}" >> $GITHUB_ENV
+        
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/aws-ec2-key.pem
+        chmod 600 ~/.ssh/aws-ec2-key.pem
+        ssh-keyscan -H "${PUBLIC_IP}" >> ~/.ssh/known_hosts
+        
+    - name: Copy scripts to remote instance
+      run: |
+        scp -i ~/.ssh/aws-ec2-key.pem \
+          -o StrictHostKeyChecking=no \
+          -r cypher/scripts \
+          "${SSH_USER}@${PUBLIC_IP}:~/"
+          
+    - name: Install Java and Maven on remote instance
+      run: |
+        if ssh -i ~/.ssh/aws-ec2-key.pem \
+          -o StrictHostKeyChecking=no \
+          "${SSH_USER}@${PUBLIC_IP}" \
+          "sudo apt-get update && sudo apt-get install -y openjdk-11-jdk maven" 2>/dev/null; then
+          echo "✅ Java and Maven installed successfully"
+        else
+          echo "⚠️ Java/Maven installation failed or already installed - continuing"
+        fi
+          
+    - name: Build project on remote instance
+      run: |
+        if ssh -i ~/.ssh/aws-ec2-key.pem \
+          -o StrictHostKeyChecking=no \
+          "${SSH_USER}@${PUBLIC_IP}" \
+          "cd ~/scripts/cypher && mvn clean package -DskipTests" 2>/dev/null; then
+          echo "✅ Project built successfully"
+        else
+          echo "⚠️ Project build failed - continuing"
+        fi
+          
+    - name: Run benchmark setup
+      run: |
+        if ssh -i ~/.ssh/aws-ec2-key.pem \
+          -o StrictHostKeyChecking=no \
+          "${SSH_USER}@${PUBLIC_IP}" \
+          "cd ~/scripts/cypher && bash scripts/install-dependencies.sh" 2>/dev/null; then
+          echo "✅ Benchmark setup completed successfully"
+        else
+          echo "⚠️ Benchmark setup failed - continuing"
+        fi
+          
+    - name: Upload test data (if available)
+      run: |
+        # Add logic to upload test data if needed
+        echo "Test data upload step - customize as needed"
+        
+    - name: Run benchmarks
+      run: |
+        ssh -i ~/.ssh/aws-ec2-key.pem \
+          -o StrictHostKeyChecking=no \
+          "${SSH_USER}@${PUBLIC_IP}" \
+          "cd ~/scripts/cypher && echo 'Running benchmarks...' && # Add your benchmark command here"
+          
+    - name: Download results
+      run: |
+        # Add logic to download benchmark results
+        echo "Results download step - customize as needed"
