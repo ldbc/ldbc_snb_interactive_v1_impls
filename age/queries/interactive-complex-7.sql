@@ -30,7 +30,7 @@ FROM (
             likeCreationDate agtype, commentOrPostId agtype, commentOrPostContent agtype,
             minutesLatency agtype, isNew agtype)
   ) all_likes
-  ORDER BY personId, likeCreationDate DESC
+  ORDER BY personId, likeCreationDate DESC, commentOrPostId ASC
 ) latest_likes
 ORDER BY likeCreationDate DESC, personId ASC
 LIMIT 20;

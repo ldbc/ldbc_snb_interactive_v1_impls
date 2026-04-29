@@ -20,5 +20,5 @@ SELECT * FROM (
           originalPostId agtype, originalPostAuthorId agtype,
           originalPostAuthorFirstName agtype, originalPostAuthorLastName agtype)
 ) all_msgs
-ORDER BY messageCreationDate DESC, messageId ASC
+ORDER BY messageCreationDate DESC, messageId DESC
 LIMIT 10;

@@ -23,20 +23,26 @@ FROM (
   $$) AS (friendId agtype, friendFirstName agtype, friendLastName agtype, countryName agtype)
   UNION ALL
   SELECT * FROM cypher('$graphName', $$
-    MATCH (p:Person {id: $personId})-[:KNOWS]->(:Person)-[:KNOWS]->(friend:Person)<-[:HAS_CREATOR]-(msg:Comment)-[:IS_LOCATED_IN]->(country:Country),
-          (friend)-[:IS_LOCATED_IN]->(fCity:City)-[:IS_PART_OF]->(fCountry:Country)
+    MATCH (p:Person {id: $personId})-[:KNOWS]->(:Person)-[:KNOWS]->(friend:Person)
     WHERE friend.id <> $personId
-      AND msg.creationDate >= $startDate AND msg.creationDate < $endDate
+    OPTIONAL MATCH (p)-[direct:KNOWS]->(friend)
+    WITH DISTINCT friend, direct WHERE direct IS NULL
+    MATCH (friend)<-[:HAS_CREATOR]-(msg:Comment)-[:IS_LOCATED_IN]->(country:Country),
+          (friend)-[:IS_LOCATED_IN]->(fCity:City)-[:IS_PART_OF]->(fCountry:Country)
+    WHERE msg.creationDate >= $startDate AND msg.creationDate < $endDate
       AND country.name IN [$countryXName, $countryYName]
       AND fCountry.name <> $countryXName AND fCountry.name <> $countryYName
     RETURN friend.id, friend.firstName, friend.lastName, country.name
   $$) AS (friendId agtype, friendFirstName agtype, friendLastName agtype, countryName agtype)
   UNION ALL
   SELECT * FROM cypher('$graphName', $$
-    MATCH (p:Person {id: $personId})-[:KNOWS]->(:Person)-[:KNOWS]->(friend:Person)<-[:HAS_CREATOR]-(msg:Post)-[:IS_LOCATED_IN]->(country:Country),
-          (friend)-[:IS_LOCATED_IN]->(fCity:City)-[:IS_PART_OF]->(fCountry:Country)
+    MATCH (p:Person {id: $personId})-[:KNOWS]->(:Person)-[:KNOWS]->(friend:Person)
     WHERE friend.id <> $personId
-      AND msg.creationDate >= $startDate AND msg.creationDate < $endDate
+    OPTIONAL MATCH (p)-[direct:KNOWS]->(friend)
+    WITH DISTINCT friend, direct WHERE direct IS NULL
+    MATCH (friend)<-[:HAS_CREATOR]-(msg:Post)-[:IS_LOCATED_IN]->(country:Country),
+          (friend)-[:IS_LOCATED_IN]->(fCity:City)-[:IS_PART_OF]->(fCountry:Country)
+    WHERE msg.creationDate >= $startDate AND msg.creationDate < $endDate
       AND country.name IN [$countryXName, $countryYName]
       AND fCountry.name <> $countryXName AND fCountry.name <> $countryYName
     RETURN friend.id, friend.firstName, friend.lastName, country.name

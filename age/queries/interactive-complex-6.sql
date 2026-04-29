@@ -10,8 +10,12 @@ SELECT tagName, SUM(postCount::text::bigint)::bigint AS postCount FROM (
   $$) AS (tagName agtype, postCount agtype)
   UNION ALL
   SELECT * FROM cypher('$graphName', $$
-    MATCH (p:Person {id: $personId})-[:KNOWS]->(:Person)-[:KNOWS]->(friend:Person)<-[:HAS_CREATOR]-(post:Post)-[:HAS_TAG]->(tag:Tag)
-    WHERE friend.id <> $personId AND tag.name <> $tagName
+    MATCH (p:Person {id: $personId})-[:KNOWS]->(:Person)-[:KNOWS]->(friend:Person)
+    WHERE friend.id <> $personId
+    OPTIONAL MATCH (p)-[direct:KNOWS]->(friend)
+    WITH DISTINCT friend, direct WHERE direct IS NULL
+    MATCH (friend)<-[:HAS_CREATOR]-(post:Post)-[:HAS_TAG]->(tag:Tag)
+    WHERE tag.name <> $tagName
     MATCH (friend)<-[:HAS_CREATOR]-(:Post)-[:HAS_TAG]->(:Tag {name: $tagName})
     WITH tag.name AS tagName, count(DISTINCT post) AS postCount
     RETURN tagName, postCount
