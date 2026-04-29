@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# End-to-end local validation against the Docker AGE instance on localhost:5432.
+# End-to-end local validation against a local AGE/PostgreSQL instance.
 # Run from the age/ directory after building the JAR.
 #
 # Steps:
@@ -11,24 +11,39 @@
 # Usage:
 #   cd age
 #   bash scripts/run-local-validation.sh [--load]
+#
+# Override the default connection:
+#   CONNECTION_STRING="postgresql://user:pass@host:5432/db" bash scripts/run-local-validation.sh
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 AGE_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 JAR="${AGE_DIR}/target/age-1.2.0-SNAPSHOT.jar"
 
-export CONNECTION_STRING="postgresql://postgres:postgres@localhost:5432/postgres"
+export CONNECTION_STRING="${CONNECTION_STRING:-postgresql://postgres:postgres@localhost:5432/postgres}"
+SNAPSHOT_FILE="${SNAPSHOT_FILE:-/tmp/ldbc_snb_snapshot.dump}"
 
 LOCAL_VALIDATE="${AGE_DIR}/driver/validate-local.properties"
 LOCAL_CREATE_PARAMS="${AGE_DIR}/driver/create-validation-parameters-local.properties"
+
+# ---- Parse connection details from CONNECTION_STRING -------------------------
+# Expected format: postgresql://user:pass@host:port/dbname
+_cs="${CONNECTION_STRING#postgresql://}"
+_userpass="${_cs%%@*}"
+_hostportdb="${_cs##*@}"
+_LOCAL_USER="${_userpass%%:*}"
+_LOCAL_PASS="${_userpass##*:}"
+_LOCAL_HOSTPORT="${_hostportdb%%/*}"
+_LOCAL_DB="${_hostportdb##*/}"
+_LOCAL_ENDPOINT="${_LOCAL_HOSTPORT}/${_LOCAL_DB}"
 
 # ---- Build local properties from templates -----------------------------------
 fill_local_props() {
   local src="$1" dst="$2"
   sed \
-    -e 's|age_endpoint=.*|age_endpoint=localhost:5432/postgres|' \
-    -e 's|age_user=.*|age_user=postgres|' \
-    -e 's|age_password=.*|age_password=postgres|' \
+    -e "s|age_endpoint=.*|age_endpoint=${_LOCAL_ENDPOINT}|" \
+    -e "s|age_user=.*|age_user=${_LOCAL_USER}|" \
+    -e "s|age_password=.*|age_password=${_LOCAL_PASS}|" \
     "$src" > "$dst"
 }
 
@@ -58,6 +73,11 @@ java -cp "${JAR}" org.ldbcouncil.snb.driver.Client \
 # ---- Step 2: Restore snapshot (reset IU mutations) ---------------------------
 echo ""
 echo "=== Restoring snapshot ==="
+if [[ ! -f "${SNAPSHOT_FILE}" ]]; then
+  echo "ERROR: Snapshot not found at ${SNAPSHOT_FILE}." >&2
+  echo "       Run with --load first, or run scripts/snapshot-database.sh manually." >&2
+  exit 1
+fi
 bash scripts/restore-database.sh
 
 # ---- Step 3: Validate --------------------------------------------------------
