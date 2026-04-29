@@ -40,12 +40,23 @@ public class AgeQueryStore extends QueryStore {
     protected String loadQueryFromFile(String path, String filename) throws DbException {
         final String filePath = path + File.separator + filename;
         try {
-            String query = new String(Files.readAllBytes(Paths.get(filePath)));
-            return query.replace("$graphName", graphName);
+            return new String(Files.readAllBytes(Paths.get(filePath)));
         } catch (IOException e) {
-            // Not all query types are required (IC13, IC14 have no files)
+            // Not all query types are required (IC13, IC14 have no .sql files)
             return null;
         }
+    }
+
+    /**
+     * Injects $graphName into every prepare() call so it is substituted at query
+     * retrieval time.  This avoids the super() constructor ordering problem where
+     * loadQueryFromFile is called before this.graphName has been assigned.
+     */
+    @Override
+    protected String prepare(QueryType queryType, Map<String, Object> parameterSubstitutions) {
+        java.util.Map<String, Object> params = new java.util.HashMap<>(parameterSubstitutions);
+        params.put("graphName", graphName);
+        return super.prepare(queryType, params);
     }
 
     // -------------------------------------------------------------------------

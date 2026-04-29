@@ -13,8 +13,8 @@ FROM (
       WHERE friend.firstName = $firstName AND friend.id <> $personId
       OPTIONAL MATCH (friend)-[studyAt:STUDY_AT]->(uni:University)-[:IS_LOCATED_IN]->(uniCity:City)
       WITH friend, city, collect(CASE WHEN uni IS NULL THEN null ELSE [uni.name, studyAt.classYear, uniCity.name] END) AS unis
-      OPTIONAL MATCH (friend)-[workAt:WORK_AT]->(company:Company)
-      WITH friend, city, unis, collect(CASE WHEN company IS NULL THEN null ELSE [company.name, workAt.workFrom, company.placeName] END) AS companies
+      OPTIONAL MATCH (friend)-[workAt:WORK_AT]->(company:Company)-[:IS_LOCATED_IN]->(compCountry:Country)
+      WITH friend, city, unis, collect(CASE WHEN company IS NULL THEN null ELSE [company.name, workAt.workFrom, compCountry.name] END) AS companies
       RETURN friend.id, friend.lastName, 1, friend.birthday, friend.creationDate,
              friend.gender, friend.browserUsed, friend.locationIP, friend.email, friend.speaks,
              city.name, unis, companies
@@ -28,8 +28,8 @@ FROM (
       WHERE friend.firstName = $firstName AND friend.id <> $personId
       OPTIONAL MATCH (friend)-[studyAt:STUDY_AT]->(uni:University)-[:IS_LOCATED_IN]->(uniCity:City)
       WITH friend, city, collect(CASE WHEN uni IS NULL THEN null ELSE [uni.name, studyAt.classYear, uniCity.name] END) AS unis
-      OPTIONAL MATCH (friend)-[workAt:WORK_AT]->(company:Company)
-      WITH friend, city, unis, collect(CASE WHEN company IS NULL THEN null ELSE [company.name, workAt.workFrom, company.placeName] END) AS companies
+      OPTIONAL MATCH (friend)-[workAt:WORK_AT]->(company:Company)-[:IS_LOCATED_IN]->(compCountry:Country)
+      WITH friend, city, unis, collect(CASE WHEN company IS NULL THEN null ELSE [company.name, workAt.workFrom, compCountry.name] END) AS companies
       RETURN friend.id, friend.lastName, 2, friend.birthday, friend.creationDate,
              friend.gender, friend.browserUsed, friend.locationIP, friend.email, friend.speaks,
              city.name, unis, companies
@@ -43,8 +43,8 @@ FROM (
       WHERE friend.firstName = $firstName AND friend.id <> $personId
       OPTIONAL MATCH (friend)-[studyAt:STUDY_AT]->(uni:University)-[:IS_LOCATED_IN]->(uniCity:City)
       WITH friend, city, collect(CASE WHEN uni IS NULL THEN null ELSE [uni.name, studyAt.classYear, uniCity.name] END) AS unis
-      OPTIONAL MATCH (friend)-[workAt:WORK_AT]->(company:Company)
-      WITH friend, city, unis, collect(CASE WHEN company IS NULL THEN null ELSE [company.name, workAt.workFrom, company.placeName] END) AS companies
+      OPTIONAL MATCH (friend)-[workAt:WORK_AT]->(company:Company)-[:IS_LOCATED_IN]->(compCountry:Country)
+      WITH friend, city, unis, collect(CASE WHEN company IS NULL THEN null ELSE [company.name, workAt.workFrom, compCountry.name] END) AS companies
       RETURN friend.id, friend.lastName, 3, friend.birthday, friend.creationDate,
              friend.gender, friend.browserUsed, friend.locationIP, friend.email, friend.speaks,
              city.name, unis, companies

@@ -1,5 +1,5 @@
 SET search_path = ag_catalog, public;
-SELECT forumTitle, SUM(postCount)::int AS postCount
+SELECT forumTitle, SUM(postCount::text::bigint)::int AS postCount
 FROM (
   SELECT DISTINCT ON (friendId, forumId) friendId, forumId, forumTitle, postCount
   FROM (

@@ -1,0 +1,7 @@
+-- IC14: Trusted connection paths
+-- Apache AGE 1.6.0 does not support allShortestPaths().
+-- This query is handled by AgeIC14OperationHandler which always returns an empty list.
+-- This file is a placeholder only; it is not executed by the driver.
+--
+-- Disable in validate.properties:
+--   ldbc.snb.interactive.LdbcQuery14_enable=false

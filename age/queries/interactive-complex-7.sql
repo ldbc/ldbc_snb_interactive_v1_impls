@@ -8,24 +8,24 @@ FROM (
   FROM (
     SELECT * FROM cypher('$graphName', $$
       MATCH (p:Person {id: $personId})<-[:HAS_CREATOR]-(msg:Comment)<-[like:LIKES]-(liker:Person)
-      WITH liker, msg, like.creationDate AS likeTime
-      OPTIONAL MATCH (p)-[:KNOWS]-(liker)
+      WITH p, liker, msg, like.creationDate AS likeTime
+      OPTIONAL MATCH (p)-[knows:KNOWS]-(liker)
       RETURN liker.id, liker.firstName, liker.lastName, likeTime, msg.id,
              coalesce(msg.content, msg.imageFile),
              toInteger(floor(toFloat(likeTime - msg.creationDate) / 60000.0)),
-             CASE WHEN (p)-[:KNOWS]-(liker) THEN false ELSE true END
+             knows IS NULL
     $$) AS (personId agtype, personFirstName agtype, personLastName agtype,
             likeCreationDate agtype, commentOrPostId agtype, commentOrPostContent agtype,
             minutesLatency agtype, isNew agtype)
     UNION ALL
     SELECT * FROM cypher('$graphName', $$
       MATCH (p:Person {id: $personId})<-[:HAS_CREATOR]-(msg:Post)<-[like:LIKES]-(liker:Person)
-      WITH liker, msg, like.creationDate AS likeTime
-      OPTIONAL MATCH (p)-[:KNOWS]-(liker)
+      WITH p, liker, msg, like.creationDate AS likeTime
+      OPTIONAL MATCH (p)-[knows:KNOWS]-(liker)
       RETURN liker.id, liker.firstName, liker.lastName, likeTime, msg.id,
              coalesce(msg.imageFile, msg.content),
              toInteger(floor(toFloat(likeTime - msg.creationDate) / 60000.0)),
-             CASE WHEN (p)-[:KNOWS]-(liker) THEN false ELSE true END
+             knows IS NULL
     $$) AS (personId agtype, personFirstName agtype, personLastName agtype,
             likeCreationDate agtype, commentOrPostId agtype, commentOrPostContent agtype,
             minutesLatency agtype, isNew agtype)

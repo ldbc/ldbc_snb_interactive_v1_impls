@@ -1,0 +1,8 @@
+-- IC13: Single shortest path
+-- Apache AGE 1.6.0 does not support shortestPath().
+-- This query is handled by AgeIC13OperationHandler which always returns -1
+-- (the LDBC spec sentinel for "no path exists").
+-- This file is a placeholder only; it is not executed by the driver.
+--
+-- Disable in validate.properties:
+--   ldbc.snb.interactive.LdbcQuery13_enable=false

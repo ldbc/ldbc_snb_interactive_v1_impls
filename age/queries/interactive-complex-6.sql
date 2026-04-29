@@ -1,9 +1,9 @@
 SET search_path = ag_catalog, public;
-SELECT tagName, postCount FROM (
+SELECT tagName, SUM(postCount::text::bigint)::bigint AS postCount FROM (
   SELECT * FROM cypher('$graphName', $$
     MATCH (p:Person {id: $personId})-[:KNOWS]->(friend:Person)<-[:HAS_CREATOR]-(post:Post)-[:HAS_TAG]->(tag:Tag)
     WHERE tag.name <> $tagName
-      AND (p)-[:KNOWS]->(friend)<-[:HAS_CREATOR]-(:Post)-[:HAS_TAG]->(:Tag {name: $tagName})
+    MATCH (friend)<-[:HAS_CREATOR]-(:Post)-[:HAS_TAG]->(:Tag {name: $tagName})
     WITH tag.name AS tagName, count(DISTINCT post) AS postCount
     RETURN tagName, postCount
     ORDER BY postCount DESC, tagName ASC
@@ -12,7 +12,7 @@ SELECT tagName, postCount FROM (
   SELECT * FROM cypher('$graphName', $$
     MATCH (p:Person {id: $personId})-[:KNOWS]->(:Person)-[:KNOWS]->(friend:Person)<-[:HAS_CREATOR]-(post:Post)-[:HAS_TAG]->(tag:Tag)
     WHERE friend.id <> $personId AND tag.name <> $tagName
-      AND (p)-[:KNOWS]->(:Person)-[:KNOWS]->(friend)<-[:HAS_CREATOR]-(:Post)-[:HAS_TAG]->(:Tag {name: $tagName})
+    MATCH (friend)<-[:HAS_CREATOR]-(:Post)-[:HAS_TAG]->(:Tag {name: $tagName})
     WITH tag.name AS tagName, count(DISTINCT post) AS postCount
     RETURN tagName, postCount
     ORDER BY postCount DESC, tagName ASC
