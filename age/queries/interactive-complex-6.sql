@@ -3,7 +3,7 @@ SELECT tagName, SUM(postCount::text::bigint)::bigint AS postCount FROM (
   SELECT * FROM cypher('$graphName', $$
     MATCH (p:Person {id: $personId})-[:KNOWS]->(friend:Person)<-[:HAS_CREATOR]-(post:Post)-[:HAS_TAG]->(tag:Tag)
     WHERE tag.name <> $tagName
-    MATCH (friend)<-[:HAS_CREATOR]-(:Post)-[:HAS_TAG]->(:Tag {name: $tagName})
+    MATCH (post)-[:HAS_TAG]->(:Tag {name: $tagName})
     WITH tag.name AS tagName, count(DISTINCT post) AS postCount
     RETURN tagName, postCount
     ORDER BY postCount DESC, tagName ASC
@@ -16,7 +16,7 @@ SELECT tagName, SUM(postCount::text::bigint)::bigint AS postCount FROM (
     WITH DISTINCT friend, direct WHERE direct IS NULL
     MATCH (friend)<-[:HAS_CREATOR]-(post:Post)-[:HAS_TAG]->(tag:Tag)
     WHERE tag.name <> $tagName
-    MATCH (friend)<-[:HAS_CREATOR]-(:Post)-[:HAS_TAG]->(:Tag {name: $tagName})
+    MATCH (post)-[:HAS_TAG]->(:Tag {name: $tagName})
     WITH tag.name AS tagName, count(DISTINCT post) AS postCount
     RETURN tagName, postCount
     ORDER BY postCount DESC, tagName ASC
