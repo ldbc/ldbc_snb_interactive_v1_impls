@@ -1,0 +1,27 @@
+workload: Interactive
+operation: complex
+number: 6
+title: Tag co-occurrence
+description: |
+  Given a start *Person* with ID `$personId` and a *Tag* with name `$tagName`, find the other *Tags* that occur together with this *Tag* on *Posts* that were created by start *Person*'s friends and friends of friends (excluding start *Person*). Return top 10 *Tags*, and the count of *Posts* that were created by these *Persons*, which contain both this *Tag* and the given *Tag*.
+parameters:
+  - name: personId
+    type: ID
+  - name: tagName
+    type: Long String
+result:
+  - name: otherTag.name
+    type: Long String
+  - name: postCount
+    type: 32-bit Integer
+    category: aggregated
+    description: Number of *Posts* that were created by friends and friends of friends, which have the *Tag* `otherTag`
+sort:
+  - name: postCount
+    direction: desc
+  - name: otherTag.name
+    direction: asc
+limit: 10
+choke_points: [5.1, 8.2]
+relevance: |
+  This query looks for paths of lengths three or four, starting from a given *Person*, moving to friends or friends of friends, then to *Posts* and finally ending at a given *Tag*.

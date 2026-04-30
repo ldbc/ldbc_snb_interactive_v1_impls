@@ -1,0 +1,33 @@
+workload: Interactive
+operation: complex
+number: 8
+title: Recent replies
+description: |
+  Given a start *Person* with ID `$personId`, find the most recent *Comments* that are replies to *Messages* of the start *Person*.
+  Only consider direct (single-hop) replies, not the transitive (multi-hop) ones.
+  Return the reply *Comments*, and the *Person* that created each reply *Comment*.
+parameters:
+  - name: personId
+    type: ID
+result:
+  - name: commentAuthor.id
+    type: ID
+  - name: commentAuthor.firstName
+    type: String
+  - name: commentAuthor.lastName
+    type: String
+  - name: comment.creationDate
+    type: DateTime
+  - name: comment.id
+    type: ID
+  - name: comment.content
+    type: Text
+sort:
+  - name: comment.creationDate
+    direction: desc
+  - name: comment.id
+    direction: asc
+limit: 20
+choke_points: [2.4, 3.3, 5.3]
+relevance: |
+  This query looks for paths of length two, starting from a given *Person*, going through its created *Messages* and finishing at their replies. In this query there is temporal locality between the replies being accessed. Thus the top-k order by this can interact with the selection, i.e. do not consider older *Posts* than the 20th oldest seen so far.

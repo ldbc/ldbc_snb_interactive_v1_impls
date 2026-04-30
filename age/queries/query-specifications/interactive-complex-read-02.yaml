@@ -1,0 +1,34 @@
+workload: Interactive
+operation: complex
+number: 2
+title: Recent messages by your friends
+description: |
+  Given a start *Person* with ID `$personId`, find the most recent *Messages* from all of that *Person*'s friends (`friend` nodes).
+  Only consider *Messages* created before the given `$maxDate` (excluding that day).
+parameters:
+  - name: personId
+    type: ID
+  - name: maxDate
+    type: Date
+result:
+  - name: friend.id
+    type: ID
+  - name: friend.firstName
+    type: String
+  - name: friend.lastName
+    type: String
+  - name: message.id
+    type: ID
+  - name: message.content or message.imageFile (for photos)
+    type: Text
+  - name: message.creationDate
+    type: DateTime
+sort:
+  - name: message.creationDate
+    direction: desc
+  - name: message.id
+    direction: asc
+limit: 20
+choke_points: [1.1, 2.2, 2.3, 3.2, 8.5]
+relevance: |
+  This is a navigational query looking for paths of length two, starting from a given *Person*, going to their friends and from them, moving to their published *Posts* and *Comments*. This query exercices both the optimizer and how data is stored. It tests the ability to create execution plans taking advantage of the orderings induced by some operators to avoid performing expensive sorts. This query requires selecting *Posts* and *Comments* based on their creation date, which might be correlated with their identifier and therefore, having intermediate results with interesting orders. Also, messages could be stored in an order correlated with their creation date to improve data access locality. Finally, as many of the attributes required in the projection are not needed for the execution of the query, it is expected that the query optimizer will move the projection to the end.

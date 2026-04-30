@@ -1,0 +1,39 @@
+workload: Interactive
+operation: complex
+number: 10
+title: Friend recommendation
+description: |
+  Given a start *Person* with ID `$personId`, find that *Person*'s friends of friends (`foaf`) -- excluding the start *Person* and his/her immediate friends --, who were born on or after the 21st of a given `$month` (in any year) and before the 22nd of the following month. Calculate the similarity between each `friend` and the start `person`, where `commonInterestScore` is defined as follows:
+
+  * `common`   = number of *Posts* created by `friend`, such that the *Post* has a  *Tag* that the start `person` is interested in
+  * `uncommon` = number of *Posts* created by `friend`, such that the *Post* has no *Tag* that the start `person` is interested in
+  * `commonInterestScore` = `common` - `uncommon`
+parameters:
+  - name: personId
+    type: ID
+  - name: month
+    type: 32-bit Integer
+    description: "Between 1 and 12. Implementations may also pass the next month as an additional `$nextMonth` parameter"
+result:
+  - name: foaf.id
+    type: ID
+  - name: foaf.firstName
+    type: String
+  - name: foaf.lastName
+    type: String
+  - name: commonInterestScore
+    type: 32-bit Integer
+    category: aggregated
+  - name: foaf.gender
+    type: String
+  - name: city.name
+    type: String
+sort:
+  - name: commonInterestScore
+    direction: desc
+  - name: foaf.id
+    direction: asc
+limit: 10
+choke_points: [2.3, 3.3, 4.1, 4.2, 5.1, 5.2, 6.1, 7.1, 8.6]
+relevance: |
+  This query looks for paths of length two, starting from a *Person* and ending at the friends of their friends. It does widely scattered graph traversal, and one expects no locality of in friends of friends, as these have been acquired over a long time and have widely scattered identifiers. The join order is simple but one must see that the anti-join for "not in my friends" is better with hash. Also the last pattern in the scalar sub-queries joining or anti-joining the *Tags* of the candidate's *Posts* to interests of self should be by hash.

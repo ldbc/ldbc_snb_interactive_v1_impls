@@ -1,0 +1,30 @@
+workload: Interactive
+operation: complex
+number: 5
+title: New groups
+description: |
+  Given a start *Person* with ID `$personId`, denote their friends and friends of friends (excluding the start *Person*) as `otherPerson`.
+
+  Find *Forums* that any *Person* `otherPerson` became a *member* of after a given date (`$minDate`).
+  For each of those *Forums*, count the number of *Posts* that were created by the *Person* `otherPerson`.
+parameters:
+  - name: personId
+    type: ID
+  - name: minDate
+    type: Date
+result:
+  - name: forum.title
+    type: Long String
+  - name: postCount
+    type: 32-bit Integer
+    category: aggregated
+    description: Number of *Posts* made in `forum` that were created by the *Person* `otherPerson`
+sort:
+  - name: postCount
+    direction: desc
+  - name: forum.id
+    direction: asc
+limit: 20
+choke_points: [2.3, 3.3, 8.2, 8.5]
+relevance: |
+  This query looks for paths of length two and three, starting from a given *Person*, moving to friends and friends of friends, and then getting the *Forums* they are members of. Besides testing the ability of the query optimizer to select the proper join operator, it rewards the usage of indices, but their accesses will be presumably scattered due to the two/three-hop search space of the query, leading to unpredictable and scattered index accesses. Having efficient implementations of such indices will be highly beneficial.

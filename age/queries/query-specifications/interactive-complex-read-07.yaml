@@ -1,0 +1,45 @@
+workload: Interactive
+operation: complex
+number: 7
+title: Recent likers
+description: |
+  Given a start *Person* with ID `$personId`, find the most recent `likes` on any of start *Person*'s *Messages*.
+  Find *Persons* that liked (`likes` edge) any of start *Person*'s *Messages*, the *Messages* they liked most recently, the creation date of that like, and the latency in minutes (`minutesLatency`) between creation of *Messages* and like.
+  Additionally, for each *Person* found return a flag indicating (`isNew`) whether the liker is a friend of start *Person*.
+  In case that a *Person* liked multiple *Messages* at the same time, return the *Message* with lowest identifier.
+
+  **Validation rule:** Depending on whether the system-under-test supports leap seconds or uses UTC-SLS (UTC with Smoothed Leap Seconds), a difference of 1 minute can occur between the `minutesLatency` results of two correct implementations when the time interval includes June 30, 2012, when there was a leap second. Therefore, the `minutesLatency` value is validated using a tolerance of 1 minute.
+parameters:
+  - name: personId
+    type: ID
+result:
+  - name: friend.id
+    type: ID
+    description: friend.id = personId is allowed
+  - name: friend.firstName
+    type: String
+  - name: friend.lastName
+    type: String
+  - name: likes.creationDate
+    type: DateTime
+  - name: message.id
+    type: ID
+  - name: message.content or message.imageFile (for photos)
+    type: Text
+  - name: minutesLatency
+    type: 32-bit Integer
+    category: calculated
+    description: Duration between the creation of the *Message* and the creation of the like, in minutes.
+  - name: isNew
+    type: Boolean
+    category: calculated
+    description: "`False` if `person` and `friend` know each other, `True` otherwise"
+sort:
+  - name: likes.creationDate
+    direction: desc
+  - name: friend.id
+    direction: asc
+limit: 20
+choke_points: [2.2, 2.3, 3.3, 5.1, 8.1, 8.3]
+relevance: |
+  This query looks for paths of length two, starting from a given *Person*, moving to its published messages and then to *Persons* who liked them. It tests several aspects related to join optimization, both at query optimization plan level and execution engine level. On the one hand, many of the columns needed for the projection are only needed in the last stages of the query, so the optimizer is expected to delay the projection until the end. This query implies accessing two-hop data, and as a consequence, index accesses are expected to be scattered. We expect to observe variate cardinalities, depending on the characteristics of the input parameter, so properly selecting the join operators will be crucial. This query has a lot of correlated sub-queries, so it is testing the ability to flatten the query execution plans.

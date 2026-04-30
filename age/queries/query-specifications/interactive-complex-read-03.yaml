@@ -1,0 +1,53 @@
+workload: Interactive
+operation: complex
+number: 3
+title: Friends and friends of friends that have been to given countries
+description: |
+  Given a start *Person* with ID `$personId`, find *Persons* that are their friends and friends of friends (excluding the start *Person*) that have made *Posts* / *Comments* in both of the given *Countries* (named `$countryXName` and `$countryYName`), within `[$startDate, $startDate + $durationDays)` (closed-open interval). Only *Persons* that are foreign to these *Countries* are considered, that is *Persons* whose location *Country* is neither named `$countryXName` nor `$countryYName`.
+parameters:
+  - name: personId
+    type: ID
+  - name: countryXName
+    type: String
+    description: |
+      In SNB Interactive v2, this query has two variants:
+
+      `(a)` Correlated *Countries*
+
+      `(b)` Anti-correlated *Countries*
+  - name: countryYName
+    type: String
+  - name: startDate
+    type: Date
+    description: Beginning of requested period
+  - name: durationDays
+    type: 32-bit Integer
+    description: Duration of requested period, in days. The interval `[$startDate, $startDate + $durationDays)` is closed-open
+result:
+  - name: otherPerson.id
+    type: ID
+  - name: otherPerson.firstName
+    type: String
+  - name: otherPerson.lastName
+    type: String
+  - name: xCount
+    type: 32-bit Integer
+    category: aggregated
+    description: Number of *Messages* from *Country* named `$countryXName` created by the *Person* within the given time
+  - name: yCount
+    type: 32-bit Integer
+    category: aggregated
+    description: Number of *Messages* from *Country* named `$countryYName` created by the *Person* within the given time
+  - name: count
+    type: 32-bit Integer
+    category: aggregated
+    description: "`count` = `xCount` + `yCount`"
+sort:
+  - name: count
+    direction: desc
+  - name: otherPerson.id
+    direction: asc
+limit: 20
+choke_points: [2.1, 3.1, 5.1, 8.2, 8.5]
+relevance: |
+  This query looks for paths of length two and three, starting from a *Person*, going to friends or friends of friends, and then moving to *Messages*. This query tests the ability of the query optimizer to select the most efficient join ordering, which will depend on the cardinalities of the intermediate results. Many friends of friends can be duplicate, then it is expected to eliminate duplicates and those people prior to access the *Post* and *Comments*, as well as eliminate those friends from *Countries* named `$countryXName` and `$countryYName`, as the size of the intermediate results can be severely affected. A possible structural optimization could be to materialize the number of *Posts* and *Comments* created by a *Person*, and progressively filter those people that could not even fall in the top 20 even having all their posts in the *Countries* named `$countryXName` and `$countryYName`.

@@ -1,0 +1,33 @@
+workload: Interactive
+operation: complex
+number: 12
+title: Expert search
+description: |
+  Given a start *Person* with ID `$personId`, find the *Comments* that this *Person*'s friends made in reply to *Posts*, considering only those *Comments* that are direct (single-hop) replies to *Posts*, not the transitive (multi-hop) ones. Only consider *Posts* with a *Tag* in a given *TagClass* with name `$tagClassName` or in a descendent of that *TagClass*. Count the number of these reply *Comments*, and collect the *Tags* that were attached to the *Posts* they replied to, but only collect *Tags* with the given *TagClass* or with a descendant of that *TagClass*. Return *Persons* with at least one reply, the reply count, and the collection of *Tags*.
+parameters:
+  - name: personId
+    type: ID
+  - name: tagClassName
+    type: Long String
+result:
+  - name: friend.id
+    type: ID
+  - name: friend.firstName
+    type: String
+  - name: friend.lastName
+    type: String
+  - name: tagNames
+    type: \{Long String\}
+    category: aggregated
+  - name: replyCount
+    type: 32-bit Integer
+    category: aggregated
+sort:
+  - name: replyCount
+    direction: desc
+  - name: friend.id
+    direction: asc
+limit: 20
+choke_points: [3.3, 7.2, 7.3, 8.2]
+relevance: |
+  This query starts at a *Person*, moves to its friends, and the to their *Comments* and their root *Posts*. Then, it gets the *Tag* of each *Post* and checks whether it (directly or transitively) belongs to the specified *TagClass*. This can be thought of a bidirectional search between the *Person* and the *TagClass*. The difficulty of this query is determining the optimal direction of this traversal.

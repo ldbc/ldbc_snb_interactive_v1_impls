@@ -1,0 +1,57 @@
+workload: Interactive
+operation: complex
+number: 1
+title: Transitive friends with a certain name
+description: |
+  Given a start *Person* with ID `$personId`, find *Persons* with a given first name (`$firstName`) that the start *Person* is connected to (excluding start *Person*) by at most 3 steps via the *knows* relationships. Return *Persons*, including the distance (1..3), summaries of the *Persons* workplaces and places of study.
+parameters:
+  - name: personId
+    type: ID
+  - name: firstName
+    type: String
+result:
+  - name: otherPerson.id
+    type: ID
+  - name: otherPerson.lastName
+    type: String
+  - name: distanceFromPerson
+    type: 32-bit Integer
+    category: calculated
+  - name: otherPerson.birthday
+    type: Date
+  - name: otherPerson.creationDate
+    type: DateTime
+  - name: otherPerson.gender
+    type: String
+  - name: otherPerson.browserUsed
+    type: String
+  - name: otherPerson.locationIP
+    type: String
+  - name: otherPerson.email
+    type: \{Long String\}
+  - name: otherPerson.speaks
+    type: \{String\}
+  - name: locationCity.name
+    type: String
+  - name: universities
+    type: \{\<String, 32-bit Integer, String>\}
+    description: "`{<university.name, studyAt.classYear, universityCity.name>}`"
+    category: aggregated
+  - name: companies
+    type: \{\<String, 32-bit Integer, String>\}
+    description: "`{<company.name, workAt.workFrom, companyCountry.name>}`"
+    category: aggregated
+sort:
+  - name: distanceFromPerson
+    direction: asc
+  - name: otherPerson.lastName
+    direction: asc
+  - name: otherPerson.id
+    direction: asc
+limit: 20
+choke_points: [2.1, 5.3, 8.2]
+relevance: |
+  This query is a representative of a simple navigational query. It is interesting for several aspects.
+  (1) It requires for a complex aggregation for returning the concatenation of universities, companies, languages and email information of the *Person*.
+  (2) It tests the ability of the optimizer to move the evaluation of sub-queries functionally dependant on the *Person*, after the evaluation of the top-k.
+  (3) Its performance is highly sensitive to properly estimating the cardinalities in each transitive path, and paying attention not to explore already visited *Persons*.

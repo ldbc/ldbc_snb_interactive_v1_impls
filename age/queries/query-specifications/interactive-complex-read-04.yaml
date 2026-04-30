@@ -1,0 +1,30 @@
+workload: Interactive
+operation: complex
+number: 4
+title: New topics
+description: |
+  Given a start *Person* with ID `$personId`, find *Tags* that are attached to *Posts* that were created by that *Person*'s friends. Only include *Tags* that were attached to friends' *Posts* created within a given time interval `[$startDate, $startDate + $durationDays)` (closed-open) and that were never attached to friends' *Posts* created before this interval.
+parameters:
+  - name: personId
+    type: ID
+  - name: startDate
+    type: Date
+  - name: durationDays
+    type: 32-bit Integer
+    description: Duration of requested period, in days. The interval `[$startDate, $startDate + $durationDays)` is closed-open
+result:
+  - name: tag.name
+    type: Long String
+  - name: postCount
+    type: 32-bit Integer
+    category: aggregated
+    description: "Number of *Posts* made within the given time interval that have `tag`"
+sort:
+  - name: postCount
+    direction: desc
+  - name: tag.name
+    direction: asc
+limit: 10
+choke_points: [2.3, 8.2, 8.5]
+relevance: |
+  This query looks for paths of length two, starting from a given *Person*, moving to *Posts* and then to *Tags*. It tests the ability of the query optimizer to properly select the usage of hash joins or index based joins, depending on the cardinality of the intermediate results. These cardinalities are clearly affected by the input *Person*, the number of friends, the variety of *Tags*, the time interval and the number of *Posts*.

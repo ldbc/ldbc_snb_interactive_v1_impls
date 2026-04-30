@@ -1,0 +1,34 @@
+workload: Interactive
+operation: complex
+number: 9
+title: Recent messages by friends or friends of friends
+description: |
+  Given a start *Person* with ID `$personId`, find the most recent *Messages* created by that *Person*'s friends or friends of friends (excluding the start *Person*).
+  Only consider *Messages* created before the given `$maxDate` (excluding that day).
+parameters:
+  - name: personId
+    type: ID
+  - name: maxDate
+    type: Date
+result:
+  - name: otherPerson.id
+    type: ID
+  - name: otherPerson.firstName
+    type: String
+  - name: otherPerson.lastName
+    type: String
+  - name: message.id
+    type: ID
+  - name: message.content or message.imageFile (for photos)
+    type: Text
+  - name: message.creationDate
+    type: DateTime
+sort:
+  - name: message.creationDate
+    direction: desc
+  - name: message.id
+    direction: asc
+limit: 20
+choke_points: [1.1, 1.2, 2.2, 2.3, 3.2, 3.3, 8.5]
+relevance: |
+  This query looks for paths of length two or three, starting from a given *Person*, moving to its friends and friends of friends, and ending at their created *Messages*. This is one of the most complex queries, as the list of choke points indicates. This query is expected to touch variable amounts of data with entities of different characteristics, and therefore, properly estimating cardinalities and selecting the proper operators will be crucial.
